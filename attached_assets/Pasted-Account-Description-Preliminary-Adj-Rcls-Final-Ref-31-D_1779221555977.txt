@@ -1,0 +1,53 @@
+Account Description Preliminary Adj. Rcls. Final Ref 31-Dec-23 Amt Change
+4045 Workshop Income - - - - (167.69) 167.69
+4055 HayDay Income - - - - (2,205.00) 2,205.00
+4000-Operating revenues (48,694.29) - - (48,694.29) (57,263.72) 8,569.43
+4030 Lease Income - - - - (10,800.00) 10,800.00
+4040 Office Rent (3,000.00) - - (3,000.00) - (3,000.00)
+4050 Utilities Repayment - - - - (4,207.64) 4,207.64
+4060-Rental revenue (3,000.00) - - (3,000.00) (15,007.64) 12,007.64
+4998 CRA Interest (1,435.45) - - (1,435.45) - (1,435.45)
+4100-Interest revenue (1,435.45) - - (1,435.45) - (1,435.45)
+4999 Grant Proceeds (2,579.50) 2,579.50 - - (2,500.00) 2,500.00
+4970-Subsidies and grants (2,579.50) 2,579.50 - - (2,500.00) 2,500.00
+5000 Cost of Goods Sold 5,308.55 (1,064.31) - 4,244.24 5,705.49 (1,461.25)
+5002 Product Samples Expense - - - - 493.03 (493.03)
+5003 Purchases - Resale Items 17,743.61 - - 17,743.61 19,319.26 (1,575.65)
+5011 Grocery Expense 8,089.60 - - 8,089.60 3,651.87 4,437.73
+5012 Grow Expense 786.25 - - 786.25 912.16 (125.91)
+5030 Grab and Go Expense - - - - 282.89 (282.89)
+5131 Product Samples - - - - 304.57 (304.57)
+5120-Purchases/cost of materials 31,928.01 (1,064.31) - 30,863.70 30,669.27 194.43
+5008-1 Commissions 2,540.16 - - 2,540.16 - 2,540.16
+5160-Other direct costs 2,540.16 - - 2,540.16 - 2,540.16
+5004 Advertising and Promotion 8,934.36 - - 8,934.36 4,957.11 3,977.25
+5024 Share Expense 800.00 - - 800.00 - 800.00
+5028 Donation (621.50) - - (621.50) - (621.50)
+5200-Advertising 9,112.86 - - 9,112.86 4,957.11 4,155.75
+5017 Meals and Entertainment 269.81 - - 269.81 134.33 135.48
+5210-Meals and entertainment 269.81 - - 269.81 134.33 135.48
+5005 Amortization - 7,722.66 - 7,722.66 13,353.75 (5,631.09)
+5230-Amortization - 7,722.66 - 7,722.66 13,353.75 (5,631.09)
+5013 Insurance Expense 3,972.56 - - 3,972.56 3,771.10 201.46
+5235-Insurance 3,972.56 - - 3,972.56 3,771.10 201.46
+5001 Merchant Account Fees - - - - - -
+5008 Bank Service Charges 248.29 - - 248.29 842.23 (593.94)
+5240-Interest and bank charges 248.29 - - 248.29 842.23 (593.94)
+5014 Interest Expense 1.83 - - 1.83 3,524.48 (3,522.65)
+5250 Interest on long-term debt 1,268.54 - - 1,268.54 - 1,268.54
+5250-Interest on long-term debt 1,270.37 - - 1,270.37 3,524.48 (2,254.11)
+5010 Dues and Subscriptions - - - - 250.00 (250.00)
+5029 Membership Fee - - - - 50.00 (50.00)
+5255 Dues, Licenses and Subscriptions - - - - 125.00 (125.00)
+5255-Dues, licenses and subscriptions - - - - 425.00 (425.00)
+5015 Janitorial Expenses 711.02 - - 711.02 345.99 365.03
+5025 Telephone Expense 799.05 - - 799.05 - 799.05
+5018 Office Supplies 2,043.30 - - 2,043.30 1,063.80 979.50
+6170 Computer and Internet Expenses - - - - 29.96 (29.96)
+6980 Uncategorized expenses 0.03 - - 0.03 - 0.03
+8000 Ask my accountant - - - - (1.40) 1.40
+5260-Office 3,553.40 - - 3,553.40 1,438.35 2,115.05
+5020 Professional Fees 675.00 - - 675.00 2,025.00 (1,350.00)
+5265-Professional fees 675.00 - - 675.00 2,025.00 (1,350.00)
+5021 Rent Expense 3,000.00 - - 3,000.00 16,695.00 (13,695.00)
+5270-Real estate rental 3,000.00 - - 3,000.00 16,695.00 (13,695.00)
