@@ -54,7 +54,7 @@ const API_BASE = process.env.EXPO_PUBLIC_DOMAIN
   ? `https://${process.env.EXPO_PUBLIC_DOMAIN}/api-server/api`
   : "http://localhost:3001/api";
 
-type ScreenPhase = "prompts" | "generating" | "story" | "done";
+type ScreenPhase = "tale" | "prompts" | "generating" | "story" | "done";
 
 // Render TaleBlock[] inline (no outer ScrollView wrapper)
 function TaleBlocks({
@@ -154,8 +154,10 @@ export default function StoryStationScreen() {
   );
   const [currentInput, setCurrentInput] = useState("");
   const [localAnswers, setLocalAnswers] = useState<Record<string, string>>(storedAnswers);
+  const hasStarted = Object.keys(storedAnswers).length > 0 || !!storedStory;
   const [phase, setPhase] = useState<ScreenPhase>(
-    completed || (allAnswered && storedStory) ? "story" : "prompts",
+    completed || (allAnswered && storedStory) ? "story" :
+    hasStarted ? "prompts" : "tale",
   );
   const [localStory, setLocalStory] = useState<string | null>(storedStory ?? null);
   const [generating, setGenerating] = useState(false);
@@ -190,6 +192,8 @@ export default function StoryStationScreen() {
     setCurrentPromptIdx(allDone ? prompts.length : Math.max(0, idx));
     if (isCompleted(station.id) || (allDone && story)) {
       setPhase("story");
+    } else if (Object.keys(answers).length > 0) {
+      setPhase("prompts");
     }
     const mem = getTrailMemory(station.id);
     setLocalNote(mem.note ?? "");
@@ -376,10 +380,6 @@ export default function StoryStationScreen() {
   const completedPrompts = prompts.slice(0, currentPromptIdx);
   const allPromptsAnswered = currentPromptIdx >= prompts.length;
 
-  // First block of the tale (used as hook when collapsed)
-  const firstTaleBlock = tale?.body.find((b) => b.kind === "para" || b.kind === "italic");
-  const firstTaleText =
-    firstTaleBlock != null ? firstTaleBlock.text : "";
 
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
@@ -430,33 +430,25 @@ export default function StoryStationScreen() {
 
         <View style={[styles.rule, { backgroundColor: c.rule }]} />
 
-        {/* ── THE STORY FROM THE BOOK ───────────────────────────────────── */}
-        <Text style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
-          READ
-        </Text>
-
-        {tale ? (
-          <View style={[styles.taleCard, { backgroundColor: c.card, borderColor: c.rule }]}>
-            <Text style={[styles.taleBookLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+        {/* ── TALE PHASE: full reading experience, gates the writing ─────── */}
+        {phase === "tale" ? (
+          <>
+            <Text style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
               FROM THE CODETRY BOOK
             </Text>
-            <Text style={[styles.taleTitleInline, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
-              {tale.title}
-            </Text>
-            <Text style={[styles.taleSubtitleInline, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
-              {tale.subtitle}
-            </Text>
-            <View style={[styles.taleRule, { backgroundColor: c.rule }]} />
-
-            {/* Hook — first paragraph always visible */}
-            <Text style={[taleStyles.para, { color: c.foreground, fontFamily: SERIF }]}>
-              {firstTaleText}
-            </Text>
-
-            {/* Full body — shown when expanded */}
-            {taleExpanded ? (
-              <>
-                <TaleBlocks blocks={tale.body.slice(1)} colors={c} />
+            {tale ? (
+              <View style={[styles.taleCard, { backgroundColor: c.card, borderColor: c.rule }]}>
+                <Text style={[styles.taleBookLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+                  CHILDREN'S TALE
+                </Text>
+                <Text style={[styles.taleTitleInline, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
+                  {tale.title}
+                </Text>
+                <Text style={[styles.taleSubtitleInline, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
+                  {tale.subtitle}
+                </Text>
+                <View style={[styles.taleRule, { backgroundColor: c.rule }]} />
+                <TaleBlocks blocks={tale.body} colors={c} />
                 {tale.authorNote ? (
                   <>
                     <View style={[styles.taleRule, { backgroundColor: c.rule, marginTop: 8, marginBottom: 20 }]} />
@@ -465,29 +457,62 @@ export default function StoryStationScreen() {
                     </Text>
                   </>
                 ) : null}
-              </>
-            ) : null}
-
-            {/* Expand / collapse toggle */}
+              </View>
+            ) : (
+              <View style={[styles.excerptCard, { backgroundColor: c.card, borderColor: c.rule }]}>
+                <Text style={[styles.excerptText, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
+                  {station.taleExcerpt}
+                </Text>
+              </View>
+            )}
             <Pressable
-              onPress={() => setTaleExpanded((v) => !v)}
-              style={({ pressed }) => [styles.expandBtn, { opacity: pressed ? 0.6 : 1 }]}
+              onPress={() => setPhase("prompts")}
+              style={({ pressed }) => [
+                styles.generateBtn,
+                { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1, marginTop: 24 },
+              ]}
             >
-              <Text style={[styles.expandLabel, { color: c.foreground, fontFamily: MONO }]}>
-                {taleExpanded ? "Close story ↑" : "Read the full story ↓"}
+              <Text style={[styles.generateBtnLabel, { color: c.background, fontFamily: MONO }]}>
+                Now write yours →
               </Text>
             </Pressable>
-          </View>
+          </>
         ) : (
-          // Fallback to excerpt if tale not found
-          <View style={[styles.excerptCard, { backgroundColor: c.card, borderColor: c.rule }]}>
-            <Text style={[styles.excerptText, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
-              {station.taleExcerpt}
+          <>
+            {/* Compact tale reference once writing has begun */}
+            <Text style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
+              THE STORY YOU READ
             </Text>
-          </View>
+            <View style={[styles.excerptCard, { backgroundColor: c.card, borderColor: c.rule }]}>
+              {tale ? (
+                <Text style={[styles.taleTitleInline, { color: c.foreground, fontFamily: SERIF_BOLD, marginBottom: 6 }]}>
+                  {tale.title}
+                </Text>
+              ) : null}
+              <Text style={[styles.excerptText, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
+                {station.taleExcerpt}
+              </Text>
+              {tale ? (
+                <>
+                  <Pressable
+                    onPress={() => setTaleExpanded((v) => !v)}
+                    style={({ pressed }) => [styles.expandBtn, { opacity: pressed ? 0.6 : 1 }]}
+                  >
+                    <Text style={[styles.expandLabel, { color: c.foreground, fontFamily: MONO }]}>
+                      {taleExpanded ? "Close ↑" : "Read it again ↓"}
+                    </Text>
+                  </Pressable>
+                  {taleExpanded ? (
+                    <View style={{ marginTop: 12 }}>
+                      <TaleBlocks blocks={tale.body} colors={c} />
+                    </View>
+                  ) : null}
+                </>
+              ) : null}
+            </View>
+            <View style={[styles.rule, { backgroundColor: c.rule }]} />
+          </>
         )}
-
-        <View style={[styles.rule, { backgroundColor: c.rule }]} />
 
         {/* ── WRITE PROMPTS ─────────────────────────────────────────────── */}
         {phase === "prompts" || phase === "generating" ? (
