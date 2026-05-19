@@ -266,8 +266,8 @@ export function HomePage() {
               <TrailSignPost mode="fork" compact />
             </div>
 
-            {/* Dual CTA — practitioner path and story path */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            {/* Primary CTA — adult practitioner path */}
+            <div className="flex flex-col items-center justify-center gap-3">
               <a
                 href={`${import.meta.env.BASE_URL}odyssey`}
                 className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-all hover:opacity-90"
@@ -278,15 +278,11 @@ export function HomePage() {
               </a>
               <a
                 href={`${import.meta.env.BASE_URL}story`}
-                className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-all hover:opacity-80"
-                style={{
-                  background: "transparent",
-                  color: "rgba(244,237,224,0.82)",
-                  border: "1px solid rgba(244,237,224,0.28)",
-                }}
+                className="font-mono text-[10px] uppercase tracking-[0.16em] transition-opacity hover:opacity-80"
+                style={{ color: "rgba(244,237,224,0.42)" }}
                 data-testid="story-cta"
               >
-                Youth Odyssey →
+                For youth and families →
               </a>
             </div>
 
@@ -1094,6 +1090,14 @@ export function HomePage() {
               data-testid="footer-sign-on-link"
             >
               Sign on
+            </a>
+            <a
+              href={`${import.meta.env.BASE_URL}founding-stories`}
+              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
+              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.5 }}
+              data-testid="footer-origin-link"
+            >
+              Read the origin
             </a>
             <p
               className="font-mono text-[10px] uppercase tracking-[0.18em]"

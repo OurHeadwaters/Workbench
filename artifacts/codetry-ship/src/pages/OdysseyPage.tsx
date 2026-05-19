@@ -257,7 +257,7 @@ export function OdysseyPage() {
             basic development language and want to strengthen their communities from the source.
           </p>
 
-          {/* Scroll cue + story crosslink */}
+          {/* Scroll cue + origin crosslink */}
           <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2">
             <a
               href="#start"
@@ -271,7 +271,7 @@ export function OdysseyPage() {
               className="font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
               style={{ color: "rgba(244,237,224,0.38)" }}
             >
-              New here? Read the story first →
+              Read the origin →
             </a>
           </div>
         </div>
@@ -295,10 +295,23 @@ export function OdysseyPage() {
             {ODYSSEY_INTRO.paragraph1}
           </p>
           <p
-            className="font-serif text-[17px] leading-[1.7]"
+            className="font-serif text-[17px] leading-[1.7] mb-5"
             style={{ color: "rgba(31,61,46,0.68)" }}
           >
             {ODYSSEY_INTRO.paragraph2}
+          </p>
+          {/* Bridge sentence — grounds poetic framing in concrete outcome */}
+          <p
+            className="font-serif text-[16px] leading-[1.65] pl-4 py-3"
+            style={{
+              borderLeft: "3px solid #b85a3e",
+              background: "rgba(184,90,62,0.05)",
+              color: "rgba(31,61,46,0.72)",
+              borderRadius: "0 4px 4px 0",
+            }}
+            data-testid="odyssey-bridge-sentence"
+          >
+            This is the same naming discipline used to build the 807 Food Co-op platform — board-owned, no vendor fees.
           </p>
         </section>
 
@@ -574,6 +587,49 @@ export function OdysseyPage() {
               >
                 Headwaters Odyssey · sealed with hempcrete
               </p>
+
+              {/* ── What's next — Guild cohort ── */}
+              <div
+                className="mt-10 rounded-md px-6 py-6 text-left"
+                style={{
+                  border: "1px solid rgba(184,90,62,0.28)",
+                  background: "rgba(244,237,224,0.6)",
+                }}
+                data-testid="odyssey-whats-next"
+              >
+                <p
+                  className="font-mono text-[10px] uppercase tracking-[0.26em] mb-3"
+                  style={{ color: "#b85a3e" }}
+                >
+                  What's next
+                </p>
+                <h3
+                  className="font-serif text-xl tracking-tight mb-2"
+                  style={{ color: "#1f3d2e" }}
+                >
+                  The Guild cohort + Signal group
+                </h3>
+                <p
+                  className="font-serif text-[15px] leading-[1.65] mb-4"
+                  style={{ color: "rgba(31,61,46,0.70)" }}
+                >
+                  After completing the free Odyssey, the next paid step is the Guild cohort — a small group of practitioners building alongside each other. Includes the private Signal group, cohort calls with Bobbie, and direct feedback on your community work.
+                </p>
+                <p
+                  className="font-mono text-[14px] font-semibold mb-4"
+                  style={{ color: "#1f3d2e" }}
+                >
+                  $1,200 – $1,500 / person
+                </p>
+                <a
+                  href="/sign-on"
+                  className="inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
+                  style={{ color: "#b85a3e" }}
+                  data-testid="odyssey-guild-interest"
+                >
+                  Express interest in the next cohort →
+                </a>
+              </div>
             </div>
 
           ) : (

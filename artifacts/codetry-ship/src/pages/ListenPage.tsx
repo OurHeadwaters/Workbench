@@ -106,6 +106,90 @@ export function ListenPage() {
           Codetry is the operating system for a community economy — store, accounts, freight, and training — built in the open, owned by the band.
         </p>
 
+        {/* ---- 807 outcomes block (outcomes-first) ---- */}
+        <section className="mt-8 print:hidden" data-testid="section-outcomes">
+          <p
+            className="font-mono text-[11px] uppercase tracking-[0.22em] mb-5"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            proof it works
+          </p>
+          <div
+            className="rounded-sm border px-6 py-5 space-y-5"
+            style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--muted))" }}
+          >
+            <p className="font-serif font-semibold text-lg sm:text-xl leading-snug">
+              807 Food Co-op — Northwestern Ontario
+            </p>
+            {/* Outcome stats row */}
+            <div className="grid grid-cols-3 gap-4 pt-1">
+              {[
+                { value: "180+",   label: "Households served" },
+                { value: "4,000+", label: "Orders fulfilled" },
+                { value: "$340k+", label: "Kept local" },
+              ].map(({ value, label }) => (
+                <div key={label} className="text-center">
+                  <p
+                    className="font-serif font-semibold leading-none mb-1"
+                    style={{ fontSize: "clamp(1.4rem, 4vw, 2rem)", color: "hsl(var(--foreground))" }}
+                  >
+                    {value}
+                  </p>
+                  <p
+                    className="font-mono text-[10px] uppercase tracking-[0.16em]"
+                    style={{ color: "hsl(var(--muted-foreground))" }}
+                  >
+                    {label}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="font-serif text-sm sm:text-base leading-relaxed text-foreground/70">
+              Board-owned, no vendor fees. The same platform Bobbie built for the 807 Food Co-op is being handed off to Deer Lake First Nation right now — software, accounts, and training included. Parr&rsquo;s Jars, the homestead operation Bobbie built before the co-op, proved the model at the household scale before it moved to the community.
+            </p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/40">
+              807foodcoop.ca · parrsjars.ca
+            </p>
+          </div>
+        </section>
+
+        {/* ---- primary CTA — Odyssey as next step ---- */}
+        <section className="mt-8 print:hidden" data-testid="section-odyssey-cta">
+          <div
+            className="rounded-sm px-6 py-6 space-y-4"
+            style={{ background: "#1f3d2e" }}
+          >
+            <p
+              className="font-mono text-[11px] uppercase tracking-[0.22em]"
+              style={{ color: "rgba(212,160,23,0.85)" }}
+            >
+              The free next step
+            </p>
+            <h2
+              className="font-serif text-xl sm:text-2xl leading-snug"
+              style={{ color: "#f4ede0" }}
+            >
+              Start the Headwaters Odyssey — free, self-paced, no account required.
+            </h2>
+            <p
+              className="font-serif text-base leading-relaxed"
+              style={{ color: "rgba(244,237,224,0.72)" }}
+            >
+              A disciplined 5-phase journey that teaches the same naming and organising method used to build the 807 Food Co-op. You work through it at your own pace. Each station unlocks when you do the work.
+            </p>
+            <a
+              href="/odyssey"
+              className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              style={{ background: "#b85a3e", color: "#f4ede0" }}
+              data-testid="listen-odyssey-cta"
+            >
+              Begin the Odyssey →
+            </a>
+          </div>
+        </section>
+
+        <hr className="rule mt-10 sm:mt-12 print:hidden" />
+
         <p className="mt-6 font-serif text-xl sm:text-2xl leading-snug text-foreground/70 print:hidden">
           Not a co-op pitch. Not a grant application. A working system — being
           built right now, in Northwestern Ontario, by a household that lives

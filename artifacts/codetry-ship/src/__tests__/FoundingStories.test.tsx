@@ -26,15 +26,15 @@ vi.mock("@/lib/api", () => ({
 /* ── OdysseyPage entry link ── */
 
 describe("OdysseyPage — founding-stories entry link", () => {
-  it("'New here? Read the story first →' links to /founding-stories", () => {
+  it("'Read the origin →' links to /founding-stories", () => {
     render(<OdysseyPage />);
-    const link = screen.getByRole("link", { name: /new here\? read the story first/i });
+    const link = screen.getByRole("link", { name: /read the origin/i });
     expect(link).toHaveAttribute("href", "/founding-stories");
   });
 
   it("does not link to the old /story path", () => {
     render(<OdysseyPage />);
-    const link = screen.getByRole("link", { name: /new here\? read the story first/i });
+    const link = screen.getByRole("link", { name: /read the origin/i });
     expect(link).not.toHaveAttribute("href", "/story");
   });
 });
