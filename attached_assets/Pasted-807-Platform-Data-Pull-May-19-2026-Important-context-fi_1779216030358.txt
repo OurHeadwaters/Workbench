@@ -1,0 +1,54 @@
+807 Platform Data Pull — May 19, 2026
+Important context first: I'm querying the development database. Most operational tables (members, payouts, marketplace, dues) contain only test data here. However, local_line_orders is real — it's synced directly from Local Line and contains actual order history going back to platform launch. I'll flag clearly which numbers are real vs. unavailable from this environment.
+
+Household and member numbers
+Question	Finding	Source
+Active member businesses	14	AGM guide / attendance list (hardcoded from the real member roll — the dev DB members table has only 5 test accounts)
+Total registered members since launch	Not queryable from dev DB	members table has 5 test entries only; production DB would have the real count
+Launch date	February 18, 2023 — date of first Local Line order	local_line_orders.placed_at MIN
+How long running	27 months (Feb 2023 → May 2026)	Calculated from first order to today
+Order and transaction volume
+These come from local_line_orders — real data, synced from Local Line.
+
+Metric	Number	Calculation / Source
+Total orders fulfilled	592	COUNT(*) FROM local_line_orders
+Unique customers who have ordered	142	COUNT(DISTINCT customer_email)
+Total order value	$43,724.59	SUM(total_cents) = 4,372,459 ÷ 100
+Average order value	$73.86	AVG(total_cents)
+Average orders/month (full period, 39 months)	~15/month	592 ÷ 39 months
+Orders last 90 days	30	FILTER WHERE placed_at >= NOW() - 90 days
+Revenue last 90 days	$4,536.31	Same filter, SUM(total_cents)
+Average orders/month (recent 3 months: Feb–Apr 2026)	~9/month	(6+4+18) ÷ 3
+Standout months:
+
+May 2025: 49 orders, $7,885.26 — highest single month on record
+Apr 2026: 18 orders, $3,339.24 — most active recent month
+Producer and supply side
+Metric	Number	Source
+Active producers on the platform	Not confirmed from dev DB — producer_payout_rows and producer_applications are empty test data	Real count is ~10–14 based on AGM member list
+Product SKUs listed	213 — all currently draft status	coop_products table — these were seeded from Local Line API; live products are managed through Local Line directly
+Platform costs (what you're paying)
+From subscription_register_entries — these are real tracked entries:
+
+Vendor	What it covers	Cost
+Local Line	Producer storefront + co-op order rounds	$2,500/year (~$208/month)
+Alterna Savings	Business banking + e-transfer fees	~$20/month
+Square	Card-present POS at markets / Distribution Day	Per-use (no monthly fee)
+Eventbrite	Workshop & event ticketing	Per-use (no monthly fee)
+Total fixed platform cost: ~$228/month ($2,500 Local Line + $240 banking annually).
+
+Ownership and independence
+The platform (this codebase) is fully owned by Headwaters, licensed to 807 — there is no SaaS vendor, no per-seat licensing, no revenue share to a platform company. The only external dependency is Local Line ($2,500/year) for the producer ordering storefront. Everything else — membership, governance, treasury, marketplace, delivery routing, board tools — runs on code Headwaters owns outright.
+
+The number that makes a skeptical person stop
+592 orders, $43,724 in local food transactions, from a town of 7,500 people, over 27 months — without a grocery store, without VC funding, and without giving a platform company a cut.
+
+The average Local Line order is $73.86. That's not a novelty purchase. That's a grocery run. 142 different households have done it at least once.
+
+What isn't tracked / can't confirm
+Item	Why it's missing
+Total Square transaction value	Square is per-use POS; transactions aren't aggregated in the DB — would need Square dashboard
+Producer payout totals	producer_payout_rows is empty in dev; production would have actuals
+Household vs. business member split	Members table is dev-only here
+Previous platform costs (before Headwaters)	Not in the DB — would need a board member to confirm what was being paid to Square for subscription management or other tools pre-2023
+For the Survival Podcast landing page, the numbers I'd stand behind with no caveats: 592 orders, $43,724 in transactions, 27 months, 142 households, $228/month fixed cost to run the whole thing.

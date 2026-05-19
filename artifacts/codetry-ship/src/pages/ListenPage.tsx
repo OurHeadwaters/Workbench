@@ -124,9 +124,9 @@ export function ListenPage() {
             {/* Outcome stats row */}
             <div className="grid grid-cols-3 gap-4 pt-1">
               {[
-                { value: "180+",   label: "Households served" },
-                { value: "4,000+", label: "Orders fulfilled" },
-                { value: "$340k+", label: "Kept local" },
+                { value: "142",      label: "Households served" },
+                { value: "592",      label: "Orders fulfilled" },
+                { value: "$43,724", label: "Kept local" },
               ].map(({ value, label }) => (
                 <div key={label} className="text-center">
                   <p
