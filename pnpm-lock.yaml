@@ -580,6 +580,9 @@ importers:
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
+      '@workspace/codetry-handbook':
+        specifier: workspace:*
+        version: link:../codetry-handbook
       '@workspace/codetry-public':
         specifier: workspace:*
         version: link:../../lib/codetry-public
