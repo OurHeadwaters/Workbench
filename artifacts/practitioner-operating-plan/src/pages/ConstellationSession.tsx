@@ -324,6 +324,22 @@ export default function ConstellationSession() {
         </p>
       </div>
 
+      <div style={{ marginTop: 12, padding: "12px 16px", borderRadius: 8, background: "rgba(15,118,110,0.08)", border: `1px solid rgba(15,118,110,0.22)` }}>
+        <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: "0 0 6px" }}>
+          <strong style={{ color: T.teal }}>Related brief</strong>
+        </p>
+        <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: 0 }}>
+          The{" "}
+          <button
+            onClick={() => navigate(`${BASE}/saltbox-gather-round`)}
+            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11, color: T.teal, textDecoration: "underline" }}
+          >
+            Saltbox × Gather Round brief
+          </button>
+          {" "}covers the full revenue model, tech stack intelligence, and first-contact language for the Gather Round partnership — the commercial path for Saltbox (Zone 0) entering a proven homeschool market.
+        </p>
+      </div>
+
     </div>
   );
 }

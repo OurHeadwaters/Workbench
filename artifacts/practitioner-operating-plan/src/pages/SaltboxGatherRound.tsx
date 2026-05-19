@@ -1,3 +1,5 @@
+import { useLocation } from "wouter";
+
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const T = {
@@ -519,6 +521,8 @@ function Block({ b }: { b: Block }) {
 }
 
 export default function SaltboxGatherRound() {
+  const [, navigate] = useLocation();
+
   return (
     <div style={{
       maxWidth: 660,
@@ -528,20 +532,23 @@ export default function SaltboxGatherRound() {
     }}>
 
       {/* Back */}
-      <a
-        href={`${BASE}/`}
+      <button
+        onClick={() => navigate(`${BASE}/`)}
         style={{
           display: "inline-flex",
           alignItems: "center",
           gap: 5,
           fontSize: 11,
           color: T.muted,
-          textDecoration: "none",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: 0,
           marginBottom: 20,
         }}
       >
         ← Lobby
-      </a>
+      </button>
 
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
@@ -625,7 +632,7 @@ export default function SaltboxGatherRound() {
         backgroundColor: "rgba(75,96,112,0.12)",
         border: `1px solid rgba(75,96,112,0.25)`,
       }}>
-        <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: 0 }}>
+        <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: "0 0 8px" }}>
           <strong style={{ color: T.slate }}>Prepared for Saily / Saltbox Operating Plan.</strong>{" "}
           This brief is a strategic planning document — not a pitch deck. Use it to think through the
           opportunity before committing development time. Cross-reference with the{" "}
@@ -633,6 +640,16 @@ export default function SaltboxGatherRound() {
           and the{" "}
           <a href={`${BASE}/deer-lake-roadmap`} style={{ color: T.slate }}>Deer Lake Roadmap</a>{" "}
           to ensure the sprint timeline fits within Phase 1 capacity.
+        </p>
+        <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: 0 }}>
+          <strong style={{ color: T.slate }}>Related reference</strong>{" "}—{" "}
+          <button
+            onClick={() => navigate(`${BASE}/constellation-session`)}
+            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11, color: T.slate, textDecoration: "underline" }}
+          >
+            Constellation Session
+          </button>
+          {" "}has zone-model status and locked architectural decisions — including where Saltbox (Zone 0) sits within the full Codetry constellation and what's proven vs. still open.
         </p>
       </div>
 
