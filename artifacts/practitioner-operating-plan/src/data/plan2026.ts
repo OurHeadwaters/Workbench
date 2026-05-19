@@ -96,6 +96,17 @@ export const PLAN_2026: Week[] = [
             detail: "$25,000 flat fee, 8-week trial, Bobbie solo, 40 hr/wk. The trial is intentionally below cost — the entry price for a bounded first engagement. Make sure the pitch framing matches this: it's a trial-first offer, not a full-year ask.",
             link: { label: "View V7 scenario", path: "/practitioners-guide-v2/" },
           },
+          {
+            title: "Gather Round — send first-contact Instagram DM to Rebecca Spooner",
+            detail: "The tools are fully built as of today: QR device-to-device handoff, Legacy Pass NFT verification, Evidence Package print doc, and the Gather Round pitch doc are all live. The first-contact channel is Instagram DM (@homeschoolon) — no public business inquiry email exists. The only action is sending a 2-sentence message: a plain-language problem statement and one question. Do not pitch the credential architecture in the first message. Lead with the Legacy Pass download problem, then ask if it's worth a 20-minute call.",
+            actions: [
+              {
+                type: "copy-ai-prompt",
+                label: "Draft the Instagram DM",
+                content: "Write a 2-sentence Instagram DM from a homeschool mom who is also a developer. She is reaching out to Rebecca Spooner, founder of Gather Round Homeschool (@homeschoolon). The message should: (1) open by naming the Legacy Pass download management problem in plain language — families spending real time downloading PDFs, sorting files across devices, losing access without internet; (2) ask if it would make sense to show Rebecca a local-first tool she has built for exactly this problem. Tone: warm, peer-to-peer, not a cold pitch. No jargon. No mention of blockchain, NFTs, or XRPL in the first message. Two sentences only. She is a Canadian homeschool mom building tools for families like Gather Round's own customers — that's the common ground.",
+              },
+            ],
+          },
         ],
       },
       {
@@ -154,6 +165,10 @@ export const PLAN_2026: Week[] = [
           {
             title: "Bridge capital: follow-up call or written status check",
             detail: "May 30 deadline is 5 days away. If no written commitment yet, call. Document the outcome of the call in writing.",
+          },
+          {
+            title: "Gather Round — follow up if no DM response; prepare 20-minute demo script",
+            detail: "If no response to the Instagram DM sent last Tuesday, send one light follow-up — same channel, one sentence: 'Wanted to make sure this didn't get buried — happy to share a quick demo if the timing is ever right.' Do not send more than two total messages before waiting. In parallel, prepare the 20-minute demo script for the first call if she does respond. A successful first call covers: (1) the Legacy Pass download problem restated from the family's experience; (2) a live demo of the QR device handoff — one device to another, no internet, no account; (3) the credential flow in plain language — 'your pass travels with your family, not with a login'; (4) the ask: a 90-day pilot with 5 families, flat fee, before any per-user rate conversation.",
           },
         ],
       },
