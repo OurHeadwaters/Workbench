@@ -315,7 +315,7 @@ const outreachPieces = [
     href: "/codetry-packet-deer-lake",
     title: "Codetry Print Packet — Deer Lake First Nation",
     label: "Deer Lake",
-    desc: "Complete outreach packet for Deer Lake — all four pages in one PDF: intro letter, Why Deer Lake Why Now, Deer Lake-specific funding brief, and pilot proposal. Letter size (8.5×11).",
+    desc: "Complete outreach packet for Deer Lake — eight pages in one PDF: founding community declaration, intro letter, Why Deer Lake Why Now, Youth Odyssey, Economic Engine one-pager, funding brief, pilot proposal, and Chief Brief. Letter size (8.5×11).",
     icon: "📦",
   },
   {

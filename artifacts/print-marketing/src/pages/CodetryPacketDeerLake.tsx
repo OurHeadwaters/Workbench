@@ -7,6 +7,7 @@ import { DeerLakeYouthOdysseyPage } from "./DeerLakeYouthOdyssey";
 import { EngineOnePagerPage } from "./EngineOnePager";
 import { CodetryFundingBriefDeerLakePage } from "./CodetryFundingBriefDeerLake";
 import { CodetryPilotProposalDeerLakePage } from "./CodetryPilotProposalDeerLake";
+import { DeerLakeChiefBriefPage } from "./DeerLakeChiefBrief";
 
 const COMMUNITY = "Deer Lake First Nation";
 const DATE = "May 2026";
@@ -47,6 +48,11 @@ const DOCUMENTS = [
     title: "Pilot Proposal Outline",
     desc: `A four-phase community store pilot proposal prepared specifically for ${COMMUNITY}.`,
   },
+  {
+    num: "8",
+    title: "Chief Brief",
+    desc: "Plain-language one-read for the Chief — what a community store is, the 807 proof, youth opportunity, the 8-week trial, and the ask.",
+  },
 ];
 
 export default function CodetryPacketDeerLake() {
@@ -54,7 +60,7 @@ export default function CodetryPacketDeerLake() {
     <>
       <PrintNav
         targetId="pdf-target"
-        filename="headwaters-codetry-packet-deer-lake.pdf"
+        filename="headwaters-codetry-packet-deer-lake-8pg.pdf"
         paginate={true}
       />
       <div
@@ -81,6 +87,7 @@ export default function CodetryPacketDeerLake() {
         <EngineOnePagerPage />
         <CodetryFundingBriefDeerLakePage />
         <CodetryPilotProposalDeerLakePage />
+        <DeerLakeChiefBriefPage />
       </div>
     </>
   );
