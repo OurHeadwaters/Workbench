@@ -238,6 +238,122 @@ const BLOCKS: Block[] = [
   },
 ];
 
+function EmailDraft() {
+  const emailParas = [
+    "Hi Rebecca,",
+    "I'm a homeschooling mother, Legacy Pass member, and community development practitioner based in Wabigoon, Ontario — and over the past few years I've been building a local-first app for myself and the other mothers in our local Gather Round group to manage our curriculum files offline.",
+    "What I keep seeing across these families is a quiet but recurring stress: the single-download model creates real friction. A lot of households either spend more time managing files than using them, or quietly avoid local storage altogether and carry the low-grade anxiety of not actually having what they need when they need it — especially in rural areas where signal is unreliable.",
+    "I'd love to show you what I've built and hear whether it might be useful to your community. If it seems like a fit, would a 20-minute call make sense?",
+    "Bobbie",
+  ];
+
+  const notes = [
+    {
+      label: "What's doing the work here",
+      body: "Three lines establish standing before you ask for anything: homeschooling mother (peer), Legacy Pass member (customer), community development practitioner (professional). The problem is named without naming the product — she can nod along before being asked anything. 'Our local Gather Round group' signals this isn't abstract; you're describing what you've actually watched. The ask is specific (a 20-minute call) and gated ('if it seems like a fit') — it gives her an easy out and makes yes feel low-stakes.",
+    },
+    {
+      label: "What to leave out of the first email",
+      body: "Do not mention XRPL, NFT, blockchain, or credential architecture. Do not reference Mighty Networks by name. Do not mention her hiring post. Do not frame this as a business proposition — you're a customer who built something and wants to know if it's useful. The product and partnership framing comes later, on the call, if she asks.",
+    },
+    {
+      label: "When to send it",
+      body: "After you have a working demo — even a rough one. The email opens a conversation; the demo is what makes the call worth taking. Don't send it cold and promise something you can't show yet. Tuesday or Wednesday morning before 10 AM EST performs best for founder cold outreach. Find her direct email — not the support inbox.",
+    },
+  ];
+
+  return (
+    <div style={{
+      borderRadius: 10,
+      border: `1px solid ${T.rule}`,
+      overflow: "hidden",
+      marginBottom: 14,
+    }}>
+      {/* Header */}
+      <div style={{
+        padding: "10px 16px",
+        backgroundColor: T.teal,
+        display: "flex",
+        alignItems: "baseline",
+        gap: 10,
+      }}>
+        <span style={{
+          fontSize: 9, fontWeight: 900, letterSpacing: "0.22em",
+          textTransform: "uppercase" as const, color: "#fff",
+        }}>FIRST CONTACT · DRAFT</span>
+        <span style={{
+          fontSize: 12, color: "rgba(255,255,255,0.75)", fontWeight: 600,
+          fontFamily: "var(--font-display, Georgia, serif)",
+        }}>The email to Rebecca</span>
+      </div>
+
+      {/* Subject */}
+      <div style={{
+        padding: "10px 16px",
+        backgroundColor: T.paper,
+        borderBottom: `1px solid ${T.rule}`,
+        display: "flex",
+        gap: 10,
+        alignItems: "baseline",
+      }}>
+        <span style={{
+          fontSize: 9, fontWeight: 900, letterSpacing: "0.16em",
+          textTransform: "uppercase" as const, color: T.muted,
+          flexShrink: 0,
+        }}>Subject</span>
+        <span style={{ fontSize: 13, color: T.text, fontWeight: 600, lineHeight: 1.4 }}>
+          A file management problem I keep running into with Legacy Pass families
+        </span>
+      </div>
+
+      {/* Email body */}
+      <div style={{
+        padding: "20px 22px",
+        backgroundColor: "#faf7f1",
+        borderBottom: `1px solid ${T.rule}`,
+      }}>
+        {emailParas.map((para, i) => (
+          <p key={i} style={{
+            fontSize: 14,
+            color: T.text,
+            lineHeight: 1.8,
+            margin: i < emailParas.length - 1 ? "0 0 14px" : "0",
+            fontFamily: "var(--font-body, Inter, sans-serif)",
+          }}>
+            {para}
+          </p>
+        ))}
+      </div>
+
+      {/* Commentary */}
+      <div style={{ backgroundColor: T.paper }}>
+        {notes.map((n, i) => (
+          <div key={n.label} style={{
+            padding: "14px 16px",
+            borderBottom: i < notes.length - 1 ? `1px solid ${T.rule}` : "none",
+            display: "flex",
+            gap: 12,
+          }}>
+            <div style={{
+              width: 3, borderRadius: 2, backgroundColor: T.teal,
+              flexShrink: 0, alignSelf: "stretch", minHeight: 16,
+            }} />
+            <div>
+              <p style={{
+                fontSize: 10, fontWeight: 900, letterSpacing: "0.14em",
+                textTransform: "uppercase" as const, color: T.teal, margin: "0 0 5px",
+              }}>{n.label}</p>
+              <p style={{ fontSize: 13, color: T.text, lineHeight: 1.65, margin: 0 }}>
+                {n.body}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Block({ b }: { b: Block }) {
   return (
     <div style={{
@@ -411,8 +527,10 @@ export default function SaltboxGatherRound() {
         ))}
       </div>
 
-      {/* Content blocks */}
-      {BLOCKS.map((b) => <Block key={b.badge} b={b} />)}
+      {/* Content blocks — EmailDraft sits between First action and Live Intelligence */}
+      {BLOCKS.slice(0, 7).map((b) => <Block key={b.badge} b={b} />)}
+      <EmailDraft />
+      {BLOCKS.slice(7).map((b) => <Block key={b.badge} b={b} />)}
 
       {/* Footer note */}
       <div style={{
