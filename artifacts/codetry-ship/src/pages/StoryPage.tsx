@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { TrailArtGallery } from "@/components/TrailArtGallery";
 import { YouthTrailMap } from "@/components/YouthTrailMap";
 
@@ -964,10 +964,37 @@ function StoryDisplay({
   accent: string;
   onWriteAnother: () => void;
 }) {
+  const [isReading, setIsReading] = useState(false);
+  const speechSupported =
+    typeof window !== "undefined" && "speechSynthesis" in window;
+
+  useEffect(() => {
+    return () => {
+      if (speechSupported) window.speechSynthesis.cancel();
+    };
+  }, [speechSupported]);
+
   const paragraphs = story
     .split(/\n{2,}/)
     .map((p) => p.trim())
     .filter(Boolean);
+
+  function handleReadAloud() {
+    if (!speechSupported) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(paragraphs.join(" "));
+    utterance.rate = 0.92;
+    utterance.onstart = () => setIsReading(true);
+    utterance.onend = () => setIsReading(false);
+    utterance.onerror = () => setIsReading(false);
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function handleStop() {
+    if (!speechSupported) return;
+    window.speechSynthesis.cancel();
+    setIsReading(false);
+  }
 
   return (
     <div>
@@ -1004,13 +1031,35 @@ function StoryDisplay({
         </div>
       </div>
 
-      <button
-        onClick={onWriteAnother}
-        className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
-        style={{ color: `${accent}cc` }}
-      >
-        Write another →
-      </button>
+      <div className="flex items-center gap-5 flex-wrap">
+        <button
+          onClick={onWriteAnother}
+          className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
+          style={{ color: `${accent}cc` }}
+        >
+          Write another →
+        </button>
+
+        {speechSupported && (
+          isReading ? (
+            <button
+              onClick={handleStop}
+              className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
+              style={{ color: `${accent}99` }}
+            >
+              Stop ◼
+            </button>
+          ) : (
+            <button
+              onClick={handleReadAloud}
+              className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
+              style={{ color: `${accent}99` }}
+            >
+              Read aloud →
+            </button>
+          )
+        )}
+      </div>
     </div>
   );
 }
