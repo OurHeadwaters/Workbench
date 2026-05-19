@@ -50,6 +50,14 @@ module.exports = {
       ],
       "expo-font",
       "expo-web-browser",
+      [
+        "expo-media-library",
+        {
+          photosPermission: "Allow $(PRODUCT_NAME) to save your keepsake story to your photo library.",
+          savePhotosPermission: "Allow $(PRODUCT_NAME) to save your keepsake story to your photo library.",
+          isAccessMediaLocationEnabled: false,
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,

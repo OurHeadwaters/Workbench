@@ -88,7 +88,9 @@
     "@expo-google-fonts/fraunces": "^0.4.1",
     "expo-clipboard": "^8.0.8",
     "expo-file-system": "~19.0.22",
+    "expo-media-library": "^55.0.17",
     "expo-sharing": "~14.0.8",
-    "expo-speech": "~14.0.8"
+    "expo-speech": "~14.0.8",
+    "react-native-view-shot": "^5.1.0"
   }
 }

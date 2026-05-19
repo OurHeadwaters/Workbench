@@ -9,8 +9,11 @@
 
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import * as MediaLibrary from "expo-media-library";
 import * as Speech from "expo-speech";
 import { router, useLocalSearchParams } from "expo-router";
+import * as Sharing from "expo-sharing";
+import ViewShot, { ViewShotRef } from "react-native-view-shot";
 import React, {
   useCallback,
   useEffect,
@@ -21,9 +24,11 @@ import React, {
 import {
   Animated,
   Image,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -253,6 +258,72 @@ export default function StoryStationScreen() {
   const [localPhotoUri, setLocalPhotoUri] = useState(storedMemory.photoUri ?? "");
   const noteDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Keepsake card state
+  const [keepsakeVisible, setKeepsakeVisible] = useState(false);
+  const [savingPhoto, setSavingPhoto] = useState(false);
+  const viewShotRef = useRef<ViewShotRef>(null);
+
+  const captureKeepsake = useCallback(async (): Promise<string | null> => {
+    try {
+      return await viewShotRef.current?.capture() ?? null;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const handleSaveToPhotos = useCallback(async () => {
+    if (savingPhoto) return;
+    setSavingPhoto(true);
+    try {
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") return;
+      const uri = await captureKeepsake();
+      if (uri) {
+        await MediaLibrary.saveToLibraryAsync(uri);
+      }
+    } catch {
+      // Permission denied or capture failed — silent
+    } finally {
+      setSavingPhoto(false);
+    }
+  }, [savingPhoto, captureKeepsake]);
+
+  const handleShareKeepsake = useCallback(async () => {
+    if (!localStory || !station) return;
+    // Try to share the rendered card as an image first
+    const uri = await captureKeepsake();
+    if (uri && (await Sharing.isAvailableAsync())) {
+      try {
+        await Sharing.shareAsync(uri, {
+          mimeType: "image/jpeg",
+          dialogTitle: `My Story: ${station.name}`,
+        });
+        return;
+      } catch {
+        // Fall through to text share
+      }
+    }
+    // Text fallback for platforms/simulators where image sharing isn't available
+    const date = new Date().toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const shareText = [
+      `✦ ${station.name}`,
+      station.subtitle,
+      "",
+      localStory.trim(),
+      "",
+      `— ${date}`,
+    ].join("\n");
+    try {
+      await Share.share({ message: shareText, title: `My Story: ${station.name}` });
+    } catch {
+      // User cancelled or share unavailable — silent
+    }
+  }, [localStory, station, captureKeepsake]);
+
   // Sync hydration from store after AsyncStorage loads
   const hydratedRef = useRef(false);
   useEffect(() => {
@@ -458,8 +529,134 @@ export default function StoryStationScreen() {
   const allPromptsAnswered = currentPromptIdx >= prompts.length;
 
 
+  const keepsakeDate = new Date().toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
+      {/* ── KEEPSAKE MODAL ─────────────────────────────────────────── */}
+      <Modal
+        visible={keepsakeVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setKeepsakeVisible(false)}
+      >
+        <View style={[keepsakeStyles.root, { backgroundColor: c.background }]}>
+          {/* Header row */}
+          <View style={[keepsakeStyles.header, { borderBottomColor: c.rule }]}>
+            <Pressable
+              onPress={() => setKeepsakeVisible(false)}
+              style={({ pressed }) => [keepsakeStyles.closeBtn, { opacity: pressed ? 0.6 : 1 }]}
+              accessibilityLabel="Close keepsake"
+            >
+              <Ionicons name="close" size={22} color={c.foreground} />
+            </Pressable>
+            <Text style={[keepsakeStyles.headerLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+              YOUR KEEPSAKE
+            </Text>
+            <Pressable
+              onPress={handleShareKeepsake}
+              style={({ pressed }) => [keepsakeStyles.shareBtn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+              accessibilityLabel="Share story"
+            >
+              <Ionicons name="share-outline" size={16} color={c.background} />
+              <Text style={[keepsakeStyles.shareBtnLabel, { color: c.background, fontFamily: MONO }]}>
+                Share
+              </Text>
+            </Pressable>
+          </View>
+
+          {/* Card body */}
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            showsVerticalScrollIndicator={false}
+          >
+          <ViewShot ref={viewShotRef} options={{ format: "jpg", quality: 0.95 }} style={{ flex: 1, backgroundColor: c.background }}>
+          <View style={keepsakeStyles.scroll}>
+            {/* Ornament top */}
+            <View style={[keepsakeStyles.ornamentRow, { marginBottom: 28 }]}>
+              <View style={[keepsakeStyles.ornamentLine, { backgroundColor: c.rule }]} />
+              <Text style={[keepsakeStyles.ornamentDot, { color: c.mutedForeground, fontFamily: SERIF }]}>✦</Text>
+              <View style={[keepsakeStyles.ornamentLine, { backgroundColor: c.rule }]} />
+            </View>
+
+            {/* Station label */}
+            <Text style={[keepsakeStyles.stationLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+              STATION {STATION_ROMAN[station.ordinal] ?? station.ordinal} · {station.name.toUpperCase()}
+            </Text>
+
+            {/* Story title */}
+            <Text style={[keepsakeStyles.storyTitle, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
+              {station.name}
+            </Text>
+            <Text style={[keepsakeStyles.storySubtitle, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
+              {station.subtitle}
+            </Text>
+
+            {/* Divider */}
+            <View style={[keepsakeStyles.divider, { backgroundColor: c.rule }]} />
+
+            {/* Story text */}
+            {localStory ? localStory.split("\n\n").filter(Boolean).map((para, idx) => (
+              <Text
+                key={idx}
+                style={[
+                  keepsakeStyles.storyPara,
+                  { color: c.foreground, fontFamily: SERIF },
+                  idx > 0 && { marginTop: 20 },
+                ]}
+              >
+                {para.trim()}
+              </Text>
+            )) : null}
+
+            {/* Footer */}
+            <View style={[keepsakeStyles.ornamentRow, { marginTop: 36, marginBottom: 8 }]}>
+              <View style={[keepsakeStyles.ornamentLine, { backgroundColor: c.rule }]} />
+              <Text style={[keepsakeStyles.ornamentDot, { color: c.mutedForeground, fontFamily: SERIF }]}>✦</Text>
+              <View style={[keepsakeStyles.ornamentLine, { backgroundColor: c.rule }]} />
+            </View>
+            <Text style={[keepsakeStyles.dateLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+              {keepsakeDate}
+            </Text>
+
+            {/* Action buttons at bottom */}
+            <View style={keepsakeStyles.actionRow}>
+              <Pressable
+                onPress={handleSaveToPhotos}
+                disabled={savingPhoto}
+                style={({ pressed }) => [
+                  keepsakeStyles.actionBtn,
+                  { borderColor: c.foreground, backgroundColor: c.background, opacity: pressed || savingPhoto ? 0.6 : 1 },
+                ]}
+              >
+                <Ionicons name="download-outline" size={15} color={c.foreground} />
+                <Text style={[keepsakeStyles.actionBtnLabel, { color: c.foreground, fontFamily: MONO }]}>
+                  {savingPhoto ? "Saving…" : "Save to Photos"}
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={handleShareKeepsake}
+                style={({ pressed }) => [
+                  keepsakeStyles.actionBtnFilled,
+                  { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 },
+                ]}
+              >
+                <Ionicons name="share-outline" size={15} color={c.background} />
+                <Text style={[keepsakeStyles.actionBtnFilledLabel, { color: c.background, fontFamily: MONO }]}>
+                  Share
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+          </ViewShot>
+          </ScrollView>
+        </View>
+      </Modal>
+
       <Animated.View
         pointerEvents="none"
         style={[
@@ -756,6 +953,20 @@ export default function StoryStationScreen() {
                 </Text>
               ))}
             </View>
+
+            {/* Save as keepsake button */}
+            <Pressable
+              onPress={() => setKeepsakeVisible(true)}
+              style={({ pressed }) => [
+                styles.keepsakeBtn,
+                { borderColor: c.foreground, backgroundColor: c.background, opacity: pressed ? 0.7 : 1 },
+              ]}
+            >
+              <Ionicons name="bookmark-outline" size={15} color={c.foreground} />
+              <Text style={[styles.keepsakeBtnLabel, { color: c.foreground, fontFamily: MONO }]}>
+                Save as keepsake
+              </Text>
+            </Pressable>
 
             {!completed ? (
               <>
@@ -1166,6 +1377,24 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   storyPara: { fontSize: 17, lineHeight: 28 },
+  // Keepsake button
+  keepsakeBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingVertical: 11,
+    paddingHorizontal: 16,
+    alignSelf: "flex-start",
+    marginTop: 14,
+    marginBottom: 4,
+  },
+  keepsakeBtnLabel: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
   // Mark done
   markIntro: { fontSize: 16, lineHeight: 24, marginBottom: 18 },
   markBtn: {
@@ -1270,4 +1499,129 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   navNameRight: { textAlign: "right" },
+});
+
+const keepsakeStyles = StyleSheet.create({
+  root: { flex: 1 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  headerLabel: {
+    fontSize: 10,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
+  },
+  closeBtn: { padding: 4 },
+  shareBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    borderRadius: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  shareBtnLabel: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  scroll: {
+    paddingHorizontal: 28,
+    paddingTop: 36,
+    paddingBottom: 60,
+    maxWidth: 600,
+    width: "100%",
+    alignSelf: "center",
+  },
+  ornamentRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  ornamentLine: {
+    flex: 1,
+    height: 1,
+    opacity: 0.35,
+  },
+  ornamentDot: {
+    fontSize: 14,
+    opacity: 0.5,
+  },
+  stationLabel: {
+    fontSize: 9,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    marginBottom: 10,
+    opacity: 0.7,
+  },
+  storyTitle: {
+    fontSize: 32,
+    lineHeight: 38,
+    letterSpacing: 0.2,
+    marginBottom: 6,
+  },
+  storySubtitle: {
+    fontSize: 16,
+    lineHeight: 24,
+    opacity: 0.8,
+    marginBottom: 4,
+  },
+  divider: {
+    width: 40,
+    height: 1,
+    marginTop: 24,
+    marginBottom: 28,
+    opacity: 0.4,
+  },
+  storyPara: {
+    fontSize: 18,
+    lineHeight: 30,
+  },
+  dateLabel: {
+    fontSize: 10,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+    textAlign: "center",
+    opacity: 0.55,
+    marginBottom: 36,
+  },
+  actionRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 8,
+  },
+  actionBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 7,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 13,
+  },
+  actionBtnLabel: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  actionBtnFilled: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 7,
+    borderRadius: 8,
+    paddingVertical: 13,
+  },
+  actionBtnFilledLabel: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
 });
