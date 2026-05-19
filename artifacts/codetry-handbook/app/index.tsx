@@ -224,7 +224,7 @@ export default function FrontPage() {
         </View>
 
         {/* ── CHILDREN'S TALES — always visible ────────────────────── */}
-        <SectionHeader label="CHILDREN'S TALES" accent={RUST} topGap={28} />
+        <SectionHeader label="CHILDREN'S TALES" accent={EVERGREEN} topGap={28} />
 
         <Pressable
           onPress={() => router.push("/tales")}
@@ -337,7 +337,7 @@ export default function FrontPage() {
             />
 
             {/* YOUR WORK */}
-            <SectionHeader label="YOUR WORK" accent={RUST} topGap={32} />
+            <SectionHeader label="YOUR WORK" accent={EVERGREEN} topGap={32} />
             <ToolRow
               label="Your Constellation"
               sub="Name your six zones in your own vocabulary"
