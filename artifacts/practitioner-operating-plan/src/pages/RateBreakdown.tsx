@@ -278,6 +278,41 @@ export default function RateBreakdown() {
           not overhead.
         </div>
 
+        {/* ── See Also ── */}
+        <div
+          className="rounded-lg border px-4 py-3"
+          style={{ borderColor: ACCENT + "30" }}
+        >
+          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted mb-2">
+            See Also
+          </p>
+          <div className="flex flex-wrap gap-2.5 items-center">
+            <Link
+              href={`${BASE}/deer-lake-roadmap`}
+              className="text-xs font-bold no-underline"
+              style={{ color: RUST }}
+            >
+              How the Model Spreads →
+            </Link>
+            <span className="text-xs" style={{ color: ACCENT + "40" }}>|</span>
+            <Link
+              href={`${BASE}/deer-lake-talking-points`}
+              className="text-xs font-bold no-underline"
+              style={{ color: RUST }}
+            >
+              Talking Points →
+            </Link>
+            <span className="text-xs" style={{ color: ACCENT + "40" }}>|</span>
+            <Link
+              href={`${BASE}/constellation-session`}
+              className="text-xs font-bold no-underline"
+              style={{ color: RUST }}
+            >
+              Constellation Session →
+            </Link>
+          </div>
+        </div>
+
       </div>
     </div>
   );

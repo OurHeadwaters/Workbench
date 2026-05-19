@@ -1,3 +1,5 @@
+import { Link } from "wouter";
+
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const T = {
@@ -221,17 +223,21 @@ export default function DeerLakeTalkingPoints() {
           See Also
         </p>
         <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 10 }}>
-          <a href={`${BASE}/deer-lake-roadmap`} style={{ fontSize: 12, fontWeight: 700, color: T.accent, textDecoration: "none" }}>
+          <Link href={`${BASE}/deer-lake-roadmap`} style={{ fontSize: 12, fontWeight: 700, color: T.accent, textDecoration: "none" }}>
             How the Model Spreads →
-          </a>
+          </Link>
           <span style={{ color: T.rule, fontSize: 12 }}>|</span>
-          <a href={`${BASE}/rate-breakdown`} style={{ fontSize: 12, fontWeight: 700, color: T.accent, textDecoration: "none" }}>
+          <Link href={`${BASE}/rate-breakdown`} style={{ fontSize: 12, fontWeight: 700, color: T.accent, textDecoration: "none" }}>
             Rate Breakdown →
-          </a>
+          </Link>
           <span style={{ color: T.rule, fontSize: 12 }}>|</span>
-          <a href={`${BASE}/contract-terms`} style={{ fontSize: 12, fontWeight: 700, color: T.accent, textDecoration: "none" }}>
+          <Link href={`${BASE}/contract-terms`} style={{ fontSize: 12, fontWeight: 700, color: T.accent, textDecoration: "none" }}>
             Contract Terms →
-          </a>
+          </Link>
+          <span style={{ color: T.rule, fontSize: 12 }}>|</span>
+          <Link href={`${BASE}/constellation-session`} style={{ fontSize: 12, fontWeight: 700, color: T.accent, textDecoration: "none" }}>
+            Constellation Session →
+          </Link>
         </div>
       </div>
 
