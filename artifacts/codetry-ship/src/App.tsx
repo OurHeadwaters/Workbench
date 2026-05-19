@@ -58,6 +58,7 @@ function Router() {
       </Route>
       <Route path="/privacy" component={PrivacyPage} />
       <Route path="/listen" component={ListenPage} />
+      <Route path="/tsp" component={ListenPage} />
       <Route path="/window" component={TheWindowPage} />
       <Route path="/odyssey" component={OdysseyPage} />
       <Route path="/story" component={StoryPage} />

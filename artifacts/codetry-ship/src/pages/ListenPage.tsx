@@ -25,6 +25,13 @@ const LISTEN_URL =
     ? `${window.location.origin}/listen`
     : `https://${LISTEN_CANONICAL}`;
 
+const FROM_PARAM =
+  typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search).get("from") ?? ""
+    : "";
+const BRIDGE_SOURCE: "youtube" | "tsp" | null =
+  FROM_PARAM === "youtube" ? "youtube" : FROM_PARAM === "tsp" ? "tsp" : null;
+
 export function ListenPage() {
   const [form, setForm] = useState<FormState>(EMPTY);
   const [submitting, setSubmitting] = useState(false);
@@ -110,6 +117,23 @@ export function ListenPage() {
       </section>
 
       <div className="mx-auto max-w-[42rem] px-6 sm:px-8 pt-10 pb-16 print:py-0 print:max-w-full">
+
+        {/* ---- YouTube / TSP bridge banner ---- */}
+        {BRIDGE_SOURCE && (
+          <div
+            className="mt-6 rounded-sm border-l-4 px-5 py-4 print:hidden"
+            style={{ borderLeftColor: "#b85a3e", background: "hsl(var(--muted))" }}
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] mb-1" style={{ color: "#b85a3e" }}>
+              {BRIDGE_SOURCE === "youtube" ? "you found us from the youtube video" : "you found us from the survival podcast"}
+            </p>
+            <p className="font-serif text-sm sm:text-base leading-relaxed text-foreground/80">
+              {BRIDGE_SOURCE === "youtube"
+                ? "That episode was recorded in 2023. A lot has happened — 807 Food Co-op has moved ~$147,000 through a community-owned channel, and a cold distribution route to Dryden was ratified at our May 2026 AGM. The full picture is below."
+                : "Welcome back. The numbers below are current as of 2026 — the co-op has grown since Jack's episode aired."}
+            </p>
+          </div>
+        )}
 
         {/* ---- print-only one-liner ---- */}
         <p className="hidden print:block mt-3 font-serif text-base leading-snug">
