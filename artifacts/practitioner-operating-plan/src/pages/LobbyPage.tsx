@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import {
   getTodayWeek,
@@ -10,6 +10,7 @@ import {
 } from "@/data/plan2026";
 import { getMostRecentEveningDump } from "./EveningDump";
 import { setDailyThing, todayKey, loadDayThings } from "@/lib/threeThings";
+import { SessionStore, type SessionEntry } from "@/lib/sessionStore";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -325,6 +326,396 @@ function formatDumpDate(isoDate: string): string {
   return d.toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" });
 }
 
+// ─── Yesterday Close Block ────────────────────────────────────────────────────
+
+function YesterdayCloseBlock({ entry }: { entry: SessionEntry }) {
+  return (
+    <div
+      style={{
+        padding: "10px 12px",
+        background: "rgba(31,61,46,0.06)",
+        border: "1px solid rgba(31,61,46,0.14)",
+        borderRadius: 8,
+        display: "flex",
+        flexDirection: "column",
+        gap: 7,
+      }}
+    >
+      <p
+        style={{
+          margin: 0,
+          fontSize: 9,
+          fontWeight: 900,
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
+          color: "#1F5446",
+        }}
+      >
+        Last night you left off
+      </p>
+      {entry.whatMoved && (
+        <div>
+          <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: T.muted }}>What moved </span>
+          <span style={{ fontSize: 12, color: T.text, lineHeight: 1.55, display: "block", marginTop: 1 }}>{entry.whatMoved}</span>
+        </div>
+      )}
+      {entry.openThreads && (
+        <div>
+          <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: T.muted }}>Open threads </span>
+          <span style={{ fontSize: 12, color: T.text, lineHeight: 1.55, display: "block", marginTop: 1 }}>{entry.openThreads}</span>
+        </div>
+      )}
+      {entry.firstMove && (
+        <div>
+          <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#1F5446" }}>First move today </span>
+          <span style={{ fontSize: 12, color: T.text, fontWeight: 600, lineHeight: 1.55, display: "block", marginTop: 1 }}>{entry.firstMove}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Work Achieved Panel ──────────────────────────────────────────────────────
+
+function WorkAchievedPanel() {
+  const [entry, setEntry] = useState<SessionEntry | null>(null);
+  const [newItem, setNewItem] = useState("");
+  const [adding, setAdding] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setEntry(SessionStore.getToday());
+  }, []);
+
+  useEffect(() => {
+    if (adding && inputRef.current) inputRef.current.focus();
+  }, [adding]);
+
+  function handleAdd(e: React.FormEvent) {
+    e.preventDefault();
+    const text = newItem.trim();
+    if (!text) return;
+    SessionStore.addAchieved(text);
+    setEntry(SessionStore.getToday());
+    setNewItem("");
+    setAdding(false);
+  }
+
+  function handleRemove(i: number) {
+    SessionStore.removeAchieved(i);
+    setEntry(SessionStore.getToday());
+  }
+
+  const achieved = entry?.achieved ?? [];
+
+  return (
+    <div
+      style={{
+        borderRadius: 10,
+        overflow: "hidden",
+        border: `1px solid rgba(184,90,62,0.3)`,
+        background: "rgba(184,90,62,0.07)",
+      }}
+    >
+      <div
+        style={{
+          padding: "10px 16px",
+          background: "rgba(184,90,62,0.2)",
+          display: "flex",
+          alignItems: "baseline",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+          <span
+            style={{
+              fontSize: 10,
+              fontWeight: 900,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: T.paper,
+            }}
+          >
+            TODAY SO FAR
+          </span>
+          <span style={{ fontSize: 10, color: "rgba(244,237,224,0.6)", fontWeight: 500 }}>
+            what got done
+          </span>
+        </div>
+        <button
+          onClick={() => setAdding((v) => !v)}
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            color: "rgba(244,237,224,0.75)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 0,
+            letterSpacing: "0.08em",
+          }}
+        >
+          + add item
+        </button>
+      </div>
+
+      <div style={{ padding: "12px 16px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
+        {achieved.length === 0 && !adding && (
+          <p style={{ margin: 0, fontSize: 12, color: "rgba(244,237,224,0.45)", fontStyle: "italic", lineHeight: 1.6 }}>
+            Nothing logged yet. Hit "+ add item" to mark your first win of the day.
+          </p>
+        )}
+
+        {achieved.map((item, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+            <span style={{ color: T.accent, fontSize: 12, flexShrink: 0, marginTop: 2, lineHeight: 1 }}>✓</span>
+            <span style={{ flex: 1, fontSize: 12, color: T.paper, lineHeight: 1.6 }}>{item}</span>
+            <button
+              onClick={() => handleRemove(i)}
+              title="Remove"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                color: "rgba(244,237,224,0.3)",
+                fontSize: 13,
+                lineHeight: 1,
+                flexShrink: 0,
+              }}
+            >
+              ×
+            </button>
+          </div>
+        ))}
+
+        {adding && (
+          <form onSubmit={handleAdd} style={{ display: "flex", gap: 6, marginTop: achieved.length ? 4 : 0 }}>
+            <input
+              ref={inputRef}
+              type="text"
+              value={newItem}
+              onChange={(e) => setNewItem(e.target.value)}
+              placeholder="What did you just finish?"
+              style={{
+                flex: 1,
+                padding: "8px 10px",
+                fontSize: 12,
+                fontFamily: "var(--font-body)",
+                color: T.text,
+                background: T.paper,
+                border: `1.5px solid ${T.rule}`,
+                borderRadius: 6,
+                outline: "none",
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                padding: "8px 12px",
+                background: T.accent,
+                color: "#fff",
+                border: "none",
+                borderRadius: 6,
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Log it
+            </button>
+            <button
+              type="button"
+              onClick={() => { setAdding(false); setNewItem(""); }}
+              style={{
+                padding: "8px 10px",
+                background: "rgba(244,237,224,0.1)",
+                color: "rgba(244,237,224,0.6)",
+                border: "none",
+                borderRadius: 6,
+                fontSize: 11,
+                cursor: "pointer",
+              }}
+            >
+              Cancel
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Session Close Modal ──────────────────────────────────────────────────────
+
+function SessionCloseModal({ onClose }: { onClose: () => void }) {
+  const [whatMoved, setWhatMoved] = useState("");
+  const [openThreads, setOpenThreads] = useState("");
+  const [firstMove, setFirstMove] = useState("");
+  const [saved, setSaved] = useState(false);
+
+  const existing = SessionStore.getToday();
+  useEffect(() => {
+    if (existing) {
+      setWhatMoved(existing.whatMoved);
+      setOpenThreads(existing.openThreads);
+      setFirstMove(existing.firstMove);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    SessionStore.saveClose({ whatMoved, openThreads, firstMove });
+    setSaved(true);
+    setTimeout(onClose, 1400);
+  }
+
+  const fieldStyle: React.CSSProperties = {
+    width: "100%",
+    boxSizing: "border-box",
+    padding: "9px 11px",
+    fontSize: 12,
+    fontFamily: "var(--font-body)",
+    color: T.text,
+    background: "rgba(31,61,46,0.04)",
+    border: `1.5px solid ${T.rule}`,
+    borderRadius: 6,
+    outline: "none",
+    resize: "vertical",
+    lineHeight: 1.55,
+    minHeight: 68,
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: 9,
+    fontWeight: 900,
+    letterSpacing: "0.2em",
+    textTransform: "uppercase",
+    color: T.muted,
+    display: "block",
+    marginBottom: 5,
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 200,
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "center",
+        background: "rgba(20,36,26,0.72)",
+        backdropFilter: "blur(3px)",
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 620,
+          background: T.paper,
+          borderRadius: "14px 14px 0 0",
+          padding: "24px 20px 36px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 18,
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+          <div>
+            <span style={{ fontSize: 10, fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", color: T.accent }}>
+              END OF SESSION
+            </span>
+            <p style={{ margin: "3px 0 0", fontSize: 12, color: T.muted, lineHeight: 1.5 }}>
+              Close the loop. Three fields. Under a minute.
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            style={{ background: "none", border: "none", cursor: "pointer", color: T.muted, fontSize: 20, lineHeight: 1, padding: "0 0 0 12px" }}
+          >
+            ×
+          </button>
+        </div>
+
+        {saved ? (
+          <div
+            style={{
+              padding: "16px",
+              background: "rgba(31,84,70,0.08)",
+              border: "1px solid rgba(31,84,70,0.2)",
+              borderRadius: 8,
+              fontSize: 13,
+              color: "#1F5446",
+              fontWeight: 600,
+              textAlign: "center",
+            }}
+          >
+            Saved. Tomorrow's brief will pick this up.
+          </div>
+        ) : (
+          <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div>
+              <label style={labelStyle}>What moved today</label>
+              <textarea
+                value={whatMoved}
+                onChange={(e) => setWhatMoved(e.target.value)}
+                placeholder="The things that actually shifted — decisions made, things sent, people talked to…"
+                style={fieldStyle}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>Open threads</label>
+              <textarea
+                value={openThreads}
+                onChange={(e) => setOpenThreads(e.target.value)}
+                placeholder="What's unresolved, waiting on someone, or quietly nagging at you…"
+                style={fieldStyle}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>First move tomorrow</label>
+              <textarea
+                value={firstMove}
+                onChange={(e) => setFirstMove(e.target.value)}
+                placeholder="The one thing you'll do before you open email or look at your phone…"
+                style={{ ...fieldStyle, minHeight: 52 }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                padding: "11px 20px",
+                background: T.accent,
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                fontSize: 12,
+                fontWeight: 700,
+                cursor: "pointer",
+                letterSpacing: "0.04em",
+              }}
+            >
+              Save and close the day →
+            </button>
+
+            <p style={{ margin: 0, fontSize: 10, color: T.muted, lineHeight: 1.6, textAlign: "center" }}>
+              This close-out feeds tomorrow's strategy framing — keeping the OPA as the live record of business thinking, not a separate notebook.
+            </p>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Morning Brief Card ───────────────────────────────────────────────────────
 
 function MorningBriefCard() {
@@ -333,6 +724,7 @@ function MorningBriefCard() {
   const [submitted, setSubmitted] = useState(false);
 
   const dump = getMostRecentEveningDump();
+  const yesterdayClose = SessionStore.getYesterday();
 
   function handleMorningNote(e: React.FormEvent) {
     e.preventDefault();
@@ -386,13 +778,17 @@ function MorningBriefCard() {
             morning brief
           </span>
         </div>
-        <div style={{ backgroundColor: T.paper, padding: "16px 16px 14px" }}>
-          <p style={{ margin: "0 0 10px", fontSize: 13, color: T.text, lineHeight: 1.6 }}>
+        <div style={{ backgroundColor: T.paper, padding: "16px 16px 14px", display: "flex", flexDirection: "column", gap: 12 }}>
+          {yesterdayClose && (yesterdayClose.whatMoved || yesterdayClose.openThreads || yesterdayClose.firstMove) && (
+            <YesterdayCloseBlock entry={yesterdayClose} />
+          )}
+          <p style={{ margin: 0, fontSize: 13, color: T.text, lineHeight: 1.6 }}>
             No evening dump yet. Tonight, before you close the laptop, spend 5 minutes writing what's on your mind. Tomorrow morning it'll be waiting here.
           </p>
           <button
             onClick={() => navigate(`${BASE}/debrief/evening`)}
             style={{
+              alignSelf: "flex-start",
               padding: "8px 14px",
               background: T.accent,
               color: "#fff",
@@ -455,6 +851,11 @@ function MorningBriefCard() {
       </div>
 
       <div style={{ backgroundColor: T.paper, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 12 }}>
+
+        {/* Yesterday's session close — subtle context block */}
+        {yesterdayClose && (yesterdayClose.whatMoved || yesterdayClose.openThreads || yesterdayClose.firstMove) && (
+          <YesterdayCloseBlock entry={yesterdayClose} />
+        )}
 
         {/* The user's own words */}
         <div
@@ -606,6 +1007,7 @@ export function LobbyPage() {
 
   const [query, setQuery] = useState("");
   const filtered = filterSections(query);
+  const [showClose, setShowClose] = useState(false);
 
   const todayLabel = new Date().toLocaleDateString("en-CA", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
@@ -619,6 +1021,9 @@ export function LobbyPage() {
     <div style={{ maxWidth: 620, margin: "0 auto", padding: "28px 16px 56px", display: "flex", flexDirection: "column", gap: 14, position: "relative" }}>
       <div aria-hidden className="pointer-events-none od-topo" style={{ position: "absolute", inset: 0, opacity: 0.07, pointerEvents: "none" }} />
 
+      {/* Session Close Modal */}
+      {showClose && <SessionCloseModal onClose={() => setShowClose(false)} />}
+
       {/* Header */}
       <div style={{ marginBottom: 4 }}>
         <div className="hw-label hw-label--cream" style={{ marginBottom: 6 }}>
@@ -629,7 +1034,10 @@ export function LobbyPage() {
         </h1>
       </div>
 
-      {/* Morning brief card — always first */}
+      {/* Work Achieved panel — very top, always visible */}
+      {!query && <WorkAchievedPanel />}
+
+      {/* Morning brief card */}
       {!query && <MorningBriefCard />}
 
       {/* Phase banner */}
@@ -665,6 +1073,32 @@ export function LobbyPage() {
             Start today ↗
           </a>
         </div>
+      )}
+
+      {/* End of session trigger */}
+      {!query && (
+        <button
+          onClick={() => setShowClose(true)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            padding: "11px 16px",
+            background: "rgba(255,255,255,0.05)",
+            border: `1px solid rgba(200,191,167,0.2)`,
+            borderRadius: 8,
+            cursor: "pointer",
+            textAlign: "left",
+          }}
+        >
+          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(244,237,224,0.7)", letterSpacing: "0.04em" }}>
+            End of session →
+          </span>
+          <span style={{ fontSize: 10, color: "rgba(244,237,224,0.35)" }}>
+            log wins · open threads · first move tomorrow
+          </span>
+        </button>
       )}
 
       {/* Search */}
