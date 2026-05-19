@@ -1,0 +1,52 @@
+Saltbox — Session Debrief, May 19 2026
+What Saltbox is
+Saltbox is a device-local homeschool day companion (the gather artifact in the monorepo, preview path /gather/). Families import their own curriculum — PDFs, audio, lesson plans — and the app organises it into a daily schedule by child. Everything runs from the device. No account. No subscription. Works offline from day one.
+
+The broader project is a Codetry constellation — a zone-based community economy model. Saltbox is Zone 0 (household). The relevant zones for the Gather Round conversation are Zone 0 (Saltbox, household) and the fact that Zone 5 (The Shallows) uses XRPL DIDs — meaning XRPL tooling already exists in the stack.
+
+What was built today
+1. Device-to-device QR handoff (the centerpiece feature)
+A full offline curriculum transfer system. In Settings → "Transfer to another device," the app bundles the entire Saltbox setup — all children, all curriculum files (PDFs, audio, images via IndexedDB), all schedules — into a compressed archive, uploads it to the API server (new gather_handoff DB table, 15-minute TTL), and displays a QR code. Scanning the QR on a second device downloads and imports everything in one tap. One-time use; auto-deletes on claim; 410 if expired.
+
+Key files: artifacts/gather/src/components/device-handoff.tsx, artifacts/gather/src/lib/exporting.ts (added createHandoff, claimHandoff, buildArchiveString), artifacts/api-server/src/routes/gather.ts (POST /api/gather/handoff, GET /api/gather/handoff/:token), lib/db/src/schema/gather.ts (new gatherHandoffTable).
+
+2. XRPL Legacy Pass NFT verification
+A complete credential verification flow for Gather Round Legacy Pass holders. In Settings → "Gather Round Legacy Pass," families enter their XRPL wallet address. Saltbox calls account_nfts on the public XRP Ledger mainnet directly (no Saltbox server, no API key), filters by issuer address + taxon, and if the NFT is present, grants full Founding Family status (lifetime, stored in IndexedDB). A simulation mode (VITE_LEGACY_PASS_SIM=true) allows demo runs before any real NFTs exist.
+
+Key files: artifacts/gather/src/lib/xrpl.ts (added checkLegacyPassNFT, GATHER_ROUND_LEGACY_PASS_ISSUER constant), artifacts/gather/src/lib/entitlement.ts (added legacy-pass source, nftTokenId/nftIssuer/nftWalletAddress proof fields), artifacts/gather/src/pages/legacy-pass.tsx (new page, route /legacy-pass).
+
+3. Brief gallery documents (two new)
+The Brief artifact (/brief/) is a static print suite — a gallery of locked letter-size documents for funding and partnership conversations.
+
+Legacy Pass Evidence Package (legacy-pass-evidence) — a printable one-pager for the Gather Round tester pilot. Left column: 5-step demo flow + technical proof summary. Right column: live demo QR code + three localStorage-backed family story boxes for capturing tester friction-reduction accounts after the pilot sessions.
+
+Gather Round First-Contact Pitch (gather-round-pitch) — the pitch document for the first conversation with Rebecca Spooner. Covers: the customer problem (purchase is permanent, access is fragile), what Saltbox does, the credential architecture in plain English, the ask (20-minute call), and one revenue option. Sender fields (name, contact, personal note) are editable and save to localStorage so the document can be personalised and printed without any export step.
+
+The Gather Round opportunity
+Who she is. Rebecca Spooner, Founder & CEO. Homeschool mom of 5. Founded Gather Round in 2019 from a notebook sketch. 100,000+ families, 70+ countries. Small remote team. Instagram: @homeschoolon. No public business inquiry email — Instagram DM is the right first channel. She runs a podcast ("Gather 'Round with Rebecca Spooner") and has described the company as "a homeschool mom, just like you."
+
+The Legacy Pass. Their flagship digital product. One-time purchase (price not publicly indexed, dynamically loaded). Gives the family lifetime access to every GR digital resource — all current units, mini units, Seatwork books, MP3s, planners — plus all future releases, plus 25% off print upgrades for life (capped at $2,000/year). The customer pain is well-documented in homeschool forums: colour PDFs are expensive to print, re-downloading to multiple devices is tedious, and curriculum that lives in a browser tab doesn't survive airplane mode.
+
+The pitch. "Your Legacy Pass holders paid for everything you've made. What they don't have is a reliable way to access it without a fast internet connection and a working Shopify session. Saltbox is free for all Legacy Pass holders in year one. Your only action is configuring one XRPL wallet address. Saltbox handles the rest."
+
+What's needed to go live after she says yes
+On Gather Round's side (the actual blockers):
+
+Create an XRPL issuer wallet (Xaman, ~10 XRP reserve)
+Decide how to handle existing Legacy Pass holders (claim campaign or batch mint)
+Mint test NFTs to 3–5 tester families
+Eventually: announce to the full Legacy Pass community via newsletter
+On Saltbox's side:
+
+Deploy Saltbox to a stable URL (one-click deploy, already ready)
+Set VITE_GATHER_ROUND_NFT_ISSUER to GR's real wallet address (one env var)
+Confirm the NFT taxon with GR (currently hardcoded as 1 in xrpl.ts)
+Add a short "how to get an XRPL wallet" guide inside the /legacy-pass page before the wider rollout (not needed for the tester pilot)
+Fill the three family story boxes in the Evidence Package after tester sessions
+Realistic timeline from "she says yes" to "5 families have it working": 3–4 weeks, gated almost entirely on GR's pace with the wallet and minting step.
+
+State of the codebase right now
+All typechecks pass clean across gather, api-server, brief, and all shared libs
+All workflows running: api-server, gather, brief, sandbox, north-star, family-buckets, eave, tester-onboarding
+DB schema pushed (gather_handoff table live in dev)
+No pending migrations

@@ -30,8 +30,8 @@ const BLOCKS: Block[] = [
         body: "Gather Round launched their own app in April 2025, built on Mighty Networks (a white-label community platform). The app is a strong community tool: forums, live class replays, discussion, podcasts. It does not and cannot manage the Legacy Pass content library. Mighty Networks has no offline access, no native file downloads, and no local content storage — these are confirmed platform-level limitations, not gaps they're planning to close. Legacy Pass families still go to the website to download files. The app doesn't change that.",
       },
       {
-        label: "The identity layer — XRPL NFT",
-        body: "A Legacy Pass holder's ownership is verified via an XRPL NFT credential. Saltbox reads that credential without calling back to Gather Round's server. The pass travels with the family — not with a download link. This is the technical core that makes the partnership real rather than just a referral arrangement.",
+        label: "The identity layer — blockchain membership token",
+        body: "A Legacy Pass holder's ownership is verified via a blockchain membership token. Saltbox reads that token without calling back to Gather Round's server. The pass travels with the family — not with a download link. This is the technical core that makes the partnership real rather than just a referral arrangement.",
       },
       {
         label: "Why this matters to Headwaters",
@@ -87,6 +87,10 @@ const BLOCKS: Block[] = [
         label: "Recommended starting posture",
         body: "Begin with Option A framing when you contact Gather Round — it asks least of them and removes the 'charging families more' objection. Keep Option C in your back pocket as the fallback that proves the model doesn't depend on their cooperation.",
       },
+      {
+        label: "Year one free — is this wise for the long game?",
+        body: "Yes. Here's the logic: Saltbox is Zone 0 in the Codetry model — the household layer. Without household penetration, the entire zone economy has no foundation to build on. Free year one is not charity; it's seeding. You need families using Saltbox before any of the higher zones have anything to compound. Gather Round gives you 100,000 qualified households you could not otherwise reach. The membership token is the identity anchor — once a family has it, their curriculum library, schedule, and device handoff history are all tied to it. That's not a relationship you lose when a subscription lapses. The risk of charging too early is near-zero uptake, no identity layer, and no foundation for Zones 1–5. The risk of free year one is a year of building with real users and real evidence. One nuance: frame it as 'included for founding Legacy Pass families in the pilot year' — not 'free forever.' The founding cohort is the credential; the scarcity is real.",
+      },
     ],
   },
   {
@@ -134,8 +138,8 @@ const BLOCKS: Block[] = [
         body: "Offline content delivery, device sync, folder-free organisation. This is what makes Saltbox worth pitching. A demo that shows a family loading curriculum content on an iPad without internet — no folder management — is the whole argument. Build this first regardless of whether Gather Round says yes.",
       },
       {
-        label: "Track 2 — Proof of concept (Weeks 2–4)",
-        body: "XRPL NFT credential for Legacy Pass simulation. Build a test pass, verify it in Saltbox, demonstrate the offline sync flow. Run with 3–5 test families who already own the Legacy Pass. Capture their friction-reduction story in one paragraph each. This is the evidence package you bring to Gather Round.",
+        label: "Track 2 — Proof of concept (Weeks 2–4) · COMPLETE",
+        body: "Blockchain membership token for Legacy Pass verification — built. The credential flow is live: families enter a blockchain wallet address, Saltbox verifies the membership token on the public ledger directly (no server call, no API key), and Founding Family status is granted and stored locally. A simulation mode exists for demo runs before real tokens are in the wild. QR device-to-device handoff is also built: a full offline curriculum transfer — all children, all files, all schedules — bundled and moved to a second device by scanning a QR code. One-time use, auto-deletes on claim. Both of these can be demonstrated right now.",
       },
       {
         label: "Track 3 — Make contact (Weeks 3–4, parallel)",
@@ -154,11 +158,11 @@ const BLOCKS: Block[] = [
     points: [
       {
         label: "Gather Round may not be interested",
-        body: "They may see a third-party app as a distraction, a liability, or a brand dilution risk. Their customer relationship is valuable to them. If they say no, Option C still works — and the XRPL credential architecture makes Saltbox interoperable with any other content provider who wants it.",
+        body: "They may see a third-party app as a distraction, a liability, or a brand dilution risk. Their customer relationship is valuable to them. If they say no, Option C still works — and the blockchain membership token architecture makes Saltbox interoperable with any other content provider who wants it.",
       },
       {
-        label: "NFT language is a red flag for many families",
-        body: "Call it a 'digital credential' or 'verified access pass' in any family-facing communication. The XRPL infrastructure is a back-end detail. Families don't need to know what blockchain it sits on — they need to know it's private, secure, and not connected to a speculative asset.",
+        label: "Membership token language — calibrate it carefully",
+        body: "In any family-facing communication, call it a 'membership token,' 'verified pass,' or 'digital credential.' Never say 'NFT' to a homeschool family — the word carries speculative-asset associations that will derail the conversation. 'Blockchain' is fine if the context is 'we use a secure public ledger to confirm your pass, no account needed' — it's an explanation, not a selling point. The back-end detail is irrelevant. What matters to families: it's private, it's permanent, and it works offline.",
       },
       {
         label: "Saltbox requires real technical investment",
@@ -212,7 +216,7 @@ const BLOCKS: Block[] = [
       },
       {
         label: "Blockchain membership — hold for the second conversation",
-        body: "The flexibility angle is real and compelling: a blockchain-anchored membership platform means she can add NFT-based tiers, transferable passes, alumni credentials, or resale-protected content — without rebuilding from scratch when her offerings evolve. But surface this after she says yes to the base build. Lead with the problem her clerk will solve. Offer the blockchain architecture as 'why this doesn't hit a ceiling the way a Kajabi or Teachable build does.' It's the answer to a question she'll ask once she's already bought in, not the hook that gets her there.",
+        body: "The flexibility angle is real and compelling: a blockchain-anchored membership platform means she can add token-based tiers, transferable passes, alumni credentials, or resale-protected content — without rebuilding from scratch when her offerings evolve. But surface this after she says yes to the base build. Lead with the problem her clerk will solve. Offer the blockchain architecture as 'why this doesn't hit a ceiling the way a Kajabi or Teachable build does.' It's the answer to a question she'll ask once she's already bought in, not the hook that gets her there.",
       },
       {
         label: "The full hiring picture — 11 open positions",
@@ -236,6 +240,87 @@ const BLOCKS: Block[] = [
       },
     ],
   },
+  {
+    title: "What exists right now — May 19, 2026",
+    badge: "BUILT TODAY",
+    color: T.gold,
+    points: [
+      {
+        label: "Device-to-device QR handoff",
+        body: "A family can now transfer their entire Saltbox setup — all children, all curriculum files (PDFs, audio, images), all schedules — to a second device by scanning a QR code. The app bundles everything into a compressed archive, generates a one-time QR code, and the second device claims it in one tap. The transfer auto-deletes after claim and expires in 15 minutes. No cloud account. No email. No login. This is the demo that makes the offline promise concrete. A second parent, a grandparent, a co-op leader — anyone who needs the same library gets it in under a minute.",
+      },
+      {
+        label: "Legacy Pass membership token verification",
+        body: "The credential flow is live. In Settings → 'Gather Round Legacy Pass,' a family enters their blockchain wallet address. Saltbox checks the public ledger directly — no Saltbox server call, no API key — and if the membership token is present, Founding Family status is granted and stored locally. A simulation mode (one environment variable) runs the full flow before any real tokens exist, which means you can demo this to Rebecca before she has issued a single token to anyone. Her only setup step is creating one blockchain wallet.",
+      },
+      {
+        label: "Evidence Package — printable",
+        body: "A print-ready one-pager for the tester pilot. Left side: a 5-step demo flow and technical proof summary for the person running the session. Right side: a live demo QR code and three family story boxes — editable, saved to localStorage — for capturing friction-reduction accounts after families have used it. After 3–5 tester sessions, this document becomes the evidence you bring to the second Gather Round conversation.",
+      },
+      {
+        label: "First-contact pitch document — printable",
+        body: "A print-ready pitch page for the first conversation with Rebecca. Covers the customer problem in plain language, what Saltbox does, the credential architecture in one paragraph, the ask (20-minute call), and one revenue option. The sender fields — name, contact, personal note — are editable inline and save to localStorage so the document is personalised before printing. No export step.",
+      },
+      {
+        label: "What's still needed before going live",
+        body: "On Gather Round's side: create a blockchain wallet (Xaman app, ~$15 CAD in reserve), decide how to handle existing Legacy Pass holders (a claim campaign or batch mint), and issue test tokens to 3–5 pilot families. On Saltbox's side: deploy to a stable public URL (one-click, already ready), set one environment variable to Gather Round's real wallet address, confirm the token category with GR. Realistic timeline from 'she says yes' to '5 families have it working': 3–4 weeks, gated almost entirely on GR's pace.",
+      },
+    ],
+  },
+  {
+    title: "When she asks how it works",
+    badge: "TECH COACHING SHEET",
+    color: T.slate,
+    points: [
+      {
+        label: "If she asks: 'What is a blockchain wallet?'",
+        body: "A blockchain wallet is like a digital key ring. It doesn't hold money — it holds credentials. When Gather Round creates a wallet, they get a public address (a long string of letters and numbers) that can issue membership tokens to families. You configure Saltbox with that address once. After that, any family whose wallet contains a Gather Round token is automatically verified. No database to maintain. No passwords to reset. No account the family can lose access to.",
+      },
+      {
+        label: "If she asks: 'Do families need to buy cryptocurrency?'",
+        body: "No. The token lives in a free wallet app (Xaman, available on iOS and Android). Families receive the token from Gather Round — they don't purchase it. There's no transaction cost to claim it. The blockchain is just the ledger that records who holds what. Families never see a crypto exchange, never buy anything, never provide payment information to anyone.",
+      },
+      {
+        label: "If she asks: 'What if a family loses their wallet?'",
+        body: "The wallet app stores a 12-word recovery phrase. If a phone is lost, the family reinstalls the wallet app, enters their phrase, and their token is back. It's similar to recovering a password manager. Gather Round doesn't need to re-issue anything. This is the key advantage over a download link or a login: the credential belongs to the family, not to a server that can go down or a link that expires.",
+      },
+      {
+        label: "If she asks: 'Is this secure?'",
+        body: "More secure than a download link. A download link can be forwarded, screenshotted, or scraped. A blockchain membership token can only be used by the wallet that holds it — and the wallet is protected by the family's 12-word phrase, which Gather Round never sees. Saltbox doesn't call back to any Gather Round server when it verifies — it reads the public ledger directly, the same way you'd look up a public record. There's nothing for a hacker to steal from Gather Round's side.",
+      },
+      {
+        label: "If she asks: 'What does Gather Round actually have to do?'",
+        body: "One time: create a blockchain wallet using the Xaman app (~15 minutes, ~$15 CAD reserve). Tell Saltbox the wallet address (one environment variable). Decide how to issue tokens to existing Legacy Pass holders — options are a self-serve claim flow or a batch issuance. That's the entire technical lift. After that, every new Legacy Pass sale can include token issuance automatically. Nothing else changes on Gather Round's side — no new infrastructure, no new subscriptions, no new vendors.",
+      },
+      {
+        label: "If she asks: 'What does it cost Gather Round?'",
+        body: "The wallet reserve (~$15 CAD, one time). Saltbox handles everything else — verification, storage, offline delivery. If you're discussing Option A (licensing), Gather Round pays Headwaters a per-verified-user annual fee; families pay nothing extra. The licensing fee is the only recurring cost to Gather Round, and it's offset by Legacy Pass retention improvement, reduced support load, and enhanced value for future pass sales.",
+      },
+    ],
+  },
+  {
+    title: "After she says yes",
+    badge: "GO-LIVE CHECKLIST",
+    color: T.teal,
+    points: [
+      {
+        label: "Gather Round's four steps (her side)",
+        body: "1. Create a blockchain wallet — Xaman app, iOS or Android, ~15 minutes, ~$15 CAD reserve. 2. Share the public wallet address with Saltbox (one message or email). 3. Issue test tokens to 3–5 pilot families — this can be done manually in the Xaman app for the pilot. 4. Announce the pilot to the Legacy Pass community via newsletter when ready. Steps 1–3 can happen in the same week. Step 4 comes after the pilot proves the flow.",
+      },
+      {
+        label: "Saltbox's four steps (your side)",
+        body: "1. Deploy Saltbox to a stable public URL — one-click deploy, already ready to go. 2. Set the wallet address environment variable to Gather Round's real address. 3. Confirm the token category number with GR (currently set to 1 in the code — just needs verification). 4. Add a short 'how to get a blockchain wallet' guide inside the verification page before wider rollout — not needed for the pilot, but needed before the newsletter goes out. Steps 1–3 take under an hour.",
+      },
+      {
+        label: "The pilot shape",
+        body: "Three to five families who already hold a Legacy Pass. They install Saltbox, enter their wallet address, receive Founding Family status, load their curriculum, and try the QR handoff to a second device. After two weeks, each family writes or records one paragraph about what changed. That paragraph is your evidence. The pilot proves the flow is reliable before you ask Rebecca to announce it to the full community.",
+      },
+      {
+        label: "What 'success' looks like at 30 days",
+        body: "Five families have used Saltbox without a support request. At least three have stories worth publishing. The QR handoff has been used at least once by a real family (not just in testing). The credential verification has worked on at least two different device types. Gather Round has seen the evidence package. The conversation has moved from 'is this real?' to 'how do we roll it out?'",
+      },
+    ],
+  },
 ];
 
 function EmailDraft() {
@@ -254,7 +339,7 @@ function EmailDraft() {
     },
     {
       label: "What to leave out of the first email",
-      body: "Do not mention XRPL, NFT, blockchain, or credential architecture. Do not reference Mighty Networks by name. Do not mention her hiring post. Do not frame this as a business proposition — you're a customer who built something and wants to know if it's useful. The product and partnership framing comes later, on the call, if she asks.",
+      body: "Do not mention blockchain, membership tokens, or any credential architecture. Do not reference Mighty Networks by name. Do not mention her hiring post. Do not frame this as a business proposition — you're a customer who built something and wants to know if it's useful. The product, the tech, and the partnership framing all come later, on the call, when she asks.",
     },
     {
       label: "When to send it",
