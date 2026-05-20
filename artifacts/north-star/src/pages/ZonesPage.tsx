@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Archive, ArchiveRestore, ChevronUp, ChevronDown } from "lucide-react";
+import { useState, useRef } from "react";
+import { Plus, Pencil, Trash2, Archive, ArchiveRestore, ChevronUp, ChevronDown, GripVertical } from "lucide-react";
 import { useStore, ZONE_COLORS } from "@/store";
 import { ZoneBadge } from "@/components/ZoneBadge";
 import { ZONE_LABELS, cn } from "@/lib/utils";
@@ -155,6 +155,64 @@ export function ZonesPage() {
     setZoneRanking(next);
   }
 
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [overIdx, setOverIdx] = useState<number | null>(null);
+  const zoneRowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const dragStartY = useRef<number>(0);
+  const dragActive = useRef(false);
+
+  function commitDrop(from: number, to: number) {
+    if (from === to) return;
+    const next = [...ranked];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    setZoneRanking(next);
+  }
+
+  function findRowAt(clientY: number): number | null {
+    for (let i = 0; i < zoneRowRefs.current.length; i++) {
+      const el = zoneRowRefs.current[i];
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      if (clientY >= rect.top && clientY <= rect.bottom) return i;
+    }
+    return null;
+  }
+
+  function handleGripPointerDown(e: React.PointerEvent, idx: number) {
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    dragStartY.current = e.clientY;
+    dragActive.current = false;
+    setDragIdx(idx);
+    setOverIdx(idx);
+  }
+
+  function handleGripPointerMove(e: React.PointerEvent) {
+    if (dragIdx === null) return;
+    if (!dragActive.current) {
+      if (Math.abs(e.clientY - dragStartY.current) < 8) return;
+      dragActive.current = true;
+    }
+    e.preventDefault();
+    const hit = findRowAt(e.clientY);
+    if (hit !== null) setOverIdx(hit);
+  }
+
+  function handleGripPointerUp() {
+    if (dragIdx !== null && overIdx !== null && dragActive.current) {
+      commitDrop(dragIdx, overIdx);
+    }
+    setDragIdx(null);
+    setOverIdx(null);
+    dragActive.current = false;
+  }
+
+  function handleGripPointerCancel() {
+    setDragIdx(null);
+    setOverIdx(null);
+    dragActive.current = false;
+  }
+
   const parked = constellations.filter((c) => !c.active);
 
   return (
@@ -170,15 +228,35 @@ export function ZonesPage() {
           const zoneContracts = contracts.filter((c) =>
             zoneConstellations.some((co) => co.id === c.constellationId) && c.active
           );
+          const isDragging = dragIdx === zIdx;
+          const isOver = overIdx === zIdx && dragIdx !== null && dragIdx !== zIdx;
           return (
-            <div key={zone} className="space-y-2">
+            <div
+              key={zone}
+              ref={(el) => { zoneRowRefs.current[zIdx] = el; }}
+              className={cn(
+                "space-y-2 rounded-xl transition-colors",
+                isDragging && "opacity-40",
+                isOver && "ring-2 ring-[#1C1917] bg-[#F5F5F0]"
+              )}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
+                  <div
+                    className="flex items-center justify-center min-h-[44px] min-w-[44px] cursor-grab active:cursor-grabbing touch-none text-[#78716C] select-none"
+                    aria-label="Drag to reorder zone"
+                    onPointerDown={(e) => handleGripPointerDown(e, zIdx)}
+                    onPointerMove={handleGripPointerMove}
+                    onPointerUp={handleGripPointerUp}
+                    onPointerCancel={handleGripPointerCancel}
+                  >
+                    <GripVertical size={18} />
+                  </div>
                   <div className="flex flex-col gap-0.5">
-                    <button onClick={() => moveZone(zone, -1)} disabled={zIdx === 0} className="text-[#78716C] disabled:opacity-30 min-h-[22px] min-w-[22px] flex items-center justify-center">
+                    <button onClick={() => moveZone(zone, -1)} disabled={zIdx === 0} className="text-[#78716C] disabled:opacity-30 min-h-[22px] min-w-[22px] flex items-center justify-center" aria-label="Move up">
                       <ChevronUp size={14} />
                     </button>
-                    <button onClick={() => moveZone(zone, 1)} disabled={zIdx === ranked.length - 1} className="text-[#78716C] disabled:opacity-30 min-h-[22px] min-w-[22px] flex items-center justify-center">
+                    <button onClick={() => moveZone(zone, 1)} disabled={zIdx === ranked.length - 1} className="text-[#78716C] disabled:opacity-30 min-h-[22px] min-w-[22px] flex items-center justify-center" aria-label="Move down">
                       <ChevronDown size={14} />
                     </button>
                   </div>
