@@ -23,6 +23,7 @@ import sandboxRouter from "./sandbox";
 import membershipRouter from "./membership";
 import inboxRouter from "./inbox";
 import waitlistRouter from "./waitlist";
+import odysseyRouter from "./odyssey";
 
 const router: IRouter = Router();
 
@@ -53,5 +54,6 @@ router.use("/sandbox", sandboxRouter);
 router.use("/membership", membershipRouter);
 router.use("/inbox", inboxRouter);
 router.use("/waitlist", waitlistRouter);
+router.use("/odyssey", odysseyRouter);
 
 export default router;

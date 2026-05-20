@@ -11,6 +11,7 @@ import { SeasonalPage } from "@/pages/SeasonalPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 import { InboxSetupPage } from "@/pages/InboxSetupPage";
 import { TesterKitPage } from "@/pages/TesterKitPage";
+import { SponsorIntakePage } from "@/pages/SponsorIntakePage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -98,6 +99,12 @@ export default function App() {
               <TesterKitPage />
             </AppShell>
           </OnboardingGuard>
+        </Route>
+
+        <Route path="/sponsor-intake">
+          <AppShell>
+            <SponsorIntakePage />
+          </AppShell>
         </Route>
 
         <Route>

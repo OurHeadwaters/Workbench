@@ -5,8 +5,10 @@ import { useStore, getTodayKey, getWeekKey, getSeasonKey } from "@/store";
 import { MorningTriage } from "@/components/MorningTriage";
 import { CaptureSheet } from "@/components/CaptureSheet";
 import { ZoneBadge } from "@/components/ZoneBadge";
+import { OdysseyTrail } from "@/components/TrailSign";
 import { cn } from "@/lib/utils";
 import type { ZoneId, Constellation } from "@/types";
+import { fetchTrailSigns, getTrailSigns } from "@workspace/odyssey";
 import { Link, useLocation } from "wouter";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -348,6 +350,47 @@ function IntentionAndHours() {
   );
 }
 
+const BASE_API = import.meta.env.VITE_API_URL ?? "/api";
+
+function OdysseySection() {
+  const getTodayPick = useStore((s) => s.getTodayPick);
+  const constellations = useStore((s) => s.constellations);
+  const dismissedNudges = useStore((s) => s.dismissedNudges);
+  const dismissNudge = useStore((s) => s.dismissNudge);
+  const todayKey = getTodayKey();
+
+  const todayPick = getTodayPick();
+  const pickedIds = todayPick.constellationIds;
+
+  const activeZone: ZoneId = (() => {
+    if (pickedIds.length === 0) return "Z1";
+    const picked = constellations.filter((c) => pickedIds.includes(c.id));
+    const counts: Partial<Record<ZoneId, number>> = {};
+    for (const c of picked) counts[c.zone] = (counts[c.zone] ?? 0) + 1;
+    return (Object.entries(counts).sort((a, b) => (b[1] as number) - (a[1] as number))[0]?.[0] ?? "Z1") as ZoneId;
+  })();
+
+  const [signs, setSigns] = useState(() => getTrailSigns(activeZone));
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchTrailSigns(BASE_API, activeZone).then((live) => {
+      if (!cancelled) setSigns(live);
+    });
+    return () => { cancelled = true; };
+  }, [activeZone]);
+
+  const odysseyDismissKey = `odyssey-trail-${todayKey}`;
+  if (dismissedNudges[odysseyDismissKey] || signs.length === 0) return null;
+
+  return (
+    <OdysseyTrail
+      signs={signs}
+      onAllDismissed={() => dismissNudge(odysseyDismissKey)}
+    />
+  );
+}
+
 export function TodayPage() {
   const statement = useStore((s) => s.statement);
   const captures = useStore((s) => s.captures);
@@ -388,6 +431,8 @@ export function TodayPage() {
         <ReviewNudges />
 
         <ConstellationPicker />
+
+        <OdysseySection />
 
         {statement && (
           <div className="bg-[#F5F5F0] rounded-xl p-4 space-y-1">
