@@ -31,7 +31,7 @@ export default function PathToScale() {
           One pilot proves the model.<br />The model replicates.
         </h1>
         <div className="font-display italic text-[1.35vw] text-muted mb-[4vh] max-w-[65vw]">
-          Deer Lake is Pilot #1. The documentation, the supply relationships, the financial records — all of it becomes the template for the next community.
+          Deer Lake is Pilot #1. The documentation, the supply relationships, the financial records — all of it becomes the template for any community ready to run the model — northern, rural, or urban.
         </div>
 
         <div className="flex-1 flex items-end gap-[4vw] pb-[2vh]">
