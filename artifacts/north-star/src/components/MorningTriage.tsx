@@ -26,7 +26,13 @@ export function MorningTriage() {
   useEffect(() => {
     if (!inbox.enabled) return;
     setLoading(true);
-    fetch(`${BASE_API}/inbox/threads`)
+
+    const params = new URLSearchParams();
+    if (inbox.keywords?.length) params.set("keywords", inbox.keywords.join(","));
+    if (inbox.senders?.length) params.set("senders", inbox.senders.join(","));
+    if (inbox.hatLabels?.length) params.set("labels", inbox.hatLabels.map((h) => h.label).join(","));
+
+    fetch(`${BASE_API}/inbox/threads?${params.toString()}`)
       .then((r) => {
         if (!r.ok) throw new Error("unavailable");
         return r.json();
@@ -39,7 +45,7 @@ export function MorningTriage() {
         setError("unavailable");
         setLoading(false);
       });
-  }, [inbox.enabled]);
+  }, [inbox.enabled, inbox.keywords, inbox.senders, inbox.hatLabels]);
 
   if (!inbox.enabled) return null;
   if (error || (!loading && threads.length === 0)) return null;

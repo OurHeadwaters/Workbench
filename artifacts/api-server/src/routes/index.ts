@@ -21,6 +21,7 @@ import helpingHandsRouter from "./helpingHands";
 import youthPathRouter from "./youthPath";
 import sandboxRouter from "./sandbox";
 import membershipRouter from "./membership";
+import inboxRouter from "./inbox";
 
 const router: IRouter = Router();
 
@@ -49,5 +50,6 @@ router.use("/helping-hands", helpingHandsRouter);
 router.use("/youth-path", youthPathRouter);
 router.use("/sandbox", sandboxRouter);
 router.use("/membership", membershipRouter);
+router.use("/inbox", inboxRouter);
 
 export default router;
