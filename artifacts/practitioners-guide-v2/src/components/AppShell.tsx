@@ -333,7 +333,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
           </Link>
           <div className="flex-1" />
-          <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+          <NeighbourhoodBadge zoneId={2} />
         </div>
       </header>
 

@@ -121,7 +121,7 @@ export default function Home() {
           />
           <span className="font-serif font-bold text-lg text-foreground">Headwaters</span>
         </div>
-        <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+        <NeighbourhoodBadge zoneId={2} />
         <div className="flex items-center gap-3">
           <SignedOut>
             <Link href="/sign-in">

@@ -17,7 +17,7 @@ export function NavBar() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#E7E5E4] z-50 safe-area-bottom">
       <div className="flex items-center justify-center py-1 border-b border-[#E7E5E4]/60">
-        <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+        <NeighbourhoodBadge zoneId={2} />
       </div>
       <div className="flex items-stretch max-w-lg mx-auto">
         {NAV.map(({ path, icon: Icon, label }) => {

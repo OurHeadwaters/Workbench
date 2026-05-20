@@ -1,20 +1,17 @@
+import { useZone } from "@workspace/zone-store";
+
 const MAP_URL = "/map";
 
 interface NeighbourhoodBadgeProps {
-  zoneNumber: number;
-  zoneName: string;
-  standby?: boolean;
+  zoneId: number;
 }
 
-export function NeighbourhoodBadge({
-  zoneNumber,
-  zoneName,
-  standby = false,
-}: NeighbourhoodBadgeProps) {
+export function NeighbourhoodBadge({ zoneId }: NeighbourhoodBadgeProps) {
+  const { number, name, standby } = useZone(zoneId);
   return (
     <a
       href={MAP_URL}
-      title={`Zone ${zoneNumber} — ${zoneName} · View the neighbourhood map`}
+      title={`Zone ${number} — ${name} · View the neighbourhood map`}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -44,7 +41,7 @@ export function NeighbourhoodBadge({
           flexShrink: 0,
         }}
       >
-        {zoneNumber}
+        {number}
       </span>
       <span
         style={{
@@ -57,7 +54,7 @@ export function NeighbourhoodBadge({
           whiteSpace: "nowrap",
         }}
       >
-        {zoneName}
+        {name}
       </span>
       <span
         style={{

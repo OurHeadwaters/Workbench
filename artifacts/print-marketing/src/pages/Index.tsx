@@ -40,7 +40,7 @@ export default function Index() {
     >
       {/* Neighbourhood badge — fixed top right */}
       <div style={{ position: "fixed", top: 12, right: 16, zIndex: 50 }}>
-        <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+        <NeighbourhoodBadge zoneId={2} />
       </div>
 
       {/* Gradient overlay */}

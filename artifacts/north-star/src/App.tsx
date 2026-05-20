@@ -1,4 +1,5 @@
 import { Router as WouterRouter, Route, Switch, Redirect } from "wouter";
+import { ZoneStoreProvider } from "@workspace/zone-store";
 import { useStore } from "@/store";
 import { NavBar } from "@/components/NavBar";
 import { OnboardingPage } from "@/pages/OnboardingPage";
@@ -30,6 +31,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
+    <ZoneStoreProvider>
     <WouterRouter base={BASE}>
       <Switch>
         <Route path="/onboarding" component={OnboardingPage} />
@@ -103,5 +105,6 @@ export default function App() {
         </Route>
       </Switch>
     </WouterRouter>
+    </ZoneStoreProvider>
   );
 }

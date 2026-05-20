@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { ZoneStoreProvider } from "@workspace/zone-store";
 import { Route, Switch } from "wouter";
 import { LobbyPage } from "./pages/LobbyPage";
 import OnePager from "./pages/OnePager";
@@ -37,6 +38,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export default function App() {
   return (
+    <ZoneStoreProvider>
     <Switch>
       <Route path={`${BASE}/`} component={LobbyPage} />
       <Route path={`${BASE}/deck`} component={DeckPlayer} />
@@ -75,5 +77,6 @@ export default function App() {
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />
       <Route component={LobbyPage} />
     </Switch>
+    </ZoneStoreProvider>
   );
 }

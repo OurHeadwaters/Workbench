@@ -1,4 +1,5 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
+import { ZoneStoreProvider } from "@workspace/zone-store";
 import { PreviewProvider } from "@/context/PreviewContext";
 import Index from "@/pages/Index";
 import PriceList from "@/pages/PriceList";
@@ -114,10 +115,12 @@ function Router() {
 
 export default function App() {
   return (
+    <ZoneStoreProvider>
     <PreviewProvider>
       <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
         <Router />
       </WouterRouter>
     </PreviewProvider>
+    </ZoneStoreProvider>
   );
 }

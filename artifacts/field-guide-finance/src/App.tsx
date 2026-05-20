@@ -1,4 +1,5 @@
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { ZoneStoreProvider } from "@workspace/zone-store";
 import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { ClerkProvider, useAuth, SignIn, SignUp } from "@clerk/react";
 import { Loader2 } from "lucide-react";
@@ -146,8 +147,10 @@ function ClerkProviderWithRoutes() {
 
 export default function App() {
   return (
+    <ZoneStoreProvider>
     <WouterRouter base={basePath}>
       <ClerkProviderWithRoutes />
     </WouterRouter>
+    </ZoneStoreProvider>
   );
 }

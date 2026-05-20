@@ -72,7 +72,7 @@ export function CoursePage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+          <NeighbourhoodBadge zoneId={2} />
           <span className="text-xs hidden sm:block" style={{ color: "var(--mid-brown)" }}>
             {progress}% complete
           </span>

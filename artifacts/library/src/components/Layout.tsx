@@ -57,7 +57,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             </h1>
           </Link>
           <div className="mt-3">
-            <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+            <NeighbourhoodBadge zoneId={2} />
           </div>
         </div>
         <nav className="p-4 flex-1 overflow-y-auto space-y-1">

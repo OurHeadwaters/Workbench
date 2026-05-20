@@ -1086,7 +1086,7 @@ export function LobbyPage() {
           <div className="hw-label hw-label--cream">
             Daily Bench — Practitioner's Operating Plan
           </div>
-          <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+          <NeighbourhoodBadge zoneId={2} />
         </div>
         <h1 style={{ fontSize: 26, fontWeight: 600, lineHeight: 1.2, color: T.paper, fontFamily: "var(--font-display)", margin: 0 }}>
           {todayLabel}

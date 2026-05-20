@@ -710,6 +710,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.1.4(vite@7.3.2(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.2))
+      '@workspace/zone-store':
+        specifier: workspace:*
+        version: link:../../lib/zone-store
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -767,6 +770,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.1.4(vite@7.3.2(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.2))
+      '@workspace/zone-store':
+        specifier: workspace:*
+        version: link:../../lib/zone-store
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -942,6 +948,9 @@ importers:
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
+      '@workspace/zone-store':
+        specifier: workspace:*
+        version: link:../../lib/zone-store
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -1159,6 +1168,9 @@ importers:
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
+      '@workspace/zone-store':
+        specifier: workspace:*
+        version: link:../../lib/zone-store
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -1301,6 +1313,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.1.4(vite@7.3.2(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.2))
+      '@workspace/zone-store':
+        specifier: workspace:*
+        version: link:../../lib/zone-store
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -1383,6 +1398,9 @@ importers:
       '@workspace/codetry-public':
         specifier: workspace:*
         version: link:../../lib/codetry-public
+      '@workspace/zone-store':
+        specifier: workspace:*
+        version: link:../../lib/zone-store
       jsdom:
         specifier: ^29.1.1
         version: 29.1.1(@noble/hashes@1.8.0)
@@ -1540,6 +1558,9 @@ importers:
       '@workspace/headwaters-pricing':
         specifier: workspace:*
         version: link:../../lib/headwaters-pricing
+      '@workspace/zone-store':
+        specifier: workspace:*
+        version: link:../../lib/zone-store
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -1751,6 +1772,9 @@ importers:
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
+      '@workspace/zone-store':
+        specifier: workspace:*
+        version: link:../../lib/zone-store
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -1977,6 +2001,18 @@ importers:
         version: 19.2.14
 
   lib/why-stores-fail: {}
+
+  lib/zone-store:
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.0
+        version: 19.2.14
+      '@workspace/codetry-handbook':
+        specifier: workspace:*
+        version: link:../../artifacts/codetry-handbook
+      react:
+        specifier: 'catalog:'
+        version: 19.1.0
 
   scripts:
     dependencies:
