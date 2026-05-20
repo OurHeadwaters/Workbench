@@ -10,10 +10,11 @@ import {
   getGetPnlByMonthQueryKey,
   getGetTaxSummaryQueryKey,
 } from "@workspace/api-client-react";
-import type { CategoryReportRow, TaxSummaryLineItem, PnlBreakdownCostCentre } from "@workspace/api-client-react";
+import type { CategoryReportRow, TaxSummaryLineItem, PnlBreakdownCostCentre, CostCentrePnlReport } from "@workspace/api-client-react";
 import {
   Loader2,
   Printer,
+  Download,
   TrendingUp,
   TrendingDown,
   Minus,
@@ -863,6 +864,45 @@ function TabByCategory({ from, to }: { from: string; to: string }) {
 
 // ── Main page ───────────────────────────────────────────────────────────────────
 
+function buildPnlCsv(
+  data: CostCentrePnlReport,
+  from: string,
+  to: string,
+): string {
+  const escape = (v: string | number) => {
+    const s = String(v);
+    return s.includes(",") || s.includes('"') || s.includes("\n")
+      ? `"${s.replace(/"/g, '""')}"`
+      : s;
+  };
+  const row = (...cols: (string | number)[]) => cols.map(escape).join(",");
+
+  const lines: string[] = [
+    `# Headwaters Books — P&L by Cost Centre`,
+    `# Period: ${from} to ${to}`,
+    `# Exported: ${new Date().toLocaleDateString("en-CA")}`,
+    ``,
+    row("Cost Centre Code", "Cost Centre Name", "Account Code", "Account Name", "Revenue", "Costs", "Net"),
+  ];
+
+  for (const cc of data.costCentres) {
+    for (const rev of cc.revenueLines) {
+      lines.push(row(cc.code, cc.name, rev.accountCode, rev.accountName, rev.total, 0, rev.total));
+    }
+    for (const cost of cc.costLines) {
+      lines.push(row(cc.code, cc.name, cost.accountCode, cost.accountName, 0, cost.total, -cost.total));
+    }
+    if (cc.revenueLines.length === 0 && cc.costLines.length === 0) {
+      lines.push(row(cc.code, cc.name, "", "", 0, 0, 0));
+    }
+  }
+
+  const t = data.agencyTotals;
+  lines.push(row("TOTAL", "Agency Total", "", "", t.revenue, t.costs, t.net));
+
+  return lines.join("\n");
+}
+
 export default function Pnl() {
   const { data: me, isLoading: meLoading } = useGetBookkeeperMe();
 
@@ -871,7 +911,24 @@ export default function Pnl() {
   const [from, setFrom] = useState(thisYear().from);
   const [to, setTo] = useState(thisYear().to);
 
+  const { data: pnlData } = useGetBookkeeperPnl(
+    { from, to },
+    { query: { queryKey: getGetBookkeeperPnlQueryKey({ from, to }) } },
+  );
+
   const isAllowed = me?.role === "owner" || me?.role === "bookkeeper";
+
+  function downloadCsv() {
+    if (!pnlData) return;
+    const csv = buildPnlCsv(pnlData, from, to);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `pnl-${from}-to-${to}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   if (meLoading) {
     return (
@@ -904,10 +961,16 @@ export default function Pnl() {
           <h1 className="text-3xl font-bold" style={{ fontFamily: "var(--font-serif, serif)" }}>Reports</h1>
           <p className="text-muted-foreground mt-1 text-sm">P&amp;L, monthly trends, and category breakdown.</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => window.print()} className="flex items-center gap-2 shrink-0 self-start print:hidden">
-          <Printer className="w-4 h-4" />
-          Print / PDF
-        </Button>
+        <div className="flex items-center gap-2 shrink-0 self-start print:hidden">
+          <Button variant="outline" size="sm" onClick={downloadCsv} disabled={!pnlData} className="flex items-center gap-2">
+            <Download className="w-4 h-4" />
+            Download CSV
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => window.print()} className="flex items-center gap-2">
+            <Printer className="w-4 h-4" />
+            Print / PDF
+          </Button>
+        </div>
       </div>
 
       {/* Print-only header */}
