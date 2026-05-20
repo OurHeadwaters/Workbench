@@ -63,6 +63,16 @@ export interface HatLabel {
   label: string;
 }
 
+export interface GmailAccount {
+  id: string;
+  address: string;
+  label: string;
+  fullName: string;
+  enabled: boolean;
+  isAlias?: boolean;
+  aliasNote?: string;
+}
+
 export interface AppState {
   schemaVersion: number;
   installedAt: string;
@@ -98,6 +108,7 @@ export interface AppState {
     hatLabels: HatLabel[];
     lastSavedAt?: string;
   };
+  gmailAccounts: GmailAccount[];
   lastBackedUpAt?: string;
   contentBank: ContentBankItem[];
 }
@@ -122,6 +133,7 @@ export interface StoreActions {
   setGuideProgress: (chapterId: string, sectionId: string) => void;
   setGuideBookmark: (chapterId: string) => void;
   updateInbox: (patch: Partial<AppState["inbox"]>) => void;
+  updateGmailAccount: (id: string, patch: Partial<GmailAccount>) => void;
   setPendingReply: (threadId: string, patch: Partial<AppState["pendingReplies"][string]>) => void;
   exportBackup: () => string;
   importBackup: (json: string) => boolean;

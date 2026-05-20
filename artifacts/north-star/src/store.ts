@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
-import type { AppState, Store, Constellation, ZoneId, ContentBankItem } from "./types";
+import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount } from "./types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 
 const ZONE_COLORS: Record<ZoneId, string> = {
@@ -116,8 +116,76 @@ const SEED_CONSTELLATIONS: Omit<Constellation, "id" | "slug" | "colorVar">[] = [
   },
 ];
 
+const SEED_GMAIL_ACCOUNTS: GmailAccount[] = [
+  {
+    id: "acc-bobbie-personal",
+    address: "bobbiepepin@gmail.com",
+    label: "Personal",
+    fullName: "Bobbie (personal / early journey)",
+    enabled: true,
+  },
+  {
+    id: "acc-pj-main",
+    address: "parrsjars@gmail.com",
+    label: "PJ Main",
+    fullName: "Parr's Jars",
+    enabled: true,
+  },
+  {
+    id: "acc-pj-orders",
+    address: "parrsjars.orders@gmail.com",
+    label: "PJ Orders",
+    fullName: "Parr's Jars Orders & Invoicing",
+    enabled: true,
+  },
+  {
+    id: "acc-pj-info",
+    address: "parrsjars.info@gmail.com",
+    label: "PJ Info",
+    fullName: "Parr's Jars Community & Suppliers",
+    enabled: true,
+  },
+  {
+    id: "acc-xbuckets",
+    address: "xbucketsapp@gmail.com",
+    label: "xBuckets",
+    fullName: "xBuckets App & Software",
+    enabled: true,
+  },
+  {
+    id: "acc-807foodcoop",
+    address: "807foodcoop@gmail.com",
+    label: "807 Co-op",
+    fullName: "807 Food Co-op (Dryden Coordinator)",
+    enabled: true,
+  },
+  {
+    id: "acc-the807foodcoop",
+    address: "the807foodcoop@gmail.com",
+    label: "807 Board",
+    fullName: "807 Food Co-op (Board of Directors)",
+    enabled: true,
+  },
+  {
+    id: "acc-807foodhub",
+    address: "807foodhub@gmail.com",
+    label: "Food Hub",
+    fullName: "807 Food Hub Coordinator",
+    enabled: true,
+  },
+  {
+    id: "acc-headwaters-alias",
+    address: "bobbie@ourheadwaters.ca",
+    label: "Headwaters",
+    fullName: "Headwaters (alias → Parr's Jars)",
+    enabled: true,
+    isAlias: true,
+    aliasNote: "Auto-forwards to parrsjars@gmail.com. Threads appear in the PJ Main feed until Phase 2 adds true send-as support.",
+  },
+];
+
 const INITIAL_STATE: AppState = {
-  schemaVersion: 4,
+  schemaVersion: 5,
   installedAt: new Date().toISOString(),
   onboarding: { completed: false, step: 0 },
   statement: undefined,
@@ -146,6 +214,7 @@ const INITIAL_STATE: AppState = {
       { address: "", label: "807 Coord" },
     ],
   },
+  gmailAccounts: SEED_GMAIL_ACCOUNTS,
 };
 
 export const useStore = create<Store>()(
@@ -282,6 +351,11 @@ export const useStore = create<Store>()(
       updateInbox: (patch) =>
         set((s) => ({ inbox: { ...s.inbox, ...patch } })),
 
+      updateGmailAccount: (id, patch) =>
+        set((s) => ({
+          gmailAccounts: s.gmailAccounts.map((a) => (a.id === id ? { ...a, ...patch } : a)),
+        })),
+
       setPendingReply: (threadId, patch) =>
         set((s) => ({
           pendingReplies: {
@@ -331,7 +405,15 @@ export const useStore = create<Store>()(
     }),
     {
       name: "north-star:v1",
-      version: 4,
+      version: 5,
+      migrate(persistedState: unknown, fromVersion: number) {
+        const s = persistedState as Record<string, unknown>;
+        if (fromVersion < 5) {
+          s.gmailAccounts = SEED_GMAIL_ACCOUNTS;
+          s.schemaVersion = 5;
+        }
+        return s as unknown as AppState;
+      },
     }
   )
 );

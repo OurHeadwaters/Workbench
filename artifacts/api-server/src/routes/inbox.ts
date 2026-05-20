@@ -1,13 +1,29 @@
 /**
  * Inbox routes — Gmail thread triage for North Star's Morning Triage card.
  *
+ * Server-side account registry: the mapping of accountId → Replit connectionId
+ * lives here, server-side only. Clients send accountIds; the server resolves
+ * which connection to use. Clients cannot supply or override connectionIds.
+ *
  * GET /api/inbox/threads
  *   Query params:
  *     keywords  — comma-separated list (default: accountant,CRA,bookkeeping,invoice,tax)
  *     senders   — comma-separated list of email addresses to always surface
  *     labels    — comma-separated Gmail label names to always surface
- *   Returns: EmailThread[] (id, subject, from, snippet, date)
- *   On OAuth not configured: 200 with empty array (silent fail by design)
+ *   Returns: EmailThread[]
+ *
+ * GET /api/inbox/threads/all
+ *   Query params: keywords, senders, labels (same as above)
+ *                 accountIds — comma-separated accountIds from the registry
+ *   Each enabled account is resolved server-side. Accounts without a registered
+ *   connection are immediately marked "no-connection" and skipped — no Gmail call
+ *   is attempted.
+ *   Returns: { threads: EnrichedEmailThread[], accountStatuses }
+ *
+ * GET /api/inbox/accounts/status
+ *   Query params: accountIds — comma-separated
+ *   Probes each account's connection with a minimal Gmail API call.
+ *   Returns: Record<accountId, "ok" | "scope" | "unavailable" | "no-connection">
  */
 
 import { Router, type IRouter } from "express";
@@ -17,6 +33,59 @@ import { logger } from "../lib/logger";
 const router: IRouter = Router();
 
 const DEFAULT_KEYWORDS = ["accountant", "CRA", "bookkeeping", "invoice", "tax"];
+
+// ─── Server-side account registry ──────────────────────────────────────────
+// This is the ONLY place connectionIds are stored. Clients send accountIds;
+// the server looks up the connection here. Clients cannot supply connectionIds.
+//
+// Each account maps to a Replit google-mail OAuth connection.
+// To add an account: create a new Gmail connection in the Replit Integrations
+// panel, then set the corresponding environment variable listed below.
+// The account will immediately start loading in the unified feed on next restart.
+//
+// Environment variables → account IDs:
+//   GMAIL_CONN_ACC_BOBBIE_PERSONAL → acc-bobbie-personal  (bobbiepepin@gmail.com)
+//   GMAIL_CONN_ACC_PJ_MAIN         → acc-pj-main          (parrsjars@gmail.com)
+//   GMAIL_CONN_ACC_PJ_ORDERS       → acc-pj-orders        (parrsjars.orders@gmail.com)
+//   GMAIL_CONN_ACC_PJ_INFO         → acc-pj-info          (parrsjars.info@gmail.com)
+//   GMAIL_CONN_ACC_XBUCKETS        → acc-xbuckets         (xbucketsapp@gmail.com)
+//   GMAIL_CONN_ACC_807FOODCOOP     → acc-807foodcoop      (807foodcoop@gmail.com)
+//   GMAIL_CONN_ACC_THE807FOODCOOP  → acc-the807foodcoop   (the807foodcoop@gmail.com)
+//   GMAIL_CONN_ACC_807FOODHUB      → acc-807foodhub       (807foodhub@gmail.com)
+// (bobbie@ourheadwaters.ca is an alias — fetched via acc-pj-main, not directly)
+//
+// GMAIL_CONN_ACC_PJ_MAIN has a hardcoded default (the initial connection) so the
+// feed works immediately without setting the env var.
+
+const ACCOUNT_ENV_VAR_NAMES: Record<string, string> = {
+  "acc-bobbie-personal": "GMAIL_CONN_ACC_BOBBIE_PERSONAL",
+  "acc-pj-main":         "GMAIL_CONN_ACC_PJ_MAIN",
+  "acc-pj-orders":       "GMAIL_CONN_ACC_PJ_ORDERS",
+  "acc-pj-info":         "GMAIL_CONN_ACC_PJ_INFO",
+  "acc-xbuckets":        "GMAIL_CONN_ACC_XBUCKETS",
+  "acc-807foodcoop":     "GMAIL_CONN_ACC_807FOODCOOP",
+  "acc-the807foodcoop":  "GMAIL_CONN_ACC_THE807FOODCOOP",
+  "acc-807foodhub":      "GMAIL_CONN_ACC_807FOODHUB",
+};
+
+// Initial known connection ID for acc-pj-main — used as fallback if the env
+// var is not set, so the feed works immediately after deployment.
+const PJ_MAIN_DEFAULT_CONN = "conn_google-mail_01KPKQ3QXGG61BYN5M5G6W83AP";
+
+function resolveConnection(accountId: string): string | null {
+  const envVar = ACCOUNT_ENV_VAR_NAMES[accountId];
+  if (!envVar) return null;
+
+  const fromEnv = process.env[envVar];
+  if (fromEnv) return fromEnv;
+
+  // Fallback for acc-pj-main so it works without the env var being set
+  if (accountId === "acc-pj-main") return PJ_MAIN_DEFAULT_CONN;
+
+  return null;
+}
+
+// ─── Types ──────────────────────────────────────────────────────────────────
 
 interface GmailThread {
   id: string;
@@ -42,10 +111,23 @@ interface GmailMessage {
   internalDate?: string;
 }
 
-/**
- * Walk a MIME tree to find the first text/plain part and return its decoded
- * content, trimmed to `maxChars` characters.
- */
+interface EmailThread {
+  id: string;
+  subject: string;
+  from: string;
+  snippet: string;
+  date: string;
+}
+
+interface EnrichedEmailThread extends EmailThread {
+  accountId: string;
+  accountLabel: string;
+}
+
+type AccountStatus = "ok" | "scope" | "unavailable" | "no-connection";
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
 function extractPlainText(payload: GmailMessage["payload"], maxChars = 1000): string {
   if (!payload) return "";
 
@@ -78,88 +160,61 @@ function pickHeader(
   return headers?.find((h) => h.name.toLowerCase() === name.toLowerCase())?.value ?? "";
 }
 
-// GET /inbox/threads
-router.get("/threads", async (req, res) => {
+function buildQuery(keywords: string[], senders: string[], labels: string[]): string {
+  function escapeToken(token: string): string {
+    return /[\s"'(){}[\]|\\^~*?:!]/.test(token) ? `"${token.replace(/"/g, "")}"` : token;
+  }
+
+  const parts: string[] = [];
+  if (keywords.length > 0) parts.push(`(${keywords.map(escapeToken).join(" OR ")})`);
+  if (senders.length > 0) parts.push(`(${senders.map((s) => `from:${escapeToken(s)}`).join(" OR ")})`);
+  if (labels.length > 0) parts.push(`(${labels.map((l) => `label:${escapeToken(l)}`).join(" OR ")})`);
+  return `in:inbox is:unread newer_than:7d${parts.length > 0 ? " " + parts.join(" OR ") : ""}`;
+}
+
+/**
+ * Fetch threads using a specific Replit connection ID.
+ * Never falls back to the default connection — if connectionId is null/undefined,
+ * returns { threads: [], error: "no-connection" } immediately.
+ */
+async function fetchThreadsForConnection(
+  connectionId: string,
+  q: string,
+): Promise<{ threads: EmailThread[]; error: "scope" | "unavailable" | null }> {
   try {
     const connectors = new ReplitConnectors();
 
-    const keywordsParam = typeof req.query.keywords === "string" ? req.query.keywords : "";
-    const sendersParam = typeof req.query.senders === "string" ? req.query.senders : "";
-    const labelsParam = typeof req.query.labels === "string" ? req.query.labels : "";
-
-    const keywords = keywordsParam
-      ? keywordsParam.split(",").map((k) => k.trim()).filter(Boolean)
-      : DEFAULT_KEYWORDS;
-    const senders = sendersParam
-      ? sendersParam.split(",").map((s) => s.trim()).filter(Boolean)
-      : [];
-    const labels = labelsParam
-      ? labelsParam.split(",").map((l) => l.trim()).filter(Boolean)
-      : [];
-
-    // Escape a Gmail query token: wrap in quotes if it contains spaces or
-    // special operator characters, so user-supplied strings don't break syntax.
-    function escapeToken(token: string): string {
-      return /[\s"'(){}[\]|\\^~*?:!]/.test(token) ? `"${token.replace(/"/g, "")}"` : token;
-    }
-
-    // Build a Gmail search query that matches any keyword OR any sender OR any label
-    const parts: string[] = [];
-
-    if (keywords.length > 0) {
-      parts.push(`(${keywords.map(escapeToken).join(" OR ")})`);
-    }
-
-    if (senders.length > 0) {
-      parts.push(`(${senders.map((s) => `from:${escapeToken(s)}`).join(" OR ")})`);
-    }
-
-    if (labels.length > 0) {
-      parts.push(`(${labels.map((l) => `label:${escapeToken(l)}`).join(" OR ")})`);
-    }
-
-    // Always scope to inbox, unread, last 7 days
-    const q = `in:inbox is:unread newer_than:7d${parts.length > 0 ? " " + parts.join(" OR ") : ""}`;
+    const proxyOpts = { method: "GET", connectionId } as Parameters<typeof connectors.proxy>[2] & { connectionId: string };
 
     const listResp = await connectors.proxy(
       "google-mail",
       `/gmail/v1/users/me/threads?maxResults=20&q=${encodeURIComponent(q)}`,
-      { method: "GET" },
+      proxyOpts,
     );
 
-    const listData = await listResp.json() as { threads?: GmailThread[]; error?: { message: string } };
+    const listData = await listResp.json() as {
+      threads?: GmailThread[];
+      error?: { message: string; status?: string };
+    };
 
     if (listData.error) {
-      logger.warn({ err: listData.error }, "inbox: Gmail API error");
-      // Surface scope errors explicitly so the UI can show an actionable message
-      // rather than silently rendering nothing. The gmail.readonly (or gmail.modify)
-      // scope is required for threads.list — addon-only scopes are insufficient.
+      logger.warn({ err: listData.error, connectionId }, "inbox: Gmail API error");
       const isScope =
         listData.error.message?.toLowerCase().includes("insufficient") ||
-        (listData.error as unknown as { status?: string }).status === "PERMISSION_DENIED";
-      if (isScope) {
-        res.status(403).json({ error: "insufficient_scope", message: listData.error.message });
-      } else {
-        res.json([]);
-      }
-      return;
+        listData.error.status === "PERMISSION_DENIED";
+      return { threads: [], error: isScope ? "scope" : "unavailable" };
     }
 
     const rawThreads: GmailThread[] = listData.threads ?? [];
+    if (rawThreads.length === 0) return { threads: [], error: null };
 
-    if (rawThreads.length === 0) {
-      res.json([]);
-      return;
-    }
-
-    // Fetch metadata for each thread (first message only)
     const threads = await Promise.all(
       rawThreads.slice(0, 15).map(async (t) => {
         try {
           const msgResp = await connectors.proxy(
             "google-mail",
             `/gmail/v1/users/me/threads/${t.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`,
-            { method: "GET" },
+            proxyOpts,
           );
 
           const msgData = await msgResp.json() as {
@@ -168,8 +223,6 @@ router.get("/threads", async (req, res) => {
             snippet?: string;
           };
 
-          // Use the last message for headers so Subject/From/Date reflect the
-          // most recent reply in the thread, not the original message.
           const messages = msgData.messages ?? [];
           const latestMsg = messages[messages.length - 1];
           const headers = latestMsg?.payload?.headers;
@@ -188,25 +241,177 @@ router.get("/threads", async (req, res) => {
       }),
     );
 
-    const result = threads.filter(Boolean);
-    res.json(result);
+    return { threads: threads.filter(Boolean) as EmailThread[], error: null };
   } catch (err) {
-    // OAuth not configured or connector unavailable — silent fail
-    logger.warn({ err }, "inbox: Gmail connector unavailable, returning empty");
-    res.json([]);
+    logger.warn({ err, connectionId }, "inbox: Gmail connector unavailable");
+    return { threads: [], error: "unavailable" };
   }
+}
+
+/**
+ * Lightweight connection probe — fetches at most 1 thread with a narrow query.
+ * Used by /accounts/status to report live status per account.
+ */
+async function probeConnection(connectionId: string): Promise<AccountStatus> {
+  try {
+    const connectors = new ReplitConnectors();
+    const proxyOpts = { method: "GET", connectionId } as Parameters<typeof connectors.proxy>[2] & { connectionId: string };
+
+    const resp = await connectors.proxy(
+      "google-mail",
+      `/gmail/v1/users/me/threads?maxResults=1&q=in:inbox`,
+      proxyOpts,
+    );
+
+    const data = await resp.json() as {
+      threads?: GmailThread[];
+      error?: { message: string; status?: string };
+    };
+
+    if (data.error) {
+      const isScope =
+        data.error.message?.toLowerCase().includes("insufficient") ||
+        data.error.status === "PERMISSION_DENIED";
+      return isScope ? "scope" : "unavailable";
+    }
+
+    return "ok";
+  } catch {
+    return "unavailable";
+  }
+}
+
+// ─── GET /inbox/threads ──────────────────────────────────────────────────────
+// Single-account backward-compatible endpoint.
+// Resolves the account from the server-side registry via optional ?accountId param.
+// Falls back to the primary account (acc-pj-main) if none specified.
+router.get("/threads", async (req, res) => {
+  const keywordsParam = typeof req.query.keywords === "string" ? req.query.keywords : "";
+  const sendersParam = typeof req.query.senders === "string" ? req.query.senders : "";
+  const labelsParam = typeof req.query.labels === "string" ? req.query.labels : "";
+  const accountIdParam = typeof req.query.accountId === "string" ? req.query.accountId : "acc-pj-main";
+
+  const keywords = keywordsParam ? keywordsParam.split(",").map((k) => k.trim()).filter(Boolean) : DEFAULT_KEYWORDS;
+  const senders = sendersParam ? sendersParam.split(",").map((s) => s.trim()).filter(Boolean) : [];
+  const labels = labelsParam ? labelsParam.split(",").map((l) => l.trim()).filter(Boolean) : [];
+
+  const connectionId = resolveConnection(accountIdParam);
+  if (!connectionId) {
+    res.json([]);
+    return;
+  }
+
+  const q = buildQuery(keywords, senders, labels);
+  const { threads, error } = await fetchThreadsForConnection(connectionId, q);
+
+  if (error === "scope") {
+    res.status(403).json({ error: "insufficient_scope" });
+    return;
+  }
+  res.json(threads);
+});
+
+// ─── GET /inbox/threads/all ──────────────────────────────────────────────────
+// Multi-account fan-out.
+// Client sends: ?accountIds=acc-pj-main,acc-807foodcoop,...
+// Server resolves connections from the trusted registry.
+// Accounts not in the registry or with no connectionId → immediately "no-connection", skipped.
+router.get("/threads/all", async (req, res) => {
+  const keywordsParam = typeof req.query.keywords === "string" ? req.query.keywords : "";
+  const sendersParam = typeof req.query.senders === "string" ? req.query.senders : "";
+  const labelsParam = typeof req.query.labels === "string" ? req.query.labels : "";
+  const accountIdsParam = typeof req.query.accountIds === "string" ? req.query.accountIds : "";
+  const accountLabelsParam = typeof req.query.accountLabels === "string" ? req.query.accountLabels : "";
+
+  const keywords = keywordsParam ? keywordsParam.split(",").map((k) => k.trim()).filter(Boolean) : DEFAULT_KEYWORDS;
+  const senders = sendersParam ? sendersParam.split(",").map((s) => s.trim()).filter(Boolean) : [];
+  const labels = labelsParam ? labelsParam.split(",").map((l) => l.trim()).filter(Boolean) : [];
+
+  const accountIds = accountIdsParam ? accountIdsParam.split(",").map((s) => s.trim()).filter(Boolean) : Object.keys(ACCOUNT_ENV_VAR_NAMES);
+  const labelMap: Record<string, string> = {};
+  if (accountLabelsParam) {
+    accountLabelsParam.split(",").forEach((pair) => {
+      const [id, ...rest] = pair.split(":");
+      if (id) labelMap[id.trim()] = rest.join(":").trim();
+    });
+  }
+
+  const q = buildQuery(keywords, senders, labels);
+  const accountStatuses: Record<string, AccountStatus> = {};
+  const enriched: EnrichedEmailThread[] = [];
+  const seenIds = new Set<string>();
+
+  await Promise.all(
+    accountIds.map(async (accountId) => {
+      const connectionId = resolveConnection(accountId);
+
+      if (!connectionId) {
+        accountStatuses[accountId] = "no-connection";
+        return;
+      }
+
+      const { threads, error } = await fetchThreadsForConnection(connectionId, q);
+      accountStatuses[accountId] = error ?? "ok";
+
+      const accountLabel = labelMap[accountId] ?? accountId;
+
+      for (const t of threads) {
+        const key = `${accountId}:${t.id}`;
+        if (!seenIds.has(key)) {
+          seenIds.add(key);
+          enriched.push({ ...t, accountId, accountLabel });
+        }
+      }
+    }),
+  );
+
+  enriched.sort((a, b) => {
+    const da = new Date(a.date).getTime() || 0;
+    const db = new Date(b.date).getTime() || 0;
+    return db - da;
+  });
+
+  res.json({ threads: enriched, accountStatuses });
+});
+
+// ─── GET /inbox/accounts/status ─────────────────────────────────────────────
+// Probes each requested accountId and returns live connection status + metadata.
+// Used by InboxSetupPage to show per-account status without fetching full threads.
+// Query params: accountIds — comma-separated list of accountIds
+//
+// Returns: Record<accountId, { status, envVar }>
+//   status:  "ok" | "scope" | "unavailable" | "no-connection"
+//   envVar:  the environment variable name to set to wire this account
+router.get("/accounts/status", async (req, res) => {
+  const accountIdsParam = typeof req.query.accountIds === "string" ? req.query.accountIds : "";
+  const accountIds = accountIdsParam
+    ? accountIdsParam.split(",").map((s) => s.trim()).filter(Boolean)
+    : [];
+
+  if (accountIds.length === 0) {
+    res.json({});
+    return;
+  }
+
+  const result: Record<string, { status: AccountStatus; envVar: string }> = {};
+
+  await Promise.all(
+    accountIds.map(async (accountId) => {
+      const envVar = ACCOUNT_ENV_VAR_NAMES[accountId] ?? "";
+      const connectionId = resolveConnection(accountId);
+      if (!connectionId) {
+        result[accountId] = { status: "no-connection", envVar };
+        return;
+      }
+      const status = await probeConnection(connectionId);
+      result[accountId] = { status, envVar };
+    }),
+  );
+
+  res.json(result);
 });
 
 // ─── Archive search ────────────────────────────────────────────────────────
-// GET /inbox/archive
-//   Query params:
-//     q          — free-text Gmail query string (appended to base query)
-//     dateFrom   — ISO date string (YYYY-MM-DD) lower bound
-//     dateTo     — ISO date string (YYYY-MM-DD) upper bound
-//     preset     — one of: mailchimp | z1-income | z2-contract | z3-future | z4-community
-//     maxResults — number of threads to return (default 30, max 50)
-//   Returns: EmailThread[] (same shape as /threads)
-
 const PRESET_QUERIES: Record<string, string> = {
   mailchimp: "from:@mailchimp.com OR from:@mandrillapp.com OR from:campaigns@",
   "z1-income": "(accountant OR CRA OR bookkeeping OR invoice OR tax OR revenue OR payroll OR HST OR GST OR \"tax return\" OR T4)",
@@ -218,6 +423,7 @@ const PRESET_QUERIES: Record<string, string> = {
 router.get("/archive", async (req, res) => {
   try {
     const connectors = new ReplitConnectors();
+    const primaryConnectionId = resolveConnection("acc-pj-main");
 
     const qParam = typeof req.query.q === "string" ? req.query.q.trim() : "";
     const dateFrom = typeof req.query.dateFrom === "string" ? req.query.dateFrom.trim() : "";
@@ -230,22 +436,10 @@ router.get("/archive", async (req, res) => {
     );
 
     const parts: string[] = [];
-
-    if (preset && PRESET_QUERIES[preset]) {
-      parts.push(`(${PRESET_QUERIES[preset]})`);
-    }
-
-    if (qParam) {
-      parts.push(`(${qParam})`);
-    }
-
-    if (dateFrom) {
-      parts.push(`after:${dateFrom.replace(/-/g, "/")}`);
-    }
-
-    if (dateTo) {
-      parts.push(`before:${dateTo.replace(/-/g, "/")}`);
-    }
+    if (preset && PRESET_QUERIES[preset]) parts.push(`(${PRESET_QUERIES[preset]})`);
+    if (qParam) parts.push(`(${qParam})`);
+    if (dateFrom) parts.push(`after:${dateFrom.replace(/-/g, "/")}`);
+    if (dateTo) parts.push(`before:${dateTo.replace(/-/g, "/")}`);
 
     if (parts.length === 0) {
       res.json([]);
@@ -254,10 +448,13 @@ router.get("/archive", async (req, res) => {
 
     const q = parts.join(" ");
 
+    const proxyOpts: Parameters<typeof connectors.proxy>[2] & { connectionId?: string } = { method: "GET" };
+    if (primaryConnectionId) (proxyOpts as Record<string, unknown>).connectionId = primaryConnectionId;
+
     const listResp = await connectors.proxy(
       "google-mail",
       `/gmail/v1/users/me/threads?maxResults=${maxResults}&q=${encodeURIComponent(q)}`,
-      { method: "GET" },
+      proxyOpts,
     );
 
     const listData = await listResp.json() as { threads?: GmailThread[]; error?: { message: string } };
@@ -276,7 +473,6 @@ router.get("/archive", async (req, res) => {
     }
 
     const rawThreads: GmailThread[] = listData.threads ?? [];
-
     if (rawThreads.length === 0) {
       res.json([]);
       return;
@@ -285,17 +481,13 @@ router.get("/archive", async (req, res) => {
     const threads = await Promise.all(
       rawThreads.slice(0, maxResults).map(async (t) => {
         try {
-          // Use full format when body is requested so we get MIME parts;
-          // otherwise stick with the cheaper metadata-only format.
           const format = includeBody ? "full" : "metadata";
-          const metaHeaders = includeBody
-            ? ""
-            : "&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date";
+          const metaHeaders = includeBody ? "" : "&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date";
 
           const msgResp = await connectors.proxy(
             "google-mail",
             `/gmail/v1/users/me/threads/${t.id}?format=${format}${metaHeaders}`,
-            { method: "GET" },
+            proxyOpts,
           );
 
           const msgData = await msgResp.json() as {
@@ -336,20 +528,20 @@ router.get("/archive", async (req, res) => {
   }
 });
 
-// ─── Single thread body (on-demand) ───────────────────────────────────────
-// GET /inbox/thread/:id/body
-//   Returns: { body: string } — first ~1000 chars of the first message's
-//   text/plain part.  Safe to call lazily when the user expands a thread row.
-
+// ─── Single thread body (on-demand) ────────────────────────────────────────
 router.get("/thread/:id/body", async (req, res) => {
   try {
     const connectors = new ReplitConnectors();
     const threadId = req.params.id;
+    const primaryConnectionId = resolveConnection("acc-pj-main");
+
+    const proxyOpts: Parameters<typeof connectors.proxy>[2] & { connectionId?: string } = { method: "GET" };
+    if (primaryConnectionId) (proxyOpts as Record<string, unknown>).connectionId = primaryConnectionId;
 
     const msgResp = await connectors.proxy(
       "google-mail",
       `/gmail/v1/users/me/threads/${threadId}?format=full`,
-      { method: "GET" },
+      proxyOpts,
     );
 
     const msgData = await msgResp.json() as {

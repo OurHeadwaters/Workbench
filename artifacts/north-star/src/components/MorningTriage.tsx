@@ -3,58 +3,90 @@ import { Inbox, ChevronDown, ChevronUp, Check, Clock } from "lucide-react";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 
-interface EmailThread {
+interface EnrichedEmailThread {
   id: string;
   subject: string;
   from: string;
   snippet: string;
   date: string;
+  accountId: string;
+  accountLabel: string;
 }
+
+type AccountStatus = "ok" | "scope" | "unavailable" | "no-connection";
 
 const BASE_API = "/api";
 
+const BADGE_COLORS: Record<string, string> = {
+  "acc-bobbie-personal": "bg-[#EDE9FE] text-[#5B21B6]",
+  "acc-pj-main":         "bg-[#D1FAE5] text-[#065F46]",
+  "acc-pj-orders":       "bg-[#D1FAE5] text-[#065F46]",
+  "acc-pj-info":         "bg-[#D1FAE5] text-[#065F46]",
+  "acc-xbuckets":        "bg-[#FEF3C7] text-[#92400E]",
+  "acc-807foodcoop":     "bg-[#DBEAFE] text-[#1E40AF]",
+  "acc-the807foodcoop":  "bg-[#DBEAFE] text-[#1E40AF]",
+  "acc-807foodhub":      "bg-[#DBEAFE] text-[#1E40AF]",
+  "acc-headwaters-alias":"bg-[#FCE7F3] text-[#9D174D]",
+  default:               "bg-[#F5F5F0] text-[#44403C]",
+};
+
 export function MorningTriage() {
   const inbox = useStore((s) => s.inbox);
+  const gmailAccounts = useStore((s) => s.gmailAccounts);
   const pendingReplies = useStore((s) => s.pendingReplies);
   const setPendingReply = useStore((s) => s.setPendingReply);
 
-  const [threads, setThreads] = useState<EmailThread[]>([]);
+  const [threads, setThreads] = useState<EnrichedEmailThread[]>([]);
+  const [accountStatuses, setAccountStatuses] = useState<Record<string, AccountStatus>>({});
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<"unavailable" | "scope" | null>(null);
+  const [globalError, setGlobalError] = useState<"unavailable" | "scope" | null>(null);
   const [expanded, setExpanded] = useState(true);
 
+  // Enabled non-alias accounts that will participate in the fan-out
+  const enabledAccounts = gmailAccounts.filter((a) => a.enabled && !a.isAlias);
+
   useEffect(() => {
-    if (!inbox.enabled) return;
+    if (!inbox.enabled || enabledAccounts.length === 0) return;
     setLoading(true);
-    setError(null);
+    setGlobalError(null);
 
     const params = new URLSearchParams();
     if (inbox.keywords?.length) params.set("keywords", inbox.keywords.join(","));
     if (inbox.senders?.length) params.set("senders", inbox.senders.join(","));
     if (inbox.hatLabels?.length) params.set("labels", inbox.hatLabels.map((h) => h.label).join(","));
 
-    fetch(`${BASE_API}/inbox/threads?${params.toString()}`)
+    params.set("accountIds", enabledAccounts.map((a) => a.id).join(","));
+    params.set(
+      "accountLabels",
+      enabledAccounts.map((a) => `${a.id}:${a.label}`).join(","),
+    );
+
+    fetch(`${BASE_API}/inbox/threads/all?${params.toString()}`)
       .then(async (r) => {
         if (r.status === 403) {
-          setError("scope");
+          setGlobalError("scope");
           setLoading(false);
           return;
         }
         if (!r.ok) throw new Error("unavailable");
-        const data: EmailThread[] = await r.json();
-        setThreads(data);
+        const data = await r.json() as {
+          threads: EnrichedEmailThread[];
+          accountStatuses: Record<string, AccountStatus>;
+        };
+        setThreads(data.threads ?? []);
+        setAccountStatuses(data.accountStatuses ?? {});
         setLoading(false);
       })
       .catch(() => {
-        setError("unavailable");
+        setGlobalError("unavailable");
         setLoading(false);
       });
-  }, [inbox.enabled, inbox.keywords, inbox.senders, inbox.hatLabels, inbox.lastSavedAt]);
+  }, [inbox.enabled, inbox.keywords, inbox.senders, inbox.hatLabels, inbox.lastSavedAt, gmailAccounts]);
 
   if (!inbox.enabled) return null;
-  if (!loading && threads.length === 0 && error !== "scope") return null;
+  if (!loading && threads.length === 0 && globalError !== "scope") return null;
 
-  if (error === "scope") {
+  if (globalError === "scope") {
     return (
       <div className="rounded-xl border border-[#FCD34D] bg-[#FFFBEB] px-4 py-3 mb-4 flex items-start gap-3">
         <Inbox size={16} className="text-[#92400E] mt-0.5 shrink-0" />
@@ -68,7 +100,11 @@ export function MorningTriage() {
     );
   }
 
-  const active = threads.filter((t) => !pendingReplies[t.id]?.doneAt);
+  const active = threads.filter((t) => !pendingReplies[`${t.accountId}:${t.id}`]?.doneAt);
+
+  const failedCount = Object.values(accountStatuses).filter(
+    (s) => s === "scope" || s === "unavailable",
+  ).length;
 
   return (
     <div className="rounded-xl border border-[#E7E5E4] bg-white overflow-hidden mb-4">
@@ -84,6 +120,11 @@ export function MorningTriage() {
               {active.length}
             </span>
           )}
+          {failedCount > 0 && (
+            <span className="text-xs bg-[#FEF3C7] text-[#92400E] rounded-full px-2 py-0.5">
+              {failedCount} needs auth
+            </span>
+          )}
         </div>
         {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
       </button>
@@ -94,18 +135,25 @@ export function MorningTriage() {
             <div className="px-4 py-3 text-sm text-[#78716C]">Loading…</div>
           )}
           {active.map((t) => {
-            const state = pendingReplies[t.id];
+            const stateKey = `${t.accountId}:${t.id}`;
+            const state = pendingReplies[stateKey];
+            const badgeColor = BADGE_COLORS[t.accountId] ?? BADGE_COLORS.default;
             return (
-              <div key={t.id} className="px-4 py-3">
+              <div key={stateKey} className="px-4 py-3">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">{t.subject}</p>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+                      <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded-full shrink-0", badgeColor)}>
+                        {t.accountLabel}
+                      </span>
+                      <p className="text-sm font-medium truncate">{t.subject}</p>
+                    </div>
                     <p className="text-xs text-[#78716C] truncate">{t.from}</p>
                     <p className="text-xs text-[#78716C] mt-0.5 line-clamp-1">{t.snippet}</p>
                   </div>
                   <div className="flex gap-1 shrink-0">
                     <button
-                      onClick={() => setPendingReply(t.id, { doneAt: new Date().toISOString() })}
+                      onClick={() => setPendingReply(stateKey, { doneAt: new Date().toISOString() })}
                       className="p-2 rounded-lg hover:bg-[#D1E7DB] min-h-[44px] min-w-[44px] flex items-center justify-center"
                       title="Mark done"
                     >
@@ -113,7 +161,7 @@ export function MorningTriage() {
                     </button>
                     <button
                       onClick={() =>
-                        setPendingReply(t.id, {
+                        setPendingReply(stateKey, {
                           deferredCount: (state?.deferredCount ?? 0) + 1,
                           lastDeferred: new Date().toISOString(),
                         })
