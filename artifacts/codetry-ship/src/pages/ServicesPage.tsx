@@ -100,8 +100,23 @@ export function ServicesPage() {
               who this is for
             </p>
             <p className="font-serif text-[16px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
-              Headwaters works with community organizations — co-ops, band councils, local economies — that are building something they intend to own and run themselves. The work was built and proven in Northwestern Ontario with First Nations communities and regional food systems. Codetry, the discipline it runs on, replicates: a rural co-op, a fishing village, an Indigenous nation in another country, an off-grid settlement — any decentralized community asking "how would we even start?" is the right community for this conversation.
+              Headwaters works with community organizations — co-ops, band councils, local economies — that are building something they intend to own and run themselves. The work was built and proven in Northwestern Ontario with First Nations communities and regional food systems.{" "}
+              <a
+                href={`${(import.meta.env.BASE_URL ?? "/").replace(/\/$/, "")}/codetry`}
+                className="underline underline-offset-2 hover:opacity-75 transition-opacity"
+                style={{ color: "hsl(var(--foreground))" }}
+              >
+                Codetry
+              </a>
+              , the discipline it runs on, replicates: a rural co-op, a fishing village, an Indigenous nation in another country, an off-grid settlement — any decentralized community asking "how would we even start?" is the right community for this conversation.
             </p>
+            <a
+              href={`${(import.meta.env.BASE_URL ?? "/").replace(/\/$/, "")}/codetry`}
+              className="inline-flex items-center gap-1.5 mt-4 font-mono text-[10px] uppercase tracking-[0.2em] hover:opacity-75 transition-opacity"
+              style={{ color: "hsl(var(--accent))" }}
+            >
+              What is Codetry? →
+            </a>
           </div>
         </section>
 
