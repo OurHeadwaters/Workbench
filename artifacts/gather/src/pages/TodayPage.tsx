@@ -153,6 +153,15 @@ export function TodayPage() {
         <section className="grid grid-cols-2 gap-3">
           <div
             className="rounded-xl bg-white border border-[#E4D9CC] p-3 cursor-pointer hover:border-[#C7613B]/40 transition-colors"
+            onClick={() => { window.location.href = "/field-guide-finance/"; }}
+          >
+            <p className="text-xs text-[#7A6B60] mb-1">Learn</p>
+            <p className="text-base font-medium text-[#2E2620]">Field Guide Finance</p>
+            <p className="text-xs text-[#7A6B60] mt-0.5">Premium member course</p>
+          </div>
+
+          <div
+            className="rounded-xl bg-white border border-[#E4D9CC] p-3 cursor-pointer hover:border-[#C7613B]/40 transition-colors"
             onClick={() => navigate("/kit")}
           >
             <p className="text-xs text-[#7A6B60] mb-1">Kit</p>

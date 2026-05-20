@@ -1,0 +1,84 @@
+@import 'tailwindcss';
+
+:root {
+  --cream: #FAF6EF;
+  --cream-dark: #F0E9DD;
+  --warm-brown: #2E2010;
+  --mid-brown: #6B5744;
+  --light-brown: #A8927A;
+  --accent: #C7613B;
+  --accent-light: #F5E8E0;
+  --border: #E0D5C8;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--cream);
+  color: var(--warm-brown);
+  -webkit-font-smoothing: antialiased;
+}
+
+.prose-course {
+  font-family: var(--font-sans);
+  color: var(--warm-brown);
+  line-height: 1.75;
+  font-size: 1rem;
+}
+
+.prose-course h1,
+.prose-course h2,
+.prose-course h3 {
+  font-family: var(--font-serif);
+  color: var(--warm-brown);
+  line-height: 1.25;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose-course h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.prose-course h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.prose-course p {
+  margin-bottom: 1em;
+}
+
+.prose-course a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.prose-course ul,
+.prose-course ol {
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+
+.prose-course li {
+  margin-bottom: 0.35em;
+}
+
+.prose-course blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  color: var(--mid-brown);
+  font-style: italic;
+  margin: 1.5em 0;
+}
+
+.prose-course strong {
+  font-weight: 600;
+  color: var(--warm-brown);
+}

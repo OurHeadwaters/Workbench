@@ -64,6 +64,15 @@ if (fs.existsSync(sandboxDist)) {
   });
 }
 
+// Serve field-guide-finance SPA at /field-guide-finance/
+const fieldGuideFinanceDist = new URL("../../field-guide-finance/dist/public", import.meta.url).pathname;
+if (fs.existsSync(fieldGuideFinanceDist)) {
+  app.use("/field-guide-finance", express.static(fieldGuideFinanceDist));
+  app.get("/field-guide-finance/*path", (_req, res) => {
+    res.sendFile(path.join(fieldGuideFinanceDist, "index.html"));
+  });
+}
+
 // Serve the media manager UI at /media/ (internal workspace tool)
 // Use import.meta.url so the path works regardless of CWD in dev or prod.
 const mediaManagerHtml = new URL("../src/media-manager.html", import.meta.url).pathname;

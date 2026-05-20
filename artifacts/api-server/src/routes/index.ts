@@ -20,6 +20,7 @@ import captureRouter from "./capture";
 import helpingHandsRouter from "./helpingHands";
 import youthPathRouter from "./youthPath";
 import sandboxRouter from "./sandbox";
+import membershipRouter from "./membership";
 
 const router: IRouter = Router();
 
@@ -47,5 +48,6 @@ router.use("/capture", captureRouter);
 router.use("/helping-hands", helpingHandsRouter);
 router.use("/youth-path", youthPathRouter);
 router.use("/sandbox", sandboxRouter);
+router.use("/membership", membershipRouter);
 
 export default router;
