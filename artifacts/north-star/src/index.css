@@ -1,0 +1,63 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  --color-ink: #1C1917;
+  --color-ink-light: #44403C;
+  --color-ink-muted: #78716C;
+  --color-paper: #FAFAF9;
+  --color-paper-warm: #F5F5F0;
+  --color-border: #E7E5E4;
+  --color-amber-soft: #FEF3C7;
+  --color-amber-border: #FCD34D;
+  --color-amber-text: #92400E;
+
+  --color-z1: #4F6E5C;
+  --color-z1-light: #D1E7DB;
+  --color-z2: #3B5998;
+  --color-z2-light: #DBEAFE;
+  --color-z3: #7C4E8A;
+  --color-z3-light: #EDE9FE;
+  --color-z4: #B45309;
+  --color-z4-light: #FEF3C7;
+}
+
+:root {
+  --background: #FAFAF9;
+  --foreground: #1C1917;
+  --border: #E7E5E4;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #FAFAF9;
+  color: #1C1917;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400;
+}
+
+button, a, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.zone-z1 { --zone-color: #4F6E5C; --zone-light: #D1E7DB; }
+.zone-z2 { --zone-color: #3B5998; --zone-light: #DBEAFE; }
+.zone-z3 { --zone-color: #7C4E8A; --zone-light: #EDE9FE; }
+.zone-z4 { --zone-color: #B45309; --zone-light: #FEF3C7; }
