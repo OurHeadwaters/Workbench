@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ScenarioProvider } from "@/lib/scenario";
+import { PassphraseGate } from "@/components/PassphraseGate";
 import { AppShell } from "@/components/AppShell";
 import { EaglePrologue } from "@/components/EaglePrologue";
 import { IndexPage } from "@/pages/IndexPage";
@@ -102,12 +103,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <ScenarioProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <AppContent />
-          </WouterRouter>
-        </ScenarioProvider>
-        <Toaster />
+        <PassphraseGate>
+          <ScenarioProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <AppContent />
+            </WouterRouter>
+          </ScenarioProvider>
+          <Toaster />
+        </PassphraseGate>
       </TooltipProvider>
     </QueryClientProvider>
   );
