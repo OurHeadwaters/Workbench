@@ -31,6 +31,7 @@ import GMPHPage from "./pages/GMPHPage";
 import EightOhSevenPage from "./pages/EightOhSevenPage";
 import NANPage from "./pages/NANPage";
 import { HeadwatersWindowPage } from "./pages/HeadwatersWindowPage";
+import EthosPage from "./pages/EthosPage";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
@@ -72,6 +73,7 @@ export default function App() {
       <Route path={`${BASE}/eight-oh-seven`} component={EightOhSevenPage} />
       <Route path={`${BASE}/nan`} component={NANPage} />
       <Route path={`${BASE}/window`} component={HeadwatersWindowPage} />
+      <Route path={`${BASE}/ethos`} component={EthosPage} />
       <Route path={`${BASE}/plan`} component={PlanYear} />
       <Route path={`${BASE}/plan/today`} component={PlanToday} />
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />

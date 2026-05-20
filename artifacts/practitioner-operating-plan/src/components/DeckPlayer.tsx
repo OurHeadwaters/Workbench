@@ -6,6 +6,7 @@ import manifest from "../data/slides-manifest.json";
 import Prologue from "../pages/slides/Prologue";
 import Cover from "../pages/slides/Cover";
 import SlabVsGrassland from "../pages/slides/SlabVsGrassland";
+import EthosSlide from "../pages/slides/EthosSlide";
 import Budget from "../pages/slides/Budget";
 import CaseForRate from "../pages/slides/CaseForRate";
 import CashFlow from "../pages/slides/CashFlow";
@@ -35,6 +36,7 @@ const COMPONENTS: ComponentType[] = [
   Prologue,
   Cover,
   SlabVsGrassland,
+  EthosSlide,
   Budget,
   CaseForRate,
   CashFlow,
