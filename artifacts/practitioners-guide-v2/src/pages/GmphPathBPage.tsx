@@ -460,7 +460,7 @@ function ToolCard({ tool }: { tool: (typeof TOOLS)[0] }) {
             <button
               type="button"
               onClick={() => setOpen((p) => !p)}
-              className="mt-3 flex items-center gap-1 text-xs font-medium transition-colors"
+              className="mt-3 flex items-center gap-1 text-xs font-medium transition-colors print:hidden"
               style={{ color: tool.accent }}
             >
               {open ? (
@@ -474,20 +474,21 @@ function ToolCard({ tool }: { tool: (typeof TOOLS)[0] }) {
               )}
             </button>
 
-            {open && (
-              <div className="mt-3 space-y-2 text-sm">
-                <div className="rounded-lg p-3" style={{ background: tool.accentSoft + "60" }}>
-                  <p className="text-xs font-semibold mb-1" style={{ color: tool.accent }}>
-                    The problem
-                  </p>
-                  <p className="text-xs leading-relaxed text-muted-foreground">{tool.problem}</p>
-                </div>
-                <div className="rounded-lg p-3" style={{ background: "hsl(var(--muted)/0.4)" }}>
-                  <p className="text-xs font-semibold mb-1 text-foreground">What it does</p>
-                  <p className="text-xs leading-relaxed text-muted-foreground">{tool.solution}</p>
-                </div>
+            <div
+              data-print-expand=""
+              className={`mt-3 space-y-2 text-sm${open ? "" : " hidden"}`}
+            >
+              <div className="rounded-lg p-3" style={{ background: tool.accentSoft + "60" }}>
+                <p className="text-xs font-semibold mb-1" style={{ color: tool.accent }}>
+                  The problem
+                </p>
+                <p className="text-xs leading-relaxed text-muted-foreground">{tool.problem}</p>
               </div>
-            )}
+              <div className="rounded-lg p-3" style={{ background: "hsl(var(--muted)/0.4)" }}>
+                <p className="text-xs font-semibold mb-1 text-foreground">What it does</p>
+                <p className="text-xs leading-relaxed text-muted-foreground">{tool.solution}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -518,7 +519,7 @@ function RevenueCalculator() {
     >
       <div className="h-1 bg-emerald-600" />
       <div className="p-5 space-y-5">
-        <div>
+        <div data-print-hide="">
           <p className="text-xs font-semibold text-foreground mb-1">
             Monthly price per facility
           </p>
@@ -544,7 +545,7 @@ function RevenueCalculator() {
           </p>
         </div>
 
-        <div>
+        <div data-print-hide="">
           <p className="text-xs font-semibold text-foreground mb-1">
             Number of subscribing facilities
           </p>

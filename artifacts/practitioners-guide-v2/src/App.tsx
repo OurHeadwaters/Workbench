@@ -41,6 +41,16 @@ import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
 
+function GmphPublicShell() {
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 py-10 print:px-0 print:py-0 print:max-w-none">
+        <GmphPathBPage />
+      </div>
+    </div>
+  );
+}
+
 function Router() {
   return (
     <Switch>
@@ -102,19 +112,34 @@ function AppContent() {
   );
 }
 
+function PublicRouter() {
+  return (
+    <Switch>
+      <Route path="/gmph-path-b" component={GmphPublicShell} />
+      <Route>{null}</Route>
+    </Switch>
+  );
+}
+
 function App() {
   return (
     <ZoneStoreProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <PassphraseGate>
-          <ScenarioProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <AppContent />
-            </WouterRouter>
-          </ScenarioProvider>
-          <Toaster />
-        </PassphraseGate>
+        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <PublicRouter />
+          <Switch>
+            <Route path="/gmph-path-b">{null}</Route>
+            <Route>
+              <PassphraseGate>
+                <ScenarioProvider>
+                  <AppContent />
+                </ScenarioProvider>
+                <Toaster />
+              </PassphraseGate>
+            </Route>
+          </Switch>
+        </WouterRouter>
       </TooltipProvider>
     </QueryClientProvider>
     </ZoneStoreProvider>

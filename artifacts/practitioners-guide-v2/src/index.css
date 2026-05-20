@@ -369,3 +369,61 @@
 .hw-label--gold      { background: #d4a017; color: #1f3d2e; }
 .hw-label--cream     { background: #f4ede0; color: #1f3d2e; }
 .hw-label--blue      { background: #1B5E8A; color: #f4ede0; }
+
+/* ─── GMPH Path B — print / PDF stylesheet ────────────────────────────── */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 18mm 16mm 18mm 16mm;
+  }
+
+  body {
+    background: #fff !important;
+    color: #1a1a1a !important;
+    font-size: 11pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide the back-link on print (it's also print:hidden via Tailwind) */
+  [data-testid="back-to-dashboard"] {
+    display: none !important;
+  }
+
+  /* Ensure the page fills the full print width */
+  .max-w-3xl { max-width: 100% !important; }
+
+  /* Avoid breaking inside cards */
+  section,
+  [class*="rounded-xl"],
+  [class*="rounded-lg"] {
+    break-inside: avoid;
+  }
+
+  /* Always show tool-card detail panels */
+  [data-print-expand] {
+    display: block !important;
+  }
+
+  /* Hide interactive controls that don't make sense on paper */
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  /* Tweak spacing for paper */
+  .space-y-10 > * + * { margin-top: 1.6rem !important; }
+  .space-y-4  > * + * { margin-top: 0.75rem !important; }
+  .space-y-3  > * + * { margin-top: 0.6rem !important; }
+
+  /* Keep colour-coded backgrounds legible on paper */
+  [style*="background: #d1fae5"],
+  [style*="background: #dbeafe"],
+  [style*="background: #ede9fe"],
+  [style*="background: #fef3c7"],
+  [style*="background: #fee2e2"] {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+}
