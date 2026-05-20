@@ -1,0 +1,43 @@
+#1 - The Train — Viral Recut
+What & Why
+Re-cut and extend the existing ~60s short into a single self-contained ~2–3 minute film designed as a viral first point of contact for people overwhelmed by the state of the world — people feeling helpless, dissociated, or on the edge of breaking. The film must pull them emotionally from confusion and terror through to clarity and an open door, so they leave wanting to explore solutions and connect, not spiral further. A separate intake pipeline (out of scope here) will receive viewers who reach out.
+
+The current cut ends right as the train's headlight blooms — a closed mystery. That ending is wrong for the goal. We extend forward through the subway time-glitch, the hospital, the sleep, the clarity, and the future-vantage reveal — and we land on a held-out hand, not a riddle.
+
+Done looks like
+A single ~2–3 minute film plays start-to-finish in the existing artifact, viewable on web and shareable (vertical-friendly composition where possible for social).
+First 5 seconds hook hard — a viewer scrolling past on a phone stops.
+The journey reads emotionally as: dissociation → terror → stillness → clarity → recognition → invitation.
+A viewer who has felt overwhelmed by "everything happening in the world" sees themselves in her and feels less alone by the end.
+The crypto/cultural signals (XRP, Ripple, phoenix-from-ashes, XRP army, XLM, BTC) are present only as background texture — tickers, graffiti, posters, station signage glimpsed in passing. A viewer who knows recognizes them; a viewer who doesn't never feels excluded.
+The "something answered you" beat lands as spiritually open — no religious vocabulary, no "God" on screen, nothing that would alienate a non-religious viewer. A believer reads it as God; a non-believer reads it as their own inner signal. Both work.
+The hospital sequence is hard but tasteful — brief fragmented flashes (a needle, a restrained wrist, fluorescent ceiling, a face going in and out of focus) carried by oppressive sound design. Long enough to land the terror, short enough that people who've been there feel recognized rather than re-traumatized.
+The film closes with a single quiet final card or visual that functions as an open door — something a viewer can act on without it feeling like an ad. The closer carries the project's actual language and framework:
+The world she has woken up from is named "the systems" (lowercase, in-world dialect — not "the system," not "the Matrix").
+The path forward is the exit and build strategy: leave the systems, build solutions in place.
+The closing line is: "Start where you are. Do what you can. See the ripple effect."
+These three sentences land on the final card (or across two beats), quiet, unbranded, no logo. They function as both the emotional resolution and the invitation.
+The existing Chapter One scenes (bathtub, hairdresser, walk, security guard, Blackberry-in-toilet, train headlight) are preserved and integrated, not rebuilt from scratch. The HANDOFF.md tone bible still governs (centred composition, locked-off camera, sodium-amber accent used once per scene, no narration, almost no on-screen text).
+Out of scope
+The intake pipeline / landing page / support funnel viewers are directed toward. This film only points at the door.
+Audio mastering for broadcast — we ship with web-quality sound design.
+Multi-language subtitles or localization.
+A separate vertical (9:16) re-cut. We compose with social in mind but ship one master.
+Any religious framing, on-screen God language, or scripture.
+The Jan 1 2025 / Musk name-change real-world reference — too topical and dating; we keep the time-travel reveal abstract instead.
+Steps
+Lock the new beat sheet and timing. Write a scene-by-scene breakdown for the full ~2–3 min arc, mapping which existing scenes carry forward (bathtub, hairdresser, walk, guard, Blackberry, headlight), which need extension, and which are net-new (mall cold-open, subway time-glitch with embedded culture signals, Subway-sandwich/subway-train visual glitch, "Nothing stops this train" stop reveal, hospital fragment montage, sleep-to-clarity turn, family/preparedness flashes, future-vantage reveal, the open-door closer). Confirm total runtime target and which existing scenes get trimmed.
+
+Write the new scenes. Build the net-new scenes as React/Framer Motion components following the existing video_scenes/ pattern and the HANDOFF.md visual language (palette, single sodium-amber accent per scene, locked-off camera, centred composition, negative space above her head). Source or generate the required still imagery for backgrounds.
+
+Design the subway time-glitch sequence. This is the visual centerpiece. Build the train-through-time effect, the Subway-sandwich/subway-train glitch gag, the embedded crypto/cultural signals as background texture only (station ads, graffiti, ticker crawl), and the "Nothing stops this train" stop-sign reveal. Crypto signals must read as ambient world-building, never as the subject of a shot.
+
+Build the hospital fragment montage. Short, fragmented, oppressive. Brief flashes (needle, restrained wrist, fluorescent ceiling, face drifting in/out) carried primarily by sound design. Land the terror without sustained graphic content. End on a hard cut to stillness.
+
+Build the clarity turn and family/preparedness flashes. The tonal pivot from terror to stillness to recognition. Warm light returns sparingly. The family/preparedness flashes are quick, tender, grounded — proof that the years between then and now were not wasted.
+
+Build the future-vantage reveal and open-door closer. Reveal that she was riding back from a future-vantage point (pre-COVID, pre-collapse) without naming specific events on screen — the audience fills in their own. Land the "something answered you" beat as spiritually open (visual or a single non-religious phrase). Close on the open-door final card carrying the project's framework language: name what she exited as "the systems" (lowercase, in-world dialect), and land the closing line "Start where you are. Do what you can. See the ripple effect." Quiet, unbranded, no logo — the line itself is the invitation.
+
+Sound design pass across the full film. Vivid sound is called out explicitly in the source. Mall hum, fluorescent buzz, January wind, subway rush, train doppler, hospital sounds (muted, oppressive), the silence-break at the clarity turn. Reuse the existing scene transitions' rhythm but extend the palette.
+
+Integrate, pace, and ship. Wire all scenes into the existing VideoTemplate / scene controller, tune transition timing and holds across the full runtime (the long film needs different pacing than the 60s cut — earn the held shots, don't waste them), verify it plays cleanly end-to-end in the preview, and update HANDOFF.md so the next agent inherits the new arc.
