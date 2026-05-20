@@ -22,7 +22,7 @@ const PHASES = [
   {
     n: "03",
     label: "Both-Sides",
-    body: "Map the actors — who benefits, who bears cost, who decides.",
+    body: "Map the actors — who benefits, who bears cost, who decides. The model was first drawn in reserves and northern communities, where both sides of that ledger are rarely in the same room.",
     season: "High summer — long light, hard work.",
   },
   {
