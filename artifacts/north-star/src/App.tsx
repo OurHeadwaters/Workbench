@@ -13,6 +13,7 @@ import { InboxSetupPage } from "@/pages/InboxSetupPage";
 import { TesterKitPage } from "@/pages/TesterKitPage";
 import { SponsorIntakePage } from "@/pages/SponsorIntakePage";
 import { TriageLandingPage } from "@/pages/TriageLandingPage";
+import { ArchiveMiningPage } from "@/pages/ArchiveMiningPage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -109,6 +110,14 @@ export default function App() {
         </Route>
 
         <Route path="/triage" component={TriageLandingPage} />
+
+        <Route path="/archive-mining">
+          <OnboardingGuard>
+            <AppShell>
+              <ArchiveMiningPage />
+            </AppShell>
+          </OnboardingGuard>
+        </Route>
 
         <Route>
           <Redirect to="/" />

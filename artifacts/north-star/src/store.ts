@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
-import type { AppState, Store, Constellation, ZoneId } from "./types";
+import type { AppState, Store, Constellation, ZoneId, ContentBankItem } from "./types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 
 const ZONE_COLORS: Record<ZoneId, string> = {
@@ -136,6 +136,7 @@ const INITIAL_STATE: AppState = {
   captures: [],
   dismissedNudges: {},
   pendingReplies: {},
+  contentBank: [],
   inbox: {
     keywords: ["accountant", "CRA", "bookkeeping", "invoice", "tax"],
     senders: [],
@@ -311,6 +312,22 @@ export const useStore = create<Store>()(
       resetAll: () => set({ ...INITIAL_STATE, installedAt: new Date().toISOString() }),
 
       setLastBackedUp: () => set({ lastBackedUpAt: new Date().toISOString() }),
+
+      addToContentBank: (item) =>
+        set((s) => ({
+          contentBank: [
+            { ...item, id: uuidv4(), taggedAt: new Date().toISOString() },
+            ...s.contentBank.filter((x) => x.threadId !== item.threadId),
+          ],
+        })),
+
+      updateContentBankItem: (id, patch) =>
+        set((s) => ({
+          contentBank: s.contentBank.map((x) => (x.id === id ? { ...x, ...patch } : x)),
+        })),
+
+      removeFromContentBank: (id) =>
+        set((s) => ({ contentBank: s.contentBank.filter((x) => x.id !== id) })),
     }),
     {
       name: "north-star:v1",

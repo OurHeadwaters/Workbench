@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Archive } from "lucide-react";
+import { Link } from "wouter";
 import { useStore } from "@/store";
 import type { HatLabel } from "@/types";
 
@@ -151,6 +152,17 @@ export function InboxSetupPage() {
             <strong>Gmail OAuth required.</strong> The Morning Triage card reads from <code className="font-mono">/api/inbox/threads</code>. If OAuth isn't configured in the API server, the triage card will silently show nothing — the Today screen still works fully.
           </p>
         </div>
+
+        <Link href="/archive-mining">
+          <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 flex items-center gap-3 cursor-pointer hover:bg-[#F5F5F0] transition-colors">
+            <Archive size={18} className="text-[#78716C] shrink-0" />
+            <div className="min-w-0">
+              <p className="text-sm font-medium">Archive Mining</p>
+              <p className="text-xs text-[#78716C]">Search your Gmail archive by zone, tag threads, build a content bank</p>
+            </div>
+            <span className="text-[#A8A29E] text-sm ml-auto shrink-0">→</span>
+          </div>
+        </Link>
 
         <button
           onClick={handleSave}

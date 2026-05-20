@@ -159,4 +159,128 @@ router.get("/threads", async (req, res) => {
   }
 });
 
+// ─── Archive search ────────────────────────────────────────────────────────
+// GET /inbox/archive
+//   Query params:
+//     q          — free-text Gmail query string (appended to base query)
+//     dateFrom   — ISO date string (YYYY-MM-DD) lower bound
+//     dateTo     — ISO date string (YYYY-MM-DD) upper bound
+//     preset     — one of: mailchimp | z1-income | z2-contract | z3-future | z4-community
+//     maxResults — number of threads to return (default 30, max 50)
+//   Returns: EmailThread[] (same shape as /threads)
+
+const PRESET_QUERIES: Record<string, string> = {
+  mailchimp: "from:@mailchimp.com OR from:@mandrillapp.com OR from:campaigns@",
+  "z1-income": "(accountant OR CRA OR bookkeeping OR invoice OR tax OR revenue OR payroll OR HST OR GST OR \"tax return\" OR T4)",
+  "z2-contract": "(contract OR proposal OR agreement OR SOW OR deliverable OR scope OR retainer OR \"letter of intent\" OR client)",
+  "z3-future": "(course OR workshop OR cohort OR program OR curriculum OR training OR module OR lesson OR \"online learning\")",
+  "z4-community": "(community OR \"food system\" OR corridor OR \"co-op\" OR cooperative OR Headwaters OR \"Deer Lake\" OR Brightside OR \"Northern Ontario\")",
+};
+
+router.get("/archive", async (req, res) => {
+  try {
+    const connectors = new ReplitConnectors();
+
+    const qParam = typeof req.query.q === "string" ? req.query.q.trim() : "";
+    const dateFrom = typeof req.query.dateFrom === "string" ? req.query.dateFrom.trim() : "";
+    const dateTo = typeof req.query.dateTo === "string" ? req.query.dateTo.trim() : "";
+    const preset = typeof req.query.preset === "string" ? req.query.preset.trim() : "";
+    const maxResults = Math.min(
+      50,
+      parseInt(typeof req.query.maxResults === "string" ? req.query.maxResults : "30", 10) || 30,
+    );
+
+    const parts: string[] = [];
+
+    if (preset && PRESET_QUERIES[preset]) {
+      parts.push(`(${PRESET_QUERIES[preset]})`);
+    }
+
+    if (qParam) {
+      parts.push(`(${qParam})`);
+    }
+
+    if (dateFrom) {
+      parts.push(`after:${dateFrom.replace(/-/g, "/")}`);
+    }
+
+    if (dateTo) {
+      parts.push(`before:${dateTo.replace(/-/g, "/")}`);
+    }
+
+    if (parts.length === 0) {
+      res.json([]);
+      return;
+    }
+
+    const q = parts.join(" ");
+
+    const listResp = await connectors.proxy(
+      "google-mail",
+      `/gmail/v1/users/me/threads?maxResults=${maxResults}&q=${encodeURIComponent(q)}`,
+      { method: "GET" },
+    );
+
+    const listData = await listResp.json() as { threads?: GmailThread[]; error?: { message: string } };
+
+    if (listData.error) {
+      logger.warn({ err: listData.error }, "inbox/archive: Gmail API error");
+      const isScope =
+        listData.error.message?.toLowerCase().includes("insufficient") ||
+        (listData.error as unknown as { status?: string }).status === "PERMISSION_DENIED";
+      if (isScope) {
+        res.status(403).json({ error: "insufficient_scope", message: listData.error.message });
+      } else {
+        res.json([]);
+      }
+      return;
+    }
+
+    const rawThreads: GmailThread[] = listData.threads ?? [];
+
+    if (rawThreads.length === 0) {
+      res.json([]);
+      return;
+    }
+
+    const threads = await Promise.all(
+      rawThreads.slice(0, maxResults).map(async (t) => {
+        try {
+          const msgResp = await connectors.proxy(
+            "google-mail",
+            `/gmail/v1/users/me/threads/${t.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`,
+            { method: "GET" },
+          );
+
+          const msgData = await msgResp.json() as {
+            id: string;
+            messages?: GmailMessage[];
+            snippet?: string;
+          };
+
+          const messages = msgData.messages ?? [];
+          const latestMsg = messages[messages.length - 1];
+          const headers = latestMsg?.payload?.headers;
+
+          return {
+            id: t.id,
+            subject: pickHeader(headers, "Subject") || "(no subject)",
+            from: pickHeader(headers, "From") || "Unknown",
+            snippet: msgData.snippet ?? t.snippet ?? "",
+            date: pickHeader(headers, "Date") || new Date().toISOString(),
+          };
+        } catch (err) {
+          logger.warn({ err, threadId: t.id }, "inbox/archive: failed to fetch thread metadata");
+          return null;
+        }
+      }),
+    );
+
+    res.json(threads.filter(Boolean));
+  } catch (err) {
+    logger.warn({ err }, "inbox/archive: Gmail connector unavailable, returning empty");
+    res.json([]);
+  }
+});
+
 export default router;

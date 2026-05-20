@@ -99,6 +99,7 @@ export interface AppState {
     lastSavedAt?: string;
   };
   lastBackedUpAt?: string;
+  contentBank: ContentBankItem[];
 }
 
 export interface StoreActions {
@@ -126,6 +127,29 @@ export interface StoreActions {
   importBackup: (json: string) => boolean;
   resetAll: () => void;
   setLastBackedUp: () => void;
+  addToContentBank: (item: Omit<ContentBankItem, "id" | "taggedAt">) => void;
+  updateContentBankItem: (id: string, patch: Partial<ContentBankItem>) => void;
+  removeFromContentBank: (id: string) => void;
+}
+
+export type ArchiveContentType =
+  | "course-material"
+  | "email-sequence"
+  | "case-study"
+  | "voice-sample"
+  | "discard";
+
+export interface ContentBankItem {
+  id: string;
+  threadId: string;
+  subject: string;
+  from: string;
+  snippet: string;
+  date: string;
+  zone: ZoneId;
+  contentType: ArchiveContentType;
+  notes: string;
+  taggedAt: string;
 }
 
 export type Store = AppState & StoreActions;
