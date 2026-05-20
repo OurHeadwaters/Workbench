@@ -545,7 +545,7 @@ function exportCsv(
         item.deerLake ? "" : String(item.low),
         item.deerLake ? "" : String(item.high),
         actual === "0" && !actuals[item.id] ? "" : actual,
-        item.deerLake ? "" : (notes[item.id] ?? ""),
+        item.deerLake ? "" : (actuals[item.id] && !(notes[item.id] ?? "").trim() ? "memo missing" : (notes[item.id] ?? "")),
       ]);
     }
   }
