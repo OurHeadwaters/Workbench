@@ -141,6 +141,51 @@ export default function Index() {
           We bring the strategy, the documents, and the follow-through — so the work
           stays in community hands.
         </p>
+
+        {/* Contact CTA */}
+        <div style={{ marginTop: "2.5rem" }}>
+          <a
+            href="mailto:hello@ourheadwaters.ca"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.75rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "#f4ede0",
+              textDecoration: "none",
+              border: "1px solid rgba(212,160,23,0.45)",
+              borderRadius: "2px",
+              padding: "0.65rem 1.5rem",
+              background: "rgba(212,160,23,0.08)",
+              transition: "background 0.2s, border-color 0.2s",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.18)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.7)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.08)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.45)";
+            }}
+            onFocus={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.18)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.7)";
+              (e.currentTarget as HTMLAnchorElement).style.outline = "2px solid rgba(212,160,23,0.6)";
+              (e.currentTarget as HTMLAnchorElement).style.outlineOffset = "3px";
+            }}
+            onBlur={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.08)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.45)";
+              (e.currentTarget as HTMLAnchorElement).style.outline = "none";
+            }}
+          >
+            <span style={{ color: "rgba(212,160,23,0.8)", fontSize: "0.9rem" }}>✉</span>
+            Get in touch
+          </a>
+        </div>
       </div>
 
       {/* Footer */}
