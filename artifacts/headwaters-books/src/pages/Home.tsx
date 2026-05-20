@@ -3,7 +3,7 @@ import { SignedIn, SignedOut } from "@/lib/clerkGates";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { EaglePrologue } from "@/components/EaglePrologue";
-import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
+import { NeighbourhoodBadge } from "@workspace/zone-store";
 import {
   LayoutDashboard,
   HandHelping,

@@ -1,4 +1,4 @@
-import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
+import { NeighbourhoodBadge } from "@workspace/zone-store";
 
 const base = import.meta.env.BASE_URL;
 

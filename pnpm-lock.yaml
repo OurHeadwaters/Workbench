@@ -589,6 +589,9 @@ importers:
       '@workspace/codetry-public':
         specifier: workspace:*
         version: link:../../lib/codetry-public
+      '@workspace/zone-store':
+        specifier: workspace:*
+        version: link:../../lib/zone-store
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1

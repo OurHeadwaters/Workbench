@@ -56,6 +56,7 @@
     "@workspace/api-client-react": "workspace:*",
     "@workspace/codetry-handbook": "workspace:*",
     "@workspace/codetry-public": "workspace:*",
+    "@workspace/zone-store": "workspace:*",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "cmdk": "^1.1.1",

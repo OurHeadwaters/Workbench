@@ -1,20 +1,17 @@
+import { useZone } from "./index";
+
 const MAP_URL = "/map";
 
 interface NeighbourhoodBadgeProps {
-  zoneNumber: number;
-  zoneName: string;
-  standby?: boolean;
+  zoneId: number;
 }
 
-export function NeighbourhoodBadge({
-  zoneNumber,
-  zoneName,
-  standby = false,
-}: NeighbourhoodBadgeProps) {
+export function NeighbourhoodBadge({ zoneId }: NeighbourhoodBadgeProps) {
+  const { number, name, standby } = useZone(zoneId);
   return (
     <a
       href={MAP_URL}
-      title={`Zone ${zoneNumber} — ${zoneName} · View the neighbourhood map`}
+      title={`Zone ${number} — ${name} · View the neighbourhood map`}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -36,7 +33,7 @@ export function NeighbourhoodBadge({
           width: 18,
           height: 18,
           borderRadius: "50%",
-          background: standby ? "#b85a3e" : "#5B3E8C",
+          background: standby ? "#b85a3e" : "#1f3d2e",
           fontFamily: "monospace",
           fontSize: 8,
           fontWeight: 900,
@@ -44,7 +41,7 @@ export function NeighbourhoodBadge({
           flexShrink: 0,
         }}
       >
-        {zoneNumber}
+        {number}
       </span>
       <span
         style={{
@@ -57,7 +54,7 @@ export function NeighbourhoodBadge({
           whiteSpace: "nowrap",
         }}
       >
-        {zoneName}
+        {name}
       </span>
       <span
         style={{

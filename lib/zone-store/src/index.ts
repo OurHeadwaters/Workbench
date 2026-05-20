@@ -81,3 +81,5 @@ export const ZONE_REGISTRY: Record<number, ZoneEntry> = Object.fromEntries(
     },
   ]),
 );
+
+export { NeighbourhoodBadge } from "./NeighbourhoodBadge";

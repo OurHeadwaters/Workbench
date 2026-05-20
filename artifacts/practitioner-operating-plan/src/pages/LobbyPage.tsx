@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
+import { NeighbourhoodBadge } from "@workspace/zone-store";
 import {
   getTodayWeek,
   getTodayDay,

@@ -6,7 +6,7 @@ import { CourseSidebar } from "@/components/CourseSidebar";
 import { LessonView } from "@/components/LessonView";
 import { markVisited, getVisitedIds, getProgress } from "@/lib/progress";
 import { BookOpen, Menu, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
-import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
+import { NeighbourhoodBadge } from "@workspace/zone-store";
 
 export function CoursePage() {
   const { signOut } = useClerk();

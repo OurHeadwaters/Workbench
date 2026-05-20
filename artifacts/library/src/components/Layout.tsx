@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
+import { NeighbourhoodBadge } from "@workspace/zone-store";
 import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat, ShieldAlert, UserCog } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";

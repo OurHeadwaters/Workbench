@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { getStoredOwnerToken, setStoredOwnerToken } from "@/lib/api";
-import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
+import { NeighbourhoodBadge } from "@workspace/zone-store";
 
 interface NavLink {
   href: string;
@@ -158,7 +158,7 @@ export function SiteNav() {
               </span>
             </a>
             <div className="hidden sm:block">
-              <NeighbourhoodBadge zoneNumber={5} zoneName="The Wild" />
+              <NeighbourhoodBadge zoneId={5} />
             </div>
           </div>
 
@@ -458,7 +458,7 @@ export function SiteNav() {
             className="mt-3 pt-3 border-t flex flex-col items-center gap-2"
             style={{ borderColor: "hsl(var(--card-border))" }}
           >
-            <NeighbourhoodBadge zoneNumber={5} zoneName="The Wild" />
+            <NeighbourhoodBadge zoneId={5} />
             <p
               className="font-mono text-[9px] uppercase tracking-[0.22em] text-center"
               style={{ color: "hsl(var(--muted-foreground))", opacity: 0.6 }}

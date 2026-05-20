@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import type { ReactNode } from "react";
-import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
+import { NeighbourhoodBadge } from "@workspace/zone-store";
 import { useEffect, useState } from "react";
 import { useScenario } from "@/lib/scenario";
 import { BUCKETS } from "@/data/buckets";

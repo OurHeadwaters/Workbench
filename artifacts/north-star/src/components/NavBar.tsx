@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { Star, Grid3x3, BookOpen, Settings, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
+import { NeighbourhoodBadge } from "@workspace/zone-store";
 
 const NAV = [
   { path: "/", icon: Star, label: "Today" },
