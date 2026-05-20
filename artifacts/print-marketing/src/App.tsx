@@ -50,6 +50,7 @@ import CommunityFinanceBrief from "@/pages/CommunityFinanceBrief";
 import EngineOnePager from "@/pages/EngineOnePager";
 import DeerLakeFirstEngine from "@/pages/DeerLakeFirstEngine";
 import DeerLakeYouthOdyssey from "@/pages/DeerLakeYouthOdyssey";
+import InternalDocs from "@/pages/InternalDocs";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -105,6 +106,7 @@ function Router() {
       <Route path="/constellation-session-may16" component={ConstellationSessionMay16} />
       <Route path="/xrpl-tip" component={XRPLTip} />
       <Route path="/community-finance-brief" component={CommunityFinanceBrief} />
+      <Route path="/internal" component={InternalDocs} />
       <Route component={NotFound} />
     </Switch>
   );
