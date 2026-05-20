@@ -101,6 +101,16 @@ export function SignOnPage() {
           >
             Rooted in reserves and northern communities — built to replicate anywhere.
           </p>
+          <p className="mt-5">
+            <Link
+              href="/codetry"
+              className="font-mono text-[9.5px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
+              style={{ color: "rgba(244,237,224,0.40)" }}
+              data-testid="sign-on-what-is-codetry-link"
+            >
+              New here? What is Codetry? →
+            </Link>
+          </p>
         </div>
       </section>
 

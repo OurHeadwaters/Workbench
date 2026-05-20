@@ -27,6 +27,7 @@ import { EconomyPage } from "@/pages/EconomyPage";
 import { EconomyJoinPage } from "@/pages/EconomyJoinPage";
 import { WalletPage } from "@/pages/WalletPage";
 import { TipPage } from "@/pages/TipPage";
+import { WhatIsCodetryPage } from "@/pages/WhatIsCodetryPage";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,9 @@ function Router() {
       <Route path="/economy/wallet" component={WalletPage} />
       <Route path="/economy/tip" component={TipPage} />
       <Route path="/economy/join/:code" component={EconomyJoinPage} />
+
+      {/* ── What is Codetry? ── */}
+      <Route path="/codetry" component={WhatIsCodetryPage} />
 
       <Route component={NotFound} />
     </Switch>

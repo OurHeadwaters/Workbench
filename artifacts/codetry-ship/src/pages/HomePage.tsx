@@ -1061,6 +1061,14 @@ export function HomePage() {
           <p className="signoff">— bobbie parr · headwaters · dryden, ontario</p>
           <div className="flex items-center gap-6">
             <a
+              href={`${import.meta.env.BASE_URL}codetry`}
+              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+              data-testid="footer-what-is-codetry-link"
+            >
+              What is Codetry?
+            </a>
+            <a
               href="/privacy"
               className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
               style={{ color: "hsl(var(--muted-foreground))" }}
