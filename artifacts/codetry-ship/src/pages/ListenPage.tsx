@@ -3,6 +3,167 @@ import { Link } from "wouter";
 import { QRCodeSVG } from "qrcode.react";
 import { ApiError, postSignOn, postIntake } from "@/lib/api";
 
+/* ── TSP permaculture zone quiz ────────────────────────────────────────── */
+
+interface PcZone {
+  id: string;
+  name: string;
+  blurb: string;
+  guidance: string;
+  cta: { label: string; href: string };
+  color: string;
+}
+
+const PC_ZONES: PcZone[] = [
+  {
+    id: "Z0",
+    name: "The Self",
+    blurb: "Skills, knowledge, mindset — you're building your own capacity first.",
+    guidance:
+      "Right place to start. The Codetry Handbook is a plain-language guide to the whole method — how communities name their work, scope it, and hand it over without losing it. Read it first, then walk the Odyssey.",
+    cta: { label: "Read the Handbook →", href: "/codetry-handbook/" },
+    color: "#7A4E2D",
+  },
+  {
+    id: "Z1",
+    name: "The Home",
+    blurb: "Household sorted. You want to connect with neighbours — buying clubs, food security at street level.",
+    guidance:
+      "This is exactly where the 807 Food Co-op started. A handful of households, one shared order. The numbers below show what three years of that looks like in a northern Ontario town.",
+    cta: { label: "See the 807 numbers ↓", href: "#section-outcomes" },
+    color: "#1f3d2e",
+  },
+  {
+    id: "Z2",
+    name: "The Garden",
+    blurb: "You're growing food and hitting the limits of what one farm or garden can do alone.",
+    guidance:
+      "The route problem is real — one producer can't justify a freight run. Pool the demand across 10–15 households and the math changes. The flywheel section below explains how it works without a grant to get started.",
+    cta: { label: "How the flywheel works ↓", href: "#section-flywheel" },
+    color: "#2e8b4e",
+  },
+  {
+    id: "Z3",
+    name: "The Homestead",
+    blurb: "Working homestead. You want to knit it into a supply chain that doesn't depend on chain grocery.",
+    guidance:
+      "The cold distribution lane ratified at our May 2026 AGM is the infrastructure you're looking for — a bi-weekly route that moves product without depending on individual vehicle runs. The Headwaters Odyssey teaches the method for organising that in your own region.",
+    cta: { label: "Start the Odyssey →", href: "/odyssey" },
+    color: "#c97c2e",
+  },
+  {
+    id: "Z4",
+    name: "The Forest",
+    blurb: "Land-scale thinking — watershed economics, long-horizon community ownership.",
+    guidance:
+      "The northern reserve work is the right lens here. Headwaters is delivering a full store operating system to Deer Lake First Nation — software, accounts, freight, on-site training. Community ownership at that scale is the same model, bigger radius.",
+    cta: { label: "Read about the work ↓", href: "#section-trust" },
+    color: "#3D4A5C",
+  },
+  {
+    id: "Z5",
+    name: "The Wild",
+    blurb: "You've built something and you're ready to help others replicate it.",
+    guidance:
+      "The Odyssey is the method written down — five phases, twenty stations, the same discipline used to build the 807 Food Co-op. If you're at the stage where you want to teach it forward, start there.",
+    cta: { label: "Begin the Odyssey →", href: "/odyssey" },
+    color: "#5B3E8C",
+  },
+];
+
+function TspZoneQuiz() {
+  const [selected, setSelected] = useState<string | null>(null);
+  const zone = PC_ZONES.find((z) => z.id === selected);
+
+  return (
+    <div
+      className="rounded-sm border print:hidden"
+      style={{ borderColor: "hsl(var(--card-border))" }}
+      data-testid="section-zone-quiz"
+    >
+      <div className="px-5 pt-5 pb-3">
+        <p
+          className="font-mono text-[10px] uppercase tracking-[0.28em] mb-2"
+          style={{ color: "hsl(var(--accent))" }}
+        >
+          start here
+        </p>
+        <p className="font-serif text-base sm:text-lg leading-snug mb-4">
+          Which zone are you working in right now?
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {PC_ZONES.map((z) => {
+            const active = selected === z.id;
+            return (
+              <button
+                key={z.id}
+                type="button"
+                onClick={() => setSelected(active ? null : z.id)}
+                className="text-left rounded-sm border px-3 py-2.5 transition-all"
+                style={{
+                  borderColor: active ? z.color : "hsl(var(--card-border))",
+                  background: active ? `${z.color}12` : "hsl(var(--card))",
+                  boxShadow: active ? `0 0 0 1.5px ${z.color}` : "none",
+                }}
+                aria-pressed={active}
+                data-testid={`zone-btn-${z.id}`}
+              >
+                <span
+                  className="block font-mono text-[9px] uppercase tracking-[0.18em] mb-0.5"
+                  style={{ color: active ? z.color : "hsl(var(--muted-foreground))" }}
+                >
+                  {z.id}
+                </span>
+                <span
+                  className="block font-serif text-[13px] font-medium leading-tight mb-1"
+                  style={{ color: "hsl(var(--foreground))" }}
+                >
+                  {z.name}
+                </span>
+                <span
+                  className="block font-serif text-[11px] leading-snug"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                >
+                  {z.blurb}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {zone && (
+        <div
+          className="mx-5 mb-5 mt-1 rounded-sm px-4 py-4"
+          style={{
+            background: `${zone.color}0d`,
+            borderLeft: `3px solid ${zone.color}`,
+          }}
+          data-testid="zone-guidance"
+        >
+          <p
+            className="font-mono text-[9px] uppercase tracking-[0.22em] mb-2"
+            style={{ color: zone.color }}
+          >
+            {zone.id} · {zone.name}
+          </p>
+          <p className="font-serif text-sm sm:text-base leading-relaxed text-foreground/80 mb-3">
+            {zone.guidance}
+          </p>
+          <a
+            href={zone.cta.href}
+            className="inline-flex items-center font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
+            style={{ color: zone.color }}
+            data-testid="zone-cta"
+          >
+            {zone.cta.label}
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface FormState {
   name: string;
   email: string;
@@ -155,14 +316,20 @@ export function ListenPage() {
             <span style={{ color: "#b85a3e" }}>was never designed to serve you.</span>
           </h1>
           <p
-            className="mt-5 font-serif leading-relaxed"
-            style={{ fontSize: "clamp(1rem, 3vw, 1.15rem)", color: "rgba(244,237,224,0.78)" }}
+            className="mt-4 font-serif font-medium"
+            style={{ fontSize: "clamp(0.95rem, 2.8vw, 1.1rem)", color: "rgba(244,237,224,0.92)" }}
           >
-            Northwestern Ontario. Towns of 3,000–10,000 people, hours from the
-            nearest distribution centre. Local producers who can&rsquo;t reach
-            markets. Communities bleeding money outward to chain grocery. One
-            co-op decided to pool its demand instead — and built a food system
-            the chain never would.
+            A working community food economy — real numbers, real members, real logistics.
+            Built by someone who already ran one in northwestern Ontario.
+          </p>
+          <p
+            className="mt-4 font-serif leading-relaxed"
+            style={{ fontSize: "clamp(0.9rem, 2.6vw, 1rem)", color: "rgba(244,237,224,0.65)" }}
+          >
+            Towns of 3,000–10,000 people, hours from the nearest distribution centre.
+            Local producers who can&rsquo;t reach markets. Communities bleeding money
+            outward to chain grocery. One co-op decided to pool its demand instead — and
+            built a food system the chain never would.
           </p>
         </div>
       </section>
@@ -190,6 +357,11 @@ export function ListenPage() {
         <p className="hidden print:block mt-3 font-serif text-base leading-snug">
           807 Food Co-op is a member-owned food co-operative in Dryden, Ontario — incorporated under the Co-operative Corporations Act, operated by 14+ member businesses, $147,000 moved through a community-owned channel in 27 months.
         </p>
+
+        {/* ---- Start Here — permaculture zone quiz ---- */}
+        <div className="mt-8 print:hidden">
+          <TspZoneQuiz />
+        </div>
 
         {/* ---- 807 outcomes block ---- */}
         <section className="mt-8 print:hidden" data-testid="section-outcomes">

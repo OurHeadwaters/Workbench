@@ -444,17 +444,10 @@ export function MapPage() {
             marginTop: 48,
             paddingTop: 24,
             borderTop: `1px solid ${RULE}`,
-            display: "flex",
-            flexDirection: "column",
-            gap: 6,
           }}
         >
           <p style={{ fontSize: 11, color: MUTED, margin: 0 }}>
-            Zone badges for external tools (xbuckets, salt-box, Dam Days) will be added to their respective projects in a future task.
-          </p>
-          <p style={{ fontSize: 11, color: MUTED, margin: 0 }}>
-            This map is the canonical public URL for the Headwaters neighbourhood —{" "}
-            <span style={{ fontFamily: "monospace" }}>headwaters.replit.app/map</span>
+            Six zones. One neighbourhood. Each zone is a different kind of place — pick the door that matches what you need.
           </p>
         </div>
       </div>
