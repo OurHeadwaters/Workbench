@@ -22,6 +22,7 @@ import youthPathRouter from "./youthPath";
 import sandboxRouter from "./sandbox";
 import membershipRouter from "./membership";
 import inboxRouter from "./inbox";
+import waitlistRouter from "./waitlist";
 
 const router: IRouter = Router();
 
@@ -51,5 +52,6 @@ router.use("/youth-path", youthPathRouter);
 router.use("/sandbox", sandboxRouter);
 router.use("/membership", membershipRouter);
 router.use("/inbox", inboxRouter);
+router.use("/waitlist", waitlistRouter);
 
 export default router;

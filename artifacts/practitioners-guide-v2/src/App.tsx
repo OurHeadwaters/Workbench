@@ -37,6 +37,7 @@ import { SessionHandoffPage } from "@/pages/SessionHandoffPage";
 import { WorkspacePage } from "@/pages/WorkspacePage";
 import { SaltboxGatherRoundPage } from "@/pages/SaltboxGatherRoundPage";
 import { GmphPathBPage } from "@/pages/GmphPathBPage";
+import { LegacyAssetManagerPage } from "@/pages/LegacyAssetManagerPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -112,10 +113,14 @@ function AppContent() {
   );
 }
 
+// Public routes rendered outside PassphraseGate so they can be shared freely.
+// /gmph-path-b — GMPH revenue-share proposal (incoming from main)
+// /legacy-asset-manager — Legacy Asset Manager public product funnel (task #1625)
 function PublicRouter() {
   return (
     <Switch>
       <Route path="/gmph-path-b" component={GmphPublicShell} />
+      <Route path="/legacy-asset-manager" component={LegacyAssetManagerPage} />
       <Route>{null}</Route>
     </Switch>
   );
@@ -129,7 +134,9 @@ function App() {
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <PublicRouter />
           <Switch>
+            {/* Suppress public routes so they don't fall through to PassphraseGate */}
             <Route path="/gmph-path-b">{null}</Route>
+            <Route path="/legacy-asset-manager">{null}</Route>
             <Route>
               <PassphraseGate>
                 <ScenarioProvider>
