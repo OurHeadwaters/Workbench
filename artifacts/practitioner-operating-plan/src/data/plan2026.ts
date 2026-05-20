@@ -210,6 +210,11 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-05-21",
         steps: [
           {
+            title: "Morning: drag-and-drop photos into the Library + sort out codetry.ca domain",
+            detail: "Two quick tech tasks before the day opens up. (1) Open the Research Library → Add to Library → Upload File tab. Drag a folder of photos onto the drop zone — it queues all of them and uploads one by one. Tag them with Producer/Subject/Bucket before you drop so they land organized. (2) Sort out the codetry.ca domain: confirm DNS is pointed correctly and the domain is resolving to the right place. Both should be done before the first call of the day.",
+            category: "admin",
+          },
+          {
             title: "AGM agenda — draft the key items for the board meeting",
             detail: "AGM is the near-term board milestone. The agenda should include: financial position ($28k startup budget, $12k 807 runway), Deer Lake partnership path for board approval, and any other items requiring a board resolution. Get this into a draft form now so there's time to refine it.",
             category: "admin",

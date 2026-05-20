@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,7 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { UploadCloud, Link as LinkIcon, Loader2, X, File as FileIcon, Image as ImageIcon, Lock, ShieldAlert } from "lucide-react";
+import { UploadCloud, Link as LinkIcon, Loader2, X, File as FileIcon, Image as ImageIcon, Lock, ShieldAlert, CheckCircle2, AlertCircle } from "lucide-react";
 
 const urlFormSchema = z.object({
   url: z.string().url({ message: "Please enter a valid URL" }),
@@ -32,6 +32,14 @@ const urlFormSchema = z.object({
   subjectSlugs: z.array(z.string()).default([]),
   bucketSlugs: z.array(z.string()).default([]),
 });
+
+interface BatchProgress {
+  current: number;
+  total: number;
+  failed: string[];
+  done: boolean;
+  singleFileProgress: number;
+}
 
 export default function NewEntry() {
   const [, setLocation] = useLocation();
@@ -42,7 +50,56 @@ export default function NewEntry() {
 
   const createFromUrl = useCreateEntryFromUrl();
   const createLibraryEntry = useCreateLibraryEntry();
-  
+
+  // Refs so async upload callbacks always read the latest values
+  const fileMetadataRef = useRef<{ producerSlug: string; subjectSlugs: string[]; bucketSlugs: string[] }>({
+    producerSlug: "",
+    subjectSlugs: [],
+    bucketSlugs: [],
+  });
+  const batchQueueRef = useRef<File[]>([]);
+  const batchProgressRef = useRef<{ current: number; total: number; failed: string[] }>({
+    current: 0,
+    total: 0,
+    failed: [],
+  });
+  // Tracks which file is currently in-flight so onError can record its name
+  const currentUploadFileRef = useRef<File | null>(null);
+
+  const [batchProgress, setBatchProgress] = useState<BatchProgress | null>(null);
+
+  const finishBatch = () => {
+    const { total, failed } = batchProgressRef.current;
+    const succeeded = total - failed.length;
+    setBatchProgress(prev => prev ? { ...prev, done: true } : null);
+    const hasFailures = failed.length > 0;
+    toast({
+      title: hasFailures ? `${succeeded} of ${total} uploaded` : `${total} file${total !== 1 ? "s" : ""} added`,
+      description: hasFailures
+        ? `${failed.length} failed: ${failed.join(", ")}`
+        : "All files added to library.",
+      variant: hasFailures ? "destructive" : "default",
+    });
+    setLocation("/entries");
+  };
+
+  const processNextInQueue = () => {
+    const queue = batchQueueRef.current;
+    if (queue.length === 0) {
+      finishBatch();
+      return;
+    }
+    const nextFile = queue.shift()!;
+    batchQueueRef.current = queue;
+    batchProgressRef.current.current += 1;
+    currentUploadFileRef.current = nextFile;
+    setBatchProgress(prev => prev
+      ? { ...prev, current: batchProgressRef.current.current, singleFileProgress: 0 }
+      : null
+    );
+    uploadFile(nextFile);
+  };
+
   const { uploadFile, isUploading, progress } = useUpload({
     getHeaders: () => {
       try {
@@ -57,7 +114,7 @@ export default function NewEntry() {
     onSuccess: async (response, file) => {
       try {
         const hash = await computeFileHash(file);
-        
+        const meta = fileMetadataRef.current;
         const result = await createLibraryEntry.mutateAsync({
           data: {
             kind: "file",
@@ -67,43 +124,65 @@ export default function NewEntry() {
             fileSize: file.size,
             contentType: file.type,
             originalFilename: file.name,
-            producerSlug: fileMetadata.producerSlug || undefined,
-            subjectSlugs: fileMetadata.subjectSlugs,
-            bucketSlugs: fileMetadata.bucketSlugs,
+            producerSlug: meta.producerSlug || undefined,
+            subjectSlugs: meta.subjectSlugs,
+            bucketSlugs: meta.bucketSlugs,
             status: "published"
           }
         });
 
-        if (result.duplicate) {
+        if (batchProgressRef.current.total === 1) {
+          setBatchProgress(null);
           toast({
-            title: "Duplicate found",
-            description: "A file with identical content already exists. We linked to the existing entry.",
-            variant: "default",
+            title: result.duplicate ? "Duplicate found" : "Upload complete",
+            description: result.duplicate
+              ? "A file with identical content already exists. We linked to the existing entry."
+              : "File added to library successfully.",
           });
-        } else {
-          toast({
-            title: "Upload complete",
-            description: "File added to library successfully.",
-          });
+          setLocation(`/entries/${result.entry.id}`);
+          return;
         }
-        
-        setLocation(`/entries/${result.entry.id}`);
+
+        processNextInQueue();
       } catch (err) {
-        toast({
-          title: "Error creating entry",
-          description: errMessage(err, "Failed to finalize upload"),
-          variant: "destructive",
-        });
+        const fileName = currentUploadFileRef.current?.name ?? "unknown";
+        batchProgressRef.current.failed.push(fileName);
+        if (batchProgressRef.current.total === 1) {
+          setBatchProgress(null);
+          toast({
+            title: "Error creating entry",
+            description: errMessage(err, "Failed to finalize upload"),
+            variant: "destructive",
+          });
+          return;
+        }
+        setBatchProgress(prev => prev ? { ...prev, failed: [...batchProgressRef.current.failed] } : null);
+        processNextInQueue();
       }
     },
     onError: (err) => {
-      toast({
-        title: "Upload failed",
-        description: err.message || "Could not upload file to storage",
-        variant: "destructive",
-      });
+      const fileName = currentUploadFileRef.current?.name ?? "unknown";
+      batchProgressRef.current.failed.push(fileName);
+      if (batchProgressRef.current.total === 1) {
+        setBatchProgress(null);
+        toast({
+          title: "Upload failed",
+          description: err.message || "Could not upload file to storage",
+          variant: "destructive",
+        });
+        return;
+      }
+      setBatchProgress(prev => prev ? { ...prev, failed: [...batchProgressRef.current.failed] } : null);
+      processNextInQueue();
     }
   });
+
+  // Mirror the hook's coarse upload progress into the batch progress state
+  useEffect(() => {
+    if (batchProgress && !batchProgress.done) {
+      setBatchProgress(prev => prev ? { ...prev, singleFileProgress: progress } : null);
+    }
+  }, [progress]);
 
   const urlForm = useForm<z.infer<typeof urlFormSchema>>({
     resolver: zodResolver(urlFormSchema),
@@ -126,15 +205,21 @@ export default function NewEntry() {
     bucketSlugs: []
   });
 
+  const updateFileMetadata = (updater: (prev: typeof fileMetadata) => typeof fileMetadata) => {
+    setFileMetadata(prev => {
+      const next = updater(prev);
+      fileMetadataRef.current = next;
+      return next;
+    });
+  };
+
   const [confidentialDragActive, setConfidentialDragActive] = useState(false);
   const [confidentialUploading, setConfidentialUploading] = useState(false);
   const confidentialFileInputRef = useRef<HTMLInputElement>(null);
 
-  // Pending file waiting for title/notes form submission
   const [pendingConfidentialFile, setPendingConfidentialFile] = useState<File | null>(null);
   const [confidentialTitle, setConfidentialTitle] = useState("");
   const [confidentialNotes, setConfidentialNotes] = useState("");
-  // Use a ref so the upload onSuccess closure always sees the latest values
   const confidentialMetaRef = useRef<{ title: string; notes: string }>({ title: "", notes: "" });
 
   const { uploadFile: uploadConfidentialFile, isUploading: isConfidentialUploading, progress: confidentialUploadProgress } = useUpload({
@@ -279,25 +364,35 @@ export default function NewEntry() {
     }
   };
 
+  const startBatch = (files: File[]) => {
+    if (files.length === 0) return;
+    const [first, ...rest] = files;
+    batchQueueRef.current = rest;
+    batchProgressRef.current = { current: 1, total: files.length, failed: [] };
+    currentUploadFileRef.current = first;
+    setBatchProgress({ current: 1, total: files.length, failed: [], done: false, singleFileProgress: 0 });
+    uploadFile(first);
+  };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      startBatch(Array.from(e.dataTransfer.files));
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      handleFile(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      startBatch(Array.from(e.target.files));
+      // Reset input so the same files can be re-selected if needed
+      e.target.value = "";
     }
   };
 
-  const handleFile = (file: File) => {
-    uploadFile(file);
-  };
+  const isBusy = isUploading || createLibraryEntry.isPending || (batchProgress !== null && !batchProgress.done);
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in duration-500 py-6">
@@ -326,7 +421,7 @@ export default function NewEntry() {
           <Card className="bg-card border-border shadow-sm overflow-hidden">
             <CardHeader className="bg-muted/30 border-b border-border/50 pb-4">
               <CardTitle className="text-lg font-serif">1. Set Metadata (Optional)</CardTitle>
-              <CardDescription>Tag the file before uploading it to automatically organize it.</CardDescription>
+              <CardDescription>Tag the files before uploading to automatically organize them.</CardDescription>
             </CardHeader>
             <CardContent className="p-6 grid gap-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -334,7 +429,7 @@ export default function NewEntry() {
                   <Label>Producer / Source</Label>
                   <Select 
                     value={fileMetadata.producerSlug} 
-                    onValueChange={(v) => setFileMetadata(prev => ({ ...prev, producerSlug: v === "none" ? "" : v }))}
+                    onValueChange={(v) => updateFileMetadata(prev => ({ ...prev, producerSlug: v === "none" ? "" : v }))}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select producer" />
@@ -353,7 +448,7 @@ export default function NewEntry() {
                   <Select 
                     onValueChange={(v) => {
                       if (!fileMetadata.subjectSlugs.includes(v)) {
-                        setFileMetadata(prev => ({ ...prev, subjectSlugs: [...prev.subjectSlugs, v] }));
+                        updateFileMetadata(prev => ({ ...prev, subjectSlugs: [...prev.subjectSlugs, v] }));
                       }
                     }}
                   >
@@ -374,7 +469,7 @@ export default function NewEntry() {
                           {subject?.name || slug}
                           <button 
                             className="text-muted-foreground hover:text-foreground rounded-full hover:bg-muted p-0.5"
-                            onClick={() => setFileMetadata(prev => ({ ...prev, subjectSlugs: prev.subjectSlugs.filter(s => s !== slug) }))}
+                            onClick={() => updateFileMetadata(prev => ({ ...prev, subjectSlugs: prev.subjectSlugs.filter(s => s !== slug) }))}
                           >
                             <X className="h-3 w-3" />
                           </button>
@@ -389,7 +484,7 @@ export default function NewEntry() {
                   <Select 
                     onValueChange={(v) => {
                       if (!fileMetadata.bucketSlugs.includes(v)) {
-                        setFileMetadata(prev => ({ ...prev, bucketSlugs: [...prev.bucketSlugs, v] }));
+                        updateFileMetadata(prev => ({ ...prev, bucketSlugs: [...prev.bucketSlugs, v] }));
                       }
                     }}
                   >
@@ -410,7 +505,7 @@ export default function NewEntry() {
                           {bucket?.name || slug}
                           <button 
                             className="text-muted-foreground hover:text-foreground rounded-full hover:bg-muted p-0.5"
-                            onClick={() => setFileMetadata(prev => ({ ...prev, bucketSlugs: prev.bucketSlugs.filter(s => s !== slug) }))}
+                            onClick={() => updateFileMetadata(prev => ({ ...prev, bucketSlugs: prev.bucketSlugs.filter(s => s !== slug) }))}
                           >
                             <X className="h-3 w-3" />
                           </button>
@@ -425,40 +520,61 @@ export default function NewEntry() {
 
           <Card className="bg-card border-border shadow-sm overflow-hidden">
             <CardHeader className="bg-muted/30 border-b border-border/50 pb-4">
-              <CardTitle className="text-lg font-serif">2. Upload File</CardTitle>
+              <CardTitle className="text-lg font-serif">2. Upload Files</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <div 
                 className={`relative border-2 border-dashed rounded-xl p-12 text-center transition-all ${
                   dragActive ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 bg-background/50'
-                } ${isUploading || createLibraryEntry.isPending ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}`}
+                } ${isBusy ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
-                onClick={() => !isUploading && !createLibraryEntry.isPending && fileInputRef.current?.click()}
+                onClick={() => !isBusy && fileInputRef.current?.click()}
               >
                 <input 
                   ref={fileInputRef}
-                  type="file" 
+                  type="file"
+                  multiple
                   className="hidden" 
                   onChange={handleChange}
-                  disabled={isUploading || createLibraryEntry.isPending}
+                  disabled={isBusy}
                 />
                 
-                {isUploading || createLibraryEntry.isPending ? (
+                {batchProgress && !batchProgress.done ? (
                   <div className="flex flex-col items-center gap-4">
                     <Loader2 className="h-10 w-10 text-primary animate-spin" />
-                    <p className="font-medium text-foreground">
-                      {isUploading ? `Uploading... ${Math.round(progress)}%` : "Finalizing entry..."}
+                    <p className="font-medium text-foreground text-lg">
+                      {batchProgress.total === 1
+                        ? isUploading
+                          ? `Uploading… ${Math.round(batchProgress.singleFileProgress)}%`
+                          : "Finalizing entry…"
+                        : isUploading
+                          ? `Uploading ${batchProgress.current} of ${batchProgress.total}… ${Math.round(batchProgress.singleFileProgress)}%`
+                          : `Processing ${batchProgress.current} of ${batchProgress.total}…`
+                      }
                     </p>
-                    {isUploading && (
-                      <div className="w-full max-w-xs bg-muted rounded-full h-2 mt-2">
+                    <div className="w-full max-w-xs bg-muted rounded-full h-2 mt-1">
+                      {batchProgress.total === 1 ? (
                         <div 
                           className="bg-primary h-2 rounded-full transition-all duration-300" 
-                          style={{ width: `${progress}%` }}
+                          style={{ width: `${batchProgress.singleFileProgress}%` }}
                         />
-                      </div>
+                      ) : (
+                        <div 
+                          className="bg-primary h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${((batchProgress.current - 1) / batchProgress.total) * 100 + (batchProgress.singleFileProgress / batchProgress.total)}%` }}
+                        />
+                      )}
+                    </div>
+                    {batchProgress.total > 1 && (
+                      <p className="text-sm text-muted-foreground">
+                        {batchProgress.current - 1} of {batchProgress.total} complete
+                        {batchProgress.failed.length > 0 && (
+                          <span className="text-destructive ml-2">· {batchProgress.failed.length} failed</span>
+                        )}
+                      </p>
                     )}
                   </div>
                 ) : (
@@ -467,9 +583,9 @@ export default function NewEntry() {
                       <FileIcon className="h-10 w-10" />
                       <ImageIcon className="h-10 w-10" />
                     </div>
-                    <p className="text-lg font-serif font-medium text-foreground">Drag and drop your file here</p>
-                    <p className="text-sm text-muted-foreground mb-4">or click to browse from your computer</p>
-                    <Button type="button" variant="outline">Select File</Button>
+                    <p className="text-lg font-serif font-medium text-foreground">Drag and drop files here</p>
+                    <p className="text-sm text-muted-foreground mb-4">Drop a whole folder of photos at once, or click to browse</p>
+                    <Button type="button" variant="outline">Select Files</Button>
                   </div>
                 )}
               </div>
