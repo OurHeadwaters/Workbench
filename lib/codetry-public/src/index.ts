@@ -110,43 +110,43 @@ export interface CodetryEngagement {
 
 export const CODETRY_ENGAGEMENTS: CodetryEngagement[] = [
   {
-    name: "Northern Band — Agency Contract (V4–V7)",
+    name: "Parr's Jars / Headwaters — Dual-identity rebrand",
     type: "paid",
-    objectives: ["1", "3", "4"],
+    objectives: ["3", "2"],
     status: "proven",
     isPublic: true,
     codetryValue:
-      "The founding engagement. Proved the model works — a community can own and operate a food system built with Codetry tools and hand it over without losing institutional memory.",
+      "Proved the dual-identity brand model: two distinct lines of work can coexist under a shared visual system without either diluting the other. The tools built here are now the starting point for any future brand engagement.",
     publicSummary:
-      "The founding engagement. A community food system — built, named, and handed over so the community could run it themselves. The ledger, the tools, and the institutional memory stayed with the band.",
+      "A small-batch preserves business out of the bush near Dryden had one name carrying two lines of work — community markets and band council offices. Built a dual-identity brand system so Parr's Jars and Headwaters Development Services could coexist without either diluting the other: new wordmarks, a unified colour system, copy architecture written for two distinct audiences, and a live site that holds both identities without stapling them together.",
     statusNote:
-      "Proved the community store model produces a legible operating system. Naming discipline reduced handover friction. Financial records are community-held. This is the first brick.",
+      "Delivered. Brand system is live and in use across both identities. The engagement sharpened the naming and copy discipline that now carries into every brand build.",
   },
   {
-    name: "Deer Lake First Nation — Phase 1",
+    name: "G.M. Pepin Holdings Inc. — Brand Identity",
     type: "paid",
-    objectives: ["1", "4"],
-    status: "in-progress",
+    objectives: ["3", "4"],
+    status: "proven",
     isPublic: true,
     codetryValue:
-      "The replication test. Can Codetry run in a second community without rebuilding from scratch? Deer Lake Phase 2 data becomes the first piece of auditable supply chain evidence.",
+      "Produced a complete, print-ready brand identity system — the kind of community-owned record that stays with the client permanently. Sharpened the brand toolkit: logo system, type pairing, and tone guidelines are now reproducible faster on the next engagement.",
     publicSummary:
-      "The replication test. Building the same model in a new community context — with the January 2027 winter road as the supply chain unlock that makes the economics real.",
+      "A Dryden, ON residential property management company needed a brand that could carry authority without institutional coldness. Delivered a complete brand identity system: logo in light, dark, and coloured variants; a warm earth-tone colour palette (Dark Brown, Caramel, Light Beige); Space Grotesk and Merriweather type pairing; tone and voice guidelines for resident communication; business card, letterhead, and social assets — all print-ready and export-ready.",
     statusNote:
-      "Proving the model replicates in a new community context. Phase 2 data (demand, financial) is what backs the 807 supply chain grant applications. The proof point is the January 2027 winter road.",
+      "Delivered. All assets print-ready and export-ready. The full brand package is community-owned — the client holds every file.",
   },
   {
-    name: "807 Food Co-operative — Supply Chain",
+    name: "807 Food Co-operative — Benefits Portal",
     type: "paid",
     objectives: ["1", "4", "5"],
-    status: "in-progress",
+    status: "proven",
     isPublic: true,
     codetryValue:
-      "Builds the record that outlasts any individual engagement. NWO producer → 807 → community store is a documented supply chain. That documentation is the first piece of the trust layer.",
+      "Built the infrastructure connecting Northwestern Ontario households directly with local producers — a documented supply chain that produces evidence for grant applications and backs broader food sovereignty work in the region. The portal is the first piece of the trust layer running in production.",
     publicSummary:
-      "NWO producers → 807 aggregation → First Nations communities. Building the documented supply chain that backs grant applications and makes community food sovereignty possible at scale.",
+      "Built the 807 Benefits Members Portal — connecting Northwestern Ontario households directly with local farmers, makers, and food artisans. Members get a community knowledge base, co-op shopping rounds, and tools to eat better for less. The same producer network serves as the supply chain infrastructure for broader food sovereignty work in the region.",
     statusNote:
-      "The supply chain connection between NWO producers and First Nations communities. The aggregation layer is the infrastructure that makes Deer Lake work. Grant applications June 2026.",
+      "Delivered and in production. The portal is the live evidence layer for the 807 supply chain. Documentation from this engagement backs grant applications and supply chain partnerships.",
   },
   {
     name: "Codetry Handbook — How a Community Runs Its Own Economy",
@@ -257,10 +257,10 @@ export const CODETRY_ENGAGEMENTS: CodetryEngagement[] = [
 // ─── Honest accounting (internal) ─────────────────────────────────────────────
 
 export const PROVEN_ITEMS = [
-  "The community store model produces a legible operating system a community can own.",
-  "The naming discipline reduces handover friction — the next person can read what was built.",
-  "Kitchen table methodology produces systems the operator recognises as theirs.",
-  "One practitioner can hold the system the way ten used to, with the right tools.",
+  "A dual-identity brand system can hold two distinct lines of work without either diluting the other — Parr's Jars and Headwaters coexist under one visual system.",
+  "A complete brand identity system — logo variants, colour palette, type pairing, tone guidelines, and print-ready assets — can be delivered and fully owned by a small business client.",
+  "The 807 Benefits Members Portal connects Northwestern Ontario households directly with local producers and is running in production as the live evidence layer for the supply chain.",
+  "The naming and copy discipline built in brand engagements reduces friction on every subsequent engagement.",
   "Unpaid practice work feeds directly back into paid engagement quality.",
 ];
 
