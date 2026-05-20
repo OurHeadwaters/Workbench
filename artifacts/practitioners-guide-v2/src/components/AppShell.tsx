@@ -33,6 +33,7 @@ import {
   CalendarCheck,
   BookMarked,
   Map,
+  FileText,
 } from "lucide-react";
 
 interface NavItem {
@@ -102,7 +103,7 @@ const NAV_GROUPS: NavGroup[] = [
     id: "pipeline",
     label: "Pipeline",
     icon: Handshake,
-    matchPaths: ["/contracts", "/salts", "/brightside"],
+    matchPaths: ["/contracts", "/salts", "/brightside", "/gmph-path-b"],
     items: [
       {
         href: "/contracts",
@@ -116,6 +117,12 @@ const NAV_GROUPS: NavGroup[] = [
         label: BUCKETS.brightside.name,
         icon: Cpu,
         accent: BUCKETS.brightside.accent,
+      },
+      {
+        href: "/gmph-path-b",
+        label: "GMPH Path B",
+        icon: FileText,
+        accent: "#1f3d2e",
       },
     ],
   },
