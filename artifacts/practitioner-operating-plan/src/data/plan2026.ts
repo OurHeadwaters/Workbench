@@ -185,7 +185,7 @@ export const PLAN_2026: Week[] = [
           {
             title: "Connect codetry.ca in GoDaddy — 10 minutes, coffee in hand",
             detail: "Step 1: Open this Replit project → click Publish (top right) → Custom domains → Add domain → type codetry.ca → also add www.codetry.ca. Replit will show you a CNAME value to copy (looks like a long replit.app address). Step 2: In a new tab, go to godaddy.com → sign in → My Products → Domains → codetry.ca → DNS. Step 3: Add a CNAME record — Name: www, Value: paste what Replit gave you, TTL: 1 hour. Step 4: For the root (codetry.ca with no www), GoDaddy calls it an 'A' record — use the IP address Replit shows, or if GoDaddy offers 'Forwarding', forward codetry.ca → www.codetry.ca. Step 5: Save. Done. DNS can take anywhere from 2 minutes to 2 hours to kick in — check by typing codetry.ca in your browser.",
-            category: "ops",
+            category: "admin",
           },
           {
             title: "Print materials — confirm what's in the queue",
