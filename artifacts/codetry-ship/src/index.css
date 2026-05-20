@@ -12,6 +12,10 @@ html {
  * editorial — Iowan Old Style or Charter on the body, Inter for utility
  * text and form fields. */
 
+@theme {
+  --breakpoint-xs: 390px;
+}
+
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));

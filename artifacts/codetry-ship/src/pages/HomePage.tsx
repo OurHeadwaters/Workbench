@@ -129,8 +129,7 @@ export function HomePage() {
 
           {/* Mantra — the three lines */}
           <h1
-            className="font-serif leading-[1.18] tracking-tight mt-7 mb-8"
-            style={{ fontSize: "clamp(1.75rem, 6.5vw, 2.6rem)" }}
+            className="font-serif text-[1.6rem] xs:text-3xl sm:text-5xl leading-[1.18] tracking-tight mt-7 mb-8"
             data-testid="home-title"
           >
             Build it.<br />
