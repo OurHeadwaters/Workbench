@@ -850,10 +850,21 @@ export interface PnlByMonthMonth {
   net: number;
 }
 
+export interface PnlBreakdownCostCentre {
+  code: string;
+  name: string;
+  monthlyRevenue: { [key: string]: number };
+  monthlyCosts: { [key: string]: number };
+  totalRevenue: number;
+  totalCosts: number;
+  totalNet: number;
+}
+
 export interface PnlByMonthResponse {
   from?: string | null;
   to?: string | null;
   months: PnlByMonthMonth[];
+  breakdown?: PnlBreakdownCostCentre[];
 }
 
 export interface TaxSummaryLineItem {

@@ -10,7 +10,7 @@ import {
   getGetPnlByMonthQueryKey,
   getGetTaxSummaryQueryKey,
 } from "@workspace/api-client-react";
-import type { CategoryReportRow, TaxSummaryLineItem } from "@workspace/api-client-react";
+import type { CategoryReportRow, TaxSummaryLineItem, PnlBreakdownCostCentre } from "@workspace/api-client-react";
 import {
   Loader2,
   Printer,
@@ -300,7 +300,149 @@ function TabByCc({ from, to }: { from: string; to: string }) {
   );
 }
 
-// ── P&L by Month bar chart ──────────────────────────────────────────────────────
+// ── P&L by Month ────────────────────────────────────────────────────────────────
+
+function monthLabel(key: string) {
+  const [y, m] = key.split("-");
+  const d = new Date(Number(y), Number(m) - 1, 1);
+  return d.toLocaleDateString("en-CA", { month: "short", year: "2-digit" });
+}
+
+function PivotTable({
+  monthRows,
+  breakdown,
+  totalRevenue,
+  totalCosts,
+  totalNet,
+}: {
+  monthRows: { month: string; revenue: number; costs: number; net: number }[];
+  breakdown: PnlBreakdownCostCentre[];
+  totalRevenue: number;
+  totalCosts: number;
+  totalNet: number;
+}) {
+  const months = monthRows.map((m) => m.month);
+  // Build a lookup from the authoritative agency-level month totals
+  const agencyByMonth = new Map(monthRows.map((m) => [m.month, m]));
+
+  const revenueRows = breakdown.filter((cc) => cc.totalRevenue !== 0);
+  const costRows = breakdown.filter((cc) => cc.totalCosts !== 0);
+
+  const thCls = "text-right px-3 py-2 text-[10px] font-mono uppercase tracking-[0.12em] text-muted-foreground font-normal whitespace-nowrap";
+  const tdRev = "px-3 py-1.5 text-right font-mono tabular-nums text-xs text-emerald-700";
+  const tdCost = "px-3 py-1.5 text-right font-mono tabular-nums text-xs text-red-700";
+  const tdZero = "px-3 py-1.5 text-right font-mono tabular-nums text-xs text-muted-foreground/40";
+
+  return (
+    <div className="rounded-xl border border-border bg-muted/30 overflow-x-auto">
+      <p className="px-4 py-2 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground border-b border-border">
+        Month-by-month breakdown — one column per month
+      </p>
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-border bg-muted/60">
+            <th className="text-left px-4 py-2 text-[10px] font-mono uppercase tracking-[0.12em] text-muted-foreground font-normal sticky left-0 bg-muted/60 min-w-[160px]">
+              Cost Centre
+            </th>
+            {months.map((m) => (
+              <th key={m} className={thCls}>{monthLabel(m)}</th>
+            ))}
+            <th className={`${thCls} border-l border-border`}>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* Revenue section */}
+          <tr className="bg-emerald-50/60 border-b border-emerald-100">
+            <td colSpan={months.length + 2} className="px-4 py-1 text-[10px] font-mono uppercase tracking-[0.18em] text-emerald-700 font-semibold">
+              Revenue
+            </td>
+          </tr>
+          {revenueRows.length === 0 && (
+            <tr className="border-b border-border/40">
+              <td colSpan={months.length + 2} className="px-4 py-2 text-xs text-muted-foreground italic">No revenue lines</td>
+            </tr>
+          )}
+          {revenueRows.map((cc, i) => (
+            <tr key={`rev-${cc.code}`} className={`border-b border-border/40 ${i % 2 === 1 ? "bg-muted/10" : ""}`}>
+              <td className="px-4 py-1.5 sticky left-0 bg-inherit">
+                <span className="text-[10px] font-mono text-muted-foreground mr-2">{cc.code === "__UNASSIGNED__" ? "—" : cc.code}</span>
+                <span className="text-xs">{cc.name}</span>
+              </td>
+              {months.map((m) => {
+                const v = cc.monthlyRevenue[m] ?? 0;
+                return (
+                  <td key={m} className={v !== 0 ? tdRev : tdZero}>{v !== 0 ? fmt(v) : "—"}</td>
+                );
+              })}
+              <td className={`${tdRev} border-l border-border font-semibold`}>{fmt(cc.totalRevenue)}</td>
+            </tr>
+          ))}
+          {/* Revenue totals row — use authoritative agency month totals */}
+          <tr className="border-b-2 border-emerald-200 bg-emerald-50/80">
+            <td className="px-4 py-2 text-xs font-semibold text-emerald-800 sticky left-0 bg-emerald-50/80">Total Revenue</td>
+            {months.map((m) => {
+              const v = agencyByMonth.get(m)?.revenue ?? 0;
+              return <td key={m} className="px-3 py-2 text-right font-mono tabular-nums text-xs font-semibold text-emerald-800">{v !== 0 ? fmt(v) : "—"}</td>;
+            })}
+            <td className="px-3 py-2 text-right font-mono tabular-nums text-sm font-bold text-emerald-800 border-l border-border">{fmt(totalRevenue)}</td>
+          </tr>
+
+          {/* Costs section */}
+          <tr className="bg-red-50/60 border-b border-red-100">
+            <td colSpan={months.length + 2} className="px-4 py-1 text-[10px] font-mono uppercase tracking-[0.18em] text-red-700 font-semibold">
+              Costs
+            </td>
+          </tr>
+          {costRows.length === 0 && (
+            <tr className="border-b border-border/40">
+              <td colSpan={months.length + 2} className="px-4 py-2 text-xs text-muted-foreground italic">No cost lines</td>
+            </tr>
+          )}
+          {costRows.map((cc, i) => (
+            <tr key={`cost-${cc.code}`} className={`border-b border-border/40 ${i % 2 === 1 ? "bg-muted/10" : ""}`}>
+              <td className="px-4 py-1.5 sticky left-0 bg-inherit">
+                <span className="text-[10px] font-mono text-muted-foreground mr-2">{cc.code === "__UNASSIGNED__" ? "—" : cc.code}</span>
+                <span className="text-xs">{cc.name}</span>
+              </td>
+              {months.map((m) => {
+                const v = cc.monthlyCosts[m] ?? 0;
+                return (
+                  <td key={m} className={v !== 0 ? tdCost : tdZero}>{v !== 0 ? fmt(v) : "—"}</td>
+                );
+              })}
+              <td className={`${tdCost} border-l border-border font-semibold`}>{fmt(cc.totalCosts)}</td>
+            </tr>
+          ))}
+          {/* Costs totals row — use authoritative agency month totals */}
+          <tr className="border-b-2 border-red-200 bg-red-50/80">
+            <td className="px-4 py-2 text-xs font-semibold text-red-800 sticky left-0 bg-red-50/80">Total Costs</td>
+            {months.map((m) => {
+              const v = agencyByMonth.get(m)?.costs ?? 0;
+              return <td key={m} className="px-3 py-2 text-right font-mono tabular-nums text-xs font-semibold text-red-800">{v !== 0 ? fmt(v) : "—"}</td>;
+            })}
+            <td className="px-3 py-2 text-right font-mono tabular-nums text-sm font-bold text-red-800 border-l border-border">{fmt(totalCosts)}</td>
+          </tr>
+
+          {/* Net income row — use authoritative agency month net */}
+          <tr className={`border-t-2 border-border ${totalNet >= 0 ? "bg-primary/5" : "bg-destructive/5"}`}>
+            <td className={`px-4 py-3 text-xs font-bold sticky left-0 ${totalNet >= 0 ? "bg-primary/5 text-primary" : "bg-destructive/5 text-destructive"}`}>Net Income</td>
+            {months.map((m) => {
+              const entry = agencyByMonth.get(m);
+              const net = entry?.net ?? 0;
+              const isEmpty = !entry || (entry.revenue === 0 && entry.costs === 0);
+              return (
+                <td key={m} className={`px-3 py-3 text-right font-mono tabular-nums text-xs font-bold ${netColor(net)}`}>
+                  {isEmpty ? "—" : fmt(net)}
+                </td>
+              );
+            })}
+            <td className={`px-3 py-3 text-right font-mono tabular-nums text-sm font-bold border-l border-border ${netColor(totalNet)}`}>{fmt(totalNet)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 function TabByMonth({ from, to }: { from: string; to: string }) {
   const { data, isLoading, isError } = useGetPnlByMonth(
@@ -329,9 +471,11 @@ function TabByMonth({ from, to }: { from: string; to: string }) {
   const totalRevenue = data.months.reduce((s, m) => s + m.revenue, 0);
   const totalCosts = data.months.reduce((s, m) => s + m.costs, 0);
   const totalNet = totalRevenue - totalCosts;
+  const breakdown = data.breakdown ?? [];
 
   return (
     <div className="space-y-6">
+      {/* Summary banner */}
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
           <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-emerald-700 mb-1">Total Revenue</p>
@@ -347,9 +491,10 @@ function TabByMonth({ from, to }: { from: string; to: string }) {
         </div>
       </div>
 
+      {/* Bar chart */}
       <div className="rounded-xl border border-border bg-card p-4 pt-6">
         <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">Revenue vs Costs — monthly</p>
-        <ResponsiveContainer width="100%" height={320}>
+        <ResponsiveContainer width="100%" height={280}>
           <BarChart data={chartData} margin={{ top: 4, right: 16, left: 0, bottom: 4 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis dataKey="month" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
@@ -371,26 +516,46 @@ function TabByMonth({ from, to }: { from: string; to: string }) {
         </ResponsiveContainer>
       </div>
 
-      <div className="rounded-xl border border-border bg-muted/30 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead><tr className="border-b border-border bg-muted/60">
-            <th className="text-left px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Month</th>
-            <th className="text-right px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Revenue</th>
-            <th className="text-right px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Costs</th>
-            <th className="text-right px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Net</th>
-          </tr></thead>
-          <tbody>
-            {data.months.map((m, i) => (
-              <tr key={m.month} className={`border-b border-border/50 ${i % 2 === 1 ? "bg-muted/20" : ""}`}>
-                <td className="px-4 py-2 font-mono text-sm">{m.month}</td>
-                <td className="px-4 py-2 text-right font-mono tabular-nums text-emerald-700 text-xs">{fmt(m.revenue)}</td>
-                <td className="px-4 py-2 text-right font-mono tabular-nums text-red-700 text-xs">{fmt(m.costs)}</td>
-                <td className={`px-4 py-2 text-right font-mono tabular-nums font-semibold text-xs ${netColor(m.net)}`}>{fmt(m.net)}</td>
+      {/* Pivot breakdown table */}
+      {breakdown.length > 0 ? (
+        <PivotTable
+          monthRows={data.months}
+          breakdown={breakdown}
+          totalRevenue={totalRevenue}
+          totalCosts={totalCosts}
+          totalNet={totalNet}
+        />
+      ) : (
+        /* Fallback simple table when no cost-centre data */
+        <div className="rounded-xl border border-border bg-muted/30 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead><tr className="border-b border-border bg-muted/60">
+              <th className="text-left px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Month</th>
+              <th className="text-right px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Revenue</th>
+              <th className="text-right px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Costs</th>
+              <th className="text-right px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Net</th>
+            </tr></thead>
+            <tbody>
+              {data.months.map((m, i) => (
+                <tr key={m.month} className={`border-b border-border/50 ${i % 2 === 1 ? "bg-muted/20" : ""}`}>
+                  <td className="px-4 py-2 font-mono text-sm">{m.month}</td>
+                  <td className="px-4 py-2 text-right font-mono tabular-nums text-emerald-700 text-xs">{fmt(m.revenue)}</td>
+                  <td className="px-4 py-2 text-right font-mono tabular-nums text-red-700 text-xs">{fmt(m.costs)}</td>
+                  <td className={`px-4 py-2 text-right font-mono tabular-nums font-semibold text-xs ${netColor(m.net)}`}>{fmt(m.net)}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr className="border-t-2 border-border bg-muted/50">
+                <td className="px-4 py-2 font-semibold text-xs">Total</td>
+                <td className="px-4 py-2 text-right font-mono tabular-nums font-bold text-emerald-700 text-sm">{fmt(totalRevenue)}</td>
+                <td className="px-4 py-2 text-right font-mono tabular-nums font-bold text-red-700 text-sm">{fmt(totalCosts)}</td>
+                <td className={`px-4 py-2 text-right font-mono tabular-nums font-bold text-sm ${netColor(totalNet)}`}>{fmt(totalNet)}</td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </tfoot>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

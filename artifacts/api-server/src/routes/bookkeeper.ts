@@ -1568,6 +1568,7 @@ router.get(
     const lines = await db
       .select({
         accountCode: bookkeeperTransactionLinesTable.accountCode,
+        costCentreCode: bookkeeperTransactionLinesTable.costCentreCode,
         debit: bookkeeperTransactionLinesTable.debit,
         credit: bookkeeperTransactionLinesTable.credit,
         postedDate: bookkeeperTransactionsTable.postedDate,
@@ -1585,7 +1586,16 @@ router.get(
     const accounts = await db.select().from(bookkeeperAccountsTable);
     const acctMap = new Map(accounts.map((a) => [a.code, a]));
 
+    const costCentres = await db
+      .select()
+      .from(bookkeeperCostCentresTable)
+      .orderBy(asc(bookkeeperCostCentresTable.code));
+    const ccMap = new Map(costCentres.map((c) => [c.code, c]));
+
     const byMonth = new Map<string, { revenue: number; costs: number }>();
+    // breakdown: costCentreCode (or "__UNASSIGNED__") -> monthKey -> { revenue, costs }
+    const UNASSIGNED = "__UNASSIGNED__";
+    const byCc = new Map<string, Map<string, { revenue: number; costs: number }>>();
 
     for (const l of lines) {
       const acct = acctMap.get(l.accountCode);
@@ -1593,32 +1603,100 @@ router.get(
       const debit = num(l.debit);
       const credit = num(l.credit);
       const monthKey = dateStr(l.postedDate).slice(0, 7);
+
+      // Agency-level totals by month
       let bucket = byMonth.get(monthKey);
       if (!bucket) {
         bucket = { revenue: 0, costs: 0 };
         byMonth.set(monthKey, bucket);
       }
+
+      const ccKey = l.costCentreCode ?? UNASSIGNED;
+
       if (acct.type === "revenue") {
-        bucket.revenue += credit - debit;
+        const v = credit - debit;
+        bucket.revenue += v;
+        let ccMonths = byCc.get(ccKey);
+        if (!ccMonths) { ccMonths = new Map(); byCc.set(ccKey, ccMonths); }
+        let ccBucket = ccMonths.get(monthKey);
+        if (!ccBucket) { ccBucket = { revenue: 0, costs: 0 }; ccMonths.set(monthKey, ccBucket); }
+        ccBucket.revenue += v;
       } else if (
         acct.type === "cost_of_sales" ||
         acct.type === "expense" ||
         acct.type === "contra"
       ) {
-        bucket.costs += debit - credit;
+        const v = debit - credit;
+        bucket.costs += v;
+        let ccMonths = byCc.get(ccKey);
+        if (!ccMonths) { ccMonths = new Map(); byCc.set(ccKey, ccMonths); }
+        let ccBucket = ccMonths.get(monthKey);
+        if (!ccBucket) { ccBucket = { revenue: 0, costs: 0 }; ccMonths.set(monthKey, ccBucket); }
+        ccBucket.costs += v;
       }
     }
 
-    const months = Array.from(byMonth.entries())
-      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-      .map(([month, v]) => ({
+    // Build a complete list of months from from..to (zero-fill gaps).
+    // If no from/to, fall back to the span of months with activity.
+    const allMonthKeys: string[] = [];
+    if (from && to) {
+      const cursor = new Date(from.slice(0, 7) + "-01");
+      const end = new Date(to.slice(0, 7) + "-01");
+      while (cursor <= end) {
+        const key = cursor.toISOString().slice(0, 7);
+        allMonthKeys.push(key);
+        cursor.setMonth(cursor.getMonth() + 1);
+      }
+    } else {
+      // Fall back to active months only
+      const active = Array.from(byMonth.keys()).sort();
+      allMonthKeys.push(...active);
+    }
+
+    const months = allMonthKeys.map((month) => {
+      const v = byMonth.get(month) ?? { revenue: 0, costs: 0 };
+      return {
         month,
         revenue: Math.round(v.revenue * 100) / 100,
         costs: Math.round(v.costs * 100) / 100,
         net: Math.round((v.revenue - v.costs) * 100) / 100,
-      }));
+      };
+    });
 
-    res.json({ from, to, months });
+    // Build cost-centre breakdown. Includes unassigned lines so pivot totals reconcile.
+    const breakdown = Array.from(byCc.entries())
+      .map(([code, ccMonths]) => {
+        const cc = code === UNASSIGNED ? null : ccMap.get(code);
+        const monthlyRevenue: Record<string, number> = {};
+        const monthlyCosts: Record<string, number> = {};
+        let totalRevenue = 0;
+        let totalCosts = 0;
+        for (const [m, v] of ccMonths.entries()) {
+          monthlyRevenue[m] = Math.round(v.revenue * 100) / 100;
+          monthlyCosts[m] = Math.round(v.costs * 100) / 100;
+          totalRevenue += v.revenue;
+          totalCosts += v.costs;
+        }
+        totalRevenue = Math.round(totalRevenue * 100) / 100;
+        totalCosts = Math.round(totalCosts * 100) / 100;
+        return {
+          code,
+          name: code === UNASSIGNED ? "Unassigned" : (cc?.name ?? code),
+          monthlyRevenue,
+          monthlyCosts,
+          totalRevenue,
+          totalCosts,
+          totalNet: Math.round((totalRevenue - totalCosts) * 100) / 100,
+        };
+      })
+      .sort((a, b) => {
+        // Sort UNASSIGNED to the end
+        if (a.code === UNASSIGNED) return 1;
+        if (b.code === UNASSIGNED) return -1;
+        return a.code.localeCompare(b.code);
+      });
+
+    res.json({ from, to, months, breakdown });
   },
 );
 
