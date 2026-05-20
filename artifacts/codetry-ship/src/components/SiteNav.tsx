@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { getStoredOwnerToken, setStoredOwnerToken } from "@/lib/api";
+import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
 
 interface NavLink {
   href: string;
@@ -136,26 +137,31 @@ export function SiteNav() {
         <div className="mx-auto max-w-[64rem] px-5 sm:px-8 flex items-center justify-between h-12">
 
           {/* ── wordmark ── */}
-          <a
-            href={`${base}/`}
-            className="flex items-center gap-2.5 shrink-0 group"
-            aria-label="Headwaters home"
-            data-testid="nav-home-link"
-          >
-            <img
-              aria-hidden="true"
-              src={`${import.meta.env.BASE_URL}eagle-mark.svg`}
-              alt=""
-              className="opacity-90 group-hover:opacity-100 transition-opacity shrink-0"
-              style={{ width: 36, height: 30, objectFit: "contain" }}
-            />
-            <span
-              className="font-mono text-[10px] uppercase tracking-[0.22em] hidden sm:inline"
-              style={{ color: dark ? "hsl(38 36% 86%)" : "hsl(var(--foreground))", opacity: 0.8 }}
+          <div className="flex items-center gap-3 shrink-0">
+            <a
+              href={`${base}/`}
+              className="flex items-center gap-2.5 group"
+              aria-label="Headwaters home"
+              data-testid="nav-home-link"
             >
-              Headwaters
-            </span>
-          </a>
+              <img
+                aria-hidden="true"
+                src={`${import.meta.env.BASE_URL}eagle-mark.svg`}
+                alt=""
+                className="opacity-90 group-hover:opacity-100 transition-opacity shrink-0"
+                style={{ width: 36, height: 30, objectFit: "contain" }}
+              />
+              <span
+                className="font-mono text-[10px] uppercase tracking-[0.22em] hidden sm:inline"
+                style={{ color: dark ? "hsl(38 36% 86%)" : "hsl(var(--foreground))", opacity: 0.8 }}
+              >
+                Headwaters
+              </span>
+            </a>
+            <div className="hidden sm:block">
+              <NeighbourhoodBadge zoneNumber={5} zoneName="The Wild" />
+            </div>
+          </div>
 
           {/* ── desktop links ── */}
           <div className="hidden sm:flex items-center gap-1">
@@ -450,9 +456,10 @@ export function SiteNav() {
             </button>
           ) : null}
           <div
-            className="mt-3 pt-3 border-t"
+            className="mt-3 pt-3 border-t flex flex-col items-center gap-2"
             style={{ borderColor: "hsl(var(--card-border))" }}
           >
+            <NeighbourhoodBadge zoneNumber={5} zoneName="The Wild" />
             <p
               className="font-mono text-[9px] uppercase tracking-[0.22em] text-center"
               style={{ color: "hsl(var(--muted-foreground))", opacity: 0.6 }}
