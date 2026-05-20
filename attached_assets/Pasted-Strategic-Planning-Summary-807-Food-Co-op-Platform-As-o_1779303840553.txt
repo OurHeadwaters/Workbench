@@ -1,0 +1,201 @@
+Strategic Planning Summary — 807 Food Co-op Platform
+As of May 20, 2026
+
+1. Full Route Inventory
+807 Benefits (/) — main member app
+Public / No login required
+
+Path	What it does	State
+/	Marketing home for guests; Library home for signed-in users	Working
+/about	Co-op info page	Working
+/faq	FAQ	Working
+/mentors	Mentor directory	Working
+/producers	Public producer directory	Working
+/region	807 regional impact page	Working
+/region/bobbies-story	Story page	Working
+/partners	Partnership opportunities	Working
+/partners/kitchen-rental	Kitchen rental inquiry form	Working (posts silently to /api/partners/kitchen-rental/inquire)
+/privacy	Privacy policy	Working
+/sign-in / /sign-up	Clerk auth screens	Working
+/apply-producer	Public producer application	Working
+/local-line-setup	Local Line integration helper	Working
+/learning	Course/path overview	Working
+/board	Public board roles	Working
+/coming-soon	2026/2027 network expansion placeholder	Placeholder content
+Gated (Clerk login required)
+
+Path	What it does	State
+/dashboard	Member overview	Gated
+/knowledge-base	Tips, recipes, guides	Gated
+/learning/:slug	Course player	Gated — mentorship sections labeled "In Development"
+/email-preferences	Notification settings	Gated
+/producer-playbook	Producer training	Gated
+/producer/sales	Sales dashboard	Gated
+/producer/payouts	Payout history	Gated
+/producer/banking-setup	Banking/Stripe setup	Gated
+/producer/onboarding	Multi-step producer onboarding	Gated
+/producer/side-trades	Producer-to-producer trade log	Gated
+/marketplace/seller	Marketplace seller dashboard	Gated
+/marketplace/seller/shop	Direct shop management	Gated
+/snap-to-shelf	Inventory snapping tool	Gated
+/coop-products	Co-op product list	Gated
+/board-hub	Internal board portal	Gated
+/board-hub/training	Board director training	Gated
+/board-hub/chair	Chair workflows	Gated
+/board-hub/treasurer	Financial portal	Gated
+/board-hub/treasurer/journey	Treasurer calm monthly journey	Gated
+/board-hub/treasurer/assets	Asset register	Gated
+/board-hub/agm	AGM planning tool	Gated
+/board-hub/distribution	Logistics / route planning	Gated
+/ops/weekly	Weekly operations checklist	Gated
+/ops/pack	Packing list generator	Gated
+/admin	Site admin (Headwaters usage stats)	Gated
+/admin/exports	Data export management	Gated
+/admin/finance	Financial oversight	Gated
+/admin/dues-campaign	Dues and reminders	Gated
+/admin/marketplace	Marketplace moderation settings	Gated
+Disabled / Redirected to /
+/veg-share, /delivery, /subscribe, /join, /membership, /tips/:id, /local-events, /volunteer, /marketplace (redirects to /marketplace/seller)
+
+Deadhead (/deadhead/)
+Path	What it does
+/	Founder dashboard
+/intro	Landing for unauthenticated users
+/triage	Rapid-fire item processing
+/new	Create new item (the "Drop a deadhead" form)
+/items/:id	Item detail + event log
+/spotter/:id	Magic-link view for external advisors
+/billing	Subscription management
+/tour	Product walkthrough
+Market Mosaic (/market/)
+Path	What it does
+/	Landing + region selector
+/r/:tenantSlug	Regional homepage
+/r/:tenantSlug/search	Product search
+/r/:tenantSlug/markets/:marketSlug	Market detail + vendors
+/vendor/:vendorId	Vendor dashboard
+/coordinator/:tenantSlug	Coordinator tools
+Grants Finder (/grants/)
+Path	What it does
+/	AI chat for grant discovery
+/library	Saved grant opportunities
+/sources	Configure sites to monitor
+/profiles	Project profiles for grant matching
+/pipeline	Application status tracker
+Standby Supplies (/standby/)
+Path	What it does
+/	Main dashboard (inventory alerts)
+/right-now	Critical shortages
+/categories	Browse by category
+/seasons	Seasonal demand planning
+/item/:id	Supply item detail
+Parrs Jars / Rootwork (/studio/)
+Path	What it does
+/	Studio landing
+/pitch	AI pitch deck generator
+/bookkeeping	Transaction matching + export
+/routes	Delivery route planning
+/producer/labels	Food compliance label generator
+/wholesale	Wholesale account management
+807 Garden (/807-garden/) — Expo mobile
+Path	What it does
+/index	Main garden / growth tracking view
+/community	Regional social feed
+/earn	Marketplace tasks + rewards
+/profile	Member digital ID
+/knowledge-base	Farming/gardening guides
+/onboarding	New member setup
+AGM Guide (/agm/) — served directly from API server
+Static HTML. Secretary mode at /agm/sec/ (PIN: 807sec). Notes API at GET/POST /api/agm/notes.
+
+2. The Deadhead System
+What it is: A founder-only pre-backlog vetting tool. Named after the horticultural practice of cutting dead blooms to drive new growth — it captures risks, messy ideas, and aging tasks before they become formal work items.
+
+The "Drop a deadhead" button appears globally in the header/sidebar of every constellation app (807 Benefits, Market Mosaic, Grants Finder, Rootwork/Studio, Standby Supplies). Clicking it redirects to /deadhead/new.
+
+The form captures:
+
+Title (280 char), body/context (markdown), constellation (auto-filled from source), type (Tax, Legal, Strategic, etc.), gut-check risk level (Low / Medium / Smash-the-motor), attachments (photos/PDFs), and the source URL.
+Where it goes:
+
+POST /api/deadhead/items → stored in deadheads table + deadhead_attachments table
+Status starts as lay-of-the-land
+Every submission logs an event in deadhead_events
+Receiving end — two flows:
+
+Founder triage (/deadhead/triage): Rapid-fire decisions: Execute (mark done → queues PROPOSED → PENDING transition in pending-task-transitions.json outbox for Replit tasks), Pin (keep visible), Hold (pause, requires a hold note), Trash (smash status).
+
+Spotter flow (/deadhead/spotter/:id): Founder assigns an external advisor by email → they receive a signed magic-link token (HMAC, signed by DEADHEAD_SPOTTER_SECRET or SESSION_SECRET) → spotter sees item + a project-specific checklist → submits one of: proceed, hold, dont, need-more-info → logged as an event and surfaced to the founder.
+
+External wiring: The Deadhead triage syncs with .local/replit-tasks-cache.json via POST /api/deadhead/sync-tasks — this pulls Replit project tasks into the triage list. When a founder executes an item, it can trigger a task state transition in the external Replit tasks system.
+
+3. What's Self-Serve Today
+Genuinely usable by a stranger with no setup:
+
+Tool	What works	Honest caveat
+Grants Finder (/grants/)	AI chat, library browsing, source configuration, pipeline tracking	Needs ANTHROPIC_API_KEY set; library has real content; genuinely usable
+AGM Guide (/agm/)	Mobile-friendly guide, collapsible sections, board election section	Static HTML; secretary mode is PIN-gated; good shape for a real meeting
+807 Benefits marketing home (/)	Landing page, about, FAQ, producers, region, partners, kitchen rental inquiry	Works for discovery; inquiry form fires but email routing depends on Resend being live
+Producer application (/apply-producer)	Public form, submits to backend	Works if API is running
+Deadhead (/deadhead/)	Item submission, spotter links, triage	Requires founder account; not public by design
+Standby Supplies (/standby/)	All pages render	No data — entirely empty without content entry
+Rootwork/Studio (/studio/)	All pages render	Bookkeeping and pitch require real data; label generator may be functional
+What just looks ready but isn't:
+
+Market Mosaic — shows "no regions set up yet." Entirely empty. No regions, markets, or vendors configured.
+807 Garden — has a QR code entry point but onboarding leads to an empty experience without active members/data behind it.
+Member dashboard, producer tools, board hub — all gate behind Clerk and require a real account + the correct role assigned.
+Marketplace seller dashboard — gated, and depends on Local Line sync being live.
+4. What's Seeded vs. Empty
+Artifact	Data state
+Grants Finder library	Real content exists — grant opportunities are populated and browsable
+807 Benefits knowledge base / learning paths	Content exists in lib/db and artifacts/807-benefits/src/data/library.ts — functional
+Producer directory	Real producers visible publicly at /producers
+Standby Supplies	Schema exists, all pages render — zero inventory data; nothing to display
+Market Mosaic	Schema and multi-tenant structure exist — no regions, markets, or vendors configured; landing page shows empty state
+807 Garden	App scaffolded, onboarding flow built — no community content, earn tasks, or knowledge base entries seeded for the mobile experience
+Rootwork / Parrs Jars Studio	Wholesale, bookkeeping, and label tools exist — depends entirely on connected producer data
+AGM notes table (agm_notes)	Schema exists; notes are stored per-POST to /api/agm/notes — functional but fresh/empty unless used live
+5. Connection Points to the Outside World
+System	Purpose	Status
+Clerk	Auth + session management + role-based access	Fully wired; requires CLERK_SECRET_KEY + VITE_CLERK_PUBLISHABLE_KEY
+Resend	All transactional email (onboarding, tier changes, reports, event approvals, donor receipts, admin alerts)	Fully wired; requires RESEND_API_KEY
+Anthropic (Claude Sonnet)	Grants Finder AI chat + grant extraction from unstructured text	Fully wired via lib/integrations-anthropic-ai; requires ANTHROPIC_API_KEY (or AI_INTEGRATIONS_ANTHROPIC_* for Replit-proxied version)
+Local Line	Syncs orders and product listings to 807's Local Line storefront	Fully wired with automated sync workers; requires LOCAL_LINE_API_TOKEN + LOCAL_LINE_API_BASE_URL
+Google Drive + Google Docs	Exports course content for producer review; board minutes sync	Wired via Replit Connectors OAuth (installed: google-mail, google-calendar)
+Shopify / Square / Lightspeed	POS inventory fetching for partner shops on marketplace	Fully wired; credentials stored per-shop in DB (encrypted)
+Stripe	Marketplace payments — scaffolded for Stripe Connect	Scaffolded only — logic paths exist but no active Stripe SDK calls; e-transfer is the live payment rail
+Interac E-transfer	Primary payment method for marketplace	Live (manual reconciliation via DEPOSIT_ADDRESS_KEY)
+Gmail	Grant source ingestion via LLM extraction	Wired in grants scraper
+Replit Tasks API	Deadhead triage syncs Replit project tasks; execute triggers PROPOSED → PENDING transitions	Wired via pending-task-transitions.json outbox + cache file
+Note on the Deadhead ↔ Replit connection: The Deadhead system's "external API" is this Replit workspace itself. There is no separate hosted Headwaters API — the deadhead triage writes to a local JSON outbox that the Replit task orchestration system reads.
+
+6. What's Unfinished or Known-Broken
+Issue	Location	Severity
+Treasurer SMS reminders	lib/db/src/schema/treasurer-journey.ts — channelSms is a stub; toggle persists to DB but no SMS provider is wired	Low (feature gap, not broken)
+Stripe Connect	artifacts/807-benefits/src/pages/board-treasurer.tsx — explicitly marked "future rail, not active"	Low (known incomplete)
+Square POS in-person sync	artifacts/api-server/src/lib/producerPosLineItems.ts — sync stub only	Low
+Marketplace email failures	artifacts/api-server/src/lib/marketplace.ts — email validation failures are logged and swallowed; never surfaced to users	Medium (silent failure)
+Marketplace report send failures	Same file — send-failed reports retry up to a cap then stay stuck; no alert	Medium (silent failure)
+POS sync row errors	artifacts/api-server/src/lib/posSync.ts — individual row failures increment an error count but don't halt the sync	Low-Medium
+Wholesale prices	artifacts/807-benefits/src/pages/coop-products.tsx — prices "not yet confirmed," showing retail as placeholder	Content gap
+Mentorship sections in courses	/learning/:slug — explicitly labeled "In Development" in the UI	Visible placeholder
+Market Mosaic entirely empty	No regions, markets, or vendors configured	Launch blocker for that artifact
+Standby Supplies entirely empty	No inventory data	Launch blocker for that artifact
+FIELD_ENCRYPTION_KEY missing	lib/db/src/encryptedField.ts — will throw and fail to start in non-dev if missing	Critical if not set in prod
+Consumer member routes all redirect	/veg-share, /join, /membership, /subscribe, /delivery all redirect to /	Intentional but worth noting — there's no join/upgrade path for a stranger
+AI_INTEGRATIONS_ANTHROPIC_* env vars	lib/integrations-anthropic-ai/src/client.ts — throws on startup if missing	Critical for Grants Finder
+Backfill scripts in the codebase	backfillMemberNames.ts, backfillPayoutHstAndChannels.ts — indicates past data consistency fixes were manual	Historical debt
+7. Registered Artifact List
+Name	Kind	Preview Path	Directory
+807 Benefits Membership	web	/	artifacts/807-benefits
+API Server	api	/api	artifacts/api-server
+Deadhead	web	/deadhead/	artifacts/deadhead
+807 Garden	mobile (Expo)	/807-garden/	artifacts/807-garden
+Market Mosaic	web	/market/	artifacts/market-mosaic
+Grants Finder	web	/grants/	artifacts/grants-finder
+Standby Supplies Guidebook	web	/standby/	artifacts/standby-supplies
+Rootwork (née Parrs Jars Studio)	web	/studio/	artifacts/parrs-jars-studio
+All eight run as separate services behind a single shared reverse proxy, path-routed by artifact.toml.
+
+Bottom line for planning: The 807 Benefits core (member app, producer tools, board hub, treasurer) is the most complete and connected artifact. Grants Finder and the AGM guide are genuinely usable today. Market Mosaic, Standby Supplies, and 807 Garden are structurally complete but content-empty — they need data before they're launch-ready. The biggest non-obvious risk is the cluster of silent failures in marketplace email/report delivery, and the missing FIELD_ENCRYPTION_KEY in production environments.
