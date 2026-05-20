@@ -12,6 +12,7 @@ import { SettingsPage } from "@/pages/SettingsPage";
 import { InboxSetupPage } from "@/pages/InboxSetupPage";
 import { TesterKitPage } from "@/pages/TesterKitPage";
 import { SponsorIntakePage } from "@/pages/SponsorIntakePage";
+import { TriageLandingPage } from "@/pages/TriageLandingPage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -106,6 +107,8 @@ export default function App() {
             <SponsorIntakePage />
           </AppShell>
         </Route>
+
+        <Route path="/triage" component={TriageLandingPage} />
 
         <Route>
           <Redirect to="/" />
