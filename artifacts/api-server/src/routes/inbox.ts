@@ -23,14 +23,52 @@ interface GmailThread {
   snippet: string;
 }
 
+interface GmailMessagePart {
+  mimeType?: string;
+  body?: { data?: string; size?: number };
+  parts?: GmailMessagePart[];
+}
+
 interface GmailMessage {
   id: string;
   threadId: string;
   payload?: {
     headers?: { name: string; value: string }[];
+    mimeType?: string;
+    body?: { data?: string; size?: number };
+    parts?: GmailMessagePart[];
   };
   snippet?: string;
   internalDate?: string;
+}
+
+/**
+ * Walk a MIME tree to find the first text/plain part and return its decoded
+ * content, trimmed to `maxChars` characters.
+ */
+function extractPlainText(payload: GmailMessage["payload"], maxChars = 1000): string {
+  if (!payload) return "";
+
+  function findPlain(part: GmailMessagePart): string | null {
+    if (part.mimeType === "text/plain" && part.body?.data) {
+      const raw = part.body.data.replace(/-/g, "+").replace(/_/g, "/");
+      try {
+        return Buffer.from(raw, "base64").toString("utf-8");
+      } catch {
+        return null;
+      }
+    }
+    if (part.parts) {
+      for (const child of part.parts) {
+        const result = findPlain(child);
+        if (result !== null) return result;
+      }
+    }
+    return null;
+  }
+
+  const text = findPlain(payload as GmailMessagePart) ?? "";
+  return text.slice(0, maxChars);
 }
 
 function pickHeader(
@@ -185,6 +223,7 @@ router.get("/archive", async (req, res) => {
     const dateFrom = typeof req.query.dateFrom === "string" ? req.query.dateFrom.trim() : "";
     const dateTo = typeof req.query.dateTo === "string" ? req.query.dateTo.trim() : "";
     const preset = typeof req.query.preset === "string" ? req.query.preset.trim() : "";
+    const includeBody = req.query.includeBody === "true";
     const maxResults = Math.min(
       50,
       parseInt(typeof req.query.maxResults === "string" ? req.query.maxResults : "30", 10) || 30,
@@ -246,9 +285,16 @@ router.get("/archive", async (req, res) => {
     const threads = await Promise.all(
       rawThreads.slice(0, maxResults).map(async (t) => {
         try {
+          // Use full format when body is requested so we get MIME parts;
+          // otherwise stick with the cheaper metadata-only format.
+          const format = includeBody ? "full" : "metadata";
+          const metaHeaders = includeBody
+            ? ""
+            : "&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date";
+
           const msgResp = await connectors.proxy(
             "google-mail",
-            `/gmail/v1/users/me/threads/${t.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`,
+            `/gmail/v1/users/me/threads/${t.id}?format=${format}${metaHeaders}`,
             { method: "GET" },
           );
 
@@ -259,16 +305,23 @@ router.get("/archive", async (req, res) => {
           };
 
           const messages = msgData.messages ?? [];
+          const firstMsg = messages[0];
           const latestMsg = messages[messages.length - 1];
           const headers = latestMsg?.payload?.headers;
 
-          return {
+          const result: Record<string, unknown> = {
             id: t.id,
             subject: pickHeader(headers, "Subject") || "(no subject)",
             from: pickHeader(headers, "From") || "Unknown",
             snippet: msgData.snippet ?? t.snippet ?? "",
             date: pickHeader(headers, "Date") || new Date().toISOString(),
           };
+
+          if (includeBody) {
+            result.body = extractPlainText(firstMsg?.payload);
+          }
+
+          return result;
         } catch (err) {
           logger.warn({ err, threadId: t.id }, "inbox/archive: failed to fetch thread metadata");
           return null;
@@ -280,6 +333,51 @@ router.get("/archive", async (req, res) => {
   } catch (err) {
     logger.warn({ err }, "inbox/archive: Gmail connector unavailable, returning empty");
     res.json([]);
+  }
+});
+
+// ─── Single thread body (on-demand) ───────────────────────────────────────
+// GET /inbox/thread/:id/body
+//   Returns: { body: string } — first ~1000 chars of the first message's
+//   text/plain part.  Safe to call lazily when the user expands a thread row.
+
+router.get("/thread/:id/body", async (req, res) => {
+  try {
+    const connectors = new ReplitConnectors();
+    const threadId = req.params.id;
+
+    const msgResp = await connectors.proxy(
+      "google-mail",
+      `/gmail/v1/users/me/threads/${threadId}?format=full`,
+      { method: "GET" },
+    );
+
+    const msgData = await msgResp.json() as {
+      id: string;
+      messages?: GmailMessage[];
+      error?: { message: string };
+    };
+
+    if (msgData.error) {
+      logger.warn({ err: msgData.error, threadId }, "inbox/thread/body: Gmail API error");
+      const isScope =
+        msgData.error.message?.toLowerCase().includes("insufficient") ||
+        (msgData.error as unknown as { status?: string }).status === "PERMISSION_DENIED";
+      if (isScope) {
+        res.status(403).json({ error: "insufficient_scope", message: msgData.error.message });
+      } else {
+        res.status(502).json({ error: "gmail_error", message: msgData.error.message });
+      }
+      return;
+    }
+
+    const firstMsg = (msgData.messages ?? [])[0];
+    const body = extractPlainText(firstMsg?.payload, 1000);
+
+    res.json({ body });
+  } catch (err) {
+    logger.warn({ err }, "inbox/thread/body: Gmail connector unavailable");
+    res.status(502).json({ error: "unavailable" });
   }
 });
 

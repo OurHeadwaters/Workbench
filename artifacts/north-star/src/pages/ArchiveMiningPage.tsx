@@ -26,6 +26,7 @@ interface ArchiveThread {
   from: string;
   snippet: string;
   date: string;
+  body?: string;
 }
 
 type Tab = "search" | "bank";
@@ -175,12 +176,39 @@ function SearchTab() {
   const [error, setError] = useState<"scope" | "unavailable" | null>(null);
   const [taggingThread, setTaggingThread] = useState<ArchiveThread | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(true);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [bodyCache, setBodyCache] = useState<Record<string, string>>({});
+  const [loadingBodyId, setLoadingBodyId] = useState<string | null>(null);
+
+  const toggleExpand = useCallback(async (t: ArchiveThread) => {
+    if (expandedId === t.id) {
+      setExpandedId(null);
+      return;
+    }
+    setExpandedId(t.id);
+    if (bodyCache[t.id] !== undefined) return;
+    setLoadingBodyId(t.id);
+    try {
+      const r = await fetch(`${BASE_API}/inbox/thread/${t.id}/body`);
+      if (r.ok) {
+        const data: { body: string } = await r.json();
+        setBodyCache((prev) => ({ ...prev, [t.id]: data.body }));
+      } else {
+        setBodyCache((prev) => ({ ...prev, [t.id]: "" }));
+      }
+    } catch {
+      setBodyCache((prev) => ({ ...prev, [t.id]: "" }));
+    } finally {
+      setLoadingBodyId(null);
+    }
+  }, [expandedId, bodyCache]);
 
   const runSearch = useCallback(async () => {
     if (!preset && !customQ.trim()) return;
     setLoading(true);
     setError(null);
     setThreads([]);
+    setExpandedId(null);
 
     const params = new URLSearchParams();
     if (preset) params.set("preset", preset);
@@ -336,15 +364,22 @@ function SearchTab() {
         <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
           <div className="px-4 py-3 border-b border-[#E7E5E4] flex items-center justify-between">
             <p className="text-sm font-medium">{threads.length} threads found</p>
-            <p className="text-xs text-[#78716C]">Tap a thread to tag it</p>
+            <p className="text-xs text-[#78716C]">Tap a row to read · tag icon to tag</p>
           </div>
           <div className="divide-y divide-[#E7E5E4]">
             {threads.map((t) => {
               const inBank = bankIds.has(t.id);
+              const isExpanded = expandedId === t.id;
+              const isLoadingBody = loadingBodyId === t.id;
+              const body = bodyCache[t.id];
+
               return (
                 <div key={t.id} className="px-4 py-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 flex-1">
+                  <div className="flex items-start gap-3">
+                    <button
+                      onClick={() => toggleExpand(t)}
+                      className="min-w-0 flex-1 text-left"
+                    >
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-sm font-medium truncate">{t.subject}</p>
                         {inBank && (
@@ -352,11 +387,17 @@ function SearchTab() {
                             ✓ Tagged
                           </span>
                         )}
+                        {isExpanded
+                          ? <ChevronUp size={13} className="text-[#A8A29E] shrink-0" />
+                          : <ChevronDown size={13} className="text-[#A8A29E] shrink-0" />
+                        }
                       </div>
                       <p className="text-xs text-[#78716C] truncate">{t.from}</p>
-                      <p className="text-xs text-[#78716C] line-clamp-2 mt-0.5">{t.snippet}</p>
+                      {!isExpanded && (
+                        <p className="text-xs text-[#78716C] line-clamp-2 mt-0.5">{t.snippet}</p>
+                      )}
                       <p className="text-xs text-[#A8A29E] mt-1">{t.date}</p>
-                    </div>
+                    </button>
                     <button
                       onClick={() => setTaggingThread(t)}
                       className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-[#F5F5F0]"
@@ -365,6 +406,25 @@ function SearchTab() {
                       <Tag size={16} className={inBank ? "text-[#4F6E5C]" : "text-[#78716C]"} />
                     </button>
                   </div>
+
+                  {isExpanded && (
+                    <div className="mt-2 rounded-lg bg-[#FAFAF9] border border-[#E7E5E4] px-3 py-3">
+                      {isLoadingBody ? (
+                        <div className="flex items-center gap-2 text-xs text-[#78716C]">
+                          <Loader2 size={12} className="animate-spin" />
+                          Loading preview…
+                        </div>
+                      ) : body ? (
+                        <p className="text-xs text-[#44403C] whitespace-pre-wrap leading-relaxed font-mono">
+                          {body}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-[#A8A29E] italic">
+                          No plain-text body found for this message.
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}
