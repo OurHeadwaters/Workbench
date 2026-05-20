@@ -1,16 +1,19 @@
 import { useState, useMemo } from "react";
+import { Link } from "wouter";
 import {
   useGetBookkeeperPnl,
   useGetBookkeeperMe,
   useGetReportsByCategory,
   useGetPnlByMonth,
   useGetTaxSummary,
+  useListTransactions,
   getGetBookkeeperPnlQueryKey,
   getGetReportsByCategoryQueryKey,
   getGetPnlByMonthQueryKey,
   getGetTaxSummaryQueryKey,
+  getListTransactionsQueryKey,
 } from "@workspace/api-client-react";
-import type { CategoryReportRow, TaxSummaryLineItem, PnlBreakdownCostCentre, CostCentrePnlReport } from "@workspace/api-client-react";
+import type { CategoryReportRow, TaxSummaryLineItem, PnlBreakdownCostCentre, CostCentrePnlReport, Transaction } from "@workspace/api-client-react";
 import {
   Loader2,
   Printer,
@@ -23,10 +26,19 @@ import {
   Table2,
   ChevronUp,
   ChevronDown,
+  ExternalLink,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import {
   BarChart,
   Bar,
@@ -144,36 +156,186 @@ function DateRangeBar({
   );
 }
 
+// ── Drill-down slide-over ───────────────────────────────────────────────────────
+
+interface DrillTarget {
+  accountCode: string;
+  accountName: string;
+}
+
+function DrillDownSheet({
+  target,
+  from,
+  to,
+  onClose,
+}: {
+  target: DrillTarget | null;
+  from: string;
+  to: string;
+  onClose: () => void;
+}) {
+  const { data, isLoading, isError } = useListTransactions(
+    target
+      ? { accountCode: target.accountCode, from, to, status: "posted", limit: 200 }
+      : undefined,
+    {
+      query: {
+        enabled: !!target,
+        queryKey: getListTransactionsQueryKey(
+          target
+            ? { accountCode: target.accountCode, from, to, status: "posted", limit: 200 }
+            : undefined,
+        ),
+      },
+    },
+  );
+
+  return (
+    <Sheet open={!!target} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent className="w-full sm:max-w-2xl sm:w-[720px] overflow-y-auto">
+        <SheetHeader className="mt-4 mb-4">
+          <SheetTitle className="font-serif text-xl">
+            {target?.accountName ?? ""}
+          </SheetTitle>
+          <SheetDescription className="font-mono text-xs">
+            {target?.accountCode} · {from} to {to}
+          </SheetDescription>
+        </SheetHeader>
+
+        {isLoading && (
+          <div className="flex justify-center py-16">
+            <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+          </div>
+        )}
+
+        {isError && (
+          <Alert variant="destructive">
+            <AlertDescription>Failed to load transactions.</AlertDescription>
+          </Alert>
+        )}
+
+        {data && data.items.length === 0 && (
+          <div className="rounded-xl border border-border bg-muted/20 p-10 text-center">
+            <Minus className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">No posted transactions for this account in the period.</p>
+          </div>
+        )}
+
+        {data && data.items.length > 0 && (
+          <div className="space-y-3">
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+              {data.total} transaction{data.total !== 1 ? "s" : ""} · click any row to view detail
+            </p>
+            <div className="rounded-xl border border-border bg-muted/30 overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-muted/60">
+                    <th className="text-left px-3 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Date</th>
+                    <th className="text-left px-3 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Description</th>
+                    <th className="text-left px-3 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal hidden sm:table-cell">Ref</th>
+                    <th className="text-right px-3 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Debit</th>
+                    <th className="text-right px-3 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Credit</th>
+                    <th className="px-2 py-2 w-6" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.items.map((txn: Transaction, i) => {
+                    const relevantLines = txn.lines.filter(
+                      (l) => l.accountCode === target?.accountCode,
+                    );
+                    return relevantLines.map((line, li) => (
+                      <tr
+                        key={`${txn.id}-${li}`}
+                        className={`border-b border-border/50 hover:bg-muted/40 transition-colors ${i % 2 === 1 ? "bg-muted/10" : ""}`}
+                      >
+                        <td className="px-3 py-2 font-mono text-xs text-muted-foreground whitespace-nowrap">
+                          {txn.postedDate}
+                        </td>
+                        <td className="px-3 py-2 text-xs max-w-[200px]">
+                          <div className="truncate font-medium">{txn.description}</div>
+                          {line.memo && line.memo !== txn.description && (
+                            <div className="truncate text-muted-foreground text-[10px]">{line.memo}</div>
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-xs text-muted-foreground font-mono hidden sm:table-cell">
+                          {txn.reference ?? "—"}
+                        </td>
+                        <td className="px-3 py-2 text-right font-mono tabular-nums text-xs">
+                          {line.debit > 0 ? fmt(line.debit) : "—"}
+                        </td>
+                        <td className="px-3 py-2 text-right font-mono tabular-nums text-xs">
+                          {line.credit > 0 ? fmt(line.credit) : "—"}
+                        </td>
+                        <td className="px-2 py-2 text-right">
+                          <Link href={`/transactions/${txn.id}`}>
+                            <button
+                              className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                              title="View full transaction"
+                              onClick={onClose}
+                            >
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </button>
+                          </Link>
+                        </td>
+                      </tr>
+                    ));
+                  })}
+                </tbody>
+              </table>
+            </div>
+            {data.total > 200 && (
+              <p className="text-[10px] text-muted-foreground text-right font-mono">
+                Showing first 200 of {data.total} — use the Transactions ledger for a full export.
+              </p>
+            )}
+          </div>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 // ── P&L by Cost Centre (existing) ──────────────────────────────────────────────
 
 function AccountLines({
   lines,
   kind,
+  onAccountClick,
 }: {
   lines: { accountCode: string; accountName: string; total: number }[];
   kind: "revenue" | "cost";
+  onAccountClick?: (accountCode: string, accountName: string) => void;
 }) {
   if (lines.length === 0) return null;
   const color = kind === "revenue" ? "text-emerald-700" : "text-red-700";
   return (
     <div className="mt-1 space-y-0.5">
       {lines.map((l) => (
-        <div key={l.accountCode} className="grid grid-cols-[auto_1fr_auto] gap-2 items-baseline pl-4">
+        <div
+          key={l.accountCode}
+          className={`grid grid-cols-[auto_1fr_auto_auto] gap-2 items-baseline pl-4 pr-1 rounded ${onAccountClick ? "cursor-pointer hover:bg-muted/50 group" : ""}`}
+          onClick={() => onAccountClick?.(l.accountCode, l.accountName)}
+          title={onAccountClick ? "Click to see transactions" : undefined}
+        >
           <span className="text-[10px] font-mono text-muted-foreground w-16 shrink-0">{l.accountCode}</span>
           <span className="text-xs text-muted-foreground truncate">{l.accountName}</span>
           <span className={`text-xs font-mono tabular-nums ${color}`}>{fmt(l.total)}</span>
+          {onAccountClick && (
+            <ExternalLink className="w-3 h-3 text-muted-foreground/40 group-hover:text-muted-foreground shrink-0 transition-colors" />
+          )}
         </div>
       ))}
     </div>
   );
 }
 
-function CostCentreCard({ cc }: {
+function CostCentreCard({ cc, onAccountClick }: {
   cc: {
     code: string; name: string; revenue: number; costs: number; net: number;
     revenueLines: { accountCode: string; accountName: string; total: number }[];
     costLines: { accountCode: string; accountName: string; total: number }[];
   };
+  onAccountClick: (accountCode: string, accountName: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   return (
@@ -204,13 +366,13 @@ function CostCentreCard({ cc }: {
           {cc.revenueLines.length > 0 && (
             <div>
               <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-emerald-700 mb-1">Revenue lines</p>
-              <AccountLines lines={cc.revenueLines} kind="revenue" />
+              <AccountLines lines={cc.revenueLines} kind="revenue" onAccountClick={onAccountClick} />
             </div>
           )}
           {cc.costLines.length > 0 && (
             <div>
               <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-red-700 mb-1">Cost lines</p>
-              <AccountLines lines={cc.costLines} kind="cost" />
+              <AccountLines lines={cc.costLines} kind="cost" onAccountClick={onAccountClick} />
             </div>
           )}
           {cc.revenueLines.length === 0 && cc.costLines.length === 0 && (
@@ -228,6 +390,8 @@ function TabByCc({ from, to }: { from: string; to: string }) {
     { query: { queryKey: getGetBookkeeperPnlQueryKey({ from, to }) } },
   );
 
+  const [drillTarget, setDrillTarget] = useState<DrillTarget | null>(null);
+
   const agencyTotals = data?.agencyTotals ?? { revenue: 0, costs: 0, net: 0 };
   const activeCostCentres = (data?.costCentres ?? []).filter(
     (cc) => cc.revenue !== 0 || cc.costs !== 0,
@@ -239,6 +403,13 @@ function TabByCc({ from, to }: { from: string; to: string }) {
 
   return (
     <>
+      <DrillDownSheet
+        target={drillTarget}
+        from={from}
+        to={to}
+        onClose={() => setDrillTarget(null)}
+      />
+
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
           <div className="flex items-center gap-2 mb-2"><TrendingUp className="w-4 h-4 text-emerald-600" /><p className="text-[10px] font-mono uppercase tracking-[0.18em] text-emerald-700">Total Revenue</p></div>
@@ -267,8 +438,16 @@ function TabByCc({ from, to }: { from: string; to: string }) {
         </div>
       ) : (
         <div className="space-y-3">
-          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">By cost centre — click any row to expand account detail</p>
-          {activeCostCentres.map((cc) => <CostCentreCard key={cc.code} cc={cc} />)}
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">By cost centre — expand a row, then click an account line to drill into its transactions</p>
+          {activeCostCentres.map((cc) => (
+            <CostCentreCard
+              key={cc.code}
+              cc={cc}
+              onAccountClick={(accountCode, accountName) =>
+                setDrillTarget({ accountCode, accountName })
+              }
+            />
+          ))}
           <div className="rounded-xl border border-border bg-muted/30 overflow-hidden mt-4">
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-muted/60">
@@ -753,6 +932,7 @@ function TabByCategory({ from, to }: { from: string; to: string }) {
     { query: { queryKey: getGetReportsByCategoryQueryKey({ from, to }) } },
   );
 
+  const [drillTarget, setDrillTarget] = useState<DrillTarget | null>(null);
   const [sortCol, setSortCol] = useState<SortCol>("type");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
@@ -786,6 +966,13 @@ function TabByCategory({ from, to }: { from: string; to: string }) {
 
   return (
     <div className="space-y-6">
+      <DrillDownSheet
+        target={drillTarget}
+        from={from}
+        to={to}
+        onClose={() => setDrillTarget(null)}
+      />
+
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
           <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-emerald-700 mb-1">Total Revenue</p>
@@ -803,7 +990,7 @@ function TabByCategory({ from, to }: { from: string; to: string }) {
 
       <div className="rounded-xl border border-border bg-muted/30 overflow-hidden">
         <p className="px-4 py-2 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground border-b border-border">
-          Click column headers to sort · {data.rows.length} accounts
+          Click column headers to sort · click a row to drill into its transactions · {data.rows.length} accounts
         </p>
         <table className="w-full text-sm">
           <thead>
@@ -832,7 +1019,12 @@ function TabByCategory({ from, to }: { from: string; to: string }) {
           </thead>
           <tbody>
             {sorted.map((row: CategoryReportRow, i) => (
-              <tr key={row.accountCode} className={`border-b border-border/50 ${i % 2 === 1 ? "bg-muted/20" : ""}`}>
+              <tr
+                key={row.accountCode}
+                className={`border-b border-border/50 cursor-pointer hover:bg-muted/40 transition-colors ${i % 2 === 1 ? "bg-muted/20" : ""}`}
+                onClick={() => setDrillTarget({ accountCode: row.accountCode, accountName: row.accountName })}
+                title="Click to see transactions"
+              >
                 <td className="px-4 py-2">
                   <span className="font-mono text-xs text-muted-foreground mr-2">{row.accountCode}</span>
                   <span className="text-sm">{row.accountName}</span>
