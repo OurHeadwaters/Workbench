@@ -567,6 +567,7 @@ export function HomePage() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    title="Opens in a new tab"
                     className="relative group block rounded-md border bg-card p-4 flex gap-3.5 items-start transition-opacity hover:opacity-80"
                     style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
                     data-testid={testId}
@@ -673,6 +674,7 @@ export function HomePage() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  title="Opens in a new tab"
                   className="relative group block rounded-md border bg-card p-4 flex gap-3 items-start transition-opacity hover:opacity-80"
                   style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
                   data-testid={testId}
