@@ -9,7 +9,7 @@ import { ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage"
 import { ObjectPermission } from "../lib/objectAcl";
 import { db, libraryEntriesTable, shareLinksTable } from "@workspace/db";
 import { or, eq } from "drizzle-orm";
-import { isOwnerRequest, OWNER_TOKEN } from "../lib/ownerAuth";
+import { isOwnerRequest, OWNER_TOKEN, getCuratorFromToken, extractOwnerToken } from "../lib/ownerAuth";
 
 // ----------------------- upload authorization -----------------------
 //
@@ -17,7 +17,8 @@ import { isOwnerRequest, OWNER_TOKEN } from "../lib/ownerAuth";
 // object storage.  We restrict it to either:
 //   1. The library owner (LIBRARY_OWNER_TOKEN, sent as Authorization: Bearer
 //      or x-library-owner-token).
-//   2. A non-revoked, non-expired share link (its random token sent as
+//   2. Any curator with a valid DB session token (issued on passphrase login).
+//   3. A non-revoked, non-expired share link (its random token sent as
 //      x-share-token).  Share contributors need this to upload through
 //      tokenized links.
 //
@@ -43,10 +44,21 @@ async function requireUploadAuth(
   res: Response,
   next: () => void,
 ): Promise<void> {
+  // Check 1: raw LIBRARY_OWNER_TOKEN (env var)
   if (isOwnerRequest(req)) {
     next();
     return;
   }
+  // Check 2: DB-backed curator session token (issued by passphrase login)
+  const sessionToken = extractOwnerToken(req);
+  if (sessionToken) {
+    const curator = await getCuratorFromToken(sessionToken);
+    if (curator) {
+      next();
+      return;
+    }
+  }
+  // Check 3: contributor share link
   const shareToken = req.header("x-share-token")?.trim();
   if (shareToken && (await shareTokenIsValid(shareToken))) {
     next();
