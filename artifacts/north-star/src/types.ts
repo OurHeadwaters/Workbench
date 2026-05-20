@@ -96,6 +96,7 @@ export interface AppState {
     senders: string[];
     enabled: boolean;
     hatLabels: HatLabel[];
+    lastSavedAt?: string;
   };
   lastBackedUpAt?: string;
 }

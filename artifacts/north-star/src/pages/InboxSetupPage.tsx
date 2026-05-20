@@ -17,7 +17,7 @@ export function InboxSetupPage() {
   const [saved, setSaved] = useState(false);
 
   function handleSave() {
-    updateInbox({ keywords, senders, enabled, hatLabels });
+    updateInbox({ keywords, senders, enabled, hatLabels, lastSavedAt: new Date().toISOString() });
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   }

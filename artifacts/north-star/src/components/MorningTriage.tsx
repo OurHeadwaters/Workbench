@@ -49,7 +49,7 @@ export function MorningTriage() {
         setError("unavailable");
         setLoading(false);
       });
-  }, [inbox.enabled, inbox.keywords, inbox.senders, inbox.hatLabels]);
+  }, [inbox.enabled, inbox.keywords, inbox.senders, inbox.hatLabels, inbox.lastSavedAt]);
 
   if (!inbox.enabled) return null;
   if (!loading && threads.length === 0 && error !== "scope") return null;
