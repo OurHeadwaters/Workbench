@@ -253,8 +253,10 @@ export function OdysseyPage() {
             className="font-serif text-[17px] leading-[1.7] max-w-2xl mt-6"
             style={{ color: "rgba(244,237,224,0.85)" }}
           >
-            A disciplined, self-paced pioneer journey for people who already speak
-            basic development language and want to strengthen their communities from the source.
+            Built in reserves and northern communities — open to any decentralized
+            practitioner ready to strengthen their community from the source.
+            If you already speak basic development language and your community is
+            organising from the inside out, the trail starts here.
           </p>
 
           {/* Scroll cue + origin crosslink */}
