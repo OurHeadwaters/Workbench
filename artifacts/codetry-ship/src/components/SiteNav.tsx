@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "wouter";
 import { getStoredOwnerToken, setStoredOwnerToken } from "@/lib/api";
 import { NeighbourhoodBadge } from "@workspace/zone-store";
@@ -47,6 +47,7 @@ export function SiteNav() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const toolsDropdownRef = useRef<HTMLDivElement>(null);
   const toolsBtnRef = useRef<HTMLButtonElement>(null);
+  const toolItemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   useEffect(() => {
     function syncAuth() {
@@ -93,9 +94,9 @@ export function SiteNav() {
 
   useEffect(() => {
     if (!toolsOpen) return;
-    function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setToolsOpen(false);
-    }
+
+    toolItemRefs.current[0]?.focus();
+
     function handleClick(e: MouseEvent) {
       if (
         toolsDropdownRef.current &&
@@ -106,13 +107,42 @@ export function SiteNav() {
         setToolsOpen(false);
       }
     }
-    document.addEventListener("keydown", handleKey);
     document.addEventListener("mousedown", handleClick);
     return () => {
-      document.removeEventListener("keydown", handleKey);
       document.removeEventListener("mousedown", handleClick);
     };
   }, [toolsOpen]);
+
+  const handleToolsMenuKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const items = toolItemRefs.current.filter(Boolean) as HTMLAnchorElement[];
+      const current = document.activeElement as HTMLElement;
+      const idx = items.indexOf(current as HTMLAnchorElement);
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const next = (idx + 1) % items.length;
+        items[next]?.focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prev = (idx - 1 + items.length) % items.length;
+        items[prev]?.focus();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        setToolsOpen(false);
+        toolsBtnRef.current?.focus();
+      } else if (e.key === "Tab") {
+        setToolsOpen(false);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        items[0]?.focus();
+      } else if (e.key === "End") {
+        e.preventDefault();
+        items[items.length - 1]?.focus();
+      }
+    },
+    []
+  );
 
   const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
 
@@ -202,8 +232,9 @@ export function SiteNav() {
                     ? dark ? "rgba(255,255,255,0.08)" : "hsl(var(--muted))"
                     : "transparent",
                 }}
-                aria-haspopup="true"
+                aria-haspopup="menu"
                 aria-expanded={toolsOpen}
+                aria-controls="tools-menu"
                 data-testid="nav-tools-toggle"
               >
                 Tools
@@ -225,6 +256,7 @@ export function SiteNav() {
 
               {toolsOpen && (
                 <div
+                  id="tools-menu"
                   ref={toolsDropdownRef}
                   className="absolute right-0 top-full mt-1 rounded-md border shadow-lg py-1 z-50"
                   style={{
@@ -233,16 +265,21 @@ export function SiteNav() {
                     minWidth: "220px",
                   }}
                   role="menu"
+                  aria-label={`Tools menu, ${TOOLS.length} items`}
+                  onKeyDown={handleToolsMenuKeyDown}
                   data-testid="nav-tools-dropdown"
                 >
-                  {TOOLS.map(({ icon, name, href, comingSoon }) => (
+                  {TOOLS.map(({ icon, name, href, comingSoon }, i) => (
                     <a
                       key={name}
+                      ref={(el) => { toolItemRefs.current[i] = el; }}
                       href={comingSoon ? undefined : href}
                       className={`flex items-center gap-2.5 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${comingSoon ? "cursor-default opacity-50" : "hover:bg-muted"}`}
                       style={{ color: "hsl(var(--foreground))" }}
                       role="menuitem"
-                      aria-disabled={comingSoon}
+                      aria-disabled={comingSoon ? true : undefined}
+                      tabIndex={-1}
+                      onClick={comingSoon ? (e) => e.preventDefault() : undefined}
                       data-testid={`nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                     >
                       <span className="text-base leading-none shrink-0">{icon}</span>
@@ -377,7 +414,9 @@ export function SiteNav() {
               onClick={() => setMobileToolsOpen((o) => !o)}
               className="w-full flex items-center justify-between px-4 py-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors"
               style={{ color: "hsl(var(--muted-foreground))" }}
+              aria-haspopup="menu"
               aria-expanded={mobileToolsOpen}
+              aria-controls="mobile-tools-menu"
               data-testid="mobile-nav-tools-toggle"
             >
               Tools
@@ -398,6 +437,9 @@ export function SiteNav() {
             </button>
             {mobileToolsOpen && (
               <div
+                id="mobile-tools-menu"
+                role="menu"
+                aria-label={`Tools menu, ${TOOLS.length} items`}
                 className="border-t"
                 style={{ borderColor: "hsl(var(--card-border))" }}
               >
@@ -407,7 +449,9 @@ export function SiteNav() {
                     href={comingSoon ? undefined : href}
                     className={`flex items-center gap-2.5 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${comingSoon ? "cursor-default opacity-50" : "hover:bg-muted"}`}
                     style={{ color: "hsl(var(--foreground))" }}
-                    aria-disabled={comingSoon}
+                    role="menuitem"
+                    aria-disabled={comingSoon ? true : undefined}
+                    onClick={comingSoon ? (e) => e.preventDefault() : undefined}
                     data-testid={`mobile-nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                   >
                     <span className="text-base leading-none shrink-0">{icon}</span>
