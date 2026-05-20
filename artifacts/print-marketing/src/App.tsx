@@ -15,6 +15,7 @@ import SaltOfTheEarthClub from "@/pages/SaltOfTheEarthClub";
 import GoingDigital from "@/pages/GoingDigital";
 import RackCardIndigenous from "@/pages/RackCardIndigenous";
 import CapabilityStatement from "@/pages/CapabilityStatement";
+import CapabilityStatementPublic from "@/pages/CapabilityStatementPublic";
 import ScopeRateSheet from "@/pages/ScopeRateSheet";
 import TspGuestForm from "@/pages/TspGuestForm";
 import ColdTrailerUpgrade from "@/pages/ColdTrailerUpgrade";
@@ -69,6 +70,7 @@ function Router() {
       <Route path="/going-digital" component={GoingDigital} />
       <Route path="/rack-card-indigenous" component={RackCardIndigenous} />
       <Route path="/capability-statement" component={CapabilityStatement} />
+      <Route path="/capability-statement/view" component={CapabilityStatementPublic} />
       <Route path="/scope-rate-sheet" component={ScopeRateSheet} />
       <Route path="/tsp-guest-form" component={TspGuestForm} />
       <Route path="/cold-trailer-upgrade" component={ColdTrailerUpgrade} />
