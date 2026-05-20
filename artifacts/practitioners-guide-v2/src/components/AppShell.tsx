@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import type { ReactNode } from "react";
+import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
 import { useEffect, useState } from "react";
 import { useScenario } from "@/lib/scenario";
 import { BUCKETS } from "@/data/buckets";
@@ -332,6 +333,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
           </Link>
           <div className="flex-1" />
+          <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
         </div>
       </header>
 

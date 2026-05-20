@@ -6,6 +6,7 @@ import { CourseSidebar } from "@/components/CourseSidebar";
 import { LessonView } from "@/components/LessonView";
 import { markVisited, getVisitedIds, getProgress } from "@/lib/progress";
 import { BookOpen, Menu, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
 
 export function CoursePage() {
   const { signOut } = useClerk();
@@ -71,6 +72,7 @@ export function CoursePage() {
         </div>
 
         <div className="flex items-center gap-3">
+          <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
           <span className="text-xs hidden sm:block" style={{ color: "var(--mid-brown)" }}>
             {progress}% complete
           </span>

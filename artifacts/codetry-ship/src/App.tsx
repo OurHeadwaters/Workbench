@@ -28,6 +28,7 @@ import { EconomyJoinPage } from "@/pages/EconomyJoinPage";
 import { WalletPage } from "@/pages/WalletPage";
 import { TipPage } from "@/pages/TipPage";
 import { WhatIsCodetryPage } from "@/pages/WhatIsCodetryPage";
+import { MapPage } from "@/pages/MapPage";
 
 const queryClient = new QueryClient();
 
@@ -77,6 +78,9 @@ function Router() {
 
       {/* ── What is Codetry? ── */}
       <Route path="/codetry" component={WhatIsCodetryPage} />
+
+      {/* ── Neighbourhood Map ── */}
+      <Route path="/map" component={MapPage} />
 
       <Route component={NotFound} />
     </Switch>

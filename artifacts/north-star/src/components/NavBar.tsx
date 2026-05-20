@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { Star, Grid3x3, BookOpen, Settings, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
 
 const NAV = [
   { path: "/", icon: Star, label: "Today" },
@@ -15,6 +16,9 @@ export function NavBar() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#E7E5E4] z-50 safe-area-bottom">
+      <div className="flex items-center justify-center py-1 border-b border-[#E7E5E4]/60">
+        <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+      </div>
       <div className="flex items-stretch max-w-lg mx-auto">
         {NAV.map(({ path, icon: Icon, label }) => {
           const active = path === "/" ? location === "/" : location.startsWith(path);

@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
+import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
 import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat, ShieldAlert, UserCog } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
@@ -55,6 +56,9 @@ export default function Layout({ children }: { children: ReactNode }) {
               </span>
             </h1>
           </Link>
+          <div className="mt-3">
+            <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+          </div>
         </div>
         <nav className="p-4 flex-1 overflow-y-auto space-y-1">
           {NAV_ITEMS.map((item) => {

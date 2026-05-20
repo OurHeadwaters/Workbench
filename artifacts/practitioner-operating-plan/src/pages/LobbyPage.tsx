@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
+import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
 import {
   getTodayWeek,
   getTodayDay,
@@ -1081,8 +1082,11 @@ export function LobbyPage() {
 
       {/* Header */}
       <div style={{ marginBottom: 4 }}>
-        <div className="hw-label hw-label--cream" style={{ marginBottom: 6 }}>
-          Daily Bench — Practitioner's Operating Plan
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 8 }}>
+          <div className="hw-label hw-label--cream">
+            Daily Bench — Practitioner's Operating Plan
+          </div>
+          <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
         </div>
         <h1 style={{ fontSize: 26, fontWeight: 600, lineHeight: 1.2, color: T.paper, fontFamily: "var(--font-display)", margin: 0 }}>
           {todayLabel}

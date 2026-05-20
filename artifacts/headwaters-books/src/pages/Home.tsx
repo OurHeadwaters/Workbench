@@ -3,6 +3,7 @@ import { SignedIn, SignedOut } from "@/lib/clerkGates";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { EaglePrologue } from "@/components/EaglePrologue";
+import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
 import {
   LayoutDashboard,
   HandHelping,
@@ -120,6 +121,7 @@ export default function Home() {
           />
           <span className="font-serif font-bold text-lg text-foreground">Headwaters</span>
         </div>
+        <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
         <div className="flex items-center gap-3">
           <SignedOut>
             <Link href="/sign-in">

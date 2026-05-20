@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
+  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -114,6 +115,16 @@ export default function FrontPage() {
           <Text style={[styles.heroByline, { fontFamily: MONO }]}>
             {`v${constellation.version} \u00b7 ${constellation.lastUpdated} \u00b7 offline-readable`}
           </Text>
+          <Pressable
+            onPress={() => Linking.openURL("/map")}
+            style={({ pressed }) => [styles.zoneBadge, pressed && { opacity: 0.7 }]}
+          >
+            <View style={styles.zoneDot}>
+              <Text style={[styles.zoneDotText, { fontFamily: MONO }]}>0</Text>
+            </View>
+            <Text style={[styles.zoneBadgeText, { fontFamily: MONO }]}>The Saltbox</Text>
+            <Text style={[styles.zoneState, { fontFamily: MONO }]}>· Good Times</Text>
+          </Pressable>
         </View>
 
         {/* ── BEGIN READING ─────────────────────────────────────────── */}
@@ -531,6 +542,43 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "rgba(244,237,224,0.28)",
     marginTop: 18,
+  },
+  zoneBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    gap: 6,
+    marginTop: 14,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(244,237,224,0.18)",
+    backgroundColor: "rgba(244,237,224,0.06)",
+  },
+  zoneDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: RUST,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  zoneDotText: {
+    fontSize: 9,
+    color: CREAM,
+    fontWeight: "700",
+  },
+  zoneBadgeText: {
+    fontSize: 9,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+    color: "rgba(244,237,224,0.55)",
+  },
+  zoneState: {
+    fontSize: 9,
+    letterSpacing: 0.5,
+    color: "rgba(244,237,224,0.28)",
   },
 
   // BEGIN

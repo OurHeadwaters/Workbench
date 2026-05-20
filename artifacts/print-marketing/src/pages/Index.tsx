@@ -1,3 +1,5 @@
+import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
+
 const base = import.meta.env.BASE_URL;
 
 /* ── Eagle Mark SVG ──────────────────────────────────────────────────────── */
@@ -36,6 +38,11 @@ export default function Index() {
         backgroundPosition: "center 40%",
       }}
     >
+      {/* Neighbourhood badge — fixed top right */}
+      <div style={{ position: "fixed", top: 12, right: 16, zIndex: 50 }}>
+        <NeighbourhoodBadge zoneNumber={2} zoneName="The Bench" />
+      </div>
+
       {/* Gradient overlay */}
       <div
         style={{

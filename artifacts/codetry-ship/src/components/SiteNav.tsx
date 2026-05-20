@@ -19,6 +19,7 @@ const NAV_LINKS: NavLink[] = [
   { href: "/listen",   label: "Listen" },
   { href: "/economy",  label: "Economy", desktopOnly: true },
   { href: "/odyssey",  label: "Odyssey" },
+  { href: "/map",      label: "Map" },
 ];
 
 const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[] = [

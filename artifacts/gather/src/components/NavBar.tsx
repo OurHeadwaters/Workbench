@@ -2,6 +2,7 @@ import { useLocation } from "wouter";
 import { Home, Users, Shield, Package, Map } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGatherStore } from "@/lib/store";
+import { NeighbourhoodBadge } from "@/components/NeighbourhoodBadge";
 
 const NAV_ITEMS = [
   { path: "/", label: "Today", icon: Home },
@@ -17,6 +18,9 @@ export function NavBar() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#FAF6F0] border-t border-[#E4D9CC] safe-area-bottom">
+      <div className="max-w-md mx-auto flex items-center justify-center py-1 border-b border-[#E4D9CC]/60">
+        <NeighbourhoodBadge zoneNumber={0} zoneName="The Saltbox" />
+      </div>
       <div className="max-w-md mx-auto flex">
         {NAV_ITEMS.map(({ path, label, icon: Icon }) => {
           const isActive = path === "/" ? location === "/" : location.startsWith(path);
