@@ -9,7 +9,7 @@
  * It is plain-language, honest about projections, and PDF-printable.
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import {
   ArrowLeft,
@@ -26,6 +26,9 @@ import {
   ChevronDown,
   ChevronUp,
   Handshake,
+  Pencil,
+  Save,
+  RotateCcw,
 } from "lucide-react";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -125,6 +128,284 @@ function monthsToClear(monthlyRevenue: number): number {
 function clearanceDate(months: number): string {
   const d = new Date(2025, 4 + months); // Start May 2025 as reference
   return d.toLocaleDateString("en-CA", { month: "long", year: "numeric" });
+}
+
+const TRACKER_KEY = "gmph-balance-tracker-v1";
+
+interface TrackerState {
+  collected: number;
+  monthlyRate: number;
+  lastUpdated: string;
+}
+
+function loadTracker(): TrackerState {
+  try {
+    const raw = localStorage.getItem(TRACKER_KEY);
+    if (raw) return JSON.parse(raw) as TrackerState;
+  } catch {
+    // ignore
+  }
+  return { collected: 0, monthlyRate: 0, lastUpdated: "" };
+}
+
+function saveTracker(state: TrackerState) {
+  localStorage.setItem(TRACKER_KEY, JSON.stringify(state));
+}
+
+function BalanceTracker() {
+  const [saved, setSaved] = useState<TrackerState>(() => loadTracker());
+  const [editing, setEditing] = useState(false);
+  const [draftCollected, setDraftCollected] = useState(String(saved.collected));
+  const [draftRate, setDraftRate] = useState(String(saved.monthlyRate));
+
+  useEffect(() => {
+    setDraftCollected(String(saved.collected));
+    setDraftRate(String(saved.monthlyRate));
+  }, [saved]);
+
+  function handleEdit() {
+    setEditing(true);
+  }
+
+  function handleSave() {
+    const collected = Math.max(0, Math.min(DEBT_TOTAL, Number(draftCollected) || 0));
+    const monthlyRate = Math.max(0, Number(draftRate) || 0);
+    const next: TrackerState = {
+      collected,
+      monthlyRate,
+      lastUpdated: new Date().toLocaleDateString("en-CA", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    };
+    saveTracker(next);
+    setSaved(next);
+    setEditing(false);
+  }
+
+  function handleReset() {
+    const next: TrackerState = { collected: 0, monthlyRate: 0, lastUpdated: "" };
+    saveTracker(next);
+    setSaved(next);
+    setEditing(false);
+  }
+
+  const remaining = Math.max(0, DEBT_TOTAL - saved.collected);
+  const pct = Math.min(100, (saved.collected / DEBT_TOTAL) * 100);
+  const monthsLeft =
+    saved.monthlyRate > 0 ? Math.ceil(remaining / saved.monthlyRate) : null;
+  const cleared = remaining === 0;
+
+  const clearDateStr = (() => {
+    if (monthsLeft === null) return null;
+    const d = new Date();
+    d.setDate(1);
+    d.setMonth(d.getMonth() + monthsLeft);
+    return d.toLocaleDateString("en-CA", { month: "long", year: "numeric" });
+  })();
+
+  return (
+    <div
+      className="rounded-xl border-2 overflow-hidden"
+      style={{
+        borderColor: cleared ? "#065f46" : "#1f3d2e",
+        background: "hsl(var(--card))",
+      }}
+    >
+      <div
+        className="px-5 py-3 flex items-center justify-between gap-3"
+        style={{ background: cleared ? "#065f46" : "#1f3d2e" }}
+      >
+        <div className="flex items-center gap-2">
+          <DollarSign className="h-4 w-4 text-emerald-200" />
+          <span className="text-sm font-semibold text-white">
+            {cleared ? "Balance cleared — $72,000 recovered" : "Live balance tracker · $72,000 to recover"}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 print:hidden">
+          {!editing ? (
+            <button
+              type="button"
+              onClick={handleEdit}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium transition-colors"
+              style={{ background: "#ffffff20", color: "#fff" }}
+            >
+              <Pencil className="h-3 w-3" />
+              Update numbers
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={handleSave}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium"
+                style={{ background: "#d1fae5", color: "#065f46" }}
+              >
+                <Save className="h-3 w-3" />
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditing(false)}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium"
+                style={{ background: "#ffffff20", color: "#fff" }}
+              >
+                Cancel
+              </button>
+            </>
+          )}
+          <button
+            type="button"
+            onClick={handleReset}
+            title="Reset to zero"
+            className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs transition-colors"
+            style={{ background: "#ffffff14", color: "#d1fae580" }}
+          >
+            <RotateCcw className="h-3 w-3" />
+          </button>
+        </div>
+      </div>
+
+      <div className="p-5 space-y-5">
+        {/* Progress bar */}
+        <div>
+          <div className="flex justify-between text-[10px] font-mono text-muted-foreground mb-1.5">
+            <span>{money(saved.collected)} collected</span>
+            <span>{pct.toFixed(1)}%</span>
+            <span>{money(DEBT_TOTAL)} target</span>
+          </div>
+          <div className="h-3 rounded-full overflow-hidden" style={{ background: "#d1fae5" }}>
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${pct}%`,
+                background: cleared ? "#065f46" : "#1f3d2e",
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Key numbers */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div
+            className="rounded-xl p-3 text-center"
+            style={{ background: "#d1fae5" }}
+          >
+            <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-emerald-700 mb-1">
+              Collected
+            </p>
+            {editing ? (
+              <input
+                type="number"
+                min={0}
+                max={72000}
+                value={draftCollected}
+                onChange={(e) => setDraftCollected(e.target.value)}
+                className="w-full text-center text-lg font-bold tabular-nums bg-white rounded-lg border px-2 py-0.5"
+                style={{ borderColor: "#6ee7b7", color: "#065f46" }}
+              />
+            ) : (
+              <p className="text-xl font-bold tabular-nums text-emerald-900">
+                {money(saved.collected)}
+              </p>
+            )}
+          </div>
+
+          <div
+            className="rounded-xl p-3 text-center"
+            style={{ background: cleared ? "#d1fae5" : "#fef3c7" }}
+          >
+            <p
+              className="text-[10px] font-mono uppercase tracking-[0.16em] mb-1"
+              style={{ color: cleared ? "#065f46" : "#b45309" }}
+            >
+              Remaining
+            </p>
+            <p
+              className="text-xl font-bold tabular-nums"
+              style={{ color: cleared ? "#065f46" : "#92400e" }}
+            >
+              {cleared ? "—" : money(remaining)}
+            </p>
+          </div>
+
+          <div
+            className="rounded-xl p-3 text-center"
+            style={{ background: "hsl(var(--muted)/0.5)" }}
+          >
+            <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-muted-foreground mb-1">
+              Monthly rate
+            </p>
+            {editing ? (
+              <input
+                type="number"
+                min={0}
+                value={draftRate}
+                onChange={(e) => setDraftRate(e.target.value)}
+                className="w-full text-center text-lg font-bold tabular-nums bg-white rounded-lg border px-2 py-0.5"
+                style={{ borderColor: "hsl(var(--card-border))", color: "hsl(var(--foreground))" }}
+              />
+            ) : (
+              <p className="text-xl font-bold tabular-nums text-foreground">
+                {saved.monthlyRate > 0 ? money(saved.monthlyRate) : "—"}
+              </p>
+            )}
+          </div>
+
+          <div
+            className="rounded-xl p-3 text-center"
+            style={{ background: "hsl(var(--muted)/0.5)" }}
+          >
+            <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-muted-foreground mb-1">
+              Months to clear
+            </p>
+            <p className="text-xl font-bold tabular-nums text-foreground">
+              {cleared ? "Done" : monthsLeft !== null ? `~${monthsLeft}` : "—"}
+            </p>
+          </div>
+        </div>
+
+        {/* Clear-by date */}
+        {!cleared && clearDateStr && (
+          <div
+            className="rounded-xl p-3 flex items-center gap-3"
+            style={{ background: "#dbeafe" }}
+          >
+            <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-blue-700" />
+            <p className="text-sm text-blue-900">
+              At the current run rate, the $72,000 balance clears by{" "}
+              <strong>{clearDateStr}</strong>.
+            </p>
+          </div>
+        )}
+
+        {cleared && (
+          <div
+            className="rounded-xl p-3 flex items-center gap-3"
+            style={{ background: "#d1fae5" }}
+          >
+            <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-emerald-700" />
+            <p className="text-sm text-emerald-900 font-semibold">
+              The $72,000 balance has been fully recovered. GMPH retains ongoing revenue with no further obligation.
+            </p>
+          </div>
+        )}
+
+        {!cleared && saved.collected === 0 && !editing && (
+          <p className="text-[11px] text-muted-foreground text-center">
+            No revenue recorded yet. Click <strong>Update numbers</strong> to enter the first payment received.
+          </p>
+        )}
+
+        {saved.lastUpdated && (
+          <p className="text-[10px] text-muted-foreground text-right">
+            Last updated: {saved.lastUpdated}
+          </p>
+        )}
+      </div>
+    </div>
+  );
 }
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
@@ -542,6 +823,12 @@ export function GmphPathBPage() {
       <section>
         <SectionLabel>Revenue projection · adjust the sliders to see what's realistic</SectionLabel>
         <RevenueCalculator />
+      </section>
+
+      {/* ── Live balance tracker ── */}
+      <section>
+        <SectionLabel>Recovery tracker · actual progress against the $72k balance</SectionLabel>
+        <BalanceTracker />
       </section>
 
       {/* ── Agreement structure ── */}
