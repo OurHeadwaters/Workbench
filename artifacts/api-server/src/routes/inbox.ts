@@ -93,7 +93,17 @@ router.get("/threads", async (req, res) => {
 
     if (listData.error) {
       logger.warn({ err: listData.error }, "inbox: Gmail API error");
-      res.json([]);
+      // Surface scope errors explicitly so the UI can show an actionable message
+      // rather than silently rendering nothing. The gmail.readonly (or gmail.modify)
+      // scope is required for threads.list — addon-only scopes are insufficient.
+      const isScope =
+        listData.error.message?.toLowerCase().includes("insufficient") ||
+        (listData.error as unknown as { status?: string }).status === "PERMISSION_DENIED";
+      if (isScope) {
+        res.status(403).json({ error: "insufficient_scope", message: listData.error.message });
+      } else {
+        res.json([]);
+      }
       return;
     }
 

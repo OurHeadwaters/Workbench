@@ -20,12 +20,13 @@ export function MorningTriage() {
 
   const [threads, setThreads] = useState<EmailThread[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<"unavailable" | "scope" | null>(null);
   const [expanded, setExpanded] = useState(true);
 
   useEffect(() => {
     if (!inbox.enabled) return;
     setLoading(true);
+    setError(null);
 
     const params = new URLSearchParams();
     if (inbox.keywords?.length) params.set("keywords", inbox.keywords.join(","));
@@ -33,11 +34,14 @@ export function MorningTriage() {
     if (inbox.hatLabels?.length) params.set("labels", inbox.hatLabels.map((h) => h.label).join(","));
 
     fetch(`${BASE_API}/inbox/threads?${params.toString()}`)
-      .then((r) => {
+      .then(async (r) => {
+        if (r.status === 403) {
+          setError("scope");
+          setLoading(false);
+          return;
+        }
         if (!r.ok) throw new Error("unavailable");
-        return r.json();
-      })
-      .then((data: EmailThread[]) => {
+        const data: EmailThread[] = await r.json();
         setThreads(data);
         setLoading(false);
       })
@@ -48,7 +52,21 @@ export function MorningTriage() {
   }, [inbox.enabled, inbox.keywords, inbox.senders, inbox.hatLabels]);
 
   if (!inbox.enabled) return null;
-  if (error || (!loading && threads.length === 0)) return null;
+  if (!loading && threads.length === 0 && error !== "scope") return null;
+
+  if (error === "scope") {
+    return (
+      <div className="rounded-xl border border-[#FCD34D] bg-[#FFFBEB] px-4 py-3 mb-4 flex items-start gap-3">
+        <Inbox size={16} className="text-[#92400E] mt-0.5 shrink-0" />
+        <div>
+          <p className="text-sm font-medium text-[#92400E]">Gmail read access needed</p>
+          <p className="text-xs text-[#78350F] mt-0.5">
+            The connected Gmail account only has add-on permissions. To enable Morning Triage, the Gmail connection needs the <strong>gmail.readonly</strong> scope — reconnect it in the Replit integrations panel with broader access.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const active = threads.filter((t) => !pendingReplies[t.id]?.doneAt);
 
