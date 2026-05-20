@@ -423,7 +423,7 @@ export function StoryPage() {
     setStoryState(station.ordinal, { status: "loading" });
 
     try {
-      const res = await fetch("/media/youth-path/generate-story", {
+      const res = await fetch("/api/youth-path/generate-story", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
