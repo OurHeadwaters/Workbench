@@ -1,0 +1,184 @@
+North Star — Complete Context for Implementation Agent
+What this is: North Star is a personal operating system built for an ADHD-inattentive entrepreneur who runs multiple projects simultaneously. It is local-first (all data in the browser's localStorage, zero server dependency), mobile-first, and built on the Codetry zone model. It lives at /north-star/ in a pnpm monorepo. The tech stack is React + Vite + Zustand + Tailwind + shadcn/ui + Wouter routing.
+
+The Zone Model (the conceptual backbone of everything)
+North Star is built around Codetry zones. Every project the user runs is tagged to a zone. The zones are:
+
+Z1 — Household / Afloat: Income-generating work. The floor that keeps the lights on.
+Z2 — Circle / Paid contract: Paid contracted work with a deadline and a deliverable.
+Z3 — Home Range / Build now, paid later: Active projects being built toward future value. Most passion projects live here.
+Z4 — Community / Passion: Volunteer or community work. No immediate return.
+Z1 and Z2 are "protected" zones. The app actively guards them from being crowded out by Z3/Z4 energy. That guardrail logic is core to the Today screen.
+
+Zone 0 (Household) and Zone 5 (Wild/public) exist in the broader model but are not used as project zones in North Star — Z1–Z4 are the four rankable zones.
+
+Core Concept: Constellations
+A constellation is what North Star calls a project. The language is intentional — the zone model describes the night sky of your work, each project is a cluster of light.
+
+Each constellation has:
+
+id — UUID
+slug — URL-safe name (auto-generated from name)
+name — display name
+notes — one-line description
+zone — one of Z1, Z2, Z3, Z4
+url — optional home path (e.g. /gather/)
+deepLinks — array of { label, path } quick-launch links that appear when the constellation is picked for the day
+colorVar — HSL values string for the zone color band
+active — boolean; parked constellations are hidden from Today but not deleted
+linkedFamilyId — optional; links to Family Buckets backend for live status
+linkedShareToken — optional; links to Saltbox live-share for status
+Two constellations are seeded at install: Saltbox (the homeschool companion, Z3) and Family Buckets (chores/allowance, Z3). Both come with deep links pre-wired.
+
+Core Concept: Contracts
+A contract is paid work attached to a constellation. It represents the work that has a deadline and a check.
+
+Each contract has:
+
+id, name, constellationId, weeklyHourTarget (in hours, 0.25 precision), active, endsOn (optional), createdAt
+Contracts power the guardrail system: if the user picks a Z3 or Z4 constellation for today but has an active Z2 contract with hours remaining this week, the Today screen surfaces a prompt — "You have Xh left on [contract] this week. Still want to spend today on a passion thing?" The user can acknowledge and proceed, or navigate to Zones to review. The acknowledgement is stored per-day per-guardrail so it doesn't re-fire.
+
+Core Concept: The North Star Statement
+During onboarding (and editable later in Settings), the user writes a three-part statement:
+
+Who: Who is this work for? (a specific kind of person)
+Why: So that what shifts for them? (the underlying change)
+No-fly: What you will politely turn down — even when the offer is good.
+This statement is displayed on the Today screen and the Guide. It is the anchor the entrepreneur returns to when making decisions about what to say yes or no to. The no-fly line is the strategic boundary.
+
+The Onboarding Flow (5 steps)
+The app gates all content behind onboarding.completed === true. Until onboarded, every route redirects to /onboarding.
+
+Welcome — "Start with what you're already building." Single CTA to proceed.
+Constellations — Lists pre-seeded constellations (Saltbox, Family Buckets), lets user add/edit/remove. Each tagged Z1–Z4.
+Contracts — Optional. Add paid work with weekly hour targets. Linked to a constellation.
+Who — First clause of the North Star statement. Can skip.
+Why → No-fly — Second and third clauses. Completing all three marks onboarding done and navigates to Today.
+If the user skips the statement steps, onboarding.completed is still set to true. They can complete the statement later in Settings.
+
+Today Screen — The Daily Operating Loop
+The Today screen is the home of the app. It has these sections in order:
+
+1. Morning Triage Card
+A separate component (MorningTriage) that surfaces Gmail inbox threads. Requires the inbox integration to be configured (see Inbox section below). Shows threads matching the user's keyword/sender filters, with deferred/done state tracked locally.
+
+2. Date + Intention Prompt
+"What does today get?" Header with a Capture button (Mic icon → opens a sheet to log a quick thought, voice note, or text).
+
+3. Recent Captures
+The last few captures displayed inline.
+
+4. Review Nudges
+If it's Sunday or Monday and no weekly review exists for the current week → gentle banner with a link to /weekly.
+If no seasonal review exists for the current season → banner linking to /seasonal.
+Both are dismissible per-day.
+5. Backup Nudge
+If it's been more than 7 days since the last backup (or never backed up) → amber warning: "Back up in Settings — North Star lives only on this device." Dismissible per-day.
+
+6. Pick 1–3 Constellations
+The core daily mechanic. All active constellations are listed. The user picks which ones get today. Soft cap at 3 — trying to pick a fourth triggers a "Park one?" prompt asking which of the current three should step out to make room. The cap can be bypassed by dismissing ("don't ask again today").
+
+When a constellation is picked, its deep links appear as quick-launch buttons below it. Live status (from the API — Family Buckets task count, Saltbox live share state) appears as a summary line.
+
+The Z2 contract guardrail fires here when a Z3/Z4 pick is added while a Z2 contract is under-target for the week.
+
+7. One Line of Intention
+A textarea: "Today, the win is…" Saved to the day's pick record.
+
+8. Rough Hours by Zone
+Four number inputs (Z1–Z4), quarter-hour precision. End-of-day logging — no timer, no tracking. The weekly review reads this data to show zone balance.
+
+The Weekly Review
+Route /weekly. Structured reflection: what shipped, what stalled, zone hour summary for the week (pulled from logged hours), the contract guardrail report (hours logged vs. target), and an intention field for next week. Stores one record per week (ISO Monday date as key). Keeps last 52 weeks.
+
+Due trigger: Sunday or Monday, if no review exists for the current week.
+
+The Seasonal Review
+Route /seasonal. Bigger picture: what changed this season, what zones shifted, what the statement looks like now. Stores one record per season (e.g. 2026-spring). Keeps last 24 seasons (6 years).
+
+Due trigger: Any time, if no review exists for the current season.
+
+The Guide
+Route /guide. The Codetry zone model explained in plain language — what each zone is, why the boundaries matter, how to decide where a project belongs. Includes a link to the public Codetry handbook. User progress through chapters is tracked (last section read per chapter, optional bookmark). The North Star statement is displayed here as a north star reference.
+
+The Zones Page
+Route /zones. Shows all constellations grouped by zone. From here the user can add/edit/remove constellations, add/edit contracts, park or unpark constellations, and reorder zone priority. The zone ranking (Z1–Z4 in the user's priority order) is configurable here and affects how the guardrail logic weights time decisions.
+
+The Captures System
+Captures are quick thoughts, voice notes, or text items that can be logged from the Today screen's Capture button. Each capture has:
+
+id, createdAt, text (optional), blobId (optional — references IndexedDB audio blob)
+Up to 500 captures are kept in localStorage. Blobs live in IndexedDB (north-star-blobs store). When the cap rolls over, orphaned blobs are cleaned up automatically. Captures are displayed as RecentCaptures on the Today screen.
+
+The Gmail Inbox Integration
+Route /inbox-setup. North Star connects to Gmail via the API server's GET /api/inbox/threads endpoint (which uses @replit/connectors-sdk + Google OAuth). The user configures:
+
+Keywords to filter by (default: "accountant", "CRA", "bookkeeping", "invoice", "tax")
+Senders to always surface
+Hat labels — named email addresses the user operates from (e.g. "Headwaters", "807 Coord"). The defaults are seeded for the specific user's known email aliases.
+The enabled flag turns the inbox feature on/off. Thread state (deferred, done) is tracked locally in pendingReplies: { deferredCount, lastDeferred, doneAt } per threadId.
+
+Important: the inbox integration requires OAuth credentials wired up in the API server. If those aren't configured, the inbox silently shows nothing. The Today screen still renders fully without it.
+
+The Tester Kit
+Route /tester-kit. A scratch space for testing features and demonstrations. Used for partner conversations and demo flows.
+
+Settings Page
+Route /settings. Contains:
+
+Edit the North Star statement (who/why/noFly)
+Manage constellations (add, edit, park, remove)
+Manage contracts
+Inbox setup link
+Backup/restore: export all state to JSON, import from JSON. lastBackedUpAt is set on export. The 7-day backup nudge reads this timestamp.
+Reset all data
+The Full Data Model (localStorage key: north-star:v1, schema version 4)
+AppState {
+  installedAt: string (ISO)
+  onboarding: { completed: boolean, completedAt?: string }
+  statement?: { who: string, why: string, noFly: string, updatedAt: string }
+  zoneRanking: ZoneId[]  // user-ordered Z1–Z4 priority
+  constellations: Constellation[]
+  contracts: Contract[]
+  dailyPicks: Record<YYYY-MM-DD, DailyPick>
+  weeklyReviews: WeeklyReview[]  // max 52
+  seasonalReviews: SeasonalReview[]  // max 24
+  guide: { lastSectionByChapter: Record<string,string>, lastOpenedAt?, bookmarkChapterId? }
+  captures: Capture[]  // max 500
+  dismissedNudges: Record<string, ISO string>
+  pendingReplies: Record<threadId, { deferredCount, lastDeferred, doneAt? }>
+  inbox: { keywords: string[], senders: string[], enabled: boolean, hatLabels: {address,label}[] }
+  lastBackedUpAt?: string
+}
+DailyPick {
+  date: YYYY-MM-DD
+  constellationIds: string[]  // max 3 active picks
+  pickedAt: string
+  reflection?: string  // "Today, the win is…"
+  hoursByZone?: Record<ZoneId, number>  // quarter-hour precision
+  acknowledgedGuardrails?: string[]  // guardrail IDs acknowledged this day
+}
+Key Design Decisions to Preserve
+No push, no badges, no notifications. Everything is pull. The user opens the app; the app doesn't reach for them.
+Soft cap, not hard cap. The 3-constellation limit is a guardrail that can be bypassed. The friction is the point — it prompts a decision, not a block.
+No red. Destructive actions and warnings use amber. This is a system rule across the whole project.
+Local-first is a trust contract. The backup nudge language is explicit: "North Star lives only on this device." Any feature that adds server sync must be opt-in and announced clearly to the user.
+Fraunces serif headings, Inter body. No exceptions. 44px minimum tap targets on interactive elements.
+The zone model is load-bearing. The guardrail, the weekly review's zone hour chart, the zone ranking — these only make sense if the zone assignment is honest. Onboarding should gently push users to think about it, not make it feel bureaucratic.
+Constellations are not tasks. They are living projects — things you are building, not a to-do list. The daily pick is about attention, not completion.
+What Is Currently Working
+Full onboarding flow (5 steps, skippable statement)
+Today screen with constellation picks, soft cap, guardrails, hour logging, intention field, backup nudge, weekly/seasonal nudges
+Morning triage (Gmail inbox) — requires OAuth configured in API server
+Captures (text; audio blob support wired, IndexedDB)
+Weekly and seasonal review pages (structured forms, stored per period)
+Guide (Codetry model, chapter tracking, bookmarks)
+Zones page (constellation/contract CRUD, zone ranking)
+Settings (statement edit, backup/restore, reset)
+Tester kit page
+What Is Not Yet Built / Known Gaps
+The Guide chapter content is present but the guide-chapter page renders individual chapters — the actual written chapter content of the Codetry handbook may be placeholder or thin depending on what was seeded.
+Audio capture (the Mic button on Today) — the sheet component exists and the blob infrastructure is wired, but voice recording may not be fully implemented (needs browser MediaRecorder integration in capture-sheet.tsx).
+The Zones page UI for reordering zone priority (the zoneRanking array is stored and read by the guardrail logic, but the drag-to-reorder UI may be missing).
+The inbox-setup page is a configuration form — the actual thread-fetching and display in MorningTriage depends on the API server's Gmail connector being fully wired.
+No export to PDF, no sharing, no multi-device sync — intentional by design for now.
