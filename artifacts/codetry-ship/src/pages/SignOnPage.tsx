@@ -99,7 +99,7 @@ export function SignOnPage() {
             className="font-serif italic mt-4"
             style={{ fontSize: "clamp(0.95rem, 2.5vw, 1.05rem)", color: "rgba(244,237,224,0.65)", lineHeight: 1.55 }}
           >
-            Building in the open — for band councils and northern communities.
+            Rooted in reserves and northern communities — built to replicate anywhere.
           </p>
         </div>
       </section>

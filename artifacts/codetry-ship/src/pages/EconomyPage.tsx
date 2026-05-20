@@ -51,11 +51,13 @@ export function EconomyPage() {
           style={{ borderColor: "hsl(var(--accent))" }}
         >
           <p className="font-serif text-xl sm:text-2xl leading-snug">
-            On every reserve in the north, people help each other every day.
+            In every decentralized community, people help each other every day.
             The neighbour who knows how to fix an outboard. The Elder who
             remembers where the food cache used to be. The cousin who shares
             what they know about freight rates. That value flows — it just
-            doesn&rsquo;t get counted.
+            doesn&rsquo;t get counted. Reserves and northern communities are
+            where this work was built and tested. The pattern holds everywhere
+            it&rsquo;s true.
           </p>
           <p className="mt-4 signoff">— headwaters</p>
         </section>

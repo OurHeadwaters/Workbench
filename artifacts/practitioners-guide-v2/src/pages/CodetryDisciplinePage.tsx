@@ -180,6 +180,9 @@ export function CodetryDisciplinePage() {
           <p className="mt-2 text-muted-foreground max-w-3xl">
             If you change a name, you change the spec.
           </p>
+          <p className="mt-2 text-xs text-muted-foreground max-w-3xl">
+            Built and proven on reserves and in northern communities — the naming discipline travels to any decentralized community where legible, community-owned systems matter.
+          </p>
           <div
             className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
             style={{ backgroundColor: ACCENT_SOFT, color: ACCENT_INK }}

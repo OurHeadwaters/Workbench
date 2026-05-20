@@ -19,9 +19,9 @@ function buildPlainText(): string {
     "",
     "---",
     "",
-    "THE PROBLEM WITH HOW NORTHERN COMMUNITIES GET SERVED",
+    "THE PROBLEM WITH HOW DECENTRALIZED COMMUNITIES GET SERVED",
     "",
-    "Most economic development work in remote northern communities follows the same pattern: a consultant comes in, writes a report, collects a fee, and leaves. The community gets a document. The consultant gets paid. The problem stays.",
+    "Most economic development work — in remote northern communities, rural co-ops, Indigenous nations anywhere — follows the same pattern: a consultant comes in, writes a report, collects a fee, and leaves. The community gets a document. The consultant gets paid. The problem stays.",
     "",
     "The tools don't stay. The knowledge doesn't stay. The infrastructure doesn't stay.",
     "We build for the seventh generation — not the funder's reporting cycle.",
@@ -56,7 +56,7 @@ function buildPlainText(): string {
     "",
     "WHO WE WORK WITH",
     "",
-    "Band councils, First Nations businesses, Indigenous economic development offices, Métis communities, and northern co-ops — anyone building something real for their people.",
+    "Band councils, First Nations businesses, Indigenous economic development offices, northern co-ops — and beyond: any decentralized community asking 'how would we even start?' is the right community for this conversation.",
     "",
     "Current and recent work includes founding the 807 Food Co-operative, pilot development projects including an in-person food hub and circular economy product manufacturing, grant writing and project development, and authoring the Codetry practitioner guide and discipline.",
     "",
@@ -86,7 +86,7 @@ const services = [
   },
   {
     title: "Co-op Platforms",
-    desc: "Member portals that track shares, equity, and governance — built for remote and northern communities. You own the platform outright. No licensing fees.",
+    desc: "Member portals that track shares, equity, and governance — built for any community that wants to own its own platform. You own it outright. No licensing fees.",
   },
   {
     title: "Food System Infrastructure",
@@ -125,7 +125,7 @@ export function CodetryOnePagerPage() {
               </div>
               <h1 style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.55rem", fontWeight: 700, color: CREAM, margin: 0, lineHeight: 1.15, letterSpacing: "-0.01em" }}>
                 Economic Development<br />
-                <span style={{ fontWeight: 400, fontStyle: "italic" }}>for northern communities</span>
+                <span style={{ fontWeight: 400, fontStyle: "italic" }}>rooted in northern communities — built to replicate</span>
               </h1>
             </div>
             <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.6rem", color: "rgba(244,237,224,0.5)", margin: 0, flexShrink: 0 }}>
@@ -142,11 +142,11 @@ export function CodetryOnePagerPage() {
             {/* Problem statement */}
             <section>
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: RUST, marginBottom: "0.1in" }}>
-                The problem with how northern communities get served
+                The problem with how decentralized communities get served
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.2in" }}>
                 <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.78rem", lineHeight: 1.65, color: INK, margin: 0 }}>
-                  Most economic development work in remote northern communities follows the same pattern: a consultant comes in, writes a report, collects a fee, and leaves. The community gets a document. The consultant gets paid. The problem stays.
+                  Most economic development work — in remote northern communities, rural co-ops, Indigenous nations anywhere — follows the same pattern: a consultant comes in, writes a report, collects a fee, and leaves. The community gets a document. The consultant gets paid. The problem stays.
                 </p>
                 <div style={{ borderLeft: `3px solid ${RUST}`, paddingLeft: "0.18in" }}>
                   <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.95rem", fontStyle: "italic", color: EVERGREEN, lineHeight: 1.5, margin: 0 }}>
@@ -200,7 +200,7 @@ export function CodetryOnePagerPage() {
                   Who we work with
                 </p>
                 <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.74rem", lineHeight: 1.65, color: INK, marginBottom: "0.12in" }}>
-                  Band councils, First Nations businesses, Indigenous economic development offices, Métis communities, and northern co-ops — anyone building something real for their people.
+                  Band councils, First Nations businesses, Indigenous economic development offices, northern co-ops — and beyond: any decentralized community asking "how would we even start?" is the right community for this conversation.
                 </p>
                 <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.74rem", lineHeight: 1.65, color: MUTED }}>
                   Current and recent work includes founding the 807 Food Co-operative, pilot development projects including an in-person food hub and circular economy product manufacturing, grant writing and project development, and authoring the Codetry practitioner guide and discipline.

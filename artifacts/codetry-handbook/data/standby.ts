@@ -370,3 +370,14 @@ export function itemsForRungBySubShelf(
 export const STANDBY_PRIMITIVE = standbyPrimitive;
 export const STANDBY_PRIMITIVE_NAME = standbyPrimitive.name;
 export const STANDBY_PRIMITIVE_SUMMARY = standbyPrimitive.summary;
+
+// Two-sides frame — the canonical positioning statement for the Standby model.
+// Built and proven on reserves and in northern communities (the origin and
+// ongoing priority). The discipline travels: any household or community running
+// a decentralized economy can run the same standby model. Surfaced in the UI
+// as "Local roots · Global pattern" so practitioners anywhere know the model
+// belongs to them.
+export const STANDBY_TWO_SIDES_FRAME = {
+  label: "Local roots · Global pattern",
+  body: "Built and proven on reserves and in northern communities. The discipline travels — any household or community running a decentralized economy can run the same standby model.",
+} as const;

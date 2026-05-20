@@ -27,7 +27,7 @@ function buildPlainText(community: string): string {
     "",
     `The reason I'm writing to ${community} specifically is Codetry.`,
     "",
-    "Codetry is a capacity-building discipline I've developed for building community-owned economic tools — community stores, co-op platforms, and the software that runs them — using a trial-first model that keeps costs honest and gives communities a way out at every stage. Nothing is locked in. Everything built stays with the community. The engagement is bounded: clear scope, flat fee, defined deliverables, and a handoff built into the design from day one.",
+    "Codetry is a capacity-building discipline I've developed for building community-owned economic tools — community stores, co-op platforms, and the software that runs them — using a trial-first model that keeps costs honest and gives communities a way out at every stage. Nothing is locked in. Everything built stays with the community. The work was built and proven on reserves and in northern communities; the discipline replicates to any decentralized community that wants to own what it builds. The engagement is bounded: clear scope, flat fee, defined deliverables, and a handoff built into the design from day one.",
     "",
     `I've enclosed three documents with this letter: a Partnership and Funding Brief that explains what Codetry is and what I'm asking for; a one-pager on economic development for your reference; and a Pilot Proposal Outline showing how a first engagement with ${community} would run.`,
     "",
@@ -130,7 +130,7 @@ export function CodetryIntroLetterPage({ community = "your community" }: { commu
           </p>
 
           <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
-            Codetry is a capacity-building discipline I've developed for building community-owned economic tools — community stores, co-op platforms, and the software that runs them — using a trial-first model that keeps costs honest and gives communities a way out at every stage. Nothing is locked in. Everything built stays with the community. The engagement is bounded: clear scope, flat fee, defined deliverables, and a handoff built into the design from day one.
+            Codetry is a capacity-building discipline I've developed for building community-owned economic tools — community stores, co-op platforms, and the software that runs them — using a trial-first model that keeps costs honest and gives communities a way out at every stage. Nothing is locked in. Everything built stays with the community. The work was built and proven on reserves and in northern communities; the discipline replicates to any decentralized community that wants to own what it builds. The engagement is bounded: clear scope, flat fee, defined deliverables, and a handoff built into the design from day one.
           </p>
 
           <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>

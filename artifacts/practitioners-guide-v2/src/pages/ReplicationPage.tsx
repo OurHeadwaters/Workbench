@@ -80,6 +80,18 @@ export function ReplicationPage() {
             and how-to-use guide.
           </PageIntro>
           <div
+            className="mt-3 flex items-start gap-2 rounded-md border px-3 py-2.5 text-xs leading-relaxed"
+            style={{ borderColor: accent, backgroundColor: accentSoft, color: accentInk }}
+            data-testid="replication-two-sides-frame"
+          >
+            <span className="font-semibold shrink-0">Two sides.</span>
+            <span>
+              Headwaters is built and proven on reserves and in northern communities — that is the origin, the test bed, and the ongoing priority.
+              Codetry is the portable, repeatable model: any decentralized community where value moves informally and doesn't get counted — a fishing village, a rural co-op, an Indigenous nation in another country, an off-grid settlement — can run the same discipline.{" "}
+              <strong>Local roots. Global pattern.</strong>
+            </span>
+          </div>
+          <div
             className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
             style={{ backgroundColor: accentSoft, color: accentInk }}
           >

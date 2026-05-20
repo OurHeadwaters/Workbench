@@ -104,6 +104,7 @@ export function CodetryPhilosophyPage() {
           <p className="mt-2 text-muted-foreground max-w-3xl">
             A discipline for building legible operating systems with and for community groups —
             not a variant of existing practice, but a method that grew from a different root.
+            Proven on reserves and in northern communities. Built to replicate in any decentralized community where the same conditions hold.
           </p>
           <div
             className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
@@ -184,8 +185,10 @@ export function CodetryPhilosophyPage() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Codetry emerged from the practice of building operational software for community
                 enterprises — food hubs, co-operatives, Indigenous economic development bodies,
-                community stores. These groups share a specific condition: they inherit and operate
-                systems that were never designed for them.
+                community stores. The work was built and tested on reserves and in northern
+                communities: that is the origin and the ongoing priority. The discipline
+                itself is geography-agnostic — it travels to any decentralized community
+                that inherits and operates systems that were never designed for it.
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 The software assumes an HR department. The accounting assumes a CFO. The dashboard

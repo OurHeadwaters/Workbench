@@ -23,7 +23,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SyncStatusPill } from "@/components/SyncStatusPill";
 import { useColors } from "@/hooks/useColors";
 import { useHandbookContent } from "@/contexts/HandbookContentContext";
-import { itemsForRungBySubShelf, type RungId, type SubShelfInfo } from "@/data/standby";
+import { itemsForRungBySubShelf, STANDBY_TWO_SIDES_FRAME, type RungId, type SubShelfInfo } from "@/data/standby";
 import { useStandby } from "@/lib/standby/store";
 
 const SERIF = "Fraunces_400Regular";
@@ -212,6 +212,21 @@ export default function StandbyChecklist() {
           ]}
         >
           The household checklist — same rungs, same nouns the co-op uses.
+        </Text>
+        <Text
+          style={[
+            styles.summary,
+            { color: c.mutedForeground, fontFamily: MONO, fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", marginTop: 10 },
+          ]}
+        >
+          {STANDBY_TWO_SIDES_FRAME.label}
+        </Text>
+        <Text
+          style={[
+            { color: c.mutedForeground, fontFamily: SERIF_ITALIC, fontSize: 13, lineHeight: 19, marginTop: 4 },
+          ]}
+        >
+          {STANDBY_TWO_SIDES_FRAME.body}
         </Text>
 
         <Text
