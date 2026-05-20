@@ -711,7 +711,7 @@ export function OdysseyPage() {
                     required
                     value={form.community}
                     onChange={set("community")}
-                    placeholder="Your reserve, co-op, village, settlement, or neighbourhood"
+                    placeholder="Your town, neighbourhood, village, co-op, settlement, or reserve"
                   />
                 </JournalField>
 
