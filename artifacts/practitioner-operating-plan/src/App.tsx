@@ -25,6 +25,10 @@ import DailyDebrief from "./pages/DailyDebrief";
 import EveningDump from "./pages/EveningDump";
 import SaltboxGatherRound from "./pages/SaltboxGatherRound";
 import ConstellationSession from "./pages/ConstellationSession";
+import ClientsPage from "./pages/ClientsPage";
+import GMPHPage from "./pages/GMPHPage";
+import EightOhSevenPage from "./pages/EightOhSevenPage";
+import NANPage from "./pages/NANPage";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
@@ -60,6 +64,10 @@ export default function App() {
       <Route path={`${BASE}/debrief/evening`} component={EveningDump} />
       <Route path={`${BASE}/saltbox-gather-round`} component={SaltboxGatherRound} />
       <Route path={`${BASE}/constellation-session`} component={ConstellationSession} />
+      <Route path={`${BASE}/clients`} component={ClientsPage} />
+      <Route path={`${BASE}/gmph`} component={GMPHPage} />
+      <Route path={`${BASE}/eight-oh-seven`} component={EightOhSevenPage} />
+      <Route path={`${BASE}/nan`} component={NANPage} />
       <Route path={`${BASE}/plan`} component={PlanYear} />
       <Route path={`${BASE}/plan/today`} component={PlanToday} />
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />

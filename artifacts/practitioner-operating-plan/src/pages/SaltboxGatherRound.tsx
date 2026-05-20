@@ -19,6 +19,129 @@ interface Block { title: string; badge: string; color: string; points: Point[] }
 
 const BLOCKS: Block[] = [
   {
+    title: "The catalog demo — what's built and proven",
+    badge: "MAY 2026 · DEMO PROOF",
+    color: T.teal,
+    points: [
+      {
+        label: "20+ curriculum paths, mapped and working",
+        body: "The Saltbox catalog demo covers more than 20 distinct Gather Round curriculum paths — not hypothetical content, but real GR material organized and navigable inside the app. A family can browse by subject, age, season, and learning style without touching a download link or a folder. This is the demo that makes the pitch real.",
+      },
+      {
+        label: "7 real GR covers in the catalog",
+        body: "Seven actual Gather Round curriculum unit covers are visible in the demo catalog — Africa, Botany, Beekeeping, Farming + Food, and others. They're not placeholders. They show exactly what a Legacy Pass family would see when they open their library: the actual books they've already paid for, organized and ready without file management.",
+      },
+      {
+        label: "What the demo proves",
+        body: "The demo answers the question Rebecca will ask before she asks it: 'Does this actually work for our content?' Yes. The organization is artistry-first — by subject and theme, not by file type or date. The content depth is real. The infrastructure (offline sync, device handoff) is live. The demo is not a mockup; it's a working product running on actual GR catalog material.",
+      },
+      {
+        label: "The artistry-first organization principle",
+        body: "GR curriculum is organized around themes and seasons, not subjects and grades. The Saltbox catalog respects that. Families navigate by the story of what they're studying — Africa leads to culture leads to language leads to cooking. That path is a curriculum arc, not a folder structure. The demo shows this working.",
+      },
+    ],
+  },
+  {
+    title: "Three partnership vectors — May 2026 framing",
+    badge: "PARTNERSHIP VECTORS",
+    color: T.slate,
+    points: [
+      {
+        label: "Vector A — Tech Retainer",
+        body: "Headwaters builds and maintains the Saltbox platform as Gather Round's official offline content delivery layer. GR pays a monthly or annual tech retainer for access, support, and continued development. Year 1 is endorsement-level (low fee or pilot rate). Year 2 moves to a formal retainer. This is the lowest-friction entry point — it asks GR to pay for something they'd otherwise need to build or hire for.",
+      },
+      {
+        label: "Vector B — Co-brand",
+        body: "Saltbox becomes 'Gather Round Offline Library' or similar — a co-branded product offered as an add-on to the Legacy Pass or as a premium upgrade. GR controls the brand; Headwaters runs the platform. Revenue share model: GR takes the customer relationship, Headwaters takes a per-user or percentage fee. This is the middle path — more revenue potential than a retainer, more GR involvement than pure tech.",
+      },
+      {
+        label: "Vector C — Acquisition",
+        body: "Gather Round acquires Saltbox outright, or acquires the GR-specific instance of it. Headwaters builds to a proof point — adoption, retention, user stories — and then sells the platform or licenses it exclusively to GR. Year 3 territory. This is the highest-value exit for Headwaters but requires 2 years of demonstrated performance first. Don't lead with this. Know it's possible.",
+      },
+      {
+        label: "Sequencing — how the vectors layer",
+        body: "Start with Vector A framing: tech retainer, low friction, one decision. If the relationship deepens, the co-brand conversation opens naturally. If GR wants to own the capability rather than license it, Vector C is the off-ramp. The three vectors aren't competing options — they're a progression. Year 1: endorsement. Year 2: retainer or co-brand. Year 3: acquisition or deep partnership.",
+      },
+    ],
+  },
+  {
+    title: "Revenue model by year",
+    badge: "YEAR-BY-YEAR",
+    color: T.accent,
+    points: [
+      {
+        label: "Year 1 — Endorsement",
+        body: "GR endorses Saltbox to their Legacy Pass community. Saltbox is offered free to all Legacy Pass holders for Year 1. Headwaters earns a flat pilot fee (propose $2,500/quarter, $10,000/year) or nothing — the goal is adoption data and user stories, not revenue. The founding cohort is the credential. Year 1 is seeding, not selling.",
+      },
+      {
+        label: "Year 2 — Retainer",
+        body: "With adoption data in hand, the conversation moves to a formal tech retainer. Headwaters proposes a per-verified-user annual fee ($8–$12/user/year) or a flat retainer based on the pilot size. Conservative case: 3,750 users at $8 = $30,000/year. Mid case: 6,000 users at $10 = $60,000/year. The retainer is the first real recurring revenue from the GR relationship.",
+      },
+      {
+        label: "Year 3 — Acquisition or Deep Partnership",
+        body: "By Year 3, Saltbox has adoption data, user stories, and a proven delivery model. GR can acquire the platform (negotiated price), enter a co-brand agreement, or continue the retainer at scale. The acquisition conversation is triggered by GR wanting to own the capability rather than license it. Headwaters is ready for any of the three outcomes.",
+      },
+      {
+        label: "What this isn't",
+        body: "This is not a subscription pitch to families. Families pay nothing extra — ever. The revenue model lives entirely between Headwaters and Gather Round. This matters for how the partnership is framed to the GR community: 'Saltbox is a gift to Legacy Pass holders' is true and sustainable because the platform is funded by the institutional relationship, not family wallets.",
+      },
+    ],
+  },
+  {
+    title: "The compound content graph",
+    badge: "CONTENT DEPTH",
+    color: T.gold,
+    points: [
+      {
+        label: "Africa → Botany → Beekeeping → Farming + Food",
+        body: "These four Gather Round units form a content arc — they're not separate topics, they're a sequence. Africa introduces geography and culture. Botany builds on that with plant life and growing systems. Beekeeping connects to ecology and food production. Farming + Food closes the loop on where food comes from and how communities sustain themselves. A family can follow this arc across an entire year without ever leaving the GR catalog.",
+      },
+      {
+        label: "What this shows about the catalog",
+        body: "GR doesn't teach in isolated units. The curriculum is designed as a living map — subjects connect to each other, build on each other, and reinforce each other over time. Saltbox's organization mirrors this: not 'here are all your PDFs' but 'here is where you are in the arc and what comes next.' That's a fundamentally different experience than a download folder.",
+      },
+      {
+        label: "Why this matters for the pitch",
+        body: "Rebecca built a curriculum that's meant to be experienced as a whole, not downloaded one piece at a time. The manual download model fragments that experience — families end up with disconnected files instead of a coherent curriculum journey. Saltbox restores the arc. When you show Rebecca the compound content graph in the demo, you're showing her that you understand what she built.",
+      },
+      {
+        label: "The infrastructure depth point",
+        body: "The compound graph also demonstrates infrastructure credibility: to map 20+ paths and show how 7 units connect and compound, Saltbox had to understand the GR catalog well enough to build a navigation layer on top of it. This isn't a scraper or a generic file manager. It's a tool that knows GR's curriculum.",
+      },
+    ],
+  },
+  {
+    title: "The Canadian mom register — how to open the conversation",
+    badge: "CONVERSATION SCRIPT",
+    color: T.teal,
+    points: [
+      {
+        label: "Why register matters",
+        body: "Rebecca Spooner is a Canadian mom running a homeschool curriculum business from Georgia. She knows what it's like to be the Canadian in an American market — building something real without institutional support, making it work on trust and community rather than funding. That's your register. Don't pitch to her like a founder. Talk to her like someone who gets it.",
+      },
+      {
+        label: "Opening line — peer-to-peer, not founder-to-founder",
+        body: "'I'm a homeschooling mother, Legacy Pass member, and community development practitioner based in Wabigoon, Ontario.' Three facts. No pitch. No product. Just standing. She now knows: you're a customer (Legacy Pass member), you're a peer (homeschooling mother), and you have professional context (practitioner). Everything else follows from that.",
+      },
+      {
+        label: "The problem in one sentence",
+        body: "'The single-download model creates real friction — families spend more time managing files than using them, especially in rural areas where signal is unreliable.' This is what a Legacy Pass holder actually experiences, stated without jargon. She doesn't need to be convinced the problem is real. She already knows. Your job is to name it so she nods before she reads the next line.",
+      },
+      {
+        label: "The ask — small and specific",
+        body: "'Would a 20-minute call make sense?' Not a proposal. Not a partnership pitch. Not a demo deck. A 20-minute call. The ask is proportional to what you're asking her to believe at this point — which is nothing more than: 'this person might have something worth five minutes of conversation.' Make the ask easy to say yes to.",
+      },
+      {
+        label: "What not to say in the first exchange",
+        body: "Do not mention blockchain, NFTs, XRPL, or Mighty Networks by name. Do not reference her hiring post. Do not frame this as a business proposition. Do not send a pitch deck, a feature list, or a revenue model. The first exchange is a door. All the content — the demo, the credential architecture, the revenue path — comes on the call, when she's already said yes.",
+      },
+      {
+        label: "After she responds — what to bring to the call",
+        body: "When she agrees to a call: open with the compound content graph demo (Africa → Botany → Beekeeping → Farming + Food). Show the catalog demo with 7 real GR covers. Let her see that you understand her curriculum. Then show the offline delivery — a family loading their library without internet. Then show the QR handoff. Only after all that, if she asks how verification works, explain the credential architecture in plain language. The demo does the work. The tech is the answer to her questions, not the pitch.",
+      },
+    ],
+  },
+  {
     title: "What this is",
     badge: "THE OPPORTUNITY",
     color: T.teal,

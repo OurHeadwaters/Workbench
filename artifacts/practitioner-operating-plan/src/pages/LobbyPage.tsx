@@ -32,6 +32,7 @@ const SEC = {
   week:    { header: "#7A4E2D", label: "THIS WEEK",       note: "Weekly rhythm" },
   year:    { header: "#1f3d2e", label: "THE YEAR",        note: "2026 full plan" },
   money:   { header: "#1A5FA8", label: "MONEY",           note: "Salt, costs, and numbers" },
+  clients: { header: "#3D5C48", label: "CLIENTS",         note: "Who we're working with and where each stands" },
   hiring:  { header: "#3D4A5C", label: "SUBCONTRACTOR LIST",  note: "Partner organizations, templates, and trackers" },
   ref:     { header: "#5B3E8C", label: "REFERENCE",       note: "One-pager and full deck" },
   deer:    { header: "#1F5446", label: "DEER LAKE DOCS",  note: "Coaching docs for founder conversations" },
@@ -67,6 +68,53 @@ const SECTIONS: ToolSection[] = [
     sec: SEC.year,
     tools: [
       { label: "Year Overview", sub: "All phases — Pursuit → Pivot → Operating Season", detail: "The full 2026 plan. Three phases anchored to real milestones: Deer Lake proposal, 807 computing runway, AGM, Tyler's cold storage, and farmers market / print delivery.", path: `${BASE}/plan`, accent: "#1f3d2e" },
+    ],
+  },
+  {
+    sec: SEC.clients,
+    tools: [
+      {
+        label: "Client Roster",
+        sub: "All five clients — status, what's active, and quick links",
+        detail: "One-page view of everyone Bobbie is working with: GMPH ($72k pre-paid, stepping-back), 807 Food Co-op (revenue floor + Wild Bites), Gather Round × Saltbox (outreach, demo ready), Deer Lake (anchor proposal), and NAN (pipeline, waiting on Deer Lake). Each card shows status badge, what's active now, and a link to the full brief.",
+        path: `${BASE}/clients`,
+        accent: "#3D5C48",
+      },
+      {
+        label: "GMPH — G.M. Pepin Holdings",
+        sub: "Active · $72k pre-paid · stepping-back engagement",
+        detail: "Gilles Pepin, three-phase stepping-back plan: Discover → Run → Step Back. Phase 1 Discovery at $28k. Voice-note-first working method. Weekly written brief from Bobbie. The two-of-you framing from the May 2026 brief.",
+        path: `${BASE}/gmph`,
+        accent: "#3D4A5C",
+      },
+      {
+        label: "807 Food Co-op / Wild Bites",
+        sub: "Active · $12k computing runway · Wild Bites product line live",
+        detail: "Community-owned supply chain co-op and the revenue floor for the Pursuit phase. Wild Bites is the active branded product line: 2,000 roll labels + 200 foil pouches ordered April 2026. 807 is also the proof case named in the Deer Lake Chief Brief.",
+        path: `${BASE}/eight-oh-seven`,
+        accent: "#1A5FA8",
+      },
+      {
+        label: "Gather Round × Saltbox",
+        sub: "Outreach · catalog demo live · three partnership vectors",
+        detail: "20+ curriculum paths mapped, 7 real GR covers in the demo. Three partnership vectors: A — Tech Retainer, B — Co-brand, C — Acquisition. Revenue model by year. Canadian mom register conversation script ready. First contact not yet sent.",
+        path: `${BASE}/saltbox-gather-round`,
+        accent: "#4B6070",
+      },
+      {
+        label: "Deer Lake First Nation",
+        sub: "Anchor · Chief Brief delivered · 8-week trial framing active",
+        detail: "The anchor community engagement and the proof case for the constellation model. Chief Brief in hand. AGM board approval on path. Soft decision deadline June 15. Every future community proposal references Deer Lake as the foundation.",
+        path: `${BASE}/deer-lake-chief-brief`,
+        accent: "#1F5446",
+      },
+      {
+        label: "NAN — Nishnawbe Aski Nation",
+        sub: "Pipeline · first outreach not yet sent · 49 communities",
+        detail: "Represents 49 First Nation communities across Treaty 9 and 5. The right conversation happens after Deer Lake is contracted. Outreach note is drafted. Research task: identify correct NAN contact for community economic development before sending anything.",
+        path: `${BASE}/nan`,
+        accent: "#5B3E8C",
+      },
     ],
   },
   {
