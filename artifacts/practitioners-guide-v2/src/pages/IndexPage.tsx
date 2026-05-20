@@ -32,6 +32,7 @@ import {
   X,
   Wallet,
   Flag,
+  TrendingUp,
 } from "lucide-react";
 
 const FOCUS_STORAGE_KEY = "pgv2.whatsnext.focus";
@@ -414,6 +415,108 @@ function StartupBudgetCard() {
               ? `${Math.round(runwayPct)}% of budget remaining (actual)`
               : `~${Math.round(runwayPct)}% remaining (est. midpoint)`}
           </p>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ─── Annual snapshot card ─────────────────────────────────────────────────────
+
+const CHECKIN_API = "/api/annual-check-in";
+
+interface Snapshot {
+  id: number;
+  year: number;
+  takenAt: string;
+  watershedArr: number;
+  ownerTakeHome: number;
+  portfolioValue: number;
+  xrpBalance: number;
+  xrpPriceUsd: number;
+  annualLivingExpenses: number;
+  notes: string | null;
+}
+
+function AnnualSnapshotCard() {
+  const [snapshot, setSnapshot] = useState<Snapshot | null | undefined>(undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${CHECKIN_API}/snapshots/latest`)
+      .then((r) => r.json())
+      .then((data: { snapshot: Snapshot | null }) => {
+        if (!cancelled) setSnapshot(data.snapshot ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setSnapshot(null);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  if (snapshot === undefined) return null;
+  if (snapshot === null) return null;
+
+  const ratio =
+    snapshot.annualLivingExpenses > 0
+      ? snapshot.ownerTakeHome / snapshot.annualLivingExpenses
+      : null;
+
+  return (
+    <Link
+      href="/year/check-in"
+      className="block rounded-xl border p-4 hover:shadow-sm transition-shadow"
+      style={{ borderColor: "#1F5B3F44", backgroundColor: "#F0FDF4" }}
+      data-testid="annual-snapshot-card"
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className="h-8 w-8 rounded-md grid place-items-center flex-shrink-0"
+          style={{ backgroundColor: "#1F5B3F", color: "#fff" }}
+        >
+          <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#14532d] opacity-70">
+              {snapshot.year} Annual Snapshot
+            </p>
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-[#1F5B3F]">
+              Full history <ChevronRight className="h-3 w-3" />
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+            <div>
+              <p className="text-[10px] text-[#14532d] opacity-60 mb-0.5">ARR</p>
+              <p className="text-sm font-bold text-[#14532d] tabular-nums">
+                {fmtMoney(snapshot.watershedArr)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] text-[#14532d] opacity-60 mb-0.5">Take-home</p>
+              <p className="text-sm font-bold text-[#14532d] tabular-nums">
+                {fmtMoney(snapshot.ownerTakeHome)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] text-[#14532d] opacity-60 mb-0.5">Portfolio</p>
+              <p className="text-sm font-bold text-[#14532d] tabular-nums">
+                {fmtMoney(snapshot.portfolioValue)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] text-[#14532d] opacity-60 mb-0.5">Income / Expenses</p>
+              <p
+                className="text-sm font-bold tabular-nums"
+                style={{
+                  color: ratio === null ? "#14532d" : ratio >= 1 ? "#065F46" : "#DC2626",
+                }}
+              >
+                {ratio === null ? "—" : `${ratio.toFixed(2)}×`}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </Link>
@@ -833,6 +936,9 @@ export function IndexPage() {
 
       {/* ── Startup budget runway ── */}
       <StartupBudgetCard />
+
+      {/* ── Annual snapshot (state of the business) ── */}
+      <AnnualSnapshotCard />
 
       {/* ── Decision tree ── */}
       <DecisionTree />

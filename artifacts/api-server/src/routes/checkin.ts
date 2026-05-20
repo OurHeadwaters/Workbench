@@ -9,9 +9,10 @@ import {
 
 const router: IRouter = Router();
 
-// Endpoints that bypass the owner-token gate.  Login is the only one —
-// this route exists solely for the operating plan's annual check-in page.
-const PUBLIC_PREFIXES = ["/owner/login"];
+// Endpoints that bypass the owner-token gate.  Login and the latest-snapshot
+// summary are public so the dashboard can surface state-of-the-business numbers
+// without requiring the owner passphrase.
+const PUBLIC_PREFIXES = ["/owner/login", "/snapshots/latest"];
 
 router.use((req, res, next) => {
   if (PUBLIC_PREFIXES.some((p) => req.path.startsWith(p))) {
