@@ -301,8 +301,17 @@ const AGE_TRACKS: { value: AgeTrack; label: string; note: string }[] = [
 
 /* ── Page ──────────────────────────────────────────────────────────────── */
 
+type StationStep = "closed" | "read" | "build" | "story";
+
+function excerptTeaser(excerpt: string, maxLen = 80): string {
+  const sentence = excerpt.split(/[.!?]/)[0].trim();
+  if (sentence.length <= maxLen) return sentence + ".";
+  return sentence.slice(0, maxLen).trimEnd() + "…";
+}
+
 export function StoryPage() {
-  const [openStation, setOpenStation] = useState<number | null>(null);
+  const [stationSteps, setStationSteps] = useState<Record<number, StationStep>>({});
+  const [currentPromptIdxs, setCurrentPromptIdxs] = useState<Record<number, number>>({});
   const [activePhase, setActivePhase] = useState(0);
   const [scrollPhase, setScrollPhase] = useState(0);
   const phaseRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -368,8 +377,36 @@ export function StoryPage() {
     }
   };
 
+  const getStationStep = (ordinal: number): StationStep =>
+    stationSteps[ordinal] ?? "closed";
+
+  const setStationStep = (ordinal: number, step: StationStep) => {
+    setStationSteps((prev) => ({ ...prev, [ordinal]: step }));
+  };
+
+  const getCurrentPromptIdx = (ordinal: number): number =>
+    currentPromptIdxs[ordinal] ?? 0;
+
+  const setCurrentPromptIdx = (ordinal: number, idx: number) => {
+    setCurrentPromptIdxs((prev) => ({ ...prev, [ordinal]: idx }));
+  };
+
   const handleStationToggle = (ordinal: number) => {
-    setOpenStation((prev) => (prev === ordinal ? null : ordinal));
+    const current = getStationStep(ordinal);
+    if (current !== "closed") {
+      setStationStep(ordinal, "closed");
+    } else {
+      setStationStep(ordinal, "read");
+      setStationSteps((prev) => {
+        const next: Record<number, StationStep> = {};
+        Object.keys(prev).forEach((k) => {
+          const n = Number(k);
+          next[n] = n === ordinal ? "read" : "closed";
+        });
+        next[ordinal] = "read";
+        return next;
+      });
+    }
   };
 
   const handleGenerate = async (station: StationData) => {
@@ -411,6 +448,7 @@ export function StoryPage() {
         status: "success",
         story: data.story ?? "",
       });
+      setStationStep(station.ordinal, "story");
     } catch {
       setStoryState(station.ordinal, {
         status: "error",
@@ -422,6 +460,8 @@ export function StoryPage() {
   const handleWriteAnother = (ordinal: number) => {
     setStoryState(ordinal, { status: "idle" });
     setAnswers((prev) => ({ ...prev, [ordinal]: {} }));
+    setCurrentPromptIdx(ordinal, 0);
+    setStationStep(ordinal, "read");
   };
 
   return (
@@ -712,13 +752,12 @@ export function StoryPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {stations.map((station) => {
-                    const isOpen = openStation === station.ordinal;
+                    const step = getStationStep(station.ordinal);
+                    const isOpen = step !== "closed";
                     const track = getAgeTrack(station.ordinal);
                     const storyState = storyStates[station.ordinal] ?? { status: "idle" };
                     const prompts = station.prompts[track];
-                    const allAnswered = prompts.every(
-                      (p) => getAnswer(station.ordinal, p.id).trim() !== ""
-                    );
+                    const promptIdx = getCurrentPromptIdx(station.ordinal);
 
                     return (
                       <div
@@ -782,10 +821,14 @@ export function StoryPage() {
 
                               {!isOpen && (
                                 <p
-                                  className="font-mono text-[7px] uppercase tracking-[0.18em] mt-3"
-                                  style={{ color: "rgba(244,237,224,0.20)" }}
+                                  className="font-serif italic mt-2.5"
+                                  style={{
+                                    fontSize: "12px",
+                                    color: "rgba(244,237,224,0.32)",
+                                    lineHeight: 1.6,
+                                  }}
                                 >
-                                  Tap to write your story →
+                                  {excerptTeaser(station.excerpt)}
                                 </p>
                               )}
                             </div>
@@ -795,41 +838,52 @@ export function StoryPage() {
                         {/* ── Expanded content ── */}
                         {isOpen && (
                           <div className="px-4 pb-6">
-                            {/* Excerpt */}
-                            <div className="mt-1 mb-5">
-                              <div className="h-px mb-4" style={{ background: `${accent}30` }} />
-                              <p
-                                className="font-serif italic"
-                                style={{
-                                  fontSize: "14px",
-                                  color: "rgba(244,237,224,0.88)",
-                                  lineHeight: 1.78,
-                                }}
-                              >
-                                "{station.excerpt}"
-                              </p>
-                              <p
-                                className="font-mono text-[7.5px] uppercase tracking-[0.18em] mt-3"
-                                style={{ color: `${accent}70` }}
-                              >
-                                From: {station.sourceTale}
-                              </p>
-                            </div>
 
-                            {/* ── Story generation panel ── */}
-                            {storyState.status === "success" ? (
-                              /* Story display */
-                              <StoryDisplay
-                                story={storyState.story ?? ""}
-                                stationName={station.name}
-                                ageTrack={track}
-                                accent={accent}
-                                onWriteAnother={() => handleWriteAnother(station.ordinal)}
-                              />
-                            ) : (
+                            {/* ══ READ step ══ */}
+                            {step === "read" && (
                               <>
+                                <div className="h-px mb-6" style={{ background: `${accent}30` }} />
+                                <p
+                                  className="font-serif"
+                                  style={{
+                                    fontSize: "clamp(1.05rem, 3vw, 1.2rem)",
+                                    color: "rgba(244,237,224,0.94)",
+                                    lineHeight: 1.82,
+                                    letterSpacing: "0.008em",
+                                    fontStyle: "italic",
+                                  }}
+                                >
+                                  "{station.excerpt}"
+                                </p>
+                                <p
+                                  className="font-mono text-[7.5px] uppercase tracking-[0.2em] mt-4 mb-8"
+                                  style={{ color: `${accent}80` }}
+                                >
+                                  From: {station.sourceTale}
+                                </p>
+                                <button
+                                  onClick={() => {
+                                    setStationStep(station.ordinal, "build");
+                                    setCurrentPromptIdx(station.ordinal, 0);
+                                  }}
+                                  className="w-full font-mono text-[9px] uppercase tracking-[0.22em] py-3.5 rounded-lg transition-all hover:opacity-90"
+                                  style={{
+                                    background: accent,
+                                    color: "#0d1d15",
+                                  }}
+                                >
+                                  Ready to write mine →
+                                </button>
+                              </>
+                            )}
+
+                            {/* ══ BUILD step ══ */}
+                            {step === "build" && (
+                              <>
+                                <div className="h-px mb-5" style={{ background: `${accent}30` }} />
+
                                 {/* Age track selector */}
-                                <div className="mb-5">
+                                <div className="mb-6">
                                   <p
                                     className="font-mono text-[7.5px] uppercase tracking-[0.22em] mb-2.5"
                                     style={{ color: "rgba(244,237,224,0.35)" }}
@@ -842,12 +896,14 @@ export function StoryPage() {
                                       return (
                                         <button
                                           key={t.value}
-                                          onClick={() =>
+                                          onClick={() => {
                                             setAgeTracks((prev) => ({
                                               ...prev,
                                               [station.ordinal]: t.value,
-                                            }))
-                                          }
+                                            }));
+                                            setCurrentPromptIdx(station.ordinal, 0);
+                                            setAnswers((prev) => ({ ...prev, [station.ordinal]: {} }));
+                                          }}
                                           className="flex flex-col items-start px-3 py-2 rounded-lg transition-all"
                                           style={{
                                             background: isSelected
@@ -861,9 +917,7 @@ export function StoryPage() {
                                           <span
                                             className="font-mono text-[8px] uppercase tracking-[0.18em]"
                                             style={{
-                                              color: isSelected
-                                                ? accent
-                                                : "rgba(244,237,224,0.5)",
+                                              color: isSelected ? accent : "rgba(244,237,224,0.5)",
                                             }}
                                           >
                                             {t.label}
@@ -880,103 +934,164 @@ export function StoryPage() {
                                   </div>
                                 </div>
 
-                                {/* Prompt form */}
-                                <div className="space-y-4 mb-5">
-                                  {prompts.map((prompt, idx) => (
-                                    <div key={prompt.id}>
-                                      <label
-                                        className="block font-serif mb-2"
-                                        style={{
-                                          fontSize: "13px",
-                                          color: "rgba(244,237,224,0.75)",
-                                          lineHeight: 1.55,
-                                        }}
-                                      >
-                                        <span
-                                          className="font-mono text-[7px] uppercase tracking-[0.2em] mr-2"
-                                          style={{ color: `${accent}70` }}
+                                {/* Completed prompt log */}
+                                {promptIdx > 0 && (
+                                  <div className="mb-5 space-y-3">
+                                    {prompts.slice(0, promptIdx).map((p, idx) => (
+                                      <div key={p.id}>
+                                        <p
+                                          className="font-mono text-[7px] uppercase tracking-[0.2em] mb-1"
+                                          style={{ color: `${accent}60` }}
                                         >
-                                          {String(idx + 1).padStart(2, "0")}
-                                        </span>
-                                        {prompt.question}
-                                      </label>
-                                      <textarea
-                                        rows={2}
-                                        value={getAnswer(station.ordinal, prompt.id)}
-                                        onChange={(e) =>
-                                          setAnswer(station.ordinal, prompt.id, e.target.value)
-                                        }
-                                        placeholder={prompt.placeholder}
-                                        className="w-full rounded-lg resize-none font-serif text-sm outline-none transition-all"
-                                        style={{
-                                          background: "rgba(0,0,0,0.25)",
-                                          border: `1px solid rgba(244,237,224,0.12)`,
-                                          color: "#f4ede0",
-                                          padding: "10px 12px",
-                                          lineHeight: 1.6,
-                                          fontSize: "13px",
-                                        }}
-                                        onFocus={(e) => {
-                                          e.target.style.borderColor = `${accent}60`;
-                                        }}
-                                        onBlur={(e) => {
-                                          e.target.style.borderColor = "rgba(244,237,224,0.12)";
-                                        }}
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-
-                                {/* Error state */}
-                                {storyState.status === "error" && (
-                                  <p
-                                    className="font-mono text-[8px] mb-3 rounded-lg px-3 py-2"
-                                    style={{
-                                      color: "#e8725a",
-                                      background: "rgba(232,114,90,0.08)",
-                                      border: "1px solid rgba(232,114,90,0.18)",
-                                    }}
-                                  >
-                                    {storyState.error ?? "Something went wrong. Try again."}
-                                  </p>
+                                          {String(idx + 1).padStart(2, "0")} — {p.question}
+                                        </p>
+                                        <p
+                                          className="font-serif"
+                                          style={{
+                                            fontSize: "13px",
+                                            color: "rgba(244,237,224,0.50)",
+                                            lineHeight: 1.6,
+                                            fontStyle: "italic",
+                                          }}
+                                        >
+                                          {getAnswer(station.ordinal, p.id)}
+                                        </p>
+                                      </div>
+                                    ))}
+                                    <div className="h-px" style={{ background: `${accent}18` }} />
+                                  </div>
                                 )}
 
-                                {/* Submit button */}
-                                <button
-                                  onClick={() => handleGenerate(station)}
-                                  disabled={storyState.status === "loading" || !allAnswered}
-                                  className="font-mono text-[8.5px] uppercase tracking-[0.2em] px-5 py-2.5 rounded-lg transition-all"
-                                  style={{
-                                    background:
-                                      storyState.status === "loading" || !allAnswered
-                                        ? "rgba(244,237,224,0.06)"
-                                        : accent,
-                                    color:
-                                      storyState.status === "loading" || !allAnswered
-                                        ? "rgba(244,237,224,0.3)"
-                                        : "#0d1d15",
-                                    cursor:
-                                      storyState.status === "loading" || !allAnswered
-                                        ? "default"
-                                        : "pointer",
-                                    border:
-                                      storyState.status === "loading" || !allAnswered
-                                        ? `1px solid rgba(244,237,224,0.10)`
-                                        : "none",
-                                  }}
-                                >
-                                  {storyState.status === "loading"
-                                    ? "Writing your story…"
-                                    : "Write my story →"}
-                                </button>
+                                {/* Active prompt */}
+                                {promptIdx < prompts.length ? (
+                                  <div className="mb-5">
+                                    <label
+                                      className="block font-serif mb-3"
+                                      style={{
+                                        fontSize: "15px",
+                                        color: "rgba(244,237,224,0.82)",
+                                        lineHeight: 1.6,
+                                      }}
+                                    >
+                                      <span
+                                        className="font-mono text-[7px] uppercase tracking-[0.2em] mr-2"
+                                        style={{ color: `${accent}70` }}
+                                      >
+                                        {String(promptIdx + 1).padStart(2, "0")} of {prompts.length}
+                                      </span>
+                                      {prompts[promptIdx].question}
+                                    </label>
+                                    <textarea
+                                      key={`${station.ordinal}-${promptIdx}`}
+                                      rows={3}
+                                      defaultValue={getAnswer(station.ordinal, prompts[promptIdx].id)}
+                                      onChange={(e) =>
+                                        setAnswer(station.ordinal, prompts[promptIdx].id, e.target.value)
+                                      }
+                                      placeholder={prompts[promptIdx].placeholder}
+                                      className="w-full rounded-lg resize-none font-serif text-sm outline-none transition-all"
+                                      style={{
+                                        background: "rgba(0,0,0,0.25)",
+                                        border: `1px solid rgba(244,237,224,0.12)`,
+                                        color: "#f4ede0",
+                                        padding: "12px 14px",
+                                        lineHeight: 1.6,
+                                        fontSize: "14px",
+                                      }}
+                                      onFocus={(e) => {
+                                        e.target.style.borderColor = `${accent}60`;
+                                      }}
+                                      onBlur={(e) => {
+                                        e.target.style.borderColor = "rgba(244,237,224,0.12)";
+                                      }}
+                                    />
+                                    <button
+                                      onClick={() => {
+                                        const val = getAnswer(station.ordinal, prompts[promptIdx].id).trim();
+                                        if (!val) return;
+                                        setCurrentPromptIdx(station.ordinal, promptIdx + 1);
+                                      }}
+                                      disabled={!getAnswer(station.ordinal, prompts[promptIdx].id).trim()}
+                                      className="mt-3 font-mono text-[8.5px] uppercase tracking-[0.2em] px-5 py-2.5 rounded-lg transition-all"
+                                      style={{
+                                        background: getAnswer(station.ordinal, prompts[promptIdx].id).trim()
+                                          ? accent
+                                          : "rgba(244,237,224,0.06)",
+                                        color: getAnswer(station.ordinal, prompts[promptIdx].id).trim()
+                                          ? "#0d1d15"
+                                          : "rgba(244,237,224,0.3)",
+                                        cursor: getAnswer(station.ordinal, prompts[promptIdx].id).trim()
+                                          ? "pointer"
+                                          : "default",
+                                        border: getAnswer(station.ordinal, prompts[promptIdx].id).trim()
+                                          ? "none"
+                                          : `1px solid rgba(244,237,224,0.10)`,
+                                      }}
+                                    >
+                                      {promptIdx < prompts.length - 1 ? "Next →" : "Almost there →"}
+                                    </button>
+                                  </div>
+                                ) : (
+                                  /* All prompts answered — show Write my story */
+                                  <div className="mb-5">
+                                    {storyState.status === "error" && (
+                                      <p
+                                        className="font-mono text-[8px] mb-3 rounded-lg px-3 py-2"
+                                        style={{
+                                          color: "#e8725a",
+                                          background: "rgba(232,114,90,0.08)",
+                                          border: "1px solid rgba(232,114,90,0.18)",
+                                        }}
+                                      >
+                                        {storyState.error ?? "Something went wrong. Try again."}
+                                      </p>
+                                    )}
+                                    <button
+                                      onClick={() => handleGenerate(station)}
+                                      disabled={storyState.status === "loading"}
+                                      className="w-full font-mono text-[9px] uppercase tracking-[0.22em] py-3.5 rounded-lg transition-all hover:opacity-90"
+                                      style={{
+                                        background: storyState.status === "loading"
+                                          ? "rgba(244,237,224,0.06)"
+                                          : accent,
+                                        color: storyState.status === "loading"
+                                          ? "rgba(244,237,224,0.3)"
+                                          : "#0d1d15",
+                                        cursor: storyState.status === "loading" ? "default" : "pointer",
+                                        border: storyState.status === "loading"
+                                          ? `1px solid rgba(244,237,224,0.10)`
+                                          : "none",
+                                      }}
+                                    >
+                                      {storyState.status === "loading"
+                                        ? "Writing your story…"
+                                        : "Write my story →"}
+                                    </button>
+                                  </div>
+                                )}
+                              </>
+                            )}
 
-                                {!allAnswered && storyState.status !== "loading" && (
-                                  <p
-                                    className="font-mono text-[7px] mt-2"
-                                    style={{ color: "rgba(244,237,224,0.22)" }}
-                                  >
-                                    Answer all the prompts above to unlock your story.
-                                  </p>
+                            {/* ══ STORY / KEEP step ══ */}
+                            {(step === "story" || storyState.status === "success") && (
+                              <>
+                                {storyState.status === "success" ? (
+                                  <KeepPanel
+                                    story={storyState.story ?? ""}
+                                    stationName={station.name}
+                                    ageTrack={track}
+                                    accent={accent}
+                                    onStartOver={() => handleWriteAnother(station.ordinal)}
+                                  />
+                                ) : (
+                                  <div className="py-6">
+                                    <p
+                                      className="font-mono text-[8px] uppercase tracking-[0.2em]"
+                                      style={{ color: "rgba(244,237,224,0.3)" }}
+                                    >
+                                      Writing your story…
+                                    </p>
+                                  </div>
                                 )}
                               </>
                             )}
@@ -1071,7 +1186,7 @@ export function StoryPage() {
   );
 }
 
-/* ── Story display sub-component ────────────────────────────────────────── */
+/* ── KEEP panel (story keepsake) ─────────────────────────────────────────── */
 
 const AGE_TRACK_LABELS: Record<AgeTrack, string> = {
   young: "Young (Ages 6–10)",
@@ -1082,18 +1197,18 @@ const AGE_TRACK_LABELS: Record<AgeTrack, string> = {
 const VOICE_SESSION_KEY = "hw_story_voice_index";
 const MAX_VOICES = 3;
 
-function StoryDisplay({
+function KeepPanel({
   story,
   stationName,
   ageTrack,
   accent,
-  onWriteAnother,
+  onStartOver,
 }: {
   story: string;
   stationName: string;
   ageTrack: AgeTrack;
   accent: string;
-  onWriteAnother: () => void;
+  onStartOver: () => void;
 }) {
   const [isReading, setIsReading] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -1288,32 +1403,57 @@ function StoryDisplay({
     setIsReading(false);
   }
 
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    const text = [stationName, "", ...paragraphs].join("\n\n");
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {});
+  }
+
   return (
     <div>
-      <div className="h-px mb-5" style={{ background: `${accent}30` }} />
+      <div className="h-px mb-6" style={{ background: `${accent}30` }} />
 
+      {/* Station heading */}
+      <p
+        className="font-mono text-[7.5px] uppercase tracking-[0.22em] mb-2"
+        style={{ color: `${accent}80` }}
+      >
+        Youth Trail · Station · Keep
+      </p>
+      <p
+        className="font-serif mb-6"
+        style={{
+          fontSize: "clamp(1.1rem, 3.5vw, 1.35rem)",
+          color: "#f4ede0",
+          fontWeight: 500,
+          lineHeight: 1.2,
+          letterSpacing: "-0.01em",
+        }}
+      >
+        {stationName}
+      </p>
+
+      {/* Story text */}
       <div
-        className="rounded-xl px-5 py-6 mb-5"
+        className="rounded-xl px-5 py-6 mb-6"
         style={{
           background: "rgba(244,237,224,0.06)",
           border: `1px solid ${accent}25`,
         }}
       >
-        <p
-          className="font-mono text-[7.5px] uppercase tracking-[0.22em] mb-4"
-          style={{ color: `${accent}80` }}
-        >
-          {stationName} · Your Story
-        </p>
         <div className="space-y-4">
           {paragraphs.map((para, i) => (
             <p
               key={i}
               className="font-serif"
               style={{
-                fontSize: "15px",
-                color: "rgba(244,237,224,0.90)",
-                lineHeight: 1.82,
+                fontSize: "16px",
+                color: "rgba(244,237,224,0.92)",
+                lineHeight: 1.85,
                 letterSpacing: "0.005em",
               }}
             >
@@ -1323,21 +1463,33 @@ function StoryDisplay({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 mb-4">
+      {/* Actions row */}
+      <div className="flex flex-wrap items-center gap-3 mb-5">
         <button
-          onClick={handleDownload}
-          className="font-mono text-[8.5px] uppercase tracking-[0.2em] px-4 py-2 rounded-lg transition-all hover:opacity-85"
+          onClick={handleCopy}
+          className="font-mono text-[8.5px] uppercase tracking-[0.2em] px-4 py-2.5 rounded-lg transition-all hover:opacity-85"
           style={{
             background: `${accent}22`,
             border: `1px solid ${accent}50`,
             color: accent,
           }}
         >
-          Save my story ↓
+          {copied ? "Copied ✓" : "Copy to clipboard"}
+        </button>
+        <button
+          onClick={handleDownload}
+          className="font-mono text-[8.5px] uppercase tracking-[0.2em] px-4 py-2.5 rounded-lg transition-all hover:opacity-85"
+          style={{
+            background: "rgba(244,237,224,0.06)",
+            border: "1px solid rgba(244,237,224,0.18)",
+            color: "rgba(244,237,224,0.55)",
+          }}
+        >
+          Save ↓
         </button>
         <button
           onClick={handlePrint}
-          className="font-mono text-[8.5px] uppercase tracking-[0.2em] px-4 py-2 rounded-lg transition-all hover:opacity-85"
+          className="font-mono text-[8.5px] uppercase tracking-[0.2em] px-4 py-2.5 rounded-lg transition-all hover:opacity-85"
           style={{
             background: "rgba(244,237,224,0.06)",
             border: "1px solid rgba(244,237,224,0.18)",
@@ -1349,14 +1501,6 @@ function StoryDisplay({
       </div>
 
       <div className="flex items-center gap-5 flex-wrap">
-        <button
-          onClick={onWriteAnother}
-          className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
-          style={{ color: `${accent}cc` }}
-        >
-          Write another →
-        </button>
-
         {speechSupported && (
           <div className="flex items-center gap-3 flex-wrap">
             {voices.length > 1 && !isReading && (
@@ -1369,14 +1513,9 @@ function StoryDisplay({
                     className="font-mono text-[7.5px] uppercase tracking-[0.18em] px-2 py-1 rounded transition-all"
                     style={{
                       background:
-                        selectedVoiceIdx === idx
-                          ? `${accent}30`
-                          : "transparent",
-                      border: `1px solid ${
-                        selectedVoiceIdx === idx ? accent : `${accent}40`
-                      }`,
-                      color:
-                        selectedVoiceIdx === idx ? accent : `${accent}70`,
+                        selectedVoiceIdx === idx ? `${accent}30` : "transparent",
+                      border: `1px solid ${selectedVoiceIdx === idx ? accent : `${accent}40`}`,
+                      color: selectedVoiceIdx === idx ? accent : `${accent}70`,
                     }}
                   >
                     Voice {idx + 1}
@@ -1404,6 +1543,14 @@ function StoryDisplay({
             )}
           </div>
         )}
+
+        <button
+          onClick={onStartOver}
+          className="font-mono text-[8px] uppercase tracking-[0.18em] transition-opacity hover:opacity-70"
+          style={{ color: "rgba(244,237,224,0.28)" }}
+        >
+          Start over
+        </button>
       </div>
     </div>
   );
