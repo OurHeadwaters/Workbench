@@ -5,10 +5,12 @@ import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAcco
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 
 const ZONE_COLORS: Record<ZoneId, string> = {
+  Z0: "45 60% 32%",
   Z1: "142 34% 37%",
   Z2: "220 45% 41%",
   Z3: "288 30% 42%",
   Z4: "38 60% 36%",
+  Z5: "200 18% 36%",
 };
 
 function slugify(name: string) {
@@ -185,11 +187,11 @@ const SEED_GMAIL_ACCOUNTS: GmailAccount[] = [
 ];
 
 const INITIAL_STATE: AppState = {
-  schemaVersion: 5,
+  schemaVersion: 6,
   installedAt: new Date().toISOString(),
   onboarding: { completed: false, step: 0 },
   statement: undefined,
-  zoneRanking: ["Z1", "Z2", "Z3", "Z4"],
+  zoneRanking: ["Z0", "Z1", "Z2", "Z3", "Z4", "Z5"],
   constellations: SEED_CONSTELLATIONS.map((c) => ({
     ...c,
     id: uuidv4(),
@@ -405,12 +407,19 @@ export const useStore = create<Store>()(
     }),
     {
       name: "north-star:v1",
-      version: 5,
+      version: 6,
       migrate(persistedState: unknown, fromVersion: number) {
         const s = persistedState as Record<string, unknown>;
         if (fromVersion < 5) {
           s.gmailAccounts = SEED_GMAIL_ACCOUNTS;
           s.schemaVersion = 5;
+        }
+        if (fromVersion < 6) {
+          const ranking = (s.zoneRanking as string[]) ?? ["Z1", "Z2", "Z3", "Z4"];
+          if (!ranking.includes("Z0")) ranking.unshift("Z0");
+          if (!ranking.includes("Z5")) ranking.push("Z5");
+          s.zoneRanking = ranking;
+          s.schemaVersion = 6;
         }
         return s as unknown as AppState;
       },

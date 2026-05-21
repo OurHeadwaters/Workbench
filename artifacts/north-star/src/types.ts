@@ -1,4 +1,4 @@
-export type ZoneId = "Z1" | "Z2" | "Z3" | "Z4";
+export type ZoneId = "Z0" | "Z1" | "Z2" | "Z3" | "Z4" | "Z5";
 
 export interface Constellation {
   id: string;

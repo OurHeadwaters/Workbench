@@ -5,7 +5,7 @@ import { ZoneBadge } from "@/components/ZoneBadge";
 import { ZONE_LABELS, cn } from "@/lib/utils";
 import type { ZoneId, Constellation, Contract } from "@/types";
 
-const ZONES: ZoneId[] = ["Z1", "Z2", "Z3", "Z4"];
+const ZONES: ZoneId[] = ["Z0", "Z1", "Z2", "Z3", "Z4", "Z5"];
 
 function ConstellationForm({
   initial,
