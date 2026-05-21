@@ -214,6 +214,7 @@ export default function NewEntry() {
   };
 
   const [confidentialDragActive, setConfidentialDragActive] = useState(false);
+  const confidentialDragCounterRef = useRef(0);
   const [confidentialUploading, setConfidentialUploading] = useState(false);
   const confidentialFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -305,13 +306,21 @@ export default function NewEntry() {
   const handleConfidentialDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") setConfidentialDragActive(true);
-    else if (e.type === "dragleave") setConfidentialDragActive(false);
+    if (e.type === "dragenter") {
+      confidentialDragCounterRef.current++;
+      setConfidentialDragActive(true);
+    } else if (e.type === "dragleave") {
+      confidentialDragCounterRef.current--;
+      if (confidentialDragCounterRef.current === 0) setConfidentialDragActive(false);
+    } else if (e.type === "dragover") {
+      setConfidentialDragActive(true);
+    }
   };
 
   const handleConfidentialDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    confidentialDragCounterRef.current = 0;
     setConfidentialDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       stageConfidentialFile(e.dataTransfer.files[0]);
@@ -326,6 +335,7 @@ export default function NewEntry() {
   };
 
   const [dragActive, setDragActive] = useState(false);
+  const dragCounterRef = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onUrlSubmit = async (values: z.infer<typeof urlFormSchema>) => {
@@ -357,10 +367,14 @@ export default function NewEntry() {
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
+    if (e.type === "dragenter") {
+      dragCounterRef.current++;
       setDragActive(true);
     } else if (e.type === "dragleave") {
-      setDragActive(false);
+      dragCounterRef.current--;
+      if (dragCounterRef.current === 0) setDragActive(false);
+    } else if (e.type === "dragover") {
+      setDragActive(true);
     }
   };
 
@@ -377,6 +391,7 @@ export default function NewEntry() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    dragCounterRef.current = 0;
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       startBatch(Array.from(e.dataTransfer.files));
