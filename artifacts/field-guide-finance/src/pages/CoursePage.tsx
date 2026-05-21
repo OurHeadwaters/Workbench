@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useClerk } from "@clerk/react";
 import { useLocation } from "wouter";
 import { courseModules } from "@/data/courseModules";
 import { CourseSidebar } from "@/components/CourseSidebar";
 import { LessonView } from "@/components/LessonView";
 import { markVisited, getVisitedIds, getProgress } from "@/lib/progress";
-import { BookOpen, Menu, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { Menu, LogOut, ChevronLeft, ChevronRight, CheckCircle } from "lucide-react";
 import { NeighbourhoodBadge } from "@workspace/zone-store";
+import { ScrollTrail } from "@/components/ScrollTrail";
+import { RavenInline } from "@/components/RavenCompanion";
 
 export function CoursePage() {
   const { signOut } = useClerk();
@@ -19,6 +21,8 @@ export function CoursePage() {
   const [activeLessonId, setActiveLessonId] = useState(firstLesson.id);
   const [visitedIds, setVisitedIds] = useState<Set<string>>(getVisitedIds());
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const mainRef = useRef<HTMLElement>(null);
 
   const totalLessons = courseModules.reduce((acc, m) => acc + m.lessons.length, 0);
   const progress = getProgress(totalLessons);
@@ -37,66 +41,137 @@ export function CoursePage() {
   const currentIndex = allLessons.findIndex((x) => x.lessonId === activeLessonId);
   const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
   const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
+  const isFinalLesson = !nextLesson;
 
   function handleSelectLesson(moduleId: string, lessonId: string) {
     setActiveModuleId(moduleId);
     setActiveLessonId(lessonId);
     setMobileOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (mainRef.current) {
+      mainRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   return (
-    <div className="flex flex-col h-dvh" style={{ backgroundColor: "var(--cream)" }}>
-      {/* Top bar */}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100dvh",
+        backgroundColor: "var(--cream)",
+        fontFamily: "var(--font-sans)",
+      }}
+    >
+      {/* ─── Top bar ─── */}
       <header
-        className="flex-shrink-0 border-b flex items-center justify-between px-4 h-14 z-10"
-        style={{ borderColor: "var(--border)", backgroundColor: "var(--cream)" }}
+        style={{
+          flexShrink: 0,
+          borderBottom: "1px solid var(--border-light)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 16px",
+          height: 52,
+          zIndex: 10,
+          backgroundColor: "var(--parchment)",
+        }}
       >
-        <div className="flex items-center gap-3">
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {/* Mobile menu */}
           <button
-            className="lg:hidden p-1.5 rounded-lg hover:bg-[#F0E9DD]"
             onClick={() => setMobileOpen(true)}
             aria-label="Open chapters"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 6,
+              borderRadius: 8,
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              color: "var(--bark-light)",
+            }}
+            className="lg-hide"
           >
-            <Menu size={20} color="var(--mid-brown)" />
+            <Menu size={20} />
           </button>
-          <div className="flex items-center gap-2">
-            <BookOpen size={18} color="var(--accent)" />
+
+          {/* Logo */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 19.5 C4 18.1 5.1 17 6.5 17 L20 17" stroke="var(--forest)" strokeWidth="1.8" strokeLinecap="round"/>
+              <path d="M6.5 2 L20 2 L20 22 L6.5 22 C5.1 22 4 20.9 4 19.5 L4 4.5 C4 3.1 5.1 2 6.5 2Z" stroke="var(--forest)" strokeWidth="1.8" strokeLinejoin="round"/>
+              <path d="M8 7 L16 7 M8 11 L14 11" stroke="var(--amber)" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
             <span
-              className="font-semibold text-sm hidden sm:block"
-              style={{ fontFamily: "var(--font-serif)", color: "var(--warm-brown)" }}
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                color: "var(--forest)",
+              }}
+              className="sm-show"
             >
               Field Guide Finance
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <NeighbourhoodBadge zoneId={2} />
-          <span className="text-xs hidden sm:block" style={{ color: "var(--mid-brown)" }}>
+          <span
+            style={{ fontSize: "0.75rem", color: "var(--bark-light)", fontWeight: 500 }}
+            className="sm-show"
+            aria-label={`Course progress: ${progress}%`}
+          >
             {progress}% complete
           </span>
+
+          {/* Inline progress bar */}
           <div
-            className="hidden sm:block w-24 h-1.5 rounded-full overflow-hidden"
-            style={{ backgroundColor: "var(--border)" }}
+            className="sm-show"
+            style={{ width: 80, height: 4, borderRadius: 4, backgroundColor: "var(--cream-dark)", overflow: "hidden" }}
+            role="progressbar"
+            aria-valuenow={progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-hidden="true"
           >
             <div
-              className="h-full rounded-full transition-all"
-              style={{ width: `${progress}%`, backgroundColor: "var(--accent)" }}
+              style={{
+                height: "100%",
+                width: `${progress}%`,
+                borderRadius: 4,
+                background: "linear-gradient(90deg, var(--forest-light), var(--amber))",
+                transition: "width 0.5s ease",
+              }}
             />
           </div>
+
           <button
             onClick={() => signOut().then(() => navigate("/"))}
-            className="p-1.5 rounded-lg hover:bg-[#F0E9DD] transition-colors"
             title="Sign out"
+            aria-label="Sign out"
+            style={{
+              padding: 6,
+              borderRadius: 8,
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              color: "var(--bark-light)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            <LogOut size={16} color="var(--mid-brown)" />
+            <LogOut size={16} />
           </button>
         </div>
       </header>
 
-      {/* Main content */}
-      <div className="flex flex-1 overflow-hidden">
+      {/* ─── Main content ─── */}
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         <CourseSidebar
           activeModuleId={activeModuleId}
           activeLessonId={activeLessonId}
@@ -108,43 +183,113 @@ export function CoursePage() {
           onMobileClose={() => setMobileOpen(false)}
         />
 
-        <main className="flex-1 overflow-y-auto">
-          <LessonView module={activeModule} lesson={activeLesson} />
+        {/* Content area with scroll trail */}
+        <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+          {/* Vertical scroll trail */}
+          <ScrollTrail containerRef={mainRef} />
 
-          {/* Prev / Next navigation */}
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-12 flex justify-between gap-4">
-            {prevLesson ? (
-              <button
-                onClick={() => handleSelectLesson(prevLesson.moduleId, prevLesson.lessonId)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm transition-colors hover:border-[#C7613B]"
-                style={{ borderColor: "var(--border)", color: "var(--mid-brown)" }}
-              >
-                <ChevronLeft size={15} />
-                Previous
-              </button>
-            ) : (
-              <div />
-            )}
-            {nextLesson ? (
-              <button
-                onClick={() => handleSelectLesson(nextLesson.moduleId, nextLesson.lessonId)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
-                style={{ backgroundColor: "var(--accent)", color: "white" }}
-              >
-                Next lesson
-                <ChevronRight size={15} />
-              </button>
-            ) : (
-              <div
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
-                style={{ backgroundColor: "var(--accent-light)", color: "var(--accent)" }}
-              >
-                Course complete!
-              </div>
-            )}
-          </div>
-        </main>
+          <main
+            ref={mainRef}
+            id="main-content"
+            tabIndex={-1}
+            style={{ flex: 1, height: "100%", overflowY: "auto", position: "relative", paddingLeft: 36 }}
+          >
+            <LessonView module={activeModule} lesson={activeLesson} />
+
+            {/* Prev / Next navigation */}
+            <div
+              style={{
+                maxWidth: 680,
+                margin: "0 auto",
+                padding: "0 20px 48px",
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 12,
+                alignItems: "center",
+              }}
+            >
+              {prevLesson ? (
+                <button
+                  onClick={() => handleSelectLesson(prevLesson.moduleId, prevLesson.lessonId)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "9px 16px",
+                    borderRadius: 10,
+                    border: "1px solid var(--border)",
+                    backgroundColor: "var(--parchment)",
+                    fontSize: "0.82rem",
+                    color: "var(--bark)",
+                    cursor: "pointer",
+                    fontFamily: "var(--font-sans)",
+                    transition: "border-color 0.15s, box-shadow 0.15s",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--amber)";
+                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-card)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)";
+                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
+                  }}
+                >
+                  <ChevronLeft size={14} />
+                  Previous
+                </button>
+              ) : (
+                <div />
+              )}
+
+              {nextLesson ? (
+                <button
+                  onClick={() => handleSelectLesson(nextLesson.moduleId, nextLesson.lessonId)}
+                  className="trail-sign-btn"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "9px 20px",
+                    fontSize: "0.86rem",
+                    fontWeight: 600,
+                    backgroundColor: "var(--forest)",
+                    color: "var(--cream)",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  <RavenInline />
+                  Next lesson
+                  <ChevronRight size={14} />
+                </button>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "9px 18px",
+                    borderRadius: 10,
+                    backgroundColor: isFinalLesson ? "var(--amber-light)" : "transparent",
+                    color: "var(--amber)",
+                    fontSize: "0.86rem",
+                    fontWeight: 600,
+                    border: "1px solid var(--amber-mid)",
+                  }}
+                >
+                  <CheckCircle size={15} />
+                  Course complete!
+                </div>
+              )}
+            </div>
+          </main>
+        </div>
       </div>
+
+      <style>{`
+        @media (min-width: 1024px) { .lg-hide { display: none !important; } }
+        @media (max-width: 639px)  { .sm-show { display: none !important; } }
+      `}</style>
     </div>
   );
 }
