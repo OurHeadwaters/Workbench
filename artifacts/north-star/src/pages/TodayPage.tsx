@@ -275,7 +275,7 @@ function ConstellationPicker() {
       )}
 
       <div className="space-y-2.5">
-        {active.map((c) => {
+        {active.map((c, i) => {
           const picked = pickedIds.includes(c.id);
           const zoneColor = ZONE_SOLID[c.zone] ?? "#1C1917";
           const zoneGlow = ZONE_GLOW[c.zone] ?? "transparent";
@@ -283,15 +283,18 @@ function ConstellationPicker() {
             <div
               key={c.id}
               className={cn(
-                "rounded-xl border bg-white transition-all duration-200",
+                "constellation-card rounded-xl border bg-white transition-all duration-200",
                 picked
                   ? "border-transparent shadow-md"
                   : "border-[#E7E5E4] hover:border-[#D6D0C7] hover:shadow-sm"
               )}
-              style={picked ? {
-                borderColor: zoneColor,
-                boxShadow: `0 2px 12px ${zoneGlow}, 0 0 0 1.5px ${zoneColor}`,
-              } : undefined}
+              style={{
+                animationDelay: `${i * 40}ms`,
+                ...(picked ? {
+                  borderColor: zoneColor,
+                  boxShadow: `0 2px 12px ${zoneGlow}, 0 0 0 1.5px ${zoneColor}`,
+                } : {}),
+              }}
             >
               <button
                 onClick={() => handleToggle(c)}
