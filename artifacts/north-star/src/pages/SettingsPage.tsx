@@ -67,12 +67,15 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-[#FAFAF9] pb-24">
+    <div className="min-h-dvh pb-24" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
       <div className="px-5 py-6 max-w-lg mx-auto space-y-6">
         <h1 className="text-2xl">Settings</h1>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-4">
-          <h2 className="text-base">North star statement</h2>
+        <div
+          className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-4"
+          style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+        >
+          <h2 className="text-base font-medium text-[#1C1917]">North star statement</h2>
 
           <div className="space-y-2">
             <label className="text-xs text-[#78716C] uppercase tracking-wider">Who is this work for?</label>
@@ -81,7 +84,7 @@ export function SettingsPage() {
               onChange={(e) => setWho(e.target.value)}
               placeholder="A specific kind of person"
               rows={2}
-              className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#1C1917] resize-none"
+              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
             />
           </div>
 
@@ -92,7 +95,7 @@ export function SettingsPage() {
               onChange={(e) => setWhy(e.target.value)}
               placeholder="What shifts for them"
               rows={2}
-              className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#1C1917] resize-none"
+              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
             />
           </div>
 
@@ -103,47 +106,47 @@ export function SettingsPage() {
               onChange={(e) => setNoFly(e.target.value)}
               placeholder="What you'll politely decline"
               rows={2}
-              className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#1C1917] resize-none"
+              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
             />
           </div>
 
           <button
             onClick={handleSaveStatement}
-            className="w-full bg-[#1C1917] text-white rounded-lg py-2 text-sm font-medium min-h-[44px]"
+            className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px]"
           >
             {statementSaved ? "Saved ✓" : "Save statement"}
           </button>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] divide-y divide-[#E7E5E4]">
+        <div className="bg-white/70 rounded-2xl border border-[#D6D0C7] shadow-sm divide-y divide-[#E7E5E4]">
           <Link
             href="/zones"
-            className="flex items-center justify-between px-4 py-3 min-h-[56px]"
+            className="flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-[#F5F0E8]/50 rounded-t-2xl transition-colors"
           >
             <span className="text-sm">Manage constellations & contracts</span>
             <ExternalLink size={16} className="text-[#78716C]" />
           </Link>
           <Link
             href="/inbox-setup"
-            className="flex items-center justify-between px-4 py-3 min-h-[56px]"
+            className="flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-[#F5F0E8]/50 rounded-b-2xl transition-colors"
           >
             <span className="text-sm">Gmail inbox setup</span>
             <ExternalLink size={16} className="text-[#78716C]" />
           </Link>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-4">
-          <h2 className="text-base">Backup & restore</h2>
-          <p className="text-xs text-[#78716C]">North Star lives only on this device. Export a backup regularly.</p>
+        <div className="rounded-2xl border border-[#C8923A]/40 shadow-sm p-4 space-y-4" style={{ background: "#FEF9EE" }}>
+          <h2 className="text-base font-medium text-[#1C1917]">Backup & restore</h2>
+          <p className="text-xs text-[#92400E]">North Star lives only on this device. Export a backup regularly.</p>
 
           <button
             onClick={handleExport}
-            className="w-full flex items-center justify-center gap-2 border border-[#E7E5E4] rounded-lg py-2 text-sm min-h-[44px] hover:bg-[#F5F5F0]"
+            className="w-full flex items-center justify-center gap-2 border border-[#D6D0C7] bg-white/60 rounded-xl py-2 text-sm min-h-[44px] hover:bg-white/90 transition-colors"
           >
             <Download size={16} /> Export backup JSON
           </button>
 
-          <label className="w-full flex items-center justify-center gap-2 border border-[#E7E5E4] rounded-lg py-2 text-sm min-h-[44px] hover:bg-[#F5F5F0] cursor-pointer">
+          <label className="w-full flex items-center justify-center gap-2 border border-[#D6D0C7] bg-white/60 rounded-xl py-2 text-sm min-h-[44px] hover:bg-white/90 transition-colors cursor-pointer">
             <Upload size={16} /> Import backup JSON
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
           </label>
@@ -152,13 +155,13 @@ export function SettingsPage() {
           {importSuccess && <p className="text-sm text-[#4F6E5C]">Backup imported successfully.</p>}
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3">
-          <h2 className="text-base">Danger zone</h2>
+        <div className="bg-white/70 rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-3">
+          <h2 className="text-base font-medium text-[#1C1917]">Danger zone</h2>
 
           {!showReset ? (
             <button
               onClick={() => setShowReset(true)}
-              className="w-full flex items-center justify-center gap-2 border border-[#FCD34D] bg-[#FEF3C7] text-[#92400E] rounded-lg py-2 text-sm min-h-[44px]"
+              className="w-full flex items-center justify-center gap-2 border border-[#C8923A]/50 bg-[#FEF9EE] text-[#92400E] rounded-xl py-2 text-sm min-h-[44px] hover:bg-[#FEF3C7] transition-colors"
             >
               <RotateCcw size={16} /> Reset all data
             </button>
@@ -168,12 +171,12 @@ export function SettingsPage() {
                 This will permanently erase all your constellations, picks, reviews, and captures. There is no undo. Export a backup first.
               </p>
               <div className="flex gap-2">
-                <button onClick={() => setShowReset(false)} className="flex-1 border border-[#E7E5E4] rounded-lg py-2 text-sm min-h-[44px]">
+                <button onClick={() => setShowReset(false)} className="flex-1 border border-[#D6D0C7] rounded-xl py-2 text-sm min-h-[44px] hover:bg-[#F5F0E8] transition-colors">
                   Cancel
                 </button>
                 <button
                   onClick={handleReset}
-                  className="flex-1 bg-[#FEF3C7] border border-[#FCD34D] text-[#92400E] rounded-lg py-2 text-sm font-medium min-h-[44px]"
+                  className="flex-1 bg-[#FEF3C7] border border-[#C8923A]/50 text-[#92400E] rounded-xl py-2 text-sm font-medium min-h-[44px] hover:bg-[#FDE68A] transition-colors"
                 >
                   Yes, reset everything
                 </button>
