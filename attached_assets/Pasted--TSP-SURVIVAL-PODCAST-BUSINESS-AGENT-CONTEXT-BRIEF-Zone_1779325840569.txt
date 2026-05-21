@@ -1,0 +1,211 @@
+# TSP SURVIVAL PODCAST — BUSINESS AGENT CONTEXT BRIEF
+## Zone 2: The Garden — Strategy Handoff
+Generated: May 21, 2026
+
+---
+
+## WHAT THIS SYSTEM IS
+
+The Survival Podcast (TSP) has produced 3,000+ episodes over 15+ years. 
+This project turns that archive into a structured discovery and progression 
+engine — not a podcast website, but a guided self-reliance curriculum.
+
+The engine runs on three artifacts:
+- **Survival Podcast web app** — the main discovery engine (tsp.show/)
+- **API Server** — ingests RSS feeds, stores episodes, serves all data
+- **TSP Mobile** — Expo React Native app for on-the-go access
+
+The web app is built in React + Vite. The API server uses Express + 
+Drizzle ORM on Postgres. Auth is Replit Auth (OpenID Connect).
+
+---
+
+## THE PERMACULTURE ZONE MODEL
+
+Content, experts, businesses, and learning tracks are all organized by 
+permaculture zone — proximity and frequency of attention, outward from self:
+
+| Zone | Name | Philosophy | Primary Content |
+|------|------|------------|-----------------|
+| 0 | The Self | Sovereignty begins here | Mindset, money, Bitcoin, liberty |
+| 1 | The Home | Daily resilience | Food storage, water, self-defense, first aid |
+| **2** | **The Garden** | **The most radical thing you can do is grow your own food** | Permaculture, gardening, aquaponics, beekeeping, chickens, herbs |
+| 3 | The Homestead | Land as operating system | Livestock, solar, off-grid, water management |
+| 4 | The Forest | Oldest supply chain | Hunting, fishing, foraging, bushcraft |
+| 5 | The Wild | Know your edge | Bug-out, grid-down, wilderness survival |
+
+---
+
+## ZONE 2: THE GARDEN — FULL CONTEXT
+
+**Slug:** `zone-2`  
+**Color:** #6B8F47  
+**Series:** Unloose the Goose (ULG) — Jack's business/self-reliance podcast
+
+**Content tags driving zone 2 episode pulls:**
+permaculture, gardening, aquaponics, beekeeping, chickens, composting, 
+herbal medicine, herbs, hydroponics, food systems, small livestock, 
+duck chronicles, fermentation
+
+**Learning Track:** "Growing Your Own" — From seed to surplus  
+Structured progression through the Zone 2 archive. Users track episode 
+completion and pick up where they left off, synced across devices via 
+user_track_progress table.
+
+**Expert Council members in Zone 2:**
+- Sam Nowak — Permaculture & food forest design
+- Marjory Wildcraft — Home food production, grow your own groceries
+
+**Registered ULG businesses in Zone 2:**
+- Ames Farm — Single-source raw honey (Zones 2, 3)
+- Flood & Fire Organics — Biodynamic seeds and soil (Zone 2)
+- Mountain Rose Herbs — Organic herbs and botanicals (Zones 1, 2)
+- Practical Self Reliance — Home food preservation (Zones 1, 2)
+- Audacious Brewing — Craft fermentation (Zone 2)
+- AgriSafe Network — Health and safety for farm families (Zones 1, 3)
+
+**Transformation path serving Zone 2:**
+- Conventional → Regenerative: "From commodity inputs and row-crop 
+  monocultures to closed-loop systems that build soil, produce surplus, 
+  and heal land."
+
+---
+
+## FULL TRANSFORMATION PATHS (all six)
+
+1. **Conventional → Regenerative** (Zone 2/3 primary)
+   Tags: permaculture, gardening, composting, soil science, regenerative
+
+2. **TradFi → Hard Assets** (Zone 0 primary)
+   Tags: investing, silver, gold, bitcoin, real estate, money, debt
+
+3. **Employee → Owner** (Zone 0 primary)
+   Tags: entrepreneurship, business, lifestyle design, side hustle
+
+4. **Grid → Off-Grid** (Zone 3 primary)
+   Tags: solar, alternative energy, off grid, water storage, wood heat
+
+5. **Outsourced Health → Health Sovereign** (Zones 1/2 primary)
+   Tags: natural health, herbal medicine, nutrition, fermentation, first aid
+
+6. **Individual Resilience → Community Scale** (all zones)
+   Tags: community, ham radio, food systems, emergency planning
+
+---
+
+## ALL LEARNING TRACKS
+
+| Track | Zone | Subtitle |
+|-------|------|----------|
+| Mind & Money | 0 | The foundation before the gear |
+| Escape the Grindstone | 0 | From squeezed to sovereign |
+| Prepared at Home | 1 | Daily resilience, no bunker required |
+| **Growing Your Own** | **2** | **From seed to surplus** |
+| The Working Homestead | 3 | Land as operating system |
+| Wild Harvest | 4 | The oldest supply chain |
+| When Things Get Hard | 5 | Contingencies for the unmanageable |
+
+---
+
+## DATABASE SCHEMA (key tables)
+
+- **content_items** — All episodes (TSP + ULG), with title, summary, 
+  categories (jsonb), tags (jsonb), audioUrl, episodeNumber, publishedAt
+- **expert_council** — Experts with zones (jsonb) and podcastFeedUrl
+- **ulg_businesses** — ULG businesses with zones (jsonb) and url
+- **user_track_progress** — userId, trackSlug, episodeId, completedAt
+- **wisdom_gems** — Extracted key quotes from episodes
+- **content_gap_submissions** — Listener topic requests
+- **wishing_well_tips** — Listener tips tied to a wishText and draw system
+- **users / sessions** — Replit Auth tables
+
+---
+
+## WHAT WAS BUILT TODAY (MERGED — live in production)
+
+**Core engine:**
+- Full zone-based content discovery (all 6 zones)
+- Zone Resources Library weaving TSP, ULG, and Expert Council together
+- Learning tracks with progress tracking, synced to user accounts
+- Transformation path filtering across the archive
+- Transformation badges on episode cards and detail pages
+- Expert Council registry with zone tagging and photos on zone pages
+
+**Discovery & navigation:**
+- "This Day in History" — daily segment from the archive, date-browsable
+- Special series pages (Unloose the Goose, 13 Stomps, Tuesday Chats)
+- Series episode position badges sitewide
+- Full-text search and filtering inside learning tracks
+- Category descriptions on all browse pages
+- Source filter (TSP vs. ULG) with persistence across zone visits
+
+**User retention:**
+- Progress tracking across all tracks
+- "Next up" episode on homepage for active track users
+- Cross-device sync via user accounts
+- Progress export and reset tools
+- Shareable track links (for inviting new listeners)
+
+**Technical:**
+- Chapter timestamp detection from ID3 tags + RSS podcast:chapters
+- Chapter fetch optimized (skips old episodes, pre-loads at sync)
+- History segment timestamp detection rate shown in sync dashboard
+- Episode counts on each track card
+- Full publish date (month/day/year) on episode cards
+
+**Mobile (Expo):**
+- Episode browse and playback
+- Offline download
+- Bookmarks and playback history
+- Learning track progress sync
+
+---
+
+## ACTIVE PIPELINE (proposed, not yet built)
+
+Key items queued for build:
+
+- Show all in-progress tracks on homepage (user retention)
+- Carry source filter into full episode browser
+- Let visitors click a transformation badge → jump to filtered results
+- Show transformation badges in the archive
+- Link Expert Council + business admin from site nav
+- Protect admin pages (auth gate)
+- Server-synced progress counts on tracks listing page
+- Sort This Day in History oldest→newest for natural flow
+
+---
+
+## THE BUSINESS OPPORTUNITY FRAMING
+
+The engine owns the moment between **learning intent** and **purchase 
+readiness**. A Zone 2 visitor arrives curious about food growing, gets 
+matched to the "Growing Your Own" track or the "Conventional → Regenerative" 
+transformation path, follows structured progression backed by expert voices 
+(Marjory Wildcraft, Sam Nowak), and encounters vetted Zone 2 businesses 
+(Flood & Fire Organics, Ames Farm, Mountain Rose Herbs) exactly when the 
+content makes them relevant.
+
+**Zone 2 primary demographic:**
+- Suburban homeowner, 35–55, has a backyard and wants to use it
+- Post-2020 food anxiety — started a garden, quit, wants a real system
+- Aspiring homesteader not there yet — Zone 2 is as far as they can go now
+- Parent/provider mindset — motivated by feeding family, not fear
+- Existing TSP listener — trusts Jack, wants the archive organized for them
+
+**The pitch:**
+This is not advertising. It's curriculum-integrated commerce. The business 
+appears at the lesson where it belongs. No banner. No sidebar. The listener 
+is already in the right headspace when the product surfaces.
+
+---
+
+## CODEBASE LOCATIONS
+
+- Zone definitions: `artifacts/api-server/src/lib/zones.ts`
+- Learning tracks: `artifacts/api-server/src/lib/tracks.ts`
+- Transformation paths: `artifacts/api-server/src/lib/transformations.ts`
+- Expert Council + ULG businesses: `artifacts/api-server/src/lib/expert-council-static.ts`
+- DB schema: `lib/db/src/schema/`
+- Web app pages: `artifacts/survival-podcast/src/pages/`
+- API routes: `artifacts/api-server/src/routes/`
