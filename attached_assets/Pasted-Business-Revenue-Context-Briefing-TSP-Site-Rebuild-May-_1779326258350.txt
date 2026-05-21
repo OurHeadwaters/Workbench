@@ -1,0 +1,99 @@
+Business & Revenue Context Briefing — TSP Site Rebuild (May 20–21, 2026)
+This document captures every business- and revenue-touching surface built or planned during the current sprint, with full technical and strategic context, for a strategy agent to reason from.
+
+1. The Show & Its Ecosystem
+The Survival Podcast (TSP) — hosted by Jack Spirko — is a long-running (~4,000 episodes since 2008) podcast on practical self-reliance: permaculture, homesteading, personal finance, entrepreneurship, preparedness, and liberty. The site rebuild being done here is a full redesign of the public-facing archive and companion mobile app.
+
+TSP has a second show: Unloose the Goose (ULG), a separate podcast Jack co-hosts focused on small business owners. 77 episodes are now ingested and cross-listed in the same content library.
+
+The site has a sister artifact called Codetry (/codetry) — a separate web product with its own branding, built on the "Context / Desire / Try" copywriting framework. Codetry appears to be a consulting or coaching product. The TSP redesign's copy, zone structure, and transformation paths all reference the Codetry framework explicitly.
+
+2. Revenue Surfaces Built (MERGED — live in codebase)
+A. Expert Council Directory
+What it is: A curated registry of named domain experts and affiliated businesses, displayed on zone resource pages (the site is organized into 6 "zones" — Mind, Home, Garden, Farm, Wild, Community). Each expert and business is tagged to one or more zones.
+
+15 named Expert Council members include: Steven Harris (energy), Joel Salatin (regenerative farming), Marjory Wildcraft (home food production), Chris Martenson (Peak Prosperity), John Lovell (Warrior Poet Society), Paul Wheaton (Permies), Dr. Joseph Mercola, and others — all known TSP guests and community figures.
+
+12 ULG-affiliated businesses include: Ready Made Resources (explicitly called a "long-time TSP sponsor"), Mountain Rose Herbs, Forge Survival Supply, Flood & Fire Organics, and others.
+
+Technical state: Fully DB-backed. Admin CRUD UI exists at /admin/council. Experts can be created, updated, deleted, reordered, and tagged to zones without code changes. Each expert record also has optional podcastFeedUrl and rssSlug fields (for cross-linking to related podcasts). The admin UI is currently unprotected — no auth check (see pending Task #138).
+
+Revenue implication: This is the affiliate/sponsor directory. The ULG businesses section in particular maps directly to sponsor relationships. The Expert Council maps to what TSP calls its "trusted resource" or endorsement layer. There's no affiliate link tracking built yet — all URLs go directly to partner sites.
+
+B. Value for Value (V4V) — Lightning/Crypto Tipping
+What it is: A full Podcasting 2.0 Value-for-Value implementation. Listeners can send Bitcoin Lightning payments directly to creator wallet addresses while listening, with revenue split between creators per episode.
+
+Technical state:
+
+Database tables: creators (name, role, walletType, walletAddress), episode_value_splits (per-episode override splits), default_value_splits (fallback percentages)
+Public API: GET /api/v4v/episode-splits/:slug — returns split recipients for any episode
+Public API: GET /api/v4v/default-splits — returns the default split table
+Public API: GET /api/v4v/rss.xml — generates a Podcasting 2.0-compliant RSS feed with <podcast:value> and <podcast:valueRecipient> tags embedded
+Admin CRUD (auth-protected): full management of creators and splits
+A POST /api/v4v/supporter endpoint exists to mark a user as a supporter (currently a no-op — just returns {ok: true})
+Revenue implication: This is a crypto-native direct listener monetization layer. The RSS feed it generates is Podcasting 2.0 compliant, meaning any compatible app (Fountain, Podverse, Breez, etc.) can stream sats to Jack as listeners play. The mobile app (tsp-mobile) is plumbed for this — it reads episode splits to power the player. The "supporter" badge/status is referenced but not wired to anything yet.
+
+C. Wishing Well — Community Tipping Mechanic
+What it is: A daily coin-and-wish ritual. Listeners submit "tips" (denominated in XRP) attached to a wish (what they'd do with the money). A daily draw picks one random winner. The pot is split 50/50: 50% to the creator (Jack), 50% to the winning listener. Community members can "stack" a wish (add momentum); when a wish hits 10 stacks, a "founder match" is triggered.
+
+Technical state — fully built:
+
+wishing_well_tips table: amountUnits, currency (default XRP), wishText, listenerName, drawDate, status (pending/drawn/not_drawn), stackCount, founderMatchTriggered, episodeSlug
+wishing_well_distributions table: records each daily draw — winner, total pot, creator share, winner share, payoutStatus (pending/sent), winnerImpactNote
+wish_stacks table: tracks per-session stacking (one stack per session per wish)
+Public endpoints: GET today's pot, GET community wall of wishes, POST a tip, POST a stack
+Admin endpoints: POST to run the draw, PATCH to mark payout as sent, GET admin dashboard
+A winner can post an "impact note" after receiving funds (authenticated)
+Revenue implication: The 50/50 split means every XRP sent by listeners flows 50% to Jack. The mechanic is designed to be community-positive (half goes back to a listener) while still monetizing. Payouts are currently manual — admin marks payout as "sent" after doing a crypto transfer off-platform. No automated payout rails exist. The "founder match" at 10 stacks is a social commitment mechanic, not a financial contract enforced in code.
+
+D. Account System / User Auth
+What it is: A full user account system was built (MERGED task #120) to sync learning track progress server-side. This is the foundational identity layer for any future member-gated features.
+
+Technical state: Auth is already wired. The req.isAuthenticated() middleware is in use across V4V admin routes and Wishing Well authenticated paths. The V4V supporter endpoint checks req.isAuthenticated(). Learning track progress is stored per user.id in the database.
+
+Revenue implication: The auth layer is the prerequisite for any membership/premium tier. It exists and works. Nothing is gated behind it yet from a content or feature standpoint — but the infrastructure to do so is in place.
+
+E. Transformation Paths (Codetry-Linked)
+What it is: Six "transformation paths" that map a listener's current situation to a destination state, surfacing relevant TSP episodes as the curriculum. Paths: Conventional → Regenerative, TradFi → Hard Assets, Employee → Owner, Grid → Off-Grid, Outsourced Health → Health Sovereign, Individual → Community Scale.
+
+Revenue implication: The "Employee → Owner" path is explicitly entrepreneurship/business content. These paths are the content discovery layer for upselling — a listener on the "Employee → Owner" path is pre-qualified as someone building income streams. The Codetry product (/codetry artifact) appears to be the higher-level offer this discovery layer feeds into. The connection between the two is implicit in the current build — there's no explicit CTA from a transformation path to Codetry.
+
+3. Open Admin & Business Infrastructure (PROPOSED — not yet built)
+Three proposed tasks directly touch the business layer:
+
+Task #136 — Link to Expert Council and Business admin pages from site navigation
+Admin pages (/admin/council, /admin/categories) are currently URL-only. This task adds a discoverable admin nav section. Business relevance: Without this, content managers can't efficiently maintain the sponsor/partner directory.
+
+Task #137 — Show Expert Council member photos on zone resource pages
+Adds avatar/headshot support to expert entries. Business relevance: Visual credibility for partner endorsements is standard for affiliate/sponsor displays. Currently text-only cards reduce trust and click-through.
+
+Task #138 — Protect admin pages so only authorized users can make changes
+The /api/admin/* routes (Expert Council CRUD, category management) have no authentication check right now. The V4V admin routes do check req.isAuthenticated() — the council routes do not. Business relevance / risk: This is a live security gap. Anyone who discovers the URL can add, edit, or delete Expert Council members and affiliated businesses.
+
+4. What's Missing from a Revenue Standpoint
+Based on what's built, here's what's conspicuously absent:
+
+No affiliate link tracking. All expert and sponsor URLs go directly to partner sites. There's no UTM tagging, no click tracking, no conversion attribution. Jack can't measure which zone or which expert card drives traffic to Ready Made Resources.
+
+No membership tier / content gating. Auth exists, user accounts exist, but nothing is gated. The V4V "supporter" status is recorded but not displayed or rewarded anywhere on the site.
+
+No automated payout for Wishing Well. Manual admin action is required for every daily draw. XRP transfers happen off-platform.
+
+No Codetry → TSP or TSP → Codetry funnel. The two artifacts share a conceptual framework (zones, transformations) but there's no explicit link, CTA, or conversion path between them in the UI.
+
+MSB (Members Support Brigade) — Jack's actual membership community — is not referenced anywhere in the codebase. No MSB login integration, no MSB-exclusive content surface, no upsell CTA pointing to it.
+
+Expert Council has no monetization model defined. It's unclear whether these are paid placements, affiliate relationships, editorial recommendations, or legacy sponsor relationships. The data model supports URLs but not commission rates, affiliate codes, or relationship types.
+
+5. Relevant Code Locations
+Surface	Key Files
+Expert Council data	artifacts/api-server/src/lib/expert-council-static.ts, expert-council.ts
+Expert Council admin API	artifacts/api-server/src/routes/admin-council.ts
+Expert Council admin UI	artifacts/survival-podcast/src/pages/admin-council.tsx
+ULG Businesses	same files as above (second table)
+V4V (Lightning tipping)	artifacts/api-server/src/routes/v4v.ts
+Wishing Well	artifacts/api-server/src/routes/wishing-well.ts
+Transformation paths	artifacts/api-server/src/lib/transformations.ts
+Zone-level sponsor display	artifacts/survival-podcast/src/pages/zone-detail.tsx
+Auth middleware (used by V4V)	artifacts/api-server/src/routes/admin-council.ts (note: missing auth here)
+That's the full picture. The core monetization infrastructure (V4V, Wishing Well, Expert Council/sponsor directory, user accounts) is all built. The gaps are: affiliate tracking, content gating, MSB integration, Codetry funnel connection, and admin security.
