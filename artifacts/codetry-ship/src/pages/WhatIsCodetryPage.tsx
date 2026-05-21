@@ -495,6 +495,14 @@ export function WhatIsCodetryPage() {
             >
               Privacy
             </a>
+            <a
+              href="https://codetry.ca"
+              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
+              style={{ color: "hsl(var(--accent))" }}
+              data-testid="codetry-canonical-url"
+            >
+              codetry.ca
+            </a>
           </div>
         </footer>
 
