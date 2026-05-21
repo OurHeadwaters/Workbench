@@ -1,0 +1,82 @@
+For the Headwaters Agent at northern-store-plan.replit.app
+What You're Looking At
+You are the strategy/practice site. This workspace — the one that produced the brief you received — is the build workspace. Two separate Replit projects. One practice, two repos.
+
+You (Headwaters) = the map, the framework, the practitioner programme, the economy model, the neighbourhood architecture.
+
+This workspace = where Bobbie actually builds the digital tools that practitioners deliver.
+
+They are not the same project. They are the same practice.
+
+How the Zones Map Across Both Repos
+Your Map page ("Six zones. One neighbourhood.") is not abstract — it is the same zone architecture running through every artifact in the build workspace:
+
+Headwaters Zone	Headwaters Name	In the Build Workspace
+Zone 0	The Saltbox	Privacy Guide's "The Clearing" — private, device-only, offline-first. Also TSP Zone 0 (Mind)
+Zone 1	The Lodge	Privacy Guide's "The Lodge" — Saltbox/co-op community server. Also TSP Zone 1 (Home)
+Zone 2	The Bench	TSP Zone 2 (Garden) — where practitioners plan and produce food systems
+Zone 3	The Standby	TSP Zone 3 (Farm) — operational land-scale resilience
+Zone 4	Wild	TSP Zone 4 — hunting, foraging, wild harvest
+Zone 5	Community	TSP Zone 5 — where individual resilience scales outward
+The Privacy Guide artifact in this workspace — the printable homeschool handbook for "The Clearing and The Lodge" — is a Zone 0/1 deliverable. It is a community-ready output of Headwaters practitioner work. It currently has no link from your site or from Codetry. It exists at /privacy-guide in this repo and is invisible to anyone who hasn't been given the URL.
+
+The Economy Engine — What's Actually Built
+Your Economy page says: "The Codetry P2P economy engine makes that value legible. The system runs on community credit — a token backed by the labour and knowledge that's already in your community."
+
+That system exists as working code in this workspace right now — in two forms:
+
+1. XBuckets / XRPL (your site references this in Zone 0):
+The build workspace has a v4v.ts route that implements Podcasting 2.0 Value-for-Value — Lightning Network wallets, per-episode payment splits, a Podcasting 2.0-compliant RSS feed, and a full admin CRUD for managing creator wallet addresses and split percentages. The TSP mobile app has a Wallet tab and a Boost Sheet (streaming sats while listening). This is the Lightning implementation of what you call the P2P economy engine.
+
+2. The Wishing Well (community tipping with daily draw):
+Tips denominated in XRP. Community "stacking" builds social proof. Daily draw splits the pot 50/50 — creator and a random community winner. The "founder match" triggers at 10 stacks. An admin manually marks payouts sent. This is the community-generosity layer of your economy model — built and running, proof-of-concept scale.
+
+Neither of these is described anywhere on your site as a capability Headwaters practitioners can deliver. They are invisible to communities who would benefit from exactly this.
+
+The Odyssey and the Transformation Paths
+Your Odyssey page says: "Become the hempcrete your community needs — 4 phases, 8 stations — built in reserves and northern communities."
+
+The build workspace has six Transformation Paths wired into the TSP site and mobile app:
+
+Conventional → Regenerative
+TradFi → Hard Assets
+Employee → Owner
+Grid → Off-Grid
+Outsourced Health → Health Sovereign
+Individual Resilience → Community Scale
+That last one — Individual → Community Scale — is the Odyssey in content form. It's 4,000 TSP episodes pre-filtered and curated for someone moving from household preparedness to neighbourhood and watershed resilience. The description in the code reads: "the 'build' phase Codetry is designed for."
+
+These paths are currently only on the TSP site. There is no link from the Odyssey to them. There is no link from them to the Odyssey. A practitioner going through your 4-phase programme would find the TSP archive to be the deepest curriculum library available for exactly what you teach — and there is no bridge between them.
+
+Codetry — The Service Arm
+Your nav says "What is Codetry?" (currently 404). The build workspace has a fully built Codetry site at /codetry with:
+
+Three service tiers: Brochure site ($800–$1,500, 2–3 weeks), Local Directory ($2,000–$4,500, 4–8 weeks), Custom Tooling ($5,000+, 6–12 weeks)
+Lead magnet: Digital Resilience Checklist — email captured via Formspree, PDF download
+CTA: codetry@gmail.com
+Tagline: "Build it. Hand it off. Community Runs It."
+This is the commercial vehicle for everything Headwaters practitioners need built. The Zone 2 (Bench) tools you describe — North Star, planning tools — these would be Codetry Custom Tooling engagements. The Village Board Sandbox (Zone 1) — that's a Local Directory engagement. The Saltbox household readiness tools — Brochure site or Custom Tooling.
+
+Codetry is how Headwaters practitioners commission the tools their communities need. That relationship is nowhere written down anywhere in either repo.
+
+The Standby Dashboard (Zone 3)
+Your Map references: "The Standby Dashboard — Z3 pilot dashboard, status ladder and call composer (inside Headwaters Books)."
+
+The build workspace has an admin infrastructure (unprotected right now — Task #138 is the fix) that includes:
+
+Expert Council CRUD (manage the trusted-resource directory by zone)
+Category description management (content admin)
+Sync status dashboard (chapter timestamp detection rates)
+Wishing Well admin (run daily draws, mark payouts sent)
+These are practitioner-facing admin tools. They are in the TSP site because TSP is the current client — but the pattern is exactly what a Standby Dashboard would be for any community: a place where the practitioner (not a platform) controls the data.
+
+What This Means for Your Strategy
+The build workspace is not a client project that happens to share some language with Headwaters. It is Headwaters expressed as software — the same zone architecture, the same economy model, the same transformation journey, the same "build it, hand it off, community runs it" mandate — running on a real 4,000-episode podcast with a real audience.
+
+TSP is the pilot. Jack Spirko's listeners are the first community to experience the Headwaters zone model through software, whether they know it or not.
+
+The Codetry services page lists exactly who should be next: homesteaders scaling a side business, food co-ops, homeschool collectives, local producers. These are the same people your Odyssey trains practitioners to serve. Practitioners who complete the Odyssey should be able to commission tools from Codetry. Communities that need what the Privacy Guide describes should be able to get a Lodge and a Clearing built. Communities that want the economy engine should be able to get XBuckets and the Wishing Well.
+
+The machine exists. The connections between the cogs — Odyssey → Codetry → built tools → community economy — are not yet written in any nav, any CTA, or any link between the two repos.
+
+That is what needs to be wired.
