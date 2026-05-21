@@ -39,10 +39,20 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
   return <Component />;
 }
 
+// When visited from codetry.ca, the root path should land on /codetry
+// (the practitioner-facing "What is Codetry?" page) rather than the
+// community home page. ourheadwaters.ca continues to land on HomePage.
+function CodetryHostRoot() {
+  if (typeof window !== "undefined" && window.location.hostname === "codetry.ca") {
+    return <Redirect to="/codetry" />;
+  }
+  return <HomePage />;
+}
+
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={HomePage} />
+      <Route path="/" component={CodetryHostRoot} />
       <Route path="/home" component={HomePage} />
       <Route path="/bio" component={BioPage} />
       <Route path="/services" component={ServicesPage} />
