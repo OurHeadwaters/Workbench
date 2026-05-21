@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { TrailArtGallery } from "@/components/TrailArtGallery";
 import { YouthTrailMap } from "@/components/YouthTrailMap";
+import { AmbientBackground, GrainOverlay, ScrollReveal } from "@/components/AmbientBackground";
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
 
@@ -354,8 +355,9 @@ export function StoryPage() {
           }
         });
         if (best !== null) {
-          setScrollPhase(best.phase);
-          setActivePhase(best.phase);
+          const b = best as { phase: number; ratio: number };
+          setScrollPhase(b.phase);
+          setActivePhase(b.phase);
         }
       },
       { threshold: [0.1, 0.3, 0.5], rootMargin: "-80px 0px -20% 0px" }
@@ -467,31 +469,34 @@ export function StoryPage() {
   return (
     <main
       className="min-h-screen"
-      style={{ background: "#fdf8f0" }}
+      style={{ background: "#0F1C18" }}
     >
       {/* ══════════════════════════════════════════════ HERO ══ */}
       <section
         className="relative w-full overflow-hidden"
-        style={{ minHeight: "58vw", maxHeight: 560 }}
+        style={{ minHeight: "58vw", maxHeight: 600 }}
       >
         <img
           src="/story/hero-banner.jpg"
           alt="A warm boreal forest trail at golden hour"
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: "center 40%" }}
+          style={{ objectPosition: "center 40%", opacity: 0.55 }}
         />
+        {/* Campfire ambient warmth */}
+        <AmbientBackground variant="campfire" />
+        <GrainOverlay opacity={0.035} />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(8,20,14,0.78) 0%, rgba(14,30,20,0.55) 35%, rgba(14,30,20,0.42) 55%, rgba(14,30,20,0.82) 100%)",
+              "linear-gradient(to bottom, rgba(8,16,12,0.65) 0%, rgba(12,24,16,0.40) 35%, rgba(12,24,16,0.32) 55%, rgba(8,16,12,0.92) 100%)",
           }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 110% 100% at 50% 100%, transparent 40%, rgba(6,16,10,0.45) 100%)",
+              "radial-gradient(ellipse 110% 100% at 50% 100%, transparent 40%, rgba(6,12,8,0.55) 100%)",
           }}
         />
 
@@ -566,20 +571,23 @@ export function StoryPage() {
       {/* ════════════════════════════════ PLAIN-LANGUAGE INTRO ══ */}
       <section
         className="mx-auto max-w-[52rem] px-6 sm:px-8 pt-14 pb-10"
+        style={{ background: "#0F1C18" }}
         data-testid="youth-odyssey-intro"
       >
-        <p
-          className="font-serif text-[17px] leading-[1.75] mb-4"
-          style={{ color: "#1f3d2e" }}
-        >
-          The Youth Odyssey is a free, self-paced journey for young people ages 6–18 — four phases, eight stations, each one built around their own story: their kitchen, their people, the hard thing they've faced, and what they carry across the crossing.
-        </p>
-        <p
-          className="font-serif text-[17px] leading-[1.7]"
-          style={{ color: "rgba(31,61,46,0.68)" }}
-        >
-          By the final station they hold a written record of their own experience and a clearer sense of where they stand in their community. Younger children move through it with a caregiver; older youth go at their own pace — no grades, no deadlines, no cost.
-        </p>
+        <ScrollReveal>
+          <p
+            className="font-serif text-[17px] leading-[1.8] mb-5"
+            style={{ color: "rgba(244,237,224,0.88)" }}
+          >
+            The Youth Odyssey is a free, self-paced journey for young people ages 6–18 — four phases, eight stations, each one built around their own story: their kitchen, their people, the hard thing they've faced, and what they carry across the crossing.
+          </p>
+          <p
+            className="font-serif text-[17px] leading-[1.75]"
+            style={{ color: "rgba(244,237,224,0.60)" }}
+          >
+            By the final station they hold a written record of their own experience and a clearer sense of where they stand in their community. Younger children move through it with a caregiver; older youth go at their own pace — no grades, no deadlines, no cost.
+          </p>
+        </ScrollReveal>
       </section>
 
       {/* ══════════════════════════════════ SOPHIE'S WATERCOLOUR ══ */}
@@ -589,7 +597,7 @@ export function StoryPage() {
 
       <section
         className="w-full overflow-hidden"
-        style={{ borderTop: "1px solid rgba(31,61,46,0.10)", borderBottom: "1px solid rgba(31,61,46,0.10)" }}
+        style={{ borderTop: "1px solid rgba(244,237,224,0.06)", borderBottom: "1px solid rgba(244,237,224,0.06)" }}
         data-testid="youth-trail-map-section"
       >
         <div
@@ -611,15 +619,17 @@ export function StoryPage() {
         />
       </section>
 
-      {/* ── Phase journal cards (dark boreal) ── */}
+      {/* ── Phase journal cards (cinematic deep boreal) ── */}
       <section
         style={{
-          background: "linear-gradient(to bottom, #16261e 0%, #1a2e24 60%, #162535 100%)",
+          background: "#0F1C18",
           paddingTop: 48,
           paddingBottom: 64,
+          position: "relative",
         }}
         data-testid="youth-phase-cards"
       >
+        <GrainOverlay opacity={0.025} />
         <div className="max-w-[44rem] mx-auto px-4 sm:px-8 space-y-12">
 
           <div className="flex items-center gap-3">
@@ -709,8 +719,66 @@ export function StoryPage() {
                 key={phase.n}
                 ref={(el) => { phaseRefs.current[phaseIdx] = el; }}
                 data-testid={`youth-phase-${phase.n}`}
+                style={{ position: "relative" }}
               >
-                <div className="flex items-center gap-3 mb-4">
+                {/* ── Phase campfire-circle icon ── */}
+                <div
+                  className="flex items-center gap-3 mb-4"
+                  style={{ position: "relative" }}
+                >
+                  {/* Hand-drawn woodcut circle badge */}
+                  <div style={{ position: "relative", flexShrink: 0 }}>
+                    <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
+                      <circle
+                        cx="18" cy="18" r="16"
+                        fill={`${accent}14`}
+                        stroke={isPhaseActive ? accent : `${accent}88`}
+                        strokeWidth={isPhaseActive ? 1.8 : 1.2}
+                        strokeDasharray={isPhaseActive ? "none" : "3 2"}
+                      />
+                      {/* Phase-specific woodcut icon (paths match YouthTrailMap icons) */}
+                      {phase.n === 1 && (
+                        /* Hearth / fire flame */
+                        <g transform="translate(18,18)">
+                          <path
+                            d="M0,6 C-5,2 -3,-5 0,-8 C3,-5 5,2 0,6Z"
+                            fill={isPhaseActive ? accent : `${accent}99`}
+                            opacity={0.85}
+                          />
+                          <ellipse cx="0" cy="6" rx="4.5" ry="1.5"
+                            fill={isPhaseActive ? accent : `${accent}99`} opacity={0.35} />
+                        </g>
+                      )}
+                      {phase.n === 2 && (
+                        /* Three figures — community */
+                        <g transform="translate(18,18)" fill="none" stroke={isPhaseActive ? accent : `${accent}99`} strokeWidth="1.4" strokeLinecap="round">
+                          <line x1="-5" y1="-3" x2="-5" y2="5" />
+                          <circle cx="-5" cy="-6" r="2" />
+                          <line x1="0"  y1="-3" x2="0"  y2="5" />
+                          <circle cx="0"  cy="-6" r="2" />
+                          <line x1="5"  y1="-3" x2="5"  y2="5" />
+                          <circle cx="5"  cy="-6" r="2" />
+                        </g>
+                      )}
+                      {phase.n === 3 && (
+                        /* Mountain peak */
+                        <g transform="translate(18,18)" fill="none" stroke={isPhaseActive ? accent : `${accent}99`} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="-7,6 0,-8 7,6" />
+                          <polyline points="0,-8 2,0 -1,4" opacity="0.5" />
+                        </g>
+                      )}
+                      {phase.n === 4 && (
+                        /* River crossing / horizon */
+                        <g transform="translate(18,18)" stroke={isPhaseActive ? accent : `${accent}99`} strokeWidth="1.4" strokeLinecap="round">
+                          <path d="M-7,1 C-3,-1 3,3 7,1" fill="none" />
+                          <path d="M-5,4.5 C-2,2.5 2,6 5,4.5" fill="none" />
+                          <line x1="0" y1="-8" x2="0" y2="-2" />
+                          <path d="M-4,-4 A4,4 0 0 1 4,-4" fill="none" opacity="0.6" />
+                        </g>
+                      )}
+                    </svg>
+                  </div>
+
                   <span
                     className="font-mono text-[8px] uppercase tracking-[0.24em] px-2.5 py-1 rounded-sm"
                     style={{

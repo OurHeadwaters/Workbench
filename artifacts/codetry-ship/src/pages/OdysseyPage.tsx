@@ -3,6 +3,7 @@ import { ApiError, postIntake } from "@/lib/api";
 import { TrailArtGallery } from "@/components/TrailArtGallery";
 import { TrailMapHero } from "@/components/TrailMapHero";
 import { ODYSSEY_INTRO } from "@/content/odyssey";
+import { AmbientBackground, GrainOverlay, ScrollReveal } from "@/components/AmbientBackground";
 
 /* ── Phase data ────────────────────────────────────────────────────────── */
 
@@ -193,88 +194,137 @@ export function OdysseyPage() {
   };
 
   return (
-    <main className="odyssey-page min-h-screen w-full" style={{ background: "#f4ede0" }}>
+    <main className="odyssey-page min-h-screen w-full" style={{ background: "#0F1C18" }}>
 
       {/* ══════════════════════════════════════════════════════ HERO ══ */}
       <section
-        className="relative overflow-hidden px-6 sm:px-10 pt-20 pb-28"
-        style={{
-          background: "#1f3d2e",
-          backgroundImage: `url("${BASE}odyssey/hero-banner.jpg")`,
-          backgroundSize: "cover",
-          backgroundPosition: "center 40%",
-        }}
+        className="relative overflow-hidden px-6 sm:px-10 pt-24 pb-32"
+        style={{ minHeight: "72vh" }}
         data-testid="odyssey-hero"
       >
-        {/* Darkening gradient overlay — text legibility */}
+        {/* Deep northern landscape */}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url("${BASE}odyssey/hero-banner.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center 40%",
+            opacity: 0.42,
+          }}
+        />
+        {/* Aurora ambient layer */}
+        <AmbientBackground variant="aurora" />
+        {/* Grain texture */}
+        <GrainOverlay opacity={0.04} />
+        {/* Topographic texture overlay */}
+        <div
+          aria-hidden
+          className="absolute inset-0 od-topo"
+          style={{ opacity: 0.08 }}
+        />
+        {/* Dark vignette gradient */}
         <div
           aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(20,46,32,0.62) 0%, rgba(20,46,32,0.80) 55%, rgba(20,46,32,0.97) 100%)",
+              "linear-gradient(to bottom, rgba(10,20,14,0.55) 0%, rgba(10,20,14,0.35) 40%, rgba(10,20,14,0.75) 80%, rgba(10,20,14,0.97) 100%)",
           }}
         />
-        {/* Topographic texture overlay */}
+        {/* Horizontal edge vignette */}
         <div
           aria-hidden
-          className="absolute inset-0 od-topo"
-          style={{ opacity: 0.18 }}
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 100% 80% at 50% 50%, transparent 50%, rgba(8,16,12,0.5) 100%)",
+          }}
         />
 
         <div className="relative z-10 mx-auto max-w-[52rem]">
-          {/* Eyebrow */}
-          <div className="flex items-center gap-3 mb-6">
-            <div
-              className="h-px w-8 opacity-50"
-              style={{ background: "#d4a017" }}
-            />
+          {/* Eyebrow with flanking rules */}
+          <div className="flex items-center gap-3 mb-8">
+            <div className="h-px w-12 opacity-60" style={{ background: "#d4a017" }} />
             <p
-              className="font-mono text-[12px] uppercase tracking-[0.32em]"
-              style={{ color: "rgba(212,160,23,0.85)" }}
+              className="font-mono text-[11px] uppercase tracking-[0.34em]"
+              style={{ color: "rgba(212,160,23,0.88)" }}
             >
               Headwaters Odyssey
             </p>
+            <div className="h-px w-12 opacity-40" style={{ background: "#d4a017" }} />
           </div>
 
           <h1
-            className="font-serif text-[2.6rem] sm:text-[3.4rem] leading-[1.04] tracking-tight mb-5"
-            style={{ color: "#f4ede0" }}
+            className="font-serif leading-[1.02] tracking-tight mb-6"
+            style={{
+              color: "#f4ede0",
+              fontSize: "clamp(2.4rem, 7vw, 4.2rem)",
+              textShadow: "0 2px 30px rgba(0,0,0,0.8)",
+            }}
           >
-            Become the hempcrete<br className="hidden sm:block" /> your community needs.
+            Become the hempcrete<br className="hidden sm:block" />{" "}
+            <span style={{ color: "#d4a017", fontStyle: "italic" }}>your community needs.</span>
           </h1>
           <p
-            className="font-serif text-lg italic mb-2 od-pencil"
-            style={{ color: "rgba(244,237,224,0.72)", textDecorationColor: "rgba(212,160,23,0.35)" }}
+            className="font-serif text-xl italic mb-3"
+            style={{ color: "rgba(244,237,224,0.68)", textShadow: "0 1px 16px rgba(0,0,0,0.7)" }}
           >
             Whether the flood comes or not.
           </p>
           <p
-            className="font-serif text-[17px] leading-[1.7] max-w-2xl mt-6"
-            style={{ color: "rgba(244,237,224,0.85)" }}
+            className="font-serif leading-[1.75] max-w-[42ch] mt-6"
+            style={{
+              color: "rgba(244,237,224,0.80)",
+              fontSize: "clamp(1rem, 2.2vw, 1.1rem)",
+              textShadow: "0 1px 12px rgba(0,0,0,0.6)",
+            }}
           >
             Built in reserves and northern communities — open to any decentralized
             practitioner ready to strengthen their community from the source.
-            If you already speak basic development language and your community is
-            organising from the inside out, the trail starts here.
           </p>
 
-          {/* Scroll cue + origin crosslink */}
-          <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2">
+          {/* CTAs */}
+          <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-3">
             <a
               href="#start"
-              className="inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.24em] transition-opacity hover:opacity-80"
-              style={{ color: "rgba(212,160,23,0.9)" }}
+              className="btn-plaque"
+              style={{ fontSize: "0.65rem", paddingInline: "1.75rem" }}
             >
-              Begin ↓
+              Begin the journey ↓
             </a>
             <a
               href="/founding-stories"
-              className="font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
-              style={{ color: "rgba(244,237,224,0.38)" }}
+              className="font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
+              style={{ color: "rgba(244,237,224,0.42)" }}
             >
               Read the origin →
             </a>
+          </div>
+
+          {/* Phase dots */}
+          <div className="mt-10 flex items-center gap-2">
+            {["01","02","03","04","05"].map((n, i) => (
+              <div
+                key={n}
+                className="flex flex-col items-center gap-1"
+                style={{ opacity: 0.5 + i * 0.1 }}
+              >
+                <div
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ background: ["#b85a3e","#d4a017","#2e8b4e","#c97c2e","#7ab3cc"][i] }}
+                />
+                <span className="font-mono text-[7px] tracking-[0.1em]" style={{ color: "rgba(244,237,224,0.32)" }}>
+                  {n}
+                </span>
+              </div>
+            ))}
+            <span
+              className="ml-3 font-mono text-[9px] uppercase tracking-[0.2em]"
+              style={{ color: "rgba(244,237,224,0.28)" }}
+            >
+              5 phases · 20 stations
+            </span>
           </div>
         </div>
       </section>
@@ -286,79 +336,86 @@ export function OdysseyPage() {
       <TrailArtGallery />
 
       {/* ══════════════════════════════════════ MAIN CONTENT COLUMN ══ */}
-      <div className="mx-auto max-w-[52rem] px-6 sm:px-8">
+      <div
+        className="mx-auto max-w-[52rem] px-6 sm:px-8"
+        style={{ background: "#0F1C18" }}
+      >
 
         {/* ══════════════════════════════════ PLAIN-LANGUAGE INTRO ══ */}
         <section className="pt-14 pb-10" data-testid="odyssey-intro">
-          <p
-            className="font-serif text-[17px] leading-[1.75] mb-4"
-            style={{ color: "#1f3d2e" }}
-          >
-            {ODYSSEY_INTRO.paragraph1}
-          </p>
-          <p
-            className="font-serif text-[17px] leading-[1.7] mb-5"
-            style={{ color: "rgba(31,61,46,0.68)" }}
-          >
-            {ODYSSEY_INTRO.paragraph2}
-          </p>
-          {/* Bridge sentence — grounds poetic framing in concrete outcome */}
-          <p
-            className="font-serif text-[16px] leading-[1.65] pl-4 py-3"
-            style={{
-              borderLeft: "3px solid #b85a3e",
-              background: "rgba(184,90,62,0.05)",
-              color: "rgba(31,61,46,0.72)",
-              borderRadius: "0 4px 4px 0",
-            }}
-            data-testid="odyssey-bridge-sentence"
-          >
-            This is the same naming discipline used to build the 807 Food Co-op platform — board-owned, no vendor fees.
-          </p>
+          <ScrollReveal>
+            <p
+              className="font-serif text-[17px] leading-[1.8] mb-5"
+              style={{ color: "rgba(244,237,224,0.88)" }}
+            >
+              {ODYSSEY_INTRO.paragraph1}
+            </p>
+            <p
+              className="font-serif text-[17px] leading-[1.75] mb-6"
+              style={{ color: "rgba(244,237,224,0.62)" }}
+            >
+              {ODYSSEY_INTRO.paragraph2}
+            </p>
+            {/* Bridge sentence — gold accent pull-quote */}
+            <p
+              className="font-serif text-[16px] leading-[1.65] pl-5 py-4"
+              style={{
+                borderLeft: "3px solid #d4a017",
+                background: "rgba(212,160,23,0.06)",
+                color: "rgba(244,237,224,0.78)",
+                borderRadius: "0 4px 4px 0",
+              }}
+              data-testid="odyssey-bridge-sentence"
+            >
+              This is the same naming discipline used to build the 807 Food Co-op platform — board-owned, no vendor fees.
+            </p>
+          </ScrollReveal>
         </section>
 
         {/* Trail divider */}
-        <div className="od-trail-rule">
+        <div className="od-trail-rule" style={{ color: "rgba(244,237,224,0.2)" }}>
           <span>Phase trail</span>
         </div>
 
         {/* ═════════════════════════════════════ HOW IT WORKS ══ */}
         <section data-testid="odyssey-how-it-works">
-          <p
-            className="font-mono text-[12px] uppercase tracking-[0.28em] mb-3"
-            style={{ color: "#b85a3e" }}
-          >
-            How it works
-          </p>
-          <h2
-            className="font-serif text-3xl tracking-tight mb-1"
-            style={{ color: "#1f3d2e" }}
-          >
-            5 Phases. 20 Stations.
-          </h2>
-          <p
-            className="font-serif text-[16px] italic mb-6"
-            style={{ color: "rgba(31,61,46,0.55)" }}
-          >
-            You do the work. The next station opens.
-          </p>
+          <ScrollReveal>
+            <p
+              className="font-mono text-[12px] uppercase tracking-[0.28em] mb-3"
+              style={{ color: "#b85a3e" }}
+            >
+              How it works
+            </p>
+            <h2
+              className="font-serif text-3xl tracking-tight mb-1"
+              style={{ color: "#f4ede0" }}
+            >
+              5 Phases. 20 Stations.
+            </h2>
+            <p
+              className="font-serif text-[16px] italic mb-6"
+              style={{ color: "rgba(244,237,224,0.45)" }}
+            >
+              You do the work. The next station opens.
+            </p>
 
-          {/* Mechanic tags */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            {MECHANIC_TAGS.map(({ glyph, text }) => (
-              <span
-                key={text}
-                className="inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.14em] px-3 py-1.5"
-                style={{
-                  color: "rgba(31,61,46,0.72)",
-                  borderBottom: "1.5px solid rgba(31,61,46,0.2)",
-                }}
-              >
-                <span style={{ color: "#b85a3e", fontSize: "11px" }}>{glyph}</span>
-                {text}
-              </span>
-            ))}
-          </div>
+            {/* Mechanic tags */}
+            <div className="flex flex-wrap gap-2 mb-8">
+              {MECHANIC_TAGS.map(({ glyph, text }) => (
+                <span
+                  key={text}
+                  className="inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.14em] px-3 py-1.5"
+                  style={{
+                    color: "rgba(244,237,224,0.58)",
+                    borderBottom: "1.5px solid rgba(244,237,224,0.14)",
+                  }}
+                >
+                  <span style={{ color: "#b85a3e", fontSize: "11px" }}>{glyph}</span>
+                  {text}
+                </span>
+              ))}
+            </div>
+          </ScrollReveal>
         </section>
 
       </div>{/* close max-w column */}
@@ -393,184 +450,200 @@ export function OdysseyPage() {
       </section>
 
       {/* ════════════════════════════════════ PHASE JOURNAL CARDS ══ */}
-      {/* Each phase rendered as a boreal field-journal entry card.    */}
       <section
-        className="w-full py-10 px-4 sm:px-8"
-        style={{ background: "#f4ede0" }}
+        className="w-full py-12 px-4 sm:px-8"
+        style={{ background: "#0F1C18" }}
         data-testid="odyssey-phase-cards"
       >
-        <div className="mx-auto max-w-[52rem] space-y-4">
+        <GrainOverlay opacity={0.025} />
+        <div className="mx-auto max-w-[52rem] space-y-4 relative z-10">
           {PHASES.map((p, i) => {
             const phaseColors = ["#b85a3e","#d4a017","#2e8b4e","#c97c2e","#4a8aab"];
             const accent = phaseColors[i] ?? "#b85a3e";
             const isActive = activePhase === i + 1;
             return (
-              <div
-                key={p.n}
-                ref={(el) => { phaseRefs.current[i] = el; }}
-                className="rounded-md overflow-hidden transition-all duration-300"
-                style={{
-                  background: isActive ? "#fffdf8" : "#f9f3e9",
-                  border: `1.5px solid ${isActive ? accent : "rgba(184,90,62,0.18)"}`,
-                  boxShadow: isActive
-                    ? `0 4px 20px rgba(0,0,0,0.10), 0 0 0 1px ${accent}22`
-                    : "0 2px 8px rgba(0,0,0,0.06)",
-                }}
-              >
-                {/* Card header — rust accent border-left */}
+              <ScrollReveal key={p.n} delay={i * 80}>
                 <div
-                  className="flex items-start gap-4 px-5 py-4"
-                  style={{ borderLeft: `4px solid ${accent}` }}
-                >
-                  <div
-                    className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center mt-0.5"
-                    style={{ background: `${accent}22`, border: `1.5px solid ${accent}55`, color: accent }}
-                  >
-                    <PhaseIcon n={p.n} className="w-5 h-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline justify-between gap-2 flex-wrap mb-1">
-                      <h3
-                        className="font-serif text-[18px] font-semibold tracking-tight"
-                        style={{ color: "#1f3d2e" }}
-                      >
-                        {p.label}
-                      </h3>
-                      <span
-                        className="font-mono text-[10px] uppercase tracking-[0.22em] shrink-0 px-2 py-0.5 rounded-sm"
-                        style={{ background: `${accent}18`, color: accent }}
-                      >
-                        Phase {p.n}
-                      </span>
-                    </div>
-                    {/* Trail condition — "rust italic" teaser */}
-                    <p
-                      className="font-serif text-[13px] italic mb-2"
-                      style={{ color: accent, opacity: 0.85 }}
-                    >
-                      {p.season}
-                    </p>
-                    <p
-                      className="font-serif text-[15px] leading-[1.65]"
-                      style={{ color: "rgba(31,61,46,0.78)" }}
-                    >
-                      {p.body}
-                    </p>
-                  </div>
-                </div>
-                {/* Pencil-line separator + station count */}
-                <div
-                  className="flex items-center justify-between px-5 py-2"
+                  ref={(el) => { phaseRefs.current[i] = el; }}
+                  className="rounded-lg overflow-hidden transition-all duration-300"
                   style={{
-                    borderTop: "1px dashed rgba(184,90,62,0.18)",
-                    background: "rgba(31,61,46,0.025)",
+                    background: isActive
+                      ? "rgba(20,38,28,0.95)"
+                      : "rgba(15,28,24,0.8)",
+                    border: `1.5px solid ${isActive ? accent : "rgba(244,237,224,0.08)"}`,
+                    boxShadow: isActive
+                      ? `0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px ${accent}28, 0 0 24px ${accent}10`
+                      : "0 3px 12px rgba(0,0,0,0.35)",
+                    backdropFilter: "blur(4px)",
                   }}
                 >
-                  <span
-                    className="font-mono text-[9px] uppercase tracking-[0.22em]"
-                    style={{ color: "rgba(31,61,46,0.32)" }}
+                  {/* Card header — accent left border */}
+                  <div
+                    className="flex items-start gap-4 px-5 py-5"
+                    style={{ borderLeft: `4px solid ${accent}` }}
                   >
-                    4 stations · earn each one
-                  </span>
-                  <a
-                    href="#start"
-                    className="font-mono text-[9px] uppercase tracking-[0.18em] transition-opacity hover:opacity-70"
-                    style={{ color: accent }}
+                    <div
+                      className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center mt-0.5"
+                      style={{
+                        background: `${accent}18`,
+                        border: `1.5px solid ${accent}45`,
+                        color: accent,
+                        boxShadow: isActive ? `0 0 16px ${accent}25` : "none",
+                      }}
+                    >
+                      <PhaseIcon n={p.n} className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-2 flex-wrap mb-2">
+                        <h3
+                          className="font-serif text-[19px] tracking-tight"
+                          style={{ color: "#f4ede0" }}
+                        >
+                          {p.label}
+                        </h3>
+                        <span
+                          className="font-mono text-[9px] uppercase tracking-[0.22em] shrink-0 px-2.5 py-1 rounded-sm"
+                          style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}35` }}
+                        >
+                          Phase {p.n}
+                        </span>
+                      </div>
+                      {/* Seasonal cue as pull-quote */}
+                      <p
+                        className="font-serif text-[13px] italic mb-3"
+                        style={{ color: accent, opacity: 0.9 }}
+                      >
+                        {p.season}
+                      </p>
+                      <p
+                        className="font-serif text-[15px] leading-[1.7]"
+                        style={{ color: "rgba(244,237,224,0.72)" }}
+                      >
+                        {p.body}
+                      </p>
+                    </div>
+                  </div>
+                  {/* Footer bar */}
+                  <div
+                    className="flex items-center justify-between px-5 py-2.5"
+                    style={{
+                      borderTop: `1px solid rgba(244,237,224,0.06)`,
+                      background: "rgba(0,0,0,0.2)",
+                    }}
                   >
-                    Begin now →
-                  </a>
-                  <button
-                    onClick={() => handlePhaseClick(i + 1)}
-                    className="font-mono text-[9px] uppercase tracking-[0.18em] transition-opacity hover:opacity-70"
-                    style={{ color: accent }}
-                  >
-                    {isActive ? "↑ on map" : "show on map ↑"}
-                  </button>
+                    <span
+                      className="font-mono text-[9px] uppercase tracking-[0.22em]"
+                      style={{ color: "rgba(244,237,224,0.25)" }}
+                    >
+                      4 stations · earn each one
+                    </span>
+                    <a
+                      href="#start"
+                      className="font-mono text-[9px] uppercase tracking-[0.18em] transition-opacity hover:opacity-70"
+                      style={{ color: accent }}
+                    >
+                      Begin now →
+                    </a>
+                    <button
+                      onClick={() => handlePhaseClick(i + 1)}
+                      className="font-mono text-[9px] uppercase tracking-[0.18em] transition-opacity hover:opacity-70"
+                      style={{ color: isActive ? accent : "rgba(244,237,224,0.25)" }}
+                    >
+                      {isActive ? "↑ on map" : "show on map ↑"}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </ScrollReveal>
             );
           })}
 
           {/* Station key note */}
-          <div
-            className="rounded-md px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-2"
-            style={{
-              background: "#f0e8d8",
-              border: "1.5px dashed rgba(184,90,62,0.32)",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            }}
-          >
-            <span
-              className="shrink-0 font-mono text-[10px] uppercase tracking-[0.24em] px-3 py-1.5 rounded-sm"
-              style={{ background: "#1f3d2e", color: "#f4ede0" }}
+          <ScrollReveal delay={400}>
+            <div
+              className="rounded-md px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-2"
+              style={{
+                background: "rgba(212,160,23,0.07)",
+                border: "1.5px dashed rgba(212,160,23,0.28)",
+              }}
             >
-              Each station
-            </span>
-            <p
-              className="font-serif text-[16px] leading-[1.5]"
-              style={{ color: "rgba(31,61,46,0.72)" }}
-            >
-              One piece of real work. One field note. One unlock. No skipping.
-            </p>
-          </div>
+              <span
+                className="shrink-0 font-mono text-[10px] uppercase tracking-[0.24em] px-3 py-1.5 rounded-sm"
+                style={{ background: "#d4a017", color: "#0F1C18" }}
+              >
+                Each station
+              </span>
+              <p
+                className="font-serif text-[16px] leading-[1.5]"
+                style={{ color: "rgba(244,237,224,0.72)" }}
+              >
+                One piece of real work. One field note. One unlock. No skipping.
+              </p>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      <div className="mx-auto max-w-[52rem] px-6 sm:px-8">
+      <div
+        className="mx-auto max-w-[52rem] px-6 sm:px-8"
+        style={{ background: "#0F1C18" }}
+      >
 
         {/* Trail divider */}
-        <div className="od-trail-rule">
+        <div className="od-trail-rule" style={{ color: "rgba(244,237,224,0.2)" }}>
           <span>Start here</span>
         </div>
 
         {/* ═══════════════════════════════════════ INTAKE / CONFIRM ══ */}
         <section id="start" data-testid="odyssey-intake">
-          <p
-            className="font-mono text-[12px] uppercase tracking-[0.28em] mb-3"
-            style={{ color: "#b85a3e" }}
-          >
-            Begin the journey
-          </p>
-          <h2
-            className="font-serif text-3xl tracking-tight mb-1"
-            style={{ color: "#1f3d2e" }}
-          >
-            Three short questions.
-          </h2>
-          <p
-            className="font-serif text-[16px] italic mb-8"
-            style={{ color: "rgba(31,61,46,0.55)" }}
-          >
-            So the journey begins in your real context, not a hypothetical one.
-          </p>
+          <ScrollReveal>
+            <p
+              className="font-mono text-[12px] uppercase tracking-[0.28em] mb-3"
+              style={{ color: "#b85a3e" }}
+            >
+              Begin the journey
+            </p>
+            <h2
+              className="font-serif text-3xl tracking-tight mb-1"
+              style={{ color: "#f4ede0" }}
+            >
+              Three short questions.
+            </h2>
+            <p
+              className="font-serif text-[16px] italic mb-8"
+              style={{ color: "rgba(244,237,224,0.45)" }}
+            >
+              So the journey begins in your real context, not a hypothetical one.
+            </p>
+          </ScrollReveal>
 
           {confirmedName ? (
 
-            /* ── Confirmation — firelight glow ── */
+            /* ── Confirmation — cinematic dark + firelight glow ── */
             <div
-              className="od-firelight rounded-md px-6 py-10 text-center"
+              className="rounded-xl px-6 py-10 text-center"
               style={{
+                background: "rgba(20,38,28,0.9)",
                 border: "1px solid rgba(212,160,23,0.3)",
-                boxShadow: "0 4px 24px rgba(212,160,23,0.12)",
+                boxShadow: "0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,160,23,0.08), 0 0 60px rgba(212,160,23,0.08) inset",
               }}
               data-testid="odyssey-confirmed"
             >
               <HempcreteCheckmark />
               <p
                 className="font-serif text-2xl mb-3"
-                style={{ color: "#1f3d2e" }}
+                style={{ color: "#f4ede0" }}
               >
                 Welcome to the trail, {confirmedName}.
               </p>
               <p
                 className="font-serif text-[16px] leading-[1.6] mb-2"
-                style={{ color: "rgba(31,61,46,0.72)" }}
+                style={{ color: "rgba(244,237,224,0.72)" }}
               >
                 Station 1 is now unlocked for you in the app.
               </p>
               <p
                 className="font-serif text-[15px] italic mb-8"
-                style={{ color: "rgba(31,61,46,0.52)" }}
+                style={{ color: "rgba(244,237,224,0.45)" }}
               >
                 Phase 01 · The Saltbox — find the substrate you're standing on.
               </p>
@@ -585,42 +658,29 @@ export function OdysseyPage() {
               </a>
               <p
                 className="mt-5 font-mono text-[11px] uppercase tracking-[0.18em]"
-                style={{ color: "rgba(31,61,46,0.38)" }}
+                style={{ color: "rgba(244,237,224,0.25)" }}
               >
                 Headwaters Odyssey · sealed with hempcrete
               </p>
 
               {/* ── What's next — Guild cohort ── */}
               <div
-                className="mt-10 rounded-md px-6 py-6 text-left"
+                className="mt-10 rounded-xl px-6 py-6 text-left cin-card"
                 style={{
                   border: "1px solid rgba(184,90,62,0.28)",
-                  background: "rgba(244,237,224,0.6)",
                 }}
                 data-testid="odyssey-whats-next"
               >
-                <p
-                  className="font-mono text-[10px] uppercase tracking-[0.26em] mb-3"
-                  style={{ color: "#b85a3e" }}
-                >
+                <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-3" style={{ color: "#b85a3e" }}>
                   What's next
                 </p>
-                <h3
-                  className="font-serif text-xl tracking-tight mb-2"
-                  style={{ color: "#1f3d2e" }}
-                >
+                <h3 className="font-serif text-xl tracking-tight mb-2" style={{ color: "#f4ede0" }}>
                   The Guild cohort + Signal group
                 </h3>
-                <p
-                  className="font-serif text-[15px] leading-[1.65] mb-4"
-                  style={{ color: "rgba(31,61,46,0.70)" }}
-                >
+                <p className="font-serif text-[15px] leading-[1.65] mb-4" style={{ color: "rgba(244,237,224,0.60)" }}>
                   After completing the free Odyssey, the next paid step is the Guild cohort — a small group of practitioners building alongside each other. Includes the private Signal group, cohort calls with Bobbie, and direct feedback on your community work.
                 </p>
-                <p
-                  className="font-mono text-[14px] font-semibold mb-4"
-                  style={{ color: "#1f3d2e" }}
-                >
+                <p className="font-mono text-[14px] font-semibold mb-4" style={{ color: "#f4ede0" }}>
                   $1,200 – $1,500 / person
                 </p>
                 <a
@@ -635,35 +695,23 @@ export function OdysseyPage() {
 
               {/* ── Commission the tools ── */}
               <div
-                className="mt-4 rounded-md px-6 py-6 text-left"
-                style={{
-                  border: "1px solid rgba(31,61,46,0.18)",
-                  background: "rgba(31,61,46,0.05)",
-                }}
+                className="mt-4 rounded-xl px-6 py-6 text-left cin-card"
+                style={{ border: "1px solid rgba(244,237,224,0.08)" }}
                 data-testid="odyssey-codetry-cta"
               >
-                <p
-                  className="font-mono text-[10px] uppercase tracking-[0.26em] mb-3"
-                  style={{ color: "rgba(31,61,46,0.5)" }}
-                >
+                <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-3" style={{ color: "rgba(212,160,23,0.55)" }}>
                   Commission the tools
                 </p>
-                <h3
-                  className="font-serif text-xl tracking-tight mb-2"
-                  style={{ color: "#1f3d2e" }}
-                >
+                <h3 className="font-serif text-xl tracking-tight mb-2" style={{ color: "#f4ede0" }}>
                   Now build what your community needs
                 </h3>
-                <p
-                  className="font-serif text-[15px] leading-[1.65] mb-4"
-                  style={{ color: "rgba(31,61,46,0.70)" }}
-                >
+                <p className="font-serif text-[15px] leading-[1.65] mb-4" style={{ color: "rgba(244,237,224,0.60)" }}>
                   Practitioners who complete the Odyssey know exactly what is missing in their community. Codetry is how you get it built — a store, a local directory, custom tooling — and handed off so the community runs it without a consultant in the room.
                 </p>
                 <a
                   href="/codetry"
                   className="inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
-                  style={{ color: "#1f3d2e" }}
+                  style={{ color: "rgba(244,237,224,0.45)" }}
                   data-testid="odyssey-codetry-link"
                 >
                   What is Codetry? →
@@ -673,10 +721,9 @@ export function OdysseyPage() {
 
           ) : (
 
-            /* ── Intake form — field journal aesthetic ── */
+            /* ── Intake form — cinematic dark ── */
             <div
-              className="od-card rounded-md overflow-hidden"
-              style={{ background: "#f4ede0" }}
+              className="cin-card rounded-xl overflow-hidden"
               data-testid="odyssey-form"
             >
               {/* Journal page header bar */}
@@ -787,15 +834,14 @@ export function OdysseyPage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[13px] uppercase tracking-[0.18em] transition-all hover:opacity-90 disabled:opacity-50"
-                    style={{ background: "#b85a3e", color: "#f4ede0" }}
+                    className="btn-plaque disabled:opacity-50"
                     data-testid="odyssey-submit"
                   >
                     {submitting ? "Sending…" : "Begin the Odyssey →"}
                   </button>
                   <p
                     className="font-mono text-[12px] uppercase tracking-[0.14em]"
-                    style={{ color: "rgba(31,61,46,0.4)" }}
+                    style={{ color: "rgba(244,237,224,0.28)" }}
                   >
                     Free · No account required · No spam
                   </p>
@@ -807,48 +853,38 @@ export function OdysseyPage() {
         </section>
 
         {/* ═══════════════════════════════════ SUBMIT YOUR ART ══ */}
-        <div className="od-trail-rule mt-4">
+        <div className="od-trail-rule mt-4" style={{ color: "rgba(244,237,224,0.2)" }}>
           <span>Leave your mark</span>
         </div>
 
         <section id="submit-art" className="pb-6" data-testid="odyssey-submit-art">
-          <div
-            className="od-card rounded-md px-6 py-7"
-            style={{ background: "#f4ede0" }}
-          >
-            <div className="flex items-start gap-4 flex-wrap sm:flex-nowrap">
-              <span style={{ fontSize: "22px", lineHeight: 1, marginTop: "2px", flexShrink: 0 }}>🌿</span>
-              <div>
-                <p
-                  className="font-serif text-[17px] font-medium mb-2 tracking-tight"
-                  style={{ color: "#1f3d2e" }}
-                >
-                  Are you an artist from a community this trail passes through?
-                </p>
-                <p
-                  className="font-serif text-[16px] leading-[1.65] mb-4"
-                  style={{ color: "rgba(31,61,46,0.68)" }}
-                >
-                  If this landscape is yours — if you've lived at the headwaters — we want your work here.
-                  Any medium. Any format. The only rule: it has to be yours and it has to be real.
-                  When it's here, people on the trail can tip you directly using community tokens.
-                </p>
-                <a
-                  href="mailto:bobbie@ourheadwaters.ca?subject=Trail%20Art%20Submission"
-                  className="inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
-                  style={{ color: "#b85a3e" }}
-                >
-                  Submit your work → bobbie@ourheadwaters.ca
-                </a>
-                <p
-                  className="font-mono text-[11px] uppercase tracking-[0.14em] mt-3 leading-[1.7]"
-                  style={{ color: "rgba(31,61,46,0.38)" }}
-                >
-                  Include: your name · your community · a title if you have one · your XRPL address for tips (optional)
-                </p>
+          <ScrollReveal>
+            <div className="cin-card rounded-xl px-6 py-7">
+              <div className="flex items-start gap-4 flex-wrap sm:flex-nowrap">
+                <span style={{ fontSize: "22px", lineHeight: 1, marginTop: "2px", flexShrink: 0 }}>🌿</span>
+                <div>
+                  <p className="font-serif text-[17px] mb-2 tracking-tight" style={{ color: "#f4ede0" }}>
+                    Are you an artist from a community this trail passes through?
+                  </p>
+                  <p className="font-serif text-[16px] leading-[1.65] mb-4" style={{ color: "rgba(244,237,224,0.60)" }}>
+                    If this landscape is yours — if you've lived at the headwaters — we want your work here.
+                    Any medium. Any format. The only rule: it has to be yours and it has to be real.
+                    When it's here, people on the trail can tip you directly using community tokens.
+                  </p>
+                  <a
+                    href="mailto:bobbie@ourheadwaters.ca?subject=Trail%20Art%20Submission"
+                    className="inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
+                    style={{ color: "#b85a3e" }}
+                  >
+                    Submit your work → bobbie@ourheadwaters.ca
+                  </a>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] mt-3 leading-[1.7]" style={{ color: "rgba(244,237,224,0.28)" }}>
+                    Include: your name · your community · a title if you have one · your XRPL address for tips (optional)
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </section>
 
         <div className="pb-24" />
@@ -871,14 +907,11 @@ function JournalField({
   return (
     <label className="flex flex-col gap-2">
       <span
-        className="font-mono text-[12px] uppercase tracking-[0.18em] od-pencil"
-        style={{
-          color: "rgba(31,61,46,0.65)",
-          textDecorationColor: "rgba(184,90,62,0.25)",
-        }}
+        className="font-mono text-[11px] uppercase tracking-[0.20em]"
+        style={{ color: "rgba(244,237,224,0.50)" }}
       >
         {label}
-        {required && <span aria-hidden style={{ color: "#b85a3e" }}> *</span>}
+        {required && <span aria-hidden style={{ color: "#d4a017" }}> *</span>}
       </span>
       {children}
     </label>

@@ -43,6 +43,7 @@ export function SiteNav() {
   const [toolsOpen, setToolsOpen] = useState(false);
   const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
   const [authed, setAuthed] = useState(() => Boolean(getStoredOwnerToken()));
+  const [scrolled, setScrolled] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const toolsDropdownRef = useRef<HTMLDivElement>(null);
@@ -59,6 +60,14 @@ export function SiteNav() {
       window.removeEventListener("storage", syncAuth);
       window.removeEventListener("headwaters:auth-change", syncAuth);
     };
+  }, []);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 8);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const onDarkHero = location === "/";
@@ -148,24 +157,39 @@ export function SiteNav() {
 
   const dark = onDarkHero;
 
+  const navBg = dark
+    ? scrolled
+      ? "rgba(10,20,15,0.96)"
+      : "rgba(10,20,15,0.82)"
+    : "hsl(var(--background))";
+
+  const navBorder = dark
+    ? scrolled
+      ? "rgba(212,160,23,0.18)"
+      : "rgba(255,255,255,0.06)"
+    : "hsl(var(--card-border))";
+
   return (
     <>
       <nav
         className="sticky top-0 z-30 w-full border-b"
         style={{
-          background: dark
-            ? "hsl(145 36% 16%)"
-            : "hsl(var(--background))",
-          borderColor: dark
-            ? "rgba(255,255,255,0.08)"
-            : "hsl(var(--card-border))",
-          transition: "background 0.2s, border-color 0.2s",
+          background: navBg,
+          borderColor: navBorder,
+          backdropFilter: dark ? "blur(12px)" : undefined,
+          WebkitBackdropFilter: dark ? "blur(12px)" : undefined,
+          transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+          boxShadow: scrolled
+            ? dark
+              ? "0 2px 20px rgba(0,0,0,0.5)"
+              : "0 2px 12px rgba(10,22,14,0.08)"
+            : "none",
         }}
         aria-label="Site navigation"
       >
         <div className="mx-auto max-w-[64rem] px-5 sm:px-8 flex items-center justify-between h-12">
 
-          {/* ── wordmark ── */}
+          {/* ── wordmark / trail marker ── */}
           <div className="flex items-center gap-3 shrink-0">
             <a
               href={`${base}/`}
@@ -177,12 +201,19 @@ export function SiteNav() {
                 aria-hidden="true"
                 src={`${import.meta.env.BASE_URL}eagle-mark.svg`}
                 alt=""
-                className="opacity-90 group-hover:opacity-100 transition-opacity shrink-0"
-                style={{ width: 36, height: 30, objectFit: "contain" }}
+                className="opacity-85 group-hover:opacity-100 transition-all duration-200 shrink-0"
+                style={{
+                  width: 36, height: 30, objectFit: "contain",
+                  filter: dark ? "brightness(1.1)" : "none",
+                }}
               />
               <span
-                className="font-mono text-[10px] uppercase tracking-[0.22em] hidden sm:inline"
-                style={{ color: dark ? "hsl(38 36% 86%)" : "hsl(var(--foreground))", opacity: 0.8 }}
+                className="font-serif text-[13px] hidden sm:inline tracking-wide"
+                style={{
+                  color: dark ? "rgba(244,237,224,0.88)" : "hsl(var(--foreground))",
+                  fontStyle: "italic",
+                  letterSpacing: "0.02em",
+                }}
               >
                 Headwaters
               </span>
@@ -192,22 +223,19 @@ export function SiteNav() {
             </div>
           </div>
 
-          {/* ── desktop links ── */}
-          <div className="hidden sm:flex items-center gap-1">
+          {/* ── desktop trail-marker links ── */}
+          <div className="hidden sm:flex items-center gap-0.5">
             {NAV_LINKS.map(({ href, label }) => {
               const active = isActive(href, location);
               return (
                 <a
                   key={href}
                   href={`${base}${href}`}
-                  className="px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-colors"
+                  className="trail-nav-link"
                   style={{
                     color: dark
-                      ? active ? "hsl(38 36% 94%)" : "rgba(235,225,210,0.60)"
+                      ? active ? "#d4a017" : "rgba(244,237,224,0.58)"
                       : active ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
-                    background: active
-                      ? dark ? "rgba(255,255,255,0.08)" : "hsl(var(--muted))"
-                      : "transparent",
                   }}
                   aria-current={active ? "page" : undefined}
                   data-testid={`nav-link-${label.toLowerCase().replace(/\s+/g, "-")}`}
@@ -217,20 +245,20 @@ export function SiteNav() {
               );
             })}
 
-            {/* ── Tools dropdown ── */}
+            {/* ── Tools dropdown — textured panel ── */}
             <div className="relative">
               <button
                 ref={toolsBtnRef}
                 type="button"
                 onClick={() => setToolsOpen((o) => !o)}
-                className="flex items-center gap-1 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-colors"
+                className="trail-nav-link flex items-center gap-1"
                 style={{
                   color: dark
-                    ? toolsOpen ? "hsl(38 36% 94%)" : "rgba(235,225,210,0.60)"
+                    ? toolsOpen ? "#d4a017" : "rgba(244,237,224,0.58)"
                     : toolsOpen ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
-                  background: toolsOpen
-                    ? dark ? "rgba(255,255,255,0.08)" : "hsl(var(--muted))"
-                    : "transparent",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
                 }}
                 aria-haspopup="menu"
                 aria-expanded={toolsOpen}
@@ -239,11 +267,7 @@ export function SiteNav() {
               >
                 Tools
                 <svg
-                  width="9"
-                  height="9"
-                  viewBox="0 0 9 9"
-                  fill="none"
-                  aria-hidden="true"
+                  width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true"
                   style={{
                     transform: toolsOpen ? "rotate(180deg)" : "none",
                     transition: "transform 0.15s",
@@ -258,28 +282,52 @@ export function SiteNav() {
                 <div
                   id="tools-menu"
                   ref={toolsDropdownRef}
-                  className="absolute right-0 top-full mt-1 rounded-md border shadow-lg py-1 z-50"
+                  className="absolute right-0 top-full mt-2 rounded-md border shadow-xl py-1.5 z-50"
                   style={{
-                    background: "hsl(var(--background))",
-                    borderColor: "hsl(var(--card-border))",
-                    minWidth: "220px",
+                    background: dark ? "rgba(10,20,15,0.97)" : "hsl(var(--background))",
+                    borderColor: dark ? "rgba(212,160,23,0.22)" : "hsl(var(--card-border))",
+                    minWidth: "230px",
+                    backdropFilter: "blur(16px)",
+                    boxShadow: dark
+                      ? "0 12px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(212,160,23,0.08)"
+                      : "0 8px 24px rgba(10,22,14,0.12)",
                   }}
                   role="menu"
                   aria-label={`Tools menu, ${TOOLS.length} items`}
                   onKeyDown={handleToolsMenuKeyDown}
                   data-testid="nav-tools-dropdown"
                 >
+                  <p
+                    className="px-4 pt-1 pb-2 font-mono text-[8px] uppercase tracking-[0.22em]"
+                    style={{ color: dark ? "rgba(212,160,23,0.55)" : "hsl(var(--muted-foreground))", opacity: 0.8 }}
+                  >
+                    Knowledge Lodge
+                  </p>
                   {TOOLS.map(({ icon, name, href, comingSoon }, i) => (
                     <a
                       key={name}
                       ref={(el) => { toolItemRefs.current[i] = el; }}
                       href={comingSoon ? undefined : href}
-                      className={`flex items-center gap-2.5 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${comingSoon ? "cursor-default opacity-50" : "hover:bg-muted"}`}
-                      style={{ color: "hsl(var(--foreground))" }}
+                      className={`flex items-center gap-3 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all ${comingSoon ? "cursor-default opacity-40" : ""}`}
+                      style={{
+                        color: dark ? "rgba(244,237,224,0.82)" : "hsl(var(--foreground))",
+                        borderLeft: "2px solid transparent",
+                      }}
                       role="menuitem"
                       aria-disabled={comingSoon ? true : undefined}
                       tabIndex={-1}
                       onClick={comingSoon ? (e) => e.preventDefault() : undefined}
+                      onMouseEnter={(e) => {
+                        if (!comingSoon) {
+                          (e.currentTarget as HTMLElement).style.borderLeftColor = "#d4a017";
+                          (e.currentTarget as HTMLElement).style.color = dark ? "#f4ede0" : "hsl(var(--foreground))";
+                          (e.currentTarget as HTMLElement).style.background = dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.borderLeftColor = "transparent";
+                        (e.currentTarget as HTMLElement).style.background = "transparent";
+                      }}
                       data-testid={`nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                     >
                       <span className="text-base leading-none shrink-0">{icon}</span>
@@ -301,14 +349,11 @@ export function SiteNav() {
             {authed && (
               <a
                 href={`${base}/workbench`}
-                className="px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-colors"
+                className="trail-nav-link"
                 style={{
                   color: isActive("/workbench", location)
-                    ? dark ? "hsl(38 36% 94%)" : "hsl(var(--foreground))"
-                    : dark ? "rgba(235,225,210,0.60)" : "hsl(var(--muted-foreground))",
-                  background: isActive("/workbench", location)
-                    ? dark ? "rgba(255,255,255,0.08)" : "hsl(var(--muted))"
-                    : "transparent",
+                    ? dark ? "#d4a017" : "hsl(var(--foreground))"
+                    : dark ? "rgba(244,237,224,0.58)" : "hsl(var(--muted-foreground))",
                 }}
                 aria-current={isActive("/workbench", location) ? "page" : undefined}
                 data-testid="nav-link-workbench"
@@ -320,11 +365,7 @@ export function SiteNav() {
               <button
                 type="button"
                 onClick={() => setStoredOwnerToken(null)}
-                className="ml-3 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
-                style={{
-                  color: dark ? "rgba(235,225,210,0.60)" : "hsl(var(--muted-foreground))",
-                  border: `1px solid ${dark ? "rgba(255,255,255,0.15)" : "hsl(var(--card-border))"}`,
-                }}
+                className="ml-2 btn-plaque text-[9px] py-1.5 px-3"
                 data-testid="nav-sign-out"
               >
                 Sign out
@@ -336,8 +377,8 @@ export function SiteNav() {
           <button
             ref={toggleRef}
             type="button"
-            className="sm:hidden flex flex-col justify-center items-center w-9 h-9 gap-[5px] rounded-sm focus:outline-none focus-visible:ring-2"
-            style={{ color: dark ? "hsl(38 36% 86%)" : "hsl(var(--foreground))" }}
+            className="sm:hidden flex flex-col justify-center items-center w-9 h-9 gap-[5px] rounded-sm focus-visible:ring-2 focus-visible:ring-amber-400"
+            style={{ color: dark ? "rgba(244,237,224,0.88)" : "hsl(var(--foreground))" }}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-nav-drawer"
@@ -375,10 +416,11 @@ export function SiteNav() {
         ref={drawerRef}
         className="sm:hidden fixed top-12 left-0 right-0 z-20 border-b"
         style={{
-          background: "hsl(var(--background))",
-          borderColor: "hsl(var(--card-border))",
+          background: dark ? "rgba(10,20,15,0.97)" : "hsl(var(--background))",
+          borderColor: dark ? "rgba(212,160,23,0.18)" : "hsl(var(--card-border))",
+          backdropFilter: "blur(16px)",
           transform: open ? "translateY(0)" : "translateY(-110%)",
-          transition: "transform 0.18s ease",
+          transition: "transform 0.22s ease",
           pointerEvents: open ? "auto" : "none",
         }}
         aria-hidden={!open}
@@ -391,10 +433,13 @@ export function SiteNav() {
               <a
                 key={href}
                 href={`${base}${href}`}
-                className="px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] transition-colors"
+                className="px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] transition-colors border-l-2"
                 style={{
-                  color: active ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
-                  background: active ? "hsl(var(--muted))" : "transparent",
+                  color: active
+                    ? dark ? "#d4a017" : "hsl(var(--foreground))"
+                    : dark ? "rgba(244,237,224,0.65)" : "hsl(var(--muted-foreground))",
+                  borderLeftColor: active ? "#d4a017" : "transparent",
+                  background: active ? "rgba(212,160,23,0.06)" : "transparent",
                 }}
                 aria-current={active ? "page" : undefined}
                 data-testid={`mobile-nav-link-${label.toLowerCase().replace(/\s+/g, "-")}`}
@@ -407,25 +452,21 @@ export function SiteNav() {
           {/* ── Tools section in mobile drawer ── */}
           <div
             className="mt-1 rounded-sm border overflow-hidden"
-            style={{ borderColor: "hsl(var(--card-border))" }}
+            style={{ borderColor: dark ? "rgba(212,160,23,0.18)" : "hsl(var(--card-border))" }}
           >
             <button
               type="button"
               onClick={() => setMobileToolsOpen((o) => !o)}
               className="w-full flex items-center justify-between px-4 py-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors"
-              style={{ color: "hsl(var(--muted-foreground))" }}
+              style={{ color: dark ? "rgba(244,237,224,0.65)" : "hsl(var(--muted-foreground))" }}
               aria-haspopup="menu"
               aria-expanded={mobileToolsOpen}
               aria-controls="mobile-tools-menu"
               data-testid="mobile-nav-tools-toggle"
             >
-              Tools
+              Tools — Knowledge Lodge
               <svg
-                width="9"
-                height="9"
-                viewBox="0 0 9 9"
-                fill="none"
-                aria-hidden="true"
+                width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true"
                 style={{
                   transform: mobileToolsOpen ? "rotate(180deg)" : "none",
                   transition: "transform 0.15s",
@@ -441,14 +482,17 @@ export function SiteNav() {
                 role="menu"
                 aria-label={`Tools menu, ${TOOLS.length} items`}
                 className="border-t"
-                style={{ borderColor: "hsl(var(--card-border))" }}
+                style={{ borderColor: dark ? "rgba(212,160,23,0.12)" : "hsl(var(--card-border))" }}
               >
                 {TOOLS.map(({ icon, name, href, comingSoon }) => (
                   <a
                     key={name}
                     href={comingSoon ? undefined : href}
-                    className={`flex items-center gap-2.5 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${comingSoon ? "cursor-default opacity-50" : "hover:bg-muted"}`}
-                    style={{ color: "hsl(var(--foreground))" }}
+                    className={`flex items-center gap-3 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors border-l-2 ${comingSoon ? "cursor-default opacity-40" : ""}`}
+                    style={{
+                      color: dark ? "rgba(244,237,224,0.75)" : "hsl(var(--foreground))",
+                      borderLeftColor: "transparent",
+                    }}
                     role="menuitem"
                     aria-disabled={comingSoon ? true : undefined}
                     onClick={comingSoon ? (e) => e.preventDefault() : undefined}
@@ -473,10 +517,12 @@ export function SiteNav() {
           {authed && (
             <a
               href={`${base}/workbench`}
-              className="px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] transition-colors"
+              className="px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] transition-colors border-l-2"
               style={{
-                color: isActive("/workbench", location) ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
-                background: isActive("/workbench", location) ? "hsl(var(--muted))" : "transparent",
+                color: isActive("/workbench", location)
+                  ? dark ? "#d4a017" : "hsl(var(--foreground))"
+                  : dark ? "rgba(244,237,224,0.65)" : "hsl(var(--muted-foreground))",
+                borderLeftColor: isActive("/workbench", location) ? "#d4a017" : "transparent",
               }}
               aria-current={isActive("/workbench", location) ? "page" : undefined}
               data-testid="mobile-nav-link-workbench"
@@ -488,40 +534,14 @@ export function SiteNav() {
             <button
               type="button"
               onClick={() => setStoredOwnerToken(null)}
-              className="mt-2 px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] text-left transition-opacity hover:opacity-80"
-              style={{
-                color: "hsl(var(--muted-foreground))",
-                border: "1px solid hsl(var(--card-border))",
-              }}
+              className="mt-2 btn-plaque w-full justify-center"
               data-testid="mobile-nav-sign-out"
             >
               Sign out
             </button>
           ) : null}
-          <div
-            className="mt-3 pt-3 border-t flex flex-col items-center gap-2"
-            style={{ borderColor: "hsl(var(--card-border))" }}
-          >
-            <NeighbourhoodBadge zoneId={5} />
-            <p
-              className="font-mono text-[9px] uppercase tracking-[0.22em] text-center"
-              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.6 }}
-            >
-              headwaters · dryden, ontario
-            </p>
-          </div>
         </div>
       </div>
-
-      {/* drawer backdrop */}
-      {open && (
-        <div
-          className="sm:hidden fixed inset-0 z-10"
-          style={{ background: "rgba(0,0,0,0.15)" }}
-          aria-hidden="true"
-          onClick={() => setOpen(false)}
-        />
-      )}
     </>
   );
 }

@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { ApiError, postIntake } from "@/lib/api";
 import testimonials from "@/data/testimonials";
 import { TrailSignPost } from "@/components/TrailSignPost";
+import { AmbientBackground, GrainOverlay, ScrollReveal } from "@/components/AmbientBackground";
 
 interface IntakeFormState {
   name: string;
@@ -54,136 +55,141 @@ export function HomePage() {
   };
 
   return (
-    <main className="home-page min-h-screen w-full bg-background text-foreground">
+    <main className="home-page min-h-screen w-full" style={{ background: "#0F1C18" }}>
 
       {/* ── hero ── */}
       <section
         className="relative overflow-hidden"
-        style={{ background: "#1f3d2e", color: "#f4ede0" }}
+        style={{ minHeight: "88vh", background: "#0F1C18" }}
         data-testid="home-header"
       >
-        {/* Hempcrete texture overlay — boreal field journal aesthetic */}
+        {/* Aurora ambient */}
+        <AmbientBackground variant="aurora" />
+        {/* Grain */}
+        <GrainOverlay opacity={0.035} />
+        {/* Topographic contour lines */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.06 }} />
+        {/* Radial gradient fade to dark at bottom */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
-            backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hempcrete-texture.jpg")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            opacity: 0.10,
-            mixBlendMode: "multiply",
+            background: "linear-gradient(to bottom, rgba(10,20,14,0.2) 0%, rgba(10,20,14,0.0) 50%, rgba(10,20,14,0.9) 100%)",
           }}
         />
-        {/* Topographic contour lines */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.10 }} />
         {/* Edge vignette */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
-            background: "radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(10,22,14,0.45) 100%)",
+            background: "radial-gradient(ellipse 120% 80% at 50% 50%, transparent 45%, rgba(8,16,12,0.45) 100%)",
           }}
         />
 
-        <div className="relative z-10 mx-auto max-w-[38rem] px-6 sm:px-8 pt-14 pb-16 text-center">
+        <div className="relative z-10 mx-auto max-w-[42rem] px-6 sm:px-8 pt-20 pb-20 text-center flex flex-col items-center justify-center" style={{ minHeight: "88vh" }}>
 
-          {/* Eagle mark — centered */}
-          <div className="flex justify-center mb-7" data-testid="home-eyebrow">
+          {/* Eagle mark — centred, luminous */}
+          <div className="flex justify-center mb-8" data-testid="home-eyebrow">
             <img
               src={`${import.meta.env.BASE_URL}eagle-mark.svg`}
               alt="Headwaters — Northwestern Ontario"
-              style={{ height: 68, width: "auto", objectFit: "contain", filter: "brightness(1.08)" }}
+              style={{
+                height: 72, width: "auto", objectFit: "contain",
+                filter: "brightness(1.15) drop-shadow(0 0 18px rgba(212,160,23,0.25))",
+              }}
             />
           </div>
 
-          {/* Name + role hierarchy */}
+          {/* Byline */}
           <p
             className="font-serif mb-0.5 leading-tight"
             data-testid="home-practitioner-byline"
           >
             <a
               href={`${import.meta.env.BASE_URL}bio`}
-              className="hover:opacity-80 transition-opacity"
+              className="hover:opacity-85 transition-opacity"
               style={{ color: "#f4ede0" }}
             >
               <span
-                className="block font-serif font-semibold tracking-tight"
-                style={{ fontSize: "clamp(1.5rem, 5vw, 2rem)", color: "#f4ede0" }}
+                className="block font-serif tracking-tight"
+                style={{ fontSize: "clamp(1.5rem, 5vw, 2rem)", color: "#f4ede0", fontStyle: "italic" }}
               >
                 Bobbie Parr
               </span>
               <span
-                className="block font-serif font-medium"
-                style={{ fontSize: "clamp(1.1rem, 3.5vw, 1.4rem)", color: "#b85a3e", lineHeight: 1.2 }}
+                className="block font-serif"
+                style={{ fontSize: "clamp(1rem, 3vw, 1.25rem)", color: "#d4a017", lineHeight: 1.3 }}
               >
                 Headwaters Practitioner
               </span>
               <span
-                className="block font-mono text-[11px] uppercase tracking-[0.22em] mt-1"
-                style={{ color: "rgba(244,237,224,0.55)" }}
+                className="block font-mono text-[10px] uppercase tracking-[0.28em] mt-1"
+                style={{ color: "rgba(244,237,224,0.40)" }}
               >
                 Northwestern Ontario
               </span>
             </a>
           </p>
 
-          {/* Mantra — the three lines */}
+          {/* Mantra — the three lines, large cinematic serif */}
           <h1
-            className="font-serif text-[1.6rem] xs:text-3xl sm:text-5xl leading-[1.18] tracking-tight mt-7 mb-8"
+            className="font-serif leading-[1.12] tracking-tight mt-8 mb-9"
+            style={{
+              fontSize: "clamp(2rem, 7vw, 3.6rem)",
+              color: "#f4ede0",
+              textShadow: "0 2px 24px rgba(0,0,0,0.7)",
+            }}
             data-testid="home-title"
           >
             Build it.<br />
             Hand it off.<br />
-            <span style={{ color: "#b85a3e" }}>Community Runs It.</span>
+            <span style={{ color: "#d4a017", fontStyle: "italic" }}>Community Runs It.</span>
           </h1>
 
-          {/* Service description box */}
+          {/* Service description — glassmorphic dark panel */}
           <div
-            className="rounded-md mx-auto mb-8 px-5 py-5 text-left"
+            className="rounded-md mx-auto mb-10 px-6 py-5 text-left w-full"
             style={{
-              background: "rgba(244,237,224,0.07)",
-              border: "1px solid rgba(184,90,62,0.55)",
-              maxWidth: 480,
-              boxShadow: "0 2px 16px rgba(0,0,0,0.2)",
+              background: "rgba(15,28,24,0.72)",
+              border: "1px solid rgba(212,160,23,0.22)",
+              maxWidth: 500,
+              boxShadow: "0 4px 24px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(244,237,224,0.04)",
+              backdropFilter: "blur(8px)",
             }}
           >
             <p
-              className="font-serif leading-[1.5] mb-3"
-              style={{ fontSize: "clamp(0.95rem, 2.8vw, 1.05rem)", color: "#f4ede0" }}
+              className="font-serif leading-[1.6] mb-3"
+              style={{ fontSize: "clamp(0.95rem, 2.6vw, 1.05rem)", color: "rgba(244,237,224,0.88)" }}
               data-testid="home-tagline"
             >
               For communities that want to own what they build — resilient food systems and community-run economies, handed off without lock-in.
             </p>
             <p
-              className="font-mono text-[10.5px] uppercase tracking-[0.18em]"
-              style={{ color: "#d4a017" }}
+              className="font-mono text-[10px] uppercase tracking-[0.2em]"
+              style={{ color: "rgba(212,160,23,0.8)" }}
               data-testid="home-name-hierarchy"
             >
-              Practitioner-built · Flat fee<br />No retainer required
+              Practitioner-built · Flat fee · No retainer
             </p>
           </div>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
             <a
               href="#conversation"
-              className="inline-flex items-center justify-center gap-2 rounded-sm px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
-              style={{
-                background: "rgba(244,237,224,0.10)",
-                border: "1px solid rgba(244,237,224,0.28)",
-                color: "#f4ede0",
-              }}
+              className="btn-plaque"
+              style={{ fontSize: "0.625rem", letterSpacing: "0.2em" }}
               data-testid="hero-cta-primary"
             >
               Start a conversation →
             </a>
             <a
               href={`${import.meta.env.BASE_URL}services`}
-              className="inline-flex items-center justify-center gap-2 rounded-sm px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              className="inline-flex items-center justify-center gap-2 rounded-sm px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-all hover:border-white/40"
               style={{
                 background: "transparent",
-                border: "1px solid rgba(244,237,224,0.22)",
-                color: "rgba(244,237,224,0.72)",
+                border: "1px solid rgba(244,237,224,0.18)",
+                color: "rgba(244,237,224,0.65)",
               }}
               data-testid="hero-cta-services"
             >
@@ -191,17 +197,23 @@ export function HomePage() {
             </a>
           </div>
 
-          {/* Youth Odyssey trail link */}
-          <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.18em]">
+          {/* Youth Odyssey micro-link */}
+          <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.2em]">
             <a
               href={`${import.meta.env.BASE_URL}story`}
-              className="transition-opacity hover:opacity-90"
-              style={{ color: "rgba(244,237,224,0.35)" }}
+              className="transition-opacity hover:opacity-70"
+              style={{ color: "rgba(244,237,224,0.28)" }}
               data-testid="hero-story-link"
             >
               Youth Odyssey — 4 phases · 8 stations →
             </a>
           </p>
+
+          {/* Scroll indicator */}
+          <div className="mt-10 flex flex-col items-center gap-2 opacity-30">
+            <div className="w-px h-8" style={{ background: "linear-gradient(to bottom, transparent, rgba(244,237,224,0.6))" }} />
+            <span className="font-mono text-[8px] uppercase tracking-[0.28em]" style={{ color: "#f4ede0" }}>Scroll</span>
+          </div>
         </div>
       </section>
 
@@ -317,46 +329,58 @@ export function HomePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[52rem] px-6 sm:px-8">
+      <div
+        className="mx-auto max-w-[52rem] px-6 sm:px-8"
+        style={{ background: "#0F1C18" }}
+      >
 
         {/* ── hero photo ── */}
-        <div
-          className="mt-10 w-full overflow-hidden rounded-md"
-          style={{ aspectRatio: "16/9" }}
-          data-testid="hero-photo-slot"
-        >
-          <img
-            src={`${import.meta.env.BASE_URL}hero-harvest.jpeg`}
-            alt="Community potato harvest — neighbours of all ages sorting potatoes together in a field near Dryden, Ontario"
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <ScrollReveal>
+          <div
+            className="mt-10 w-full overflow-hidden rounded-lg"
+            style={{
+              aspectRatio: "16/9",
+              boxShadow: "0 12px 48px rgba(0,0,0,0.6)",
+              border: "1px solid rgba(244,237,224,0.07)",
+            }}
+            data-testid="hero-photo-slot"
+          >
+            <img
+              src={`${import.meta.env.BASE_URL}hero-harvest.jpeg`}
+              alt="Community potato harvest — neighbours of all ages sorting potatoes together in a field near Dryden, Ontario"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </ScrollReveal>
 
-        <hr
-          className="my-12 sm:my-16"
-          style={{ borderColor: "hsl(var(--card-border))" }}
+        <div
+          className="my-12 sm:my-16 h-px"
+          style={{ background: "linear-gradient(to right, transparent, rgba(244,237,224,0.12), transparent)" }}
         />
 
         {/* ── how it starts ── */}
         <section data-testid="home-how-it-starts">
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            the first step
-          </p>
-          <h2
-            className="font-serif text-3xl tracking-tight mb-1"
-            data-testid="how-it-starts-heading"
-          >
-            A trial period, not a contract
-          </h2>
-          <p
-            className="font-serif text-[15px] italic mb-8"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-          >
-            Every engagement starts with a defined phase — a fixed fee, a clear scope, and a real deliverable. No retainer, no open-ended commitment.
-          </p>
+          <ScrollReveal>
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
+              style={{ color: "#d4a017" }}
+            >
+              the first step
+            </p>
+            <h2
+              className="font-serif text-3xl tracking-tight mb-1"
+              style={{ color: "#f4ede0" }}
+              data-testid="how-it-starts-heading"
+            >
+              A trial period, not a contract
+            </h2>
+            <p
+              className="font-serif text-[15px] italic mb-8"
+              style={{ color: "rgba(244,237,224,0.50)" }}
+            >
+              Every engagement starts with a defined phase — a fixed fee, a clear scope, and a real deliverable. No retainer, no open-ended commitment.
+            </p>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-10">
             {[
@@ -364,309 +388,216 @@ export function HomePage() {
               { step: "2", label: "Phase 1", body: "6–8 weeks, fixed fee, bounded scope. You get something real at the end whether or not it continues." },
               { step: "3", label: "Decision point", body: "If the fit is right, the next phase begins. If not, you leave with something useful and no obligation." },
               { step: "4", label: "Continue", body: "Each phase has its own scope, fee, and deliverables. Renewed only if the work calls for it." },
-            ].map(({ step, label, body }) => (
-              <div
-                key={step}
-                className="rounded-md border bg-card p-5"
-                style={{ borderColor: "hsl(var(--card-border))" }}
-              >
+            ].map(({ step, label, body }, i) => (
+              <ScrollReveal key={step} delay={i * 70}>
                 <div
-                  className="font-mono text-[11px] font-semibold mb-2 w-7 h-7 rounded-full flex items-center justify-center"
-                  style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+                  className="rounded-lg p-5 h-full cin-card"
                 >
-                  {step}
+                  <div
+                    className="font-mono text-[11px] font-semibold mb-3 w-7 h-7 rounded-full flex items-center justify-center"
+                    style={{ background: "#d4a017", color: "#0F1C18" }}
+                  >
+                    {step}
+                  </div>
+                  <p className="font-serif text-[15px] tracking-tight mb-1.5" style={{ color: "#f4ede0" }}>{label}</p>
+                  <p className="font-serif text-[13.5px] leading-[1.55]" style={{ color: "rgba(244,237,224,0.55)" }}>
+                    {body}
+                  </p>
                 </div>
-                <p className="font-serif text-[15px] font-medium tracking-tight mb-1.5">{label}</p>
-                <p className="font-serif text-[13.5px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
-                  {body}
-                </p>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
 
-          <div
-            className="rounded-md border px-5 py-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6"
-            style={{ borderColor: "hsl(var(--accent))", borderStyle: "dashed", background: "hsl(var(--card))" }}
-            data-testid="flat-fee-callout"
-          >
+          <ScrollReveal>
             <div
-              className="shrink-0 rounded-sm px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em]"
-              style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+              className="rounded-lg px-5 py-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6"
+              style={{
+                borderColor: "#d4a017",
+                borderStyle: "dashed",
+                borderWidth: "1px",
+                background: "rgba(212,160,23,0.05)",
+              }}
+              data-testid="flat-fee-callout"
             >
-              How we charge
+              <div
+                className="shrink-0 rounded-sm px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em]"
+                style={{ background: "#d4a017", color: "#0F1C18" }}
+              >
+                How we charge
+              </div>
+              <p className="font-serif text-[14px] leading-[1.55]" style={{ color: "rgba(244,237,224,0.65)" }}>
+                <strong style={{ color: "#f4ede0" }}>Flat fee, not hourly.</strong>{" "}
+                You own every deliverable at handoff — no licensing, no retainer required to keep it working. The community keeps the tools.
+              </p>
             </div>
-            <p className="font-serif text-[14px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
-              <strong style={{ color: "hsl(var(--foreground))" }}>Flat fee, not hourly.</strong>{" "}
-              You own every deliverable at handoff — no licensing, no retainer required to keep it working. The community keeps the tools.
-            </p>
-          </div>
 
-          <div
-            className="rounded-md border p-6 sm:p-8"
-            style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
-          >
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] mb-3" style={{ color: "hsl(var(--accent))" }}>
-              phase fees
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {[
-                { label: "Phase 1", value: "$28,000", note: "6–8 weeks. Fixed fee, defined scope, real deliverable. Shorter engagement = reduced invoice." },
-                { label: "Phase 2+", value: "$18,000–$60,000", note: "Typical per-phase range depending on scope and duration. Phase 2 (the main build) commonly runs $52,000–$60,000 over 4–6 months; later phases step down as the community takes ownership. Each phase is confirmed with the community before work begins." },
-                { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
-              ].map(({ label, value, note }) => (
-                <div key={label}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>{label}</p>
-                  <p className="font-serif text-2xl font-medium tracking-tight mb-1">{value}</p>
-                  <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{note}</p>
-                </div>
-              ))}
-            </div>
-            <p
-              className="font-mono text-[10px] uppercase tracking-[0.14em] mt-5"
-              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}
+            <div
+              className="rounded-lg p-6 sm:p-8 cin-card"
             >
-              All fees CAD · excludes HST
-            </p>
-          </div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] mb-4" style={{ color: "#d4a017" }}>
+                phase fees
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {[
+                  { label: "Phase 1", value: "$28,000", note: "6–8 weeks. Fixed fee, defined scope, real deliverable. Shorter engagement = reduced invoice." },
+                  { label: "Phase 2+", value: "$18,000–$60,000", note: "Typical per-phase range depending on scope and duration. Phase 2 (the main build) commonly runs $52,000–$60,000 over 4–6 months; later phases step down as the community takes ownership. Each phase is confirmed with the community before work begins." },
+                  { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
+                ].map(({ label, value, note }) => (
+                  <div key={label}>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(244,237,224,0.38)" }}>{label}</p>
+                    <p className="font-serif text-2xl tracking-tight mb-1.5" style={{ color: "#f4ede0" }}>{value}</p>
+                    <p className="font-serif text-[13px] leading-[1.55]" style={{ color: "rgba(244,237,224,0.52)" }}>{note}</p>
+                  </div>
+                ))}
+              </div>
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.14em] mt-6"
+                style={{ color: "rgba(244,237,224,0.22)" }}
+              >
+                All fees CAD · excludes HST
+              </p>
+            </div>
+          </ScrollReveal>
         </section>
 
-        <hr
-          className="my-12 sm:my-16"
-          style={{ borderColor: "hsl(var(--card-border))" }}
+        <div
+          className="my-12 sm:my-16 h-px"
+          style={{ background: "linear-gradient(to right, transparent, rgba(244,237,224,0.10), transparent)" }}
         />
 
         {/* ── the work ── */}
         <section data-testid="home-work">
-          <div
-            className="rounded-md px-5 py-4 mb-8 relative overflow-hidden"
-            style={{ background: "hsl(145 36% 22%)", color: "hsl(38 36% 96%)" }}
-          >
+          <ScrollReveal>
             <div
-              aria-hidden
-              className="pointer-events-none absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-10"
-              style={{ background: "hsl(38 36% 94%)" }}
-            />
-            <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
-              shipped · running · readable
-            </p>
-            <h2
-              className="font-serif text-2xl sm:text-3xl tracking-tight"
-              data-testid="work-heading"
+              className="rounded-lg px-5 py-5 mb-8 relative overflow-hidden cin-card"
             >
-              The work
-            </h2>
-          </div>
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-08"
+                style={{ background: "#d4a017" }}
+              />
+              <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-2" style={{ color: "rgba(212,160,23,0.65)" }}>
+                shipped · running · readable
+              </p>
+              <h2
+                className="font-serif text-2xl sm:text-3xl tracking-tight"
+                style={{ color: "#f4ede0" }}
+                data-testid="work-heading"
+              >
+                The work
+              </h2>
+            </div>
 
-          <p
-            className="font-serif text-[15px] leading-[1.6] mb-6"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-            data-testid="work-explainer"
-          >
-            Seven simple tools. One community economy. <strong>Headwaters is the practice</strong> — the food systems and economic development work. <strong>Codetry is the discipline it runs on</strong> — the method for building and handing over systems that communities own outright. Each tool connects to the next: learn the work, track the work, account for the work, and everything behind them that makes it run.
-          </p>
+            <p
+              className="font-serif text-[15px] leading-[1.65] mb-6"
+              style={{ color: "rgba(244,237,224,0.62)" }}
+              data-testid="work-explainer"
+            >
+              Seven simple tools. One community economy. <strong style={{ color: "#f4ede0" }}>Headwaters is the practice</strong> — the food systems and economic development work. <strong style={{ color: "#f4ede0" }}>Codetry is the discipline it runs on</strong> — the method for building and handing over systems that communities own outright. Each tool connects to the next: learn the work, track the work, account for the work, and everything behind them that makes it run.
+            </p>
+          </ScrollReveal>
 
-          {/* ── three entry cards replacing the blunt full-width services button ── */}
+          {/* ── three entry cards ── */}
           <div
             className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8"
             data-testid="link-services"
           >
             {[
-              {
-                label: "Community store",
-                blurb: "Site selection, co-op structure, band financing, and day-one operations.",
-                color: "hsl(14 64% 36%)",
-                fg: "hsl(38 36% 96%)",
-                anchor: "store",
-              },
-              {
-                label: "Platform & co-op",
-                blurb: "Membership systems, governance tools, and shared community infrastructure.",
-                color: "hsl(145 36% 22%)",
-                fg: "hsl(38 36% 96%)",
-                anchor: "platform",
-              },
-              {
-                label: "Custom tool",
-                blurb: "Purpose-built software for the specific problem in front of you.",
-                color: "hsl(30 40% 50%)",
-                fg: "hsl(38 36% 96%)",
-                anchor: "custom",
-              },
-            ].map(({ label, blurb, color, fg, anchor }) => (
-              <a
-                key={label}
-                href={`${import.meta.env.BASE_URL}services#${anchor}`}
-                className="block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
-                style={{ borderColor: "hsl(var(--card-border))" }}
-              >
-                <div className="px-4 py-3.5" style={{ background: color, color: fg }}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em]">{label}</p>
-                </div>
-                <div className="px-4 py-3" style={{ background: "hsl(var(--card))" }}>
-                  <p
-                    className="font-serif text-[13px] leading-[1.5] mb-2 break-words"
-                    style={{ color: "hsl(var(--muted-foreground))" }}
+              { label: "Community store", blurb: "Site selection, co-op structure, band financing, and day-one operations.", color: "#b85a3e", anchor: "store" },
+              { label: "Platform & co-op", blurb: "Membership systems, governance tools, and shared community infrastructure.", color: "#1f3d2e", anchor: "platform" },
+              { label: "Custom tool", blurb: "Purpose-built software for the specific problem in front of you.", color: "#c97c2e", anchor: "custom" },
+            ].map(({ label, blurb, color, anchor }, i) => (
+              <ScrollReveal key={label} delay={i * 60}>
+                <a
+                  href={`${import.meta.env.BASE_URL}services#${anchor}`}
+                  className="block rounded-lg overflow-hidden cin-card h-full"
+                >
+                  <div
+                    className="px-4 py-3.5"
+                    style={{ background: color, borderBottom: "1px solid rgba(0,0,0,0.2)" }}
                   >
-                    {blurb}
-                  </p>
-                  <p
-                    className="font-mono text-[10px] uppercase tracking-[0.14em] whitespace-nowrap"
-                    style={{ color }}
-                  >
-                    See examples →
-                  </p>
-                </div>
-              </a>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: "#f4ede0" }}>{label}</p>
+                  </div>
+                  <div className="px-4 py-4">
+                    <p className="font-serif text-[13px] leading-[1.55] mb-2" style={{ color: "rgba(244,237,224,0.60)" }}>{blurb}</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color }}>See examples →</p>
+                  </div>
+                </a>
+              </ScrollReveal>
             ))}
           </div>
 
           {/* ── Seven simple tools section ── */}
           <div data-testid="work-cards">
 
-            {/* Core flow label */}
-            <p
-              className="font-mono text-[10px] uppercase tracking-[0.24em] mb-4"
-              style={{ color: "hsl(var(--accent))" }}
-            >
-              The core flow — learn → track → account
-            </p>
+            <ScrollReveal>
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.24em] mb-4"
+                style={{ color: "#d4a017" }}
+              >
+                The core flow — learn → track → account
+              </p>
+            </ScrollReveal>
 
             <div className="space-y-2 mb-4">
               {[
-                {
-                  icon: "📖",
-                  name: "The Handbook",
-                  sub: "Codetry Handbook",
-                  desc: "Where you start. A plain-language guide that teaches the Headwaters way of working — how to scope a job, how to hand it over, and how a community can run its own economy.",
-                  color: "hsl(145 36% 22%)",
-                  testId: "work-card-handbook",
-                  href: "/codetry-handbook/",
-                },
-                {
-                  icon: "📋",
-                  name: "Practitioner's Guide",
-                  sub: "Practitioners Guide V2",
-                  desc: "Where your work lives. A structured reference that tracks each engagement — the scope, the phases, the decisions, and the handover. Keeps every project honest.",
-                  color: "hsl(145 28% 32%)",
-                  testId: "work-card-guide",
-                  href: "/practitioners-guide-v2/",
-                },
-                {
-                  icon: "📚",
-                  name: "The Accounts",
-                  sub: "Headwaters Books",
-                  desc: "Where the money is recorded. Tracks what came in, what went out, and what the work delivered — so the community always knows where it stands financially.",
-                  color: "hsl(145 22% 42%)",
-                  testId: "work-card-books",
-                  href: "/headwaters-books/",
-                },
+                { icon: "📖", name: "The Handbook", sub: "Codetry Handbook", desc: "Where you start. A plain-language guide that teaches the Headwaters way of working — how to scope a job, how to hand it over, and how a community can run its own economy.", color: "#1f3d2e", testId: "work-card-handbook", href: "/codetry-handbook/" },
+                { icon: "📋", name: "Practitioner's Guide", sub: "Practitioners Guide V2", desc: "Where your work lives. A structured reference that tracks each engagement — the scope, the phases, the decisions, and the handover. Keeps every project honest.", color: "#2a4d36", testId: "work-card-guide", href: "/practitioners-guide-v2/" },
+                { icon: "📚", name: "The Accounts", sub: "Headwaters Books", desc: "Where the money is recorded. Tracks what came in, what went out, and what the work delivered — so the community always knows where it stands financially.", color: "#345c45", testId: "work-card-books", href: "/headwaters-books/" },
               ].map(({ icon, name, sub, desc, color, testId, href }, i) => (
-                <div key={name}>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Opens in a new tab"
-                    className="relative group block rounded-md border bg-card p-4 flex gap-3.5 items-start transition-opacity hover:opacity-80"
-                    style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
-                    data-testid={testId}
-                  >
-                    <span className="text-2xl leading-none mt-0.5 shrink-0">{icon}</span>
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-baseline gap-2 mb-1">
-                        <p className="font-serif text-[15px] font-medium tracking-tight">{name}</p>
-                        <span
-                          className="font-mono text-[9px] uppercase tracking-[0.1em]"
-                          style={{ color }}
-                        >{sub}</span>
-                      </div>
-                      <p className="font-serif text-[13.5px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
-                        {desc}
-                      </p>
-                    </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 10 10"
-                      className="absolute top-2.5 right-2.5 w-3 h-3 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity"
-                      style={{ color }}
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
+                <ScrollReveal key={name} delay={i * 50}>
+                  <div>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Opens in a new tab"
+                      className="relative group flex rounded-lg p-4 gap-3.5 items-start cin-card"
+                      style={{ borderLeft: `4px solid ${color}` }}
+                      data-testid={testId}
                     >
-                      <path d="M4 2H2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V6" />
-                      <path d="M6.5 1.5h2v2" />
-                      <path d="M9 1 5.5 4.5" />
-                    </svg>
-                  </a>
-                  {i < 2 && (
-                    <div className="flex flex-col items-start pl-[2rem] py-1">
-                      <div className="w-px h-3" style={{ background: color, opacity: 0.35 }} />
-                      <span className="font-mono text-[9px] uppercase tracking-[0.12em] whitespace-nowrap" style={{ color, opacity: 0.7 }}>
-                        {i === 0 ? "then track in" : "money flows to"}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                      <span className="text-2xl leading-none mt-0.5 shrink-0">{icon}</span>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-baseline gap-2 mb-1">
+                          <p className="font-serif text-[15px] tracking-tight" style={{ color: "#f4ede0" }}>{name}</p>
+                          <span className="font-mono text-[9px] uppercase tracking-[0.1em]" style={{ color: `${color}bb` }}>{sub}</span>
+                        </div>
+                        <p className="font-serif text-[13.5px] leading-[1.55]" style={{ color: "rgba(244,237,224,0.55)" }}>{desc}</p>
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" className="absolute top-2.5 right-2.5 w-3 h-3 opacity-0 group-hover:opacity-60 transition-opacity" fill="none" stroke="#d4a017" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 2H2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V6" /><path d="M6.5 1.5h2v2" /><path d="M9 1 5.5 4.5" /></svg>
+                    </a>
+                    {i < 2 && (
+                      <div className="flex flex-col items-start pl-[2rem] py-1">
+                        <div className="w-px h-3" style={{ background: color, opacity: 0.35 }} />
+                        <span className="font-mono text-[9px] uppercase tracking-[0.12em] whitespace-nowrap" style={{ color, opacity: 0.7 }}>
+                          {i === 0 ? "then track in" : "money flows to"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </ScrollReveal>
               ))}
             </div>
 
             {/* Supporting layers divider */}
-            <div className="flex items-center gap-3 my-5">
-              <div className="flex-1 h-px" style={{ background: "hsl(var(--card-border))" }} />
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: "hsl(var(--muted-foreground))" }}>
+            <div className="flex items-center gap-3 my-6">
+              <div className="flex-1 h-px" style={{ background: "rgba(244,237,224,0.10)" }} />
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: "rgba(244,237,224,0.28)" }}>
                 Supporting layers
               </p>
-              <div className="flex-1 h-px" style={{ background: "hsl(var(--card-border))" }} />
+              <div className="flex-1 h-px" style={{ background: "rgba(244,237,224,0.10)" }} />
             </div>
 
-            <p
-              className="font-serif text-[13.5px] leading-[1.55] mb-4"
-              style={{ color: "hsl(var(--muted-foreground))" }}
-            >
+            <p className="font-serif text-[13.5px] leading-[1.6] mb-4" style={{ color: "rgba(244,237,224,0.50)" }}>
               Four tools back up the core flow — they hold the evidence, the materials, the team, and the files that everything else draws from.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
               {[
-                {
-                  icon: "🔬",
-                  name: "Research Library",
-                  sub: "Northern Food Systems Library",
-                  desc: "Curated research, reports, and links about northern food systems — so every decision is grounded in real data, not guesswork.",
-                  color: "hsl(14 64% 36%)",
-                  testId: "work-card-library",
-                  href: "/library/",
-                },
-                {
-                  icon: "🖨️",
-                  name: "Print Marketing Suite",
-                  sub: "Headwaters Print Marketing",
-                  desc: "Print-ready flyers, posters, rack cards, and forms for every public-facing moment — from a farmers market table to a band council pitch.",
-                  color: "hsl(14 50% 44%)",
-                  testId: "work-card-print",
-                  href: "/print-marketing/",
-                },
-                {
-                  icon: "🚢",
-                  name: "Crew Manifest",
-                  sub: "Codetry Ship",
-                  desc: "Shows who is on which project, what role they fill, and how the crew fits together — so nothing falls through the cracks.",
-                  color: "hsl(220 20% 32%)",
-                  testId: "work-card-ship",
-                  href: "/",
-                },
-                {
-                  icon: "🗄️",
-                  name: "Media Library",
-                  sub: "Headwaters API",
-                  desc: "Stores photos, documents, and media assets so every other tool can pull from one reliable source — no more hunting for the right logo version.",
-                  color: "hsl(200 25% 35%)",
-                  testId: "work-card-media",
-                  href: "/media/",
-                },
+                { icon: "🔬", name: "Research Library", sub: "Northern Food Systems Library", desc: "Curated research, reports, and links about northern food systems — so every decision is grounded in real data, not guesswork.", color: "#b85a3e", testId: "work-card-library", href: "/library/" },
+                { icon: "🖨️", name: "Print Marketing Suite", sub: "Headwaters Print Marketing", desc: "Print-ready flyers, posters, rack cards, and forms for every public-facing moment — from a farmers market table to a band council pitch.", color: "#9c4a2f", testId: "work-card-print", href: "/print-marketing/" },
+                { icon: "🚢", name: "Crew Manifest", sub: "Codetry Ship", desc: "Shows who is on which project, what role they fill, and how the crew fits together — so nothing falls through the cracks.", color: "#3a5070", testId: "work-card-ship", href: "/" },
+                { icon: "🗄️", name: "Media Library", sub: "Headwaters API", desc: "Stores photos, documents, and media assets so every other tool can pull from one reliable source — no more hunting for the right logo version.", color: "#2a4560", testId: "work-card-media", href: "/media/" },
               ].map(({ icon, name, sub, desc, color, testId, href }) => (
                 <a
                   key={name}
@@ -674,68 +605,49 @@ export function HomePage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   title="Opens in a new tab"
-                  className="relative group block rounded-md border bg-card p-4 flex gap-3 items-start transition-opacity hover:opacity-80"
-                  style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
+                  className="relative group flex rounded-lg p-4 gap-3 items-start cin-card"
+                  style={{ borderLeft: `4px solid ${color}` }}
                   data-testid={testId}
                 >
                   <span className="text-xl leading-none mt-0.5 shrink-0">{icon}</span>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-baseline gap-2 mb-0.5">
-                      <p className="font-serif text-[14px] font-medium tracking-tight shrink-0">{name}</p>
-                      <span
-                        className="font-mono text-[9px] uppercase tracking-[0.08em] block truncate min-w-0 max-w-full"
-                        style={{ color }}
-                      >{sub}</span>
+                      <p className="font-serif text-[14px] tracking-tight shrink-0" style={{ color: "#f4ede0" }}>{name}</p>
+                      <span className="font-mono text-[9px] uppercase tracking-[0.08em] block truncate min-w-0 max-w-full" style={{ color: `${color}cc` }}>{sub}</span>
                     </div>
-                    <p className="font-serif text-[13px] leading-[1.45]" style={{ color: "hsl(var(--muted-foreground))" }}>
-                      {desc}
-                    </p>
+                    <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "rgba(244,237,224,0.50)" }}>{desc}</p>
                   </div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 10 10"
-                    className="absolute top-2.5 right-2.5 w-3 h-3 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity"
-                    style={{ color }}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M4 2H2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V6" />
-                    <path d="M6.5 1.5h2v2" />
-                    <path d="M9 1 5.5 4.5" />
-                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" className="absolute top-2.5 right-2.5 w-3 h-3 opacity-0 group-hover:opacity-60 transition-opacity" fill="none" stroke="#d4a017" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 2H2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V6" /><path d="M6.5 1.5h2v2" /><path d="M9 1 5.5 4.5" /></svg>
                 </a>
               ))}
             </div>
 
             {/* How it fits callout */}
-            <div
-              className="mt-4 rounded-md px-5 py-4"
-              style={{ background: "hsl(145 36% 22%)", color: "hsl(38 36% 96%)" }}
-              data-testid="work-seven-tools-callout"
-            >
-              <p className="font-mono text-[9.5px] uppercase tracking-[0.2em] mb-2 opacity-70">How it all connects</p>
-              <p className="font-serif text-[14px] leading-[1.6]">
-                <strong>The Handbook</strong> teaches you how Headwaters works.{" "}
-                <strong>The Practitioner's Guide</strong> captures each job you do.{" "}
-                <strong>The Accounts</strong> keep the money honest. Behind them: the{" "}
-                <strong>Research Library</strong> grounds decisions in real evidence, the{" "}
-                <strong>Print Suite</strong> puts everything on paper, the{" "}
-                <strong>Crew Manifest</strong> shows who's doing what, and the{" "}
-                <strong>Media Library</strong> keeps the files in one place.
-                {" "}Seven simple tools. One system. Yours.
-              </p>
-            </div>
+            <ScrollReveal>
+              <div
+                className="mt-4 rounded-lg px-5 py-5 cin-card"
+                data-testid="work-seven-tools-callout"
+              >
+                <p className="font-mono text-[9px] uppercase tracking-[0.22em] mb-2" style={{ color: "rgba(212,160,23,0.60)" }}>How it all connects</p>
+                <p className="font-serif text-[14px] leading-[1.65]" style={{ color: "rgba(244,237,224,0.72)" }}>
+                  <strong style={{ color: "#f4ede0" }}>The Handbook</strong> teaches you how Headwaters works.{" "}
+                  <strong style={{ color: "#f4ede0" }}>The Practitioner's Guide</strong> captures each job you do.{" "}
+                  <strong style={{ color: "#f4ede0" }}>The Accounts</strong> keep the money honest. Behind them: the{" "}
+                  <strong style={{ color: "#f4ede0" }}>Research Library</strong> grounds decisions in real evidence, the{" "}
+                  <strong style={{ color: "#f4ede0" }}>Print Suite</strong> puts everything on paper, the{" "}
+                  <strong style={{ color: "#f4ede0" }}>Crew Manifest</strong> shows who's doing what, and the{" "}
+                  <strong style={{ color: "#f4ede0" }}>Media Library</strong> keeps the files in one place.
+                  {" "}Seven simple tools. One system. Yours.
+                </p>
+              </div>
+            </ScrollReveal>
           </div>
 
           <div className="mt-8 text-center">
             <a
               href={`${import.meta.env.BASE_URL}work`}
               className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] border-b pb-0.5 transition-opacity hover:opacity-70"
-              style={{ color: "hsl(var(--accent))", borderColor: "hsl(var(--accent))" }}
+              style={{ color: "#d4a017", borderColor: "#d4a017" }}
               data-testid="work-see-case-studies"
             >
               See case studies →
@@ -745,106 +657,89 @@ export function HomePage() {
 
         {/* ── social proof ── */}
         <section data-testid="home-testimonial">
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-6"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            from the communities
-          </p>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {testimonials.map((t) => (
-              <blockquote
-                key={t.id}
-                className="rounded-md border-l-4 pl-6 py-2"
-                style={{ borderColor: "hsl(var(--accent))" }}
-              >
-                <p
-                  className="font-serif text-xl leading-[1.4] italic mb-5"
-                  data-testid="testimonial-quote"
+          <ScrollReveal>
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.28em] mb-6"
+              style={{ color: "#d4a017" }}
+            >
+              from the communities
+            </p>
+          </ScrollReveal>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {testimonials.map((t, i) => (
+              <ScrollReveal key={t.id} delay={i * 80}>
+                <blockquote
+                  className="rounded-lg border-l-4 pl-6 py-3 cin-card pr-5"
+                  style={{ borderColor: "#d4a017" }}
                 >
-                  "{t.quote}"
-                </p>
-                <footer className="flex flex-col gap-0.5">
                   <p
-                    className="font-mono text-[11px] font-medium tracking-tight"
-                    data-testid="testimonial-name"
+                    className="font-serif text-xl leading-[1.45] italic mb-5"
+                    style={{ color: "#f4ede0" }}
+                    data-testid="testimonial-quote"
                   >
-                    {t.name}
+                    "{t.quote}"
                   </p>
-                  {t.title && (
-                    <p
-                      className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                      style={{ color: "hsl(var(--muted-foreground))" }}
-                      data-testid="testimonial-title"
-                    >
-                      {t.title}
-                    </p>
-                  )}
-                  <p
-                    className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                    style={{ color: "hsl(var(--muted-foreground))" }}
-                    data-testid="testimonial-community"
-                  >
-                    {t.community}
-                  </p>
-                </footer>
-              </blockquote>
+                  <footer className="flex flex-col gap-0.5">
+                    <p className="font-mono text-[11px] tracking-tight" style={{ color: "rgba(244,237,224,0.75)" }} data-testid="testimonial-name">{t.name}</p>
+                    {t.title && (
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: "rgba(244,237,224,0.38)" }} data-testid="testimonial-title">{t.title}</p>
+                    )}
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: "rgba(244,237,224,0.38)" }} data-testid="testimonial-community">{t.community}</p>
+                  </footer>
+                </blockquote>
+              </ScrollReveal>
             ))}
           </div>
         </section>
 
-        <hr
-          className="my-12 sm:my-16"
-          style={{ borderColor: "hsl(var(--card-border))" }}
+        <div
+          className="my-12 sm:my-16 h-px"
+          style={{ background: "linear-gradient(to right, transparent, rgba(244,237,224,0.10), transparent)" }}
         />
 
         {/* ── start a conversation ── */}
         <section id="conversation" data-testid="home-intake">
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            get in touch
-          </p>
-          <h2
-            className="font-serif text-3xl tracking-tight mb-1"
-            data-testid="intake-heading"
-          >
-            Start a conversation
-          </h2>
-
-          <div className="space-y-4 font-serif text-[15px] leading-[1.6] mt-4 mb-8" data-testid="intake-intro">
-            <p>
-              Tell us a little about your community and what you are trying to build.
-              That is enough to start. Bobbie will write back with a plain-language
-              response — no sales pitch, no proposal deck. Usually within a day or two.
+          <ScrollReveal>
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
+              style={{ color: "#d4a017" }}
+            >
+              get in touch
             </p>
-          </div>
+            <h2
+              className="font-serif text-3xl tracking-tight mb-1"
+              style={{ color: "#f4ede0" }}
+              data-testid="intake-heading"
+            >
+              Start a conversation
+            </h2>
+
+            <div className="space-y-3 font-serif text-[15px] leading-[1.65] mt-4 mb-8" style={{ color: "rgba(244,237,224,0.65)" }} data-testid="intake-intro">
+              <p>
+                Tell us a little about your community and what you are trying to build.
+                That is enough to start. Bobbie will write back with a plain-language
+                response — no sales pitch, no proposal deck. Usually within a day or two.
+              </p>
+            </div>
+          </ScrollReveal>
 
           {confirmedName ? (
             <div
-              className="rounded-md border bg-card p-7 sm:p-9 space-y-4"
-              style={{ borderColor: "hsl(var(--card-border))" }}
+              className="rounded-xl p-7 sm:p-9 space-y-4 cin-card"
               role="status"
               aria-live="polite"
               data-testid="intake-confirmation"
             >
-              <p
-                className="font-mono text-[11px] uppercase tracking-[0.22em]"
-                style={{ color: "hsl(var(--accent))" }}
-              >
-                received
-              </p>
-              <h3 className="font-serif text-2xl leading-tight">
-                Thank you, {confirmedName}.
-              </h3>
-              <p className="font-serif text-base leading-relaxed" style={{ color: "hsl(var(--muted-foreground))" }}>
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em]" style={{ color: "#d4a017" }}>received</p>
+              <h3 className="font-serif text-2xl leading-tight" style={{ color: "#f4ede0" }}>Thank you, {confirmedName}.</h3>
+              <p className="font-serif text-base leading-relaxed" style={{ color: "rgba(244,237,224,0.60)" }}>
                 We have your message. Bobbie will read it and write back — no sales pitch, no proposal deck.
               </p>
               <button
                 type="button"
                 onClick={() => setConfirmedName(null)}
                 className="font-mono text-[11px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+                style={{ color: "rgba(244,237,224,0.50)" }}
                 data-testid="intake-send-another"
               >
                 send another message
@@ -914,10 +809,11 @@ export function HomePage() {
               <div className="space-y-2">
                 <label
                   htmlFor="intake-need"
-                  className="block font-sans text-sm font-medium"
+                  className="block font-mono text-[10px] uppercase tracking-[0.22em]"
+                  style={{ color: "rgba(244,237,224,0.55)" }}
                 >
                   What are you trying to build?{" "}
-                  <span style={{ color: "hsl(var(--accent))" }}>*</span>
+                  <span style={{ color: "#d4a017" }}>*</span>
                 </label>
                 <textarea
                   id="intake-need"
@@ -926,8 +822,13 @@ export function HomePage() {
                   value={form.whatTheyNeed}
                   onChange={(e) => setForm({ ...form, whatTheyNeed: e.target.value })}
                   placeholder="A sentence or two is enough. What is the problem, and what would a good outcome look like for your community?"
-                  className="block w-full rounded-sm border bg-input px-3 py-2 font-sans text-base focus:outline-none focus:ring-2 resize-y"
-                  style={{ borderColor: "hsl(var(--card-border))" }}
+                  className="block w-full rounded-md px-3 py-2.5 font-sans text-base focus:outline-none focus:ring-1 resize-y transition-all"
+                  style={{
+                    background: "rgba(244,237,224,0.04)",
+                    border: "1px solid rgba(244,237,224,0.14)",
+                    color: "#f4ede0",
+                    caretColor: "#d4a017",
+                  }}
                   data-testid="input-intake-need"
                 />
               </div>
@@ -959,11 +860,7 @@ export function HomePage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
-                  style={{
-                    background: "hsl(var(--accent))",
-                    color: "hsl(var(--accent-foreground))",
-                  }}
+                  className="btn-plaque disabled:opacity-60 disabled:cursor-not-allowed"
                   data-testid="button-intake-submit"
                 >
                   {submitting ? "Sending…" : "Send message →"}
@@ -971,7 +868,7 @@ export function HomePage() {
                 <a
                   href="mailto:bobbie@ourheadwaters.ca"
                   className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
-                  style={{ color: "hsl(var(--muted-foreground))" }}
+                  style={{ color: "rgba(244,237,224,0.38)" }}
                   data-testid="intake-email-fallback"
                 >
                   or email directly
@@ -981,139 +878,168 @@ export function HomePage() {
           )}
         </section>
 
-        <hr
-          className="my-12 sm:my-16"
-          style={{ borderColor: "hsl(var(--card-border))" }}
+        <div
+          className="my-12 sm:my-16 h-px"
+          style={{ background: "linear-gradient(to right, transparent, rgba(244,237,224,0.10), transparent)" }}
         />
 
         {/* ── the practitioner ── */}
         <section data-testid="home-about">
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            the practitioner
-          </p>
-          <h2
-            className="font-serif text-3xl tracking-tight mb-1"
-            data-testid="about-heading"
-          >
-            Bobbie Parr
-          </h2>
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.18em] mb-6"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-          >
-            headwaters · dryden, ontario
-          </p>
-
-          <a
-            href={`${import.meta.env.BASE_URL}bio`}
-            className="block mb-6 w-full overflow-hidden rounded-md group"
-            style={{ aspectRatio: "4/3", maxHeight: "320px" }}
-            data-testid="bio-photo-slot"
-          >
-            <img
-              src={`${import.meta.env.BASE_URL}bobbie-bio.jpeg`}
-              alt="Bobbie Parr with a Parr's Jars crate of fresh local produce, outdoors in Northwestern Ontario"
-              className="w-full h-full object-cover group-hover:opacity-90 transition-opacity" style={{ objectPosition: "center 82%" }}
-            />
-          </a>
-
-          <p
-            className="font-serif text-[15px] leading-[1.6] mb-8"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-            data-testid="about-body"
-          >
-            Community development degree, years on the ground in northern communities, and the founder
-            of Parr&rsquo;s Jars — a small preserves business out of the bush near Dryden that keeps
-            her hands in the actual work the operating plans are about. She built Headwaters to solve
-            the problems she couldn&rsquo;t find help for: how a northern organisation plans a food
-            system, owns its own tools, and hands them forward without a consultant in the room. The
-            voice is plain, dollar-honest, no startup-pitch tone.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <a
-              href="#conversation"
-              className="inline-flex items-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
-              style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
-              data-testid="about-cta-conversation"
+          <ScrollReveal>
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
+              style={{ color: "#d4a017" }}
             >
-              Start a conversation (short form) →
-            </a>
+              the practitioner
+            </p>
+            <h2
+              className="font-serif text-3xl tracking-tight mb-1"
+              style={{ color: "#f4ede0" }}
+              data-testid="about-heading"
+            >
+              Bobbie Parr
+            </h2>
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.18em] mb-6"
+              style={{ color: "rgba(244,237,224,0.35)" }}
+            >
+              headwaters · dryden, ontario
+            </p>
+          </ScrollReveal>
+
+          <ScrollReveal delay={80}>
             <a
               href={`${import.meta.env.BASE_URL}bio`}
-              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
-              style={{ color: "hsl(var(--muted-foreground))" }}
-              data-testid="link-bio"
+              className="block mb-6 w-full overflow-hidden rounded-lg group"
+              style={{
+                aspectRatio: "4/3",
+                maxHeight: "320px",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.55)",
+                border: "1px solid rgba(244,237,224,0.07)",
+              }}
+              data-testid="bio-photo-slot"
             >
-              Is Bobbie the right fit? Read the bio →
+              <img
+                src={`${import.meta.env.BASE_URL}bobbie-bio.jpeg`}
+                alt="Bobbie Parr with a Parr's Jars crate of fresh local produce, outdoors in Northwestern Ontario"
+                className="w-full h-full object-cover group-hover:opacity-90 transition-opacity" style={{ objectPosition: "center 82%" }}
+              />
             </a>
-          </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={120}>
+            <p
+              className="font-serif text-[15px] leading-[1.65] mb-8"
+              style={{ color: "rgba(244,237,224,0.60)" }}
+              data-testid="about-body"
+            >
+              Community development degree, years on the ground in northern communities, and the founder
+              of Parr&rsquo;s Jars — a small preserves business out of the bush near Dryden that keeps
+              her hands in the actual work the operating plans are about. She built Headwaters to solve
+              the problems she couldn&rsquo;t find help for: how a northern organisation plans a food
+              system, owns its own tools, and hands them forward without a consultant in the room. The
+              voice is plain, dollar-honest, no startup-pitch tone.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <a
+                href="#conversation"
+                className="btn-plaque"
+                data-testid="about-cta-conversation"
+              >
+                Start a conversation →
+              </a>
+              <a
+                href={`${import.meta.env.BASE_URL}bio`}
+                className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+                style={{ color: "rgba(244,237,224,0.38)" }}
+                data-testid="link-bio"
+              >
+                Is Bobbie the right fit? Read the bio →
+              </a>
+            </div>
+          </ScrollReveal>
         </section>
 
         {/* ── footer ── */}
         <footer
-          className="mt-20 pt-8 border-t flex flex-wrap items-center justify-between gap-4"
-          style={{ borderColor: "hsl(var(--card-border))" }}
+          className="mt-20 pt-8"
+          style={{ borderTop: "1px solid rgba(244,237,224,0.08)" }}
           data-testid="home-footer"
         >
-          <p className="signoff">— bobbie parr · headwaters · dryden, ontario</p>
-          <div className="flex items-center gap-6">
-            <a
-              href={`${import.meta.env.BASE_URL}codetry`}
-              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
-              style={{ color: "hsl(var(--muted-foreground))" }}
-              data-testid="footer-what-is-codetry-link"
-            >
-              What is Codetry?
-            </a>
-            <a
-              href="/privacy"
-              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
-              style={{ color: "hsl(var(--muted-foreground))" }}
-            >
-              Privacy
-            </a>
-            <a
-              href={`${import.meta.env.BASE_URL}listen`}
-              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
-              style={{ color: "hsl(var(--muted-foreground))" }}
-              data-testid="footer-listen-link"
-            >
-              Listen
-            </a>
-            <a
-              href={`${import.meta.env.BASE_URL}operator`}
-              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
-              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.5 }}
-              data-testid="footer-operator-link"
-            >
-              Operator
-            </a>
-            <a
-              href={`${import.meta.env.BASE_URL}sign-on`}
-              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
-              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.5 }}
-              data-testid="footer-sign-on-link"
-            >
-              Sign on
-            </a>
-            <a
-              href={`${import.meta.env.BASE_URL}founding-stories`}
-              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
-              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.5 }}
-              data-testid="footer-origin-link"
-            >
-              Read the origin
-            </a>
-            <p
-              className="font-mono text-[10px] uppercase tracking-[0.18em]"
-              style={{ color: "hsl(var(--muted-foreground))" }}
-            >
-              {new Date().getFullYear()}
+          {/* Community partner circle ring */}
+          <div className="mb-8 flex flex-col items-center gap-3">
+            <p className="font-mono text-[8px] uppercase tracking-[0.28em]" style={{ color: "rgba(244,237,224,0.22)" }}>
+              Community partners
             </p>
+            <div className="flex items-center justify-center">
+              {[
+                { initials: "HW", label: "Headwaters Collective",    color: "#1f3d2e", accent: "#d4a017" },
+                { initials: "BN", label: "Boreal North Network",     color: "#2a4560", accent: "#7ab3cc" },
+                { initials: "CF", label: "Cedar Falls Community",    color: "#3d2010", accent: "#c97c2e" },
+                { initials: "GP", label: "Green Pine Co-op",         color: "#1f3020", accent: "#6aaa78" },
+                { initials: "KL", label: "Kenora Lake Initiative",   color: "#1c2e3e", accent: "#7ab3cc" },
+                { initials: "WR", label: "Wabigoon River Institute", color: "#2e1c0a", accent: "#b85a3e" },
+              ].map((p, i) => (
+                <div
+                  key={p.initials}
+                  title={p.label}
+                  aria-label={p.label}
+                  style={{
+                    width: 42,
+                    height: 42,
+                    borderRadius: "50%",
+                    background: p.color,
+                    border: `2px solid rgba(244,237,224,0.10)`,
+                    boxShadow: "0 0 0 1.5px rgba(0,0,0,0.35)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginLeft: i === 0 ? 0 : -10,
+                    position: "relative",
+                    zIndex: 6 - i,
+                    cursor: "default",
+                    transition: "transform 0.18s ease",
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.transform = ""; }}
+                >
+                  <span
+                    className="font-mono"
+                    style={{ fontSize: "9px", letterSpacing: "0.08em", color: p.accent, fontWeight: 600 }}
+                  >
+                    {p.initials}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p className="signoff" style={{ color: "rgba(244,237,224,0.35)" }}>— bobbie parr · headwaters · dryden, ontario</p>
+            <div className="flex flex-wrap items-center gap-5">
+              {[
+                { label: "What is Codetry?", href: `${import.meta.env.BASE_URL}codetry`, testId: "footer-what-is-codetry-link" },
+                { label: "Privacy", href: "/privacy" },
+                { label: "Listen", href: `${import.meta.env.BASE_URL}listen`, testId: "footer-listen-link" },
+                { label: "Operator", href: `${import.meta.env.BASE_URL}operator`, testId: "footer-operator-link" },
+                { label: "Sign on", href: `${import.meta.env.BASE_URL}sign-on`, testId: "footer-sign-on-link" },
+                { label: "Read the origin", href: `${import.meta.env.BASE_URL}founding-stories`, testId: "footer-origin-link" },
+              ].map(({ label, href, testId }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-70 transition-opacity"
+                  style={{ color: "rgba(244,237,224,0.28)" }}
+                  {...(testId ? { "data-testid": testId } : {})}
+                >
+                  {label}
+                </a>
+              ))}
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: "rgba(244,237,224,0.18)" }}>
+                {new Date().getFullYear()}
+              </p>
+            </div>
           </div>
         </footer>
 
@@ -1145,10 +1071,14 @@ function IntakeField({
 }: IntakeFieldProps) {
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="block font-sans text-sm font-medium">
+      <label
+        htmlFor={id}
+        className="block font-mono text-[10px] uppercase tracking-[0.22em]"
+        style={{ color: "rgba(244,237,224,0.55)" }}
+      >
         {label}
         {required ? (
-          <span className="ml-1" style={{ color: "hsl(var(--accent))" }}>*</span>
+          <span className="ml-1" style={{ color: "#d4a017" }}>*</span>
         ) : null}
       </label>
       <input
@@ -1159,8 +1089,13 @@ function IntakeField({
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
         autoComplete={type === "email" ? "email" : "off"}
-        className="block w-full rounded-sm border bg-input px-3 py-2 font-sans text-base focus:outline-none focus:ring-2"
-        style={{ borderColor: "hsl(var(--card-border))" }}
+        className="block w-full rounded-md px-3 py-2.5 font-sans text-base focus:outline-none focus:ring-1 transition-all"
+        style={{
+          background: "rgba(244,237,224,0.04)",
+          border: "1px solid rgba(244,237,224,0.14)",
+          color: "#f4ede0",
+          caretColor: "#d4a017",
+        }}
         data-testid={testId}
       />
     </div>

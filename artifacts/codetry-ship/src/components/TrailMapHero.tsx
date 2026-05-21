@@ -5,10 +5,15 @@
  * trail connects five interactive phase markers. Pine silhouettes,
  * a headwaters river, and hand-drawn aesthetic throughout.
  *
+ * On scroll-into-view the trail path draws itself via stroke-dashoffset
+ * animation — compositor-friendly, prefers-reduced-motion safe.
+ *
  * Props:
  *   currentPhase — 0 = none, 1–5 = active (glows that marker)
  *   onPhaseClick — called with phase number when a marker is clicked
  */
+
+import { useEffect, useRef } from "react";
 
 interface TrailMapHeroProps {
   currentPhase?: number;
@@ -103,8 +108,45 @@ function PhaseIcon({ n, cx, cy, r }: { n: number; cx: number; cy: number; r: num
 /* ── Main component ──────────────────────────────────────────────────────── */
 
 export function TrailMapHero({ currentPhase = 0, onPhaseClick, className = "" }: TrailMapHeroProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const trailRef     = useRef<SVGPathElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const trail     = trailRef.current;
+    if (!container || !trail) return;
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReduced) {
+      trail.style.strokeDasharray = "none";
+      trail.style.strokeDashoffset = "0";
+      return;
+    }
+
+    const len = trail.getTotalLength();
+    trail.style.strokeDasharray  = String(len);
+    trail.style.strokeDashoffset = String(len);
+    trail.style.transition = "stroke-dashoffset 2.4s ease-out";
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            trail.style.strokeDashoffset = "0";
+            observer.unobserve(container);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
+      ref={containerRef}
       className={`relative w-full select-none ${className}`}
       style={{ background: "#0d1d15" }}
       data-testid="trail-map-hero"
@@ -307,7 +349,9 @@ export function TrailMapHero({ currentPhase = 0, onPhaseClick, className = "" }:
           strokeLinecap="round"
           strokeLinejoin="round"
         />
+        {/* Cream trail — ref drives scroll-triggered stroke-dashoffset draw */}
         <path
+          ref={trailRef}
           d={TRAIL_PATH}
           fill="none"
           stroke="#f4ede0"
@@ -315,7 +359,6 @@ export function TrailMapHero({ currentPhase = 0, onPhaseClick, className = "" }:
           strokeLinecap="round"
           strokeLinejoin="round"
           filter="url(#trail-glow)"
-          strokeDasharray="0"
         />
 
         {/* ── Zone label bands (subtle) ── */}

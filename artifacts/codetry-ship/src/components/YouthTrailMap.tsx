@@ -6,10 +6,15 @@
  * through community fire (Your People), rocky terrain (The Hard Thing),
  * and opens into a river crossing at dawn (The Crossing, top).
  *
+ * On scroll-into-view the trail path draws itself via stroke-dashoffset
+ * animation — compositor-friendly, prefers-reduced-motion safe.
+ *
  * Props:
  *   currentPhase — 1–4 glows that marker, 0 = none
  *   onPhaseClick — called with phase number when a marker is tapped
  */
+
+import { useEffect, useRef } from "react";
 
 interface YouthTrailMapProps {
   currentPhase?: number;
@@ -114,8 +119,45 @@ function YouthIcon({ n, cx, cy, r }: { n: number; cx: number; cy: number; r: num
 /* ── Component ───────────────────────────────────────────────────────────── */
 
 export function YouthTrailMap({ currentPhase = 0, onPhaseClick, className = "" }: YouthTrailMapProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const trailRef     = useRef<SVGPathElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const trail     = trailRef.current;
+    if (!container || !trail) return;
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReduced) {
+      trail.style.strokeDasharray  = "none";
+      trail.style.strokeDashoffset = "0";
+      return;
+    }
+
+    const len = trail.getTotalLength();
+    trail.style.strokeDasharray  = String(len);
+    trail.style.strokeDashoffset = String(len);
+    trail.style.transition = "stroke-dashoffset 2.2s ease-out";
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            trail.style.strokeDashoffset = "0";
+            observer.unobserve(container);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
+      ref={containerRef}
       className={`relative w-full select-none ${className}`}
       style={{ background: "#0d1d15" }}
       data-testid="youth-trail-map"
@@ -281,7 +323,9 @@ export function YouthTrailMap({ currentPhase = 0, onPhaseClick, className = "" }
           fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="5"
           strokeLinecap="round" strokeLinejoin="round"
         />
+        {/* Cream trail — ref drives scroll-triggered stroke-dashoffset draw */}
         <path
+          ref={trailRef}
           d={TRAIL_PATH}
           fill="none" stroke="#f4ede0" strokeWidth="2.2"
           strokeLinecap="round" strokeLinejoin="round"
