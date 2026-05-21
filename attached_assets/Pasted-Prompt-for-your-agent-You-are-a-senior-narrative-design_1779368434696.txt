@@ -1,0 +1,40 @@
+Prompt for your agent:You are a senior narrative designer and frontend craftsman working on the Headwaters project. We are completely redesigning the CodeTry Handbook page (/codetry-handbook/) to feel like a natural, beautiful extension of the Headwaters brand — not a generic embedded book tool.Brand Alignment (Critical)Match the Headwaters visual language exactly: northern, respectful, luminous, professional yet warm.
+Color palette: Deep northern greens (#0F1C18 / #1C3A2F), warm ambers (#D9A066), icy blues, soft creams.
+Typography: Elegant serif for headings (storytelling feel), clean legible sans for body.
+Atmosphere: Subtle northern mist/snow particles (low opacity), soft paper/journal textures, generous whitespace, high-end documentary feel.
+
+Current Problems
+The existing embedded book/tools feel bolted-on, generic, and disconnected from the Headwaters aesthetic. We want the handbook to feel like a trusted physical field journal brought to life — part of the same northern journey as the Odyssey and Youth Path.New Vision: “The CodeTry Field Journal”Hero SectionFull-bleed northern landscape background with subtle overlay gradient.
+Elegant title: “CodeTry Handbook: Building Tools for Northern Food Sovereignty”
+Warm tagline + short introduction in serif.
+Optional: northern-adapted living guide creature (raven/owl) perched or gently flying in the corner.
+
+Main Experience – The Handbook
+Transform the book into a beautiful digital field journal with these features:Left Sidebar / Navigation  Looks like a leather-bound journal index or carved wooden tabs.  
+Chapters/sections as trail-marker style links with subtle icons (seedling, ledger, code node, community circle, etc.).  
+Active section highlighted with warm amber glow and slight “pressed page” effect.
+Main Content Area  Clean, spacious journal-page layout with subtle paper texture background.  
+Embedded tools (CodeTry playgrounds, editors, previews) stay fully functional but framed in warm wooden/notebook borders.  
+Content styled with:Serif headings
+Generous line height
+Illustrated callouts or marginalia (small northern icons, hand-drawn style)
+Code blocks with northern-themed syntax highlighting (soft greens/blues)
+Right Sidebar (Optional but Recommended)  “Field Notes” panel — quick tips, related resources, or “How this helps northern communities” insights.  
+Collapsible on mobile.
+Interactive & Animation StandardsSmooth page-turn / section transition animations (soft paper-rustle easing).
+Scroll-triggered reveals and gentle parallax on background elements.
+Hover states on tools feel tactile (subtle lift + warm shadow).
+Mobile: Vertical journal flow — navigation becomes top tabs or accordion, content remains highly readable.
+
+Embedded Tools IntegrationKeep all existing CodeTry functionality and interactivity.
+Frame each tool/preview in a consistent “journal entry” card with header that looks handwritten or stamped.
+Add “Save Note” or “Bookmark Page” micro-interactions that feel rewarding.
+
+Overall Page EnhancementsConsistent with other Headwaters pages (same header/footer, navigation style).
+Subtle animated background elements (gentle mist or floating snow).
+Excellent accessibility and performance.
+Include the northern-adapted interactive mascot where it adds delight without distracting.
+
+Goal
+Make this feel like the most beautiful, trustworthy technical handbook on the internet — something community leaders, developers, and youth actually enjoy reading and using. It should feel cohesive with the Odyssey and Youth Path sections: hopeful, northern, and deeply human.Deliver the complete updated page component(s) with clear comments on theming, journal styling, and tool framing.
+

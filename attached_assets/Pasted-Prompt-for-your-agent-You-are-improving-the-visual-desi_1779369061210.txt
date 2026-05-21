@@ -1,0 +1,38 @@
+Prompt for your agent:You are improving the visual design and user experience of North Star, my personal daily ADHD-inattentive work companion. The app is already functionally solid. Your job is pure visual + experiential polish while respecting every constraint.Core Vision
+Transform North Star into a calm, grounding, beautiful daily ritual I actually look forward to opening every morning. It should feel like a warm, well-crafted northern field journal — spacious, intentional, and trustworthy — while staying true to the existing design system.Existing Design System (Respect Strictly)  Typography: Fraunces (serif) for all headings, Inter (sans) for body text.  
+Colors: Paper #FAFAF9, Warm Paper #F5F5F0, Ink #1C1917, Ink-Muted #78716C, Border #E7E5E4.  
+Zone Accents:  Z1 Sage #4F6E5C  
+Z2 Blue #3B5998  
+Z3 Purple #7C4E8A  
+Z4 Amber #B45309
+(Use light tints generously)
+Components: rounded-xl, thin borders, amber guardrails, solid Ink buttons.  
+Bottom nav with Star / Grid / Book / Calendar / Settings icons.
+
+ADHD-Inattentive Optimizations (Very Important)  Generous whitespace and clear visual hierarchy so nothing feels cluttered.  
+Strong visual anchoring so I never lose puzzle pieces.  
+Dopamine-friendly micro-rewards (satisfying checks, gentle progress fills, calm celebrations).  
+Reduce decision fatigue — everything important should be glanceable.
+
+Specific Improvements NeededOverall PolishAdd breathing room with subtle section dividers (soft paper texture or warm ink lines).
+Use Zone colors more intentionally as visual anchors (left accent borders on cards, colored dots, icon highlights).
+Subtle northern warmth: very light paper texture background, soft shadows, and gentle warmth in the overall feel.
+Today Page (Highest Priority – This is my daily home)Make the morning flow feel like a calm ritual.
+Constellation Picker: Turn this from a plain list into a beautiful, satisfying selection experience (larger cards, zone-colored glows, hover/tap lift, clear selected state).
+North Star statement area: more prominent, editable with elegant focus state.
+Daily log: richer, journal-like formatting.
+Zones PageDrag-and-drop areas should feel tactile and clear.
+Project cards: stronger zone color presence, better hierarchy, satisfying drag feedback.
+Weekly / Seasonal ReviewUpgrade horizontal progress bars into beautiful zone-colored radial or rounded fills with clear labels and gentle animation on load.
+Zone balance visualization should feel insightful and calming.
+Guardrail / Nudge AlertsMake amber alerts feel warm and intentional (soft wood-tone borders, better iconography, supportive tone).
+Bottom NavigationStronger active state (warm glow + icon fill).
+Make it feel anchored and part of the journal, not floating UI.
+Constraints (Do Not Break)Keep all existing routes, components, Zustand store, and Zone Model logic 100% intact.
+Visual layer only — no new dependencies.
+Mobile-first, touch targets ≥ 44×44px.
+Do not change any functionality.
+
+Deliverable
+Return the complete updated files from artifacts/north-star/ with your improvements. Focus especially on the Today page, zone cards, constellation picker, and review charts. Include helpful comments about the visual decisions.This page needs to feel like a calm, beautiful northern command center I want to visit every single day.
+
