@@ -1,285 +1,282 @@
-import { PrintNav } from "../components/PrintNav";
-
-const base = import.meta.env.BASE_URL;
-
-const CREAM     = "#f4ede0";
-const DARK      = "#2D1B0E";
+const DARK      = "#1a1008";
 const AMBER     = "#C97228";
+const CREAM     = "#f4ede0";
 const EVERGREEN = "#1f3d2e";
-const INK       = "#1a1a1a";
-const MUTED     = "#7a6f64";
+const WARM_MID  = "#2c1e10";
+const MUTED     = "rgba(244,237,224,0.55)";
 const WHITE     = "#ffffff";
-const WARM_MID  = "#e8ddd0";
+
+const card = (bg: string, border?: string): React.CSSProperties => ({
+  background: bg,
+  borderRadius: "18px",
+  padding: "28px 24px",
+  marginBottom: "14px",
+  border: border ? `1.5px solid ${border}` : undefined,
+});
+
+const sectionLabel: React.CSSProperties = {
+  fontSize: "10px",
+  fontWeight: 700,
+  letterSpacing: "0.2em",
+  textTransform: "uppercase",
+  color: AMBER,
+  margin: "0 0 10px",
+  fontFamily: "Inter, system-ui, sans-serif",
+};
+
+const headline: React.CSSProperties = {
+  fontFamily: "Fraunces, Georgia, serif",
+  fontSize: "26px",
+  fontWeight: 700,
+  lineHeight: 1.15,
+  margin: "0 0 10px",
+  color: CREAM,
+};
+
+const body: React.CSSProperties = {
+  fontFamily: "Inter, system-ui, sans-serif",
+  fontSize: "15px",
+  lineHeight: 1.65,
+  color: MUTED,
+  margin: "0 0 6px",
+};
+
+const bullet = (emoji: string, text: string, sub?: string) => (
+  <div key={text} style={{ display: "flex", gap: "12px", marginBottom: "14px", alignItems: "flex-start" }}>
+    <span style={{ fontSize: "18px", lineHeight: 1, flexShrink: 0, marginTop: "1px" }}>{emoji}</span>
+    <div>
+      <p style={{ ...body, color: CREAM, fontWeight: 600, margin: 0 }}>{text}</p>
+      {sub && <p style={{ ...body, fontSize: "13px", marginTop: "3px", margin: "3px 0 0" }}>{sub}</p>}
+    </div>
+  </div>
+);
+
+import React from "react";
 
 export default function GillesPitch() {
-  const phases = [
-    {
-      phase: "Phase 1",
-      year: "Now · 2026",
-      label: "Discover",
-      tag: "Six weeks",
-      bullets: [
-        "What's in your head becomes a system",
-        "Voice notes replace phone calls",
-        "Costs and assets go on paper",
-        "Your wife sees the full picture",
-      ],
-      style: "light" as const,
-    },
-    {
-      phase: "Phase 2",
-      year: "2027",
-      label: "Run",
-      tag: "Operate from a distance",
-      bullets: [
-        "The hotel runs shift to shift without you",
-        "Deer Lake store shares the same layer",
-        "Volume purchasing kicks in for both",
-        "The band has a plan to show the band",
-      ],
-      style: "mid" as const,
-    },
-    {
-      phase: "Phase 3",
-      year: "2028",
-      label: "Step Back",
-      tag: "The river flows without you",
-      bullets: [
-        "You're no longer in every call",
-        "The Deer Lake contract is running",
-        "What you built keeps moving",
-        "The next chapter is yours to design",
-      ],
-      style: "dark" as const,
-    },
-  ];
-
-  function phaseColors(style: "light" | "mid" | "dark") {
-    if (style === "dark") return { bg: DARK, border: DARK, label: WHITE, tag: AMBER, text: "rgba(244,237,224,0.75)", bullet: AMBER, phase: "rgba(244,237,224,0.35)" };
-    if (style === "mid") return { bg: WARM_MID, border: "#cfc5b6", label: DARK, tag: AMBER, text: MUTED, bullet: AMBER, phase: MUTED };
-    return { bg: CREAM, border: "#d6cfc3", label: DARK, tag: AMBER, text: MUTED, bullet: AMBER, phase: MUTED };
-  }
-
   return (
-    <>
-      <PrintNav
-        targetId="pdf-target"
-        filename="headwaters-gilles-proposal.pdf"
-        paginate={true}
-        pdfApiPath="/api/pdf/gilles-pitch.pdf"
-      />
+    <div style={{
+      background: DARK,
+      minHeight: "100vh",
+      fontFamily: "Inter, system-ui, sans-serif",
+      display: "flex",
+      justifyContent: "center",
+      padding: "0 0 60px",
+    }}>
+      <div style={{ width: "100%", maxWidth: "420px", padding: "0 16px" }}>
 
-      <div id="pdf-target" style={{ background: "#d8d2c8" }}>
+        {/* ── HERO ───────────────────────────────────────────── */}
+        <div style={{ padding: "48px 8px 24px" }}>
+          <p style={{ ...sectionLabel, color: "rgba(201,114,40,0.7)", margin: "0 0 12px" }}>
+            G.M. Pepin Holdings · Private
+          </p>
+          <h1 style={{
+            fontFamily: "Fraunces, Georgia, serif",
+            fontSize: "48px",
+            fontWeight: 700,
+            color: WHITE,
+            margin: "0 0 14px",
+            lineHeight: 1.05,
+          }}>
+            Gilles.
+          </h1>
+          <p style={{ ...body, fontSize: "17px", color: "rgba(244,237,224,0.75)", margin: 0 }}>
+            40 years of knowing exactly what to do.<br />
+            None of it written down.
+          </p>
+        </div>
 
-        {/* ── PAGE 1: COVER ─────────────────────────────────────── */}
-        <div
-          className="page-letter"
-          style={{
-            width: "8.5in",
-            height: "11in",
-            position: "relative",
-            overflow: "hidden",
-            fontFamily: "Inter, system-ui, sans-serif",
-          }}
-        >
-          <img
-            src={`${base}gilles-lake.jpeg`}
-            alt="Deer Lake at sunrise"
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 25%",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to bottom, rgba(18,8,2,0.62) 0%, rgba(18,8,2,0.05) 38%, rgba(18,8,2,0.12) 62%, rgba(18,8,2,0.82) 100%)",
-            }}
-          />
+        {/* ── THE PROBLEM ────────────────────────────────────── */}
+        <div style={{ ...card(WARM_MID, "rgba(201,114,40,0.2)") }}>
+          <p style={sectionLabel}>The problem you already know</p>
+          <h2 style={{ ...headline, fontSize: "22px" }}>
+            Everything runs through your two ears.
+          </h2>
+          {bullet("⚡", "When you're not there — it slows down.")}
+          {bullet("📉", "When you step back — it could collapse.")}
+          {bullet("🔒", "You can't sell a business that only works because of you.")}
+          <p style={{ ...body, color: AMBER, fontWeight: 600, margin: "10px 0 0" }}>
+            You said it yourself. Twice.
+          </p>
+        </div>
 
-          {/* Top bar */}
-          <div
-            style={{
-              position: "relative",
-              zIndex: 2,
-              padding: "0.48in 0.65in 0",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-            }}
-          >
-            <p style={{ fontSize: "0.58rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", margin: 0, fontWeight: 500 }}>
-              Private · Headwaters Development Services
+        {/* ── WHATSAPP ───────────────────────────────────────── */}
+        <div style={{ ...card("#1e2d1e", "rgba(31,61,46,0.8)") }}>
+          <p style={{ ...sectionLabel, color: "#6aad7a" }}>What you're already doing right</p>
+          <h2 style={{ ...headline, fontSize: "22px" }}>
+            WhatsApp works fine.
+          </h2>
+          <p style={{ ...body, color: "rgba(244,237,224,0.7)", marginBottom: "16px" }}>
+            Every message you send is knowledge. Experience. 40 years of knowing exactly what to do.
+          </p>
+          <div style={{
+            background: "rgba(31,61,46,0.6)",
+            borderRadius: "12px",
+            padding: "16px 18px",
+            borderLeft: `3px solid #6aad7a`,
+          }}>
+            <p style={{ ...body, color: CREAM, fontStyle: "italic", margin: 0, fontSize: "16px" }}>
+              The problem isn't the message.<br />
+              <strong style={{ color: WHITE }}>The problem is — it disappears.</strong>
             </p>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.1in" }}>
-              <img src={`${base}eagle-mark.svg`} alt="Headwaters" style={{ width: "0.3in", height: "0.25in", objectFit: "contain", flexShrink: 0, opacity: 0.75 }} />
+          </div>
+        </div>
+
+        {/* ── FIRE ESCAPE ────────────────────────────────────── */}
+        <div style={{ ...card(WARM_MID, `rgba(201,114,40,0.3)`) }}>
+          <p style={sectionLabel}>You built Fire & Security Centre</p>
+          <h2 style={{ ...headline, fontSize: "22px" }}>
+            Right now your messages put out today's fire.
+          </h2>
+          <p style={{ ...body, marginBottom: "20px" }}>
+            What if those same messages also —
+          </p>
+          {bullet("📋", "Wrote the fire escape plan", "So the next crew knows what to do")}
+          {bullet("🧯", "Showed everyone where the extinguisher is", "Without calling you")}
+          {bullet("🔁", "Made it repeatable", "Same work. Same words. Just captured.")}
+        </div>
+
+        {/* ── THE PROPOSAL ───────────────────────────────────── */}
+        <div style={{
+          background: AMBER,
+          borderRadius: "18px",
+          padding: "28px 24px",
+          marginBottom: "14px",
+        }}>
+          <p style={{ ...sectionLabel, color: "rgba(26,16,8,0.65)" }}>What I'm proposing</p>
+          <h2 style={{
+            fontFamily: "Fraunces, Georgia, serif",
+            fontSize: "26px",
+            fontWeight: 700,
+            color: DARK,
+            lineHeight: 1.15,
+            margin: "0 0 16px",
+          }}>
+            I trail your operation.<br />Not to change it.<br />To learn it.
+          </h2>
+          {[
+            ["You do what you do", "I document the knowledge nuggets"],
+            ["No new systems to learn", "No planning room required"],
+            ["French or English", "Voice note on your time"],
+          ].map(([a, b]) => (
+            <div key={a} style={{ display: "flex", gap: "10px", marginBottom: "12px", alignItems: "flex-start" }}>
+              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: DARK, flexShrink: 0, marginTop: "7px" }} />
               <div>
-                <p style={{ fontSize: "0.56rem", fontWeight: 700, color: CREAM, letterSpacing: "0.06em", textTransform: "uppercase", margin: 0, lineHeight: 1.2 }}>Headwaters</p>
-                <p style={{ fontSize: "0.42rem", color: "rgba(244,237,224,0.45)", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>Development Services</p>
+                <p style={{ margin: 0, fontSize: "14px", fontWeight: 700, color: DARK, lineHeight: 1.3 }}>{a}</p>
+                <p style={{ margin: "2px 0 0", fontSize: "13px", color: "rgba(26,16,8,0.65)", lineHeight: 1.4 }}>{b}</p>
               </div>
             </div>
-          </div>
+          ))}
+        </div>
 
-          {/* Bottom headline */}
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 2, padding: "0 0.65in 0.62in" }}>
-            <p style={{ fontSize: "0.62rem", fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, margin: "0 0 0.18in" }}>
-              G.M. Pepin Holdings Inc.
+        {/* ── LABOUR ─────────────────────────────────────────── */}
+        <div style={{ ...card(WARM_MID, "rgba(201,114,40,0.15)") }}>
+          <p style={sectionLabel}>The labour problem</p>
+          <h2 style={{ ...headline, fontSize: "20px" }}>
+            You can't hire reliable people right now.
+          </h2>
+          <p style={{ ...body, marginBottom: "16px" }}>That's real. But here's the question:</p>
+          <div style={{
+            background: "rgba(201,114,40,0.15)",
+            borderRadius: "12px",
+            padding: "16px 18px",
+            borderLeft: `3px solid ${AMBER}`,
+            marginBottom: "16px",
+          }}>
+            <p style={{ ...body, color: CREAM, fontWeight: 600, fontSize: "16px", margin: 0 }}>
+              Would reliable people stay longer if the job was clearer?
             </p>
-            <h1 style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "2.8rem", fontWeight: 700, color: WHITE, lineHeight: 1.08, margin: "0 0 0.22in", maxWidth: "6.2in" }}>
-              Six weeks.<br />
-              A plan you can both<br />
-              step back from.
-            </h1>
-            <p style={{ fontSize: "0.7rem", color: "rgba(244,237,224,0.55)", margin: 0, letterSpacing: "0.06em" }}>
-              A private proposal · May 2026
+          </div>
+          <p style={{ ...body, margin: 0 }}>
+            Day 1 with a real orientation — not a hope and a handshake. That's what this builds toward.
+          </p>
+        </div>
+
+        {/* ── 2 YEARS ────────────────────────────────────────── */}
+        <div style={{
+          background: EVERGREEN,
+          borderRadius: "18px",
+          padding: "28px 24px",
+          marginBottom: "14px",
+        }}>
+          <p style={{ ...sectionLabel, color: "rgba(244,237,224,0.55)" }}>In 2 years</p>
+          <h2 style={{ ...headline, fontSize: "22px" }}>
+            Same work.<br />But now it scales.
+          </h2>
+          {[
+            ["✅", "You're not the only one who knows how it works"],
+            ["✅", "New crews get up to speed faster"],
+            ["✅", "The chief sees a model that runs without hand-holding"],
+            ["✅", "You have something worth passing on — or selling"],
+          ].map(([icon, text]) => (
+            <div key={text} style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+              <span style={{ fontSize: "16px", flexShrink: 0 }}>{icon}</span>
+              <p style={{ ...body, color: CREAM, margin: 0, fontSize: "14px" }}>{text}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* ── COST / ASK ─────────────────────────────────────── */}
+        <div style={{ ...card("#0f0a05", `rgba(201,114,40,0.4)`) }}>
+          <p style={sectionLabel}>What it costs you right now</p>
+          <h2 style={{ ...headline, fontSize: "28px", color: WHITE }}>
+            Nothing changes.
+          </h2>
+          <p style={{ ...body, fontSize: "16px", color: "rgba(244,237,224,0.8)", marginBottom: "20px" }}>
+            You keep running your operation.<br />You keep using WhatsApp.
+          </p>
+          <div style={{
+            borderTop: `1px solid rgba(201,114,40,0.3)`,
+            paddingTop: "18px",
+          }}>
+            <p style={{ ...sectionLabel, marginBottom: "8px" }}>All I'm asking</p>
+            <p style={{
+              fontFamily: "Fraunces, Georgia, serif",
+              fontSize: "20px",
+              fontWeight: 700,
+              color: AMBER,
+              margin: 0,
+              lineHeight: 1.3,
+            }}>
+              Let me walk alongside<br />for one season.
             </p>
           </div>
         </div>
 
-        {/* ── PAGE 2: JOURNEY ───────────────────────────────────── */}
-        <div
-          className="page-letter"
-          style={{
-            width: "8.5in",
-            height: "11in",
-            overflow: "hidden",
-            background: CREAM,
-            fontFamily: "Inter, system-ui, sans-serif",
-            color: INK,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {/* Amber top rule */}
-          <div style={{ height: "0.055in", background: AMBER }} />
-
-          {/* Lead */}
-          <div style={{ padding: "0.5in 0.65in 0.42in" }}>
-            <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.12rem", lineHeight: 1.58, color: DARK, margin: 0, maxWidth: "6.5in" }}>
-              There's a version of this where you step back on your terms —
-              and everything you built keeps moving.
-            </p>
-          </div>
-
-          {/* Phase section label */}
-          <div style={{ padding: "0 0.65in 0.18in" }}>
-            <p style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: MUTED, margin: 0 }}>
-              The plan
-            </p>
-          </div>
-
-          {/* Three phases */}
-          <div style={{ padding: "0 0.65in", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.18in" }}>
-            {phases.map((p) => {
-              const c = phaseColors(p.style);
-              return (
-                <div
-                  key={p.phase}
-                  style={{
-                    background: c.bg,
-                    border: `1.5px solid ${c.border}`,
-                    borderRadius: "5px",
-                    padding: "0.28in 0.28in 0.3in",
-                  }}
-                >
-                  <p style={{ fontSize: "0.5rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: c.phase, margin: "0 0 0.06in" }}>
-                    {p.phase}
-                  </p>
-                  <p style={{ fontSize: "0.62rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: c.tag, margin: "0 0 0.1in" }}>
-                    {p.year}
-                  </p>
-                  <h3 style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.15rem", fontWeight: 700, color: c.label, margin: "0 0 0.18in", lineHeight: 1.1 }}>
-                    {p.label}
-                  </h3>
-                  <div style={{ borderTop: `1px solid ${p.style === "dark" ? "rgba(244,237,224,0.15)" : "#d6cfc3"}`, paddingTop: "0.16in" }}>
-                    {p.bullets.map((b, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "0.1in", marginBottom: "0.1in" }}>
-                        <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: c.bullet, flexShrink: 0, marginTop: "0.07in" }} />
-                        <p style={{ margin: 0, fontSize: "0.69rem", lineHeight: 1.5, color: c.text }}>{b}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* How it starts */}
-          <div style={{ padding: "0.35in 0.65in 0" }}>
-            <p style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: MUTED, margin: "0 0 0.16in" }}>
-              How Phase 1 works
-            </p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.18in 0.45in" }}>
-              <div style={{ borderTop: `2px solid ${AMBER}`, paddingTop: "0.14in" }}>
-                <h4 style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.85rem", fontWeight: 600, color: DARK, margin: "0 0 0.08in" }}>
-                  A voice note on your time
-                </h4>
-                <p style={{ margin: 0, fontSize: "0.72rem", lineHeight: 1.6, color: INK }}>
-                  In the truck, between calls, in French or English — you talk, I build it into something usable.
-                  The difference between a voice note on your time and a phone call on her time is everything.
-                </p>
-              </div>
-              <div style={{ borderTop: `2px solid ${AMBER}`, paddingTop: "0.14in" }}>
-                <h4 style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.85rem", fontWeight: 600, color: DARK, margin: "0 0 0.08in" }}>
-                  You keep running the hotel
-                </h4>
-                <p style={{ margin: 0, fontSize: "0.72rem", lineHeight: 1.6, color: INK }}>
-                  No planning room. No new systems to learn.
-                  I handle the thinking that keeps getting pushed off.
-                  Six weeks — then you have something real to hand over.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Fee + CTA */}
-          <div style={{ padding: "0.35in 0.65in 0", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.18in 0.45in" }}>
-            <div style={{ background: DARK, borderRadius: "5px", padding: "0.24in 0.28in" }}>
-              <p style={{ fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.4)", margin: "0 0 0.1in" }}>
-                How it gets paid for
-              </p>
-              <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.0rem", fontWeight: 700, color: WHITE, margin: "0 0 0.1in", lineHeight: 1.2 }}>
-                No new cheque.<br />The $72,000 is already there.
-              </p>
-              <p style={{ fontSize: "0.68rem", color: "rgba(244,237,224,0.65)", margin: 0, lineHeight: 1.55 }}>
-                Phase 1 · Discovery · $28,000<br />
-                The remaining balance funds what you both decide comes next.
-              </p>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "0.1in 0" }}>
-              <p style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: MUTED, margin: "0 0 0.1in" }}>
-                To start
-              </p>
-              <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.0rem", fontWeight: 700, color: DARK, margin: "0 0 0.1in", lineHeight: 1.3 }}>
-                One conversation —<br />both of you if you'd like.
-              </p>
-              <p style={{ fontSize: "0.72rem", color: INK, margin: "0 0 0.12in", lineHeight: 1.55 }}>
-                What does stepping back actually look like — for both of you?
-              </p>
-              <p style={{ fontSize: "0.75rem", fontWeight: 700, color: EVERGREEN, margin: 0 }}>
-                A reply is enough to reactivate.
-              </p>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div style={{ marginTop: "auto", borderTop: "1px solid rgba(45,27,14,0.1)", padding: "0.18in 0.65in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.1in" }}>
-              <img src={`${base}eagle-mark.svg`} alt="Headwaters" style={{ width: "0.2in", height: "0.17in", objectFit: "contain", flexShrink: 0, opacity: 0.5 }} />
-              <span style={{ fontSize: "0.55rem", color: MUTED, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                Headwaters Development Services · Private
-              </span>
-            </div>
-            <p style={{ fontSize: "0.55rem", color: MUTED, margin: 0 }}>May 2026</p>
-          </div>
+        {/* ── SIGN OFF ───────────────────────────────────────── */}
+        <div style={{ padding: "24px 8px 0", textAlign: "center" }}>
+          <p style={{
+            fontFamily: "Fraunces, Georgia, serif",
+            fontSize: "22px",
+            fontWeight: 700,
+            color: CREAM,
+            lineHeight: 1.4,
+            marginBottom: "16px",
+          }}>
+            "You can't sell a business<br />with just one client."
+          </p>
+          <p style={{ ...body, textAlign: "center", marginBottom: "4px" }}>
+            You don't have to build forever.
+          </p>
+          <p style={{ ...body, textAlign: "center", color: CREAM, marginBottom: "28px" }}>
+            But right now, everything you've learned<br />is still just in your head.
+          </p>
+          <p style={{
+            fontFamily: "Fraunces, Georgia, serif",
+            fontSize: "18px",
+            fontWeight: 700,
+            color: AMBER,
+            margin: "0 0 4px",
+          }}>
+            Let's get it out — and put it to work.
+          </p>
+          <p style={{ ...body, fontSize: "13px", marginTop: "24px", color: "rgba(244,237,224,0.35)" }}>
+            — Bobbie Parr · Headwaters Development Services<br />
+            ourheadwaters.ca
+          </p>
         </div>
+
       </div>
-    </>
+    </div>
   );
 }
