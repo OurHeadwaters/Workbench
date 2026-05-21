@@ -13,6 +13,7 @@ import {
 import { useUpload } from "@workspace/object-storage-web";
 import { useToast } from "@/hooks/use-toast";
 import { computeFileHash, errMessage } from "@/lib/utils";
+import { getOwnerToken } from "@/lib/ownerAuth";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -102,14 +103,10 @@ export default function NewEntry() {
 
   const { uploadFile, isUploading, progress } = useUpload({
     getHeaders: () => {
-      try {
-        const t = window.localStorage.getItem("library:owner-token");
-        const headers: Record<string, string> = {};
-        if (t) headers.authorization = `Bearer ${t}`;
-        return headers;
-      } catch {
-        return {} as Record<string, string>;
-      }
+      const t = getOwnerToken();
+      const headers: Record<string, string> = {};
+      if (t) headers.authorization = `Bearer ${t}`;
+      return headers;
     },
     onSuccess: async (response, file) => {
       try {
@@ -225,20 +222,16 @@ export default function NewEntry() {
 
   const { uploadFile: uploadConfidentialFile, isUploading: isConfidentialUploading, progress: confidentialUploadProgress } = useUpload({
     getHeaders: () => {
-      try {
-        const t = window.localStorage.getItem("library:owner-token");
-        const headers: Record<string, string> = {};
-        if (t) headers.authorization = `Bearer ${t}`;
-        return headers;
-      } catch {
-        return {} as Record<string, string>;
-      }
+      const t = getOwnerToken();
+      const headers: Record<string, string> = {};
+      if (t) headers.authorization = `Bearer ${t}`;
+      return headers;
     },
     onSuccess: async (response, file) => {
       try {
         setConfidentialUploading(true);
         const hash = await computeFileHash(file);
-        const token = window.localStorage.getItem("library:owner-token") ?? "";
+        const token = getOwnerToken() ?? "";
         const meta = confidentialMetaRef.current;
         const res = await fetch("/api/library/confidential/intake", {
           method: "POST",
