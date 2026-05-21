@@ -1,0 +1,31 @@
+Prompt for your agent:You are a senior narrative designer and frontend craftsman specializing in respectful, high-impact community and Indigenous-focused digital experiences. We are dramatically elevating the Field Guide Finance page (https://northern-store-plan.replit.app/field-guide-finance/) — titled “807 Benefits” — within the Headwaters Food Systems Planning project.Project Tone Reminder
+Professional, trustworthy, hopeful, and deeply human. Northern, grounded, luminous. Use cool northern light, deep earth greens, warm ambers for opportunity, and icy blues for clarity. This is serious financial guidance for northern communities — it must feel empowering, not overwhelming.Current State (assumed from structure)
+This is a practical “field guide” explaining financial tools, benefits, programs, and strategies (the “807 Benefits” likely refers to key opportunities or a specific framework). It probably contains sections on funding sources, grants, tax credits, community finance models, budgeting tools, etc.Overall Visual & Experience UpgradesHero Section: Powerful full-bleed image or illustration of northern community members (hands planting, harvest, ledger + land, or a glowing northern landscape with financial icons integrated respectfully). Strong, elegant title: “Field Guide to Finance: 807 Benefits for Northern Communities”. Subtle tagline about sovereignty and resilience.
+Atmosphere: Very subtle animated northern mist or gentle snow particles in background layers. Soft paper/map texture overlay. High whitespace and breathing room.
+
+Key Section Improvements (Make These Transformative)Navigation / Benefit Categories
+Turn any tabs or list of benefit categories into beautiful trail-marker cards or woven basket-style navigation — each with a meaningful icon (seed, ledger, canoe, community circle, etc.), short evocative title, and northern color accent. Make them feel like chapters in a physical field journal.
+Main Content – The 807 Benefits  Present benefits as elegant, expandable field journal entries or illustrated knowledge cards.
+Each benefit card should include:Clear, bold title
+One-sentence impact statement (warm, hopeful tone)
+Eligibility / How it helps northern communities (with map pin or northern icon)
+Amount/value indicator (styled like a wooden stamp or carved number)
+“How to Access” button that looks like a trail sign
+Add subtle dividers that look like stitched leather or twine.
+Group them thematically (e.g., Grants & Funding, Tax Benefits, Community Models, Youth & Education, etc.) with illustrated section headers.
+Interactive Elements & Tools  Any calculators, checklists, or eligibility tools → wrap in warm, tactile containers (wooden frame or notebook paper style).
+Progress toward funding goals or benefit trackers → beautiful radial gauges or flowing water-style progress bars (tying into northern rivers theme).
+Add a “Save to My Field Journal” feature (with bookmark animation).
+Visual Storytelling  Interspersed photography of real northern people, land, and projects (with respectful captions).
+Custom SVG icons throughout — hand-drawn feel but precise (e.g., sprouting seed + dollar sprout, community circle with ledger lines).
+Subtle connecting “trail line” that flows down the page, glowing softly as you scroll.
+Call to Action & Footer  Strong, hopeful CTA section: “Ready to Bring These Benefits Home?” with clear next steps.
+Include the northern-adapted living guide creature (raven, owl, or caribou companion) that flies in and perches near key actions.
+Technical & Animation StandardsSmooth scroll reveals, gentle hover lifts, and soft paper-rustle transitions.
+Fully responsive — on mobile, cards stack beautifully like open journal pages.
+High accessibility (contrast, focus states, screen-reader friendly).
+Integrate the latest interactive mascot (adapted respectfully for this formal context).
+
+Goal
+This page should feel like a trusted, beautiful physical field guide brought to life digitally — something community leaders, program managers, and families actually want to spend time with and return to. Empowering, clear, and visually memorable while remaining professional.Make the financial information feel hopeful and achievable rather than dry or bureaucratic.
+
