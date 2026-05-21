@@ -25,16 +25,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChapterBlock } from "@/components/ChapterBlock";
 import { BottomChrome, TopChrome } from "@/components/Chrome";
 import { CaptureSheet } from "@/components/CaptureSheet";
+import { FieldNotesPanel } from "@/components/FieldNotesPanel";
 import { GlossaryTermSheet } from "@/components/GlossaryTermSheet";
+import { NorthernAtmosphere } from "@/components/NorthernAtmosphere";
 import { useReader } from "@/contexts/ReaderState";
 import { useHandbookContent } from "@/contexts/HandbookContentContext";
 import { chapterExcerpt } from "@/data/handbook";
 import { GLOSSARY_ENTRIES } from "@/data/glossary";
 import { useColors } from "@/hooks/useColors";
+import { J } from "@/theme/journal";
 
 const SERIF_BOLD = "Fraunces_700Bold";
 const SERIF_ITALIC = "Fraunces_400Regular_Italic";
 const MONO = "JetBrainsMono_500Medium";
+const AMBER = "#D9A066";
 
 export default function ChapterScreen() {
   const params = useLocalSearchParams<{ id: string }>();
@@ -381,10 +385,18 @@ export default function ChapterScreen() {
             {
               paddingTop: topPad,
               paddingBottom: bottomPad,
+              backgroundColor: J.color.parchment,
             },
           ]}
+          style={styles.scrollView}
           showsVerticalScrollIndicator={false}
         >
+          {/* Northern atmosphere behind chapter header */}
+          <View style={styles.chapterAtmosphere} pointerEvents="none">
+            <NorthernAtmosphere style={{ opacity: 0.07 }} />
+            <View style={styles.chapterAtmosphereOverlay} />
+          </View>
+
           <Text
             style={[
               styles.chapterEyebrow,
@@ -406,7 +418,7 @@ export default function ChapterScreen() {
           >
             {chapter.title}
           </Text>
-          <View style={[styles.titleRule, { backgroundColor: c.rule }]} />
+          <View style={[styles.titleRule, { backgroundColor: AMBER }]} />
 
           {chapter.blocks
             .filter((b) => !b.practitioner || showPractitionerVoice)
@@ -433,6 +445,12 @@ export default function ChapterScreen() {
               />
             );
           })}
+
+          {/* Field Notes panel — surfaces callout blocks as a collapsible sidebar */}
+          <FieldNotesPanel
+            blocks={chapter.blocks}
+            fontScale={fontScale}
+          />
 
           <View style={{ height: 24 }} />
           <View style={[styles.endRule, { backgroundColor: c.rule }]} />
@@ -534,7 +552,27 @@ export default function ChapterScreen() {
 const styles = StyleSheet.create({
   root: { flex: 1 },
   tapLayer: { flex: 1 },
+  scrollView: { flex: 1 },
   scroll: { paddingHorizontal: 28 },
+  chapterAtmosphere: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 220,
+    overflow: "hidden",
+    backgroundColor: J.color.canopy,
+    pointerEvents: "none" as any,
+  },
+  chapterAtmosphereOverlay: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 80,
+    backgroundColor: J.color.parchment,
+    opacity: 0.8,
+  },
   center: { flex: 1, alignItems: "center", justifyContent: "center" },
   chapterEyebrow: {
     fontSize: 11,

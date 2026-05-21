@@ -20,22 +20,27 @@ import { constellation } from "@/data/constellation";
 import { PIONEER_STATIONS } from "@/data/pioneerPath";
 import { TALES } from "@/data/tales";
 import { usePioneerPath } from "@/lib/pioneerPath/store";
+import { NorthernAtmosphere } from "@/components/NorthernAtmosphere";
+import { J } from "@/theme/journal";
 
-const SERIF = "Fraunces_400Regular";
-const SERIF_ITALIC = "Fraunces_400Regular_Italic";
-const SERIF_BOLD = "Fraunces_700Bold";
-const MONO = "JetBrainsMono_500Medium";
+const SERIF        = J.font.serif;
+const SERIF_ITALIC = J.font.serifItalic;
+const SERIF_BOLD   = J.font.serifBold;
+const MONO         = J.font.mono;
 
-const EVERGREEN = "#1f3d2e";
-const CREAM = "#f4ede0";
-const RUST = "#b85a3e";
+const FOREST   = J.color.forest;
+const CANOPY   = J.color.canopy;
+const EVERGREEN = J.color.evergreen;
+const CREAM    = J.color.cream;
+const AMBER    = J.color.amber;
+const RUST     = J.color.rust;
 
 export default function FrontPage() {
   const c = useColors();
   const insets = useSafeAreaInsets();
   const { lastRead, bookmarks, glossaryTerms } = useReader();
   const { CHAPTERS, getChapter, PARTS } = useHandbookContent();
-  const webTop = Platform.OS === "web" ? 67 : 0;
+  const webTop    = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 
   const { ready: pathReady, isCompleted, isUnlocked } = usePioneerPath();
@@ -43,18 +48,16 @@ export default function FrontPage() {
   const badgePulse = useRef(new Animated.Value(1)).current;
   const prevStationId = useRef<string | undefined>(undefined);
 
-  const lastChapter = lastRead ? getChapter(lastRead.chapterId) : undefined;
+  const lastChapter  = lastRead ? getChapter(lastRead.chapterId) : undefined;
   const firstChapter = CHAPTERS[0];
-  const beginTarget = lastChapter ? lastChapter.id : firstChapter.id;
-  const isReturning = !!lastChapter;
+  const beginTarget  = lastChapter ? lastChapter.id : firstChapter.id;
+  const isReturning  = !!lastChapter;
 
   const currentStation = pathReady
     ? (PIONEER_STATIONS.find((s) => isUnlocked(s.id) && !isCompleted(s.id)) ??
        [...PIONEER_STATIONS].reverse().find((s) => isCompleted(s.id)))
     : undefined;
 
-  // Pulse the station badge whenever the active station changes (i.e. one was
-  // just marked done and the next station unlocked).
   useEffect(() => {
     if (!pathReady) return;
     const id = currentStation?.id;
@@ -62,16 +65,8 @@ export default function FrontPage() {
     prevStationId.current = id;
     if (prevStationId.current === undefined) return;
     Animated.sequence([
-      Animated.timing(badgePulse, {
-        toValue: 1.05,
-        duration: 180,
-        useNativeDriver: true,
-      }),
-      Animated.timing(badgePulse, {
-        toValue: 1,
-        duration: 260,
-        useNativeDriver: true,
-      }),
+      Animated.timing(badgePulse, { toValue: 1.05, duration: 180, useNativeDriver: true }),
+      Animated.timing(badgePulse, { toValue: 1,    duration: 260, useNativeDriver: true }),
     ]).start();
   }, [pathReady, currentStation?.id, badgePulse]);
 
@@ -80,15 +75,12 @@ export default function FrontPage() {
   );
 
   const featuredTale =
-    TALES.find((t) => t.id === "the-fish-who-stopped-trying-to-climb") ??
-    TALES[0];
+    TALES.find((t) => t.id === "the-fish-who-stopped-trying-to-climb") ?? TALES[0];
 
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
       <ScrollView
-        contentContainerStyle={{
-          paddingBottom: Math.max(insets.bottom, webBottom) + 56,
-        }}
+        contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, webBottom) + 56 }}
         showsVerticalScrollIndicator={false}
       >
 
@@ -99,8 +91,19 @@ export default function FrontPage() {
             { paddingTop: Math.max(insets.top, webTop) + 28 },
           ]}
         >
+          {/* Atmospheric particle layer */}
+          <NorthernAtmosphere style={{ opacity: 0.12 }} />
+
+          {/* Landscape gradient layers */}
+          {/* Sky vignette — deep at very top */}
+          <View style={styles.heroGradientSky} pointerEvents="none" />
+          {/* Horizon band — treeline silhouette effect */}
+          <View style={styles.heroHorizon} pointerEvents="none" />
+          {/* Ground fade — content transitions up from below */}
+          <View style={styles.heroGradientBottom} pointerEvents="none" />
+
           <Text style={[styles.heroEyebrow, { fontFamily: MONO }]}>
-            A CODETRY HANDBOOK
+            A FIELD JOURNAL
           </Text>
           <Text style={[styles.heroTitle, { fontFamily: SERIF_BOLD }]}>
             Headwaters
@@ -108,13 +111,17 @@ export default function FrontPage() {
           <Text style={[styles.heroSubtitle, { fontFamily: SERIF_ITALIC }]}>
             How a Community Runs Its Own Economy
           </Text>
+
+          {/* Amber rule */}
           <View style={styles.heroRule} />
+
           <Text style={[styles.heroQuote, { fontFamily: SERIF_ITALIC }]}>
             {`\u201c${constellation.grammar.thunder}\u201d`}
           </Text>
           <Text style={[styles.heroByline, { fontFamily: MONO }]}>
             {`v${constellation.version} \u00b7 ${constellation.lastUpdated} \u00b7 offline-readable`}
           </Text>
+
           <Pressable
             onPress={() => Linking.openURL("/map")}
             style={({ pressed }) => [styles.zoneBadge, pressed && { opacity: 0.7 }]}
@@ -133,40 +140,41 @@ export default function FrontPage() {
           {/* Pioneer Path station — returning readers only */}
           {isReturning && currentStation && (
             <Animated.View style={{ transform: [{ scale: badgePulse }] }}>
-            <Pressable
-              onPress={() =>
-                router.push({
-                  pathname: "/path/station/[id]",
-                  params: { id: currentStation.id },
-                })
-              }
-              style={({ pressed }) => [
-                styles.stationBadge,
-                styles.stationBadgePressable,
-                { opacity: pressed ? 0.7 : 1 },
-              ]}
-              accessibilityLabel={`Open station: ${currentStation.name}`}
-            >
-              <View style={styles.stationBadgeInner}>
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.stationBadgeText, { fontFamily: MONO }]}>
-                    {`Station ${currentStation.ordinal} of ${PIONEER_STATIONS.length} \u00b7 ${currentStation.name}`}
-                  </Text>
-                  <Text style={[styles.stationBadgeSub, { fontFamily: SERIF_ITALIC }]}>
-                    {currentStation.subtitle}
+              <Pressable
+                onPress={() =>
+                  router.push({
+                    pathname: "/path/station/[id]",
+                    params: { id: currentStation.id },
+                  })
+                }
+                style={({ pressed }) => [
+                  styles.stationBadge,
+                  styles.stationBadgePressable,
+                  { opacity: pressed ? 0.7 : 1 },
+                ]}
+                accessibilityLabel={`Open station: ${currentStation.name}`}
+              >
+                <View style={styles.stationBadgeInner}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.stationBadgeText, { fontFamily: MONO }]}>
+                      {`Station ${currentStation.ordinal} of ${PIONEER_STATIONS.length} \u00b7 ${currentStation.name}`}
+                    </Text>
+                    <Text style={[styles.stationBadgeSub, { fontFamily: SERIF_ITALIC }]}>
+                      {currentStation.subtitle}
+                    </Text>
+                  </View>
+                  <Text style={[styles.stationBadgeArrow, { fontFamily: MONO, color: `${AMBER}66` }]}>
+                    →
                   </Text>
                 </View>
-                <Text style={[styles.stationBadgeArrow, { fontFamily: MONO, color: `${EVERGREEN}66` }]}>
-                  →
+                <Text style={[styles.stationBadgeCta, { fontFamily: MONO, color: `${AMBER}55` }]}>
+                  TAP TO MARK DONE
                 </Text>
-              </View>
-              <Text style={[styles.stationBadgeCta, { fontFamily: MONO, color: `${EVERGREEN}55` }]}>
-                TAP TO MARK DONE
-              </Text>
-            </Pressable>
+              </Pressable>
             </Animated.View>
           )}
 
+          {/* Primary CTA */}
           <Pressable
             onPress={() =>
               router.push({
@@ -176,20 +184,28 @@ export default function FrontPage() {
             }
             style={({ pressed }) => [
               styles.primaryBtn,
-              { backgroundColor: isReturning ? RUST : EVERGREEN, opacity: pressed ? 0.85 : 1 },
+              {
+                backgroundColor: isReturning ? AMBER : CANOPY,
+                opacity: pressed ? 0.88 : 1,
+              },
             ]}
           >
             <View style={{ flex: 1 }}>
-              <Text style={[styles.primaryBtnLabel, { fontFamily: SERIF_ITALIC }]}>
+              <Text style={[styles.primaryBtnLabel, { fontFamily: SERIF_ITALIC, color: isReturning ? FOREST : CREAM }]}>
                 {isReturning ? "Continue where you left off" : "Start here"}
               </Text>
-              <Text style={[styles.primaryBtnEyebrow, { fontFamily: MONO, marginBottom: 0, marginTop: 6 }]}>
+              <Text style={[styles.primaryBtnEyebrow, {
+                fontFamily: MONO,
+                marginBottom: 0,
+                marginTop: 6,
+                color: isReturning ? `${FOREST}88` : "rgba(244,237,224,0.55)",
+              }]}>
                 {isReturning
                   ? `${lastChapter!.number} ${lastChapter!.title}`
                   : `${firstChapter.number} ${firstChapter.title}`}
               </Text>
             </View>
-            <Text style={[styles.primaryBtnArrow, { fontFamily: MONO }]}>→</Text>
+            <Text style={[styles.primaryBtnArrow, { fontFamily: MONO, color: isReturning ? FOREST : CREAM }]}>→</Text>
           </Pressable>
 
           <View style={styles.ghostRow}>
@@ -197,10 +213,10 @@ export default function FrontPage() {
               onPress={() => router.push(isReturning ? "/path" : "/contents")}
               style={({ pressed }) => [
                 styles.ghostBtn,
-                { borderColor: `${EVERGREEN}35`, opacity: pressed ? 0.7 : 1 },
+                { borderColor: `${AMBER}40`, opacity: pressed ? 0.7 : 1 },
               ]}
             >
-              <Text style={[styles.ghostBtnText, { color: EVERGREEN, fontFamily: MONO }]}>
+              <Text style={[styles.ghostBtnText, { color: AMBER, fontFamily: MONO }]}>
                 {isReturning ? "Trail" : "Contents"}
               </Text>
             </Pressable>
@@ -208,10 +224,10 @@ export default function FrontPage() {
               onPress={() => router.push("/bookmarks")}
               style={({ pressed }) => [
                 styles.ghostBtn,
-                { borderColor: `${EVERGREEN}35`, opacity: pressed ? 0.7 : 1 },
+                { borderColor: `${AMBER}40`, opacity: pressed ? 0.7 : 1 },
               ]}
             >
-              <Text style={[styles.ghostBtnText, { color: EVERGREEN, fontFamily: MONO }]}>
+              <Text style={[styles.ghostBtnText, { color: AMBER, fontFamily: MONO }]}>
                 {bookmarks.length > 0
                   ? `Bookmarks \u00b7 ${bookmarks.length}`
                   : "Bookmarks"}
@@ -234,8 +250,8 @@ export default function FrontPage() {
           )}
         </View>
 
-        {/* ── CHILDREN'S TALES — always visible ────────────────────── */}
-        <SectionHeader label="CHILDREN'S TALES" accent={EVERGREEN} topGap={28} />
+        {/* ── CHILDREN'S TALES ──────────────────────────────────────── */}
+        <SectionHeader label="CHILDREN'S TALES" accent={AMBER} topGap={28} />
 
         <Pressable
           onPress={() => router.push("/tales")}
@@ -243,12 +259,12 @@ export default function FrontPage() {
             styles.talesCard,
             {
               backgroundColor: c.card,
-              borderColor: `${RUST}28`,
+              borderColor: `${AMBER}28`,
               opacity: pressed ? 0.9 : 1,
             },
           ]}
         >
-          <View style={[styles.talesTopAccent, { backgroundColor: RUST }]} />
+          <View style={[styles.talesTopAccent, { backgroundColor: AMBER }]} />
           <View style={styles.talesInner}>
             <Text style={[styles.talesCount, { color: c.mutedForeground, fontFamily: MONO }]}>
               {`${TALES.length} STORIES`}
@@ -256,15 +272,15 @@ export default function FrontPage() {
             <Text style={[styles.talesQuote, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
               {`\u201c${featuredTale.excerpt}\u201d`}
             </Text>
-            <Text style={[styles.talesSource, { color: RUST, fontFamily: MONO }]}>
+            <Text style={[styles.talesSource, { color: AMBER, fontFamily: MONO }]}>
               {`\u2014\u00a0${featuredTale.title}`}
             </Text>
-            <View style={[styles.talesRule, { backgroundColor: `${RUST}22` }]} />
+            <View style={[styles.talesRule, { backgroundColor: `${AMBER}22` }]} />
             <Text style={[styles.talesDesc, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
               Stories rooted in nature, seasons, and the lifecycle. For children of all ages. Each one carries what the handbook cannot say directly.
             </Text>
-            <View style={[styles.talesReadBtn, { borderColor: `${RUST}50` }]}>
-              <Text style={[styles.talesReadBtnText, { color: RUST, fontFamily: MONO }]}>
+            <View style={[styles.talesReadBtn, { borderColor: `${AMBER}50` }]}>
+              <Text style={[styles.talesReadBtnText, { color: AMBER, fontFamily: MONO }]}>
                 Read the stories →
               </Text>
             </View>
@@ -276,10 +292,10 @@ export default function FrontPage() {
           onPress={() => router.push("/story-path")}
           style={({ pressed }) => [
             styles.storyPathBtn,
-            { borderColor: `${RUST}50`, opacity: pressed ? 0.7 : 1 },
+            { borderColor: `${AMBER}50`, opacity: pressed ? 0.7 : 1 },
           ]}
         >
-          <Text style={[styles.storyPathBtnText, { color: RUST, fontFamily: MONO }]}>
+          <Text style={[styles.storyPathBtnText, { color: AMBER, fontFamily: MONO }]}>
             Write your own story →
           </Text>
         </Pressable>
@@ -287,7 +303,7 @@ export default function FrontPage() {
         {/* ── NEW READER: orienting close ───────────────────────────── */}
         {!isReturning && (
           <View style={styles.orientWrap}>
-            <View style={[styles.orientRule, { backgroundColor: `${EVERGREEN}18` }]} />
+            <View style={[styles.orientRule, { backgroundColor: `${AMBER}18` }]} />
             <Text style={[styles.orientText, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
               Read straight through. Each chapter builds on the next.
             </Text>
@@ -302,7 +318,7 @@ export default function FrontPage() {
               onPress={() => router.push("/daily-prompt")}
               style={({ pressed }) => [
                 styles.promptCard,
-                { backgroundColor: EVERGREEN, opacity: pressed ? 0.92 : 1 },
+                { backgroundColor: CANOPY, opacity: pressed ? 0.92 : 1 },
               ]}
             >
               <View style={styles.promptInner}>
@@ -324,55 +340,55 @@ export default function FrontPage() {
             </Pressable>
 
             {/* PRACTICE */}
-            <SectionHeader label="PRACTICE" accent={EVERGREEN} topGap={36} />
+            <SectionHeader label="PRACTICE" accent={AMBER} topGap={36} />
             <ToolRow
               label="Practice Cards"
               sub="Test what has landed, one card at a time"
               onPress={() => router.push("/stack")}
               c={c}
-              accent={EVERGREEN}
+              accent={AMBER}
             />
             <ToolRow
               label="Rename Test"
               sub="Is this name load-bearing or decoration?"
               onPress={() => router.push("/rename-test")}
               c={c}
-              accent={EVERGREEN}
+              accent={AMBER}
             />
             <ToolRow
               label="Gate Log"
               sub="Bright-side names and their systems translations"
               onPress={() => router.push("/gate-log")}
               c={c}
-              accent={EVERGREEN}
+              accent={AMBER}
             />
 
             {/* YOUR WORK */}
-            <SectionHeader label="YOUR WORK" accent={EVERGREEN} topGap={32} />
+            <SectionHeader label="YOUR WORK" accent={AMBER} topGap={32} />
             <ToolRow
               label="Your Constellation"
               sub="Name your six zones in your own vocabulary"
               onPress={() => router.push("/constellation-builder")}
               c={c}
-              accent={EVERGREEN}
+              accent={AMBER}
             />
             <ToolRow
               label="Author's Desk"
               sub="Your constellation, in your words"
               onPress={() => router.push("/author")}
               c={c}
-              accent={EVERGREEN}
+              accent={AMBER}
             />
             <ToolRow
               label={glossaryTerms.length > 0 ? `Glossary \u00b7 ${glossaryTerms.length} saved` : "Glossary"}
               sub="All formally defined terms, searchable"
               onPress={() => router.push("/glossary")}
               c={c}
-              accent={EVERGREEN}
+              accent={AMBER}
             />
 
             {/* THE BOOK */}
-            <SectionHeader label="THE BOOK" accent={EVERGREEN} topGap={36} />
+            <SectionHeader label="THE BOOK" accent={AMBER} topGap={36} />
             {mainParts.map((p, i) => {
               const firstCh = CHAPTERS.find((ch) => ch.partRoman === p.roman);
               return (
@@ -389,13 +405,13 @@ export default function FrontPage() {
                   style={({ pressed }) => [
                     styles.partRow,
                     {
-                      borderBottomColor: `${EVERGREEN}14`,
-                      backgroundColor: i % 2 === 0 ? "transparent" : `${EVERGREEN}04`,
+                      borderBottomColor: `${AMBER}14`,
+                      backgroundColor: i % 2 === 0 ? "transparent" : `${AMBER}04`,
                       opacity: pressed ? 0.65 : 1,
                     },
                   ]}
                 >
-                  <Text style={[styles.partRoman, { color: EVERGREEN, fontFamily: SERIF_BOLD }]}>
+                  <Text style={[styles.partRoman, { color: AMBER, fontFamily: SERIF_BOLD }]}>
                     {p.roman}
                   </Text>
                   <View style={{ flex: 1 }}>
@@ -406,7 +422,7 @@ export default function FrontPage() {
                       {p.blurb}
                     </Text>
                   </View>
-                  <Text style={{ color: RUST, fontFamily: MONO, fontSize: 16, opacity: 0.55, paddingTop: 3 }}>
+                  <Text style={{ color: AMBER, fontFamily: MONO, fontSize: 16, opacity: 0.6, paddingTop: 3 }}>
                     →
                   </Text>
                 </Pressable>
@@ -415,7 +431,7 @@ export default function FrontPage() {
 
             {/* Colophon */}
             <View style={styles.colophonWrap}>
-              <View style={[styles.colophonRule, { backgroundColor: `${EVERGREEN}18` }]} />
+              <View style={[styles.colophonRule, { backgroundColor: `${AMBER}18` }]} />
               <Text style={[styles.colophon, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
                 Drawn from the constellation manifest. The discipline travels; the examples don't.
               </Text>
@@ -428,7 +444,7 @@ export default function FrontPage() {
   );
 }
 
-// ── Section Header ────────────────────────────────────────────────────────────
+// ── Section Header ─────────────────────────────────────────────────────────────
 
 function SectionHeader({
   label,
@@ -445,7 +461,7 @@ function SectionHeader({
       <Text style={[styles.sectionLabel, { color: accent, fontFamily: MONO }]}>
         {label}
       </Text>
-      <View style={[styles.sectionLine, { backgroundColor: `${accent}18` }]} />
+      <View style={[styles.sectionLine, { backgroundColor: `${accent}22` }]} />
     </View>
   );
 }
@@ -465,30 +481,42 @@ function ToolRow({
   c: Palette;
   accent: string;
 }) {
+  const scale = useRef(new Animated.Value(1)).current;
+
+  const onPressIn = () =>
+    Animated.spring(scale, { toValue: 0.982, useNativeDriver: true, tension: 200, friction: 14 }).start();
+  const onPressOut = () =>
+    Animated.spring(scale, { toValue: 1, useNativeDriver: true, tension: 200, friction: 14 }).start();
+
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.toolRow,
-        {
-          backgroundColor: c.card,
-          borderColor: `${accent}18`,
-          opacity: pressed ? 0.8 : 1,
-        },
-      ]}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
     >
-      <View style={[styles.toolAccentBar, { backgroundColor: accent }]} />
-      <View style={{ flex: 1, paddingLeft: 14 }}>
-        <Text style={[styles.toolLabel, { color: c.foreground, fontFamily: MONO }]}>
-          {label}
+      <Animated.View
+        style={[
+          styles.toolRow,
+          {
+            backgroundColor: c.card,
+            borderColor: `${accent}22`,
+            transform: [{ scale }],
+          },
+        ]}
+      >
+        <View style={[styles.toolAccentBar, { backgroundColor: accent }]} />
+        <View style={{ flex: 1, paddingLeft: 14 }}>
+          <Text style={[styles.toolLabel, { color: c.foreground, fontFamily: MONO }]}>
+            {label}
+          </Text>
+          <Text style={[styles.toolSub, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+            {sub}
+          </Text>
+        </View>
+        <Text style={{ color: accent, fontFamily: MONO, fontSize: 15, opacity: 0.7 }}>
+          →
         </Text>
-        <Text style={[styles.toolSub, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
-          {sub}
-        </Text>
-      </View>
-      <Text style={{ color: accent, fontFamily: MONO, fontSize: 15, opacity: 0.6 }}>
-        →
-      </Text>
+      </Animated.View>
     </Pressable>
   );
 }
@@ -500,16 +528,45 @@ const styles = StyleSheet.create({
 
   // HERO
   heroBand: {
-    backgroundColor: EVERGREEN,
+    backgroundColor: FOREST,
     paddingHorizontal: 28,
-    paddingBottom: 40,
+    paddingBottom: 44,
+    overflow: "hidden",
+    position: "relative",
+  },
+  heroGradientSky: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 120,
+    backgroundColor: "rgba(4,10,8,0.55)",
+    pointerEvents: "none" as any,
+  },
+  heroHorizon: {
+    position: "absolute",
+    bottom: 88,
+    left: 0,
+    right: 0,
+    height: 60,
+    backgroundColor: "rgba(8,18,12,0.38)",
+    pointerEvents: "none" as any,
+  },
+  heroGradientBottom: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 100,
+    backgroundColor: "rgba(15,28,24,0.50)",
+    pointerEvents: "none" as any,
   },
   heroEyebrow: {
-    fontSize: 10,
-    letterSpacing: 2.5,
+    fontSize: 9,
+    letterSpacing: 3,
     textTransform: "uppercase",
-    color: "rgba(244,237,224,0.42)",
-    marginBottom: 12,
+    color: `${AMBER}70`,
+    marginBottom: 10,
   },
   heroTitle: {
     fontSize: 60,
@@ -519,28 +576,28 @@ const styles = StyleSheet.create({
   },
   heroSubtitle: {
     fontSize: 19,
-    lineHeight: 27,
+    lineHeight: 28,
     color: "rgba(244,237,224,0.72)",
     marginTop: 8,
   },
   heroRule: {
     height: 2,
-    width: 40,
-    backgroundColor: RUST,
-    marginTop: 24,
+    width: 44,
+    backgroundColor: AMBER,
+    marginTop: 26,
     marginBottom: 20,
     borderRadius: 1,
   },
   heroQuote: {
     fontSize: 15,
     lineHeight: 24,
-    color: "rgba(244,237,224,0.60)",
+    color: "rgba(244,237,224,0.58)",
   },
   heroByline: {
-    fontSize: 10,
+    fontSize: 9,
     letterSpacing: 1.5,
     textTransform: "uppercase",
-    color: "rgba(244,237,224,0.28)",
+    color: "rgba(244,237,224,0.26)",
     marginTop: 18,
   },
   zoneBadge: {
@@ -548,40 +605,40 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "flex-start",
     gap: 6,
-    marginTop: 14,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    marginTop: 16,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "rgba(244,237,224,0.18)",
-    backgroundColor: "rgba(244,237,224,0.06)",
+    borderColor: `${AMBER}28`,
+    backgroundColor: `${AMBER}08`,
   },
   zoneDot: {
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: RUST,
+    backgroundColor: AMBER,
     alignItems: "center",
     justifyContent: "center",
   },
   zoneDotText: {
     fontSize: 9,
-    color: CREAM,
+    color: FOREST,
     fontWeight: "700",
   },
   zoneBadgeText: {
     fontSize: 9,
     letterSpacing: 0.8,
     textTransform: "uppercase",
-    color: "rgba(244,237,224,0.55)",
+    color: `${AMBER}80`,
   },
   zoneState: {
     fontSize: 9,
     letterSpacing: 0.5,
-    color: "rgba(244,237,224,0.28)",
+    color: `${AMBER}42`,
   },
 
-  // BEGIN
+  // BEGIN SECTION
   beginSection: {
     paddingHorizontal: 22,
     paddingTop: 24,
@@ -597,8 +654,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: `${EVERGREEN}18`,
-    backgroundColor: `${EVERGREEN}06`,
+    borderColor: `${AMBER}22`,
+    backgroundColor: `${AMBER}06`,
   },
   stationBadgeInner: {
     flexDirection: "row",
@@ -619,7 +676,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 1.8,
     textTransform: "uppercase",
-    color: `${EVERGREEN}99`,
+    color: `${AMBER}99`,
     marginBottom: 2,
   },
   stationBadgeSub: {
@@ -628,7 +685,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
 
-  // NIGHT SKY ENTRY
+  // NIGHT SKY
   nightSkyBtn: {
     flexDirection: "row",
     alignItems: "center",
@@ -640,38 +697,42 @@ const styles = StyleSheet.create({
   nightSkyDots: {
     fontSize: 11,
     letterSpacing: 4,
-    color: `${EVERGREEN}50`,
+    color: `${AMBER}50`,
   },
   nightSkyLabel: {
     fontSize: 9,
     letterSpacing: 2.5,
     textTransform: "uppercase",
-    color: `${EVERGREEN}50`,
+    color: `${AMBER}50`,
   },
+
+  // PRIMARY BUTTON
   primaryBtn: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 18,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: J.radius.md,
     gap: 12,
+    shadowColor: AMBER,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+    elevation: 3,
   },
   primaryBtnEyebrow: {
     fontSize: 9,
     letterSpacing: 2,
     textTransform: "uppercase",
-    color: "rgba(244,237,224,0.55)",
     marginBottom: 3,
   },
   primaryBtnLabel: {
     fontSize: 17,
-    color: CREAM,
     lineHeight: 22,
   },
   primaryBtnArrow: {
     fontSize: 20,
-    color: CREAM,
-    opacity: 0.7,
+    opacity: 0.75,
   },
   ghostRow: {
     flexDirection: "row",
@@ -684,7 +745,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: "center",
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: J.radius.md,
   },
   ghostBtnText: {
     fontSize: 10,
@@ -696,7 +757,7 @@ const styles = StyleSheet.create({
   promptCard: {
     marginHorizontal: 22,
     marginTop: 20,
-    borderRadius: 6,
+    borderRadius: J.radius.md,
   },
   promptInner: {
     flexDirection: "row",
@@ -708,7 +769,7 @@ const styles = StyleSheet.create({
     fontSize: 9,
     letterSpacing: 2.5,
     textTransform: "uppercase",
-    color: RUST,
+    color: AMBER,
     marginBottom: 5,
   },
   promptTitle: {
@@ -726,14 +787,14 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "rgba(244,237,224,0.08)",
+    backgroundColor: `${AMBER}18`,
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
   },
   promptArrow: {
     fontSize: 16,
-    color: RUST,
+    color: AMBER,
   },
 
   // SECTION HEADER
@@ -763,7 +824,7 @@ const styles = StyleSheet.create({
   // TALES
   talesCard: {
     marginHorizontal: 22,
-    borderRadius: 6,
+    borderRadius: J.radius.md,
     borderWidth: 1,
     overflow: "hidden",
   },
@@ -802,7 +863,7 @@ const styles = StyleSheet.create({
   talesReadBtn: {
     alignSelf: "flex-start",
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: J.radius.sm,
     paddingVertical: 9,
     paddingHorizontal: 14,
   },
@@ -815,10 +876,11 @@ const styles = StyleSheet.create({
   storyPathBtn: {
     alignSelf: "flex-start",
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: J.radius.sm,
     paddingVertical: 9,
     paddingHorizontal: 14,
     marginTop: 10,
+    marginHorizontal: 22,
   },
   storyPathBtnText: {
     fontSize: 10,
@@ -834,8 +896,13 @@ const styles = StyleSheet.create({
     paddingRight: 18,
     marginHorizontal: 22,
     marginBottom: 7,
-    borderRadius: 5,
+    borderRadius: J.radius.md,
     borderWidth: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 1,
   },
   toolAccentBar: {
     width: 3,
@@ -868,7 +935,7 @@ const styles = StyleSheet.create({
     width: 40,
     paddingTop: 1,
     letterSpacing: -0.5,
-    opacity: 0.18,
+    opacity: 0.22,
   },
   partTitle: {
     fontSize: 17,

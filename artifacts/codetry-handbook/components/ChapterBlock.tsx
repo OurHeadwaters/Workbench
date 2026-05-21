@@ -7,6 +7,7 @@ import { useColors } from "@/hooks/useColors";
 import { useReader } from "@/contexts/ReaderState";
 import type { Block } from "@/data/handbook";
 import { InlineText } from "./InlineText";
+import { J } from "@/theme/journal";
 
 const SERIF = "Fraunces_400Regular";
 const SERIF_ITALIC = "Fraunces_400Regular_Italic";
@@ -37,7 +38,7 @@ export function ChapterBlock({
   const [examplesOpen, setExamplesOpen] = useState(false);
   const [collapsibleOpen, setCollapsibleOpen] = useState(false);
   const baseSize = 17 * fontScale;
-  const lineHeight = baseSize * 1.55;
+  const lineHeight = baseSize * 1.8;
   const smallSize = 13 * fontScale;
   const subheadSize = 15 * fontScale;
   const pullSize = baseSize * 1.05;
@@ -159,26 +160,29 @@ export function ChapterBlock({
       );
     case "small":
       return wrapWithGlow(
-        <View style={styles.row}>
-          <InlineText
-            text={block.text}
-            style={{
-              color: c.mutedForeground,
-              fontFamily: MONO,
-              fontSize: smallSize,
-              lineHeight: smallSize * 1.5,
-              letterSpacing: 0.6,
-              textTransform: "uppercase",
-            }}
-            italicStyle={{ fontFamily: MONO }}
-            onPressRef={onPressRef}
-            refStyle={{
-              color: c.foreground,
-              fontFamily: MONO,
-              textDecorationLine: "underline",
-              textDecorationColor: c.muted,
-            }}
-          />
+        <View style={styles.smallWrap}>
+          <View style={styles.smallLedge} />
+          <View style={[styles.smallInner, { backgroundColor: J.color.syntaxBg }]}>
+            <InlineText
+              text={block.text}
+              style={{
+                color: J.color.syntaxGreen,
+                fontFamily: MONO,
+                fontSize: smallSize,
+                lineHeight: smallSize * 1.6,
+                letterSpacing: 0.6,
+                textTransform: "uppercase",
+              }}
+              italicStyle={{ fontFamily: MONO }}
+              onPressRef={onPressRef}
+              refStyle={{
+                color: J.color.syntaxAmber,
+                fontFamily: MONO,
+                textDecorationLine: "underline",
+                textDecorationColor: J.color.syntaxMuted,
+              }}
+            />
+          </View>
         </View>,
       );
     case "pull":
@@ -203,27 +207,30 @@ export function ChapterBlock({
       );
     case "callout":
       return wrapWithGlow(
-        <View
-          style={[
-            styles.callout,
-            { backgroundColor: c.card, borderColor: c.rule },
-          ]}
-        >
-          <InlineText
-            text={block.text}
-            style={{
-              color: c.foreground,
-              fontFamily: SERIF,
-              fontSize: baseSize,
-              lineHeight,
-            }}
-            italicStyle={{ fontFamily: SERIF_ITALIC }}
-            onPressRef={onPressRef}
-            refStyle={refStyle}
-            glossaryTerms={glossaryTerms}
-            onPressGlossaryTerm={onPressGlossaryTerm}
-            glossaryTermStyle={glossaryTermStyle}
-          />
+        <View style={styles.calloutWrap}>
+          {/* Amber left strip — marginalia accent */}
+          <View style={[styles.calloutStrip, { backgroundColor: J.color.amber }]} />
+          <View style={[styles.callout, { backgroundColor: c.card }]}>
+            {/* Northern field note icon */}
+            <View style={styles.calloutIcon} pointerEvents="none">
+              <Ionicons name="leaf-outline" size={12} color={`${J.color.amber}70`} />
+            </View>
+            <InlineText
+              text={block.text}
+              style={{
+                color: c.foreground,
+                fontFamily: SERIF_ITALIC,
+                fontSize: baseSize,
+                lineHeight,
+              }}
+              italicStyle={{ fontFamily: SERIF_ITALIC }}
+              onPressRef={onPressRef}
+              refStyle={refStyle}
+              glossaryTerms={glossaryTerms}
+              onPressGlossaryTerm={onPressGlossaryTerm}
+              glossaryTermStyle={glossaryTermStyle}
+            />
+          </View>
         </View>,
       );
     case "examples": {
@@ -463,56 +470,90 @@ export function ChapterBlock({
         />,
       );
     case "tool":
-      return (
-        <Pressable
-          onPress={() => router.push(block.route as any)}
-          style={({ pressed }) => [
-            styles.toolCard,
-            {
-              borderColor: c.primary,
-              backgroundColor: c.card,
-              opacity: pressed ? 0.8 : 1,
-            },
-          ]}
-        >
-          <View style={{ flex: 1 }}>
-            <Text
-              style={{
-                color: c.primary,
-                fontFamily: MONO,
-                fontSize: smallSize,
-                letterSpacing: 1,
-                textTransform: "uppercase",
-                marginBottom: 6,
-              }}
-            >
-              Try it →
-            </Text>
-            <Text
-              style={{
-                color: c.foreground,
-                fontFamily: SERIF_BOLD,
-                fontSize: subheadSize,
-                lineHeight: subheadSize * 1.3,
-              }}
-            >
-              {block.label}
-            </Text>
-            <Text
-              style={{
-                color: c.mutedForeground,
-                fontFamily: SERIF_ITALIC,
-                fontSize: 15 * fontScale,
-                lineHeight: 15 * fontScale * 1.5,
-                marginTop: 3,
-              }}
-            >
-              {block.hint}
-            </Text>
-          </View>
-        </Pressable>
-      );
+      return <ToolCardBlock block={block} fontScale={fontScale} />;
   }
+}
+
+// ── Tool Card Block ───────────────────────────────────────────────────────────
+// Extracted into its own component so hooks (useRef) don't live inside a
+// switch-case branch (which would violate the Rules of Hooks).
+
+function ToolCardBlock({
+  block,
+  fontScale,
+}: {
+  block: { kind: "tool"; label: string; hint: string; route: string };
+  fontScale: number;
+}) {
+  const subheadSize = 15 * fontScale;
+  const lift  = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(1)).current;
+
+  const borderColor = lift.interpolate({
+    inputRange: [0, 1],
+    outputRange: [`${J.color.amber}40`, `${J.color.amber}90`],
+  });
+  const shadowOpacity = lift.interpolate({ inputRange: [0, 1], outputRange: [0.08, 0.24] });
+
+  const onIn = () =>
+    Animated.parallel([
+      Animated.spring(lift,  { toValue: 1, useNativeDriver: false, tension: 200, friction: 12 }),
+      Animated.spring(scale, { toValue: 0.984, useNativeDriver: true, tension: 200, friction: 12 }),
+    ]).start();
+
+  const onOut = () =>
+    Animated.parallel([
+      Animated.spring(lift,  { toValue: 0, useNativeDriver: false, tension: 200, friction: 12 }),
+      Animated.spring(scale, { toValue: 1, useNativeDriver: true, tension: 200, friction: 12 }),
+    ]).start();
+
+  return (
+    <Pressable
+      onPress={() => router.push(block.route as any)}
+      onPressIn={onIn}
+      onPressOut={onOut}
+    >
+      <Animated.View
+        style={[
+          styles.toolCard,
+          {
+            transform: [{ scale }],
+            borderColor,
+            shadowColor: J.color.amber,
+            shadowOpacity,
+            shadowOffset: { width: 0, height: 4 },
+            shadowRadius: 12,
+            elevation: 3,
+          },
+        ]}
+      >
+        <View style={styles.toolCardHeader}>
+          <View style={styles.toolCardDot} />
+          <Text style={[styles.toolCardEyebrow, { fontFamily: MONO }]}>FIELD TOOL</Text>
+          <Text style={[styles.toolCardArrow,  { fontFamily: MONO }]}>→</Text>
+        </View>
+        <View style={styles.toolCardBody}>
+          <Text style={{
+            color: J.color.evergreen,
+            fontFamily: SERIF_BOLD,
+            fontSize: subheadSize,
+            lineHeight: subheadSize * 1.35,
+            marginBottom: 4,
+          }}>
+            {block.label}
+          </Text>
+          <Text style={{
+            color: `${J.color.evergreen}99`,
+            fontFamily: SERIF_ITALIC,
+            fontSize: 14 * fontScale,
+            lineHeight: 14 * fontScale * 1.55,
+          }}>
+            {block.hint}
+          </Text>
+        </View>
+      </Animated.View>
+    </Pressable>
+  );
 }
 
 // Static helper for the chrome to know what icon to show.
@@ -540,17 +581,52 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     opacity: 0.65,
   },
+  smallWrap: {
+    flexDirection: "row",
+    marginVertical: 10,
+    borderRadius: J.radius.sm,
+    overflow: "hidden",
+  },
+  smallLedge: {
+    width: 2,
+    backgroundColor: J.color.syntaxGreen,
+    opacity: 0.5,
+    flexShrink: 0,
+  },
+  smallInner: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderTopRightRadius: J.radius.sm,
+    borderBottomRightRadius: J.radius.sm,
+  },
   pull: {
     borderLeftWidth: 2,
     paddingLeft: 16,
     paddingVertical: 12,
     marginVertical: 12,
   },
-  callout: {
-    borderWidth: 1,
-    padding: 16,
+  calloutWrap: {
+    flexDirection: "row",
     marginVertical: 12,
-    borderRadius: 2,
+    borderRadius: J.radius.sm,
+    overflow: "hidden",
+  },
+  calloutStrip: {
+    width: 3,
+    flexShrink: 0,
+  },
+  calloutIcon: {
+    position: "absolute",
+    top: 12,
+    right: 12,
+  },
+  callout: {
+    flex: 1,
+    padding: 16,
+    paddingRight: 28,
+    borderTopRightRadius: J.radius.sm,
+    borderBottomRightRadius: J.radius.sm,
   },
   examples: { marginVertical: 8 },
   examplesHeader: {
@@ -591,12 +667,40 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   toolCard: {
+    borderWidth: 1,
+    borderRadius: J.radius.md,
+    marginVertical: 12,
+    overflow: "hidden",
+    backgroundColor: J.color.parchment,
+  },
+  toolCardHeader: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderRadius: 2,
-    marginVertical: 12,
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    backgroundColor: J.color.canopy,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: `${J.color.amber}30`,
+  },
+  toolCardDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: J.color.amber,
+  },
+  toolCardEyebrow: {
+    flex: 1,
+    fontSize: 9,
+    letterSpacing: 2,
+    color: J.color.amber,
+    textTransform: "uppercase",
+  },
+  toolCardArrow: {
+    fontSize: 13,
+    color: `${J.color.amber}80`,
+  },
+  toolCardBody: {
+    padding: 14,
   },
 });

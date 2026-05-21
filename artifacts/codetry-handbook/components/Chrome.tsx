@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useRef } from "react";
 import {
+  Animated,
   Platform,
   Pressable,
   StyleSheet,
@@ -12,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SyncStatusPill } from "@/components/SyncStatusPill";
 import { useColors } from "@/hooks/useColors";
 import { useReader } from "@/contexts/ReaderState";
+import { J } from "@/theme/journal";
 
 const MONO = "JetBrainsMono_500Medium";
 
@@ -92,21 +94,63 @@ export function TopChrome({
       <View style={styles.syncSlot}>
         <SyncStatusPill />
       </View>
-      <Pressable
+      <BookmarkButton
+        active={bookmarkActive}
         onPress={onToggleBookmark}
-        hitSlop={12}
-        style={styles.iconBtn}
-        accessibilityLabel={
-          bookmarkActive ? "Remove bookmark" : "Bookmark this chapter"
-        }
-      >
-        <Ionicons
-          name={bookmarkActive ? "bookmark" : "bookmark-outline"}
-          size={20}
-          color={c.foreground}
-        />
-      </Pressable>
+        foreground={c.foreground}
+      />
     </View>
+  );
+}
+
+// ── Animated wax-seal bookmark button ────────────────────────────────────────
+
+function BookmarkButton({
+  active,
+  onPress,
+  foreground,
+}: {
+  active: boolean;
+  onPress: () => void;
+  foreground: string;
+}) {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePress = () => {
+    Animated.sequence([
+      Animated.spring(scaleAnim, {
+        toValue: 1.4,
+        useNativeDriver: true,
+        speed: 40,
+        bounciness: 14,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        speed: 30,
+        bounciness: 6,
+      }),
+    ]).start();
+    onPress();
+  };
+
+  const iconColor = active ? J.color.amber : foreground;
+
+  return (
+    <Pressable
+      onPress={handlePress}
+      hitSlop={12}
+      style={styles.iconBtn}
+      accessibilityLabel={active ? "Remove bookmark" : "Bookmark this chapter"}
+    >
+      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+        <Ionicons
+          name={active ? "bookmark" : "bookmark-outline"}
+          size={20}
+          color={iconColor}
+        />
+      </Animated.View>
+    </Pressable>
   );
 }
 
