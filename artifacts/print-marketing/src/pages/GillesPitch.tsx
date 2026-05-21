@@ -169,6 +169,34 @@ export default function GillesPitch() {
           ))}
         </div>
 
+        {/* ── ADJACENT NOT PRESENT ───────────────────────────── */}
+        <div style={{ ...card(WARM_MID, "rgba(201,114,40,0.2)") }}>
+          <p style={sectionLabel}>How it works in practice</p>
+          <h2 style={{ ...headline, fontSize: "22px" }}>
+            I work like your wife works.
+          </h2>
+          <p style={{ ...body, marginBottom: "16px" }}>
+            She's not on-site every day. She doesn't pour concrete.
+            But the operation would collapse without what she does behind it.
+          </p>
+          <div style={{
+            background: "rgba(201,114,40,0.12)",
+            borderRadius: "12px",
+            padding: "16px 18px",
+            borderLeft: `3px solid ${AMBER}`,
+            marginBottom: "16px",
+          }}>
+            <p style={{ ...body, color: CREAM, fontWeight: 600, fontSize: "15px", margin: 0 }}>
+              Behind the operation, not in it.<br />
+              Adjacent — not absent.
+            </p>
+          </div>
+          <p style={{ ...body, margin: 0 }}>
+            I capture what comes out of your ears so it doesn't get lost.
+            A few days a month is enough — because the work happens between the days.
+          </p>
+        </div>
+
         {/* ── LABOUR ─────────────────────────────────────────── */}
         <div style={{ ...card(WARM_MID, "rgba(201,114,40,0.15)") }}>
           <p style={sectionLabel}>The labour problem</p>
@@ -214,6 +242,44 @@ export default function GillesPitch() {
               <p style={{ ...body, color: CREAM, margin: 0, fontSize: "14px" }}>{text}</p>
             </div>
           ))}
+        </div>
+
+        {/* ── LEGACY ─────────────────────────────────────────── */}
+        <div style={{
+          background: "#0f0a05",
+          borderRadius: "18px",
+          padding: "28px 24px",
+          marginBottom: "14px",
+          border: "1.5px solid rgba(201,114,40,0.25)",
+        }}>
+          <p style={sectionLabel}>The bigger picture</p>
+          <h2 style={{ ...headline, fontSize: "24px", color: WHITE }}>
+            You get to be the guy<br />who figured it out first.
+          </h2>
+          <p style={{ ...body, color: "rgba(244,237,224,0.7)", marginBottom: "20px" }}>
+            40 years of field knowledge — building in the north, understanding reserves, knowing what actually works.
+            That doesn't exist anywhere else.
+          </p>
+          <div style={{
+            background: "rgba(201,114,40,0.1)",
+            borderRadius: "12px",
+            padding: "16px 18px",
+            borderLeft: `3px solid ${AMBER}`,
+          }}>
+            <p style={{ ...body, color: CREAM, fontWeight: 600, fontSize: "15px", margin: "0 0 8px" }}>
+              What we're building together:
+            </p>
+            {[
+              "A model the next developer can follow",
+              "A system that runs when you're not in the room",
+              "Something with a shelf life beyond one client",
+            ].map((t) => (
+              <div key={t} style={{ display: "flex", gap: "10px", marginBottom: "8px" }}>
+                <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: AMBER, flexShrink: 0, marginTop: "8px" }} />
+                <p style={{ ...body, color: "rgba(244,237,224,0.75)", margin: 0, fontSize: "13px" }}>{t}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* ── COST / ASK ─────────────────────────────────────── */}
