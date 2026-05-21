@@ -336,6 +336,87 @@ export function WhatIsCodetryPage() {
 
         <hr className="my-12 sm:my-14" style={{ borderColor: "hsl(var(--card-border))" }} />
 
+        {/* ── Odyssey → Codetry bridge ── */}
+        <section className="mb-14" data-testid="codetry-odyssey-bridge">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-4"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            the practitioner path
+          </p>
+
+          <h2 className="font-serif text-2xl sm:text-3xl tracking-tight mb-4">
+            The Odyssey trains you.<br />
+            <span style={{ color: "#b85a3e" }}>Codetry builds what you need.</span>
+          </h2>
+
+          <p
+            className="font-serif text-[15.5px] leading-[1.65] mb-8"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
+            The Headwaters Odyssey — 4 phases, 8 stations — trains practitioners to map
+            a community economy: who holds value, who bears cost, what needs to be built.
+            When a practitioner completes it, they know exactly what their community is
+            missing. Codetry is how they get it built.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            {[
+              {
+                label: "Brochure site",
+                price: "$800 – $1,500",
+                body: "A clean public front door. Your store, your co-op, your service — named and findable. 2–3 weeks, handed off.",
+              },
+              {
+                label: "Local directory",
+                price: "$2,000 – $4,500",
+                body: "A member registry, business directory, or resource map for your community. Searchable, maintained by the community itself. 4–8 weeks.",
+              },
+              {
+                label: "Custom tooling",
+                price: "$5,000+",
+                body: "The full economy operating system — accounts, governance, exchange, standby dashboard. Built to the community's spec and handed off clean. 6–12 weeks.",
+              },
+            ].map(({ label, price, body }) => (
+              <div
+                key={label}
+                className="rounded-md border p-5"
+                style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+              >
+                <p
+                  className="font-mono text-[9.5px] uppercase tracking-[0.18em] mb-1"
+                  style={{ color: "hsl(14 64% 36%)" }}
+                >
+                  {label}
+                </p>
+                <p
+                  className="font-mono text-[13px] font-semibold mb-3"
+                  style={{ color: "hsl(var(--foreground))" }}
+                >
+                  {price}
+                </p>
+                <p
+                  className="font-serif text-[13.5px] leading-[1.58]"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                >
+                  {body}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <a
+            href={`${base}/odyssey`}
+            className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
+            style={{ color: "hsl(var(--accent))" }}
+            data-testid="codetry-odyssey-link"
+          >
+            Start the Odyssey →
+          </a>
+        </section>
+
+        <hr className="my-12 sm:my-14" style={{ borderColor: "hsl(var(--card-border))" }} />
+
         {/* ── CTA ── */}
         <section data-testid="codetry-cta-section">
           <div

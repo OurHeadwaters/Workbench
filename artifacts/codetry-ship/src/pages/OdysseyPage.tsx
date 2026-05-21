@@ -632,6 +632,43 @@ export function OdysseyPage() {
                   Express interest in the next cohort →
                 </a>
               </div>
+
+              {/* ── Commission the tools ── */}
+              <div
+                className="mt-4 rounded-md px-6 py-6 text-left"
+                style={{
+                  border: "1px solid rgba(31,61,46,0.18)",
+                  background: "rgba(31,61,46,0.05)",
+                }}
+                data-testid="odyssey-codetry-cta"
+              >
+                <p
+                  className="font-mono text-[10px] uppercase tracking-[0.26em] mb-3"
+                  style={{ color: "rgba(31,61,46,0.5)" }}
+                >
+                  Commission the tools
+                </p>
+                <h3
+                  className="font-serif text-xl tracking-tight mb-2"
+                  style={{ color: "#1f3d2e" }}
+                >
+                  Now build what your community needs
+                </h3>
+                <p
+                  className="font-serif text-[15px] leading-[1.65] mb-4"
+                  style={{ color: "rgba(31,61,46,0.70)" }}
+                >
+                  Practitioners who complete the Odyssey know exactly what is missing in their community. Codetry is how you get it built — a store, a local directory, custom tooling — and handed off so the community runs it without a consultant in the room.
+                </p>
+                <a
+                  href="/codetry"
+                  className="inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
+                  style={{ color: "#1f3d2e" }}
+                  data-testid="odyssey-codetry-link"
+                >
+                  What is Codetry? →
+                </a>
+              </div>
             </div>
 
           ) : (
