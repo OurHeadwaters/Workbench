@@ -1,0 +1,42 @@
+What exists in the codebase
+1. The canonical zone definitions — artifacts/north-star/src/lib/zones.ts
+This is the authoritative six-zone map, already built:
+
+Zone	Label	Intent	Notes
+Z0	The dwelling	The household itself	Informational only — not rankable. Health, sleep, family rhythm. The place everything else must protect.
+Z1	Must stay afloat	Income that keeps the lights on	Non-negotiable. Pays rent and groceries.
+Z2	Active paid contract	Booked work with a deadline and a check	Protected from passion drift. Has a weekly hour target.
+Z3	Build now, paid later	Investment work — your products, your audience	Real work, not paid yet. Allowed, but visible.
+Z4	Passion / unpaid	Curiosity, craft, joy	807, regen ag, side curiosity. Allowed — just not quietly eating the week.
+Z5	The wild	Public commons, open web	Informational only — not rankable. Things let go of, public contributions, work that belongs to no one.
+Z0 and Z5 are flagged informational: true — they appear in the guide but can't be ranked in the weekly review.
+
+2. Current seed constellations — artifacts/north-star/src/lib/store.ts
+Only two constellations are seeded today, both tagged Z3:
+
+id	Name	Zone	URL	Deep links
+c-saltbox	Saltbox	Z3	/gather/	Today, Wrap-up, Recap
+c-family-buckets	Family Buckets	Z3	/family-buckets/	Family dashboard, Helpers
+3. The planning document you're thinking of — .local/tasks/zone-identity-foundation.md
+This is the task file that has the Eave + zone/constellation mapping you're remembering. It was written as a proposed task (not yet built). The key excerpt:
+
+Zone 0–1 (household/circle): trust-based identity — name + passphrase + invite token. You were let in by someone who knows you.
+Zone 3–4 (community/trade): verification-based identity — XRPL wallet only. Provable, accountable, no circle access.
+The Eave: Zone 3 actors cannot touch Zone 1 data by architecture, not by permission. No door connects the two layers.
+
+The constellation-to-zone assignment from that document:
+
+Constellation	Codetry Zone	Identity model
+Saltbox	Z0 (dwelling/household)	No server identity — local device only
+Sandbox	Z0–1 (household/circle)	Name + passphrase + invite token
+Family Buckets	Z1–3 (household to community)	XRPL wallet per member
+North Star	Z1–4 (work classification only, internal)	Local-only, no server identity
+The Field	Z3–4 (community/trade)	XRPL wallet, above the Eave
+The key distinction to keep in mind
+There are two zone models running in this project and they use the same Z0–Z5 notation:
+
+Codetry permaculture zones — the household → community → wild model. Saltbox and Sandbox are Z0/Z1. The Eave sits between Z1 and Z3.
+North Star work-priority zones — a personal ADHD focus tool. Z1 = income, Z2 = contract, Z3 = your own products, Z4 = passion. In this model, Saltbox is tagged Z3 because it's "build now, paid later" — an investment, not a job.
+The seed data in store.ts is using the work-priority zone model, not the permaculture one. So Saltbox being tagged Z3 there doesn't contradict it being a Z0 constellation in the Codetry model — they're measuring different things.
+
+If you want to update the seed data, the relevant file is artifacts/north-star/src/lib/store.ts lines 20–50. Let me know what zone tags and constellation entries you'd like and I'll update them directly.
