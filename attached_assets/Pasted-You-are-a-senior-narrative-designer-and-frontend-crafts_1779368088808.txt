@@ -1,0 +1,44 @@
+You are a senior narrative designer and frontend craftsman with deep experience in impactful public-sector and Indigenous/community planning websites. We are transforming Headwaters — Food Systems Planning for Northern Communities from a functional planning tool into a visually compelling, emotionally resonant digital experience that honors the gravity and hope of northern food sovereignty.Project Tone
+Professional, respectful, trustworthy, and deeply human. Think documentary photography meets Indigenous design principles: clean, spacious, earthy, and luminous. Use cool northern light, deep forest tones, soft snow/ice accents, and warm community glows. Avoid anything cartoonish — this is serious work, but it should feel alive and inspiring.Overall Visual System UpgradesColor Palette: Deep northern base (#0F1C18 or similar), rich earth greens (#1C3A2F), warm ambers/golds for hope (#D9A066), icy blues/grays for water & resilience, soft creams/off-whites for text. High contrast for accessibility.
+Typography: Strong, elegant serif for headings (evoking tradition and storytelling). Clean, highly legible sans for body. Generous line height and breathing room.
+Background & Atmosphere: Subtle animated northern elements — very slow-moving mist/fog, gentle aurora-like gradients, or faint snow particle system (low opacity, performant). Use soft noise/grain textures for paper/map feel.
+Layout: Spacious, card-based with deep shadows and inner glows. Generous whitespace. Mobile-first, beautiful on all devices.
+
+Key Sections to Dramatically Elevate1. The Odyssey Section (Highest Priority – Make This Cinematic)
+This is the heart of the journey — treat it like an epic visual story map.Transform into a horizontal or vertical interactive timeline/path that feels like walking a real northern trail.
+Each milestone gets a rich illustrated card or “waypoint” with:Atmospheric hero image or custom illustration (northern landscape + community photos)
+Subtle connecting path line (with animated progress glow)
+Layered depth: foreground elements (tools, plants, hands) over background photos
+On hover/click: smooth expand with testimonial quote, data visualization, or mini video embed
+Add micro-animations: gentle wind in grass, flowing water, glowing milestones as you scroll.
+Include a “Your Community’s Odyssey” personalized progress indicator if data allows.
+
+2. Youth Path Section (Make This Warm, Hopeful & Inviting)
+Youth engagement should feel full of life and possibility.Hero visual: Beautiful montage or illustrated scene of northern youth in gardens, harvesting, learning traditional knowledge, laughing.
+Card grid becomes warm “campfire circle” layout — rounded, overlapping slightly, with soft glows.
+Each youth initiative/path card:Larger photography with overlay gradient
+Hand-drawn style icons or illustrated elements (seedling, drum, canoe, etc.)
+Testimonial pull-quotes in a handwritten-feel serif
+Call-to-action buttons styled like carved wooden plaques or woven baskets
+Add subtle idle animation: firefly-like sparkles or gentle leaf movement.
+
+3. Other Key Areas to PolishHomepage/Hero: Powerful full-bleed northern landscape photo with overlaid title in strong typography. Subtle animated compass rose or food web graphic. Include a living Gord-style mascot (adapted to northern theme — perhaps a respectful raven, caribou, or owl variant) that flies/perches on key sections.
+Navigation & Tabs: Make them feel like trail markers or wooden signs.
+Data Visualizations & Maps: Upgrade any charts to beautiful, earthy custom SVGs (radial food system diagrams, flowing Sankey diagrams for supply chains, interactive northern map with glowing community pins).
+Resource Library / Tools: Present as a beautiful “knowledge lodge” with illustrated shelves or nested baskets.
+Footer & Calls to Action: Warm, community-focused with partner logos in a respectful circle.
+
+Interactive & Animation StandardsSmooth scroll-triggered reveals and parallax on key images.
+All buttons and cards have thoughtful hover states with lift, glow, or color temperature shift.
+Transitions feel like turning a page in a field journal — soft paper-rustle easing.
+Performance-first: 60fps, lightweight animations, lazy loading.
+Accessibility: Excellent contrast, focus states, aria labels, keyboard navigation.
+
+Technical RequirementsNext.js / React + TypeScript
+Use the latest flying/perching interactive element (adapted respectfully — perhaps a northern bird or animal companion that guides users).
+Inline SVGs where possible for icons, paths, and small illustrations.
+Deliver complete updated page/component files with clear comments on theming and animation logic.
+
+Goal
+This should feel like a living document of hope and resilience — the kind of site that funders, community leaders, and youth want to explore and share. Professional enough for government/organizational use, yet warm and human enough to move people.Make the Odyssey and Youth Path sections truly unforgettable.
+

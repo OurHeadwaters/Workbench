@@ -224,6 +224,18 @@ export const PLAN_2026: Week[] = [
             detail: "Tyler's cold storage development plan is a live thread. Make sure there's a scheduled time to sit down and map out the actual plan — timeline, costs, what Tyler needs to move forward. This shouldn't stay as a background conversation much longer.",
             category: "build",
           },
+          {
+            title: "Email rake — export 10 years of Gmail for Library import",
+            detail: "You have 10 years of email across multiple Gmail accounts (parrsjars@gmail.com and others listed in North Star) — operations notes, research, newsletters from good creators, and things you emailed to yourself. The plan: (1) Go to takeout.google.com for each account, export Gmail only as MBOX. (2) Once exported, upload the MBOX file into the Library — an importer will auto-detect 'emails to self' vs newsletters by sender pattern, creating triage-ready entries. Newsletters = potential future client list; emails to self = personal knowledge archive. Do the Takeout export now while it runs in the background — it can take hours for large accounts.",
+            category: "build",
+            actions: [
+              {
+                type: "copy-ai-prompt",
+                label: "Copy Takeout instructions",
+                content: "Go to https://takeout.google.com → Deselect all → scroll to Mail → select it → choose MBOX format → Next step → Export once → Download when ready. Repeat for each Gmail account. Then bring the MBOX files to the Library importer.",
+              },
+            ],
+          },
         ],
       },
       {
