@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Star, ArrowRight, Plus, Trash2, ChevronDown } from "lucide-react";
-import { useStore, ZONE_COLORS } from "@/store";
-import { v4 as uuidv4 } from "@/lib/uuid";
+import { useStore } from "@/store";
 import { ZoneBadge } from "@/components/ZoneBadge";
 import { cn } from "@/lib/utils";
 import type { ZoneId, Constellation } from "@/types";
-import { slugify } from "@/store";
 
 const STEPS = ["Welcome", "Constellations", "Contracts", "Who", "Why & No-fly"];
 
@@ -53,6 +51,72 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
   );
 }
 
+const ALL_ZONES: { id: ZoneId; label: string }[] = [
+  { id: "Z0", label: "Z0 — Center / The Practitioner" },
+  { id: "Z1", label: "Z1 — Household / Afloat (income-generating)" },
+  { id: "Z2", label: "Z2 — Circle / Paid contract" },
+  { id: "Z3", label: "Z3 — Home Range / Build now" },
+  { id: "Z4", label: "Z4 — Community / Passion" },
+  { id: "Z5", label: "Z5 — Wild / Long Horizon" },
+];
+
+function ConstellationInlineForm({
+  initial,
+  onSave,
+  onCancel,
+}: {
+  initial?: Partial<Constellation>;
+  onSave: (data: { name: string; zone: ZoneId; notes: string; url: string }) => void;
+  onCancel: () => void;
+}) {
+  const [name, setName] = useState(initial?.name ?? "");
+  const [zone, setZone] = useState<ZoneId>(initial?.zone ?? "Z3");
+  const [notes, setNotes] = useState(initial?.notes ?? "");
+  const [url, setUrl] = useState(initial?.url ?? "");
+
+  return (
+    <div className="bg-[#F5F5F0] rounded-xl p-4 space-y-3">
+      <input
+        autoFocus
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Project name"
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+      />
+      <input
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        placeholder="One-line description (optional)"
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+      />
+      <input
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        placeholder="URL (optional, e.g. /codetry or https://...)"
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+      />
+      <select
+        value={zone}
+        onChange={(e) => setZone(e.target.value as ZoneId)}
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917] min-h-[44px]"
+      >
+        {ALL_ZONES.map((z) => (
+          <option key={z.id} value={z.id}>{z.label}</option>
+        ))}
+      </select>
+      <div className="flex gap-2">
+        <button onClick={onCancel} className="flex-1 border border-[#E7E5E4] rounded-lg py-2 text-sm min-h-[44px]">Cancel</button>
+        <button
+          onClick={() => { if (name.trim()) onSave({ name: name.trim(), zone, notes: notes.trim(), url: url.trim() }); }}
+          className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px]"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function ConstellationsStep({ onNext }: { onNext: () => void }) {
   const constellations = useStore((s) => s.constellations);
   const addConstellation = useStore((s) => s.addConstellation);
@@ -60,73 +124,61 @@ function ConstellationsStep({ onNext }: { onNext: () => void }) {
   const updateConstellation = useStore((s) => s.updateConstellation);
 
   const [adding, setAdding] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [newZone, setNewZone] = useState<ZoneId>("Z3");
-  const [newNotes, setNewNotes] = useState("");
-
-  function handleAdd() {
-    if (!newName.trim()) return;
-    addConstellation({ name: newName.trim(), zone: newZone, notes: newNotes.trim(), url: undefined, deepLinks: [], active: true });
-    setNewName("");
-    setNewNotes("");
-    setAdding(false);
-  }
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   return (
     <div className="flex flex-col gap-4">
       <div>
         <h2 className="text-2xl mb-1">Your constellations</h2>
-        <p className="text-sm text-[#78716C]">These are your active projects — each tagged to a zone.</p>
+        <p className="text-sm text-[#78716C]">These are your active projects — each tagged to a zone. Edit any to set its zone, URL, or description.</p>
       </div>
 
       <div className="space-y-2">
-        {constellations.map((c) => (
-          <div key={c.id} className="flex items-center gap-3 bg-white rounded-xl border border-[#E7E5E4] p-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{c.name}</p>
-              {c.notes && <p className="text-xs text-[#78716C] truncate">{c.notes}</p>}
-              <ZoneBadge zone={c.zone} className="mt-1" />
+        {constellations.map((c) =>
+          editingId === c.id ? (
+            <ConstellationInlineForm
+              key={c.id}
+              initial={c}
+              onSave={({ name, zone, notes, url }) => {
+                updateConstellation(c.id, { name, zone, notes, url: url || undefined });
+                setEditingId(null);
+              }}
+              onCancel={() => setEditingId(null)}
+            />
+          ) : (
+            <div key={c.id} className="flex items-center gap-3 bg-white rounded-xl border border-[#E7E5E4] p-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{c.name}</p>
+                {c.notes && <p className="text-xs text-[#78716C] truncate">{c.notes}</p>}
+                {c.url && <p className="text-xs text-[#78716C] truncate">{c.url}</p>}
+                <ZoneBadge zone={c.zone} className="mt-1" />
+              </div>
+              <button
+                onClick={() => setEditingId(c.id)}
+                className="p-2 text-[#78716C] hover:text-[#1C1917] min-h-[44px] min-w-[44px] flex items-center justify-center"
+                title="Edit"
+              >
+                <ChevronDown size={14} className="rotate-[-90deg]" />
+              </button>
+              <button
+                onClick={() => removeConstellation(c.id)}
+                className="p-2 text-[#78716C] hover:text-[#B45309] min-h-[44px] min-w-[44px] flex items-center justify-center"
+              >
+                <Trash2 size={16} />
+              </button>
             </div>
-            <button
-              onClick={() => removeConstellation(c.id)}
-              className="p-2 text-[#78716C] hover:text-[#B45309] min-h-[44px] min-w-[44px] flex items-center justify-center"
-            >
-              <Trash2 size={16} />
-            </button>
-          </div>
-        ))}
+          )
+        )}
       </div>
 
       {adding ? (
-        <div className="bg-[#F5F5F0] rounded-xl p-4 space-y-3">
-          <input
-            autoFocus
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            placeholder="Project name"
-            className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
-          />
-          <input
-            value={newNotes}
-            onChange={(e) => setNewNotes(e.target.value)}
-            placeholder="One-line description (optional)"
-            className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
-          />
-          <select
-            value={newZone}
-            onChange={(e) => setNewZone(e.target.value as ZoneId)}
-            className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917] min-h-[44px]"
-          >
-            <option value="Z1">Z1 — Household / Afloat (income-generating)</option>
-            <option value="Z2">Z2 — Circle / Paid contract</option>
-            <option value="Z3">Z3 — Home Range / Build now</option>
-            <option value="Z4">Z4 — Community / Passion</option>
-          </select>
-          <div className="flex gap-2">
-            <button onClick={() => setAdding(false)} className="flex-1 border border-[#E7E5E4] rounded-lg py-2 text-sm min-h-[44px]">Cancel</button>
-            <button onClick={handleAdd} className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px]">Add</button>
-          </div>
-        </div>
+        <ConstellationInlineForm
+          onSave={({ name, zone, notes, url }) => {
+            addConstellation({ name, zone, notes, url: url || undefined, deepLinks: [], active: true });
+            setAdding(false);
+          }}
+          onCancel={() => setAdding(false)}
+        />
       ) : (
         <button
           onClick={() => setAdding(true)}
