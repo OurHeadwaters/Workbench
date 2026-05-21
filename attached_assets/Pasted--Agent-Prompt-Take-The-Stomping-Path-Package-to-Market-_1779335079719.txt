@@ -1,0 +1,207 @@
+# Agent Prompt: Take "The Stomping Path" Package to Market
+
+## Your mission
+
+You are picking up a fully built, three-act content + product funnel and taking it from "deployed" to "discoverable and converting." The package is complete at the code level. Your job is marketing infrastructure, distribution, and conversion optimization — not rebuilding what exists.
+
+---
+
+## The three-act funnel (already built)
+
+### Act 1 — The Storm: Silent Mall Story
+- **Live at:** https://silent-mall-story.replit.app
+- **What it is:** A short cinematic film. Opens on a woman lying still in a bathtub, dim tiled bathroom, fog-heavy atmosphere. The metaphor: this is what the grind does to a person. Frozen. Waiting. Trapped in a system that was never theirs.
+- **Companion pitch deck:** https://silent-mall-story.replit.app/pitch-deck/
+  - Title: *"Exit and Build · A Field Note"*
+  - Tagline: *"Start where you are. Do what you can. See the ripple effect."*
+  - Subtitle: *"A short field note on what it means to leave the systems and build solutions in place."*
+  - Marked as: **Chapter One · Companion**
+- **Role in funnel:** Top-of-funnel viral content. Seeded on social media as standalone film. Ends with a bridge into The Stomping Path.
+
+### Act 2 — The Bridge: "Chapter One · Companion" portal
+- **Live at:** The Stomping Path homepage (second section, immediately after the hero)
+- **What it says:** *"Before the path, the silent mall."* — links to film + field note
+- **Role in funnel:** Receives visitors arriving from the film. Contextualizes them. Invites them onto the path.
+
+### Act 3 — The Destination: The Stomping Path
+- **Live at:** [your deployed TSP URL]
+- **What it is:** A fan redesign of thesurvivalpodcast.com rebranded as "The Stomping Path" — an immersive sovereignty learning platform built on top of 6,000+ real WordPress posts, audio episodes, and YouTube videos.
+- **Core features:**
+  - Immersive cinematic homepage (forest hero, parallax mountains, glowing trail footprints, particle field)
+  - Storm-to-Bloom scroll storytelling (problems → solutions)
+  - Interactive Stomping Grounds scene (homestead map with clickable stations)
+  - 7 learning tracks (Escape the Grindstone, Mind & Money, etc.)
+  - Transformation Paths (6 sovereignty arcs: from X → to Y)
+  - Daily Stomp orb (daily prompt, streak tracker, XP system, confetti)
+  - Vine progress sidebar (fills as you scroll/interact)
+  - Expert Council (curated creators with gear shelf)
+  - Gear shelf (reviewed products, Amazon affiliate, nightly sync)
+  - Wisdom Dig, Wishing Well, Water Wheel (interactive community stations)
+  - Library search (full-text across 6,000+ episodes)
+  - Episode player with artwork, series, and transformation tagging
+  - Bitcoin-only philosophy throughout
+
+---
+
+## Design system (must match exactly)
+
+| Token | Value |
+|---|---|
+| Deep Forest Green | `#2C4A36` |
+| Weathered Paper | `#FDFBF7` |
+| Leather Brown | `#E3D9CC` |
+| Warm Amber | `#D9A066` |
+| Rust | `#A64B36` |
+| Deep Bark | `#5C3D2E` |
+| Dark Canvas | `#0c1611` |
+| Forest Mid | `#15241b` |
+
+**Typography:** Fraunces (serif, headings) + DM Sans (body)  
+**Tone:** Earned. Earthy. Direct. Empowering. Never corporate. Never hustle-culture.  
+**Voice:** "You've been squeezed. Here's the path out." Not preachy. Not salesy.
+
+---
+
+## Tech stack (both projects)
+
+### The Stomping Path (this repo)
+- pnpm monorepo, React + Vite frontend (`artifacts/survival-podcast`)
+- Express API server (`artifacts/api-server`), port 8080
+- PostgreSQL + Drizzle ORM (`lib/db/`)
+- Framer Motion (animations), GSAP (scroll), Tailwind CSS
+- Wouter (routing), TanStack Query (data fetching)
+- All API calls via `${BASE_URL}api/...` pattern (never root-relative)
+
+### Silent Mall Story (separate Replit project)
+- React + Vite SPA (single artifact)
+- Slides-based pitch deck at `/pitch-deck/`
+- The film plays on the root route `/`
+- **Needs:** a final CTA slide added to the pitch deck that bridges to The Stomping Path
+
+---
+
+## What needs to be built to go to market
+
+### Priority 1 — Close the funnel loop (do this first)
+
+**1a. Add a final CTA slide to the Silent Mall Story pitch deck**
+- In the `silent-mall-story` project, find the pitch deck slides (likely `artifacts/*/src/slides/` or similar)
+- Add a final slide after the last existing slide
+- Design: full-bleed dark with amber accent, matching the existing deck aesthetic
+- Copy: *"The path is waiting."* + TSP URL + *"Chapter Two begins where the mall ends."*
+- CTA button: links to The Stomping Path deployed URL
+- Must match the existing slide visual system exactly — don't introduce new fonts, colors, or layout patterns
+
+**1b. Add a closing card to the film itself**
+- After the film ends (or as an overlay), show a 3-second card: *"The path is waiting."* + TSP URL
+- Fade in on black, amber text, minimal
+
+### Priority 2 — SEO and discoverability
+
+**2a. Meta / Open Graph**
+- The Stomping Path needs proper OG tags: title, description, image, URL
+- OG image already exists at `artifacts/survival-podcast/public/opengraph.jpg`
+- Description: *"A curated path through 6,000+ episodes of personal sovereignty. See the problems. Stomp the solutions."*
+- Twitter card: `summary_large_image`
+- Canonical URL: the deployed domain
+
+**2b. Structured data**
+- Add JSON-LD on episode pages: `PodcastEpisode` schema
+- Add JSON-LD on the homepage: `WebSite` + `Organization` schema
+- Silent Mall Story: add `VideoObject` schema for the film
+
+**2c. Sitemap**
+- Generate `/sitemap.xml` from the API server
+- Include: homepage, all episode slugs (`/library/:slug`), all track slugs (`/tracks/:slug`), all zone pages (`/zones/:id`), `/transform`, `/stomping-grounds`
+
+### Priority 3 — Social seeding infrastructure
+
+**3a. Social share cards**
+- Each episode page needs a unique OG image (episode artwork + title + "The Stomping Path" branding)
+- Each transformation path needs a shareable card: *"My transformation: [from] → [to] on The Stomping Path"*
+- The Daily Stomp completion should show a share prompt: *"Day [N] on the path. [prompt answer redacted]. #StompingPath"*
+
+**3b. Short-link / UTM wrapper**
+- Create a simple redirect service or use a free short-link service
+- UTMs for each traffic source: `?utm_source=film&utm_medium=cta`, `?utm_source=pitchdeck`, `?utm_source=twitter`, etc.
+- Track these in the existing DB — add a `page_views` or `utm_events` table
+
+### Priority 4 — Email capture and retention
+
+**4a. Wire the "Stay on the Path" email form**
+- Currently the form in `CommunitySection` on the homepage is UI-only (no backend)
+- Add a `POST /api/subscribers` endpoint in the API server
+- Store emails in a `subscribers` table (Postgres): `id`, `email`, `created_at`, `source` (UTM or referrer)
+- Send a welcome email using a transactional email service (Resend is recommended — free tier, great DX)
+- Welcome email copy: *"You're on the path. Here's where to start."* + link to the 3 most foundational tracks
+
+**4b. Weekly digest**
+- Every Monday, send a digest to subscribers: today's Daily Stomp prompt, one featured episode, one gear find
+- Pull from existing `/api/episodes/featured` and gear shelf endpoints
+- Schedule via a cron job in the API server (already has `startGearSchedule()` as a pattern)
+
+### Priority 5 — Conversion optimization
+
+**5a. Heatmap / basic analytics**
+- Add Plausible Analytics (privacy-respecting, no cookies, no GDPR issues) — single script tag
+- Track: pageviews, outbound clicks (film links, Amazon gear), stomp completions, track starts
+
+**5b. First-visit experience**
+- If a visitor arrives from `?utm_source=film` or `?utm_source=pitchdeck`, show a subtle welcome banner:
+  *"You made it. You're on The Stomping Path now."* — dismissable, amber, top of page
+- After 3 pageviews, prompt: *"Want a weekly nudge?"* — email capture modal
+
+**5c. Path completion micro-moments**
+- When a user completes their first track episode: show a small celebration + share prompt
+- When streak hits 3 days: show *"3-day stomper"* badge + share prompt
+- These fire confetti + update the vine progress
+
+---
+
+## Distribution strategy (organic, Bitcoin-aligned, no ad spend)
+
+**Week 1 — Film drop**
+- Post the Silent Mall Story film link on: X/Twitter (thread format), Nostr, Reddit (r/personalfinance, r/antiwork, r/financialindependence, r/homestead), YouTube Shorts (if film has a vertical cut)
+- Thread format: screenshot of bathtub scene → "This is what the grind looks like." → 3 beats from the field note → "The path: [TSP link]"
+- Pin the pitch deck link in the first reply
+
+**Week 2 — Path drop**
+- Post the Stomping Path homepage directly: "I built a fan redesign of thesurvivalpodcast.com and it got out of hand." — show the hero video, the storm cards, the Stomping Grounds map
+- Tag Jack Spirko (@thesurvivalpodcast) — this is his content, he may amplify
+
+**Ongoing**
+- Daily Stomp prompt → post on Nostr/X as a standalone question each morning
+- "Trail Marker of the Week" — one featured episode card posted on social with a link to the full episode
+
+---
+
+## What the new agent should NOT do
+
+- Do not rebuild the homepage, the API, the DB schema, or the episode indexing — it's all working
+- Do not change the design system — match exactly
+- Do not add paid analytics, ad pixels, or tracking that violates privacy norms (Bitcoin/sovereignty audience is extremely privacy-conscious)
+- Do not rename "The Stomping Path" or deviate from the voice/tone guidelines above
+- Do not add authentication walls — everything stays open and free
+
+---
+
+## Useful context for the agent
+
+- Jack Spirko created The Survival Podcast. This is a fan redesign — not an official product. Frame all marketing accordingly ("a community fan experience" or "an unofficial companion").
+- The Stomping Path's audience: people who are done with the grind, exploring Bitcoin/sovereignty, interested in permaculture/homesteading, libertarian-leaning, distrust corporate systems. They respond to earned authenticity, not marketing polish.
+- "Stomp" is the verb. "Path" is the arc. "Grounds" is the homestead. Keep this metaphor consistent.
+- Bitcoin-only means no Stripe, no PayPal, no Venmo. If monetization is added later, it goes through a Bitcoin Lightning wallet (BTCPay Server or Alby).
+- The vine progress bar and daily stomp XP are deliberately gamified but never annoying — they reward action, not attention.
+
+---
+
+## Files to read first (in this repo)
+
+```
+artifacts/survival-podcast/src/pages/home.tsx        ← full homepage (the rebuild)
+artifacts/survival-podcast/src/components/stomping-grounds-scene.tsx  ← the map
+artifacts/api-server/src/lib/tracks.ts               ← all 7 learning tracks
+artifacts/api-server/src/routes/                     ← all API endpoints
+lib/db/schema.ts                                     ← full DB schema
+artifacts/survival-podcast/src/App.tsx               ← routing
+```
