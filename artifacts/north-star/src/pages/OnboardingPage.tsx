@@ -15,7 +15,7 @@ function StepDots({ current }: { current: number }) {
           key={i}
           className={cn(
             "rounded-full transition-all",
-            i === current ? "w-6 h-2 bg-[#1C1917]" : "w-2 h-2 bg-[#E7E5E4]"
+            i === current ? "w-6 h-2 bg-[#8A6A1A]" : "w-2 h-2 bg-[#D6D0C7]"
           )}
         />
       ))}
@@ -35,7 +35,10 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
           A personal operating system for multi-project work — built around the Codetry zone model.
         </p>
       </div>
-      <div className="text-left bg-[#F5F0E8] rounded-xl p-4 w-full max-w-sm space-y-2">
+      <div
+        className="text-left rounded-2xl border border-[#D6D0C7] shadow-sm p-4 w-full max-w-sm space-y-2"
+        style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+      >
         <p className="text-sm font-medium">Start with what you're already building.</p>
         <p className="text-sm text-[#44403C]">
           Your projects are pre-loaded. We'll walk through them together, then set your north star statement.
@@ -43,7 +46,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
       </div>
       <button
         onClick={onNext}
-        className="flex items-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px]"
+        className="flex items-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px] hover:bg-[#2C2520] transition-colors"
       >
         Let's go <ArrowRight size={16} />
       </button>
@@ -81,44 +84,47 @@ function ConstellationInlineForm({
   }
 
   return (
-    <div className="bg-[#F5F0E8] rounded-xl p-4 space-y-3">
+    <div
+      className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-3"
+      style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+    >
       <input
         autoFocus
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Project name"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+        className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
       />
       <input
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="One-line description (optional)"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+        className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
       />
       <select
         value={zone}
         onChange={(e) => setZone(e.target.value as ZoneId)}
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 min-h-[44px]"
+        className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] min-h-[44px]"
       >
         {ALL_ZONES.map((z) => (
           <option key={z.id} value={z.id}>{z.label}</option>
         ))}
       </select>
       <div className="space-y-2">
-        <p className="text-xs font-medium text-[#78716C]">URLs / Links</p>
+        <p className="text-xs font-medium text-[#78716C] uppercase tracking-wider">URLs / Links</p>
         {urls.map((u, i) => (
           <div key={i} className="flex gap-1.5 items-center">
             <input
               value={u.label}
               onChange={(e) => setUrlEntry(i, "label", e.target.value)}
               placeholder="Label"
-              className="w-24 shrink-0 border border-[#E7E5E4] rounded-lg px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+              className="w-24 shrink-0 border border-[#D6D0C7] rounded-lg px-2 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
             />
             <input
               value={u.url}
               onChange={(e) => setUrlEntry(i, "url", e.target.value)}
               placeholder="https:// or /path/"
-              className="flex-1 min-w-0 border border-[#E7E5E4] rounded-lg px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+              className="flex-1 min-w-0 border border-[#D6D0C7] rounded-lg px-2 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
             />
             <button
               onClick={() => setUrls((prev) => prev.length === 1 ? [{ label: "", url: "" }] : prev.filter((_, idx) => idx !== i))}
@@ -136,10 +142,10 @@ function ConstellationInlineForm({
         </button>
       </div>
       <div className="flex gap-2">
-        <button onClick={onCancel} className="flex-1 border border-[#E7E5E4] rounded-lg py-2 text-sm min-h-[44px]">Cancel</button>
+        <button onClick={onCancel} className="flex-1 border border-[#D6D0C7] bg-white/60 rounded-xl py-2 text-sm min-h-[44px] hover:bg-white/90 transition-colors">Cancel</button>
         <button
           onClick={() => { if (name.trim()) onSave({ name: name.trim(), zone, notes: notes.trim(), urls: urls.filter((u) => u.url.trim()) }); }}
-          className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px]"
+          className="flex-1 bg-[#1C1917] text-white rounded-xl py-2 text-sm min-h-[44px] hover:bg-[#2C2520] transition-colors"
         >
           Save
         </button>
@@ -177,7 +183,7 @@ function ConstellationsStep({ onNext }: { onNext: () => void }) {
               onCancel={() => setEditingId(null)}
             />
           ) : (
-            <div key={c.id} className="flex items-center gap-3 bg-white rounded-xl border border-[#E7E5E4] p-3">
+            <div key={c.id} className="flex items-center gap-3 bg-white/70 rounded-2xl border border-[#D6D0C7] shadow-sm p-3">
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{c.name}</p>
                 {c.notes && <p className="text-xs text-[#78716C] truncate">{c.notes}</p>}
@@ -213,7 +219,7 @@ function ConstellationsStep({ onNext }: { onNext: () => void }) {
       ) : (
         <button
           onClick={() => setAdding(true)}
-          className="flex items-center gap-2 text-sm text-[#44403C] border border-dashed border-[#E7E5E4] rounded-xl px-4 py-3 min-h-[44px] hover:bg-[#F5F0E8]"
+          className="flex items-center gap-2 text-sm text-[#44403C] border border-dashed border-[#D6D0C7] rounded-2xl px-4 py-3 min-h-[44px] hover:bg-[#F5F0E8] transition-colors"
         >
           <Plus size={16} /> Add a constellation
         </button>
@@ -221,7 +227,7 @@ function ConstellationsStep({ onNext }: { onNext: () => void }) {
 
       <button
         onClick={onNext}
-        className="flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px] mt-2"
+        className="flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px] mt-2 hover:bg-[#2C2520] transition-colors"
       >
         Continue <ArrowRight size={16} />
       </button>
@@ -261,7 +267,7 @@ function ContractsStep({ onNext }: { onNext: () => void }) {
           {contracts.map((c) => {
             const constellation = constellations.find((co) => co.id === c.constellationId);
             return (
-              <div key={c.id} className="flex items-center gap-3 bg-white rounded-xl border border-[#E7E5E4] p-3">
+              <div key={c.id} className="flex items-center gap-3 bg-white/70 rounded-2xl border border-[#D6D0C7] shadow-sm p-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium">{c.name}</p>
                   <p className="text-xs text-[#78716C]">{constellation?.name} · {c.weeklyHourTarget}h/week target</p>
@@ -276,18 +282,21 @@ function ContractsStep({ onNext }: { onNext: () => void }) {
       )}
 
       {adding ? (
-        <div className="bg-[#F5F0E8] rounded-xl p-4 space-y-3">
+        <div
+          className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-3"
+          style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+        >
           <input
             autoFocus
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Contract name"
-            className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+            className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
           />
           <select
             value={constellationId}
             onChange={(e) => setConstellationId(e.target.value)}
-            className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 min-h-[44px]"
+            className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] min-h-[44px]"
           >
             {constellations.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
@@ -300,19 +309,19 @@ function ContractsStep({ onNext }: { onNext: () => void }) {
               step="0.25"
               value={weeklyHours}
               onChange={(e) => setWeeklyHours(e.target.value)}
-              className="w-24 border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+              className="w-24 border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
             />
             <span className="text-sm text-[#78716C]">hours / week target</span>
           </div>
           <div className="flex gap-2">
-            <button onClick={() => setAdding(false)} className="flex-1 border border-[#E7E5E4] rounded-lg py-2 text-sm min-h-[44px]">Cancel</button>
-            <button onClick={handleAdd} className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px]">Add</button>
+            <button onClick={() => setAdding(false)} className="flex-1 border border-[#D6D0C7] bg-white/60 rounded-xl py-2 text-sm min-h-[44px] hover:bg-white/90 transition-colors">Cancel</button>
+            <button onClick={handleAdd} className="flex-1 bg-[#1C1917] text-white rounded-xl py-2 text-sm min-h-[44px] hover:bg-[#2C2520] transition-colors">Add</button>
           </div>
         </div>
       ) : (
         <button
           onClick={() => setAdding(true)}
-          className="flex items-center gap-2 text-sm text-[#44403C] border border-dashed border-[#E7E5E4] rounded-xl px-4 py-3 min-h-[44px] hover:bg-[#F5F0E8]"
+          className="flex items-center gap-2 text-sm text-[#44403C] border border-dashed border-[#D6D0C7] rounded-2xl px-4 py-3 min-h-[44px] hover:bg-[#F5F0E8] transition-colors"
         >
           <Plus size={16} /> Add a contract
         </button>
@@ -320,7 +329,7 @@ function ContractsStep({ onNext }: { onNext: () => void }) {
 
       <div className="flex gap-3 mt-2">
         <button onClick={onNext} className="text-sm text-[#78716C] min-h-[44px] px-3">Skip</button>
-        <button onClick={onNext} className="flex-1 flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px]">
+        <button onClick={onNext} className="flex-1 flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px] hover:bg-[#2C2520] transition-colors">
           Continue <ArrowRight size={16} />
         </button>
       </div>
@@ -341,15 +350,18 @@ function WhoStep({ onNext }: { onNext: () => void }) {
           Describe a specific kind of person — the one your work most serves. This becomes part of your north star statement.
         </p>
       </div>
-      <div>
-        <label className="text-sm font-medium block mb-2">I do this work for…</label>
+      <div
+        className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-3"
+        style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+      >
+        <label className="text-xs text-[#78716C] uppercase tracking-wider block">I do this work for…</label>
         <textarea
           autoFocus
           value={who}
           onChange={(e) => setWho(e.target.value)}
           placeholder="e.g. Rural entrepreneurs building cooperatives in northern communities"
           rows={3}
-          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 resize-none"
+          className="w-full border border-[#D6D0C7] rounded-xl px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
         />
       </div>
       <div className="flex gap-3 mt-2">
@@ -366,7 +378,7 @@ function WhoStep({ onNext }: { onNext: () => void }) {
             }
             onNext();
           }}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px]"
+          className="flex-1 flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px] hover:bg-[#2C2520] transition-colors"
         >
           Continue <ArrowRight size={16} />
         </button>
@@ -398,32 +410,37 @@ function WhyStep({ onFinish }: { onFinish: () => void }) {
           Complete your north star statement. These anchor you when deciding what to say yes or no to.
         </p>
       </div>
-      <div>
-        <label className="text-sm font-medium block mb-2">So that…</label>
-        <textarea
-          autoFocus
-          value={why}
-          onChange={(e) => setWhy(e.target.value)}
-          placeholder="e.g. they can build locally-owned economic infrastructure without outside dependency"
-          rows={3}
-          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 resize-none"
-        />
-      </div>
-      <div>
-        <label className="text-sm font-medium block mb-2">I will politely decline…</label>
-        <textarea
-          value={noFly}
-          onChange={(e) => setNoFly(e.target.value)}
-          placeholder="e.g. work that requires long-term presence outside my home territory"
-          rows={2}
-          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 resize-none"
-        />
+      <div
+        className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-4"
+        style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+      >
+        <div className="space-y-2">
+          <label className="text-xs text-[#78716C] uppercase tracking-wider block">So that…</label>
+          <textarea
+            autoFocus
+            value={why}
+            onChange={(e) => setWhy(e.target.value)}
+            placeholder="e.g. they can build locally-owned economic infrastructure without outside dependency"
+            rows={3}
+            className="w-full border border-[#D6D0C7] rounded-xl px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs text-[#78716C] uppercase tracking-wider block">I will politely decline…</label>
+          <textarea
+            value={noFly}
+            onChange={(e) => setNoFly(e.target.value)}
+            placeholder="e.g. work that requires long-term presence outside my home territory"
+            rows={2}
+            className="w-full border border-[#D6D0C7] rounded-xl px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
+          />
+        </div>
       </div>
       <div className="flex gap-3 mt-2">
         <button onClick={handleFinish} className="text-sm text-[#78716C] min-h-[44px] px-3">Skip</button>
         <button
           onClick={handleFinish}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px]"
+          className="flex-1 flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px] hover:bg-[#2C2520] transition-colors"
         >
           Start using North Star <Star size={16} />
         </button>
@@ -444,7 +461,7 @@ export function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] flex flex-col">
+    <div className="min-h-dvh flex flex-col" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
       <div className="flex-1 px-5 py-8 max-w-lg mx-auto w-full">
         <StepDots current={step} />
 
