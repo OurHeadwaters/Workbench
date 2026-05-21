@@ -624,6 +624,92 @@ function PivotTable({
   );
 }
 
+// ── CSV export helper (P&L by Month) ──────────────────────────────────────────
+
+function buildPnlByMonthCsv(
+  months: { month: string; revenue: number; costs: number; net: number }[],
+  breakdown: PnlBreakdownCostCentre[],
+  totalRevenue: number,
+  totalCosts: number,
+  totalNet: number,
+): string {
+  const escape = (v: string | number) => {
+    const s = String(v);
+    return s.includes(",") || s.includes('"') || s.includes("\n")
+      ? `"${s.replace(/"/g, '""')}"`
+      : s;
+  };
+  const row = (...cells: (string | number)[]) =>
+    cells.map(escape).join(",");
+  const fmtRaw = (n: number) => n.toFixed(2);
+
+  const monthKeys = months.map((m) => m.month);
+  const agencyByMonth = new Map(months.map((m) => [m.month, m]));
+
+  const revenueRows = breakdown.filter((cc) => cc.totalRevenue !== 0);
+  const costRows = breakdown.filter((cc) => cc.totalCosts !== 0);
+
+  const lines: string[] = [];
+
+  lines.push(row("", ...monthKeys, "Total"));
+
+  lines.push(row("REVENUE"));
+  for (const cc of revenueRows) {
+    const label = `${cc.code === "__UNASSIGNED__" ? "—" : cc.code}  ${cc.name}`;
+    lines.push(
+      row(label, ...monthKeys.map((m) => fmtRaw(cc.monthlyRevenue[m] ?? 0)), fmtRaw(cc.totalRevenue)),
+    );
+  }
+  lines.push(
+    row(
+      "Total Revenue",
+      ...monthKeys.map((m) => fmtRaw(agencyByMonth.get(m)?.revenue ?? 0)),
+      fmtRaw(totalRevenue),
+    ),
+  );
+
+  lines.push(row(""));
+
+  lines.push(row("COSTS"));
+  for (const cc of costRows) {
+    const label = `${cc.code === "__UNASSIGNED__" ? "—" : cc.code}  ${cc.name}`;
+    lines.push(
+      row(label, ...monthKeys.map((m) => fmtRaw(cc.monthlyCosts[m] ?? 0)), fmtRaw(cc.totalCosts)),
+    );
+  }
+  lines.push(
+    row(
+      "Total Costs",
+      ...monthKeys.map((m) => fmtRaw(agencyByMonth.get(m)?.costs ?? 0)),
+      fmtRaw(totalCosts),
+    ),
+  );
+
+  lines.push(row(""));
+
+  lines.push(
+    row(
+      "Net Income",
+      ...monthKeys.map((m) => fmtRaw(agencyByMonth.get(m)?.net ?? 0)),
+      fmtRaw(totalNet),
+    ),
+  );
+
+  return lines.join("\n");
+}
+
+function downloadCsv(csv: string, filename: string) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Tab: P&L by Month ─────────────────────────────────────────────────────────
+
 function TabByMonth({ from, to }: { from: string; to: string }) {
   const { data, isLoading, isError } = useGetPnlByMonth(
     { from, to },
@@ -648,13 +734,28 @@ function TabByMonth({ from, to }: { from: string; to: string }) {
     Net: m.net,
   }));
 
-  const totalRevenue = data.months.reduce((s, m) => s + m.revenue, 0);
-  const totalCosts = data.months.reduce((s, m) => s + m.costs, 0);
+  const months = data.months;
+  const totalRevenue = months.reduce((s, m) => s + m.revenue, 0);
+  const totalCosts = months.reduce((s, m) => s + m.costs, 0);
   const totalNet = totalRevenue - totalCosts;
   const breakdown = data.breakdown ?? [];
 
+  function handleExportCsv() {
+    const csv = buildPnlByMonthCsv(months, breakdown, totalRevenue, totalCosts, totalNet);
+    const filename = `pnl-by-month_${from}_to_${to}.csv`;
+    downloadCsv(csv, filename);
+  }
+
   return (
     <div className="space-y-6">
+      {/* Toolbar */}
+      <div className="flex justify-end print:hidden">
+        <Button variant="outline" size="sm" onClick={handleExportCsv} className="gap-2">
+          <Download className="w-4 h-4" />
+          Export CSV
+        </Button>
+      </div>
+
       {/* Summary banner */}
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
