@@ -13,7 +13,7 @@ import {
   getGetTaxSummaryQueryKey,
   getListTransactionsQueryKey,
 } from "@workspace/api-client-react";
-import type { CategoryReportRow, TaxSummaryLineItem, PnlBreakdownCostCentre, CostCentrePnlReport, Transaction } from "@workspace/api-client-react";
+import type { CategoryReportRow, TaxSummaryLineItem, PnlBreakdownCostCentre, CostCentrePnlReport, Transaction, PnlByMonthResponse, CategoryReportResponse, TaxSummaryResponse } from "@workspace/api-client-react";
 import {
   Loader2,
   Printer,
@@ -1095,6 +1095,83 @@ function buildPnlCsv(
   return lines.join("\n");
 }
 
+function buildFullCsv(
+  pnlData: CostCentrePnlReport,
+  monthData: PnlByMonthResponse,
+  categoryData: CategoryReportResponse,
+  taxData: TaxSummaryResponse,
+  from: string,
+  to: string,
+): string {
+  const escape = (v: string | number) => {
+    const s = String(v);
+    return s.includes(",") || s.includes('"') || s.includes("\n")
+      ? `"${s.replace(/"/g, '""')}"`
+      : s;
+  };
+  const row = (...cols: (string | number)[]) => cols.map(escape).join(",");
+
+  const lines: string[] = [
+    `# Headwaters Books — Full Financial Export`,
+    `# Period: ${from} to ${to}`,
+    `# Exported: ${new Date().toLocaleDateString("en-CA")}`,
+    `# Sections: By Cost Centre | P&L by Month | By Category | Tax Summary`,
+    ``,
+  ];
+
+  // ── Section 1: By Cost Centre ──────────────────────────────────────────────
+  lines.push(`## SECTION 1: P&L BY COST CENTRE`);
+  lines.push(row("Cost Centre Code", "Cost Centre Name", "Account Code", "Account Name", "Revenue", "Costs", "Net"));
+  for (const cc of pnlData.costCentres) {
+    for (const rev of cc.revenueLines) {
+      lines.push(row(cc.code, cc.name, rev.accountCode, rev.accountName, rev.total, 0, rev.total));
+    }
+    for (const cost of cc.costLines) {
+      lines.push(row(cc.code, cc.name, cost.accountCode, cost.accountName, 0, cost.total, -cost.total));
+    }
+    if (cc.revenueLines.length === 0 && cc.costLines.length === 0) {
+      lines.push(row(cc.code, cc.name, "", "", 0, 0, 0));
+    }
+  }
+  const t = pnlData.agencyTotals;
+  lines.push(row("TOTAL", "Agency Total", "", "", t.revenue, t.costs, t.net));
+  lines.push(``);
+
+  // ── Section 2: P&L by Month ────────────────────────────────────────────────
+  lines.push(`## SECTION 2: P&L BY MONTH`);
+  lines.push(row("Month", "Revenue", "Costs", "Net"));
+  for (const m of monthData.months) {
+    lines.push(row(m.month, m.revenue, m.costs, m.net));
+  }
+  const mTotalRev = monthData.months.reduce((s, m) => s + m.revenue, 0);
+  const mTotalCosts = monthData.months.reduce((s, m) => s + m.costs, 0);
+  lines.push(row("TOTAL", mTotalRev, mTotalCosts, mTotalRev - mTotalCosts));
+  lines.push(``);
+
+  // ── Section 3: By Category ─────────────────────────────────────────────────
+  lines.push(`## SECTION 3: BY CATEGORY`);
+  lines.push(row("Account Code", "Account Name", "Type", "Tax Code", "Transaction Count", "Total"));
+  for (const r of categoryData.rows) {
+    lines.push(row(r.accountCode, r.accountName, r.type, r.taxCode, r.transactionCount, r.total));
+  }
+  lines.push(row("", "Total Revenue", "revenue", "", "", categoryData.totalRevenue));
+  lines.push(row("", "Total Costs", "cost", "", "", categoryData.totalCosts));
+  lines.push(row("", "Net Income", "", "", "", categoryData.net));
+  lines.push(``);
+
+  // ── Section 4: Tax Summary ─────────────────────────────────────────────────
+  lines.push(`## SECTION 4: TAX SUMMARY (GST/HST)`);
+  lines.push(row("Account Code", "Account Name", "Tax Code", "Transaction Count", "Total"));
+  for (const l of taxData.lines) {
+    lines.push(row(l.accountCode, l.accountName, l.taxCode, l.transactionCount, l.total));
+  }
+  lines.push(row("", "GST/HST Collected", "gst-collected", "", taxData.collected));
+  lines.push(row("", "GST/HST Paid (ITCs)", "gst-paid", "", taxData.paid));
+  lines.push(row("", "Net Owing / Refund", "", "", taxData.netOwing));
+
+  return lines.join("\n");
+}
+
 export default function Pnl() {
   const { data: me, isLoading: meLoading } = useGetBookkeeperMe();
 
@@ -1107,8 +1184,21 @@ export default function Pnl() {
     { from, to },
     { query: { queryKey: getGetBookkeeperPnlQueryKey({ from, to }) } },
   );
+  const { data: monthData } = useGetPnlByMonth(
+    { from, to },
+    { query: { queryKey: getGetPnlByMonthQueryKey({ from, to }) } },
+  );
+  const { data: categoryData } = useGetReportsByCategory(
+    { from, to },
+    { query: { queryKey: getGetReportsByCategoryQueryKey({ from, to }) } },
+  );
+  const { data: taxData } = useGetTaxSummary(
+    { from, to },
+    { query: { queryKey: getGetTaxSummaryQueryKey({ from, to }) } },
+  );
 
   const isAllowed = me?.role === "owner" || me?.role === "bookkeeper";
+  const allDataReady = !!(pnlData && monthData && categoryData && taxData);
 
   function downloadCsv() {
     if (!pnlData) return;
@@ -1118,6 +1208,18 @@ export default function Pnl() {
     const a = document.createElement("a");
     a.href = url;
     a.download = `pnl-${from}-to-${to}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function downloadFullCsv() {
+    if (!pnlData || !monthData || !categoryData || !taxData) return;
+    const csv = buildFullCsv(pnlData, monthData, categoryData, taxData, from, to);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `headwaters-full-export-${from}-to-${to}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -1156,7 +1258,11 @@ export default function Pnl() {
         <div className="flex items-center gap-2 shrink-0 self-start print:hidden">
           <Button variant="outline" size="sm" onClick={downloadCsv} disabled={!pnlData} className="flex items-center gap-2">
             <Download className="w-4 h-4" />
-            Download CSV
+            This view
+          </Button>
+          <Button variant="default" size="sm" onClick={downloadFullCsv} disabled={!allDataReady} className="flex items-center gap-2" title="Downloads all four report sections in one file">
+            <Download className="w-4 h-4" />
+            Full export
           </Button>
           <Button variant="outline" size="sm" onClick={() => window.print()} className="flex items-center gap-2">
             <Printer className="w-4 h-4" />
