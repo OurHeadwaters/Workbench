@@ -26,8 +26,8 @@ function StepDots({ current }: { current: number }) {
 function WelcomeStep({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col items-center text-center gap-6 py-8">
-      <div className="w-16 h-16 rounded-full bg-[#1C1917] flex items-center justify-center">
-        <Star size={28} className="text-white" />
+      <div className="w-16 h-16 rounded-full bg-[#8A6A1A] flex items-center justify-center shadow-md">
+        <Star size={28} className="text-[#FEF3C7]" fill="#FEF3C7" />
       </div>
       <div>
         <h1 className="text-3xl mb-3">North Star</h1>
@@ -35,7 +35,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
           A personal operating system for multi-project work — built around the Codetry zone model.
         </p>
       </div>
-      <div className="text-left bg-[#F5F5F0] rounded-xl p-4 w-full max-w-sm space-y-2">
+      <div className="text-left bg-[#F5F0E8] rounded-xl p-4 w-full max-w-sm space-y-2">
         <p className="text-sm font-medium">Start with what you're already building.</p>
         <p className="text-sm text-[#44403C]">
           Your projects are pre-loaded. We'll walk through them together, then set your north star statement.
@@ -75,30 +75,30 @@ function ConstellationInlineForm({
   const [url, setUrl] = useState(initial?.url ?? "");
 
   return (
-    <div className="bg-[#F5F5F0] rounded-xl p-4 space-y-3">
+    <div className="bg-[#F5F0E8] rounded-xl p-4 space-y-3">
       <input
         autoFocus
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Project name"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
       />
       <input
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="One-line description (optional)"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
       />
       <input
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="URL (optional, e.g. /codetry or https://...)"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
       />
       <select
         value={zone}
         onChange={(e) => setZone(e.target.value as ZoneId)}
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917] min-h-[44px]"
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 min-h-[44px]"
       >
         {ALL_ZONES.map((z) => (
           <option key={z.id} value={z.id}>{z.label}</option>
@@ -182,7 +182,7 @@ function ConstellationsStep({ onNext }: { onNext: () => void }) {
       ) : (
         <button
           onClick={() => setAdding(true)}
-          className="flex items-center gap-2 text-sm text-[#44403C] border border-dashed border-[#E7E5E4] rounded-xl px-4 py-3 min-h-[44px] hover:bg-[#F5F5F0]"
+          className="flex items-center gap-2 text-sm text-[#44403C] border border-dashed border-[#E7E5E4] rounded-xl px-4 py-3 min-h-[44px] hover:bg-[#F5F0E8]"
         >
           <Plus size={16} /> Add a constellation
         </button>
@@ -245,18 +245,18 @@ function ContractsStep({ onNext }: { onNext: () => void }) {
       )}
 
       {adding ? (
-        <div className="bg-[#F5F5F0] rounded-xl p-4 space-y-3">
+        <div className="bg-[#F5F0E8] rounded-xl p-4 space-y-3">
           <input
             autoFocus
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Contract name"
-            className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+            className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
           />
           <select
             value={constellationId}
             onChange={(e) => setConstellationId(e.target.value)}
-            className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917] min-h-[44px]"
+            className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 min-h-[44px]"
           >
             {constellations.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
@@ -269,7 +269,7 @@ function ContractsStep({ onNext }: { onNext: () => void }) {
               step="0.25"
               value={weeklyHours}
               onChange={(e) => setWeeklyHours(e.target.value)}
-              className="w-24 border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+              className="w-24 border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
             />
             <span className="text-sm text-[#78716C]">hours / week target</span>
           </div>
@@ -281,7 +281,7 @@ function ContractsStep({ onNext }: { onNext: () => void }) {
       ) : (
         <button
           onClick={() => setAdding(true)}
-          className="flex items-center gap-2 text-sm text-[#44403C] border border-dashed border-[#E7E5E4] rounded-xl px-4 py-3 min-h-[44px] hover:bg-[#F5F5F0]"
+          className="flex items-center gap-2 text-sm text-[#44403C] border border-dashed border-[#E7E5E4] rounded-xl px-4 py-3 min-h-[44px] hover:bg-[#F5F0E8]"
         >
           <Plus size={16} /> Add a contract
         </button>
@@ -318,7 +318,7 @@ function WhoStep({ onNext }: { onNext: () => void }) {
           onChange={(e) => setWho(e.target.value)}
           placeholder="e.g. Rural entrepreneurs building cooperatives in northern communities"
           rows={3}
-          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917] resize-none"
+          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 resize-none"
         />
       </div>
       <div className="flex gap-3 mt-2">
@@ -375,7 +375,7 @@ function WhyStep({ onFinish }: { onFinish: () => void }) {
           onChange={(e) => setWhy(e.target.value)}
           placeholder="e.g. they can build locally-owned economic infrastructure without outside dependency"
           rows={3}
-          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917] resize-none"
+          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 resize-none"
         />
       </div>
       <div>
@@ -385,7 +385,7 @@ function WhyStep({ onFinish }: { onFinish: () => void }) {
           onChange={(e) => setNoFly(e.target.value)}
           placeholder="e.g. work that requires long-term presence outside my home territory"
           rows={2}
-          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917] resize-none"
+          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 resize-none"
         />
       </div>
       <div className="flex gap-3 mt-2">
@@ -413,7 +413,7 @@ export function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-[#FAFAF9] flex flex-col">
+    <div className="min-h-dvh bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] flex flex-col">
       <div className="flex-1 px-5 py-8 max-w-lg mx-auto w-full">
         <StepDots current={step} />
 

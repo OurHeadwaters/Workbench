@@ -25,7 +25,7 @@ function OnboardingGuard({ children }: { children: React.ReactNode }) {
 
 function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh bg-[#FAFAF9]">
+    <div className="min-h-dvh bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8]">
       {children}
       <NavBar />
     </div>
