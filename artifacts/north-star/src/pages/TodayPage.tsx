@@ -333,15 +333,14 @@ function ConstellationPicker() {
                 </div>
               </button>
 
-              {picked && c.deepLinks.length > 0 && (
+              {picked && (c.urls?.length > 0 || c.deepLinks?.length > 0) && (
                 <div className="flex flex-wrap gap-2 px-4 pb-3.5">
-                  {c.deepLinks.map((dl, i) => (
+                  {(c.urls?.length ? c.urls.map((u) => ({ label: u.label, path: u.url })) : c.deepLinks ?? []).map((dl, i) => (
                     <a
                       key={i}
                       href={dl.path}
                       className="flex items-center gap-1 text-xs rounded-lg px-3 py-1.5 min-h-[36px] transition-colors"
                       style={{
-                        backgroundColor: ZONE_CLASSES[c.zone]?.bg ? undefined : "#F5F0E8",
                         color: zoneColor,
                         border: `1px solid ${zoneColor}22`,
                         background: `${zoneColor}0F`,

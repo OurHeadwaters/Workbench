@@ -1,0 +1,24 @@
+What I found
+There is strong zone assignment documentation, but it's spread across multiple sources and covers the Codetry economic model zones (Z0–Z5 = household → wild) — not a personal tools inventory.
+
+The clearest zone-to-tool mapping I found, assembled from multiple sources:
+
+Tool / Constellation	Zone	Source
+Saltbox (gather)	Z0 — household, private, local-first	Direct quote in attached asset: "You are working on Saltbox — a Zone 0 homeschool day companion"
+Sandbox	Z1 — the trusted circle around Saltbox (~60 families)	Same asset: "Zone 1 (the sandbox) is the trusted circle those households have chosen to let in"
+The Eave	The hard boundary between Z1 and Z3+	Z4/Z5 docs + zone-identity-foundation.md
+Headwaters / xBuckets	Z1–Z2	Step 1 Zone 2 document: "Zone 1 apps (Headwaters/xBuckets, Bright Side)"
+Family Buckets	Z1–Z3	zone-identity-foundation.md
+The Field (807)	Z3–Z4	zone-identity-foundation.md
+807 Food Co-op hub	Z3	Zone 2 analysis doc — "organized co-op, governance"
+Deer Lake deployment	Z2	Zone 2 analysis — "contractual execution, recurring obligations"
+The Shallows / Sandbox (XRPL feed)	Z5	Z4/Z5 living design doc
+North Star	Internal Z1–Z4 work-classification tool (separate from Codetry zones)	north-star-life-design-hub.md
+What I did NOT find
+A single document where you walked through every tool you use — not just the ones built here, but your full inventory (things like QuickBooks, Local Line, Square POS, etc.) — and assigned each one a zone. That conversation either:
+
+Happened in a different Replit project (there are references to a "practitioner operating plan" project and other agent-to-agent handoffs suggesting this)
+Happened in this project but before the git history I can access
+May not have been committed — it may have been a chat-only planning conversation that wasn't saved as a task file
+What would help reconstruct it
+If you remember roughly what tools were on the list, I can help you place them now and write it as a proper task file or North Star constellation entry. The zone logic is well-documented — Codetry zones are about trust distance and governance (Z0 = private household, Z1 = trusted circle, Z2 = contracted relationships, Z3 = organized community, Z4 = volunteer formation, Z5 = anonymous wild). Any tool maps cleanly once you know who it's accountable to.

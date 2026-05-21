@@ -38,81 +38,79 @@ const SEED_CONSTELLATIONS: Omit<Constellation, "id" | "slug" | "colorVar">[] = [
     name: "Saltbox",
     notes: "Homeschool session companion",
     zone: "Z3",
-    url: "/gather/",
-    deepLinks: [
-      { label: "Open Saltbox", path: "/gather/" },
-      { label: "Today's session", path: "/gather/" },
+    urls: [
+      { label: "Open Saltbox", url: "/gather/" },
     ],
+    deepLinks: [],
     active: true,
   },
   {
     name: "Practitioner's Guide",
     notes: "The practitioner playbook",
     zone: "Z2",
-    url: "/practitioners-guide-v2/",
-    deepLinks: [
-      { label: "Open Guide", path: "/practitioners-guide-v2/" },
-      { label: "Workspace", path: "/practitioners-guide-v2/" },
-      { label: "Workflow", path: "/practitioners-guide-v2/workflow" },
+    urls: [
+      { label: "Open Guide", url: "/practitioners-guide-v2/" },
+      { label: "Workflow", url: "/practitioners-guide-v2/workflow" },
     ],
+    deepLinks: [],
     active: true,
   },
   {
     name: "Operating Plan",
     notes: "Daily practitioner operating system",
     zone: "Z1",
-    url: "/practitioner-operating-plan/",
-    deepLinks: [
-      { label: "Open Plan", path: "/practitioner-operating-plan/" },
-      { label: "Daily Debrief", path: "/practitioner-operating-plan/debrief" },
+    urls: [
+      { label: "Open Plan", url: "/practitioner-operating-plan/" },
+      { label: "Daily Debrief", url: "/practitioner-operating-plan/debrief" },
     ],
+    deepLinks: [],
     active: true,
   },
   {
     name: "Field Guide Finance",
     notes: "Financial tracking and reporting",
     zone: "Z1",
-    url: "/field-guide-finance/",
-    deepLinks: [
-      { label: "Open Finance", path: "/field-guide-finance/" },
+    urls: [
+      { label: "Open Finance", url: "/field-guide-finance/" },
     ],
+    deepLinks: [],
     active: true,
   },
   {
     name: "Research Library",
     notes: "Northern food systems research",
     zone: "Z4",
-    url: "/library/",
-    deepLinks: [
-      { label: "Open Library", path: "/library/" },
+    urls: [
+      { label: "Open Library", url: "/library/" },
     ],
+    deepLinks: [],
     active: true,
   },
   {
     name: "Headwaters Books",
     notes: "Community publishing catalog",
     zone: "Z3",
-    url: "/headwaters-books/",
-    deepLinks: [
-      { label: "Open Books", path: "/headwaters-books/" },
+    urls: [
+      { label: "Open Books", url: "/headwaters-books/" },
     ],
+    deepLinks: [],
     active: true,
   },
   {
     name: "Codetry Handbook",
     notes: "How a community runs its own economy",
     zone: "Z3",
-    url: "/codetry-handbook/",
-    deepLinks: [
-      { label: "Open Handbook", path: "/codetry-handbook/" },
+    urls: [
+      { label: "Open Handbook", url: "/codetry-handbook/" },
     ],
+    deepLinks: [],
     active: true,
   },
   {
     name: "Family Buckets",
     notes: "Chores, allowance, household tasks",
     zone: "Z3",
-    url: undefined,
+    urls: [],
     deepLinks: [],
     active: true,
   },
@@ -407,7 +405,7 @@ export const useStore = create<Store>()(
     }),
     {
       name: "north-star:v1",
-      version: 6,
+      version: 7,
       migrate(persistedState: unknown, fromVersion: number) {
         const s = persistedState as Record<string, unknown>;
         if (fromVersion < 5) {
@@ -420,6 +418,24 @@ export const useStore = create<Store>()(
           if (!ranking.includes("Z5")) ranking.push("Z5");
           s.zoneRanking = ranking;
           s.schemaVersion = 6;
+        }
+        if (fromVersion < 7) {
+          const constellations = (s.constellations as Record<string, unknown>[]) ?? [];
+          s.constellations = constellations.map((c) => {
+            if (Array.isArray(c.urls) && c.urls.length > 0) return c;
+            const fromDeepLinks = Array.isArray(c.deepLinks)
+              ? (c.deepLinks as { label: string; path: string }[]).map((dl) => ({
+                  label: dl.label,
+                  url: dl.path,
+                }))
+              : [];
+            const fromUrl =
+              fromDeepLinks.length === 0 && typeof c.url === "string" && c.url
+                ? [{ label: "Open", url: c.url as string }]
+                : [];
+            return { ...c, urls: fromDeepLinks.length > 0 ? fromDeepLinks : fromUrl };
+          });
+          s.schemaVersion = 7;
         }
         return s as unknown as AppState;
       },

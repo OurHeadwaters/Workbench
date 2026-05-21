@@ -6,7 +6,10 @@ export interface Constellation {
   name: string;
   notes: string;
   zone: ZoneId;
+  urls: { label: string; url: string }[];
+  /** @deprecated use urls */
   url?: string;
+  /** @deprecated use urls */
   deepLinks: { label: string; path: string }[];
   colorVar: string;
   active: boolean;

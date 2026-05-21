@@ -66,13 +66,19 @@ function ConstellationInlineForm({
   onCancel,
 }: {
   initial?: Partial<Constellation>;
-  onSave: (data: { name: string; zone: ZoneId; notes: string; url: string }) => void;
+  onSave: (data: { name: string; zone: ZoneId; notes: string; urls: { label: string; url: string }[] }) => void;
   onCancel: () => void;
 }) {
   const [name, setName] = useState(initial?.name ?? "");
   const [zone, setZone] = useState<ZoneId>(initial?.zone ?? "Z3");
   const [notes, setNotes] = useState(initial?.notes ?? "");
-  const [url, setUrl] = useState(initial?.url ?? "");
+  const [urls, setUrls] = useState<{ label: string; url: string }[]>(
+    initial?.urls?.length ? initial.urls : [{ label: "", url: "" }]
+  );
+
+  function setUrlEntry(i: number, field: "label" | "url", value: string) {
+    setUrls((prev) => prev.map((u, idx) => idx === i ? { ...u, [field]: value } : u));
+  }
 
   return (
     <div className="bg-[#F5F0E8] rounded-xl p-4 space-y-3">
@@ -89,12 +95,6 @@ function ConstellationInlineForm({
         placeholder="One-line description (optional)"
         className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
       />
-      <input
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        placeholder="URL (optional, e.g. /codetry or https://...)"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
-      />
       <select
         value={zone}
         onChange={(e) => setZone(e.target.value as ZoneId)}
@@ -104,10 +104,41 @@ function ConstellationInlineForm({
           <option key={z.id} value={z.id}>{z.label}</option>
         ))}
       </select>
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-[#78716C]">URLs / Links</p>
+        {urls.map((u, i) => (
+          <div key={i} className="flex gap-1.5 items-center">
+            <input
+              value={u.label}
+              onChange={(e) => setUrlEntry(i, "label", e.target.value)}
+              placeholder="Label"
+              className="w-24 shrink-0 border border-[#E7E5E4] rounded-lg px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+            />
+            <input
+              value={u.url}
+              onChange={(e) => setUrlEntry(i, "url", e.target.value)}
+              placeholder="https:// or /path/"
+              className="flex-1 min-w-0 border border-[#E7E5E4] rounded-lg px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+            />
+            <button
+              onClick={() => setUrls((prev) => prev.length === 1 ? [{ label: "", url: "" }] : prev.filter((_, idx) => idx !== i))}
+              className="shrink-0 text-[#78716C] hover:text-[#1C1917] p-1"
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
+        ))}
+        <button
+          onClick={() => setUrls((prev) => [...prev, { label: "", url: "" }])}
+          className="flex items-center gap-1 text-xs text-[#8A6A1A] font-medium py-1"
+        >
+          <Plus size={12} /> Add URL
+        </button>
+      </div>
       <div className="flex gap-2">
         <button onClick={onCancel} className="flex-1 border border-[#E7E5E4] rounded-lg py-2 text-sm min-h-[44px]">Cancel</button>
         <button
-          onClick={() => { if (name.trim()) onSave({ name: name.trim(), zone, notes: notes.trim(), url: url.trim() }); }}
+          onClick={() => { if (name.trim()) onSave({ name: name.trim(), zone, notes: notes.trim(), urls: urls.filter((u) => u.url.trim()) }); }}
           className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px]"
         >
           Save
@@ -139,8 +170,8 @@ function ConstellationsStep({ onNext }: { onNext: () => void }) {
             <ConstellationInlineForm
               key={c.id}
               initial={c}
-              onSave={({ name, zone, notes, url }) => {
-                updateConstellation(c.id, { name, zone, notes, url: url || undefined });
+              onSave={({ name, zone, notes, urls }) => {
+                updateConstellation(c.id, { name, zone, notes, urls });
                 setEditingId(null);
               }}
               onCancel={() => setEditingId(null)}
@@ -150,7 +181,7 @@ function ConstellationsStep({ onNext }: { onNext: () => void }) {
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{c.name}</p>
                 {c.notes && <p className="text-xs text-[#78716C] truncate">{c.notes}</p>}
-                {c.url && <p className="text-xs text-[#78716C] truncate">{c.url}</p>}
+                {c.urls?.length > 0 && <p className="text-xs text-[#78716C] truncate">{c.urls[0].url}{c.urls.length > 1 ? ` +${c.urls.length - 1} more` : ""}</p>}
                 <ZoneBadge zone={c.zone} className="mt-1" />
               </div>
               <button
@@ -173,8 +204,8 @@ function ConstellationsStep({ onNext }: { onNext: () => void }) {
 
       {adding ? (
         <ConstellationInlineForm
-          onSave={({ name, zone, notes, url }) => {
-            addConstellation({ name, zone, notes, url: url || undefined, deepLinks: [], active: true });
+          onSave={({ name, zone, notes, urls }) => {
+            addConstellation({ name, zone, notes, urls, deepLinks: [], active: true });
             setAdding(false);
           }}
           onCancel={() => setAdding(false)}

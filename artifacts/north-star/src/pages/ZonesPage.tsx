@@ -28,7 +28,13 @@ function ConstellationForm({
   const [name, setName] = useState(initial?.name ?? "");
   const [zone, setZone] = useState<ZoneId>(initial?.zone ?? "Z3");
   const [notes, setNotes] = useState(initial?.notes ?? "");
-  const [url, setUrl] = useState(initial?.url ?? "");
+  const [urls, setUrls] = useState<{ label: string; url: string }[]>(
+    initial?.urls?.length ? initial.urls : [{ label: "", url: "" }]
+  );
+
+  function setUrlEntry(i: number, field: "label" | "url", value: string) {
+    setUrls((prev) => prev.map((u, idx) => idx === i ? { ...u, [field]: value } : u));
+  }
 
   function handleSave() {
     if (!name.trim()) return;
@@ -36,8 +42,8 @@ function ConstellationForm({
       name: name.trim(),
       zone,
       notes: notes.trim(),
-      url: url.trim() || undefined,
-      deepLinks: initial?.deepLinks ?? [],
+      urls: urls.filter((u) => u.url.trim()),
+      deepLinks: [],
       active: initial?.active ?? true,
     });
   }
@@ -57,12 +63,6 @@ function ConstellationForm({
         placeholder="One-line description (optional)"
         className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 focus:border-[#8A6A1A]/50"
       />
-      <input
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        placeholder="URL (optional, e.g. /gather/)"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 focus:border-[#8A6A1A]/50"
-      />
       <select
         value={zone}
         onChange={(e) => setZone(e.target.value as ZoneId)}
@@ -72,6 +72,38 @@ function ConstellationForm({
           <option key={z} value={z}>{z} — {ZONE_LABELS[z].long}</option>
         ))}
       </select>
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-[#78716C]">URLs / Links</p>
+        {urls.map((u, i) => (
+          <div key={i} className="flex gap-1.5 items-center">
+            <input
+              value={u.label}
+              onChange={(e) => setUrlEntry(i, "label", e.target.value)}
+              placeholder="Label"
+              className="w-24 shrink-0 border border-[#E7E5E4] rounded-lg px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+            />
+            <input
+              value={u.url}
+              onChange={(e) => setUrlEntry(i, "url", e.target.value)}
+              placeholder="https:// or /path/"
+              className="flex-1 min-w-0 border border-[#E7E5E4] rounded-lg px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+            />
+            <button
+              onClick={() => setUrls((prev) => prev.length === 1 ? [{ label: "", url: "" }] : prev.filter((_, idx) => idx !== i))}
+              className="shrink-0 text-[#78716C] hover:text-[#1C1917] p-1"
+              title="Remove"
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
+        ))}
+        <button
+          onClick={() => setUrls((prev) => [...prev, { label: "", url: "" }])}
+          className="flex items-center gap-1 text-xs text-[#8A6A1A] hover:text-[#6A4E10] font-medium py-1"
+        >
+          <Plus size={12} /> Add URL
+        </button>
+      </div>
       <div className="flex gap-2">
         <button onClick={onCancel} className="flex-1 border border-[#D6D0C7] rounded-lg py-2 text-sm min-h-[44px] hover:bg-white transition-colors">Cancel</button>
         <button onClick={handleSave} className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px] hover:bg-[#2C2420] transition-colors">Save</button>
@@ -306,7 +338,7 @@ export function ZonesPage() {
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium">{c.name}</p>
                             {c.notes && <p className="text-xs text-[#78716C]">{c.notes}</p>}
-                            {c.url && <p className="text-xs text-[#B5AFA9]">{c.url}</p>}
+                            {c.urls?.length > 0 && <p className="text-xs text-[#B5AFA9]">{c.urls[0].url}{c.urls.length > 1 ? ` +${c.urls.length - 1} more` : ""}</p>}
                           </div>
                           <div className="flex gap-1">
                             <button onClick={() => updateConstellation(c.id, { active: false })} className="p-1.5 text-[#B5AFA9] hover:text-[#B45309] min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors" title="Park">
