@@ -15,7 +15,7 @@ export function NavBar() {
   const [location] = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#E7E5E4] z-50 safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-[#E7E5E4] z-50 safe-area-bottom shadow-[0_-1px_8px_rgba(28,25,23,0.06)]">
       <div className="flex items-center justify-center py-1 border-b border-[#E7E5E4]/60">
         <NeighbourhoodBadge zoneId={2} />
       </div>
@@ -27,14 +27,29 @@ export function NavBar() {
               key={path}
               href={path}
               className={cn(
-                "flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] text-xs transition-colors",
+                "flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] text-xs transition-all duration-200 relative",
                 active
-                  ? "text-[#1C1917] font-medium"
-                  : "text-[#78716C]"
+                  ? "text-[#1C1917] font-semibold"
+                  : "text-[#78716C] hover:text-[#44403C]"
               )}
             >
-              <Icon size={20} strokeWidth={active ? 2 : 1.5} />
-              <span>{label}</span>
+              {active && (
+                <span
+                  className="absolute inset-x-2 top-1.5 bottom-1.5 rounded-xl bg-[#F5F0E8] -z-10"
+                  aria-hidden
+                />
+              )}
+              <span className={cn(
+                "flex items-center justify-center w-7 h-7 rounded-lg transition-all duration-200",
+                active && "drop-shadow-[0_1px_3px_rgba(180,83,9,0.18)]"
+              )}>
+                <Icon
+                  size={active ? 21 : 20}
+                  strokeWidth={active ? 2.2 : 1.5}
+                  className={active ? "text-[#1C1917]" : ""}
+                />
+              </span>
+              <span className={cn("leading-none", active ? "text-[#1C1917]" : "")}>{label}</span>
             </Link>
           );
         })}
