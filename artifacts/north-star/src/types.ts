@@ -15,34 +15,39 @@ export interface Constellation {
   active: boolean;
   /**
    * ══════════════════════════════════════════════════════════════════════
-   * EAVE RULE — Constitutional seam between Zone 1 and Zone 3
+   * EAVE RULE — Two-Gate Constitutional Model
    * ══════════════════════════════════════════════════════════════════════
    *
-   * The Eave is the hard structural seam between Zone 1 (Household / Afloat —
-   * private household identity) and Zone 3 (Home Range / Community-facing work —
-   * XRPL wallet, above-board organizational identity).
-   * It is defined by intentional architectural absence: No table, no foreign key,
-   * no join, no query path, and no stored reference may ever connect a Zone 3
-   * wallet address, any derived identifier, any zone-bind payload, or any
-   * zone-bind signature to a Zone 1 household record (name + passphrase identity).
-   * A household may voluntarily bind its own XRPL wallet using the
-   * lib/zone-identity primitives, but the binding must be stored as a one-way,
-   * non-reversible reference that never permits reverse lookup.
-   * Any proposed feature, route, migration, or type field (including the existing
-   * linkedFamilyId and linkedShareToken fields on the Constellation type) that
-   * would create such a path must be refused or redesigned to respect the seam.
+   * The Eave is the protective overhang and hard structural seam that shelters
+   * Zone 1 (Circle — private household identity) and Zone 2 (Workbench —
+   * operational practitioner layer) from Zone 3 (Community — XRPL wallet,
+   * above-board organizational identity).
+   * It is defined by intentional architectural absence with two controlled gates:
    *
-   * ── PRESSURE POINTS ON THIS INTERFACE ────────────────────────────────
-   * linkedFamilyId  — SUBJECT TO EAVE RULE.
-   *   May only ever be used in the household→wallet direction (Zone 1 actor
-   *   choosing to link). Must never be used to look up a household record
-   *   from a wallet address or zone-bind payload. No index, join, or query
-   *   path that reverses this direction is permitted.
+   * Z1–Z3 absolute prohibition: No direct or composable path may ever connect
+   * a Zone 3 wallet address, derived identifier, zone-bind payload, or zone-bind
+   * signature to any Zone 1 household record (name + passphrase identity). This
+   * includes any path that traverses Zone 2 as an intermediate hop.
    *
-   * linkedShareToken — SUBJECT TO EAVE RULE.
-   *   A share token derived from or associated with a zone-bind. Must not be
-   *   stored or queried in any way that allows resolving back to a Zone 1
-   *   household identity. Treat as write-once and direction-locked.
+   * Z2–Z3 Gate: Contractor identification may appear in controlled, auditable
+   * form at the crossing (e.g. for contracts or audit events), but must not
+   * persist as a stored reference inside Z2-scoped records (DailyPick, Contract,
+   * or equivalent). The giraffe (audit / regulatory visibility) may have sight
+   * across this gate, but the audit query shape must not be composable into a
+   * Z3 → Z1 reverse lookup.
+   *
+   * Z1–Z2 Gate: Household context may cross in controlled form (enough to know
+   * whose work this is), but remains gated and does not expose private identity
+   * outward toward Z3.
+   *
+   * A household may voluntarily bind its own XRPL wallet using `lib/zone-identity`
+   * primitives, stored as a one-way, non-reversible reference. The binding never
+   * permits reverse lookup.
+   *
+   * Any proposed feature, route, migration, or type field that violates these
+   * constraints — including the existing `linkedFamilyId` and `linkedShareToken`
+   * fields on the `Constellation` type — must be refused or redesigned to respect
+   * both gates and the absolute Z1–Z3 prohibition.
    * ══════════════════════════════════════════════════════════════════════
    */
   linkedFamilyId?: string;

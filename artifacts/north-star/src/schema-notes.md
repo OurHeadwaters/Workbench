@@ -1,11 +1,41 @@
 # Schema Notes — North Star
 
-## The Eave Rule (Governing Constraint)
+## The Eave Rule (Governing Constraint) — Two-Gate Constitutional Model
 
-> The Eave is the hard structural seam between Zone 1 (Household / Afloat — private household identity) and Zone 3 (Home Range / Community-facing work — XRPL wallet, above-board organizational identity).
-> It is defined by intentional architectural absence: No table, no foreign key, no join, no query path, and no stored reference may ever connect a Zone 3 wallet address, any derived identifier, any zone-bind payload, or any zone-bind signature to a Zone 1 household record (name + passphrase identity).
-> A household may voluntarily bind its own XRPL wallet using the lib/zone-identity primitives, but the binding must be stored as a one-way, non-reversible reference that never permits reverse lookup.
-> Any proposed feature, route, migration, or type field (including the existing linkedFamilyId and linkedShareToken fields on the Constellation type) that would create such a path must be refused or redesigned to respect the seam.
+> The Eave is the protective overhang and hard structural seam that shelters Zone 1 (Circle — private household identity) and Zone 2 (Workbench — operational practitioner layer) from Zone 3 (Community — XRPL wallet, above-board organizational identity).
+> It is defined by intentional architectural absence with two controlled gates:
+>
+> **Z1–Z3 absolute prohibition:** No direct or composable path may ever connect a Zone 3 wallet address, derived identifier, zone-bind payload, or zone-bind signature to any Zone 1 household record (name + passphrase identity). This includes any path that traverses Zone 2 as an intermediate hop.
+>
+> **Z2–Z3 Gate:** Contractor identification may appear in controlled, auditable form at the crossing (e.g. for contracts or audit events), but must not persist as a stored reference inside Z2-scoped records (DailyPick, Contract, or equivalent). The giraffe (audit / regulatory visibility) may have sight across this gate, but the audit query shape must not be composable into a Z3 → Z1 reverse lookup.
+>
+> **Z1–Z2 Gate:** Household context may cross in controlled form (enough to know whose work this is), but remains gated and does not expose private identity outward toward Z3.
+>
+> A household may voluntarily bind its own XRPL wallet using `lib/zone-identity` primitives, stored as a one-way, non-reversible reference. The binding never permits reverse lookup.
+>
+> Any proposed feature, route, migration, or type field that violates these constraints — including the existing `linkedFamilyId` and `linkedShareToken` fields on the `Constellation` type — must be refused or redesigned to respect both gates and the absolute Z1–Z3 prohibition.
+
+---
+
+## Gate Definitions
+
+### Z1–Z3 Absolute Prohibition
+
+This is not a gate — it is a wall with no door. There is no form, controlled or otherwise, in which a Zone 3 wallet address, derived identifier, zone-bind payload, or zone-bind signature may be connected to a Zone 1 household record. Zone 2 does not dissolve this prohibition: any path that routes through the Workbench as an intermediate hop to achieve a Z3→Z1 traversal is equally forbidden.
+
+### Z2–Z3 Gate — Controlled Crossing for Contractor Identification
+
+**What may appear at the crossing:** A contractor's Zone 3 identifier (e.g. wallet address or above-board organizational identity) may be present in an audit event, contract record header, or regulatory log entry at the moment of crossing. This is the "giraffe" position — visible from above for audit and regulatory purposes.
+
+**What must not persist inside Z2 records:** The contractor identifier must not be stored as a field on any Z2-scoped record — no `contractorWalletAddress`, no `z3Id`, no derived token — on `DailyPick`, `Contract`, or any equivalent Z2 entity. Once the crossing event is recorded, the reference lives in the audit/event layer only, not in the operational record itself.
+
+**Audit query shape constraint (the giraffe constraint):** Audit visibility across this gate is permitted, but the shape of any audit query must not be composable into a Z3 → Z1 reverse lookup. Concretely: it must not be possible to start with a wallet address, query audit events at the Z2–Z3 gate, and arrive at a household name or passphrase identity — even across multiple hops or joined queries.
+
+### Z1–Z2 Gate — Controlled Crossing for Household Context
+
+**What may appear at the crossing:** Enough household context to establish whose work this is — for example, a `household_id` reference that gates which Z2 records belong to which household. This is necessary for operational correctness (a contractor's DailyPick must be attributable to a household).
+
+**What must not cross outward:** The gate is directional. Household context flows inward (Z1 → Z2) to scope work, but private identity — name, passphrase, or any field that resolves back to the human identity behind the household — must not be exposed outward toward Z3. The gate does not carry private identity forward.
 
 ---
 
