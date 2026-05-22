@@ -27,6 +27,7 @@ import waitlistRouter from "./waitlist";
 import odysseyRouter from "./odyssey";
 import triageRouter from "./triage";
 import councilRouter from "./council";
+import gatekeeperRouter from "./gatekeeper";
 
 const router: IRouter = Router();
 
@@ -61,5 +62,6 @@ router.use("/waitlist", waitlistRouter);
 router.use("/odyssey", odysseyRouter);
 router.use("/triage", triageRouter);
 router.use("/council", councilRouter);
+router.use("/gatekeeper", gatekeeperRouter);
 
 export default router;

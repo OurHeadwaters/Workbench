@@ -15,3 +15,4 @@ export * from "./odysseyArtwork";
 export * from "./odysseyTrailSigns";
 export * from "./sandbox";
 export * from "./nursery";
+export * from "./gatekeeper";
