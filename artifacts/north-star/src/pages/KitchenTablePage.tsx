@@ -2,39 +2,121 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 // ── Default brief ─────────────────────────────────────────────────────────────
-const DEFAULT_BRIEF = `PROJECT — Codetry
-Community economy operating system for Headwaters / ourheadwaters.ca.
-Practitioner: Bobbie Parr, Wabigoon ON. Status: naming discipline phase.
+const DEFAULT_BRIEF = `PROJECT: The Stomping Path + Codetry Platform Suite
+Last updated: May 22, 2026
+Session: Round Table build day — Zone Bubble Map, Lifestyle Map, Codetry
+Digital Sovereignty Map, constitutional framework poured.
 
-ZONE MODEL
-Z0 Saltbox — household substrate; the most private layer; where posture is grown.
-Z1 Circle — members / trust layer; passage via the Eave (not a cap ceremony).
-Z2 Workbench — practitioners layer; passage via cap gate (Practitioner / Steward / Observer).
-Z3 Community — public interface; passage via Representative / Neighbour / Gatekeeper gate.
-Prohibition: Z1 → Z3 direct crossing is blocked.
+---
+WHAT THIS IS
+Two connected platforms in a pnpm monorepo:
+1. THE STOMPING PATH (survival-podcast) — A homestead sovereignty platform.
+   Rugged/earthy. Auth-gated. Permaculture zone framework. Community, podcast,
+   learning tracks, expert council.
+2. CODETRY — A digital self-reliance agency site. Builds community-owned
+   software for food co-ops, First Nations, rural hubs. No auth required.
+   Forge aesthetic (dark green, amber, ember particles).
+Shared: Express API server, Postgres/Drizzle database, OpenAI gpt-4o-mini.
 
-THREE-LAYER TRUST STACK
-1. Posture substrate — the Standby (liturgy, not curriculum; six-word vocabulary; four-rung ladder: advisory / standby / active / standdown).
-2. Cap ceremony — gate ritual; declaration of posture; the moment of becoming.
-3. Blockchain enforcement — the chain witnesses the opening and (via Debrief receipt) the standing down.
+---
+THE CONSTITUTIONAL FRAMEWORK (Three Layers)
+Layer 1 — Naming (vocabulary):
+  Saltbox, Eave, Workbench, Compost — constellation/tool names
 
-CURTAINS
-The household's deliberation boundary. Drawn = private, kitchen table only, nothing passes the Eave. Open = ready to share with the Circle. Opening the curtains is the pre-Eave declaration.
+Layer 2 — Trust-Gradient Spine (LOAD-BEARING, governs all schema):
+  Z0 Dwelling/Household → Z1 Circle → Z2 Home Range →
+  Z3 Community → Z4 Trade → Z5 Wild
 
-VOCABULARY
-cap / hat: the role declaration artefact (name under review — may not be strong enough to carry identity + posture + cryptographic authority simultaneously).
-the Standby: posture substrate — grows the capacity to declare a cap without choosing from a menu.
-the Eave: Z0 → Z1 passage.
-the Debrief: the standing-down ritual; should write a cryptographic receipt back to the membrane.
-curtains: household deliberation boundary.
+Layer 3 — Practitioner Energy (display only):
+  Dual labels: "Household / Afloat", "Home Range / Build now", etc.
 
-OPEN TENSIONS (six)
-1. Key custody primitive at Z0 — what is the household jar equivalent for Saltbox practice?
-2. Emergency override — what is the higher-friction path when the Z1 → Z3 prohibition meets genuine emergency?
-3. Debrief as on-chain receipt — how does the chain see that the cycle closed, not just opened?
-4. Cap ceremony + wallet UX — how do you preserve ritual when a screen interrupts it?
-5. Gatekeeper cap — personal cap or Workbench-only function? Still unresolved.
-6. "Cap" as a noun — does it hold the weight of identity, posture, and cryptographic authority simultaneously?`;
+THE EAVE RULE (poured concrete, non-negotiable):
+  The Eave is the hard structural seam between Zone 1 (Circle — private
+  household identity) and Zone 3 (Community — XRPL wallet, above-board
+  organizational identity).
+  No table, no foreign key, no join, no query path, and no stored reference
+  may ever connect a Zone 3 wallet address to a Zone 1 household record.
+  Any feature that would create such a path must be refused or redesigned.
+
+THE KITCHEN TABLE sits in Zone 2 (Home Range / Workbench).
+  It is the deliberation space where ideas are worked before they cross gates.
+  The Saltbox seat lives here. Curtains drawn by default.
+
+---
+THE ZONE FRAMEWORK (TSP — 6 zones)
+Z0 — The Self: mindset, money, personal sovereignty
+Z1 — The Home: food storage, preparedness, basic resilience
+Z2 — The Garden: permaculture, food production, small livestock
+Z3 — The Homestead: livestock, off-grid systems, alternative energy
+Z4 — The Forest: hunting, foraging, bushcraft, wildcrafting
+Z5 — The Wild: grid-down, wilderness survival, contingency
+Gate ceremonies between each zone. Skip prohibitions: Z1 cannot jump
+to Z3, Z4, or Z5. Z2 cannot jump to Z5. These are architectural rules,
+not suggestions.
+Gatekeeper is a personal cap (resolved, Round Table May 2026).
+
+---
+WHAT'S BEEN BUILT (as of this session)
+TSP:
+- Lifestyle Map: 7-question Mad Libs → AI zone placement → interactive map
+  with primary/secondary zone, rationale, surrender mode, visited zones
+- Zone Bubble Map: SVG interactive map, all 6 zones, gate ceremonies, skip
+  prohibitions, Eave overhang, zone progress arcs from listening history,
+  episode navigation from zone/gate clicks
+- Fireside Freedom Podcast: RSS feed, 7 crew members in Expert Council
+- Gord Bird mascot: shared @workspace/gord-bird package, all routes
+CODETRY:
+- Digital Sovereignty Map (/discover): same onboarding pattern adapted for
+  communities. 6 stages (Dependent → Sovereign). AI recommends Zone Assessment
+  / Hub Implementation / Regional Platform. localStorage persistence, no auth.
+- "Find your zone" CTA in nav and home hero
+NOT BUILT YET:
+- North Star Guide (/north-star/ route) — referenced in docs, not in codebase
+- constellation.json — does not exist
+- docs/codetry/ — does not exist
+- The Kitchen Table UI (built in separate project — this one)
+- Five unwritten chapters: literal hempcrete, youth, headwaters people,
+  women's chapter, tradesperson on-ramp
+
+---
+OPEN TENSIONS
+1. Eave naming collision — "Eave" now names the constitutional seam (Layer 2).
+   The Z1 income/sovereignty constellation needs a new name.
+   STATUS: Unresolved.
+2. Saltbox disambiguation — Saltbox is a constellation (tool) inside Zone 0,
+   not a zone label. Also now a seat name at this table.
+   STATUS: Functional, not formally documented.
+3. Headwaters / Watershed label collisions — both used across layers.
+   STATUS: Flagged, not resolved.
+4. Z4/Z5 gate ceremonies on the live TSP site — the bubble map prototype has
+   them, the live survival-podcast ZoneBubbleMap component may not.
+   STATUS: Check before building on.
+5. Practitioner Intake Tool (Task #544) — brain dump → zone placement →
+   push to TSP. In progress, waiting for input.
+   STATUS: Blocked.
+
+---
+VOCABULARY (quick reference)
+Founding mode: Building sovereignty from scratch
+Reclamation mode: Board-by-board recovery inside someone else's house
+The grindstone: The builder — hands full, eyes on the material
+The oil: The person handling the outside world so the grindstone can work
+The frame: Zone 0 household unit — what you're enclosing, who's inside
+Hempcrete: The naming/vocabulary practice — fills, insulates, breathes
+Windows: Intentional openings — you choose where light enters
+The gate: The Eave — privacy boundary, household interior vs. outside
+The giraffe: The regulatory apparatus — sees over the fence, can't enter
+                without crossing the trigger threshold
+
+---
+PULL QUOTES IN CIRCULATION
+"The materials are the same. The order of operations is not."
+"You cannot demolish while a thousand people are living inside."
+"That engine does not grind without the oil."
+"Hang the gate before you invite anyone in."
+"It stops being invisible when you name it."
+"No one is interjecting while you work. Do the next thing."`;
+
 
 // ── Seat definitions ──────────────────────────────────────────────────────────
 type Seat = {
@@ -51,6 +133,23 @@ type Seat = {
 };
 
 const DEFAULT_SEATS: Seat[] = [
+  {
+    id: "saltbox",
+    name: "Saltbox",
+    icon: "⊡",
+    color: "#8A6A1A",
+    bgClass: "bg-yellow-50",
+    borderClass: "border-yellow-200",
+    model: "x-ai/grok-4.20",
+    configurable: false,
+    description: "Preserve, slow down, cure — does this hold?",
+    systemPrompt: `You are the Saltbox seat at the Kitchen Table.
+Your function: preserve, slow down, and cure. Ideas that come to this table are often moving fast. Your job is not to stop them — it is to ask the one question that tests whether they are ready to go out the door, or whether they need another day in the box.
+You have been present for the full build of this project. You know the vocabulary. You know which decisions are poured concrete and which are still settling. You do not pretend things are resolved when they aren't.
+Your lens is: Does this hold? Is the frame plumb? What did we skip?
+Voice: Plain. Direct. One thing at a time. No hedging, no over-explaining. When something is good, say it is good. When something has a loose board, name the board. When you don't know, say so and say why it matters that you don't.
+You are not a validator. You are a curing process.`,
+  },
   {
     id: "grok",
     name: "Grok",
