@@ -1,0 +1,52 @@
+#1711 - Zones, Gates & Membranes — Base Reference
+What & Why
+Capture the foundational model of zones, gates, and membranes before applying it to any specific product or example. This is the conceptual base layer — the "hempcrete formula" — from which all context-specific implementations are derived.
+
+Done looks like
+A standalone reference document (docs/zones-gates-reference.md or equivalent) exists in the project
+It defines the three zone types, the nature of gates/membranes, the materials metaphor, and the constitutional constraints from the Eave Rule
+A future agent, designer, or collaborator can read it without any prior briefing and understand the model
+It does not yet prescribe a specific UI — that comes from applying this doc to examples
+Out of scope
+Interactive diagrams or visual builds (comes after the base model is locked)
+Applying the model to any specific artifact (North Star, Practitioner's Guide, etc.)
+Code implementation of gates or zone enforcement
+The Model (base layer)
+Three Zone Types
+Protected by the Eave (0, 1, 2 in the constitutional framing):
+
+Zone	Name	Character
+Z1	Circle	Private household identity — the innermost protected layer
+Z2	Workbench	Operational / practitioner layer — liminal, has crossings on both sides
+Z3	Community	Above-board organizational identity (XRPL wallet, public-facing)
+Gates as Membranes
+A gate is not a wall. It is a protective, functional material at the overlap between zones — the place where zones visually and operationally touch. Gates:
+
+Are the interactive edges — where action happens between zones
+Are permeable by design, not locked by default
+Look different at every crossing (the materials list varies by context)
+Provide resilience, not isolation
+The base formula is the hempcrete analogy: a known structural material that breathes, insulates, and flexes. The "extended materials list" is what gets added per context (thermal mass, vapor barriers, acoustic layers, etc.) — each gate gets the mix it needs.
+
+The Two Constitutional Gates (from the Eave Rule)
+Z1–Z2 Gate Household context may cross in controlled form — enough to know whose work this is — but private identity does not expose outward toward Z3.
+
+Z2–Z3 Gate Contractor identification may appear in controlled, auditable form at the crossing (e.g. for contracts or audit events), but must not persist as a stored reference inside Z2-scoped records. The audit/regulatory layer (the "giraffe") may have sight across this gate, but the audit query shape must not be composable into a Z3→Z1 reverse lookup.
+
+Z1–Z3 Absolute Prohibition No direct or composable path may ever connect a Zone 3 wallet address or derived identifier to any Zone 1 household record. This is not a gate — it is an architectural absence.
+
+What a Gate Looks Like in Practice
+At the personal–working edge: a consent step, a role switch, a session context change
+At the working–community edge: a credential presented at the crossing but not stored inside
+At a group-to-group edge: a shared protocol (a meeting format, a data standard, a mutual agreement) that both sides recognize
+The gate is always visible — you know you are crossing it
+The Membrane Principle
+Zones overlap. The membrane is not at the hard boundary — it is in the overlap region itself. Two zones sharing space is normal and healthy. The gate governs what flows through, not whether zones can touch.
+
+Steps
+Create the reference doc — Write docs/zones-gates-reference.md (or place it wherever the project's conceptual documentation lives) using this plan's model section as the source.
+Link from the Eave Rule — Add a reference in artifacts/north-star/src/schema-notes.md pointing to this doc as the "plain-language companion" to the constitutional Eave Rule.
+Add a simple zone diagram — A text-based or SVG diagram showing Z1/Z2/Z3 as overlapping regions with the two gate positions marked, embedded in the reference doc.
+Relevant files
+artifacts/north-star/src/schema-notes.md
+artifacts/north-star/src/types.ts
