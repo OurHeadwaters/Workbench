@@ -29,7 +29,7 @@ const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[
   { icon: "📚", name: "The Accounts",          href: "/headwaters-books/" },
   { icon: "🔬", name: "Research Library",      href: "/library/" },
   { icon: "🖨️", name: "Print Marketing Suite", href: "/print-marketing/" },
-  { icon: "🚢", name: "Crew Manifest",         href: "/" },
+  { icon: "🚢", name: "Crew Manifest",         href: "/", comingSoon: true },
 ];
 
 function isActive(path: string, location: string): boolean {

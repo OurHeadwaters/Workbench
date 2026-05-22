@@ -174,25 +174,18 @@ export function EconomyPage() {
         {/* ── CTA ── */}
         <section className="mt-12 sm:mt-16 space-y-6">
           <p className="font-serif text-base sm:text-lg leading-relaxed">
-            The platform is live. The wallet works. There are tasks available
-            right now, and merchants who will take the credit. The only thing
-            missing is you.
+            The wallet, the tip system, and the task board are being built now.
+            When they&rsquo;re ready, you&rsquo;ll be able to earn credits doing
+            real work for your community, spend them at local merchants, and
+            send them to people who helped you. No bank required.
           </p>
-          <div className="flex flex-wrap items-center gap-6">
-            <Link
-              href="/economy/wallet"
-              className="inline-flex items-center justify-center px-7 py-3 rounded-sm font-sans text-sm font-medium tracking-wide bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
-            >
-              Open my wallet
-            </Link>
-            <Link
-              href="/economy/tip"
-              className="font-mono text-[11px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
-              style={{ color: "hsl(var(--accent))" }}
-            >
-              Tip someone →
-            </Link>
-          </div>
+          <p
+            className="font-mono text-[11px] uppercase tracking-[0.22em]"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
+            Coming soon — joining the list means you&rsquo;re first in when the
+            doors open.
+          </p>
           <p className="signoff">— headwaters</p>
         </section>
 
