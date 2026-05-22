@@ -2,6 +2,9 @@
 
 ## The Eave Rule (Governing Constraint) — Two-Gate Constitutional Model
 
+> **Plain-language companion:** `docs/zones-gates-reference.md` explains the underlying model — what zones, gates, and membranes are, why they exist, and what they look like in practice — without prescribing any specific implementation. Read it alongside this document to understand the *why* behind each constraint.
+
+
 > The Eave is the protective overhang and hard structural seam that shelters Zone 1 (Circle — private household identity) and Zone 2 (Workbench — operational practitioner layer) from Zone 3 (Community — XRPL wallet, above-board organizational identity).
 > It is defined by intentional architectural absence with two controlled gates:
 >
