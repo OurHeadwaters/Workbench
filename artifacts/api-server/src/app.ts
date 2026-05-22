@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import { clerkMiddleware } from "@clerk/express";
+import cookieParser from "cookie-parser";
 import path from "path";
 import fs from "fs";
 import router from "./routes";
@@ -12,6 +13,12 @@ import {
 } from "./middlewares/clerkProxyMiddleware";
 
 const app: Express = express();
+
+if (process.env.NODE_ENV === "production" && !process.env.NURSERY_COOKIE_SECRET) {
+  throw new Error("NURSERY_COOKIE_SECRET must be set in production");
+}
+const NURSERY_COOKIE_SECRET =
+  process.env.NURSERY_COOKIE_SECRET ?? "nursery-local-dev-secret";
 
 app.use(
   pinoHttp({
@@ -36,6 +43,7 @@ app.use(
 app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 
 app.use(cors({ credentials: true, origin: true }));
+app.use(cookieParser(NURSERY_COOKIE_SECRET));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -61,6 +69,15 @@ if (fs.existsSync(sandboxDist)) {
   app.use("/sandbox", express.static(sandboxDist));
   app.get("/sandbox/*path", (_req, res) => {
     res.sendFile(path.join(sandboxDist, "index.html"));
+  });
+}
+
+// Serve nursery SPA at /nursery/ — Zone 4 producer idea workspace
+const nurseryDist = new URL("../../nursery/dist/public", import.meta.url).pathname;
+if (fs.existsSync(nurseryDist)) {
+  app.use("/nursery", express.static(nurseryDist));
+  app.get("/nursery/*path", (_req, res) => {
+    res.sendFile(path.join(nurseryDist, "index.html"));
   });
 }
 

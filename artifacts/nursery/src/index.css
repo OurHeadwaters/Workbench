@@ -1,0 +1,52 @@
+@import "tw-animate-css";
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #FAF6F0;
+  --surface: #FFFDF9;
+  --border: #E4D9CC;
+  --text-primary: #2E2620;
+  --text-secondary: #7A6B60;
+  --text-muted: #A89A8E;
+
+  --stage-nursery: #4A7C59;
+  --stage-nursery-bg: #EBF3EE;
+  --stage-nursery-border: #B8D9C3;
+
+  --stage-fodder: #C7613B;
+  --stage-fodder-bg: #FEF3EE;
+  --stage-fodder-border: #F5C9B3;
+
+  --stage-fallow: #6B8F71;
+  --stage-fallow-bg: #EFF4F0;
+  --stage-fallow-border: #BDD4C1;
+
+  --stage-graduated: #3D3D3D;
+  --stage-graduated-bg: #F0F0F0;
+  --stage-graduated-border: #C8C8C8;
+
+  --accent: #4A7C59;
+  --accent-warm: #C7613B;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Fraunces", serif;
+  font-weight: 400;
+}

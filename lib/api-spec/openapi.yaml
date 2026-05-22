@@ -20,6 +20,8 @@ tags:
     description: Helping Hands — band reserve workforce platform. Tasks, members, tiers, escrow tracking, and earnings history.
   - name: sandbox
     description: Sandbox — invite-only village bulletin board for homeschool families. Household auth, feed buckets, Heads Up (72h expiry), standby events with check-ins, Gather Round monthly prompt.
+  - name: nursery
+    description: Zone 4 Nursery — invite-only producer idea workspace. Producers, sessions, invites, ideas lifecycle (nursery→fodder→fallow→graduated), stage history, comments, and both-sides translation (vernacular ↔ massity).
 paths:
   /healthz:
     get:
@@ -2344,6 +2346,301 @@ paths:
                   ok: { type: boolean }
         '400': { description: No active standby event }
 
+  # ── Nursery ──────────────────────────────────────────────────────────────
+  /api/nursery/producers:
+    post:
+      operationId: nurseryJoin
+      tags: [nursery]
+      summary: Join the nursery (invite-only; bootstrap exemption for first producer)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, passphrase]
+              properties:
+                name: { type: string, maxLength: 80 }
+                passphrase: { type: string, minLength: 4 }
+                inviteCode: { type: string, description: Required for all producers after the first }
+      responses:
+        '201':
+          description: Producer created and session started
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NurseryAuthResult' }
+        '403': { description: Missing or invalid invite code }
+        '409': { description: Producer name already taken }
+
+  /api/nursery/sessions:
+    post:
+      operationId: nurseryLogin
+      tags: [nursery]
+      summary: Sign in as an existing producer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, passphrase]
+              properties:
+                name: { type: string }
+                passphrase: { type: string }
+      responses:
+        '200':
+          description: Session cookie set and producer info
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NurseryAuthResult' }
+        '401': { description: Incorrect name or passphrase }
+
+    delete:
+      operationId: nurseryLogout
+      tags: [nursery]
+      summary: Sign out (clears nursery_sid session cookie)
+      security: [{ nurseryCookieAuth: [] }]
+      responses:
+        '204': { description: Signed out }
+        '401': { description: Unauthorized }
+
+  /api/nursery/me:
+    get:
+      operationId: nurseryGetMe
+      tags: [nursery]
+      summary: Return the currently authenticated producer
+      security: [{ nurseryCookieAuth: [] }]
+      responses:
+        '200':
+          description: Current producer
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NurseryProducer' }
+        '401': { description: Unauthorized }
+
+  /api/nursery/invites:
+    get:
+      operationId: nurseryListInvites
+      tags: [nursery]
+      summary: List all invite codes (steward only)
+      security: [{ nurseryCookieAuth: [] }]
+      responses:
+        '200':
+          description: Invite list
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/NurseryInvite' }
+        '403': { description: Steward access required }
+    post:
+      operationId: nurseryCreateInvite
+      tags: [nursery]
+      summary: Generate a new one-time invite code (steward only)
+      security: [{ nurseryCookieAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note: { type: string, maxLength: 100 }
+                isStewardInvite: { type: boolean, description: Whether the invited producer will join as a steward }
+      responses:
+        '201':
+          description: Created invite
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NurseryInvite' }
+        '403': { description: Steward access required }
+
+  /api/nursery/invites/{id}:
+    delete:
+      operationId: nurseryRevokeInvite
+      tags: [nursery]
+      summary: Revoke an unused invite code (steward only)
+      security: [{ nurseryCookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Revoked }
+        '400': { description: Invite already used }
+        '404': { description: Invite not found }
+        '403': { description: Steward access required }
+
+  /api/nursery/ideas:
+    get:
+      operationId: nurseryListIdeas
+      tags: [nursery]
+      summary: List all ideas visible to the current producer
+      security: [{ nurseryCookieAuth: [] }]
+      responses:
+        '200':
+          description: Ideas list (stewards see all; producers see only published + their own drafts)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/NurseryIdea' }
+        '401': { description: Unauthorized }
+    post:
+      operationId: nurseryCreateIdea
+      tags: [nursery]
+      summary: Create a new idea (stewards publish directly; producers create drafts)
+      security: [{ nurseryCookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NurseryCreateIdeaRequest' }
+      responses:
+        '201':
+          description: Created idea
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NurseryIdea' }
+        '400': { description: Validation error }
+        '401': { description: Unauthorized }
+
+  /api/nursery/ideas/{id}:
+    get:
+      operationId: nurseryGetIdea
+      tags: [nursery]
+      summary: Get a single idea with its comments and stage history
+      security: [{ nurseryCookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Idea detail with comments
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NurseryIdeaDetail' }
+        '403': { description: Access denied (draft not owned by producer) }
+        '404': { description: Idea not found }
+    patch:
+      operationId: nurseryUpdateIdea
+      tags: [nursery]
+      summary: Update idea fields (steward only)
+      security: [{ nurseryCookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NurseryUpdateIdeaRequest' }
+      responses:
+        '200':
+          description: Updated idea
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NurseryIdea' }
+        '403': { description: Steward access required }
+        '404': { description: Idea not found }
+    delete:
+      operationId: nurseryDeleteIdea
+      tags: [nursery]
+      summary: Delete an idea (steward only)
+      security: [{ nurseryCookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Deleted }
+        '403': { description: Steward access required }
+        '404': { description: Idea not found }
+
+  /api/nursery/ideas/{id}/stage:
+    post:
+      operationId: nurseryMoveStage
+      tags: [nursery]
+      summary: Move an idea to a new lifecycle stage (steward only)
+      security: [{ nurseryCookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [stage]
+              properties:
+                stage: { type: string, enum: [nursery, fodder, fallow, graduated] }
+                note: { type: string, maxLength: 500 }
+                graduationReason: { type: string, maxLength: 2000, description: Required when stage is graduated }
+      responses:
+        '200':
+          description: Idea with updated stage and appended history
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NurseryIdea' }
+        '400': { description: Invalid stage or missing graduation reason }
+        '403': { description: Steward access required }
+        '404': { description: Idea not found }
+
+  /api/nursery/ideas/{id}/comments:
+    get:
+      operationId: nurseryListComments
+      tags: [nursery]
+      summary: List comments for an idea
+      security: [{ nurseryCookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/NurseryComment' }
+        '404': { description: Idea not found }
+    post:
+      operationId: nurseryAddComment
+      tags: [nursery]
+      summary: Add a comment to an idea
+      security: [{ nurseryCookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body]
+              properties:
+                body: { type: string, minLength: 1, maxLength: 2000 }
+      responses:
+        '201':
+          description: Created comment
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NurseryComment' }
+        '400': { description: Validation error }
+        '404': { description: Idea not found }
+
 components:
   schemas:
     HealthStatus:
@@ -2452,6 +2749,106 @@ components:
               householdName: { type: string }
               checkedInAt: { type: string, format: date-time }
     # ── End sandbox schemas ───────────────────────────────────────────────────
+    # ── Nursery schemas ──────────────────────────────────────────────────────
+    NurseryProducer:
+      type: object
+      required: [id, name, isSteward, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        isSteward: { type: boolean }
+        createdAt: { type: string, format: date-time }
+
+    NurseryAuthResult:
+      type: object
+      required: [producer]
+      properties:
+        producer: { $ref: '#/components/schemas/NurseryProducer' }
+
+    NurseryInvite:
+      type: object
+      required: [id, code, note, isStewardInvite, createdAt, usedAt, usedByProducerName]
+      properties:
+        id: { type: string, format: uuid }
+        code: { type: string }
+        note: { type: string }
+        isStewardInvite: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        usedAt: { type: string, format: date-time, nullable: true }
+        usedByProducerName: { type: string, nullable: true }
+
+    NurseryStageHistoryEntry:
+      type: object
+      required: [stage, movedAt, movedBy, note]
+      properties:
+        stage: { type: string, enum: [nursery, fodder, fallow, graduated] }
+        movedAt: { type: string, format: date-time }
+        movedBy: { type: string }
+        note: { type: string }
+
+    NurseryIdea:
+      type: object
+      required: [id, title, vernacularName, massityName, problemStatement, stage, stageHistory, stewardNotes, isDraft, graduationReason, createdByProducerId, createdByProducerName, updatedAt, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        vernacularName: { type: string, description: What the producer community calls this }
+        massityName: { type: string, description: What the mainstream/massity sector calls this }
+        problemStatement: { type: string }
+        stage: { type: string, enum: [nursery, fodder, fallow, graduated] }
+        stageHistory:
+          type: array
+          items: { $ref: '#/components/schemas/NurseryStageHistoryEntry' }
+        stewardNotes: { type: string }
+        isDraft: { type: boolean }
+        graduationReason: { type: string, nullable: true }
+        createdByProducerId: { type: string, format: uuid }
+        createdByProducerName: { type: string }
+        updatedAt: { type: string, format: date-time }
+        createdAt: { type: string, format: date-time }
+
+    NurseryComment:
+      type: object
+      required: [id, ideaId, producerId, producerName, body, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        ideaId: { type: string, format: uuid }
+        producerId: { type: string, format: uuid }
+        producerName: { type: string }
+        body: { type: string }
+        createdAt: { type: string, format: date-time }
+
+    NurseryIdeaDetail:
+      allOf:
+        - $ref: '#/components/schemas/NurseryIdea'
+        - type: object
+          required: [comments]
+          properties:
+            comments:
+              type: array
+              items: { $ref: '#/components/schemas/NurseryComment' }
+
+    NurseryCreateIdeaRequest:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+        vernacularName: { type: string, maxLength: 200 }
+        massityName: { type: string, maxLength: 200 }
+        problemStatement: { type: string, maxLength: 5000 }
+        stewardNotes: { type: string, maxLength: 5000 }
+        isDraft: { type: boolean }
+
+    NurseryUpdateIdeaRequest:
+      type: object
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+        vernacularName: { type: string, maxLength: 200 }
+        massityName: { type: string, maxLength: 200 }
+        problemStatement: { type: string, maxLength: 5000 }
+        stewardNotes: { type: string, maxLength: 5000 }
+        isDraft: { type: boolean }
+    # ── End nursery schemas ───────────────────────────────────────────────────
     ErrorEnvelope:
       type: object
       required: [error]
@@ -3888,3 +4285,11 @@ components:
         envelopeDisciplinePct: { type: integer }
         note: { type: string }
 
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    nurseryCookieAuth:
+      type: apiKey
+      in: cookie
+      name: nursery_sid
