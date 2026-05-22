@@ -34,6 +34,7 @@ import {
   BookMarked,
   Map,
   FileText,
+  ShieldAlert,
 } from "lucide-react";
 
 interface NavItem {
@@ -155,6 +156,7 @@ const NAV_GROUPS: NavGroup[] = [
       "/community-store",
       "/workflow",
       "/deer-lake",
+      "/the-gate-override",
     ],
     items: [
       { href: "/deer-lake", label: "Deer Lake Network", icon: Truck, accent: "#1B5E8A" },
@@ -164,6 +166,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/pilot-two", label: "Pilot #2", icon: Target, accent: "#B45309" },
       { href: "/workbench", label: "Workbench", icon: ScrollText, accent: "#7A2E12" },
       { href: "/codetry-philosophy", label: "Codetry — the discipline", icon: Flame, accent: "#7A3E1A" },
+      { href: "/the-gate-override", label: "The Gate — Emergency Override", icon: ShieldAlert, accent: "#8B1A1A" },
       { href: "/codetry", label: "How this guide is named", icon: ScrollText, accent: "#3B2A6E" },
       { href: "/sarge", label: "Sarge HQ", icon: Smartphone, accent: "#0F766E" },
       { href: "/community-store", label: "Community Store Playbook", icon: Store, accent: "#b85a3e", dormant: true },

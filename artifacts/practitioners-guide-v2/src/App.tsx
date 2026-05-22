@@ -38,6 +38,7 @@ import { WorkspacePage } from "@/pages/WorkspacePage";
 import { SaltboxGatherRoundPage } from "@/pages/SaltboxGatherRoundPage";
 import { GmphPathBPage } from "@/pages/GmphPathBPage";
 import { LegacyAssetManagerPage } from "@/pages/LegacyAssetManagerPage";
+import { TheGateOverridePage } from "@/pages/TheGateOverridePage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -88,6 +89,7 @@ function Router() {
       <Route path="/session-handoff" component={SessionHandoffPage} />
       <Route path="/saltbox-gather-round" component={SaltboxGatherRoundPage} />
       <Route path="/gmph-path-b" component={GmphPathBPage} />
+      <Route path="/the-gate-override" component={TheGateOverridePage} />
       <Route component={NotFound} />
     </Switch>
   );
