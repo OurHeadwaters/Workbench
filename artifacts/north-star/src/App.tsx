@@ -15,6 +15,7 @@ import { SponsorIntakePage } from "@/pages/SponsorIntakePage";
 import { TriageLandingPage } from "@/pages/TriageLandingPage";
 import { ArchiveMiningPage } from "@/pages/ArchiveMiningPage";
 import { ZoneDiagramPage } from "@/pages/ZoneDiagramPage";
+import { KitchenTablePage } from "@/pages/KitchenTablePage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -124,6 +125,14 @@ export default function App() {
           <OnboardingGuard>
             <AppShell>
               <ZoneDiagramPage />
+            </AppShell>
+          </OnboardingGuard>
+        </Route>
+
+        <Route path="/council">
+          <OnboardingGuard>
+            <AppShell>
+              <KitchenTablePage />
             </AppShell>
           </OnboardingGuard>
         </Route>
