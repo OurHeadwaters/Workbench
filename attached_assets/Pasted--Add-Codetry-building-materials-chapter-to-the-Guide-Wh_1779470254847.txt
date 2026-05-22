@@ -1,0 +1,46 @@
+ Add Codetry building materials chapter to the Guide
+
+What & Why
+
+A conversation produced two named framework distinctions and a building-materials vocabulary that belongs in the Codetry canon. The North Star Guide is the in-project staging ground — a new chapter here becomes the draft that eventually ports to the external handbook.
+
+Named concepts to document:
+
+Building materials vocabulary
+
+Hempcrete — Codetry itself. The binder. Lightweight, breathable, carbon-negative (keeps strengthening after it sets). Holds the wall without being the wall.
+Frame / content — the structural skeleton hempcrete fills around. Without the frame, hempcrete has nothing to press against.
+Foundation — Zone 0: ethos, honest capacity, and trust map. Not a document — an accumulated practice. You cannot retroactively pour the foundation.
+Windows — intentional openings. Sized and placed deliberately. Face outward from surplus toward dependents and suppliers; never inward toward the interior labor. Don't cut windows until the wall has cured.
+Fence post gate — the specific regulatory hinge (e.g. health unit). Not the giraffe; the mechanism the giraffe walks through if you give it a reason.
+The giraffe — the regulatory apparatus. Long-necked by design — can see over the fence from the road. Cannot enter unless you cross the trigger threshold.
+Mixing process (for the foundation layer of any market)
+
+Hurd audit — what capacity is genuinely available after existing commitments are honoured first. Not the pitch version.
+Ethos line — what would make growth not worth it; where is the floor you'd walk away over.
+Pressure question — what makes now the moment; what necessity makes action real rather than aspirational.
+Shape of the wall — what are you enclosing; what stays inside, what gets traded.
+Two modes
+
+Founding mode — building from personal sovereignty with Codetry from the ground up. Hempcrete from the first pour. Generationally durable. The house gets stronger while you live in it.
+Reclamation mode — board-by-board sovereignty recovery within a house someone else built. Cannot demolish while 1000 people are living inside. Each replaced board must carry the weight of the ones around it while the old ones come out. The goal is a house that is yours — the path is repair, not demolition.
+The mistake is handing a founding-mode toolkit to someone in reclamation mode, or vice versa.
+
+Window placement rule Windows face outward from surplus, not inward toward foundation. The exterior is designed for the ability to stay in the kitchen — not for the exterior's benefit. A well-designed outside (the sandbox, the trampoline) is what lets the interior work happen. Setup is the work that earns the right to stop watching. A steward who is always at the window is a steward whose interior isn't set up yet.
+
+Done looks like
+
+A new Guide chapter titled "Codetry in Practice" (or a name that passes the Both-States and Saltbox tests — the executor should propose if a better name emerges) appears in the North Star Guide list.
+The chapter has sections covering: the building materials vocabulary, the mixing process for a market foundation, and the two modes (founding vs. reclamation) — each with their pull quotes and plain-language prose drawn from the conversation above.
+The prose is kitchen-table plain, no jargon, consistent with the existing Guide chapter voice.
+The chapter links to the external Codetry handbook in its intro or a section, the same way the zone model card on the Guide index already does.
+replit.md is updated under the Codetry section to name Founding mode and Reclamation mode as canonical framework concepts.
+Out of scope
+
+Editing the external handbook at northern-store-plan.replit.app (different project).
+Adding interactive tools to the chapter dock (no existing tool maps to this content yet).
+Creating a print document in the brief suite (that's a follow-on task if wanted).
+Steps
+
+Write the chapter content — Add a new GuideChapter entry to the GUIDE array in artifacts/north-star/src/lib/guide.ts. Sections: building materials (one section per material or grouped), the mixing process, founding mode, reclamation mode, and the window placement rule. Pull quotes from the conversation where they land with weight. Keep the voice consistent with existing chapters — declarative, plain, short paragraphs.
+Update replit.md — Add Founding mode and Reclamation mode as named concepts in the Codetry section of replit.md, with a one-line definition each.

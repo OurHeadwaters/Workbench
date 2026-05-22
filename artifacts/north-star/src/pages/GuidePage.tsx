@@ -79,6 +79,37 @@ const CHAPTERS: Chapter[] = [
       },
     ],
   },
+  {
+    id: "codetry-in-practice",
+    title: "Codetry in Practice",
+    sections: [
+      {
+        id: "building-materials",
+        title: "The building materials",
+        content: `Building a community economy is a construction project. These are the named materials.\n\n**Hempcrete** — Codetry itself. The binder. Lightweight, breathable, and carbon-negative — it keeps strengthening after it sets. Hempcrete holds the wall without being the wall. Without a frame to press against, it has nothing to do.\n\n**The frame** — the structural skeleton the hempcrete fills around. The frame is the existing relationships, commitments, and structures you're building inside or alongside. Without a frame, there is no wall — just a pile of good material.\n\n**The foundation** — Zone 0: ethos, honest capacity, and trust map. Not a document. An accumulated practice. You cannot retroactively pour the foundation. It is either there or it is not, and no amount of planning language fills the gap.\n\n**Windows** — intentional openings. Sized and placed deliberately. They face outward from surplus, never inward toward interior labour. You don't cut windows until the wall has cured.`,
+      },
+      {
+        id: "gate-and-giraffe",
+        title: "The fence post gate and the giraffe",
+        content: `Two figures for the regulatory side of community building.\n\n**The fence post gate** — the specific regulatory hinge. The health unit. The band council resolution. The cooperative registration. Not the whole apparatus — the specific mechanism the apparatus walks through if you give it a reason.\n\n**The giraffe** — the regulatory apparatus itself. Long-necked by design — it can see over the fence from the road. It cannot enter unless you cross the trigger threshold. A giraffe is not the enemy. It is a known animal with known habits. You can design a yard it has no reason to enter.`,
+      },
+      {
+        id: "mixing-process",
+        title: "Mixing the foundation",
+        content: `Before you build anything for a market, there is a four-question mix to run. Skipping any one produces a wall that looks finished and isn't.\n\n**Hurd audit** — what capacity is genuinely available after existing commitments are honoured first. Not the pitch version. The real version.\n\n**Ethos line** — what would make growth not worth it. Where is the floor you would walk away over. If you don't name this before you build, someone else's growth pressure names it for you.\n\n**Pressure question** — what makes now the moment. What necessity makes action real rather than aspirational. An idea without pressure is a plan. A plan with pressure is a project.\n\n**Shape of the wall** — what are you enclosing. What stays inside, what gets traded. The exterior is not designed for the exterior's benefit. It is designed for the ability to stay in the kitchen.`,
+      },
+      {
+        id: "two-modes",
+        title: "Two modes — founding and reclamation",
+        content: `The same tools apply differently depending on which situation you're building in. Handing the wrong kit to the wrong mode is the most common mistake in community economy work.\n\n**Founding mode** — building from personal sovereignty with Codetry from the first pour. Hempcrete from day one. Generationally durable. The house gets stronger while you live in it.\n\n**Reclamation mode** — board-by-board sovereignty recovery within a house someone else built. You cannot demolish while a thousand people are living inside. Each replaced board must carry the weight of the ones around it while the old ones come out. The goal is a house that is yours. The path is repair, not demolition.\n\nA founding-mode toolkit handed to a reclamation-mode practitioner produces paralysis or destruction. A reclamation-mode toolkit handed to a founder produces timidity. Read the site before you mix.`,
+      },
+      {
+        id: "window-placement",
+        title: "The window placement rule",
+        content: `Windows face outward from surplus — not inward toward the foundation.\n\nThe exterior — the sandbox, the trampoline, the public-facing offer — is designed for one purpose: the ability to stay in the kitchen. A well-designed outside is what lets the interior work happen.\n\nSetup is the work that earns the right to stop watching. A steward who is always at the window is a steward whose interior isn't set up yet.`,
+      },
+    ],
+  },
 ];
 
 function ChapterCard({ chapter }: { chapter: Chapter }) {
