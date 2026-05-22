@@ -26,6 +26,7 @@ import inboxRouter from "./inbox";
 import waitlistRouter from "./waitlist";
 import odysseyRouter from "./odyssey";
 import triageRouter from "./triage";
+import councilRouter from "./council";
 
 const router: IRouter = Router();
 
@@ -59,5 +60,6 @@ router.use("/inbox", inboxRouter);
 router.use("/waitlist", waitlistRouter);
 router.use("/odyssey", odysseyRouter);
 router.use("/triage", triageRouter);
+router.use("/council", councilRouter);
 
 export default router;
