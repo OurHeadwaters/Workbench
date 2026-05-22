@@ -101,12 +101,53 @@ const CHAPTERS: Chapter[] = [
       {
         id: "two-modes",
         title: "Two modes — founding and reclamation",
-        content: `The same tools apply differently depending on which situation you're building in. Handing the wrong kit to the wrong mode is the most common mistake in community economy work.\n\n**Founding mode** — building from personal sovereignty with Codetry from the first pour. Hempcrete from day one. Generationally durable. The house gets stronger while you live in it.\n\n**Reclamation mode** — board-by-board sovereignty recovery within a house someone else built. You cannot demolish while a thousand people are living inside. Each replaced board must carry the weight of the ones around it while the old ones come out. The goal is a house that is yours. The path is repair, not demolition.\n\nA founding-mode toolkit handed to a reclamation-mode practitioner produces paralysis or destruction. A reclamation-mode toolkit handed to a founder produces timidity. Read the site before you mix.`,
+        content: `The materials are the same. The order of operations is not.\n\n**Founding mode** — building from personal sovereignty with Codetry from the first pour. Hempcrete from day one. Generationally durable. The house gets stronger while you live in it. What you build this way, you can hand to someone else without explaining what it secretly is.\n\n**Reclamation mode** — board-by-board sovereignty recovery within a house someone else built. You cannot demolish while a thousand people are living inside. Each replaced board must carry the weight of the ones around it while the old ones come out. The goal is a house that is yours. The path is repair, not demolition.\n\nMost people arriving are in reclamation mode. That is not a lesser version. It is harder, it carries more scar tissue, and it produces a house that is genuinely yours by the time you are done — because you have replaced every board that needed replacing and left standing every board that could carry weight.\n\nA founding-mode toolkit handed to a reclamation-mode practitioner produces paralysis or destruction. A reclamation-mode toolkit handed to a founder produces timidity. Read the site before you mix.`,
       },
       {
         id: "window-placement",
         title: "The window placement rule",
         content: `Windows face outward from surplus — not inward toward the foundation.\n\nThe exterior — the sandbox, the trampoline, the public-facing offer — is designed for one purpose: the ability to stay in the kitchen. A well-designed outside is what lets the interior work happen.\n\nSetup is the work that earns the right to stop watching. A steward who is always at the window is a steward whose interior isn't set up yet.`,
+      },
+    ],
+  },
+  {
+    id: "the-on-ramp",
+    title: "The On-Ramp",
+    sections: [
+      {
+        id: "who-this-is-for",
+        title: "Who this is for",
+        content: `Zone 0 is not an abstract unit. It is the mechanic, the plumber, the electrician, the homesteader. The husband and wife who have been carrying the household on their backs for years.\n\nThe headwaters people — the ones who have held the water from the source, who are tired, and who are looking for something to hand off or bring others into.\n\nThey do not need explaining. They need a plan they can stray from. Nobody interjecting while they work. The outside world handled so their hands stay free.\n\nThe tradespeople angle is not decorative. A builder who works with hempcrete reads this and recognizes that the metaphor is not borrowed — it is load-bearing. A nice-looking wall without the maintenance overhead of drywall is a real argument for a real material. The person who knows how to mix mortar already understands the difference between binder and structure. You are not teaching them a metaphor. You are translating a practice they already know into a new site.`,
+      },
+      {
+        id: "grindstone-and-oil",
+        title: "The grindstone and the oil",
+        content: `There are two roles in the household engine.\n\n**The grindstone person** — hands full, eyes on the material, on the ground. The mechanic, the builder, the one doing the physical thing. Needs the outside world handled so they can stay in contact with the work.\n\n**The oil** — the person handling the outside world. Running the scraps to the dump. Talking to suppliers, regulators, neighbours. Representing the interior to anyone who needs to know it exists. Without them, the grindstone seizes. Without the grindstone, they have nothing to represent.\n\nThat engine does not grind without the oil.\n\nThis is not a hierarchy. It is a named division of labour. The naming is the point — it stops being invisible when you name it. Invisible labour is the primary source of resentment in Zone 0 households, not the labour itself.\n\nThe most valuable thing you can hand the next generation is a working example of two people who figured out the division without one of them disappearing. That is the inheritance. Not the house, not the money — the pattern.`,
+      },
+      {
+        id: "step-1-frame",
+        title: "Step 1 — Lay the frame",
+        content: `Before any hempcrete goes in, the frame has to stand on its own.\n\nIn the house: the structural skeleton that defines the interior spaces. In Codetry: the household unit — what is inside, who is inside, what the walls protect.\n\nThis is the step most people skip. They want to fill the wall before the frame is plumb. Write down what you are enclosing. Name the household. Name what stays inside it.\n\nThe frame does not need to be finished to be started. Two posts and a beam is a frame. You can add to it.`,
+      },
+      {
+        id: "step-2-hempcrete",
+        title: "Step 2 — Fill with hempcrete",
+        content: `Hempcrete is not a structural material — the frame does that. Hempcrete is the binder. It fills, insulates, regulates. It holds the wall without being the wall.\n\nIn Codetry that binder is the practice itself: the vocabulary, the naming discipline, the zone model. It fills the spaces the frame defines. It breathes. It does not crack under settling the way concrete does.\n\nYou do not pour all at once. You fill in lifts — a foot at a time, tamped, left to set before the next. Rushing it produces a weak wall. The pace is the point.\n\nA hempcrete wall is a nice-looking wall. No maintenance overhead of drywall — no scuffs, no repainting every few years, no paper face that dents when someone bumps it. The material argument and the framework argument are the same argument.`,
+      },
+      {
+        id: "step-3-windows",
+        title: "Step 3 — Frame the windows",
+        content: `A window is an intentional opening. You decide where light comes in and where the outside world can see.\n\nIn the house: placement is a design decision, not an accident. In Codetry: which zone boundaries are permeable, and by how much.\n\nThe household steward is the interior architect. That is the person who knows what the rooms are for, who moves between them, and where the windows should go.\n\nWindows face outward. The interior stays yours. Nobody reaches through a window and rearranges the furniture.\n\nDon't cut windows until the wall has cured. A window cut too early weakens the wall before it has set.`,
+      },
+      {
+        id: "step-4-gate",
+        title: "Step 4 — Hang the gate",
+        content: `The gate is the regulatory hinge — the point where inside meets outside on your terms. The fence post it hangs on is the boundary. The gate is not locked; it opens and closes.\n\nIn Codetry this is the Eave: the hard privacy boundary between the household interior and the organizational world above. The gate controls what crosses.\n\nHang the gate before you invite anyone in. A fence without a gate is just a barrier. A gate without a fence is decoration.\n\nKnow where your gate is before you scale.`,
+      },
+      {
+        id: "stray-from-the-plan",
+        title: "You are allowed to stray",
+        content: `A build sequence is a starting frame, not a contract. Real walls meet real conditions. The hempcrete mix changes with the humidity. The frame settles. You adapt.\n\nThe sequence exists so you know what you skipped and can go back. That is all. It is not a grading system.\n\nNo one is interjecting while you work. Do the next thing. The plan will still be here.`,
       },
     ],
   },
