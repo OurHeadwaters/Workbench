@@ -124,6 +124,47 @@ The Zone entry in the Formal Vocabulary section above now enumerates all six zon
 
 ---
 
+## BLM Refused Words
+
+*Words tested for use in Headwaters vocabulary that were flagged for collision with an existing concept. Each entry documents the collision, the Both-Sides test result, and the decision. The collision is documented, not hidden.*
+
+---
+
+### The BLM Refused Word Protocol
+
+A four-step process for words that carry potential naming collisions:
+
+1. **Flag** — Word is proposed. A collision with an existing concept is identified (two meanings would share the same noun inside the same system).
+2. **Examine** — Does the collision *blur* meaning (the word would mislead), or does it *unify* (the two colliding meanings turn out to be the same boundary viewed from different sides)?
+3. **Decide** — If it blurs: refuse. If it unifies: accept with an explicit note.
+4. **Document** — The note becomes the glossary entry. The collision is recorded permanently, not cleaned away.
+
+**Refusal criterion — the Both-Sides test:** Does the word hold when explained to a band council elder and to an auditor in the same sentence? If one reading erases the other, the word fails. If both readings are simultaneously correct — and the collision between them reveals something true about the system — the word passes.
+
+---
+
+**Cap** *(BLM Glossary — Entry #1, accepted)* — A practitioner's credential and authorization ceiling, held simultaneously. Who you are and what you can authorize are the same boundary in Headwaters. The credential and the ceiling are the same object.
+
+*Both-Sides test result: passes.* A band council elder reads "cap" as the authority you carry to the table; an auditor reads "cap" as the maximum a role can authorize. Both readings are correct. The word holds.
+
+*Collision note:* Almost refused because Headwaters is full of financial ceilings — spending cap, budget cap, income cap. The collision is intentional: in Headwaters, authorization is not separate from identity. A financial ceiling is not a cap; it is a limit or threshold.
+
+*Community-facing term:* **cap**
+*Chain record term:* **warrant** (the ledger entry that records what a cap authorizes — see The Systems vocabulary)
+*Refusal note:* Cap was the first BLM refused word to survive its collision and enter the vocabulary.
+
+---
+
+**Limit / Threshold** *(financial ceiling replacement)* — The terms for budget, spending, and income ceilings in Headwaters financial records. Used specifically to keep "cap" available for its credential-and-identity meaning.
+
+- A **limit** is a number in a ledger; it applies to a line item.
+- A **threshold** is a trigger point — when crossed, it changes a decision.
+
+Neither carries the identity weight of a cap. *Going forward: budget limits, spending limits, income thresholds. Not: budget caps, spending caps, income caps.*
+
+---
+
 *End of vocabulary reference sheet.*
-*Total formally defined terms: 17 (Ch4 vocabulary list) + 10 (Appendix sub-terms) = 27 entries*
+*Total formally defined terms: 17 (Ch4 vocabulary list) + 10 (Appendix sub-terms) + 2 (BLM formal additions) = 29 entries*
+*BLM refused word entries: 2 (cap · limit/threshold)*
 *Resolved flagged terms: 11 (4 added to vocabulary · 2 absorbed into existing entries · 5 confirmed as non-entries)*

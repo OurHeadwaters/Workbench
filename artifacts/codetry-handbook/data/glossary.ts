@@ -1,4 +1,4 @@
-export type GlossarySection = "formal" | "appendix" | "flagged";
+export type GlossarySection = "formal" | "appendix" | "flagged" | "blm_refused";
 
 export interface GlossaryEntry {
   term: string;
@@ -20,7 +20,14 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "Both-sides",
     chapter: "Ch4",
     definition:
-      "A test for naming a primitive that faces two contexts simultaneously. Does the umbrella name hold from the bright side and from the systems side? If the name privileges one context, the membrane becomes a wall. Same word, different room.",
+      "A test for naming a primitive that faces two contexts simultaneously. Does the umbrella name hold from the bright side and from the systems side? If the name privileges one context, the membrane becomes a wall. Same word, different room. Also the refusal criterion for BLM word candidates: does the word hold when explained to a band council elder and to an auditor in the same sentence? If one reading erases the other, the word fails. If both readings are simultaneously correct, the word passes — and any collision it carries is load-bearing, not accidental.",
+    section: "formal",
+  },
+  {
+    term: "BLM refused word",
+    chapter: "Ch4 / BLM Glossary",
+    definition:
+      "Bright Side Language Model refused word. A term tested for use in Headwaters vocabulary that was flagged for collision with an existing concept, examined to determine whether the collision blurs or unifies meaning, and either rejected or accepted with an explicit note. The four-step protocol: (1) word flagged for collision; (2) collision examined — does it blur meaning (reject) or reveal that two concepts share a single boundary (unify)?; (3) if unified, accepted with an explicit note; (4) the note becomes the glossary entry. The collision is documented, not hidden. Refusal criterion: the Both-Sides test — does the word hold when read by a band council elder and by an auditor simultaneously? First entry: cap.",
     section: "formal",
   },
   {
@@ -256,16 +263,34 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     section: "appendix",
     group: "The Gate",
   },
+  {
+    term: "Cap",
+    chapter: "BLM Glossary — Entry #1",
+    definition:
+      "A practitioner's credential and authorization ceiling, held simultaneously. Who you are and what you can authorize are the same boundary in Headwaters. The credential and the ceiling are the same object. Both-Sides test result: passes. A band council elder reads 'cap' as the authority you carry to the table; an auditor reads 'cap' as the maximum a role can authorize. Both readings are correct. The word holds. Collision note: almost refused because Headwaters is full of financial ceilings (spending cap, budget cap, income cap). The collision is intentional — in Headwaters, authorization is not separate from identity. A financial ceiling is not a cap; it is a limit or threshold. Community-facing term: cap. Chain record term: warrant (the ledger entry that records what a cap authorizes). Refusal note: cap was the first BLM refused word to survive its collision and enter the vocabulary.",
+    section: "blm_refused",
+    group: "BLM Refused Words",
+  },
+  {
+    term: "Limit / Threshold",
+    chapter: "BLM Glossary — financial ceiling replacement",
+    definition:
+      "The term for budget, spending, and income ceilings in Headwaters financial records. Used specifically to keep 'cap' available for its credential-and-identity meaning. A limit is a number in a ledger; it applies to a line item. A threshold is a trigger point — when crossed, it changes a decision. Neither carries the identity weight of a cap. Going forward: budget limits, spending limits, income thresholds. Not: budget caps, spending caps, income caps.",
+    section: "blm_refused",
+    group: "BLM Refused Words",
+  },
 ];
 
 export const SECTION_LABELS: Record<GlossarySection, string> = {
   formal: "Formal Vocabulary",
   appendix: "Appendix Sub-Terms",
   flagged: "Flagged — Pending Definition",
+  blm_refused: "BLM Refused Words",
 };
 
 export const SECTION_ORDER: GlossarySection[] = [
   "formal",
   "appendix",
   "flagged",
+  "blm_refused",
 ];
