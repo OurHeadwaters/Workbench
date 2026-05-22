@@ -1,0 +1,23 @@
+#1707 - First Pour of the Eave Seam
+What & Why
+Make the constitutional Eave Rule visible exactly where a future agent or developer could violate it. This is the hempcrete-in-the-forms step — not full schema enforcement yet, but the rule is declared at the precise pressure points in code.
+
+The Eave Rule (paste verbatim, do not paraphrase):
+
+The Eave is the hard structural seam between Zone 1 (Household / Afloat — private household identity) and Zone 3 (Home Range / Community-facing work — XRPL wallet, above-board organizational identity). It is defined by intentional architectural absence: No table, no foreign key, no join, no query path, and no stored reference may ever connect a Zone 3 wallet address, any derived identifier, any zone-bind payload, or any zone-bind signature to a Zone 1 household record (name + passphrase identity). A household may voluntarily bind its own XRPL wallet using the lib/zone-identity primitives, but the binding must be stored as a one-way, non-reversible reference that never permits reverse lookup. Any proposed feature, route, migration, or type field (including the existing linkedFamilyId and linkedShareToken fields on the Constellation type) that would create such a path must be refused or redesigned to respect the seam.
+
+Done looks like
+The Eave Rule appears as a block comment directly above linkedFamilyId and linkedShareToken on the Constellation interface in types.ts
+A schema-notes.md file exists at artifacts/north-star/src/ (or alongside the Drizzle schema if one exists) describing the intended zone_bindings table: one-way reference only (household → wallet direction permitted; wallet → household lookup forbidden); includes the full Eave Rule as a comment
+Any future agent doing a code review or migration can paste the rule and test a proposed change against it without needing the briefs
+Out of scope
+Actual schema migration or table creation
+Middleware or route guards enforcing the seam
+XRPL wallet integration or zone-bind primitive implementation
+Steps
+Comment in types.ts — Add the full Eave Rule as a block comment directly above linkedFamilyId and linkedShareToken on the Constellation interface. Note that these fields are subject to the seam rule and must never be used to create a wallet→household reverse lookup.
+
+schema-notes.md — Create artifacts/north-star/src/schema-notes.md (or place alongside any existing Drizzle schema file) describing the intended zone_bindings table shape: what columns are permitted, what columns are explicitly forbidden, and the full Eave Rule pasted verbatim as the governing constraint.
+
+Relevant files
+artifacts/north-star/src/types.ts:1-18
