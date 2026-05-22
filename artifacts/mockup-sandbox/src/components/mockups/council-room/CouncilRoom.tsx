@@ -1,5 +1,40 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
+// ── Default brief ─────────────────────────────────────────────────────────────
+const DEFAULT_BRIEF = `PROJECT — Codetry
+Community economy operating system for Headwaters / ourheadwaters.ca.
+Practitioner: Bobbie Parr, Wabigoon ON. Status: naming discipline phase.
+
+ZONE MODEL
+Z0 Saltbox — household substrate; the most private layer; where posture is grown.
+Z1 Circle — members / trust layer; passage via the Eave (not a cap ceremony).
+Z2 Workbench — practitioners layer; passage via cap gate (Practitioner / Steward / Observer).
+Z3 Community — public interface; passage via Representative / Neighbour / Gatekeeper gate.
+Prohibition: Z1 → Z3 direct crossing is blocked.
+
+THREE-LAYER TRUST STACK
+1. Posture substrate — the Standby (liturgy, not curriculum; six-word vocabulary; four-rung ladder: advisory / standby / active / standdown).
+2. Cap ceremony — gate ritual; declaration of posture; the moment of becoming.
+3. Blockchain enforcement — the chain witnesses the opening and (via Debrief receipt) the standing down.
+
+CURTAINS
+The household's deliberation boundary. Drawn = private, kitchen table only, nothing passes the Eave. Open = ready to share with the Circle. Opening the curtains is the pre-Eave declaration.
+
+VOCABULARY
+cap / hat: the role declaration artefact (name under review — may not be strong enough to carry identity + posture + cryptographic authority simultaneously).
+the Standby: posture substrate — grows the capacity to declare a cap without choosing from a menu.
+the Eave: Z0 → Z1 passage.
+the Debrief: the standing-down ritual; should write a cryptographic receipt back to the membrane.
+curtains: household deliberation boundary (just named).
+
+OPEN TENSIONS (six)
+1. Key custody primitive at Z0 — what is the household jar equivalent for Saltbox practice?
+2. Emergency override — what is the higher-friction path when the Z1 → Z3 prohibition meets genuine emergency?
+3. Debrief as on-chain receipt — how does the chain see that the cycle closed, not just opened?
+4. Cap ceremony + wallet UX — how do you preserve ritual when a screen interrupts it?
+5. Gatekeeper cap — personal cap or Workbench-only function? Still unresolved.
+6. "Cap" as a noun — does it hold the weight of identity, posture, and cryptographic authority simultaneously?`;
+
 // ── Design tokens (Z0 kitchen palette) ──────────────────────────────────────
 const C = {
   cream: "#F4EDE0",
@@ -132,6 +167,9 @@ export default function CouncilRoom() {
   const [editingSession, setEditingSession] = useState(false);
   const [configSeatId, setConfigSeatId] = useState<string | null>(null);
   const [configDraft, setConfigDraft] = useState({ name: "", description: "", systemPrompt: "" });
+  const [brief, setBrief] = useState(DEFAULT_BRIEF);
+  const [briefOpen, setBriefOpen] = useState(true);
+  const [editingBrief, setEditingBrief] = useState(false);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -184,7 +222,9 @@ export default function CouncilRoom() {
         body: JSON.stringify({
           message: text,
           history,
-          systemPrompt: activeSeat.systemPrompt,
+          systemPrompt: activeSeat.systemPrompt + (brief.trim()
+            ? `\n\n---\n\nProject brief on the table:\n${brief}`
+            : ""),
           model: activeSeat.model,
         }),
       });
@@ -505,6 +545,108 @@ export default function CouncilRoom() {
 
         {/* ── Right: chat panel ── */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
+
+          {/* ── Briefing paper ── */}
+          <div
+            style={{
+              borderBottom: `1px solid ${C.rule}`,
+              background: "#FEFCF8",
+            }}
+          >
+            {/* Paper header — always visible */}
+            <button
+              onClick={() => { setBriefOpen((o) => !o); setEditingBrief(false); }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                width: "100%",
+                padding: "8px 20px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                textAlign: "left",
+                color: C.inkLight,
+              }}
+            >
+              <span style={{ fontSize: 13 }}>📄</span>
+              <span style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Georgia, serif" }}>
+                Brief on the table
+              </span>
+              <span style={{ fontSize: 10, opacity: 0.5, marginLeft: 4 }}>
+                — read by every seat
+              </span>
+              <span style={{ marginLeft: "auto", fontSize: 11, opacity: 0.4 }}>
+                {briefOpen ? "▲" : "▼"}
+              </span>
+            </button>
+
+            {/* Paper body — expandable */}
+            {briefOpen && (
+              <div style={{ padding: "0 20px 14px" }}>
+                {editingBrief ? (
+                  <div>
+                    <textarea
+                      autoFocus
+                      value={brief}
+                      onChange={(e) => setBrief(e.target.value)}
+                      rows={12}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "10px 12px",
+                        borderRadius: 6,
+                        border: `1px solid ${C.woodBorder}`,
+                        fontFamily: "'Courier New', monospace",
+                        fontSize: 11,
+                        lineHeight: 1.6,
+                        background: "#fff",
+                        color: C.ink,
+                        resize: "vertical",
+                        boxSizing: "border-box",
+                      }}
+                    />
+                    <div style={{ display: "flex", gap: 8, marginTop: 8, justifyContent: "flex-end" }}>
+                      <button
+                        onClick={() => { setBrief(DEFAULT_BRIEF); }}
+                        style={{ fontSize: 10, background: "none", border: `1px solid ${C.woodBorder}`, borderRadius: 5, padding: "4px 10px", cursor: "pointer", color: C.inkLight, fontFamily: "inherit" }}
+                      >
+                        reset to default
+                      </button>
+                      <button
+                        onClick={() => setEditingBrief(false)}
+                        style={{ fontSize: 10, background: C.evergreen, border: "none", borderRadius: 5, padding: "4px 12px", cursor: "pointer", color: C.cream, fontFamily: "inherit", fontWeight: 600 }}
+                      >
+                        done
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => setEditingBrief(true)}
+                    title="Click to edit the brief"
+                    style={{
+                      fontFamily: "'Courier New', monospace",
+                      fontSize: 11,
+                      lineHeight: 1.65,
+                      color: C.inkLight,
+                      whiteSpace: "pre-wrap",
+                      cursor: "text",
+                      maxHeight: 180,
+                      overflowY: "auto",
+                      padding: "8px 12px",
+                      borderRadius: 6,
+                      border: `1px dashed ${C.woodBorder}55`,
+                      background: "#FFFEF9",
+                    }}
+                  >
+                    {brief}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Messages */}
           <div
             style={{
