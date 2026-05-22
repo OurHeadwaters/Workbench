@@ -25,15 +25,15 @@ const terms: { term: string; sub?: string; def: string; note?: string }[] = [
   },
   {
     term: "The Gate",
-    def: "The primitive that holds the community's own language (bright side) and institutional language (massity) as two simultaneous sides of one membrane. It decides what crosses, logs every substitution, and refuses to translate what has no honest equivalent.",
+    def: "The primitive that holds the community's own language (bright side) and institutional language (the systems) as two simultaneous sides of one membrane. It decides what crosses, logs every substitution, and refuses to translate what has no honest equivalent.",
   },
   {
     term: "Bright side",
     def: "The community's own dialect — the words a community uses with itself in its own kitchens, meetings, and ledgers. Neighbour. Channel. The books. Standby stock. The watch. Neither informal nor incorrect. Simply a different room.",
   },
   {
-    term: "Massity",
-    def: "Mass-society dialect — the language a regulator, banker, funder, or lawyer will accept. Resident. Bank account. Financial statements. Inventory reserves. Compliance officer. Neither dialect is wrong inside its own context. Each is unfit currency in the other's.",
+    term: "The Systems",
+    def: "The institution dialect — the language a regulator, banker, funder, or lawyer will accept. Resident. Bank account. Financial statements. Inventory reserves. Compliance officer. Neither dialect is wrong inside its own context. Each is unfit currency in the other's.",
   },
   {
     term: "Refused",
@@ -48,7 +48,7 @@ const terms: { term: string; sub?: string; def: string; note?: string }[] = [
   {
     term: "Both-sides",
     sub: "principle",
-    def: "A test for naming a primitive that faces two contexts simultaneously: does the name hold from the bright side and from the massity side? If the name privileges one context, the membrane becomes a wall.",
+    def: "A test for naming a primitive that faces two contexts simultaneously: does the name hold from the bright side and from the systems side? If the name privileges one context, the membrane becomes a wall.",
   },
 ];
 

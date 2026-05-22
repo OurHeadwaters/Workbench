@@ -188,8 +188,8 @@ function formatStamp(iso: string): string {
 
 function directionLabel(d: GateDirection): string {
   return d === "bright-to-massity"
-    ? "bright side → massity"
-    : "massity → bright side";
+    ? "bright side → the systems"
+    : "the systems → bright side";
 }
 
 export default function Gate() {
@@ -360,10 +360,10 @@ export default function Gate() {
             <Card className="border-border bg-slate-50">
               <CardHeader className="pb-2">
                 <CardTitle className="font-serif text-base">
-                  Massity
+                  The Systems
                 </CardTitle>
                 <CardDescription>
-                  the legacy-world side; mass-society dialect — regulator,
+                  the legacy-world side; institution dialect — regulator,
                   banker, funder, lawyer, generic SaaS English
                 </CardDescription>
               </CardHeader>
@@ -746,7 +746,7 @@ function SubstitutionComposer({
         <CardTitle className="font-serif text-lg">Log a substitution</CardTitle>
         <CardDescription>
           Both names stay on file. The Gate keeps the bright-side noun
-          alongside its massity equivalent so the translation stays
+          alongside its systems equivalent so the translation stays
           auditable.
         </CardDescription>
       </CardHeader>
@@ -766,10 +766,10 @@ function SubstitutionComposer({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="bright-to-massity">
-                  bright side → massity (going out)
+                  bright side → the systems (going out)
                 </SelectItem>
                 <SelectItem value="massity-to-bright">
-                  massity → bright side (coming in)
+                  the systems → bright side (coming in)
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -803,7 +803,7 @@ function SubstitutionComposer({
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="gate-massity">Massity equivalent</Label>
+            <Label htmlFor="gate-massity">Systems equivalent</Label>
             <Input
               id="gate-massity"
               data-testid="input-massity"

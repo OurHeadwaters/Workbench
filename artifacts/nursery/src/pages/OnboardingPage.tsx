@@ -182,7 +182,7 @@ function TranslationsStep({ vernacular, massity, onVernacular, onMassity, onNext
         <p className="text-xs text-[#4A7C59] font-medium uppercase tracking-wide mb-1">Step 2 of 3</p>
         <h2 className="text-2xl text-[#2E2620] mb-2">Both sides of the fence</h2>
         <p className="text-sm text-[#7A6B60] leading-relaxed">
-          Every idea has two dialects: the vernacular — how producers talk about it in the field — and the massity dialect — how institutions, grant bodies, and boards frame it. Naming both helps ideas travel.
+          Every idea has two dialects: the vernacular — how producers talk about it in the field — and the systems dialect — how institutions, grant bodies, and boards frame it. Naming both helps ideas travel.
         </p>
       </div>
       <div className="space-y-4">
@@ -198,7 +198,7 @@ function TranslationsStep({ vernacular, massity, onVernacular, onMassity, onNext
           </Field>
         </div>
         <div className="bg-[#F0F0F0] rounded-xl p-4 border border-[#C8C8C8]">
-          <Field label="Massity name" sublabel="Formal / institution register">
+          <Field label="Systems name" sublabel="Formal / institution register">
             <input
               type="text"
               value={massity}

@@ -381,7 +381,7 @@ export default function ConfidentialQueue() {
             <Label htmlFor="refuse-reason">Reason (optional)</Label>
             <Textarea
               id="refuse-reason"
-              placeholder="Legal risk · no honest massity equivalent · do not publish"
+              placeholder="Legal risk · no honest systems equivalent · do not publish"
               value={refuseReason}
               onChange={(e) => setRefuseReason(e.target.value)}
               className="min-h-[80px] resize-none"

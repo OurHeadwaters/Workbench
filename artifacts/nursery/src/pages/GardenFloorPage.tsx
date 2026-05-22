@@ -292,7 +292,7 @@ function NewIdeaModal({ onClose, onCreated }: { onClose: () => void; onCreated: 
           <Field label="Vernacular name">
             <input type="text" value={vernacular} onChange={(e) => setVernacular(e.target.value)} placeholder="How producers say it" className={inputCls} />
           </Field>
-          <Field label="Massity name">
+          <Field label="Systems name">
             <input type="text" value={massity} onChange={(e) => setMassity(e.target.value)} placeholder="Formal / institution" className={inputCls} />
           </Field>
         </div>

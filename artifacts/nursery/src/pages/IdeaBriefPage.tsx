@@ -195,7 +195,7 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
                 border="#B8D9C3"
               />
               <TranslationPanel
-                label="Massity"
+                label="The Systems"
                 subtitle="Institution / formal register"
                 text={idea.massityName}
                 accent="#3D3D3D"
@@ -647,7 +647,7 @@ function EditCoreFieldsModal({ idea, onClose, onSaved }: {
           </div>
 
           <div>
-            <label className={labelClass}>Massity name <span className="font-normal normal-case text-[#7A6B60]">(institution / formal register)</span></label>
+            <label className={labelClass}>Systems name <span className="font-normal normal-case text-[#7A6B60]">(formal / institution register)</span></label>
             <input
               type="text"
               value={massityName}
