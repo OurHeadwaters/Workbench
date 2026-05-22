@@ -11,6 +11,7 @@ paths = ["/api", "/media", "/sandbox", "/field-guide-finance", "/nursery"]
 
 [services.development]
 run = "pnpm --filter @workspace/api-server run dev"
+proxy = [{path = "/nursery", target = 8093}]
 
 [services.production]
 

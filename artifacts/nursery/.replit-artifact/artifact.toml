@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/nursery/"
+title = "Nursery"
+version = "1.0.0"
+id = "artifacts/nursery"
+router = "path"
+
+[[services]]
+name = "web"
+paths = ["/nursery/"]
+localPort = 8093
+
+[services.development]
+run = "pnpm --filter @workspace/nursery run dev"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/nursery", "run", "build"]
+publicDir = "artifacts/nursery/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "8093"
+BASE_PATH = "/nursery/"
