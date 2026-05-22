@@ -20,6 +20,30 @@
 
 ---
 
+## Gate UI Implementation — Today Page (Constellation Picker)
+
+> **Source:** `docs/zones-gates-reference.md` § "What a Gate Looks Like in Practice"
+
+The constellation picker on the Today page is the first place where zone-crossing becomes a lived moment. Constellations are sorted by zone order (Z0 → Z1 → Z2 → Z3 → Z4 → Z5), and a visible, named gate marker is rendered at each constitutional boundary when both sides of the crossing are present in the active constellation list.
+
+### Z1→Z2 Gate — Entering the Workbench
+
+Rendered between the last Z1 constellation and the first Z2 constellation. Derived from the reference doc's description of the Z1–Z2 gate: *"a consent step, a role switch, a session context change that establishes 'I am now working as a practitioner.'"*
+
+The gate marker reads: **"Z1 → Z2 · Entering the Workbench"** with the subtitle *"Work below is attributed to your household. Your private identity stays in Z1."*
+
+### Z2→Z3 Gate — Community Crossing
+
+Rendered between the last Z2 constellation and the first Z3 constellation. Derived from: *"a credential presented at the crossing but not stored inside the operational record."*
+
+The gate marker reads: **"Z2 → Z3 · Community Crossing"** with the subtitle *"Z3 identifiers may appear at this crossing but are not stored inside Z2 records."*
+
+### Component
+
+`src/components/ZoneGate.tsx` — contains both gate variants. The component's header comment cites `docs/zones-gates-reference.md` as the explicit source and quotes the reference doc's language for each crossing type.
+
+---
+
 ## Gate Definitions
 
 ### Z1–Z3 Absolute Prohibition

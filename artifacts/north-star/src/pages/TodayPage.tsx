@@ -5,6 +5,7 @@ import { useStore, getTodayKey, getWeekKey, getSeasonKey } from "@/store";
 import { MorningTriage } from "@/components/MorningTriage";
 import { CaptureSheet } from "@/components/CaptureSheet";
 import { ZoneBadge } from "@/components/ZoneBadge";
+import { ZoneGate } from "@/components/ZoneGate";
 import { OdysseyTrail } from "@/components/TrailSign";
 import { cn } from "@/lib/utils";
 import { ZONE_CLASSES } from "@/lib/utils";
@@ -133,6 +134,14 @@ function ConstellationPicker() {
   const dailyPicks = useStore((s) => s.dailyPicks);
   const active = constellations.filter((c) => c.active);
   const capBypassKey = `cap-bypass-${todayKey}`;
+
+  // Zone sort order — gates are rendered between Z1/Z2 and Z2/Z3 boundaries.
+  // Source: docs/zones-gates-reference.md § "What a Gate Looks Like in Practice"
+  const ZONE_ORDER: ZoneId[] = ["Z0", "Z1", "Z2", "Z3", "Z4", "Z5"];
+  const sorted = [...active].sort(
+    (a, b) => ZONE_ORDER.indexOf(a.zone) - ZONE_ORDER.indexOf(b.zone)
+  );
+  const hasZone = (z: ZoneId) => sorted.some((c) => c.zone === z);
 
   function getWeekHoursLogged(constellationId: string): number {
     const constellation = constellations.find((c) => c.id === constellationId);
@@ -275,13 +284,31 @@ function ConstellationPicker() {
       )}
 
       <div className="space-y-2.5">
-        {active.map((c, i) => {
+        {sorted.map((c, i) => {
           const picked = pickedIds.includes(c.id);
           const zoneColor = ZONE_SOLID[c.zone] ?? "#1C1917";
           const zoneGlow = ZONE_GLOW[c.zone] ?? "transparent";
+          const prev = sorted[i - 1];
+          const showZ1Z2Gate =
+            i > 0 &&
+            prev.zone !== "Z2" &&
+            ZONE_ORDER.indexOf(prev.zone) < ZONE_ORDER.indexOf("Z2") &&
+            ZONE_ORDER.indexOf(c.zone) >= ZONE_ORDER.indexOf("Z2") &&
+            hasZone("Z1") &&
+            hasZone("Z2");
+          const showZ2Z3Gate =
+            i > 0 &&
+            prev.zone !== "Z3" &&
+            ZONE_ORDER.indexOf(prev.zone) < ZONE_ORDER.indexOf("Z3") &&
+            ZONE_ORDER.indexOf(c.zone) >= ZONE_ORDER.indexOf("Z3") &&
+            hasZone("Z2") &&
+            hasZone("Z3");
           return (
+            <div key={c.id} className="space-y-2.5">
+              {showZ1Z2Gate && <ZoneGate crossing="Z1→Z2" />}
+              {showZ2Z3Gate && <ZoneGate crossing="Z2→Z3" />}
             <div
-              key={c.id}
+              key={`card-${c.id}`}
               className={cn(
                 "constellation-card rounded-xl border bg-white transition-all duration-200",
                 picked
@@ -351,6 +378,7 @@ function ConstellationPicker() {
                   ))}
                 </div>
               )}
+            </div>
             </div>
           );
         })}
