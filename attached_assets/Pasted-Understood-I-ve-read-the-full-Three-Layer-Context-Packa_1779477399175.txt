@@ -1,0 +1,19 @@
+Understood. I've read the full Three-Layer Context Package + Add-On 1 verbatim.  I'm now holding all three layers in the Workbench alongside the two original briefs. No inference — only what's declared.Synthesis of the Three Layers (tested against naming principles)Layer 1 — Naming Constitution (perm culture/domain framing)
+Saltbox, Eave, Workbench, Commons, Arc, Margin as the structural nouns. Language-first. Answers "what kind of activity lives here?"Layer 2 — Architectural Intent (trust-gradient framing)
+Z0 Household → Z5 Wild. Drives (or intends to drive) data boundaries, auth models, Eave seam (hard privacy membrane — no structural path from wallet to household). Currently more declared intent than enforced schema.Layer 3 — Practitioner Energy Model (North Star dual labels)
+Proximity + energy (e.g. "Household / Afloat"). What the practitioner actually sees and navigates by daily.Agreed framing on the reconciliation question:
+Yes — the trust-gradient (Layer 2) is the intended constitutional layer for architecture and boundaries. Layers 1 and 3 are valid Both-Sides translations / registers for different rooms (practitioner language vs. technical enforcement).  This closes the fork if we treat Layer 2 as the spine that must be poured (even if not yet fully enforced). The add-on correctly flags the overstatement: calling it "enforced" creates false confidence. Better: declared architectural intent that must become load-bearing.Where it still risks breaking (sharpest pressure points)Eave collision remains live  Layer 1 wants Eave as Z1 (household income/sovereignty).  
+Layer 2 wants Eave as the hard seam (Z1–Z3 boundary).  
+Current code has a constellation at /eave/ operating at the boundary but no schema-level enforcement of the membrane.
+→ This is the exact place a naming fork could split the culture. The seam rule must be constitutional or the whole privacy architecture softens.
+Saltbox placement drift  Layer 1: Saltbox = Z0.  
+Live code: Saltbox (gather) lives at Z3 energy level (a tool being built).  
+Layer 3 risk (per add-on): Practitioner energy ("this feels core to me") could pull it back to Z0 identity center, against architectural intent.
+Enforcement gap
+No foreign keys, no middleware, no XRPL schema blocking wallet→household paths yet. The spine is drawn but not poured. This matches the reclamation mode warning in the building materials: we’re repairing/rebuilding while living in it.
+
+Proposed tightened declaration (passes Saltbox + Both-States + Both-Sides tests)Constitutional order (one bounded thing):
+Layer 2 (trust-gradient Z0–Z5) is the architectural spine. It governs data models, identity, and boundaries (including the Eave seam as hard absence of connection).  Layer 1 (permaculture domain names) and Layer 3 (energy labels) are registered translations of the same positions — different rooms, same underlying structure. They must not contradict the spine.Both-States test: Holds empty (intent declared) and full (schema enforced).
+Both-Sides test: Works for practitioner (Layer 1/3 language) and agent (Layer 2 technical rules).If this framing holds for you, the fork closes. If it breaks anywhere, that’s the real live question.What wants to become visible next?
+Since everything must be visual or it ceases to exist, shall we anchor this three-layer model right now as one bounded visual primitive?  Describe the image you see (watershed with three overlaid transparencies? Saltbox house with layers as foundation/walls/windows? Trail with three parallel paths that never cross improperly?) or just say “yes, make a simple three-layer diagram” and I’ll generate the first visual anchor.Or point me at the next zone/primitive (Standby? Gate? North Star energy labels?) that needs surfacing.I’m in the Workbench with you — ready to stomp. What’s the next footprint?
+

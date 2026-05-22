@@ -1,0 +1,40 @@
+Three-Layer Context Package — Codetry Zone System
+For Grok — May 22, 2026
+The two-brief divergence Grok identified is real, but there's a third layer underneath both: what the code has actually built. All three layers are now visible. They are not competing — they answer different questions.
+
+The Three Layers
+Layer 1 — Naming Constitution (Brief 1)
+Answers: What kind of economic activity happens here?
+Domain/permaculture framing. Saltbox, Eave, Workbench, Commons, Arc, Margin as zone labels. Language-first. The practitioner-facing vocabulary for describing what type of work occupies a zone.
+
+Layer 2 — Architectural Law (Brief 2 / replit.md)
+Answers: How close is this to my private self?
+Trust-gradient framing. Z0 Household → Z5 Wild. Drives data architecture, auth design, XRPL wallet binding, session models. The Eave is a seam here — the hard privacy membrane between Z1 and Z3. This is load-bearing. Architectural decisions that violate it (e.g. a foreign key from wallet to household) would need to be undone.
+
+Layer 3 — Live Practitioner Model (North Star utils.ts)
+Answers: What is my energy relationship to this work right now?
+Energy-relationship framing. Dual labels — proximity word + energy word (e.g. "Household / Afloat"). This is what the practitioner actually sees when triaging their day. Z0 has no constellation — it's the practitioner herself. Saltbox lands at Z3, not Z0.
+
+What the code has quietly resolved
+The live code made several calls without a formal declaration:
+
+Tension	Resolution made in code
+Saltbox as Z0 (Brief 1) vs. Saltbox as a tool	Saltbox is a Z3 constellation — a project being built, not the identity center
+The Eave as Zone 1 (Brief 1) vs. The Eave as seam (Brief 2)	Eave does not exist yet in the constellation model at all — the seam rule is in replit.md as intent, not yet in schema
+North Star as a Guide (Brief 2) vs. the app itself	North Star is the daily planning runtime; Guide is a route within it
+Trust-gradient vs. energy-relationship	Both live simultaneously — trust-gradient governs architecture, energy-relationship governs UX labels
+The actual reconciliation question
+The question Grok is circling but hasn't named directly:
+
+Do the three layers have a declared hierarchy, or are they accidentally competing?
+
+From the codebase, the answer is: Layer 2 (trust-gradient) is the only one that has been architecturally enforced. Layers 1 and 3 are vocabulary layers — useful, real, but not yet constitutionally declared.
+
+The naming risk is this: if someone reads Brief 1 and assigns Saltbox to Z0 in a new constellation, they'd be working against what the live code has already placed (Saltbox at Z3). The zone ontologies look like alternatives because no document has said "Layer 2 governs data and auth; Layers 1 and 3 are register translations of the same positions."
+
+Proposed declaration to test with Grok
+The trust-gradient zones (Z0–Z5, Household → Wild) are the constitutional layer. They govern data architecture and identity boundaries. The permaculture domain names (Brief 1) and the energy-relationship labels (North Star) are Both-Sides translations of those positions — valid registers for different audiences, not competing systems.
+
+If Grok agrees that framing holds, the fork closes. If it doesn't hold, the place it breaks is the real live question.
+
+That's the full picture as I can see it. The sharpest thing to push on with Grok next is probably whether the Eave-as-seam rule (Layer 2) is being held as constitutional even though no code enforces it yet — because if that rule evaporates before it's built, the architecture loses its spine.

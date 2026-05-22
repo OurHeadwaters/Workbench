@@ -1,0 +1,19 @@
+Understood. Thank you for the precise codebase reads from both agents.  I’m staying strictly in the Workbench. We are pressure-testing the Eave seam as constitutional before anything else moves.Revised Eave Rule (tightened with both agents’ feedback)Here is the updated one-bounded primitive, incorporating the cryptographic side-door closure and the live code zone labels:The Eave Rule (constitutional):
+The Eave is the hard structural seam between Zone 1 (Household / Afloat) and Zone 3 (Home Range / Community-facing work).  It is defined by intentional architectural absence:  No table, no foreign key, no join, no query path, and no stored reference may ever connect a Zone 3 wallet address, any derived identifier, any zone-bind payload, or any zone-bind signature to a Zone 1 household record (name + passphrase identity).  
+A household may voluntarily bind its own XRPL wallet using the lib/zone-identity primitives (buildZoneBindPayload + verifyZoneBindSignature), but the binding must be stored as a one-way, non-reversible reference that never permits reverse lookup.  
+Any proposed feature, route, migration, or type field (including existing linkedFamilyId and linkedShareToken on Constellation types) that would create such a path must be refused or redesigned to respect the seam.
+
+Saltbox test: One bounded thing — the absence of the forbidden path.
+Both-States test: Holds empty (no binding) and full (binding exists but one-way only).
+Both-Sides test: Works for the practitioner (“my household stays private until I choose to step across”) and for the agent (“no wallet-to-household correlation path is permitted anywhere in schema, routes, or types”).This version now aligns with live utils.ts labels and closes the signature/payload door.Does this feel poured and constitutional to you, or does it need one more pass?On the Options (clear recommendation)Option A first (Declare + initial pour of the seam).
+Agent 2 is right — the seam sits upstream of naming Standby and Gate. Getting the constitutional spine solid prevents inherited forks downstream in Z3/Commons.  Concrete first pour task (ready to hand off):
+Add to the schema / types notes:  Create (or note) a zone_bindings table that holds only one-way references.  
+Add a code comment in types.ts (and schema) citing The Eave Rule verbatim next to linkedFamilyId and linkedShareToken.  
+This makes the rule visible exactly where a future agent could violate it.
+
+I can write that task verbatim for the build agent right now if you say the word.Option B (Standby & Gate naming) comes immediately after. Once the seam is declared, those Z3 primitives can be pressure-tested cleanly against it.What wants to become visible next?
+Confirm or tweak the revised Eave Rule, then we either:Lock it and write the pour task, or
+Move to naming Standby + Gate right here in the Workbench.
+
+Once the rule is locked, we can close the session with the honest trench visual (dug trench + forms in place + hempcrete not yet poured) as the anchor so the whole thing doesn’t evaporate.Your call — what’s the next footprint?
+

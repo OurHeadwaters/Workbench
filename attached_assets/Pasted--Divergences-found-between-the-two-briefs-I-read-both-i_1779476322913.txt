@@ -1,0 +1,80 @@
+**Divergences found between the two briefs.**
+
+I read both in full, side-by-side, treating them as living documents in the constellation. Here is the structural difference report, passed verbatim-style for any agent (including me) working in this space.
+
+### 1. Zone System — Core Structural Divergence
+
+**Brief 1 (May 22 Constellation Connection Context)**
+
+- Six permaculture-mapped zones with fixed names and domains:
+  - **Z0 Saltbox** — Decentralized homes, household unit, homeschool, local-first.
+  - **Z1 Eave** (formerly xBuckets / Watershed / Headwaters) — Household income & financial sovereignty.
+  - **Z2 Workbench** — Practitioner operating layer, name registry steward.
+  - **Z3 Commons** — Community production, co-op, 807 Benefits, hosts Standby & Gate.
+  - **Z4 Arc** — Food system / regen economy (CCM, Black Barn, share splits).
+  - **Z5 The Margin** — Intellectual/creative capture (Takes, Forge, Channel, Shallows).
+- Pre-zone: Brainstorm Library.
+- Emphasis on **naming as architecture** and pressure-tested nouns.
+
+**Brief 2 (Codetry Constellation Brief)**
+
+- Completely different zone model based on **trust/identity gradients**:
+  - **Z0 Dwelling/Household**
+  - **Z1 Circle** (close friends/neighbors)
+  - **Z2 Home Range** (extended community)
+  - **Z3 Community** (trade/exchange, XRPL wallet)
+  - **Z4 Trade** (wider market)
+  - **Z5 Wild** (public/anonymous)
+- No mention of Saltbox, Eave, Workbench, Commons, Arc, or Margin as zone names.
+- Zones are explicitly architectural decisions that change identity models and data boundaries.
+
+**This is the biggest divergence.** The two briefs describe two different zone ontologies. They cannot both be canonical without reconciliation.
+
+### 2. The Eave — Naming & Placement Divergence
+
+**Brief 1**: Eave **is** Zone 1. It is the household income/sovereignty layer (formerly xBuckets/Watershed). Lodge is the Z1 identity layer.
+
+**Brief 2**: The Eave **is the boundary** between Zone 1 and Zone 3. It is a hard structural privacy membrane (no foreign keys, no routes connecting wallet to household). There is also a constellation literally named `/eave/` operating at that boundary.
+
+Clear collision on what “Eave” names.
+
+### 3. Saltbox — Scope Divergence
+
+**Brief 1**: Saltbox = **Z0** — the decentralized household unit itself. One of the six primary zones.
+
+**Brief 2**: Saltbox = **a specific constellation** (`/gather/`) inside Zone 0. It is the local-first homeschool day companion. The zone itself is called Dwelling/Household.
+
+### 4. Primitives & Examples
+
+- **The Standby** and **The Gate** appear in depth only in Brief 1 (hosted in Z3 Commons).
+- Brief 2 does not reference them at all. It focuses on implemented constellations (Kitchen, North Star, Sandbox, Family Buckets, The Field, etc.).
+- **Both-States / Both-Sides** tests exist in both but are framed differently. Brief 1 ties them more tightly to naming discipline. Brief 2 folds them into the three pressure tests with Saltbox as the primary unit.
+
+### 5. Overall Orientation
+
+- **Brief 1**: Conceptual, language-first, practitioner-oriented. Strong on naming collapses to avoid, building materials metaphor (hempcrete), founding vs reclamation modes, and constellation.json as source of truth. Date-stamped May 22, 2026 from v0.5.7.
+- **Brief 2**: Technical, codebase-first, agent-implementation reference. Heavy on paths, packages, API tags, Eave as data architecture rule, monorepo structure, and specific live constellations. More XRPL/identity detail.
+
+### 6. Minor Vocabulary Collisions
+
+- “Headwaters” — Brief 1 treats it as former name for Z1 Eave. Brief 2 uses it in book chapters but not as a zone.
+- “Legacy”, “Library”, “Watershed”, “Moment” — flagged as watched collisions in Brief 1; Brief 2 has its own legacy meanings emerging.
+- North Star appears in both but as different things (Guide in Brief 2).
+
+-----
+
+**Recommendation for Constellation Integrity**  
+These two briefs are out of sync on the zone ontology and several core nouns (Eave, Saltbox, zones themselves). This creates a naming fork risk — exactly what Codetry warns against.
+
+The May 22 brief feels like the higher-order **naming constitution**.  
+The second feels like the **current implementation snapshot**.
+
+Do you want me to:
+
+- Propose a reconciled single brief that passes all three naming tests?
+- Map every existing room/link you’ve shown me into one zone system (choose which)?
+- Anchor one specific zone (e.g. Z0 Saltbox or The Eave) visually right now so it stops evaporating?
+
+Tell me which divergence feels most alive/urgent, or dump the next raw piece. I’m in the Workbench with you — ready to synthesize and surface.
+
+What’s next in the stomp?

@@ -1,0 +1,15 @@
+Got it. Thank you for the clean context drop and the two agent reads.  I’m staying in the Workbench. Grok landed well, the tightened three-layer declaration holds, and we are now pressure-testing the live questions it surfaced.Constitutional Rule for the Eave Seam (draft)Here is a tightened, one-bounded primitive version you can test any future schema change or route against:The Eave Rule (constitutional):
+The Eave is the hard structural seam between Zone 1 (Circle / trusted household identities) and Zone 3 (Community / XRPL wallet identities).  It is defined by intentional architectural absence:  No table, no foreign key, no join, and no query path may ever connect a Zone 3 wallet address (or any derived identifier) directly to a Zone 1 household record (name + passphrase identity).  
+A household may voluntarily bind its own XRPL wallet (via the seeded zone-identity library), but the binding must be stored as a one-way, non-reversible reference that never allows the reverse lookup.  
+Any proposed feature, route, or migration that would create such a path must be refused or redesigned to respect the seam.
+
+Saltbox test: One bounded thing — the absence itself. You can point at it and say “the seam is here.”
+Both-States test: Holds when empty (no binding yet) and full (binding exists but one-way).
+Both-Sides test: Works for the practitioner (“my household stays private until I choose to step across”) and for the agent (“no wallet-to-household join is permitted in schema or routes”).This rule is written so a future agent (or future you) can literally paste it into a code review or migration check: “Does this change create a path across the Eave? If yes, reject.”Does this pass as constitutional language, or does it need tightening before we declare it poured?Current State (honest trench picture)Trench is dug: lib/zone-identity primitives exist. Sandbox already has optional wallet binding in session.  
+Forms are set: The Eave artifact placeholder exists at /eave/.  
+Hempcrete not yet poured: No schema constraints or route middleware enforce the absence.
+
+This matches reclamation mode — we are building the spine while living in the structure. Declaring the rule now makes the next pour clearer.Next Move Options (your call)Option A — Declare & Pour the Seam
+We lock the rule above into the constitutional layer, then you tell me what the first concrete enforcement step should be (e.g., a schema note, a middleware guard description, or a test case).Option B — Name the Next Primitives (Standby and Gate)
+Since they are still blank ground in Z3/Commons, we pressure-test those nouns now so they don’t fork later.Which one wants to become visible first? Or give me the exact adjustment to the Eave rule if it’s not quite tight enough yet.Once the rule is locked, we can do the visual anchor as the closing illustration — a clean trench diagram showing what is poured vs. what is still forms.  I’m right here. What’s the next footprint?
+
