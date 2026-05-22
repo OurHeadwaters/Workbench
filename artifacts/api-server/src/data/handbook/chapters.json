@@ -3653,8 +3653,32 @@
               "text": "There is a temptation, when the answer is unknown, to fold the question back into a chapter that has more developed material around it. §5.1 is the more developed chapter — it has the rename-test analogy, the corpus-dependence argument, the type/name/token stack — and it would be easy to keep the on-chain thread as a closing movement there. Part VI exists to refuse that move. Open questions get their own chapters here precisely so they can be returned to as the answer changes, not so they can be domesticated as tails on the chapters that almost-but-not-quite address them. When a name-layer discipline for on-chain governance does start to take shape — in a registry pattern, in a contract convention, in a community's actual practice of binding the noun to the primitive — the place to record it is here, not appended to §5.1."
             },
             {
+              "kind": "subhead",
+              "text": "The three-layer stack — a concrete beginning."
+            },
+            {
+              "kind": "para",
+              "text": "The closest thing this handbook has to a worked answer arrived in the same place as the Standby: in practice, before the theory was ready. The zone gate model — Z0 Dwelling → Z1 Circle → Z2 Workbench → Z3 Community — is built around *rituals of becoming*: named crossings where the practitioner declares a posture change before the system records one. Each crossing is a hat ceremony. The practitioner does not drift from Z1 to Z2; they gear up. The practitioner does not cross from Z2 to Z3 without naming what credential appears at the membrane. The name lives in the ritual, and the ritual lives in the practitioner's body."
+            },
+            {
+              "kind": "para",
+              "text": "The standby guidelines deepen this. The four-rung severity ladder — Advisory, Standby, Active, Standdown — is the community-scale version of the same discipline: posture changes require a named moment, and the name is what makes the moment a crossing rather than a drift. A practitioner who has practiced the Standby at the household level already knows how to hold a posture under pressure. When they reach the Z1→Z2 gate and the system asks *what hat are you putting on*, they are not choosing from a menu. They are activating a posture they have been holding in readiness. The Standby is the training layer. The gate ceremony is the declaration layer."
+            },
+            {
+              "kind": "para",
+              "text": "The blockchain is the enforcement layer. In the human-only model, the gate ceremony depends on the practitioner's memory and discipline — the kids leave the gate open, and bad actors find their way in. The protocol lives in someone's head. On-chain, the gate is a transaction: the crossing requires a signature, the hat is a credential that appears at the membrane and not inside the records on either side, the prohibition between Z1 and Z3 is structural rather than conventional. The protocol does not have to live in someone's head because it lives beneath their feet."
+            },
+            {
               "kind": "callout",
-              "text": "Open question, kept open. There is no settled name-layer practice for on-chain governance primitives, and the gap is the technocracy hazard §5.1 named. Whether the practice that fills the gap belongs inside codetry or, more honestly, in the successor trade §5.3 takes up — codetry feeding it as one tributary, not extending itself into governance — is itself part of the open question. This chapter exists to be returned to: when the substrate changes, when a registry pattern earns its place, when a community's practice of authoring the noun-as-primitive becomes specific enough to write down."
+              "text": "The standby teaches you to hold a posture. The gate asks you to declare it. The chain makes sure you did."
+            },
+            {
+              "kind": "para",
+              "text": "This is not a settled practice. It is the shape of the practice starting to come clear. The three layers — beneath the feet, in the body, in the moment — answer §5.2's question about where the name lives on-chain: it lives in the ritual that precedes the transaction. The name is what makes the transaction legible to the person signing it. Without the hat ceremony, the transaction is `castVote(uint256,uint8)`. With it, the transaction is *I am crossing as a Representative, speaking for my household in community space, and this signature is my word.* The chain records the signature. The ritual is what the signature means."
+            },
+            {
+              "kind": "callout",
+              "text": "Open question, kept open — and now with a shape. There is no settled name-layer practice for on-chain governance primitives, and the gap is the technocracy hazard §5.1 named. The three-layer stack — Standby training, gate ceremony, blockchain enforcement — is the earliest answer this handbook has. Whether the practice that fills the gap belongs inside codetry or, more honestly, in the successor trade §5.3 takes up, is itself part of the open question. This chapter exists to be returned to: when the substrate changes, when a registry pattern earns its place, when a community's practice of authoring the noun-as-primitive becomes specific enough to write down."
             }
           ]
         },
@@ -9229,8 +9253,32 @@
           "text": "There is a temptation, when the answer is unknown, to fold the question back into a chapter that has more developed material around it. §5.1 is the more developed chapter — it has the rename-test analogy, the corpus-dependence argument, the type/name/token stack — and it would be easy to keep the on-chain thread as a closing movement there. Part VI exists to refuse that move. Open questions get their own chapters here precisely so they can be returned to as the answer changes, not so they can be domesticated as tails on the chapters that almost-but-not-quite address them. When a name-layer discipline for on-chain governance does start to take shape — in a registry pattern, in a contract convention, in a community's actual practice of binding the noun to the primitive — the place to record it is here, not appended to §5.1."
         },
         {
+          "kind": "subhead",
+          "text": "The three-layer stack — a concrete beginning."
+        },
+        {
+          "kind": "para",
+          "text": "The closest thing this handbook has to a worked answer arrived in the same place as the Standby: in practice, before the theory was ready. The zone gate model — Z0 Dwelling → Z1 Circle → Z2 Workbench → Z3 Community — is built around *rituals of becoming*: named crossings where the practitioner declares a posture change before the system records one. Each crossing is a hat ceremony. The practitioner does not drift from Z1 to Z2; they gear up. The practitioner does not cross from Z2 to Z3 without naming what credential appears at the membrane. The name lives in the ritual, and the ritual lives in the practitioner's body."
+        },
+        {
+          "kind": "para",
+          "text": "The standby guidelines deepen this. The four-rung severity ladder — Advisory, Standby, Active, Standdown — is the community-scale version of the same discipline: posture changes require a named moment, and the name is what makes the moment a crossing rather than a drift. A practitioner who has practiced the Standby at the household level already knows how to hold a posture under pressure. When they reach the Z1→Z2 gate and the system asks *what hat are you putting on*, they are not choosing from a menu. They are activating a posture they have been holding in readiness. The Standby is the training layer. The gate ceremony is the declaration layer."
+        },
+        {
+          "kind": "para",
+          "text": "The blockchain is the enforcement layer. In the human-only model, the gate ceremony depends on the practitioner's memory and discipline — the kids leave the gate open, and bad actors find their way in. The protocol lives in someone's head. On-chain, the gate is a transaction: the crossing requires a signature, the hat is a credential that appears at the membrane and not inside the records on either side, the prohibition between Z1 and Z3 is structural rather than conventional. The protocol does not have to live in someone's head because it lives beneath their feet."
+        },
+        {
           "kind": "callout",
-          "text": "Open question, kept open. There is no settled name-layer practice for on-chain governance primitives, and the gap is the technocracy hazard §5.1 named. Whether the practice that fills the gap belongs inside codetry or, more honestly, in the successor trade §5.3 takes up — codetry feeding it as one tributary, not extending itself into governance — is itself part of the open question. This chapter exists to be returned to: when the substrate changes, when a registry pattern earns its place, when a community's practice of authoring the noun-as-primitive becomes specific enough to write down."
+          "text": "The standby teaches you to hold a posture. The gate asks you to declare it. The chain makes sure you did."
+        },
+        {
+          "kind": "para",
+          "text": "This is not a settled practice. It is the shape of the practice starting to come clear. The three layers — beneath the feet, in the body, in the moment — answer §5.2's question about where the name lives on-chain: it lives in the ritual that precedes the transaction. The name is what makes the transaction legible to the person signing it. Without the hat ceremony, the transaction is `castVote(uint256,uint8)`. With it, the transaction is *I am crossing as a Representative, speaking for my household in community space, and this signature is my word.* The chain records the signature. The ritual is what the signature means."
+        },
+        {
+          "kind": "callout",
+          "text": "Open question, kept open — and now with a shape. There is no settled name-layer practice for on-chain governance primitives, and the gap is the technocracy hazard §5.1 named. The three-layer stack — Standby training, gate ceremony, blockchain enforcement — is the earliest answer this handbook has. Whether the practice that fills the gap belongs inside codetry or, more honestly, in the successor trade §5.3 takes up, is itself part of the open question. This chapter exists to be returned to: when the substrate changes, when a registry pattern earns its place, when a community's practice of authoring the noun-as-primitive becomes specific enough to write down."
         }
       ]
     },
