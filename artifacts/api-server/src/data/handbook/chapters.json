@@ -2925,8 +2925,24 @@
               "text": "The chapters that follow are not a how-to guide. They are the vocabulary of Zone 0 practice — the named systems a household runs, the nouns those systems load their weight onto, and the tests that tell the practitioner when a name is doing real work versus when it is decoration. The practices themselves — fermentation, canning, cold storage, bulk sourcing, seasonal meal planning — are older than codetry and will survive it. What codetry adds is the naming discipline that keeps those practices legible to the people inside them and resistant to the generic vocabulary that would slowly erase what makes them specific."
             },
             {
+              "kind": "subhead",
+              "text": "Where the protocol begins."
+            },
+            {
+              "kind": "para",
+              "text": "The Saltbox is the first rung of the three-layer trust stack. The posture the gate asks you to declare was grown here — in the household, in the daily practice of keeping the pantry, running the Standby, naming the systems correctly. The Standby's four-rung ladder (Advisory → Standby → Active → Standdown) is household discipline before it is community infrastructure. A practitioner who has not practiced the Standby at Z0 is arriving at the Z1→Z2 gate without a posture to declare. They will choose from a menu. The practitioner who has practiced is activating a readiness they have already built."
+            },
+            {
+              "kind": "para",
+              "text": "Key custody lives at Z0. The Z1→Z3 prohibition is structural on-chain — but it is only as strong as the household's discipline over its own keys. If the household shares keys carelessly, the membrane becomes conventional again, not structural. Cryptographic sovereignty is either practiced or neglected at the Saltbox. This is not a technology problem. It is a Zone 0 practice problem, in the same category as the pantry and the canning season: something the household either maintains or does not."
+            },
+            {
+              "kind": "para",
+              "text": "The Eave shelters Z0 from Z3 weather under normal conditions. When Z3 weather arrives with institutional force — a legal demand, a tax authority, an audit — the Eave's strength is the clarity of Z0's record-keeping and key custody. A Saltbox with clean books and clear custody holds under pressure. A Saltbox that has drifted is exposed the moment the Eave is tested. Zone 0 practice is the structural load-bearer the Eave rests on."
+            },
+            {
               "kind": "callout",
-              "text": "Zone 0 is not the smallest zone. It is the source zone. Everything else is downstream."
+              "text": "Zone 0 is not the smallest zone. It is the source zone. Everything else is downstream — including the protocol."
             }
           ]
         },
@@ -4458,6 +4474,29 @@
             {
               "kind": "pull",
               "text": "The name has to hold both states — when a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures."
+            },
+            {
+              "kind": "rule"
+            },
+            {
+              "kind": "subhead",
+              "text": "The Standby as posture substrate."
+            },
+            {
+              "kind": "para",
+              "text": "Calling the Standby a *training layer* imports school-like expectations — curriculum, certification, skills checklists — that the Standby deliberately refuses. The right frame is *posture substrate*: the Standby is what grows the capacity to declare a hat without choosing from a menu. It is closer to liturgy than curriculum. The six-word vocabulary, drilled at the household level before any zone crossing is attempted, is what makes the ritual of becoming a recognition rather than a decision. You do not arrive at the Z1→Z2 gate and figure out what Practitioner means. You know, because the Standby has been teaching your body what posture under pressure feels like."
+            },
+            {
+              "kind": "para",
+              "text": "The four-rung severity ladder maps directly onto the gate system. Advisory is the Watch — something is forming, posture is unchanged, The Watch is informed. Standby is the gear-up moment — preparation is sleeved in, the crossing is imminent, stock is verified. Active is the crossing — a call is open, a hat is on, the record has flipped. Standdown is the Debrief — the call is closed, the hat is off, the receipt is written. The ladder and the gate ceremony are not two systems running in parallel. They are the same discipline at two scales: household and community."
+            },
+            {
+              "kind": "para",
+              "text": "The Debrief is the missing link between the human ritual and the blockchain enforcement layer. The chain can see that a gate was opened — a transaction was signed, a hat was declared. It cannot see whether the ritual was properly closed. A Standby stood down with no Debrief is a gate left ajar. A cryptographic receipt written from the Debrief back to the membrane would close the loop: the chain witnesses not just the opening but the standing down. This is an open architectural question. It is named here so it does not close quietly."
+            },
+            {
+              "kind": "callout",
+              "text": "The Standby grows the posture. The gate demands you declare it. The chain witnesses that you did — and that you stood down when the call was over."
             },
             {
               "kind": "rule"
@@ -8532,8 +8571,24 @@
           "text": "The chapters that follow are not a how-to guide. They are the vocabulary of Zone 0 practice — the named systems a household runs, the nouns those systems load their weight onto, and the tests that tell the practitioner when a name is doing real work versus when it is decoration. The practices themselves — fermentation, canning, cold storage, bulk sourcing, seasonal meal planning — are older than codetry and will survive it. What codetry adds is the naming discipline that keeps those practices legible to the people inside them and resistant to the generic vocabulary that would slowly erase what makes them specific."
         },
         {
+          "kind": "subhead",
+          "text": "Where the protocol begins."
+        },
+        {
+          "kind": "para",
+          "text": "The Saltbox is the first rung of the three-layer trust stack. The posture the gate asks you to declare was grown here — in the household, in the daily practice of keeping the pantry, running the Standby, naming the systems correctly. The Standby's four-rung ladder (Advisory → Standby → Active → Standdown) is household discipline before it is community infrastructure. A practitioner who has not practiced the Standby at Z0 is arriving at the Z1→Z2 gate without a posture to declare. They will choose from a menu. The practitioner who has practiced is activating a readiness they have already built."
+        },
+        {
+          "kind": "para",
+          "text": "Key custody lives at Z0. The Z1→Z3 prohibition is structural on-chain — but it is only as strong as the household's discipline over its own keys. If the household shares keys carelessly, the membrane becomes conventional again, not structural. Cryptographic sovereignty is either practiced or neglected at the Saltbox. This is not a technology problem. It is a Zone 0 practice problem, in the same category as the pantry and the canning season: something the household either maintains or does not."
+        },
+        {
+          "kind": "para",
+          "text": "The Eave shelters Z0 from Z3 weather under normal conditions. When Z3 weather arrives with institutional force — a legal demand, a tax authority, an audit — the Eave's strength is the clarity of Z0's record-keeping and key custody. A Saltbox with clean books and clear custody holds under pressure. A Saltbox that has drifted is exposed the moment the Eave is tested. Zone 0 practice is the structural load-bearer the Eave rests on."
+        },
+        {
           "kind": "callout",
-          "text": "Zone 0 is not the smallest zone. It is the source zone. Everything else is downstream."
+          "text": "Zone 0 is not the smallest zone. It is the source zone. Everything else is downstream — including the protocol."
         }
       ]
     },
@@ -10050,6 +10105,29 @@
         {
           "kind": "pull",
           "text": "The name has to hold both states — when a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures."
+        },
+        {
+          "kind": "rule"
+        },
+        {
+          "kind": "subhead",
+          "text": "The Standby as posture substrate."
+        },
+        {
+          "kind": "para",
+          "text": "Calling the Standby a *training layer* imports school-like expectations — curriculum, certification, skills checklists — that the Standby deliberately refuses. The right frame is *posture substrate*: the Standby is what grows the capacity to declare a hat without choosing from a menu. It is closer to liturgy than curriculum. The six-word vocabulary, drilled at the household level before any zone crossing is attempted, is what makes the ritual of becoming a recognition rather than a decision. You do not arrive at the Z1→Z2 gate and figure out what Practitioner means. You know, because the Standby has been teaching your body what posture under pressure feels like."
+        },
+        {
+          "kind": "para",
+          "text": "The four-rung severity ladder maps directly onto the gate system. Advisory is the Watch — something is forming, posture is unchanged, The Watch is informed. Standby is the gear-up moment — preparation is sleeved in, the crossing is imminent, stock is verified. Active is the crossing — a call is open, a hat is on, the record has flipped. Standdown is the Debrief — the call is closed, the hat is off, the receipt is written. The ladder and the gate ceremony are not two systems running in parallel. They are the same discipline at two scales: household and community."
+        },
+        {
+          "kind": "para",
+          "text": "The Debrief is the missing link between the human ritual and the blockchain enforcement layer. The chain can see that a gate was opened — a transaction was signed, a hat was declared. It cannot see whether the ritual was properly closed. A Standby stood down with no Debrief is a gate left ajar. A cryptographic receipt written from the Debrief back to the membrane would close the loop: the chain witnesses not just the opening but the standing down. This is an open architectural question. It is named here so it does not close quietly."
+        },
+        {
+          "kind": "callout",
+          "text": "The Standby grows the posture. The gate demands you declare it. The chain witnesses that you did — and that you stood down when the call was over."
         },
         {
           "kind": "rule"
