@@ -1,0 +1,44 @@
+#751 - Zone 4 Nursery — Producer Idea Workspace
+What & Why
+Build a new web artifact (/nursery/) for the Zone 4 producer group — a living workspace where a steward and producers together log problems, form ideas, and move them through the nursery lifecycle toward graduation. The tool holds the full Codetry Zone 4 model: Nursery → Fodder → Fallow → Graduated, plus both-sides translation (vernacular ↔ massity dialect) for each idea. The regen-ag abattoir problem is the seed entry — not the frame.
+
+Done looks like
+A "garden floor" landing view: every active idea visible at once, colour- or stage-coded, alive-feeling — not a table of rows. You can see all the growth at a glance and lean into any one idea.
+Each idea has a brief card: problem statement, both-sides translation, current stage, steward notes, and a log of how it moved.
+Stewards can create, move, and annotate ideas. Producers can add comments and flag new problems without a steward present.
+Stages enforced: Nursery (forming), Fodder (returned, carries history), Fallow (resting), Graduated (handed to Zone 3 board). Moving to Graduated is a deliberate, confirmable action.
+Identity follows the Sandbox household model: name + passphrase, scrypt-hashed, httpOnly signed session cookie (nursery_sid). Steward role is elevated at join time via an invite flag. No OAuth, no Clerk, no DID.
+Invite tokens gate entry (same single-use, DB-transaction pattern as Sandbox).
+The first seed idea (807 dog-treats / abattoir capacity co-op) is pre-loaded in the steward onboarding flow as an example, not hard-coded data.
+Out of scope
+Zone 5 / Shallows integration (Path B/C adoption) — future work
+XRPL wallet binding — future work
+Email digest or notifications
+Graduation vote workflow (the tool records graduation; the actual 807 board vote happens offline)
+Steps
+Scaffold the artifact — Create artifacts/nursery as a new React + Vite web artifact with preview path /nursery/. Register it via the artifacts skill. Wire PORT and BASE_PATH in its workflow.
+
+Database schema — Add nursery_producers (id, name, nameKey, passphraseHash, role steward|producer, sessionsInvalidatedBefore, createdAt), nursery_invites (token, createdByProducerId, role, usedAt, usedByProducerId), and nursery_ideas (id, title, problemStatement, vernacularName, massityName, stage nursery|fodder|fallow|graduated, stageHistory jsonb, creatorId, stewardNotes, createdAt, updatedAt) to lib/db. Add nursery_comments (id, ideaId, authorId, body, createdAt). Run pnpm --filter @workspace/db run push.
+
+Auth routes — Add /nursery/* routes to artifacts/api-server/src/routes/. Mirror the Sandbox scrypt + session-cookie + invite-token pattern using nursery_sid cookie. Steward role is encoded in the invite token record. Add requireNurseryAuth and requireSteward middleware.
+
+Idea CRUD routes — GET /nursery/ideas, POST /nursery/ideas (steward only), PATCH /nursery/ideas/:id (stage move, notes, both-sides fields — steward only), DELETE /nursery/ideas/:id (steward only). POST /nursery/ideas/:id/comments (any authenticated producer). Stage moves append to stageHistory with timestamp and actor. Graduating requires a reason field.
+
+OpenAPI spec + codegen — Add the nursery endpoints to lib/api-spec/openapi.yaml. Run pnpm --filter @workspace/api-spec run codegen to generate React Query hooks and Zod schemas.
+
+Garden floor view — The landing page after sign-in. Shows all non-graduated ideas as cards arranged by stage. Each card shows title, vernacular name, stage badge, and last-moved date. Graduated ideas are accessible via a separate "Graduated" shelf. Visual language: warm cream background, stage-coded accents (moss for Nursery, terracotta for Fodder, sage for Fallow, charcoal for Graduated), Fraunces headings. Cards should feel like seed packets or potted plants — organic, not spreadsheet.
+
+Idea brief page — Full view of one idea: problem statement, both-sides panel (vernacular on the left, massity on the right), stage history timeline, steward notes, comments thread. Stage-move button visible to stewards only. Graduating shows a confirmation step with a required reason field.
+
+Auth pages — Sign in, Join (invite token flow), and a minimal steward onboarding that walks through creating the first idea using the 807 dog-treats brief as a guided example (not pre-loaded data).
+
+Roles and permissions — Producers can view all ideas, add comments, and submit new problem statements (which land as draft nursery stage ideas awaiting steward review). Stewards can do everything. Enforce in both API middleware and frontend UI.
+
+Relevant files
+artifacts/sandbox/src/pages/welcome.tsx
+artifacts/sandbox/src/pages/join.tsx
+artifacts/sandbox/src/pages/start.tsx
+artifacts/api-server/src/routes/sandbox.ts
+artifacts/api-server/src/lib/sandbox.ts
+lib/db/src/schema/sandbox.ts
+lib/api-spec/openapi.yaml
