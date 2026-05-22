@@ -231,7 +231,7 @@ type Join = { table: FakeTable; pred: Pred; kind: "inner" | "left" };
 
 function makeSelect(
   table: FakeTable,
-  projection?: Record<string, Col | FakeTable>,
+  projection?: Record<string, Col | FakeTable | Record<string, Col> | { kind: "raw" }>,
 ) {
   let where: Pred | null = null;
   let orders: OrderArg[] = [];
@@ -267,12 +267,27 @@ function makeSelect(
     }
 
     let rows = working.filter((r) => rowMatches(r, where, joined));
+    // Capture pre-limit count for COUNT(*) projections (sql`` tags).
+    const filteredCount = rows.length;
     rows = applyOrders(rows, orders, joined);
     if (offset !== null) rows = rows.slice(offset);
     if (limit !== null) rows = rows.slice(0, limit);
 
     if (projection) {
-      return rows.map((r) => {
+      // When the projection is entirely sql-tag aggregates there are no
+      // real column values to map per-row.  Drizzle returns a single
+      // synthetic row; we replicate that by returning one result row.
+      const onlySqlTags = Object.values(projection).every(
+        (v) =>
+          v &&
+          typeof v === "object" &&
+          !isFakeTable(v) &&
+          !isCol(v) &&
+          (v as { kind?: unknown }).kind === "raw",
+      );
+      const sourceRows = onlySqlTags ? [{}] : rows;
+
+      return sourceRows.map((r) => {
         const out: Row = {};
         for (const [k, v] of Object.entries(projection)) {
           if (isFakeTable(v)) {
@@ -282,6 +297,24 @@ function makeSelect(
             out[k] = joined ? (r[v.__name] as Row | null) ?? null : null;
           } else if (isCol(v)) {
             out[k] = getColValue(r, v, joined);
+          } else if (
+            v &&
+            typeof v === "object" &&
+            (v as { kind?: unknown }).kind === "raw"
+          ) {
+            // sql`` aggregate expression — approximate COUNT(*) as the
+            // number of rows that matched the WHERE clause.
+            out[k] = filteredCount;
+          } else if (v && typeof v === "object") {
+            // Nested projection like `{ name: nurseryProducersTable.name }`.
+            // Recursively resolve each Col inside the nested object.
+            const nested: Row = {};
+            for (const [nk, nv] of Object.entries(v as Record<string, unknown>)) {
+              if (isCol(nv)) {
+                nested[nk] = getColValue(r, nv, joined);
+              }
+            }
+            out[k] = nested;
           } else {
             out[k] = undefined;
           }
@@ -329,6 +362,10 @@ function makeSelect(
       // on aggregate semantics should query the fake's __store directly.
       return builder;
     },
+    for(_mode: string) {
+      // Row-level locking is a no-op in the in-memory fake.
+      return builder;
+    },
     then<T = Row[]>(
       resolve: (v: Row[]) => T,
       reject?: (e: unknown) => unknown,
@@ -341,6 +378,31 @@ function makeSelect(
     },
   };
   return builder;
+}
+
+// ---------- JSONB auto-parse ----------
+//
+// Real Postgres JSONB columns always return parsed values (arrays/objects),
+// never the raw JSON string.  The fake stores whatever value the caller
+// passes, so a route that stores `JSON.stringify([...])` would read it back
+// as a string rather than an array.  This helper parses any string value
+// that looks like a JSON array or object before the row is written to the
+// store, matching the Postgres behaviour.
+
+function parseJsonbInRow(row: Row): Row {
+  const out: Row = {};
+  for (const [k, v] of Object.entries(row)) {
+    if (typeof v === "string" && v.length >= 2 && (v[0] === "[" || v[0] === "{")) {
+      try {
+        out[k] = JSON.parse(v) as unknown;
+        continue;
+      } catch {
+        // Not valid JSON — keep original value.
+      }
+    }
+    out[k] = v;
+  }
+  return out;
 }
 
 // ---------- insert ----------
@@ -371,7 +433,7 @@ function makeInsert(table: FakeTable) {
         returning() {
           const out: Row[] = [];
           for (const v of arr) {
-            const row: Row = { ...table.__defaults, ...v };
+            let row: Row = { ...table.__defaults, ...v };
             // Auto-fill an id if the table has one and the caller didn't
             // supply one (Postgres' defaultRandom() in production).
             if (isColRef(table, "id") && !("id" in row)) {
@@ -385,6 +447,9 @@ function makeInsert(table: FakeTable) {
             if (isColRef(table, "updatedAt") && row.updatedAt === undefined) {
               row.updatedAt = new Date();
             }
+            // Parse JSON strings (JSONB columns) so reads return the same
+            // shape as real Postgres which always returns parsed values.
+            row = parseJsonbInRow(row);
             // Enforce primary-key uniqueness like the real schema would.
             const conflict = table.__store.some((r) =>
               table.__pk.every((c) => r[c] === row[c]),
@@ -524,7 +589,9 @@ function makeUpdate(table: FakeTable) {
       const out: Row[] = [];
       for (const r of table.__store) {
         if (rowMatches(r, where)) {
-          Object.assign(r, updates);
+          // Parse JSON strings in the patch before writing so JSONB columns
+          // are stored as parsed values (mirroring Postgres behaviour).
+          Object.assign(r, parseJsonbInRow(updates));
           out.push({ ...r });
         }
       }
