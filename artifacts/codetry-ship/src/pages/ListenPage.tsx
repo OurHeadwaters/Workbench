@@ -56,7 +56,7 @@ const PC_ZONES: PcZone[] = [
     name: "The Forest",
     blurb: "Land-scale thinking — watershed economics, long-horizon community ownership.",
     guidance:
-      "The northern reserve work is the right lens here. Headwaters is delivering a full store operating system to Deer Lake First Nation — software, accounts, freight, on-site training. Community ownership at that scale is the same model, bigger radius.",
+      "The northern reserve work is the right lens here. Headwaters is delivering a full store operating system to a northern First Nations community — software, accounts, freight, on-site training. Community ownership at that scale is the same model, bigger radius.",
     cta: { label: "Read about the work ↓", href: "#section-trust" },
     color: "#3D4A5C",
   },
@@ -751,7 +751,7 @@ export function ListenPage() {
             />
             <TrustRow
               label="Phase 2 — northern reserve service"
-              detail="Extending the distribution lane into Deer Lake First Nation. Headwaters is already delivering the store operating system there: software, accounts, freight coordination, and on-site training. The lane follows the relationship."
+              detail="Extending the distribution lane into a northern reserve community. Headwaters is already delivering the store operating system there: software, accounts, freight coordination, and on-site training. The lane follows the relationship."
             />
           </div>
         </section>
