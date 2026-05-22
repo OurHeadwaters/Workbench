@@ -6,7 +6,7 @@ import {
   type IdeaStage,
   type StageHistoryEntry,
 } from "@/lib/api";
-import { ArrowLeft, Leaf, Trash2, X, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Leaf, Pencil, Trash2, X, AlertTriangle } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 
 interface IdeaBriefPageProps {
@@ -46,6 +46,7 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
   const [showStageMove, setShowStageMove] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showEditNotes, setShowEditNotes] = useState(false);
+  const [showEditCore, setShowEditCore] = useState(false);
 
   const loadIdea = useCallback(async () => {
     try {
@@ -134,6 +135,15 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
                 className="px-3 py-2 rounded-lg text-xs bg-[#4A7C59] text-white hover:bg-[#3D6B4A] transition-colors min-h-[36px]"
               >
                 Approve idea
+              </button>
+            )}
+            {producer.isSteward && (
+              <button
+                onClick={() => setShowEditCore(true)}
+                className="p-2 rounded-lg text-[#4A7C59] hover:bg-[#EBF3EE] transition-colors min-h-[36px]"
+                title="Edit idea"
+              >
+                <Pencil className="w-3.5 h-3.5" />
               </button>
             )}
             {producer.isSteward && (
@@ -301,6 +311,19 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
           onSaved={async (notes) => {
             await api.updateIdea(ideaId, { stewardNotes: notes });
             setShowEditNotes(false);
+            await loadIdea();
+          }}
+        />
+      )}
+
+      {/* Edit core fields modal */}
+      {showEditCore && (
+        <EditCoreFieldsModal
+          idea={idea}
+          onClose={() => setShowEditCore(false)}
+          onSaved={async (fields) => {
+            await api.updateIdea(ideaId, fields);
+            setShowEditCore(false);
             await loadIdea();
           }}
         />
@@ -541,6 +564,112 @@ function EditNotesModal({ current, onClose, onSaved }: {
             className="flex-1 py-2.5 rounded-xl text-sm bg-[#4A7C59] text-white disabled:opacity-50"
           >
             {loading ? "Saving…" : "Save notes"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EditCoreFieldsModal({ idea, onClose, onSaved }: {
+  idea: NurseryIdeaDetail;
+  onClose: () => void;
+  onSaved: (fields: { title?: string; problemStatement?: string; vernacularName?: string; massityName?: string }) => Promise<void>;
+}) {
+  const [title, setTitle] = useState(idea.title);
+  const [problemStatement, setProblemStatement] = useState(idea.problemStatement ?? "");
+  const [vernacularName, setVernacularName] = useState(idea.vernacularName ?? "");
+  const [massityName, setMassityName] = useState(idea.massityName ?? "");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSave() {
+    if (!title.trim()) { setError("Title is required."); return; }
+    setLoading(true);
+    setError("");
+    try {
+      await onSaved({
+        title: title.trim(),
+        problemStatement: problemStatement.trim() || undefined,
+        vernacularName: vernacularName.trim() || undefined,
+        massityName: massityName.trim() || undefined,
+      });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to save");
+      setLoading(false);
+    }
+  }
+
+  const fieldClass = "w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#E4D9CC] rounded-xl text-sm text-[#2E2620] placeholder-[#A89A8E] focus:outline-none focus:border-[#4A7C59] transition-colors";
+  const labelClass = "block text-xs font-medium text-[#4A3F38] uppercase tracking-wide mb-1.5";
+
+  return (
+    <div className="fixed inset-0 bg-black/30 flex items-end sm:items-center justify-center z-50 p-4">
+      <div className="bg-[#FFFDF9] rounded-2xl border border-[#E4D9CC] w-full max-w-lg p-6 shadow-xl max-h-[90dvh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-lg text-[#2E2620]">Edit idea</h3>
+          <button onClick={onClose} className="text-[#7A6B60]"><X className="w-4 h-4" /></button>
+        </div>
+
+        <div className="space-y-4 mb-5">
+          <div>
+            <label className={labelClass}>Title <span className="text-[#C7613B]">*</span></label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className={fieldClass}
+              placeholder="Idea title"
+              autoFocus
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Problem statement <span className="font-normal normal-case text-[#7A6B60]">(optional)</span></label>
+            <textarea
+              value={problemStatement}
+              onChange={(e) => setProblemStatement(e.target.value)}
+              rows={4}
+              className={`${fieldClass} resize-none`}
+              placeholder="What problem does this idea address?"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Vernacular name <span className="font-normal normal-case text-[#7A6B60]">(how producers say it)</span></label>
+            <input
+              type="text"
+              value={vernacularName}
+              onChange={(e) => setVernacularName(e.target.value)}
+              className={fieldClass}
+              placeholder="e.g. the price problem"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Massity name <span className="font-normal normal-case text-[#7A6B60]">(institution / formal register)</span></label>
+            <input
+              type="text"
+              value={massityName}
+              onChange={(e) => setMassityName(e.target.value)}
+              className={fieldClass}
+              placeholder="e.g. supply-chain price transparency"
+            />
+          </div>
+        </div>
+
+        {error && <p className="text-sm text-[#C7613B] mb-4">{error}</p>}
+
+        <div className="flex gap-3">
+          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm text-[#7A6B60] border border-[#E4D9CC] hover:bg-[#F0E9DF] transition-colors">
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={loading || !title.trim()}
+            className="flex-1 py-2.5 rounded-xl text-sm bg-[#4A7C59] text-white disabled:opacity-50 transition-colors"
+          >
+            {loading ? "Saving…" : "Save changes"}
           </button>
         </div>
       </div>
