@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 
+
 export function WalletPage() {
   return (
     <main className="min-h-screen w-full bg-background text-foreground">
