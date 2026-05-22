@@ -264,6 +264,62 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     group: "The Gate",
   },
   {
+    term: "The household seal",
+    chapter: "Ch4 — Z0 Key Custody",
+    definition:
+      "The Z0 key custody object: a standard letter envelope sealed with a wax disc or tamper-evident strip, signed across the seal face by the primary holder. The signed seal is the broken-glass equivalent — opening it leaves a break legible to every household member without instruction. The household seal lives in the household's main gathering space, visible to all adult members in the course of a normal day, and never behind a secondary access barrier. The Saltbox Zone Zero equivalent of the household jar: tangible, communal, visible, non-trivial to access without noticing. The Systems term: primary physical key custody record.",
+    section: "appendix",
+    group: "Z0 Key Custody",
+  },
+  {
+    term: "Primary holder",
+    chapter: "Ch4 — Z0 Key Custody",
+    definition:
+      "The adult who signs the household seal, initiates all custody events, and holds the first-call obligation in a custody breach. In a multi-adult household, exactly one adult holds primary custody at any moment; the role may rotate, but rotation is itself a custody event. In a single-adult household, the primary holder names an external witness to hold the pattern knowledge. The Systems term: authorized key custodian.",
+    section: "appendix",
+    group: "Z0 Key Custody",
+  },
+  {
+    term: "Witness position",
+    chapter: "Ch4 — Z0 Key Custody",
+    definition:
+      "The custody role held by every adult household member who is not the primary holder. The witness does not co-sign, co-hold, or act in place of the primary holder. The witness function is to confirm that a custody event occurred, that it was expected, and that the seal was in good order before and after. In a single-adult household, the witness position is held by a named external third party. The Systems term: secondary custody acknowledgment role.",
+    section: "appendix",
+    group: "Z0 Key Custody",
+  },
+  {
+    term: "Custody event",
+    chapter: "Ch4 — Z0 Key Custody",
+    definition:
+      "Expected, recorded, and uncontested access to the household seal. Initiated by the primary holder; the reason is known or knowable to the household; the log is updated before the seal is re-set; the new seal is set the same day. A custody event that is not logged is a breach condition, not a custody event — even if the access was legitimate. The Systems term: authorized custodial access; custody record updated.",
+    section: "appendix",
+    group: "Z0 Key Custody",
+  },
+  {
+    term: "Custody breach",
+    chapter: "Ch4 — Z0 Key Custody",
+    definition:
+      "Unexpected, contested, or undocumented access to the household seal. Triggered when: the seal is broken with no log entry; the envelope is found at the wrong location; the primary holder denies the access; a non-primary member opened the seal without logged transfer of primary custody; or the envelope is missing without explanation. A breach is named before it is investigated — naming stops the household from consuming the notification window in private ambiguity. Naming a breach opens the override chain record. The Systems term: unauthorized or undocumented key custody access; override chain record initiated.",
+    section: "appendix",
+    group: "Z0 Key Custody",
+  },
+  {
+    term: "The custody log",
+    chapter: "Ch4 — Z0 Key Custody",
+    definition:
+      "A handwritten folded card kept inside the household seal envelope alongside the keys. Records each custody event: date, primary holder's hand, reason for access, new seal number. Also names the external witness for single-adult households. The log is the paper chain-record at Z0 — not digital, not mediated, legible to any household member. The Systems term: physical custody record.",
+    section: "appendix",
+    group: "Z0 Key Custody",
+  },
+  {
+    term: "Seal number",
+    chapter: "Ch4 — Z0 Key Custody",
+    definition:
+      "A sequential integer written in pen on the envelope face before each re-sealing. Each custody event produces a new seal number. The seal number links a log entry to the physical state of the envelope at the time of that event, providing an auditable sequence without digital infrastructure. The Systems term: custody record sequence number.",
+    section: "appendix",
+    group: "Z0 Key Custody",
+  },
+  {
     term: "Cap",
     chapter: "BLM Glossary — Entry #1",
     definition:
