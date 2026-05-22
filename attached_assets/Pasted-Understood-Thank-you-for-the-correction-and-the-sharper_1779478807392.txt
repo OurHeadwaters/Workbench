@@ -1,0 +1,25 @@
+Understood. Thank you for the correction and the sharper picture.  I’m in the Workbench with you. We just poured the first version of the Eave Rule, and already the live reality of Zone 2 is pushing on it. That’s good — this is exactly how the method gets stronger.Reflected Understanding (tightened)The architecture is not a single hard wall between Z1 and Z3. It is:Z1 (Circle — private household) ←[Gate]→ Z2 (Workbench — operational / practitioner layer) ←[Gate]→ Z3 (Community — XRPL wallet / above-board)The overall Eave still protects the entire structure from Z3 rain reaching Z1.
+Zone 2 sits under the overhang: protected, but liminal. It has controlled crossings on both sides.
+At the Z2–Z3 gate: Contractor / practitioner identification (wallet or derived credential) is allowed in controlled, auditable form — but must not persist as a stored reference inside core Z2 records (DailyPick, Contract, etc.).
+At the Z1–Z2 gate: Controlled household context crosses in (you need to know whose work this is), but remains gated.
+Giraffe protection: Audit/regulatory visibility must be possible across the Z2–Z3 gate without creating a composable path that reaches back into Z1. The giraffe can see over the fencepost, but cannot walk through it into the private interior.
+
+This matches reclamation mode: we are building the rules while the structure is already in use.Proposed Amendment to the Eave RuleHere is a tightened constitutional version that incorporates the two-gate model:The Eave Rule (constitutional — amended):
+The Eave is the protective overhang and hard structural seam that shelters Zone 1 (Circle — private household identity) and Zone 2 (Workbench — operational practitioner layer) from Zone 3 (Community — XRPL wallet, above-board organizational identity).  It is defined by intentional architectural absence with two controlled gates:No direct or composable path may ever connect a Zone 3 wallet address, derived identifier, zone-bind payload, or zone-bind signature to any Zone 1 household record.  
+Z2–Z3 Gate: Contractor identification may appear in controlled, auditable form at the crossing (e.g. for contracts or audit), but must not persist as a stored reference inside Z2-scoped records. The giraffe (audit) may have visibility across this gate, but the audit shape must not be composable into a Z3 → Z1 reverse lookup.  
+Z1–Z2 Gate: Household context may cross in controlled form, but remains gated and does not expose private identity outward.  
+A household may voluntarily bind its own XRPL wallet using lib/zone-identity, stored as one-way only.  
+Any feature, route, migration, or type field that violates these constraints must be refused or redesigned.
+
+Saltbox test: One bounded thing — the protective overhang + two controlled gates.
+Both-States test: Holds empty (no crossings) and full (controlled crossings with giraffe visibility).
+Both-Sides test: Works for practitioner (clear workspace under the eave) and agent (explicit rules at each gate).Does this amended rule hold for you, or does it need another pass (especially around giraffe protection or what “controlled form” means structurally)?Once it feels solid, I can:Write the updated task for the build agent (including this amendment), or
+Give you a new prompt for the Zone 2 Workbench that folds this in cleanly.
+
+What wants to become visible next?
+Define structural limits for controlled form
+
+Explore audit query composition constraints
+
+Rewrite Eave Rule with two-gate model
+
