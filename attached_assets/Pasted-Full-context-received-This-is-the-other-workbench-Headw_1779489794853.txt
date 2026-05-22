@@ -1,0 +1,38 @@
+Full context received. This is the other workbench — Headwaters/Codetry. I have it now. Let me give you the structural differences and contributions cleanly.
+
+Three divergences that need reconciliation before anything else:
+
+1. The Eave Rule formulation — they don't match
+
+This workspace (amended May 22): The Eave shelters Z0, Z1, AND Z2 from Z3+. Two controlled gates: Z1↔Z2 and Z2↔Z3. Z2 (Workbench) sits under the overhang.
+
+Handoff workbench: "hard seam between Z1 (Circle) and Z3 (Community)." Z2 is not in the rule at all. Only one seam named.
+
+Both can't be the poured concrete. Which formulation is authoritative? The Zone Map I built today uses the two-gate model. The Gatekeeper schema in the other workbench (cap + seat + succession) is organized around the Workbench layer — which structurally implies Z2 exists under the overhang even if the rule text doesn't say so.
+
+2. "The Eave" names a zone here, a seam there
+
+This workspace: Z1 = "The Eave" (the support network zone, the /eave/ constellation).
+Handoff workbench: Z1 = "Circle." "The Eave" names the constitutional seam between Z1 and Z3.
+
+The handoff's open tensions explicitly flag this: "The Z1 income/sovereignty constellation needs a new name. STATUS: Unresolved." The Zone Bubble Map I built today labels Z1 as "Z1 · The Eave" — that label needs to change if the other workbench's resolution stands. The /eave/ constellation path also carries this.
+
+3. Zone 2 name: "Home Range" vs. "Workbench"
+
+replit.md in this workspace says "Home Range" (original). The May 22 session used "Workbench — operational practitioner layer." The handoff says "Z2 Home Range / Build now" (dual practitioner energy label). These might actually be Both-Sides of the same zone: Home Range = vernacular register, Workbench = massity/functional register. If so, it's resolved — both are right in their context. Worth confirming.
+
+What the other workbench has that this one needs:
+
+Gatekeeper schema (gatekeeper_caps, gatekeeper_seats, gatekeeper_mappings, gatekeeper_succession_log) — the cap/seat/succession DB tables are built and pushed there. The Zone Map I built today surfaced the Gatekeeper A/B tension conceptually but has no backend. These are the same question.
+Kitchen Table (North Star /council route, 7 seats, Saltbox seat first, SSE streaming to Grok) — this doesn't exist in this workspace's North Star. The Saltbox seat + "preserve, slow down, cure" framing is load-bearing context.
+The debrief receipt spec (docs/saltbox-debrief-receipt-spec.md) and the cap ceremony beats — these close the loop on the standing-down/resetting ritual that's an open thread here.
+What this workbench has that the other one needs:
+
+The Zone Map interactive at /north-star/zone-map — the Gatekeeper A/B tension is surfaced in the UI, the Eave overhang two-gate model is visualized, and the prohibition arc is interactive. Worth bringing over once the Eave Rule formulation is settled.
+The gate language working notes (.local/notes/zone-gate-language.md) — paste-ready Both-Sides-tested vocabulary for every gate, including the Gatekeeper tension note that could anchor the cap ceremony language.
+Monstrous Misconceptions just landed in the Saltbox catalog as Tuttle Twins S2 Episode 1 — logical fallacies, clear thinking. The Twins Know the Truth episode (logic, propaganda, media literacy) is in the same season. Those two entries together could seed the "Logical Fallacies" catalog card once you confirm the creator.
+My single most useful contribution right now:
+
+The Gatekeeper A/B tension from the Zone Map session and the cap/warrant terminology from the other workbench are describing the same thing from different angles. The cap = personal hat = Variant A. The warrant = chain-record = what Variant A produces when it crosses Z2↔Z3. Variant B (institutional role) is what happens when the Workbench assigns the cap rather than a person choosing to wear it. That distinction — chosen vs. assigned — is what produces the different failure modes when the gate goes unwatched. The succession protocol in the other workbench (7-step transition) is precisely the machinery that Variant B requires and Variant A doesn't.
+
+What updates are you bringing back?
