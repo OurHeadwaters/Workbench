@@ -13,6 +13,38 @@ export interface Constellation {
   deepLinks: { label: string; path: string }[];
   colorVar: string;
   active: boolean;
+  /**
+   * ══════════════════════════════════════════════════════════════════════
+   * EAVE RULE — Constitutional seam between Zone 1 and Zone 3
+   * ══════════════════════════════════════════════════════════════════════
+   *
+   * The Eave is the hard structural seam between Zone 1 (Household / Afloat —
+   * private household identity) and Zone 3 (Home Range / Community-facing work —
+   * XRPL wallet, above-board organizational identity).
+   * It is defined by intentional architectural absence: No table, no foreign key,
+   * no join, no query path, and no stored reference may ever connect a Zone 3
+   * wallet address, any derived identifier, any zone-bind payload, or any
+   * zone-bind signature to a Zone 1 household record (name + passphrase identity).
+   * A household may voluntarily bind its own XRPL wallet using the
+   * lib/zone-identity primitives, but the binding must be stored as a one-way,
+   * non-reversible reference that never permits reverse lookup.
+   * Any proposed feature, route, migration, or type field (including the existing
+   * linkedFamilyId and linkedShareToken fields on the Constellation type) that
+   * would create such a path must be refused or redesigned to respect the seam.
+   *
+   * ── PRESSURE POINTS ON THIS INTERFACE ────────────────────────────────
+   * linkedFamilyId  — SUBJECT TO EAVE RULE.
+   *   May only ever be used in the household→wallet direction (Zone 1 actor
+   *   choosing to link). Must never be used to look up a household record
+   *   from a wallet address or zone-bind payload. No index, join, or query
+   *   path that reverses this direction is permitted.
+   *
+   * linkedShareToken — SUBJECT TO EAVE RULE.
+   *   A share token derived from or associated with a zone-bind. Must not be
+   *   stored or queried in any way that allows resolving back to a Zone 1
+   *   household identity. Treat as write-once and direction-locked.
+   * ══════════════════════════════════════════════════════════════════════
+   */
   linkedFamilyId?: string;
   linkedShareToken?: string;
 }
