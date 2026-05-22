@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import { Plus, Pencil, Trash2, Archive, ArchiveRestore, ChevronUp, ChevronDown, GripVertical } from "lucide-react";
+import { Link } from "wouter";
+import { Plus, Pencil, Trash2, Archive, ArchiveRestore, ChevronUp, ChevronDown, GripVertical, Map } from "lucide-react";
 import { useStore, ZONE_COLORS } from "@/store";
 import { ZoneBadge } from "@/components/ZoneBadge";
 import { ZONE_LABELS, ZONE_CLASSES, cn } from "@/lib/utils";
@@ -259,9 +260,18 @@ export function ZonesPage() {
   return (
     <div className="min-h-dvh pb-24" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
       <div className="px-5 py-7 max-w-lg mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl mb-1">Zones</h1>
-          <p className="text-sm text-[#78716C]">Your constellations by zone — drag to reorder zone priority.</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl mb-1">Zones</h1>
+            <p className="text-sm text-[#78716C]">Your constellations by zone — drag to reorder zone priority.</p>
+          </div>
+          <Link
+            href="/zone-diagram"
+            className="flex items-center gap-1.5 shrink-0 text-xs text-[#7C4E8A] border border-[#C4B5CD] rounded-xl px-3 py-2 min-h-[44px] bg-[#F5F0FA] hover:bg-[#EDE9FE] transition-colors"
+          >
+            <Map size={14} />
+            Diagram
+          </Link>
         </div>
 
         {ranked.map((zone, zIdx) => {
