@@ -130,11 +130,9 @@ export default function App() {
         </Route>
 
         <Route path="/council">
-          <OnboardingGuard>
-            <AppShell>
-              <KitchenTablePage />
-            </AppShell>
-          </OnboardingGuard>
+          <AppShell>
+            <KitchenTablePage />
+          </AppShell>
         </Route>
 
         <Route>

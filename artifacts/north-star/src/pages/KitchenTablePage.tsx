@@ -2,120 +2,129 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 // ── Default brief ─────────────────────────────────────────────────────────────
-const DEFAULT_BRIEF = `PROJECT: The Stomping Path + Codetry Platform Suite
-Last updated: May 22, 2026
-Session: Round Table build day — Zone Bubble Map, Lifestyle Map, Codetry
-Digital Sovereignty Map, constitutional framework poured.
+const DEFAULT_BRIEF = `SESSION: Software Systems Bundle — Business Management Decisions
+Date: May 23, 2026
+Convened by: Bobbie Parr, Headwaters Development Services
+Table mode: Sounding. Bobbie listens for the rods — the words that hold weight.
 
 ---
-WHAT THIS IS
-Two connected platforms in a pnpm monorepo:
-1. THE STOMPING PATH (survival-podcast) — A homestead sovereignty platform.
-   Rugged/earthy. Auth-gated. Permaculture zone framework. Community, podcast,
-   learning tracks, expert council.
-2. CODETRY — A digital self-reliance agency site. Builds community-owned
-   software for food co-ops, First Nations, rural hubs. No auth required.
-   Forge aesthetic (dark green, amber, ember particles).
-Shared: Express API server, Postgres/Drizzle database, OpenAI gpt-4o-mini.
+WHO IS AT THIS TABLE
+This table has five named seats and two open/configurable seats.
+Saltbox (⊡) is Bobbie's Z0 agent — preserve, slow down, cure.
+Grok (◈) is the raw AI whiteboard — direct, honest, no hedging.
+Systems (⟳) sees through stocks, flows, and leverage points.
+Community (⌂) thinks from Schumacher and Jacobs — human scale.
+Codetry (☷) holds the naming discipline and zone model.
+Seats A and B are open — Bobbie configures them for the session's need.
 
 ---
-THE CONSTITUTIONAL FRAMEWORK (Three Layers)
-Layer 1 — Naming (vocabulary):
-  Saltbox, Eave, Workbench, Compost — constellation/tool names
+THE PRACTICE
+Headwaters is a solo practitioner firm led by Bobbie Parr, Wabigoon, Ontario
+(Treaty 3 Territory). The discipline is Codetry — building community-owned
+economic infrastructure and handing it off. Primary clients: First Nations
+band councils, northern co-ops, community organizations in Northwestern Ontario.
 
-Layer 2 — Trust-Gradient Spine (LOAD-BEARING, governs all schema):
-  Z0 Dwelling/Household → Z1 Circle → Z2 Home Range →
-  Z3 Community → Z4 Trade → Z5 Wild
+---
+THE ZONE MODEL (Headwaters — trust-gradient)
+Z0 — Saltbox / Household: Identity, voice, the mark before anything moves.
+Z1 — Eave / Circle: Mutual aid, internal coordination, the people closest in.
+Z2 — Workbench / The Deck: Where the practitioner works, sells, accounts.
+Z3+ — Open Market / Picnic Table: Public-facing, third-party, broader world.
 
-Layer 3 — Practitioner Energy (display only):
-  Dual labels: "Household / Afloat", "Home Range / Build now", etc.
-
-THE EAVE RULE (poured concrete, non-negotiable):
-  The Eave is the hard structural seam between Zone 1 (Circle — private
-  household identity) and Zone 3 (Community — XRPL wallet, above-board
-  organizational identity).
+THE EAVE RULE (poured concrete):
   No table, no foreign key, no join, no query path, and no stored reference
-  may ever connect a Zone 3 wallet address to a Zone 1 household record.
-  Any feature that would create such a path must be refused or redesigned.
-
-THE KITCHEN TABLE sits in Zone 2 (Home Range / Workbench).
-  It is the deliberation space where ideas are worked before they cross gates.
-  The Saltbox seat lives here. Curtains drawn by default.
+  may ever connect a Z3 wallet address to a Z1 household record.
+  The Deck (Z2) holds both family conversations and sales pitches.
+  The Kitchen Table deliberates here. Curtains drawn by default.
 
 ---
-THE ZONE FRAMEWORK (TSP — 6 zones)
-Z0 — The Self: mindset, money, personal sovereignty
-Z1 — The Home: food storage, preparedness, basic resilience
-Z2 — The Garden: permaculture, food production, small livestock
-Z3 — The Homestead: livestock, off-grid systems, alternative energy
-Z4 — The Forest: hunting, foraging, bushcraft, wildcrafting
-Z5 — The Wild: grid-down, wilderness survival, contingency
-Gate ceremonies between each zone. Skip prohibitions: Z1 cannot jump
-to Z3, Z4, or Z5. Z2 cannot jump to Z5. These are architectural rules,
-not suggestions.
-Gatekeeper is a personal cap (resolved, Round Table May 2026).
+THE ECOSYSTEM — WHAT'S BEEN BUILT
+Shared platform: pnpm monorepo, Express API, Postgres/Drizzle, React/Vite,
+Expo (mobile), OpenRouter/Grok AI, XRPL finance layer where applicable.
+Warm palette: cream, evergreen, terracotta, amber. Inter + Fraunces. No guilt.
+
+CURRENT ARTIFACTS (all running):
+• ourheadwaters.ca (Crew Manifest) — public marketing site, zone quiz, Odyssey
+• Codetry Handbook (mobile) — 85-chapter plain-language community economy guide
+• Field Guide Finance — NWO food entrepreneur financial literacy course
+• Practitioner's Guide V2 — internal passphrase-gated engagement tracker
+• Headwaters Books — financial accounts and records
+• Northern Food Systems Research Library — curated northern food research
+• Print Marketing Suite — 45+ print-ready documents, PDF export, community packets
+• Practitioner's Operating Plan — Bobbie's 2026 internal strategic layer
+• North Star — practitioner OS, Kitchen Table AI council (this table)
+• Nursery — community member portal (session-authenticated Z0/Z1 entry)
+• API Server — shared backend powering all artifacts
 
 ---
-WHAT'S BEEN BUILT (as of this session)
-TSP:
-- Lifestyle Map: 7-question Mad Libs → AI zone placement → interactive map
-  with primary/secondary zone, rationale, surrender mode, visited zones
-- Zone Bubble Map: SVG interactive map, all 6 zones, gate ceremonies, skip
-  prohibitions, Eave overhang, zone progress arcs from listening history,
-  episode navigation from zone/gate clicks
-- Fireside Freedom Podcast: RSS feed, 7 crew members in Expert Council
-- Gord Bird mascot: shared @workspace/gord-bird package, all routes
-CODETRY:
-- Digital Sovereignty Map (/discover): same onboarding pattern adapted for
-  communities. 6 stages (Dependent → Sovereign). AI recommends Zone Assessment
-  / Hub Implementation / Regional Platform. localStorage persistence, no auth.
-- "Find your zone" CTA in nav and home hero
-NOT BUILT YET:
-- North Star Guide (/north-star/ route) — referenced in docs, not in codebase
-- constellation.json — does not exist
-- docs/codetry/ — does not exist
-- The Kitchen Table UI (built in separate project — this one)
-- Five unwritten chapters: literal hempcrete, youth, headwaters people,
-  women's chapter, tradesperson on-ramp
+THE FIVE SELLABLE BUNDLES
+Bundle A — Wellness & Care Tracking
+  For: TOPS groups, LTC facilities, senior living, clinics, corporate wellness
+  Tools: Keto Companion + Bright Side (PHI-free care coordination)
+  Revenue model: Hosting + support. Add-ons: custom infographics, medication tracker.
+
+Bundle B — Family & Homeschool Operating System
+  For: Homeschool co-ops, families, faith communities, youth programs
+  Tools: Kitchen + Saltbox/Gather + Hearth + Life Badges + Family Buckets +
+         Campfire + Memory Lane
+  Revenue model: Hosting + support. White-label available.
+
+Bundle C — Community Coordination & Mutual Aid
+  For: Rural co-ops, villages, band councils, support networks
+  Tools: Sandbox + The Eave + North Star + Stomping Path elements
+  Revenue model: Hosting + support. Add-ons: custom AI council seats.
+
+Bundle D — Business & Producer Operations
+  For: Restaurants, retail, food co-ops, farmers markets, northern operators
+  Tools: Dryden Web Suite + 807 Benefits + Market Mosaic + Rootwork
+  Revenue model: Hosting + support. Add-ons: ordering flows, grant documentation.
+
+Bundle E — Full Sovereign Stack
+  For: Large co-ops, family offices, communities, grant-funded organizations
+  Includes: All zones + Codetry tools + Kitchen Table AI + XRPL + print suite
+  Revenue model: Hosting + support + practitioner retainer. White-label available.
 
 ---
-OPEN TENSIONS
-1. Eave naming collision — "Eave" now names the constitutional seam (Layer 2).
-   The Z1 income/sovereignty constellation needs a new name.
-   STATUS: Unresolved.
-2. Saltbox disambiguation — Saltbox is a constellation (tool) inside Zone 0,
-   not a zone label. Also now a seat name at this table.
-   STATUS: Functional, not formally documented.
-3. Headwaters / Watershed label collisions — both used across layers.
-   STATUS: Flagged, not resolved.
-4. Z4/Z5 gate ceremonies on the live TSP site — the bubble map prototype has
-   them, the live survival-podcast ZoneBubbleMap component may not.
-   STATUS: Check before building on.
-5. Practitioner Intake Tool (Task #544) — brain dump → zone placement →
-   push to TSP. In progress, waiting for input.
-   STATUS: Blocked.
+ACTIVE PROJECT: 807 PACKAGE
+Grant-funded: Field Guide Finance (financial literacy for NWO food entrepreneurs)
+Headwaters tools bundled in: Deadhead · Market Mosaic · Rootwork
+  Deadhead: Idea vetting and backlog management — structured intake and review.
+  Market Mosaic: Market coordination and producer network. (Scope TBD with Bobbie)
+  Rootwork: Asset studio and foundational infrastructure. (Scope TBD with Bobbie)
 
 ---
-VOCABULARY (quick reference)
-Founding mode: Building sovereignty from scratch
-Reclamation mode: Board-by-board recovery inside someone else's house
-The grindstone: The builder — hands full, eyes on the material
-The oil: The person handling the outside world so the grindstone can work
-The frame: Zone 0 household unit — what you're enclosing, who's inside
-Hempcrete: The naming/vocabulary practice — fills, insulates, breathes
-Windows: Intentional openings — you choose where light enters
-The gate: The Eave — privacy boundary, household interior vs. outside
-The giraffe: The regulatory apparatus — sees over the fence, can't enter
-                without crossing the trigger threshold
+TODAY'S OPEN QUESTIONS (bring these to the table)
+1. Which bundles are closest to sellable right now without new builds?
+2. What is the right entry price for a northern co-op or band council?
+3. Where does Field Guide Finance fit — standalone or always inside Bundle D/E?
+4. What do Deadhead, Market Mosaic, and Rootwork mean to a buyer?
+   What language lands? What do we stop calling them?
+5. Which artifact is the front door for a new client coming in cold?
+6. How do we talk about practitioner licensing?
+
+---
+VOCABULARY (load-bearing terms — use precisely)
+Saltbox: Z0 agent. Preserve, slow down, cure. Does this hold?
+The Deck / Workbench: Z2. Both family conversations and sales pitches.
+Kitchen Table: Z2 deliberation space. This table. Curtains drawn by default.
+Picnic Table: Z3+. Public. Open. Anyone can sit down.
+Founding mode: Building sovereignty from scratch.
+Reclamation mode: Board-by-board recovery inside someone else's house.
+The rods: The words that resonate — vocabulary worth keeping.
+Both-States: A name that works when the system is empty and when it is full.
+Both-Sides: Works for the practitioner and for the technical enforcement layer.
+Handover as exit: Success means the community runs it without you.
+Trial first: No full hire or contract without a bounded, paid trial period.
 
 ---
 PULL QUOTES IN CIRCULATION
+"Build it. Hand it off. Community runs it."
 "The materials are the same. The order of operations is not."
 "You cannot demolish while a thousand people are living inside."
-"That engine does not grind without the oil."
 "Hang the gate before you invite anyone in."
 "It stops being invisible when you name it."
-"No one is interjecting while you work. Do the next thing."`;
+"Sovereign by design. No extraction model."
+"Start at household. Expand to community without rework."`;
 
 
 // ── Seat definitions ──────────────────────────────────────────────────────────
