@@ -1,0 +1,59 @@
+Here's a full factual picture. No building yet — just answers to your six questions.
+
+1. Hearth's current tech stack
+
+Layer	Technology
+Frontend	React 19 + Vite, Wouter v3 routing, Tanstack Query, shadcn/ui + Tailwind v4
+Upload	Uppy → object storage (client-side EXIF strip before upload)
+Parent auth	Clerk (cookie-based; web SDK)
+Kid identity	PIN-gated per device; X-Hearth-Kid-Id request header — a UX gate, not a security boundary
+Backend	Express 5 (shared artifacts/api-server)
+Database	PostgreSQL + Drizzle ORM, tables: parents, kids, quests, questCompletions, submissionMedia, kudos, reports, listings, offers, trades, pointLedger
+Codegen	OpenAPI → Orval → React Query hooks + Zod schemas
+2. Path and port
+
+Hearth is registered as artifact artifacts/hearth, preview path /, internal port 25314, production static build served from artifacts/hearth/dist/public. The shared proxy routes everything not under /api to it.
+
+The API server runs on port 8080, exposed at /api through the same proxy.
+
+3. Auth — does Hearth inherit household identity from the Kitchen?
+
+No shared identity layer exists yet. Hearth's auth is Clerk-only — the parent signs in with a Clerk account (email/social), then each kid uses a PIN. The Kitchen (as you describe it) uses a household name + passphrase — a completely separate gate. Right now these two systems have no shared token, session, or trust chain.
+
+That's the main wiring question for the window peek: the Kitchen's backend can't just call Hearth's /api/* endpoints directly because all non-trivial routes require requireParent (a valid Clerk session cookie) and most also require requireActiveKid (an X-Hearth-Kid-Id header). There's no API key or internal service-to-service path today.
+
+The shortcut: both apps share the same Postgres database in this monorepo. The Kitchen's Express backend can import @workspace/db and query the Hearth tables directly — no auth boundary to cross for a read-only summary.
+
+4. Data useful for a window peek
+
+These are all available in the shared DB without any auth ceremony:
+
+What	DB source	Shape
+Active quest completions this week	questCompletions (status=approved, decidedAt last 7 days)	count + kid handles
+Recent Campfire moments	questCompletions join submissionMedia join kids	up to 3 thumbnail + kid handle + quest name
+Points leaderboard snapshot	kids where leaderboardOptIn=true	handle, avatarEmoji, points, top-N
+Kids with pending submissions	questCompletions where status=submitted	count only — parent nudge indicator
+Toy Library activity	listings (active count) + trades (completed count)	counts
+The richest "peek" for a lobby card would be: 3 most-recent approved campfire thumbnails + total points earned this week across all opt-in kids.
+
+5. API endpoints or shared lib the Kitchen could call
+
+Currently nothing purpose-built for cross-app consumption. Two realistic options:
+
+Option A — Direct DB read (fastest, zero new surface). The Kitchen's Express server imports @workspace/db (already a workspace lib), runs a focused Drizzle query against questCompletions, submissionMedia, and kids, and returns the peek payload. No new auth to invent; no HTTP hop.
+Option B — New GET /api/hearth/peek endpoint (cleaner boundary). Add a single lightweight route to api-server protected by an internal shared secret (env var) rather than Clerk. The Kitchen backend calls it server-to-server with that secret in a header. Keeps the DB schema as an implementation detail behind an API contract; lets you add caching later.
+Option A is the right call here — same monorepo, same Postgres, no external consumers, and the Kitchen backend already lives in the same trust boundary. Option B makes more sense if Hearth ever becomes a standalone deployed service.
+
+6. What "drawing the curtain" means mechanically
+
+The cleanest implementation: a boolean column hearthVisible (default true) on the Kitchen's household row in its own DB table. The parent toggling it in Kitchen settings writes that column; the Kitchen lobby card conditionally renders based on it. Kids have no control — it's a parent/household setting.
+
+Since the Kitchen doesn't yet exist as a workspace artifact, that column and the toggle UI would be built as part of standing the Kitchen up, not as a change to Hearth.
+
+Summary of what needs to happen to wire them together
+
+Create the Kitchen as a new artifact (/kitchen/) with its household passphrase auth and door-card UI.
+Add hearthVisible to the Kitchen's household table. Curtain toggle lives in Kitchen settings; no Hearth changes needed.
+Build the Hearth window widget as a Kitchen-side component — the Kitchen backend queries @workspace/db (Hearth tables) directly, assembles the peek payload, and serves it to the Kitchen frontend. No new Hearth API surface required.
+Door-card vs window: the door-card links out to / (Hearth root); the window is an inlined widget in the Kitchen lobby that shows campfire thumbnails + points snapshot — rendered only when hearthVisible=true.
+Ready to plan and build any of those pieces whenever you say go.
