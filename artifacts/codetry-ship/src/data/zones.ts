@@ -6,6 +6,14 @@ export interface ZoneTool {
   zoneAddress?: string;
 }
 
+export interface ZoneCorner {
+  id: string;
+  name: string;
+  tagline: string;
+  url: string;
+  note: string;
+}
+
 export interface ZoneData {
   number: number;
   name: string;
@@ -19,6 +27,7 @@ export interface ZoneData {
   fruitLabel: string;
   color: string;
   tools: ZoneTool[];
+  corner?: ZoneCorner;
 }
 
 export const ZONES: ZoneData[] = [
@@ -193,6 +202,13 @@ export const ZONES: ZoneData[] = [
     rootLabel: "Deliberating",
     fruitLabel: "Deciding",
     color: "#0F766E",
+    corner: {
+      id: "village-corner",
+      name: "Village Corner",
+      tagline: "The co-op layer — Village Board & community formation",
+      url: "/sandbox/",
+      note: "Community formation and governance. The Village Board is seated here.",
+    },
     tools: [
       {
         name: "Research Library",
@@ -207,6 +223,13 @@ export const ZONES: ZoneData[] = [
         url: "#",
         inThisProject: false,
         zoneAddress: "Z4–A",
+      },
+      {
+        name: "Village Corner — Village Board",
+        tagline: "Co-op governance layer — 60-family pull-only community board",
+        url: "/sandbox/",
+        inThisProject: true,
+        zoneAddress: "Z4–VC",
       },
     ],
   },
@@ -225,6 +248,13 @@ export const ZONES: ZoneData[] = [
     rootLabel: "Horizon",
     fruitLabel: "Public",
     color: "#5B3E8C",
+    corner: {
+      id: "crypto-corner",
+      name: "Crypto Corner",
+      tagline: "The Headwaters ship is docked here — XRPL gateway",
+      url: "/crypto-castle/",
+      note: "The ship is docked. This is where the Headwaters XRPL layer meets the community.",
+    },
     tools: [
       {
         name: "Codetry Ship",
@@ -247,8 +277,16 @@ export const ZONES: ZoneData[] = [
         inThisProject: false,
         zoneAddress: "Z5–C",
       },
+      {
+        name: "Crypto Corner — Crypto Castle",
+        tagline: "The docking point for the Headwaters ship — XRPL layer",
+        url: "/crypto-castle/",
+        inThisProject: true,
+        zoneAddress: "Z5–CC",
+      },
     ],
   },
 ];
 
 export const MAP_URL = "/map";
+export const COMPASS_URL = "/compass";

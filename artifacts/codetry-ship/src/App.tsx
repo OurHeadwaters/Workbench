@@ -30,6 +30,7 @@ import { WalletPage } from "@/pages/WalletPage";
 import { TipPage } from "@/pages/TipPage";
 import { WhatIsCodetryPage } from "@/pages/WhatIsCodetryPage";
 import { MapPage } from "@/pages/MapPage";
+import { CompassPage } from "@/pages/CompassPage";
 import { CapCeremonyPage } from "@/pages/CapCeremonyPage";
 
 const queryClient = new QueryClient();
@@ -93,6 +94,9 @@ function Router() {
 
       {/* ── Neighbourhood Map ── */}
       <Route path="/map" component={MapPage} />
+
+      {/* ── Headwaters Compass ── */}
+      <Route path="/compass" component={CompassPage} />
 
       {/* ── Cap Ceremony ── */}
       <Route path="/economy/cap-ceremony" component={CapCeremonyPage} />
