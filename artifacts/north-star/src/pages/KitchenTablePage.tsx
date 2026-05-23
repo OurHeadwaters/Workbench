@@ -581,7 +581,7 @@ export function KitchenTablePage() {
   const inSession = messages.length > 0;
 
   return (
-    <div className="flex flex-col h-dvh bg-[#13110E] text-[#D8D0C5] font-sans antialiased relative overflow-hidden selection:bg-[#B75C34]/40">
+    <div className="flex flex-col bg-[#13110E] text-[#D8D0C5] font-sans antialiased relative selection:bg-[#B75C34]/40" style={{ height: "calc(100dvh - 90px)" }}>
       
       {/* Campfire glow effect */}
       <div className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#B75C34] opacity-[0.04] blur-[100px] pointer-events-none rounded-full" />
