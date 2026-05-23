@@ -899,12 +899,36 @@ export function MapPage() {
               fontWeight: 700,
               color: FOREST,
               lineHeight: 1.15,
-              margin: "0 0 14px",
+              margin: "0 0 8px",
               transition: "opacity 0.25s",
             }}
           >
             {headerContent.h1}
           </h1>
+          {quizComplete && (
+            <button
+              type="button"
+              onClick={handleChange}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontFamily: "monospace",
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: MUTED,
+                padding: 0,
+                textDecoration: "underline",
+                textDecorationStyle: "dotted",
+                display: "block",
+                marginBottom: 14,
+              }}
+            >
+              Not you? Change your zone
+            </button>
+          )}
           <p
             style={{
               fontSize: 15,
