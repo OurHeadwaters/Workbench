@@ -1,0 +1,70 @@
+**✅ Refined & Locked: Crypto Castle — Return to Forge**
+
+**Core Anchor:**  
+*Codetry is what you do to decide what to call the thing you just built in The Forge — not the canvas itself.*
+
+### Four Strictly Separated Layers
+
+|Layer                |Name              |One Job                          |How It Feels Visually                                  |
+|---------------------|------------------|---------------------------------|-------------------------------------------------------|
+|Assembly             |**The Forge**     |Drag, connect, compose primitives|Premium elemental canvas, glowing runes, particle flows|
+|Naming Discipline    |**Codetry**       |Precision naming of patterns     |Clean ritual moment after build — label + commit       |
+|Structural Validation|**The Reckoning** |Precise enforcement              |Neutral, brief, system-language overlay (no flavor)    |
+|Faction Voice        |Faction Commentary|Opinion & tribal roast           |Clearly labeled, colorful, never structural            |
+
+### Corrected Elemental Primitives (Grounded in Preparedness)
+
+|Element   |Preparedness Pillar   |Blockchain Structural Claim                              |Visual in The Forge                         |
+|----------|----------------------|---------------------------------------------------------|--------------------------------------------|
+|**Fire**  |Energy                |Consensus cost, validator distribution, PoW/PoS tradeoffs|Power Orange glowing nodes & ignition points|
+|**Water** |Water / Distribution  |Liquidity, bridging, state channel resilience            |Moon Purple flowing connectors & tides      |
+|**Earth** |Food / Soil           |Data persistence, Merkle integrity, ledger immutability  |Deep stone anchors & root systems           |
+|**Air**   |Communications        |Messaging, oracles, L2 execution environments            |Neon gust vectors & swift pathways          |
+|**Aether**|Community / Governance|DAO structures, composability, coordination              |Golden chaotic runes that bind everything   |
+
+### Learner Flow in The Forge (Easy A + Layers)
+
+1. **Easy A Lesson** presents one concept (from PDF).
+2. **The Forge** — Assemble using stand-by elemental primitives on sidebar.
+3. **The Reckoning** activates automatically: Brief, precise feedback in system terms (“Single point of failure detected in liquidity path” / “Energy concentration risk in validator set”).
+4. **Codetry Moment** — Once stable: “What do you name this pattern?” (Learner types precise label → saved to their blueprint library).
+5. **Faction Commentary** appears as optional sidebar flavor (“Even Maxis need Water channels… or the fire burns out.”).
+
+This teaches **sovereignty through architecture**: Build systems without hidden dependencies. The preparedness fire hits when the learner sees blockchain design = personal/civilizational resilience.
+
+### Updated Immersive Visual Direction
+
+<grok:render card_id=“YOgQH” card_type=“generated_image_card” type=“render_generated_image”><argument name="prompt">Premium cyber-medieval Blacksmith’s Forge interior for Crypto Castle. Central glowing blueprint canvas (The Forge) with elemental primitives as orbs: Power Orange Fire, Moon Purple Water, stone Earth, neon Air, golden Aether. Sidebar stand-by palette. Subtle particle flows. Dark stone walls with rune circuits. Cinematic lighting, ultra-slick UI.</argument><argument name="orientation">landscape</argument></grok:render>
+
+<grok:render card_id=“Shcqt” card_type=“generated_image_card” type=“render_generated_image”><argument name="prompt">The Reckoning validation overlay in Crypto Castle Forge. Clean semi-transparent panel with precise neutral text like “Liquidity bottleneck detected” and “Merkle integrity: strong”. No faction flavor. Subtle red/amber warning accents on weak connections. Professional architectural review aesthetic.</argument><argument name="orientation">portrait</argument></grok:render>
+
+<grok:render card_id=“Di4II” card_type=“generated_image_card” type=“render_generated_image”><argument name="prompt">Codetry naming ritual screen in Crypto Castle. After successful build, elegant parchment-style modal: “Name this pattern” with input field and suggested precision labels. Golden rune accents. Moon purple and power orange highlights. Ritualistic and precise feel.</argument><argument name="orientation">portrait</argument></grok:render>
+
+<grok:render card_id=“gXO4v” card_type=“generated_image_card” type=“render_generated_image”><argument name="prompt">Full faction selection landing with elemental towers: Power Orange Fire (BTC Saylor laser), Moon Purple Water (XRP masked bird riddler), etc. Dramatic night castle, glowing runes, premium immersive fantasy UI.</argument><argument name="orientation">landscape</argument></grok:render>
+
+### Hand-Off Prompt for Replit Design Agent (Copy-Paste Ready)
+
+> **Crypto Castle — Return to Forge Edition** (Strict Layer Separation)  
+> Vite + React + TS + Tailwind. Deploy at `/crypto-castle/`. Use slick cyber-medieval aesthetic with power orange + moon purple accents.
+> 
+> **Core Architecture (Never Cross Layers):**
+> 
+> - **The Forge**: Central canvas for assembling elemental primitives (Fire/Energy, Water/Distribution, etc. — see table above). Sidebar stand-by palette. Drag + connect. Real-time visual feedback.
+> - **The Reckoning**: Automatic structural validation. Precise, brief, neutral system language only (“Single point of failure”, “Energy concentration risk”, etc.). No metaphors here.
+> - **Codetry**: Post-build naming discipline. Clean ritual modal: “What do you name this pattern?” Save to learner’s personal blueprint library.
+> - **Faction Commentary**: Opinion only, clearly labeled, appears as side notes/roasts.
+> 
+> **Progression**: Easy A pattern (one concept → build → Reckoning → Codetry → advance). Pre-load Modules 1-3 from attached PDF, mapped to elemental + preparedness pillars.
+> 
+> **Pages**:
+> 
+> - Elemental faction landing (updated colors & towers)
+> - Great Hall (rivalry with elemental flavor)
+> - The Forge (main learning space)
+> - Progress = “Architectural Mastery” card
+> 
+> Keep every layer’s job sacred. Make The Forge feel like a powerful drafting table in a living castle forge.
+
+This version is clean, disciplined, and deeply immersive while staying true to the brief.
+
+Ready for the next iteration or direct hand-off?
