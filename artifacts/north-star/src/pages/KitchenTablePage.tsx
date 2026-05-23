@@ -57,12 +57,13 @@ readiness, language, and licensing.
 
 ---
 WHO IS AT THIS TABLE
-This table has five named seats and two open/configurable seats.
+This table has six named seats and two open/configurable seats.
 Saltbox (⊡) is Bobbie's Z0 agent — preserve, slow down, cure.
 Grok (◈) is the raw AI whiteboard — direct, honest, no hedging.
 Systems (⟳) sees through stocks, flows, and leverage points.
 Community (⌂) thinks from Schumacher and Jacobs — human scale.
 Codetry (☷) holds the naming discipline and zone model.
+Ishmael (🐋) carries Daniel Quinn's Taker/Leaver lens — what story is the culture telling?
 Seats A and B are open — Bobbie configures them for the session's need.
 
 ---
@@ -387,24 +388,26 @@ PURPOSE
 Thirty minutes to close the week honestly and open the next one with one clear move.
 The table does not console or motivate — it reads what's true.
 
-THE FIVE QUESTIONS
+THE SIX QUESTIONS
 Q1 — What shipped, held, or moved this week? (Saltbox)
 Q2 — Where are the stocks thinned or flows blocked? (Systems)
 Q3 — What is the community or client signal? (Community)
 Q4 — What language needs cleaning or tightening? (Codetry)
 Q5 — What is the one right move for next week? (Grok)
+Q6 — What story did this week's moves enact — Taker or Leaver? (Ishmael)
 
 GROUND RULES
 — No more than three minutes per seat.
 — If a question has no answer, say so and move on.
 — End with one written decision or next action.
-— Same five questions every week. Let the pattern do the work.`,
+— Same six questions every week. Let the pattern do the work.`,
     agendaItems: [
       { q: "Q1", question: "What shipped, held, or moved this week? What's worth keeping?", lead: "Saltbox", leadId: "saltbox" },
       { q: "Q2", question: "Where are the stocks thinned or the flows blocked right now?", lead: "Systems", leadId: "systems" },
       { q: "Q3", question: "What is the community or client signal this week?", lead: "Community", leadId: "community" },
       { q: "Q4", question: "What language or framing needs cleaning or tightening?", lead: "Codetry", leadId: "codetry" },
       { q: "Q5", question: "What is the one right move to open next week well?", lead: "Grok", leadId: "grok" },
+      { q: "Q6", question: "What story did this week's moves enact — Taker or Leaver? Where did we drift toward ownership when stewardship was the right frame?", lead: "Ishmael", leadId: "ishmael" },
     ],
   },
   {
@@ -421,20 +424,21 @@ One hour to close the month with honesty and open the next with intention.
 Seven habits structure: review roles, assess wins and gaps, sharpen the saw, set the targets.
 The table reads what is true — not what we hoped or feared. Then it points forward.
 
-THE SEVEN QUESTIONS
+THE EIGHT QUESTIONS
 Q1 — What actually happened this month? Hold what held. Name what didn't. (Saltbox)
 Q2 — Where did the stocks grow or deplete? What does the system health look like? (Systems)
 Q3 — What shifted in the community, the market, or with clients this month? (Community)
 Q4 — What new language or vocabulary emerged that's worth keeping? (Codetry)
 Q5 — Are we still pointed in the right direction? What do the roles and targets say? (Grok)
 Q6 — What is one commitment to sharpen the saw — capacity, rest, or learning? (Community)
-Q7 — What are the two or three clear targets for next month? Name them. (Saltbox — does this hold?)
+Q7 — Which story did this month enact — Taker or Leaver? Where did ownership language creep in where stewardship belonged? (Ishmael)
+Q8 — What are the two or three clear targets for next month? Name them. (Saltbox — does this hold?)
 
 GROUND RULES
 — Be honest about what didn't move. No softening.
 — Name one thing that surprised you. Good or hard.
 — End with written targets — not intentions. Targets.
-— Same seven questions every month. Let the pattern compound.`,
+— Same eight questions every month. Let the pattern compound.`,
     agendaItems: [
       { q: "Q1", question: "What actually happened this month? What held? What didn't?", lead: "Saltbox", leadId: "saltbox" },
       { q: "Q2", question: "Where did the stocks grow or deplete? What is the system health right now?", lead: "Systems", leadId: "systems" },
@@ -442,7 +446,8 @@ GROUND RULES
       { q: "Q4", question: "What new language or vocabulary emerged that's worth keeping?", lead: "Codetry", leadId: "codetry" },
       { q: "Q5", question: "Are we still pointed in the right direction? What do the roles and targets say?", lead: "Grok", leadId: "grok" },
       { q: "Q6", question: "What is one commitment to sharpen the saw — capacity, rest, or learning?", lead: "Community", leadId: "community" },
-      { q: "Q7", question: "What are the two or three clear targets for next month? Name them.", lead: "Saltbox", leadId: "saltbox" },
+      { q: "Q7", question: "Which story did this month enact — Taker or Leaver? Where did ownership language creep in where stewardship belonged?", lead: "Ishmael", leadId: "ishmael" },
+      { q: "Q8", question: "What are the two or three clear targets for next month? Name them.", lead: "Saltbox", leadId: "saltbox" },
     ],
   },
 ];
