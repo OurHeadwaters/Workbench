@@ -14,7 +14,7 @@ const ChatSchema = z.object({
     )
     .max(20)
     .default([]),
-  systemPrompt: z.string().max(3000),
+  systemPrompt: z.string().max(16000),
   model: z.string().default("x-ai/grok-4.20"),
 });
 
