@@ -1,0 +1,67 @@
+**Got it — refining to make Codetry the true architectural core.**
+
+You’re right. I was treating it too much like a visual playground. Let’s correct course:
+
+### Corrected Vision: Codetry as **Architecture**
+
+**Codetry = The Blueprint Forge**  
+In Crypto Castle, the Blacksmith’s Forge isn’t just a lesson viewer or drag-drop toy. **Codetry is the architectural layer** — the structured, declarative system where learners design, compose, and validate the *architecture* of blockchain systems using **primitives** (elements) as foundational building blocks.
+
+It’s like “Architecture as Code” meets medieval alchemy:
+
+- Primitives (Fire, Water, Earth, Air, Aether) are the **atomic architectural components**.
+- Codetry lets you **assemble them into higher-order structures** (blocks, consensus mechanisms, smart contract patterns, token economies, etc.).
+- The “Easy A” pattern becomes the guided validation layer: one architectural decision at a time, confirm understanding, then see it snap into the blueprint.
+
+### Updated Elemental Primitives as Architectural Foundations
+
+|Primitive (Element)         |Architectural Role in Blockchain                                     |Faction Flavor                          |Visual in Codetry                                  |
+|----------------------------|---------------------------------------------------------------------|----------------------------------------|---------------------------------------------------|
+|**Fire** (Power Orange)     |Consensus engines, hashing, energy/Proof mechanisms                  |BTC Maxi “laser core”                   |Glowing orange nodes that “ignite” immutable chains|
+|**Water** (Moon Purple)     |Liquidity flows, state channels, bridging, adaptability layers       |XRP Riddlers “moon tides & hidden flows”|Flowing purple connectors with cryptic rune markers|
+|**Earth** (Stone/Green-Grey)|Ledgers, data persistence, Merkle structures, security foundations   |Neutral Blacksmith                      |Solid anchoring blocks and roots                   |
+|**Air** (Neon Blue/Purple)  |Messaging protocols, oracles, Layer 2 scaling, execution environments|ETH Jester “wind of innovation”         |Lightweight, fast-moving vectors                   |
+|**Aether** (Glow/Chaos Gold)|Composability, smart contract logic, zero-knowledge, governance      |Shitcoin Wildcard                       |Binding arcane runes that unify everything         |
+
+### How It Works in the Forge (Codetry Architecture Mode)
+
+1. **Stand-by Primitives Panel** (Sidebar Architecture Palette)  
+   Always-visible elemental “blueprint stamps”. These are not toys — they represent reusable architectural primitives.
+2. **Central Canvas = Living Blueprint**  
+   A clean, node-based or layered canvas where you drag primitives and connect them into **architectural diagrams**.
+- Example: Fire (consensus) + Earth (ledger) + Water (transfer) = Basic blockchain transaction architecture.
+- Real-time validation: As you build, Codetry highlights structural issues (“This flow lacks Earth stability → potential rug risk”).
+3. **Easy A Guided Progression** (One Architectural Concept at a Time)
+- Lesson presents a problem (“Build a safe transfer system”).
+- You select and place primitives.
+- “Got It” button triggers architectural review + explanation.
+- Progress unlocks higher complexity (from single block → full dApp architecture).
+4. **Faction Overlay**  
+   Your chosen faction adds biased but educational commentary on the blueprint (“A true Maxi would reinforce this with more Fire…”).
+5. **Output**  
+   The finished Codetry blueprint can be exported as a shareable diagram or even pseudo-code skeleton (future extension).
+
+This keeps the humor and tribalism while making **learning blockchain architecture** the core immersive activity.
+
+### Revised Hand-Off Prompt for Replit Design Agent
+
+> **Crypto Castle — Codetry Architecture Edition**  
+> Codetry is the **architectural core** of the Blacksmith’s Forge (reference `artifacts/codetry/src/` for Easy A pattern and existing components).
+> 
+> **Metaphor**: Blockchain systems are built like cathedrals using elemental primitives (Fire/Power Orange, Water/Moon Purple, Earth, Air, Aether). Codetry = declarative architecture tool.
+> 
+> **Forge Features**:
+> 
+> - Sidebar **Primitives Palette** — elemental architectural building blocks (stand-by mode).
+> - Central **Blueprint Canvas** — drag, connect, and compose primitives into valid blockchain architectures.
+> - Easy A flow: Guided lessons (from attached PDF) present one concept → learner builds mini-architecture → “Got It” validates + explains.
+> - Real-time visual feedback (glowing connections, stability indicators, risk highlights).
+> - Faction-specific architectural advice/roasts.
+> 
+> **Full App Structure** remains (slick cyber-medieval aesthetic, faction landing, Great Hall rivalry, progress as “Architectural Mastery”).
+> 
+> Make the Codetry canvas feel premium and powerful — like a magical drafting table with rune circuits and elemental particles.
+
+This feels much closer. Codetry drives the depth.
+
+Want me to generate a specific mockup of the Codetry canvas, flesh out sample lessons with architectural primitives, or adjust anything else?
