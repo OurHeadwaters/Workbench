@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ZONES } from "@/data/zones";
 import type { ZoneData, ZoneTool } from "@/data/zones";
 
@@ -6,6 +6,72 @@ const CREAM = "#f4ede0";
 const FOREST = "#1f3d2e";
 const MUTED = "#7a7a6e";
 const RULE = "rgba(200,191,167,0.35)";
+
+/* ─── Quiz types & routing ──────────────────────────────────────────────── */
+
+type WhoAnswer = "household" | "practitioner" | "community" | null;
+type SituationAnswer = "normal" | "standby" | null;
+
+interface QuizState {
+  who: WhoAnswer;
+  situation: SituationAnswer;
+  skipped: boolean;
+}
+
+function resolveHighlightedZones(quiz: QuizState): number[] {
+  if (quiz.skipped || quiz.who === null || quiz.situation === null) return [];
+  const base: Record<NonNullable<WhoAnswer>, number[]> = {
+    household: [0],
+    practitioner: [2],
+    community: [4],
+  };
+  const zones = [...base[quiz.who]];
+  if (quiz.situation === "standby") zones.push(3);
+  return zones;
+}
+
+/* Zone addresses of tools to highlight for each answer combination.
+   Keys are "who:situation". Values are zone-address strings. */
+const TOOL_HIGHLIGHT_MAP: Record<string, string[]> = {
+  "household:normal": ["Z0–A"],
+  "household:standby": ["Z0–A", "Z3–A"],
+  "practitioner:normal": ["Z2–C", "Z2–D"],
+  "practitioner:standby": ["Z2–C", "Z2–D", "Z3–A"],
+  "community:normal": ["Z2/Z4"],
+  "community:standby": ["Z2/Z4", "Z3–A"],
+};
+
+function resolveHighlightedTools(quiz: QuizState): string[] {
+  if (quiz.skipped || quiz.who === null || quiz.situation === null) return [];
+  return TOOL_HIGHLIGHT_MAP[`${quiz.who}:${quiz.situation}`] ?? [];
+}
+
+function resolveCtaCopy(quiz: QuizState): string {
+  if (quiz.skipped || quiz.who === null || quiz.situation === null)
+    return "Pack your kit — Begin the Odyssey →";
+  if (quiz.who === "household" && quiz.situation === "normal")
+    return "Your household kit starts here — Begin the Odyssey →";
+  if (quiz.who === "household" && quiz.situation === "standby")
+    return "Your saltbox is open and your pilots are watching — Begin the Odyssey →";
+  if (quiz.who === "practitioner" && quiz.situation === "normal")
+    return "Your practitioner bench is ready — Begin the Odyssey →";
+  if (quiz.who === "practitioner" && quiz.situation === "standby")
+    return "Your bench is hot and your standby network is live — Begin the Odyssey →";
+  if (quiz.who === "community" && quiz.situation === "normal")
+    return "Your community hall is set — Begin the Odyssey →";
+  if (quiz.who === "community" && quiz.situation === "standby")
+    return "The hall is open and the session is active — Begin the Odyssey →";
+  return "Pack your kit — Begin the Odyssey →";
+}
+
+function scrollToZone(zoneNumber: number) {
+  const el = document.getElementById(`zone-${zoneNumber}`);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+/* ─── Sub-components ────────────────────────────────────────────────────── */
 
 function ToggleSwitch({
   value,
@@ -72,7 +138,13 @@ function ToggleSwitch({
   );
 }
 
-function ToolPill({ tool }: { tool: ZoneTool }) {
+function ToolPill({
+  tool,
+  highlighted,
+}: {
+  tool: ZoneTool;
+  highlighted: boolean;
+}) {
   const isExternal = !tool.url.startsWith("/") || tool.url === "#";
   const disabled = tool.url === "#";
 
@@ -85,12 +157,19 @@ function ToolPill({ tool }: { tool: ZoneTool }) {
         display: "block",
         padding: "10px 13px",
         borderRadius: 8,
-        border: `1px solid ${RULE}`,
-        background: disabled ? "rgba(200,191,167,0.15)" : "rgba(255,253,248,0.80)",
+        border: highlighted
+          ? `1.5px solid ${FOREST}`
+          : `1px solid ${RULE}`,
+        background: highlighted
+          ? "rgba(31,61,46,0.07)"
+          : disabled
+          ? "rgba(200,191,167,0.15)"
+          : "rgba(255,253,248,0.80)",
         textDecoration: "none",
         cursor: disabled ? "default" : "pointer",
-        transition: "border-color 0.15s, background 0.15s",
+        transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
         opacity: disabled ? 0.55 : 1,
+        boxShadow: highlighted ? `0 0 0 3px rgba(31,61,46,0.08)` : "none",
       }}
       onClick={disabled ? (e) => e.preventDefault() : undefined}
     >
@@ -110,9 +189,10 @@ function ToolPill({ tool }: { tool: ZoneTool }) {
             fontWeight: 800,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
-            color: "#2a2520",
+            color: highlighted ? FOREST : "#2a2520",
           }}
         >
+          {highlighted && "→ "}
           {tool.name}
         </span>
         {tool.zoneAddress && (
@@ -161,19 +241,51 @@ function ToolPill({ tool }: { tool: ZoneTool }) {
 function ZoneCard({
   zone,
   standby,
+  highlighted,
+  dimmed,
+  highlightedTools,
 }: {
   zone: ZoneData;
   standby: boolean;
+  highlighted: boolean;
+  dimmed: boolean;
+  highlightedTools: string[];
 }) {
   return (
     <div
+      id={`zone-${zone.number}`}
       style={{
         borderRadius: 12,
-        border: `1px solid ${RULE}`,
+        border: highlighted
+          ? `2px solid ${zone.color}`
+          : `1px solid ${RULE}`,
         overflow: "hidden",
         background: "#faf7f2",
+        opacity: dimmed ? 0.38 : 1,
+        transition: "opacity 0.3s, border 0.3s, box-shadow 0.3s",
+        boxShadow: highlighted
+          ? `0 0 0 4px ${zone.color}22, 0 4px 24px ${zone.color}18`
+          : "none",
       }}
     >
+      {/* Highlighted badge */}
+      {highlighted && (
+        <div
+          style={{
+            background: zone.color,
+            padding: "5px 18px",
+            fontFamily: "monospace",
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.9)",
+          }}
+        >
+          ← Your zone
+        </div>
+      )}
+
       {/* Header */}
       <div
         style={{
@@ -301,7 +413,17 @@ function ZoneCard({
             No tools in this project for this zone yet.
           </p>
         ) : (
-          zone.tools.map((tool) => <ToolPill key={tool.zoneAddress ?? tool.name} tool={tool} />)
+          zone.tools.map((tool) => (
+            <ToolPill
+              key={tool.zoneAddress ?? tool.name}
+              tool={tool}
+              highlighted={
+                highlightedTools.length > 0 &&
+                !!tool.zoneAddress &&
+                highlightedTools.includes(tool.zoneAddress)
+              }
+            />
+          ))
         )}
       </div>
 
@@ -336,8 +458,294 @@ function ZoneCard({
   );
 }
 
+/* ─── Quiz component ────────────────────────────────────────────────────── */
+
+const WHO_OPTIONS: { value: WhoAnswer; label: string; sub: string }[] = [
+  { value: "household", label: "A household", sub: "Family, individual, or home unit" },
+  { value: "practitioner", label: "A practitioner", sub: "Self-employed, contractor, or agency" },
+  { value: "community", label: "A board or community", sub: "Governance, hall, or collective" },
+];
+
+const SITUATION_OPTIONS: { value: SituationAnswer; label: string; sub: string }[] = [
+  { value: "normal", label: "Normal period", sub: "Everyday life — nothing urgent moving" },
+  { value: "standby", label: "Active standby", sub: "Something is moving — the network is watching" },
+];
+
+function QuizChip({
+  label,
+  sub,
+  selected,
+  color,
+  onClick,
+}: {
+  label: string;
+  sub: string;
+  selected: boolean;
+  color?: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: 2,
+        padding: "10px 14px",
+        borderRadius: 8,
+        border: selected
+          ? `1.5px solid ${color ?? FOREST}`
+          : `1px solid ${RULE}`,
+        background: selected
+          ? `${color ?? FOREST}12`
+          : "rgba(255,253,248,0.7)",
+        cursor: "pointer",
+        textAlign: "left",
+        transition: "all 0.15s",
+        flex: "1 1 140px",
+        minWidth: 0,
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "monospace",
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: "0.08em",
+          color: selected ? (color ?? FOREST) : "#2a2520",
+        }}
+      >
+        {label}
+      </span>
+      <span style={{ fontSize: 10, color: MUTED, lineHeight: 1.4 }}>{sub}</span>
+    </button>
+  );
+}
+
+function ZoneQuiz({
+  quiz,
+  onChange,
+  onSkip,
+}: {
+  quiz: QuizState;
+  onChange: (next: Partial<QuizState>) => void;
+  onSkip: () => void;
+}) {
+  const highlightedZones = resolveHighlightedZones(quiz);
+  const isComplete =
+    !quiz.skipped && quiz.who !== null && quiz.situation !== null;
+
+  function handleWhoClick(v: WhoAnswer) {
+    onChange({ who: v, skipped: false });
+  }
+
+  function handleSituationClick(v: SituationAnswer) {
+    onChange({ situation: v, skipped: false });
+    setTimeout(() => {
+      const zones = resolveHighlightedZones({ ...quiz, situation: v, skipped: false });
+      if (zones.length > 0) scrollToZone(zones[0]);
+    }, 120);
+  }
+
+  function handleJump() {
+    if (highlightedZones.length > 0) scrollToZone(highlightedZones[0]);
+  }
+
+  return (
+    <div
+      style={{
+        borderRadius: 10,
+        border: `1px solid rgba(31,61,46,0.18)`,
+        background: "rgba(31,61,46,0.04)",
+        padding: "18px 20px 16px",
+        marginBottom: 24,
+        maxWidth: 560,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 14,
+          gap: 10,
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "monospace",
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            color: FOREST,
+          }}
+        >
+          Find your zone
+        </div>
+        <button
+          type="button"
+          onClick={onSkip}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontFamily: "monospace",
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: MUTED,
+            padding: 0,
+            textDecoration: "underline",
+            textDecorationStyle: "dotted",
+          }}
+        >
+          Skip — browse all zones
+        </button>
+      </div>
+
+      {/* Q1 */}
+      <div style={{ marginBottom: 14 }}>
+        <p
+          style={{
+            margin: "0 0 8px",
+            fontSize: 13,
+            color: "#2a2520",
+            fontWeight: 600,
+            lineHeight: 1.4,
+          }}
+        >
+          Who are you?
+        </p>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {WHO_OPTIONS.map((opt) => (
+            <QuizChip
+              key={opt.value}
+              label={opt.label}
+              sub={opt.sub}
+              selected={quiz.who === opt.value}
+              color={FOREST}
+              onClick={() => handleWhoClick(opt.value)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Q2 — only show after Q1 is answered */}
+      {quiz.who !== null && (
+        <div style={{ marginBottom: isComplete ? 14 : 0 }}>
+          <p
+            style={{
+              margin: "0 0 8px",
+              fontSize: 13,
+              color: "#2a2520",
+              fontWeight: 600,
+              lineHeight: 1.4,
+            }}
+          >
+            What's your current situation?
+          </p>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {SITUATION_OPTIONS.map((opt) => (
+              <QuizChip
+                key={opt.value}
+                label={opt.label}
+                sub={opt.sub}
+                selected={quiz.situation === opt.value}
+                color={opt.value === "standby" ? "#b85a3e" : FOREST}
+                onClick={() => handleSituationClick(opt.value)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Result summary */}
+      {isComplete && (
+        <div
+          style={{
+            borderTop: `1px solid rgba(31,61,46,0.12)`,
+            paddingTop: 12,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 10,
+            flexWrap: "wrap",
+          }}
+        >
+          <p style={{ margin: 0, fontSize: 11, color: MUTED, lineHeight: 1.45 }}>
+            Your{" "}
+            {highlightedZones.length === 1
+              ? "door is"
+              : "doors are"}{" "}
+            <strong style={{ color: "#2a2520" }}>
+              Zone {highlightedZones.join(" + Zone ")}
+            </strong>{" "}
+            — highlighted below.
+          </p>
+          <button
+            type="button"
+            onClick={handleJump}
+            style={{
+              background: FOREST,
+              color: CREAM,
+              border: "none",
+              borderRadius: 6,
+              padding: "6px 14px",
+              fontFamily: "monospace",
+              fontSize: 9,
+              fontWeight: 700,
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            Jump to my zone ↓
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Main page ─────────────────────────────────────────────────────────── */
+
 export function MapPage() {
   const [standby, setStandby] = useState(false);
+  const [quiz, setQuiz] = useState<QuizState>({
+    who: null,
+    situation: null,
+    skipped: false,
+  });
+
+  const highlightedZones = resolveHighlightedZones(quiz);
+  const highlightedTools = resolveHighlightedTools(quiz);
+  const quizActive = !quiz.skipped && (quiz.who !== null || quiz.situation !== null);
+  const quizComplete = !quiz.skipped && quiz.who !== null && quiz.situation !== null;
+
+  function handleQuizChange(next: Partial<QuizState>) {
+    setQuiz((prev) => ({ ...prev, ...next }));
+  }
+
+  function handleSkip() {
+    setQuiz({ who: null, situation: null, skipped: true });
+  }
+
+  /* Sync standby toggle with quiz situation answer */
+  useEffect(() => {
+    if (quizComplete && quiz.situation === "standby") {
+      setStandby(true);
+    } else if (quizComplete && quiz.situation === "normal") {
+      setStandby(false);
+    }
+  }, [quiz.situation, quizComplete]);
+
+  const ctaCopy = resolveCtaCopy(quiz);
 
   return (
     <main
@@ -406,6 +814,13 @@ export function MapPage() {
           >
             If you just arrived — from The Train, a shared link, or a QR code on a poster — this is the map. Each zone is a different kind of place. Pick the door that matches what you need.
           </p>
+
+          {/* Quiz */}
+          <ZoneQuiz
+            quiz={quiz}
+            onChange={handleQuizChange}
+            onSkip={handleSkip}
+          />
 
           {/* Pre-Odyssey framing block */}
           <div
@@ -482,9 +897,20 @@ export function MapPage() {
             gap: 16,
           }}
         >
-          {ZONES.map((zone) => (
-            <ZoneCard key={zone.number} zone={zone} standby={standby} />
-          ))}
+          {ZONES.map((zone) => {
+            const isHighlighted = highlightedZones.includes(zone.number);
+            const isDimmed = quizActive && highlightedZones.length > 0 && !isHighlighted;
+            return (
+              <ZoneCard
+                key={zone.number}
+                zone={zone}
+                standby={standby}
+                highlighted={isHighlighted}
+                dimmed={isDimmed}
+                highlightedTools={isHighlighted ? highlightedTools : []}
+              />
+            );
+          })}
         </div>
 
         {/* Footer — Odyssey CTA */}
@@ -501,7 +927,9 @@ export function MapPage() {
           }}
         >
           <p style={{ fontSize: 11, color: MUTED, margin: 0 }}>
-            Six zones. One neighbourhood. Each zone is a different kind of place — pick the door that matches what you need.
+            {quizComplete
+              ? "Your zone is identified. When you're ready —"
+              : "Six zones. One neighbourhood. Each zone is a different kind of place — pick the door that matches what you need."}
           </p>
           <a
             href="/odyssey"
@@ -520,9 +948,10 @@ export function MapPage() {
               textTransform: "uppercase",
               textDecoration: "none",
               flexShrink: 0,
+              transition: "background 0.2s",
             }}
           >
-            Pack your kit — Begin the Odyssey →
+            {ctaCopy}
           </a>
         </div>
       </div>
