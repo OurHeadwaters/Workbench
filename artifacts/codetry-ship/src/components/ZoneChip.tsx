@@ -56,19 +56,54 @@ export function ZoneChip({ dark }: { dark?: boolean }) {
   if (location === "/map") return null;
   if (!quiz) return null;
 
-  let zoneNum: number | null = null;
-  let zoneLabel: string;
+  const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
 
   if (quiz.skipped) {
-    zoneLabel = "All Zones";
-  } else if (quiz.who) {
-    zoneNum = WHO_ZONE[quiz.who];
-    zoneLabel = `Z${zoneNum} · ${WHO_LABEL[quiz.who]}`;
-  } else {
-    return null;
+    return (
+      <a
+        href={`${base}/map?change=1`}
+        aria-label="Find your zone"
+        data-testid="zone-chip"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 4,
+          padding: "2px 8px",
+          borderRadius: 999,
+          border: dark
+            ? "1px solid rgba(212,160,23,0.40)"
+            : "1px solid rgba(31,61,46,0.28)",
+          background: dark ? "rgba(212,160,23,0.10)" : "rgba(31,61,46,0.06)",
+          textDecoration: "none",
+          flexShrink: 0,
+          lineHeight: 1,
+          cursor: "pointer",
+          transition: "opacity 0.15s",
+        }}
+        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.72"; }}
+        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+      >
+        <span
+          style={{
+            fontFamily: "monospace",
+            fontSize: 8,
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: dark ? "rgba(212,160,23,0.90)" : "#1f3d2e",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Find my zone →
+        </span>
+      </a>
+    );
   }
 
-  const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
+  if (!quiz.who) return null;
+
+  const zoneNum = WHO_ZONE[quiz.who];
+  const zoneLabel = `Z${zoneNum} · ${WHO_LABEL[quiz.who]}`;
 
   return (
     <a
@@ -94,26 +129,24 @@ export function ZoneChip({ dark }: { dark?: boolean }) {
       onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.75"; }}
       onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
     >
-      {zoneNum !== null && (
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 16,
-            height: 16,
-            borderRadius: "50%",
-            background: dark ? "rgba(212,160,23,0.55)" : "#1f3d2e",
-            fontFamily: "monospace",
-            fontSize: 7,
-            fontWeight: 900,
-            color: "#f4ede0",
-            flexShrink: 0,
-          }}
-        >
-          {zoneNum}
-        </span>
-      )}
+      <span
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 16,
+          height: 16,
+          borderRadius: "50%",
+          background: dark ? "rgba(212,160,23,0.55)" : "#1f3d2e",
+          fontFamily: "monospace",
+          fontSize: 7,
+          fontWeight: 900,
+          color: "#f4ede0",
+          flexShrink: 0,
+        }}
+      >
+        {zoneNum}
+      </span>
       <span
         style={{
           fontFamily: "monospace",
