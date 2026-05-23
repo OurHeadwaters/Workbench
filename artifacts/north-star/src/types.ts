@@ -113,6 +113,15 @@ export interface GmailAccount {
   aliasNote?: string;
 }
 
+export interface WorkbenchPlan {
+  phase: string;
+  burstMinutes: number | null;
+  windows: string;
+  windowNotes: string;
+  notes: string;
+  updatedAt: string;
+}
+
 export interface AppState {
   schemaVersion: number;
   installedAt: string;
@@ -151,6 +160,7 @@ export interface AppState {
   gmailAccounts: GmailAccount[];
   lastBackedUpAt?: string;
   contentBank: ContentBankItem[];
+  workbenchPlan?: WorkbenchPlan;
 }
 
 export interface StoreActions {
@@ -182,6 +192,7 @@ export interface StoreActions {
   addToContentBank: (item: Omit<ContentBankItem, "id" | "taggedAt">) => void;
   updateContentBankItem: (id: string, patch: Partial<ContentBankItem>) => void;
   removeFromContentBank: (id: string) => void;
+  setWorkbenchPlan: (plan: Omit<WorkbenchPlan, "updatedAt">) => void;
 }
 
 export type ArchiveContentType =

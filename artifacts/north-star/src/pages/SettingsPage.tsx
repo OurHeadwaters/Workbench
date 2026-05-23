@@ -9,6 +9,8 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 export function SettingsPage() {
   const statement = useStore((s) => s.statement);
   const setStatement = useStore((s) => s.setStatement);
+  const workbenchPlan = useStore((s) => s.workbenchPlan);
+  const setWorkbenchPlan = useStore((s) => s.setWorkbenchPlan);
   const exportBackup = useStore((s) => s.exportBackup);
   const importBackup = useStore((s) => s.importBackup);
   const resetAll = useStore((s) => s.resetAll);
@@ -17,6 +19,13 @@ export function SettingsPage() {
   const [why, setWhy] = useState(statement?.why ?? "");
   const [noFly, setNoFly] = useState(statement?.noFly ?? "");
   const [statementSaved, setStatementSaved] = useState(false);
+
+  const [wpPhase, setWpPhase] = useState(workbenchPlan?.phase ?? "");
+  const [wpBurst, setWpBurst] = useState(workbenchPlan?.burstMinutes != null ? String(workbenchPlan.burstMinutes) : "");
+  const [wpWindows, setWpWindows] = useState(workbenchPlan?.windows ?? "");
+  const [wpWindowNotes, setWpWindowNotes] = useState(workbenchPlan?.windowNotes ?? "");
+  const [wpNotes, setWpNotes] = useState(workbenchPlan?.notes ?? "");
+  const [wpSaved, setWpSaved] = useState(false);
 
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
@@ -28,6 +37,18 @@ export function SettingsPage() {
     setStatement({ who: who.trim(), why: why.trim(), noFly: noFly.trim() });
     setStatementSaved(true);
     setTimeout(() => setStatementSaved(false), 2000);
+  }
+
+  function handleSaveWorkbenchPlan() {
+    setWorkbenchPlan({
+      phase: wpPhase.trim(),
+      burstMinutes: wpBurst.trim() !== "" ? Number(wpBurst.trim()) || null : null,
+      windows: wpWindows.trim(),
+      windowNotes: wpWindowNotes.trim(),
+      notes: wpNotes.trim(),
+    });
+    setWpSaved(true);
+    setTimeout(() => setWpSaved(false), 2000);
   }
 
   function handleExport() {
@@ -115,6 +136,76 @@ export function SettingsPage() {
             className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px]"
           >
             {statementSaved ? "Saved ✓" : "Save statement"}
+          </button>
+        </div>
+
+        <div
+          className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-4"
+          style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+        >
+          <h2 className="text-base font-medium text-[#1C1917]">Workbench plan</h2>
+
+          <div className="space-y-2">
+            <label className="text-xs text-[#78716C] uppercase tracking-wider">Phase</label>
+            <input
+              type="text"
+              value={wpPhase}
+              onChange={(e) => setWpPhase(e.target.value)}
+              placeholder="e.g. Funnels"
+              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs text-[#78716C] uppercase tracking-wider">Burst (minutes)</label>
+            <input
+              type="number"
+              value={wpBurst}
+              onChange={(e) => setWpBurst(e.target.value)}
+              placeholder="e.g. 20"
+              min={1}
+              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs text-[#78716C] uppercase tracking-wider">Work windows</label>
+            <input
+              type="text"
+              value={wpWindows}
+              onChange={(e) => setWpWindows(e.target.value)}
+              placeholder="e.g. 6–8am / 6–8pm / Weekend block"
+              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs text-[#78716C] uppercase tracking-wider">Window notes</label>
+            <input
+              type="text"
+              value={wpWindowNotes}
+              onChange={(e) => setWpWindowNotes(e.target.value)}
+              placeholder="e.g. when dad is home"
+              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs text-[#78716C] uppercase tracking-wider">Notes</label>
+            <textarea
+              value={wpNotes}
+              onChange={(e) => setWpNotes(e.target.value)}
+              placeholder="What you're building and why right now"
+              rows={3}
+              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
+            />
+          </div>
+
+          <button
+            onClick={handleSaveWorkbenchPlan}
+            className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px]"
+          >
+            {wpSaved ? "Saved ✓" : "Save workbench plan"}
           </button>
         </div>
 

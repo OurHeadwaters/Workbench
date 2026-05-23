@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
-import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount } from "./types";
+import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan } from "./types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 
 const ZONE_COLORS: Record<ZoneId, string> = {
@@ -185,7 +185,7 @@ const SEED_GMAIL_ACCOUNTS: GmailAccount[] = [
 ];
 
 const INITIAL_STATE: AppState = {
-  schemaVersion: 6,
+  schemaVersion: 8,
   installedAt: new Date().toISOString(),
   onboarding: { completed: false, step: 0 },
   statement: undefined,
@@ -215,6 +215,7 @@ const INITIAL_STATE: AppState = {
     ],
   },
   gmailAccounts: SEED_GMAIL_ACCOUNTS,
+  workbenchPlan: undefined,
 };
 
 export const useStore = create<Store>()(
@@ -402,10 +403,22 @@ export const useStore = create<Store>()(
 
       removeFromContentBank: (id) =>
         set((s) => ({ contentBank: s.contentBank.filter((x) => x.id !== id) })),
+
+      setWorkbenchPlan: ({ phase, burstMinutes, windows, windowNotes, notes }) =>
+        set({
+          workbenchPlan: {
+            phase,
+            burstMinutes,
+            windows,
+            windowNotes,
+            notes,
+            updatedAt: new Date().toISOString(),
+          },
+        }),
     }),
     {
       name: "north-star:v1",
-      version: 7,
+      version: 8,
       migrate(persistedState: unknown, fromVersion: number) {
         const s = persistedState as Record<string, unknown>;
         if (fromVersion < 5) {
@@ -436,6 +449,10 @@ export const useStore = create<Store>()(
             return { ...c, urls: fromDeepLinks.length > 0 ? fromDeepLinks : fromUrl };
           });
           s.schemaVersion = 7;
+        }
+        if (fromVersion < 8) {
+          s.workbenchPlan = undefined;
+          s.schemaVersion = 8;
         }
         return s as unknown as AppState;
       },
