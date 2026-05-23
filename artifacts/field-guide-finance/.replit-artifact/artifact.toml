@@ -1,6 +1,6 @@
 kind = "web"
-previewPath = "/field-guide-finance/"
-title = "Field Guide Finance"
+previewPath = "/headwaters-learning/"
+title = "Headwaters Learning"
 version = "1.0.0"
 id = "artifacts/field-guide-finance"
 router = "path"
@@ -11,7 +11,7 @@ version = "1.0.0"
 
 [[services]]
 name = "web"
-paths = [ "/field-guide-finance/" ]
+paths = [ "/headwaters-learning/" ]
 localPort = 20510
 
 [services.development]
@@ -28,4 +28,4 @@ to = "/index.html"
 
 [services.env]
 PORT = "20510"
-BASE_PATH = "/field-guide-finance/"
+BASE_PATH = "/headwaters-learning/"

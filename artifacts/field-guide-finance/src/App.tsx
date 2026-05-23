@@ -8,6 +8,14 @@ import { queryClient } from "@/lib/queryClient";
 import { LockedPreview } from "@/pages/LockedPreview";
 import { UpgradeNudge } from "@/pages/UpgradeNudge";
 import { CoursePage } from "@/pages/CoursePage";
+import { HubPage } from "@/pages/HubPage";
+import { FactionLanding } from "@/pages/forge/FactionLanding";
+import { GreatHall } from "@/pages/forge/GreatHall";
+import { ModuleList } from "@/pages/forge/ModuleList";
+import { ModuleLesson } from "@/pages/forge/ModuleLesson";
+import { ForgePage } from "@/pages/forge/ForgePage";
+import { BlueprintLibrary } from "@/pages/forge/BlueprintLibrary";
+import { ProgressPage } from "@/pages/forge/ProgressPage";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -92,10 +100,18 @@ function SignUpPage() {
 function AppRouter() {
   return (
     <Switch>
-      <Route path="/" component={CourseGate} />
+      <Route path="/" component={HubPage} />
+      <Route path="/finance" component={CourseGate} />
+      <Route path="/forge" component={FactionLanding} />
+      <Route path="/forge/modules" component={ModuleList} />
+      <Route path="/forge/module/:moduleId" component={ModuleLesson} />
+      <Route path="/forge/build" component={ForgePage} />
+      <Route path="/forge/great-hall" component={GreatHall} />
+      <Route path="/forge/library" component={BlueprintLibrary} />
+      <Route path="/forge/progress" component={ProgressPage} />
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
-      <Route component={CourseGate} />
+      <Route component={HubPage} />
     </Switch>
   );
 }
@@ -149,10 +165,10 @@ function ClerkProviderWithRoutes() {
 export default function App() {
   return (
     <ZoneStoreProvider>
-    <WouterRouter base={basePath}>
-      <ClerkProviderWithRoutes />
-    </WouterRouter>
-    <KitchenTableButton />
+      <WouterRouter base={basePath}>
+        <ClerkProviderWithRoutes />
+      </WouterRouter>
+      <KitchenTableButton />
     </ZoneStoreProvider>
   );
 }
