@@ -315,6 +315,11 @@ const server = http.createServer((req, res) => {
 });
 
 const port = parseInt(process.env.PORT || "3000", 10);
+console.log(`[serve] Starting on port ${port} (BASE_PATH=${basePath || "/"})`);
+server.on("error", (err) => {
+  console.error(`[serve] Fatal server error: ${err.message}`);
+  process.exit(1);
+});
 server.listen(port, "0.0.0.0", () => {
   console.log(`Serving Headwaters handbook on port ${port}`);
   console.log(`  PWA:               ${basePath || ""}/`);

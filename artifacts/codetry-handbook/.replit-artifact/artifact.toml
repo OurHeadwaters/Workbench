@@ -21,7 +21,7 @@ run = "pnpm --filter @workspace/codetry-handbook run dev"
 args = ["pnpm", "--filter", "@workspace/codetry-handbook", "run", "build"]
 
 [services.production.run]
-args = ["pnpm", "--filter", "@workspace/codetry-handbook", "run", "serve"]
+args = ["node", "artifacts/codetry-handbook/server/serve.js"]
 
 [services.production.run.env]
 PORT = "25432"
