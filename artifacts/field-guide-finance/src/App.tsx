@@ -1,5 +1,6 @@
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { ZoneStoreProvider } from "@workspace/zone-store";
+import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
 import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { ClerkProvider, useAuth, SignIn, SignUp } from "@clerk/react";
 import { Loader2 } from "lucide-react";
@@ -151,6 +152,7 @@ export default function App() {
     <WouterRouter base={basePath}>
       <ClerkProviderWithRoutes />
     </WouterRouter>
+    <KitchenTableButton />
     </ZoneStoreProvider>
   );
 }

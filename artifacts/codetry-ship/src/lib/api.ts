@@ -170,6 +170,8 @@ export interface DeadheadItem {
   title: string;
   originalCreatedAt: string;
   status: string;
+  source: string | null;
+  sourceRef: string | null;
   flushedAt: string;
   flushBatchId: string;
 }

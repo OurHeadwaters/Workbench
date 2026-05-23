@@ -1,5 +1,6 @@
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { ZoneStoreProvider } from "@workspace/zone-store";
+import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -151,6 +152,7 @@ function App() {
         </WouterRouter>
       </TooltipProvider>
     </QueryClientProvider>
+    <KitchenTableButton />
     </ZoneStoreProvider>
   );
 }

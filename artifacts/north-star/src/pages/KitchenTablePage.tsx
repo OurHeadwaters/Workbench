@@ -1,6 +1,91 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
+// ── Kitchen Table source roll-up ──────────────────────────────────────────────
+// Reads /api/deadhead/intake so the council can move artifact-by-artifact.
+// Hidden (returns null) if there is no owner token in localStorage or the
+// fetch comes back unauthorized — the page still works for non-owners.
+interface KTIntakeItem {
+  id: string;
+  title: string;
+  status: string;
+  source: string | null;
+  sourceRef: string | null;
+  flushedAt: string;
+}
+
+function KitchenTableSourcesPanel() {
+  const [items, setItems] = useState<KTIntakeItem[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("library.ownerToken") ||
+          window.localStorage.getItem("ownerToken")
+        : null;
+    if (!token) { setError("no-token"); return; }
+    let cancelled = false;
+    fetch("/api/deadhead/intake?status=new", {
+      headers: { "x-library-owner-token": token },
+    })
+      .then(async (r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json() as Promise<{ items: KTIntakeItem[] }>;
+      })
+      .then((j) => { if (!cancelled) setItems(j.items); })
+      .catch((e) => { if (!cancelled) setError(e instanceof Error ? e.message : "err"); });
+    return () => { cancelled = true; };
+  }, []);
+
+  if (error || !items || items.length === 0) return null;
+
+  const groups = new Map<string, KTIntakeItem[]>();
+  for (const it of items) {
+    const key = it.source ?? "unknown";
+    const arr = groups.get(key);
+    if (arr) arr.push(it);
+    else groups.set(key, [it]);
+  }
+  const sorted = Array.from(groups.entries()).sort((a, b) => b[1].length - a[1].length);
+
+  return (
+    <div
+      className="flex-shrink-0 z-10 border-b border-[#251E18] bg-[#181512] px-5 py-3"
+      data-testid="kitchen-table-sources"
+    >
+      <div className="text-[11px] uppercase tracking-[0.15em] text-[#8C7B6D] font-bold mb-2">
+        🍽 On the kitchen table — by source ({items.length})
+      </div>
+      <div className="space-y-2">
+        {sorted.map(([source, list]) => (
+          <details key={source} className="text-[12px]" data-testid={`kt-source-${source}`}>
+            <summary className="cursor-pointer text-[#C5B6A5] hover:text-[#EAE4DB]">
+              <span className="font-mono text-[11px] text-[#8C7B6D]">{source}</span>
+              <span className="ml-2 text-[#5C5046]">({list.length})</span>
+            </summary>
+            <ul className="mt-1 ml-4 space-y-1 text-[#C5B6A5]">
+              {list.slice(0, 8).map((it) => (
+                <li key={it.id} className="leading-snug">
+                  · {it.title}
+                  {it.sourceRef && (
+                    <span className="ml-2 font-mono text-[10px] text-[#5C5046]">
+                      {it.sourceRef}
+                    </span>
+                  )}
+                </li>
+              ))}
+              {list.length > 8 && (
+                <li className="text-[10px] text-[#5C5046]">+{list.length - 8} more</li>
+              )}
+            </ul>
+          </details>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Default brief ─────────────────────────────────────────────────────────────
 const DEFAULT_BRIEF = `SESSION: Software Systems Bundle — Business Management Decisions
 Date: May 23, 2026
@@ -856,6 +941,8 @@ export function KitchenTablePage() {
               })}
             </div>
           </div>
+
+          <KitchenTableSourcesPanel />
 
           {/* Agenda toggle */}
           <div className="flex-shrink-0 z-10 border-b border-[#251E18] bg-[#1A1714]">

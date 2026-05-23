@@ -1,5 +1,6 @@
 import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
@@ -112,6 +113,7 @@ function App() {
           <Router />
         </WouterRouter>
         <Toaster />
+        <KitchenTableButton />
       </TooltipProvider>
     </QueryClientProvider>
   );

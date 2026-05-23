@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { ZoneStoreProvider } from "@workspace/zone-store";
+import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
 import { Route, Switch } from "wouter";
 import { LobbyPage } from "./pages/LobbyPage";
 import OnePager from "./pages/OnePager";
@@ -79,6 +80,7 @@ export default function App() {
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />
       <Route component={LobbyPage} />
     </Switch>
+    <KitchenTableButton />
     </ZoneStoreProvider>
   );
 }

@@ -84,6 +84,7 @@
     "zod": "catalog:"
   },
   "dependencies": {
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "@workspace/kitchen-table-client": "workspace:*"
   }
 }

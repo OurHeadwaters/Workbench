@@ -63,7 +63,13 @@ export async function checkAndFlushCongestion(): Promise<void> {
     if (overflow.length === 0) return;
 
     await ingestToDeadhead(
-      overflow.map((t) => ({ id: t.id, title: t.title, createdAt: t.createdAt })),
+      overflow.map((t) => ({
+        id: t.id,
+        title: t.title,
+        createdAt: t.createdAt,
+        source: t.source,
+        sourceRef: t.sourceRef,
+      })),
       proposedCount,
     );
 

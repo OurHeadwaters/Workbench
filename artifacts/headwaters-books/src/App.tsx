@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { ZoneStoreProvider } from "@workspace/zone-store";
+import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
 import { Switch, Route, Router as WouterRouter, useLocation, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
@@ -217,6 +218,7 @@ function App() {
           </ClerkWouterAdapter>
         </WouterRouter>
         <Toaster />
+        <KitchenTableButton />
       </TooltipProvider>
     </QueryClientProvider>
     </ZoneStoreProvider>

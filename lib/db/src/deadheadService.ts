@@ -18,6 +18,8 @@ export interface TaskRef {
   id: string;
   title: string;
   createdAt: Date;
+  source?: string | null;
+  sourceRef?: string | null;
 }
 
 export interface IngestResult {
@@ -48,6 +50,8 @@ export async function ingestToDeadhead(
     title: t.title,
     originalCreatedAt: t.createdAt,
     status: "new" as const,
+    source: t.source ?? "unknown",
+    sourceRef: t.sourceRef ?? null,
     flushedAt: now,
     flushBatchId,
   }));

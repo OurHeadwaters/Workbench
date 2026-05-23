@@ -315,11 +315,28 @@ function IntakeRow({
         <div className="flex-1 min-w-0 space-y-1">
           <p className="font-serif text-base leading-snug">{item.title}</p>
           <p
-            className="font-mono text-[11px]"
+            className="font-mono text-[11px] flex flex-wrap gap-x-2"
             style={{ color: "hsl(var(--muted-foreground))" }}
           >
-            created {new Date(item.originalCreatedAt).toISOString().slice(0, 10)}
-            {" · "}flushed {new Date(item.flushedAt).toISOString().slice(0, 10)}
+            <span
+              data-testid={`source-${item.id}`}
+              className="px-1.5 py-0.5 rounded-sm border"
+              style={{
+                borderColor: "hsl(var(--card-border))",
+                color:
+                  item.source && item.source !== "unknown"
+                    ? "hsl(var(--accent))"
+                    : "hsl(var(--muted-foreground))",
+              }}
+              title={item.sourceRef ?? undefined}
+            >
+              source: {item.source ?? "unknown"}
+              {item.sourceRef ? ` · ${item.sourceRef}` : ""}
+            </span>
+            <span>
+              created {new Date(item.originalCreatedAt).toISOString().slice(0, 10)}
+              {" · "}flushed {new Date(item.flushedAt).toISOString().slice(0, 10)}
+            </span>
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">

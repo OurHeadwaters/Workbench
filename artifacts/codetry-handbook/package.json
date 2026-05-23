@@ -92,6 +92,7 @@
     "expo-media-library": "^55.0.17",
     "expo-sharing": "~14.0.8",
     "expo-speech": "~14.0.8",
-    "react-native-view-shot": "^5.1.0"
+    "react-native-view-shot": "^5.1.0",
+    "@workspace/kitchen-table-client": "workspace:*"
   }
 }

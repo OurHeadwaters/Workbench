@@ -36,6 +36,13 @@
       "when": 1779038188905,
       "tag": "0004_long_silver_fox",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1779600000000,
+      "tag": "0005_kitchen_table_source",
+      "breakpoints": true
     }
   ]
 }

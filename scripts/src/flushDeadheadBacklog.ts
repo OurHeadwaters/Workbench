@@ -78,7 +78,13 @@ async function main() {
   }
 
   const result = await ingestToDeadhead(
-    overflow.map((t) => ({ id: t.id, title: t.title, createdAt: t.createdAt })),
+    overflow.map((t) => ({
+      id: t.id,
+      title: t.title,
+      createdAt: t.createdAt,
+      source: t.source,
+      sourceRef: t.sourceRef,
+    })),
     total,
   );
 

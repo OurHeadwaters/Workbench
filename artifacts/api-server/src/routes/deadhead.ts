@@ -40,9 +40,22 @@ router.post("/tasks", async (req: Request, res: Response) => {
     return;
   }
 
+  // Kitchen-table protocol: agents drop with a `source` (artifact id) and
+  // optional `sourceRef` (page path / doc id) so provenance survives the
+  // congestion flush. Both fields are optional — items without them surface
+  // as "unknown" in the intake admin.
+  const source =
+    typeof body.source === "string" && body.source.trim()
+      ? body.source.trim().slice(0, 200)
+      : null;
+  const sourceRef =
+    typeof body.sourceRef === "string" && body.sourceRef.trim()
+      ? body.sourceRef.trim().slice(0, 500)
+      : null;
+
   const [task] = await db
     .insert(projectTasksTable)
-    .values({ title, status: "proposed" })
+    .values({ title, status: "proposed", source, sourceRef })
     .returning();
 
   if (!task) {
@@ -54,6 +67,8 @@ router.post("/tasks", async (req: Request, res: Response) => {
     id: task.id,
     title: task.title,
     status: task.status,
+    source: task.source,
+    sourceRef: task.sourceRef,
     createdAt: task.createdAt.toISOString(),
   });
 
@@ -98,6 +113,8 @@ router.get("/tasks", async (req: Request, res: Response) => {
       id: t.id,
       title: t.title,
       status: t.status,
+      source: t.source,
+      sourceRef: t.sourceRef,
       createdAt: t.createdAt.toISOString(),
       updatedAt: t.updatedAt.toISOString(),
     })),
@@ -126,7 +143,13 @@ router.post("/deadhead/intake", async (req: Request, res: Response) => {
 
   const items = rawItems
     .filter(
-      (i): i is { id: string; title: string; createdAt?: string } =>
+      (i): i is {
+        id: string;
+        title: string;
+        createdAt?: string;
+        source?: string;
+        sourceRef?: string;
+      } =>
         typeof (i as Record<string, unknown>).id === "string" &&
         typeof (i as Record<string, unknown>).title === "string",
     )
@@ -134,6 +157,8 @@ router.post("/deadhead/intake", async (req: Request, res: Response) => {
       id: i.id,
       title: i.title,
       createdAt: i.createdAt ? new Date(i.createdAt) : new Date(),
+      source: typeof i.source === "string" && i.source.trim() ? i.source.trim().slice(0, 200) : null,
+      sourceRef: typeof i.sourceRef === "string" && i.sourceRef.trim() ? i.sourceRef.trim().slice(0, 500) : null,
     }));
 
   if (items.length === 0) {
@@ -183,6 +208,8 @@ router.get("/deadhead/intake", async (req: Request, res: Response) => {
       title: r.title,
       originalCreatedAt: r.originalCreatedAt.toISOString(),
       status: r.status,
+      source: r.source,
+      sourceRef: r.sourceRef,
       flushedAt: r.flushedAt.toISOString(),
       flushBatchId: r.flushBatchId,
     })),

@@ -1,5 +1,6 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { ZoneStoreProvider } from "@workspace/zone-store";
+import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
 import { PreviewProvider } from "@/context/PreviewContext";
 import Index from "@/pages/Index";
 import PriceList from "@/pages/PriceList";
@@ -121,6 +122,7 @@ export default function App() {
       <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
         <Router />
       </WouterRouter>
+      <KitchenTableButton />
     </PreviewProvider>
     </ZoneStoreProvider>
   );

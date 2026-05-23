@@ -27,6 +27,14 @@ export const projectTasksTable = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     title: text("title").notNull(),
     status: text("status").notNull().default("proposed"),
+    /**
+     * Source artifact id (e.g. `artifacts/north-star`) the task was dropped
+     * from. Optional on this table — only items dropped via the
+     * "put it on the kitchen table" helper carry it. Existing rows are
+     * NULL and surface as "unknown" in admin views.
+     */
+    source: text("source"),
+    sourceRef: text("source_ref"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -37,6 +45,7 @@ export const projectTasksTable = pgTable(
   (t) => ({
     statusIdx: index("project_tasks_status_idx").on(t.status),
     createdAtIdx: index("project_tasks_created_at_idx").on(t.createdAt),
+    sourceIdx: index("project_tasks_source_idx").on(t.source),
   }),
 );
 
@@ -60,6 +69,13 @@ export const deadheadItemsTable = pgTable(
       withTimezone: true,
     }).notNull(),
     status: text("status").notNull().default("new"),
+    /**
+     * Source artifact id (e.g. `artifacts/north-star`) the item came from.
+     * Backfilled to 'unknown' for rows that pre-date the kitchen-table
+     * protocol. Always non-null going forward.
+     */
+    source: text("source").notNull().default("unknown"),
+    sourceRef: text("source_ref"),
     flushedAt: timestamp("flushed_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -72,6 +88,7 @@ export const deadheadItemsTable = pgTable(
     statusIdx: index("deadhead_items_status_idx").on(t.status),
     flushedAtIdx: index("deadhead_items_flushed_at_idx").on(t.flushedAt),
     batchIdx: index("deadhead_items_batch_idx").on(t.flushBatchId),
+    sourceIdx: index("deadhead_items_source_idx").on(t.source),
   }),
 );
 

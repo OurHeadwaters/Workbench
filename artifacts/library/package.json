@@ -81,6 +81,7 @@
     "@uppy/dashboard": "^5.1.1",
     "@uppy/react": "^5.2.0",
     "@workspace/object-storage-web": "workspace:*",
-    "@workspace/why-stores-fail": "workspace:*"
+    "@workspace/why-stores-fail": "workspace:*",
+    "@workspace/kitchen-table-client": "workspace:*"
   }
 }

@@ -20,7 +20,8 @@
     "@workspace/practitioners-guide-v2": "workspace:*",
     "clsx": "catalog:",
     "tailwind-merge": "catalog:",
-    "wouter": "catalog:"
+    "wouter": "catalog:",
+    "@workspace/kitchen-table-client": "workspace:*"
   },
   "devDependencies": {
     "@replit/vite-plugin-cartographer": "catalog:",

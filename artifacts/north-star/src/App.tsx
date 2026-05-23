@@ -1,5 +1,6 @@
 import { Router as WouterRouter, Route, Switch, Redirect } from "wouter";
 import { ZoneStoreProvider } from "@workspace/zone-store";
+import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
 import { useStore } from "@/store";
 import { NavBar } from "@/components/NavBar";
 import { CaptureFab } from "@/components/CaptureFab";
@@ -151,6 +152,7 @@ export default function App() {
         </Route>
       </Switch>
     </WouterRouter>
+    <KitchenTableButton />
     </ZoneStoreProvider>
   );
 }

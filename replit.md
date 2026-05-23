@@ -112,3 +112,26 @@ The project is structured as a pnpm workspace monorepo using Node.js 24 and Type
 - `artifacts/print-marketing/public/`: `gilles-brand.jpeg` (1 file)
 
 Artifacts with clean public folders (nothing removed): `practitioners-guide-v2`, `headwaters-books`, `library`, `codetry-handbook`, `print-marketing` (minus the one above).
+# "Put it on the kitchen table" — protocol (standing instruction)
+
+When the user says **"put it on the kitchen table"** (or close variants — "add to the kitchen table", "drop it on the table", "kitchen-table this"), do this, in order:
+
+1. Identify the **source artifact** — the artifact the user is currently working in (e.g. `artifacts/north-star`, `artifacts/library`, `artifacts/codetry-ship`). This becomes the `source` tag.
+2. Use the shared helper from `@workspace/kitchen-table-client` — never hand-roll a POST to `/api/tasks`. **The helper auto-derives `source` from `import.meta.env.BASE_URL`** (every web artifact mounts at `/<slug>/`, so `source` becomes `artifacts/<slug>` automatically). You only pass `source` explicitly in non-Vite contexts (Expo / React Native, scripts) or to override:
+
+   ```ts
+   import { putOnKitchenTable } from "@workspace/kitchen-table-client";
+   // Auto-derived source — works in any web artifact:
+   await putOnKitchenTable({
+     title: "<one-line statement of what to discuss>",
+     sourceRef: "<page path or doc id, optional>",
+   });
+   // Expo / scripts — pass explicitly:
+   await putOnKitchenTable({ title: "…", source: "artifacts/codetry-handbook" });
+   ```
+
+   React: `import { KitchenTableButton, useKitchenTable } from "@workspace/kitchen-table-client/react";` — `<KitchenTableButton />` is mounted in every web artifact's `App.tsx` and needs no props.
+3. **Auth posture** (already enforced server-side, don't bypass): the drop is open (`POST /api/tasks` requires no token). Decision-cap routes (`PATCH /api/deadhead/intake/:id`, intake list) stay gated by `x-library-owner-token`. The helper does not set it.
+4. Existing rows pre-dating this protocol carry `source = 'unknown'` — that is the expected backfill value, not a bug.
+
+The point: when Bobbie convenes the AI council in the north-star KitchenTablePage, items are grouped artifact-by-artifact, so the round-table can move through one artifact's questions at a time instead of a flat blob. Per-artifact `AGENTS.md` files repeat the locally relevant `source` value so agents working inside a single artifact don't need to re-derive it.

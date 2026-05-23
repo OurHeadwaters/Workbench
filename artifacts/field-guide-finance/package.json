@@ -35,6 +35,7 @@
     "@clerk/react": "^6.4.3",
     "@clerk/themes": "^2.4.57",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "@workspace/kitchen-table-client": "workspace:*"
   }
 }

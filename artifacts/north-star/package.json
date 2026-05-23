@@ -10,7 +10,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@workspace/odyssey": "workspace:*"
+    "@workspace/odyssey": "workspace:*",
+    "@workspace/kitchen-table-client": "workspace:*"
   },
   "devDependencies": {
     "@replit/vite-plugin-cartographer": "catalog:",
