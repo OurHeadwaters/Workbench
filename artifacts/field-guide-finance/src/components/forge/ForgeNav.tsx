@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { ELEMENT_MAP } from "@/data/forgeData";
 import { getFaction } from "@/lib/forgeStorage";
 
-type NavPage = "modules" | "forge" | "great-hall" | "library" | "progress" | "faction";
+type NavPage = "modules" | "forge" | "great-hall" | "library" | "progress" | "faction" | "battle-feed" | "shallows";
 
 export function ForgeNav({ active }: { active: NavPage }) {
   const [, navigate] = useLocation();
@@ -15,6 +15,8 @@ export function ForgeNav({ active }: { active: NavPage }) {
     { id: "great-hall", label: "Hall", path: "/forge/great-hall" },
     { id: "library", label: "Library", path: "/forge/library" },
     { id: "progress", label: "Progress", path: "/forge/progress" },
+    { id: "battle-feed", label: "Battle Feed", path: "/forge/battle-feed" },
+    { id: "shallows", label: "The Shallows", path: "/forge/shallows" },
   ];
 
   return (

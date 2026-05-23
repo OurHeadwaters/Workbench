@@ -16,6 +16,8 @@ import { ModuleLesson } from "@/pages/forge/ModuleLesson";
 import { ForgePage } from "@/pages/forge/ForgePage";
 import { BlueprintLibrary } from "@/pages/forge/BlueprintLibrary";
 import { ProgressPage } from "@/pages/forge/ProgressPage";
+import { BattleFeed } from "@/pages/forge/BattleFeed";
+import { Shallows } from "@/pages/forge/Shallows";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -109,6 +111,8 @@ function AppRouter() {
       <Route path="/forge/great-hall" component={GreatHall} />
       <Route path="/forge/library" component={BlueprintLibrary} />
       <Route path="/forge/progress" component={ProgressPage} />
+      <Route path="/forge/battle-feed" component={BattleFeed} />
+      <Route path="/forge/shallows" component={Shallows} />
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
       <Route component={HubPage} />
