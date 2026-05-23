@@ -1,0 +1,33 @@
+Reframe Community Listening as Ambient Signal Capture
+
+What & Why
+
+Right now the Codetry site describes "community listening sessions" as a scheduled meeting — which implies Bobbie's calendar is the bottleneck. The reality is sharper: Bobbie asks the client how they already communicate (phone calls, texts, WhatsApp, Teams), then plugs into those existing channels as the quiet observer. Problems surface naturally. Each problem gets matched to an "extinguisher" — a specific tool or fix. Bobbie decides the right one, keeps it current monthly, and trains the community on when to reach for it. The client changes nothing about how they work. That zero-disruption posture is the key selling point and needs to be front and centre across the Codetry site.
+
+The secondary goal: surface every place the site implies Bobbie must be physically present or actively monitoring in real time — and rewrite those to reflect that her time is only spent on the decision ("which extinguisher?"), not on watching for smoke.
+
+Done looks like
+
+The Zone Assessment card no longer reads "community listening sessions (in-person or remote)" — it reads something that conveys ambient, passive signal capture with zero disruption to the client's existing workflow
+The "How it works" Step 01 description reflects the new framing: Bobbie asks how the community already communicates, then observes through those channels — not a separate scheduled conversation
+A new explanatory section (or expanded callout) on the services page explains the fire/extinguisher model: problems are captured, Bobbie identifies the right fix, it stays maintained monthly, and the community is trained on when to use it
+Anywhere across the Codetry site (homepage, work page, other pages) that implies scheduled face-time or synchronous presence is updated to match this framing
+The Headwaters Financial Model page gets a "Time Leverage" annotation column or callout — flagging which revenue streams require Bobbie's active time vs. which run passively — so she can immediately see where she is the bottleneck in her own financial model
+Out of scope
+
+Building any actual audio capture, transcription, or WhatsApp/Teams integration (that is infrastructure, not copy/framing)
+Changing pricing or timelines on the service cards
+Modifying the Forge Editor assessment logic
+Any changes to the TSP or privacy-guide artifacts
+Steps
+
+Rewrite Zone Assessment card copy — Update the engagements array in services.tsx: change the "Community listening sessions (in-person or remote)" bullet to language that conveys ambient, channel-native signal capture. Update the description paragraph to lead with the zero-disruption angle.
+Rewrite "How it works" Step 01 — Update the process array Step 01 title and description to reflect: Bobbie asks how the community already communicates, then listens through those channels — no new meeting required.
+Add a "Signal → Extinguisher" explainer section to the services page — Insert a new section between the engagement cards and "The seven tools" that explains the operating model: problems are captured as they happen in existing channels → Bobbie surfaces the pattern → decides the right fix → keeps it maintained monthly → trains the community on when to use it. Use the fire/extinguisher metaphor directly. This is the proof that the Zone Assessment delivers ongoing value, not just a one-time report.
+Audit and update other Codetry pages — Check the homepage (index.tsx or equivalent) and work page (work.tsx) for any language implying scheduled sessions or synchronous presence. Update to match the ambient-listening framing.
+Add a Time Leverage view to the Headwaters Financial Model — Add a "Requires my time?" toggle or column to the BusinessFinancials component. Each revenue stream row gets a yes/no flag (defaulting to yes). A summary callout at the top shows the split: how much of the monthly low/high range is passive vs. time-dependent. This makes it immediately obvious which streams are scaling bottlenecks.
+Relevant files
+
+artifacts/codetry/src/pages/services.tsx
+artifacts/codetry/src/pages/work.tsx
+artifacts/headwaters/src/pages/business/financials.tsx
