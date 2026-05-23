@@ -202,6 +202,10 @@ export default function Index() {
           textAlign: "center",
           padding: "1.25rem 1.5rem 2rem",
           borderTop: "1px solid rgba(212,160,23,0.12)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "1.5rem",
         }}
       >
         <a
@@ -218,6 +222,20 @@ export default function Index() {
           }}
         >
           ourheadwaters.ca
+        </a>
+        <span style={{ color: "rgba(212,160,23,0.25)", fontSize: "0.65rem" }}>·</span>
+        <a
+          href={`${base}internal`}
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "0.72rem",
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "rgba(212,160,23,0.45)",
+            textDecoration: "none",
+          }}
+        >
+          → Internal docs
         </a>
       </div>
     </div>
