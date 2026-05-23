@@ -1,11 +1,21 @@
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { ELEMENTS } from "@/data/forgeData";
 import { setFaction, getFaction } from "@/lib/forgeStorage";
+import { GordBird } from "@/components/forge/GordBird";
+import { SMITH_HECKLES } from "@/lib/forgeCastleTips";
 import type { ElementId } from "@/data/forgeData";
 
 export function FactionLanding() {
   const [, navigate] = useLocation();
   const current = getFaction();
+  const [heckleIdx] = useState(() => Math.floor(Math.random() * SMITH_HECKLES.length));
+  const [showGordQuip, setShowGordQuip] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setShowGordQuip(true), 2200);
+    return () => clearTimeout(t);
+  }, []);
 
   function chooseFaction(id: ElementId) {
     setFaction(id);
@@ -39,6 +49,49 @@ export function FactionLanding() {
         >
           ← Back to Hub
         </button>
+
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 20 }}>
+          <div style={{ flexShrink: 0, marginTop: 4 }}>
+            <GordBird size={48} variant="full" animated={true} />
+          </div>
+          {showGordQuip && (
+            <div
+              style={{
+                backgroundColor: "#1a1508",
+                border: "1px solid rgba(217,119,6,0.4)",
+                borderRadius: 10,
+                padding: "10px 14px",
+                maxWidth: 340,
+                position: "relative",
+                animation: "gordBubbleIn 0.22s ease-out both",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.72rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "#D97706",
+                  marginBottom: 4,
+                }}
+              >
+                Gord on Smith
+              </p>
+              <p
+                style={{
+                  fontSize: "0.82rem",
+                  color: "#F0CFA0",
+                  lineHeight: 1.55,
+                  margin: 0,
+                  fontStyle: "italic",
+                }}
+              >
+                {SMITH_HECKLES[heckleIdx]}
+              </p>
+            </div>
+          )}
+        </div>
 
         <p
           style={{

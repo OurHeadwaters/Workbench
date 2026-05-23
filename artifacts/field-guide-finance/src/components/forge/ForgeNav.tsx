@@ -1,6 +1,7 @@
 import { useLocation } from "wouter";
 import { ELEMENT_MAP } from "@/data/forgeData";
 import { getFaction } from "@/lib/forgeStorage";
+import { GordGuide } from "@/components/forge/GordGuide";
 
 type NavPage = "modules" | "forge" | "great-hall" | "library" | "progress" | "faction" | "battle-feed" | "shallows";
 
@@ -20,6 +21,7 @@ export function ForgeNav({ active }: { active: NavPage }) {
   ];
 
   return (
+    <>
     <nav
       style={{
         borderBottom: "1px solid rgba(255,255,255,0.08)",
@@ -109,5 +111,7 @@ export function ForgeNav({ active }: { active: NavPage }) {
         </button>
       ))}
     </nav>
+    <GordGuide />
+    </>
   );
 }

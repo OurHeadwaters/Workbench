@@ -1,0 +1,45 @@
+Gord's Learning Experience
+
+What & Why
+
+A new standalone web artifact: a medieval castle-themed crypto/blockchain learning experience. Gord (the animated owl from @workspace/gord-bird) is the guide. He perches directly on stone block UI cards throughout the castle. Smith the Blacksmith is the community skeptic and Gord's foil — Gord heckles him about regulation and crypto freedom, and delivers Saladin-style anecdotes as wisdom drops.
+
+Done looks like
+
+A new web app accessible at /crypto-castle/ with a dark stone-and-torchlight castle aesthetic (dark charcoal stone, amber/gold torch warmth, rough-hewn textures)
+An animated onboarding sequence where Gord flies in and lands on a stone block, delivering a welcome message before the learner enters the castle
+Five castle zones — The Keep (home/progress), The Forge (Smith's domain), The Armory (learning modules), The Vault (core crypto concepts), The Courtyard (resources) — each represented as a stone block card Gord can perch on
+Gord's guide system (tip bubble + perch head on the edge) wired to each castle zone, with route-specific tips in his voice
+A dedicated pool of Smith heckles ("everything we like being illegal" theme) that Gord delivers in The Forge specifically — rotating quips about Smith wanting someone to regulate Bitcoin, ban decentralization, or put a king in charge of the ledger
+Saladin anecdotes surfaced as "Wisdom from the Field" — short noble-leadership stories mapped to crypto principles (sovereignty, trustlessness, generosity, passage without permission), shown as a stone-engraved aside on lesson pages
+Gord visibly perches on stone block elements: his feet/talons sit on the top edge of each zone card, with a subtle drop shadow suggesting he is physically resting on the block
+All Gord animations (head-tilt, tail-fan, wing-ruffle, eye tracking) work exactly as in other projects, using the shared @workspace/gord-bird library with no duplication
+Out of scope
+
+Real crypto wallet integration or on-chain functionality
+User accounts or persistent progress (localStorage is fine)
+Smith as a fully interactive character (he is referenced in Gord's dialogue only)
+Actual crypto price data or live feeds
+Steps
+
+Bootstrap artifact — Scaffold a new Vite + React + Tailwind web artifact at artifacts/crypto-castle using the pnpm workspace conventions. Register it with preview path /crypto-castle/ and wire it to the PORT env var. Add @workspace/gord-bird and framer-motion as dependencies.
+Castle design system — Define a castle color palette (deep charcoal #1C1917, warm stone #292524, amber torch #D97706, gold accent #B45309, parchment #FDF6EC, worn leather #8B6F47) and a rough-stone block card component. The block card has a chiseled border, subtle stone texture via CSS, and a designated "perch ledge" at its top edge where Gord sits.
+Gord's tips content for castle routes — Write src/lib/gord-castle-tips.ts with route keys for keep, forge, armory, vault, courtyard, and onboarding. Each route gets 3 tip variants. The forge route tips are all Smith heckles (e.g. "Smith asked who owns Bitcoin. I told him: everyone and no one. He filed a complaint."). Include a separate smithHeckles array (8–10 lines) and a saladinAnecdotes array (6–8 entries) with a heading and body each.
+GordGuide component — Port the GordGuide pattern from the survival-podcast (tip bubble + perch head, eye tracking, idle animations, dismiss/recall) into src/components/GordGuide.tsx, adapted to use the castle tip system and castle color palette. Gord's bubble uses parchment background with gold border. In the perch state, his head peeks over the right edge of the screen as usual.
+Stone block perch layout — On zone card components, render a small Gord head (variant="head", size 44) sitting on the top ledge of one designated card per page — positioned absolutely so his feet overlap the card's top border. Clicking the perched Gord recalls the tip bubble. Only one card per page has a perched Gord; rotate which card he chose using Math.random seeded on the route.
+Onboarding screen — A full-screen castle gate scene: dark stone arch, torch glow, and Gord flying in from off-screen (reuse FlyingGord pattern then land him on a block). He delivers a 3-step onboarding message ("Welcome to the Crypto Castle", "Smith is the blacksmith here — ignore his grumbling", "Saladin built empires without asking permission. So can you."). Advance button moves through steps; final step reveals an "Enter the Castle" CTA. Store completion in localStorage so it only shows once.
+Castle pages — Build five pages using React Router:
+/ → The Keep: welcome banner, zone cards grid (each a stone block), Gord perched on one
+/forge → The Forge: Smith's workspace framing, 3 rotating Smith heckles from Gord's tip bubble, anvil/fire visual accent
+/armory → The Armory: 4–6 placeholder learning module cards (stone blocks with a title, icon, and short description covering Bitcoin basics, Keys & Wallets, Decentralization, Mining, DeFi intro)
+/vault → The Vault: Core concept pages with Saladin anecdote aside panels rendered as stone-engraved quote blocks
+/courtyard → The Courtyard: Resource links and community framing
+Navigation — A castle-themed top nav with a portcullis/gate icon, the site name "Crypto Castle" in a serif font, and zone links. On mobile, collapses to a drawer. Gord's perch head appears in the bottom-right corner site-wide via the GordGuide component.
+Relevant files
+
+lib/gord-bird/src/GordBird.tsx
+lib/gord-bird/src/index.ts
+artifacts/survival-podcast/src/components/gord-guide.tsx
+artifacts/survival-podcast/src/lib/gord-tips.ts
+artifacts/codetry/src/components/GordBird.tsx
+artifacts/survival-podcast/src/components/gord-bird.tsx

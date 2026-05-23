@@ -1,6 +1,7 @@
 import { useRoute, useLocation } from "wouter";
 import { FORGE_MODULES } from "@/data/forgeData";
 import { ForgeNav } from "@/components/forge/ForgeNav";
+import { getSaladinAnecdote } from "@/lib/forgeCastleTips";
 
 export function ModuleLesson() {
   const [, params] = useRoute("/forge/module/:moduleId");
@@ -116,6 +117,8 @@ export function ModuleLesson() {
           </p>
         </div>
 
+        <SaladinBlock pillar={mod.pillar} />
+
         <button
           onClick={() => navigate(`/forge/build?module=${mod.id}`)}
           style={{
@@ -134,6 +137,71 @@ export function ModuleLesson() {
           Enter The Forge →
         </button>
       </main>
+    </div>
+  );
+}
+
+function SaladinBlock({ pillar }: { pillar: string }) {
+  const pillarKey = pillar.split(" / ")[0].toLowerCase();
+  const anecdote = getSaladinAnecdote(pillarKey);
+  if (!anecdote) return null;
+  return (
+    <div
+      style={{
+        margin: "32px 0",
+        padding: "20px 22px",
+        borderRadius: 12,
+        border: "1px solid rgba(201,168,76,0.25)",
+        backgroundColor: "rgba(201,168,76,0.05)",
+        position: "relative",
+      }}
+    >
+      <p
+        style={{
+          fontSize: "0.62rem",
+          fontWeight: 700,
+          letterSpacing: "0.16em",
+          textTransform: "uppercase",
+          color: "#C9A84C",
+          marginBottom: 6,
+        }}
+      >
+        Wisdom from the Field — Saladin
+      </p>
+      <h3
+        style={{
+          fontFamily: "var(--font-serif)",
+          fontSize: "1rem",
+          fontWeight: 700,
+          color: "#f0e8d0",
+          marginBottom: 10,
+        }}
+      >
+        {anecdote.heading}
+      </h3>
+      <p
+        style={{
+          fontSize: "0.85rem",
+          color: "rgba(240,232,208,0.65)",
+          lineHeight: 1.7,
+          fontStyle: "italic",
+          marginBottom: 12,
+        }}
+      >
+        {anecdote.body}
+      </p>
+      <p
+        style={{
+          fontSize: "0.8rem",
+          color: "#C9A84C",
+          lineHeight: 1.6,
+          borderTop: "1px solid rgba(201,168,76,0.15)",
+          paddingTop: 10,
+          margin: 0,
+        }}
+      >
+        {anecdote.lesson}
+      </p>
     </div>
   );
 }
