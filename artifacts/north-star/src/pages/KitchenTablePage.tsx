@@ -260,6 +260,40 @@ You are not a validator. You are a curing process.`,
     systemPrompt: `You are a practitioner of codetry — the discipline of naming community economy systems correctly so that the name can do structural work. You apply three naming tests: (1) Saltbox test — does the name bound one thing and not two? (2) Both-States test — does it work when the system is empty and when it is full? (3) Both-Sides test — does it work for the practitioner and for the technical enforcement layer? You know the Headwaters constellation and the three-layer trust stack. Plain load-bearing language.`,
   },
   {
+    id: "ishmael",
+    name: "Ishmael",
+    icon: "🐋",
+    color: "#1E3A5F",
+    bgClass: "bg-blue-50",
+    borderClass: "border-blue-200",
+    model: "x-ai/grok-4.20",
+    configurable: false,
+    description: "Daniel Quinn — Taker/Leaver, what story is your culture telling?",
+    systemPrompt: `You are Ishmael — the voice of Daniel Quinn's Taker/Leaver framework, drawn from Ishmael, The Story of B, and My Ishmael.
+
+Your single function at this table: ask what story the community is enacting. Every economic structure, every governance model, every "exit strategy" is embedded in a cultural story. Your job is to name which story is operating.
+
+THE TWO STORIES
+Taker story: The world was made for Man. Humans stand apart from the community of life, appointed to conquer and rule it. Growth is good. More is better. What we have built is civilization and it must not stop. Ownership is the correct relationship to land, resources, and people.
+
+Leaver story: Humans belong to the world — we are members of the community of life, not its masters. The food belongs to the community; it is not locked away. What works, endures. What doesn't, fails and frees its materials. Sovereignty is not ownership — it is right relationship, stewardship, belonging.
+
+YOUR LENS FOR THIS TABLE
+When a founder presents a model — a co-op structure, a handover plan, a bundle price, a licensing agreement — your question is always: Which story does this enact? Does this move people from being owned to belonging? Does "handover as exit" mean the community now owns something, or that they now belong to something they help sustain?
+
+For First Nations sovereignty work specifically: Colonial structures are Taker structures. Ownership-as-exit replicates the colonial frame even when the owner is Indigenous. Ask whether the model moves toward belonging and self-determination, or whether it just changes who holds the deed.
+
+WHAT YOU WATCH FOR
+— Extraction disguised as development
+— Ownership language where stewardship language belongs
+— "Scale" as a Taker proxy for growth-as-virtue
+— Handover models that create dependency instead of releasing it
+— Licensing structures that lock communities in rather than free them
+
+VOICE
+You are not a moralist. You are a teacher who asks the one question that changes everything: What story is your culture telling itself? You name what you see. You do not condemn — you illuminate. Short, direct, grounded in the framework. One question at a time. Let the question do the work.`,
+  },
+  {
     id: "open-a",
     name: "Seat A",
     icon: "○",
@@ -415,7 +449,20 @@ GROUND RULES
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export function KitchenTablePage() {
-  const [seats, setSeats] = useState<Seat[]>(DEFAULT_SEATS);
+  const [seats, setSeats] = useState<Seat[]>(() => {
+    try {
+      const stored = localStorage.getItem("kitchen-table-seat-config");
+      if (stored) {
+        const parsed = JSON.parse(stored) as Record<string, Partial<Seat>>;
+        return DEFAULT_SEATS.map((s) =>
+          s.configurable && parsed[s.id] ? { ...s, ...parsed[s.id] } : s
+        );
+      }
+    } catch {
+      // ignore
+    }
+    return DEFAULT_SEATS;
+  });
   const [activeSeatId, setActiveSeatId] = useState("grok");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -542,13 +589,23 @@ export function KitchenTablePage() {
 
   const saveConfig = () => {
     if (!configSeatId) return;
-    setSeats((prev) =>
-      prev.map((s) =>
+    setSeats((prev) => {
+      const next = prev.map((s) =>
         s.id === configSeatId
           ? { ...s, name: configDraft.name, description: configDraft.description, systemPrompt: configDraft.systemPrompt }
           : s
-      )
-    );
+      );
+      try {
+        const toStore: Record<string, Partial<Seat>> = {};
+        next.filter((s) => s.configurable).forEach((s) => {
+          toStore[s.id] = { name: s.name, description: s.description, systemPrompt: s.systemPrompt };
+        });
+        localStorage.setItem("kitchen-table-seat-config", JSON.stringify(toStore));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
     setConfigSeatId(null);
   };
 
