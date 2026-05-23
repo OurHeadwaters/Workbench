@@ -23,6 +23,39 @@ function StepDots({ current }: { current: number }) {
   );
 }
 
+function ChoiceScreen({ onTakeOnboarding, onSkip }: { onTakeOnboarding: () => void; onSkip: () => void }) {
+  return (
+    <div className="flex flex-col items-center text-center gap-6 py-8">
+      <div className="w-16 h-16 rounded-full bg-[#8A6A1A] flex items-center justify-center shadow-md">
+        <Star size={28} className="text-[#FEF3C7]" fill="#FEF3C7" />
+      </div>
+      <div>
+        <h1 className="text-3xl mb-3">Welcome to North Star</h1>
+        <p className="text-[#44403C] text-base leading-relaxed max-w-xs">
+          Take a quick tour to set things up, or jump straight in and explore on your own.
+        </p>
+      </div>
+      <div className="w-full max-w-sm flex flex-col gap-3">
+        <button
+          onClick={onTakeOnboarding}
+          className="flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-4 rounded-2xl text-base font-medium min-h-[56px] hover:bg-[#2C2520] transition-colors shadow-sm"
+        >
+          Take the onboarding <ArrowRight size={18} />
+        </button>
+        <button
+          onClick={onSkip}
+          className="flex items-center justify-center gap-2 border border-[#D6D0C7] bg-white/70 text-[#1C1917] px-6 py-4 rounded-2xl text-base font-medium min-h-[56px] hover:bg-white transition-colors shadow-sm"
+        >
+          Skip to North Star
+        </button>
+      </div>
+      <p className="text-xs text-[#78716C] max-w-xs">
+        The 5-step setup walks through constellations, contracts, and your north star statement. You can also skip and start using the app now.
+      </p>
+    </div>
+  );
+}
+
 function WelcomeStep({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col items-center text-center gap-6 py-8">
@@ -450,6 +483,7 @@ function WhyStep({ onFinish }: { onFinish: () => void }) {
 }
 
 export function OnboardingPage() {
+  const [showChoice, setShowChoice] = useState(true);
   const [step, setStep] = useState(0);
   const completeOnboarding = useStore((s) => s.completeOnboarding);
 
@@ -458,6 +492,24 @@ export function OnboardingPage() {
   function finish() {
     completeOnboarding();
     window.location.replace(`${BASE}/`);
+  }
+
+  function skipOnboarding() {
+    completeOnboarding();
+    window.location.replace(`${BASE}/`);
+  }
+
+  if (showChoice) {
+    return (
+      <div className="min-h-dvh flex flex-col" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
+        <div className="flex-1 px-5 py-8 max-w-lg mx-auto w-full flex flex-col justify-center">
+          <ChoiceScreen
+            onTakeOnboarding={() => setShowChoice(false)}
+            onSkip={skipOnboarding}
+          />
+        </div>
+      </div>
+    );
   }
 
   return (
