@@ -314,6 +314,7 @@ const TEMPLATES: SessionTemplate[] = [
       { q: "Q4", question: "What naming and framing feels clean, honest, and free of drift for the bundles and for practitioner licensing?", lead: "Codetry", leadId: "codetry" },
       { q: "Q5", question: "How should we speak about practitioner licensing so it feels like natural extension rather than add-on?", lead: "Grok", leadId: "grok" },
       { q: "Q6", question: "What one decision or next action carries the most weight from what we've heard?", lead: "Saltbox", leadId: "saltbox" },
+      { q: "Q7", question: "Does the current language in North Star hold the accountability philosophy precisely — flexible structure for founders wired for urgency, without breaking under anxiety or letting others down? Are we using the right visions, the right words, and do we have the discipline not to substitute words that don't fit?", lead: "Codetry", leadId: "codetry" },
     ],
   },
   {
