@@ -260,6 +260,14 @@ const server = http.createServer((req, res) => {
     pathname = pathname.slice(basePath.length) || "/";
   }
 
+  // Deployment health probe — used by ensurePreviewReachable in artifact.toml
+  // to verify this service is listening before the deployment is promoted.
+  if (pathname === "/status") {
+    res.writeHead(200, { "content-type": "application/json; charset=utf-8" });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
   // Expo Go manifest endpoint — only if the client identifies as a native
   // platform via the `expo-platform` header.
   if (pathname === "/" || pathname === "/manifest") {
