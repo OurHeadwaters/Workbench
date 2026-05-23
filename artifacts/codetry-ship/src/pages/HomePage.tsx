@@ -197,8 +197,40 @@ export function HomePage() {
             </a>
           </div>
 
+          {/* Community member entry point */}
+          <div
+            className="mt-8 rounded-md px-5 py-4 w-full text-left"
+            style={{
+              maxWidth: 480,
+              background: "rgba(212,160,23,0.07)",
+              border: "1px solid rgba(212,160,23,0.22)",
+            }}
+            data-testid="hero-community-entry"
+          >
+            <p
+              className="font-mono text-[9px] uppercase tracking-[0.24em] mb-2"
+              style={{ color: "rgba(212,160,23,0.7)" }}
+            >
+              For community members
+            </p>
+            <p
+              className="font-serif text-[15px] leading-[1.55] mb-3"
+              style={{ color: "rgba(244,237,224,0.78)" }}
+            >
+              Is your community ready to run its own economy?
+            </p>
+            <a
+              href={`${import.meta.env.BASE_URL}map`}
+              className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-75"
+              style={{ color: "#d4a017" }}
+              data-testid="hero-community-map-link"
+            >
+              Read the neighbourhood map — orient before the Odyssey →
+            </a>
+          </div>
+
           {/* Youth Odyssey micro-link */}
-          <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.2em]">
+          <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.2em]">
             <a
               href={`${import.meta.env.BASE_URL}story`}
               className="transition-opacity hover:opacity-70"

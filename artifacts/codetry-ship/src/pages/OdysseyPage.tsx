@@ -294,6 +294,14 @@ export function OdysseyPage() {
               Begin the journey ↓
             </a>
             <a
+              href="/map"
+              className="font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
+              style={{ color: "rgba(212,160,23,0.65)" }}
+              data-testid="odyssey-map-link"
+            >
+              ← Read the map first
+            </a>
+            <a
               href="/founding-stories"
               className="font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
               style={{ color: "rgba(244,237,224,0.42)" }}
@@ -578,6 +586,109 @@ export function OdysseyPage() {
               >
                 One piece of real work. One field note. One unlock. No skipping.
               </p>
+            </div>
+          </ScrollReveal>
+
+          {/* Off-ramp — what practitioners can commission after the Odyssey */}
+          <ScrollReveal delay={500}>
+            <div
+              className="mt-8 rounded-xl overflow-hidden"
+              style={{ border: "1px solid rgba(212,160,23,0.18)" }}
+              data-testid="odyssey-commission-offcamp"
+            >
+              <div
+                className="px-6 py-4"
+                style={{ background: "rgba(31,61,46,0.9)", borderBottom: "1px solid rgba(212,160,23,0.14)" }}
+              >
+                <p className="font-mono text-[9px] uppercase tracking-[0.28em] mb-1" style={{ color: "rgba(212,160,23,0.7)" }}>
+                  After the Odyssey
+                </p>
+                <h3 className="font-serif text-xl tracking-tight" style={{ color: "#f4ede0" }}>
+                  What practitioners commission from Codetry
+                </h3>
+                <p className="font-serif text-[14px] italic mt-1" style={{ color: "rgba(244,237,224,0.50)" }}>
+                  You finish the trail knowing exactly what your community is missing. Here is what gets built.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ background: "rgba(244,237,224,0.06)" }}>
+                {[
+                  {
+                    name: "The Lodge",
+                    glyph: "⌁",
+                    color: "#1f3d2e",
+                    tagline: "Identity & trust layer",
+                    desc: "Names held, credentials quiet. The Lodge is the root system — every zone in the community economy knows who is who without a server in the middle.",
+                    href: "/map#zone-1",
+                  },
+                  {
+                    name: "The Clearing",
+                    glyph: "⊕",
+                    color: "#b85a3e",
+                    tagline: "Exchange & settlement",
+                    desc: "Where community transactions are recorded and settled. Producers, households, and the co-op can see every exchange — no ledger held by someone outside the community.",
+                    href: "/services",
+                  },
+                  {
+                    name: "XBuckets",
+                    glyph: "⊞",
+                    color: "#1A5FA8",
+                    tagline: "Non-custodial community wallet",
+                    desc: "A community-run wallet layer on the XRP Ledger. No bank required, no vendor holding the keys. Each household keeps its own passphrase — the community keeps the asset.",
+                    href: "https://xbucketsapp.replit.app",
+                    external: true,
+                  },
+                  {
+                    name: "The Wishing Well",
+                    glyph: "◇",
+                    color: "#0F766E",
+                    tagline: "Community procurement & requests",
+                    desc: "A place for the community to name what it needs before it exists. Requests surface from the household level up — so what gets built next is decided by the community, not the consultant.",
+                    href: "/services",
+                  },
+                ].map(({ name, glyph, color, tagline, desc, href, external }) => (
+                  <a
+                    key={name}
+                    href={href}
+                    target={external ? "_blank" : undefined}
+                    rel={external ? "noopener noreferrer" : undefined}
+                    className="block px-5 py-5 transition-all hover:opacity-90"
+                    style={{ background: "rgba(15,28,24,0.95)", textDecoration: "none" }}
+                  >
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <span className="text-[15px]" style={{ color }}>{glyph}</span>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color }}>
+                        {name}
+                      </p>
+                    </div>
+                    <p className="font-serif text-[12px] italic mb-2" style={{ color: "rgba(244,237,224,0.42)" }}>
+                      {tagline}
+                    </p>
+                    <p className="font-serif text-[14px] leading-[1.55]" style={{ color: "rgba(244,237,224,0.65)" }}>
+                      {desc}
+                    </p>
+                    {external && (
+                      <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: "rgba(244,237,224,0.25)" }}>
+                        External ↗
+                      </p>
+                    )}
+                  </a>
+                ))}
+              </div>
+              <div
+                className="px-6 py-4 flex flex-wrap items-center justify-between gap-3"
+                style={{ background: "rgba(15,28,24,0.95)", borderTop: "1px solid rgba(244,237,224,0.06)" }}
+              >
+                <p className="font-serif text-[13px] italic" style={{ color: "rgba(244,237,224,0.38)" }}>
+                  Each tool is commissioned, built, and handed off — no retainer, no lock-in.
+                </p>
+                <a
+                  href="/services"
+                  className="font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-75"
+                  style={{ color: "#d4a017" }}
+                >
+                  See The Work →
+                </a>
+              </div>
             </div>
           </ScrollReveal>
         </div>

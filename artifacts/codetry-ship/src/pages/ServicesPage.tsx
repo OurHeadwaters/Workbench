@@ -120,6 +120,76 @@ export function ServicesPage() {
           </div>
         </section>
 
+        {/* ── find your path — community type → tool ── */}
+        <section className="pt-10 pb-4">
+          <p className="font-mono text-[13px] uppercase tracking-[0.26em] mb-2" style={{ color: "hsl(var(--accent))" }}>
+            Find your path
+          </p>
+          <p className="font-serif text-[16px] leading-[1.6] mb-5" style={{ color: "hsl(var(--muted-foreground))" }}>
+            Not every community needs the same tool first. Here is where each community type usually starts.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+            {[
+              {
+                type: "Homesteaders & rural households",
+                icon: "🏡",
+                tool: "The Lodge + XBuckets",
+                why: "Start with identity and a non-custodial wallet. Names on record, passphrase in hand — the household runs its own keys without a bank in the middle.",
+                href: "#custom",
+                color: "hsl(30 55% 38%)",
+              },
+              {
+                type: "Food co-ops & producer networks",
+                icon: "🌾",
+                tool: "The Clearing + Co-op Platform",
+                why: "Exchange and settlement between producers, households, and the board — every transaction visible to the community, no external ledger required.",
+                href: "#platform",
+                color: "hsl(145 36% 22%)",
+              },
+              {
+                type: "Homeschool collectives",
+                icon: "📖",
+                tool: "The Handbook + The Wishing Well",
+                why: "Start with the plain-language guide to running a community-owned system, then surface what the collective needs next from the households themselves.",
+                href: `${(import.meta.env.BASE_URL ?? "/").replace(/\/$/, "")}/codetry-handbook/`,
+                color: "hsl(220 20% 32%)",
+              },
+              {
+                type: "Local producers & band councils",
+                icon: "🌲",
+                tool: "Community Store Plan",
+                why: "Site selection, co-op structure, supplier directory, band financing, and day-one operations — handed off so the community runs it without a consultant in the room.",
+                href: "#store",
+                color: "hsl(145 18% 32%)",
+              },
+            ].map(({ type, icon, tool, why, href, color }) => (
+              <a
+                key={type}
+                href={href}
+                className="block rounded-md border bg-card p-4 transition-opacity hover:opacity-85"
+                style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}`, textDecoration: "none" }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[18px] leading-none shrink-0">{icon}</span>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: "hsl(var(--muted-foreground))" }}>{type}</p>
+                </div>
+                <p className="font-serif text-[15px] font-medium tracking-tight mb-1" style={{ color }}>{tool}</p>
+                <p className="font-serif text-[14px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{why}</p>
+              </a>
+            ))}
+          </div>
+          <p className="font-serif text-[13px] italic" style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}>
+            Not sure where you land?{" "}
+            <a
+              href={`${(import.meta.env.BASE_URL ?? "/").replace(/\/$/, "")}/map`}
+              className="underline underline-offset-2 hover:opacity-75 transition-opacity"
+              style={{ color: "hsl(var(--foreground))" }}
+            >
+              Read the neighbourhood map first →
+            </a>
+          </p>
+        </section>
+
         {/* ── the seven tools ── */}
         <section className="pt-10 pb-2">
           <p className="font-mono text-[13px] uppercase tracking-[0.26em] mb-4" style={{ color: "hsl(var(--accent))" }}>

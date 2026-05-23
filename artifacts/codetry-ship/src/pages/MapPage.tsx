@@ -401,11 +401,60 @@ export function MapPage() {
               color: MUTED,
               lineHeight: 1.65,
               maxWidth: 560,
-              margin: "0 0 24px",
+              margin: "0 0 16px",
             }}
           >
             If you just arrived — from The Train, a shared link, or a QR code on a poster — this is the map. Each zone is a different kind of place. Pick the door that matches what you need.
           </p>
+
+          {/* Pre-Odyssey framing block */}
+          <div
+            style={{
+              borderRadius: 10,
+              border: `1px solid rgba(212,160,23,0.35)`,
+              background: "rgba(212,160,23,0.06)",
+              padding: "16px 20px",
+              marginBottom: 24,
+              maxWidth: 560,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "monospace",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "#b85a3e",
+                marginBottom: 7,
+              }}
+            >
+              Make your map before the Odyssey
+            </div>
+            <p style={{ margin: "0 0 12px", fontSize: 13, color: "#4a4035", lineHeight: 1.6 }}>
+              The best travellers orient before they set out. This map shows the six zones of the Headwaters neighbourhood — the terrain you'll be navigating. Understand the shape of it here, then pack your kit and begin.
+            </p>
+            <a
+              href="/odyssey"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontFamily: "monospace",
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: FOREST,
+                textDecoration: "none",
+                borderBottom: `1.5px solid ${FOREST}`,
+                paddingBottom: 1,
+                transition: "opacity 0.15s",
+              }}
+            >
+              Begin the Odyssey →
+            </a>
+          </div>
 
           {/* Toggle */}
           <div
@@ -438,17 +487,43 @@ export function MapPage() {
           ))}
         </div>
 
-        {/* Footer note */}
+        {/* Footer — Odyssey CTA */}
         <div
           style={{
             marginTop: 48,
             paddingTop: 24,
             borderTop: `1px solid ${RULE}`,
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
           }}
         >
           <p style={{ fontSize: 11, color: MUTED, margin: 0 }}>
             Six zones. One neighbourhood. Each zone is a different kind of place — pick the door that matches what you need.
           </p>
+          <a
+            href="/odyssey"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "9px 20px",
+              borderRadius: 6,
+              background: FOREST,
+              color: "#f4ede0",
+              fontFamily: "monospace",
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              textDecoration: "none",
+              flexShrink: 0,
+            }}
+          >
+            Pack your kit — Begin the Odyssey →
+          </a>
         </div>
       </div>
     </main>
