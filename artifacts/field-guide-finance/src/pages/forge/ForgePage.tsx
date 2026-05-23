@@ -1,16 +1,25 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useLocation, useSearch } from "wouter";
 import { ELEMENTS, ELEMENT_MAP, FORGE_MODULES } from "@/data/forgeData";
 import { runReckoning, getSuggestedLabels } from "@/lib/reckoning";
 import type { ForgeNode, ForgeConnection, ReckoningResult } from "@/lib/reckoning";
 import { saveToLibrary, markModuleComplete, incrementPatternsNamed } from "@/lib/forgeStorage";
 import { ForgeNav } from "@/components/forge/ForgeNav";
+import type { ElementId } from "@/data/forgeData";
 
 let _nodeCounter = 0;
 function newNodeId() { return `node-${++_nodeCounter}-${Date.now()}`; }
 function newConnId() { return `conn-${++_nodeCounter}-${Date.now()}`; }
 
 type Phase = "build" | "reckoning" | "codetry" | "faction-comment";
+
+interface DragState {
+  id: string;
+  offsetX: number;
+  offsetY: number;
+  moved: boolean;
+  pointerId: number;
+}
 
 export function ForgePage() {
   const [, navigate] = useLocation();
@@ -19,71 +28,103 @@ export function ForgePage() {
   const moduleId = params.get("module");
   const mod = moduleId ? FORGE_MODULES.find((m) => m.id === moduleId) : null;
 
-  const [nodes, setNodes] = useState<ForgeNode[]>(() => {
-    if (mod) {
-      return mod.startingNodes.map((n) => ({ ...n }));
-    }
-    return [];
-  });
-  const [connections, setConnections] = useState<ForgeConnection[]>(() => {
-    if (mod) {
-      return mod.startingConnections.map((c) => ({ id: newConnId(), fromId: c.fromId, toId: c.toId }));
-    }
-    return [];
-  });
+  const [nodes, setNodes] = useState<ForgeNode[]>(() =>
+    mod ? mod.startingNodes.map((n) => ({ ...n })) : []
+  );
+  const [connections, setConnections] = useState<ForgeConnection[]>(() =>
+    mod ? mod.startingConnections.map((c) => ({ id: newConnId(), fromId: c.fromId, toId: c.toId })) : []
+  );
 
   const [phase, setPhase] = useState<Phase>("build");
   const [reckoningResult, setReckoningResult] = useState<ReckoningResult | null>(null);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [connectingFrom, setConnectingFrom] = useState<string | null>(null);
+  const [pendingElement, setPendingElement] = useState<ElementId | null>(null);
   const [patternName, setPatternName] = useState("");
   const [suggestedLabels, setSuggestedLabels] = useState<string[]>([]);
   const [savedName, setSavedName] = useState<string | null>(null);
-  const [showFactionComment, setShowFactionComment] = useState(false);
 
   const canvasRef = useRef<SVGSVGElement>(null);
-  const draggingNode = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
+  const dragging = useRef<DragState | null>(null);
 
-  function handleCanvasClick(e: React.MouseEvent<SVGSVGElement>) {
-    if (draggingNode.current) return;
-    if (e.target === canvasRef.current || (e.target as Element).tagName === "rect") {
-      setSelectedNodeId(null);
-      if (connectingFrom) setConnectingFrom(null);
+  function svgPoint(clientX: number, clientY: number) {
+    const svg = canvasRef.current;
+    if (!svg) return { x: 0, y: 0 };
+    const rect = svg.getBoundingClientRect();
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+
+  function clamp(v: number, lo: number, hi: number) { return Math.max(lo, Math.min(hi, v)); }
+
+  function handleSvgPointerDown(e: React.PointerEvent<SVGSVGElement>) {
+    const target = e.target as Element;
+    const nodeGroup = target.closest("[data-node-id]") as Element | null;
+
+    if (nodeGroup) {
+      const nodeId = nodeGroup.getAttribute("data-node-id")!;
+      const node = nodes.find((n) => n.id === nodeId);
+      if (!node) return;
+      const { x, y } = svgPoint(e.clientX, e.clientY);
+      dragging.current = {
+        id: nodeId,
+        offsetX: x - node.x,
+        offsetY: y - node.y,
+        moved: false,
+        pointerId: e.pointerId,
+      };
+      canvasRef.current?.setPointerCapture(e.pointerId);
+      e.stopPropagation();
+      return;
+    }
+
+    const isBackground =
+      target === canvasRef.current ||
+      target.tagName === "rect" ||
+      target.tagName === "text" ||
+      target.tagName === "svg";
+
+    if (isBackground && pendingElement) {
+      const { x, y } = svgPoint(e.clientX, e.clientY);
+      setNodes((prev) => [
+        ...prev,
+        { id: newNodeId(), elementId: pendingElement, x, y },
+      ]);
+      setPendingElement(null);
+      e.stopPropagation();
     }
   }
 
-  function handleDragStart(e: React.MouseEvent, nodeId: string) {
-    e.stopPropagation();
+  function handleSvgPointerMove(e: React.PointerEvent<SVGSVGElement>) {
+    if (!dragging.current || dragging.current.pointerId !== e.pointerId) return;
     const svg = canvasRef.current;
     if (!svg) return;
     const rect = svg.getBoundingClientRect();
-    const node = nodes.find((n) => n.id === nodeId);
-    if (!node) return;
-    draggingNode.current = {
-      id: nodeId,
-      offsetX: e.clientX - rect.left - node.x,
-      offsetY: e.clientY - rect.top - node.y,
-    };
-  }
-
-  function handleMouseMove(e: React.MouseEvent<SVGSVGElement>) {
-    if (!draggingNode.current) return;
-    const svg = canvasRef.current;
-    if (!svg) return;
-    const rect = svg.getBoundingClientRect();
-    const x = Math.max(30, Math.min(rect.width - 30, e.clientX - rect.left - draggingNode.current.offsetX));
-    const y = Math.max(30, Math.min(rect.height - 30, e.clientY - rect.top - draggingNode.current.offsetY));
+    const x = clamp(e.clientX - rect.left - dragging.current.offsetX, 30, rect.width - 30);
+    const y = clamp(e.clientY - rect.top - dragging.current.offsetY, 30, rect.height - 50);
+    if (Math.abs(x - (nodes.find((n) => n.id === dragging.current!.id)?.x ?? x)) > 3 ||
+        Math.abs(y - (nodes.find((n) => n.id === dragging.current!.id)?.y ?? y)) > 3) {
+      dragging.current.moved = true;
+    }
     setNodes((prev) =>
-      prev.map((n) => (n.id === draggingNode.current!.id ? { ...n, x, y } : n))
+      prev.map((n) => (n.id === dragging.current!.id ? { ...n, x, y } : n))
     );
   }
 
-  function handleMouseUp() {
-    draggingNode.current = null;
+  function handleSvgPointerUp(e: React.PointerEvent<SVGSVGElement>) {
+    if (!dragging.current || dragging.current.pointerId !== e.pointerId) {
+      dragging.current = null;
+      return;
+    }
+    const wasDrag = dragging.current.moved;
+    const nodeId = dragging.current.id;
+    dragging.current = null;
+
+    if (!wasDrag) {
+      handleNodeTap(nodeId);
+    }
   }
 
-  function handleNodeClick(e: React.MouseEvent, nodeId: string) {
-    e.stopPropagation();
+  function handleNodeTap(nodeId: string) {
     if (connectingFrom) {
       if (connectingFrom === nodeId) {
         setConnectingFrom(null);
@@ -102,23 +143,28 @@ export function ForgePage() {
       }
       setConnectingFrom(null);
     } else {
-      setSelectedNodeId(nodeId === selectedNodeId ? null : nodeId);
+      setSelectedNodeId((prev) => (prev === nodeId ? null : nodeId));
     }
+  }
+
+  function handleSvgClick(e: React.MouseEvent<SVGSVGElement>) {
+    const target = e.target as Element;
+    const isBackground =
+      target === canvasRef.current ||
+      target.tagName === "rect" ||
+      target.tagName === "svg";
+    if (!isBackground) return;
+    if (dragging.current) return;
+    setSelectedNodeId(null);
+    if (connectingFrom) setConnectingFrom(null);
   }
 
   function handleDropOnCanvas(e: React.DragEvent<SVGSVGElement>) {
     e.preventDefault();
     const elementId = e.dataTransfer.getData("elementId");
     if (!elementId) return;
-    const svg = canvasRef.current;
-    if (!svg) return;
-    const rect = svg.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setNodes((prev) => [
-      ...prev,
-      { id: newNodeId(), elementId: elementId as ForgeNode["elementId"], x, y },
-    ]);
+    const { x, y } = svgPoint(e.clientX, e.clientY);
+    setNodes((prev) => [...prev, { id: newNodeId(), elementId: elementId as ElementId, x, y }]);
   }
 
   function removeNode(nodeId: string) {
@@ -135,13 +181,7 @@ export function ForgePage() {
     const result = runReckoning(nodes, connections);
     setReckoningResult(result);
     setPhase("reckoning");
-    if (result.stable) {
-      setSuggestedLabels(getSuggestedLabels(nodes, connections));
-    }
-  }
-
-  function proceedToCodetry() {
-    setPhase("codetry");
+    if (result.stable) setSuggestedLabels(getSuggestedLabels(nodes, connections));
   }
 
   function commitToLibrary() {
@@ -169,41 +209,96 @@ export function ForgePage() {
     setReckoningResult(null);
     setSelectedNodeId(null);
     setConnectingFrom(null);
+    setPendingElement(null);
     setPatternName("");
     setSavedName(null);
   }
 
   return (
-    <div className="forge-bg" style={{ height: "100dvh", display: "flex", flexDirection: "column", fontFamily: "var(--font-sans)", overflow: "hidden" }}>
+    <div
+      className="forge-bg"
+      style={{
+        height: "100dvh",
+        display: "flex",
+        flexDirection: "column",
+        fontFamily: "var(--font-sans)",
+        overflow: "hidden",
+      }}
+    >
       <ForgeNav active="forge" />
 
       <div style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative" }}>
-        <Sidebar nodes={nodes} connectingFrom={connectingFrom} />
+        <Sidebar
+          pendingElement={pendingElement}
+          onSelectElement={(id) => {
+            setPendingElement((prev) => (prev === id ? null : id));
+            setSelectedNodeId(null);
+            setConnectingFrom(null);
+          }}
+        />
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", position: "relative" }}>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            position: "relative",
+          }}
+        >
           {mod && (
             <div
               style={{
-                padding: "8px 16px",
+                padding: "6px 10px 6px 12px",
                 borderBottom: "1px solid rgba(255,255,255,0.06)",
                 backgroundColor: "rgba(255,107,43,0.07)",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
+                gap: 8,
                 flexShrink: 0,
+                flexWrap: "wrap",
               }}
             >
-              <div>
-                <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--forge-orange)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                  {mod.pillar}
-                </span>
-                <span style={{ fontSize: "0.82rem", color: "var(--forge-muted)", marginLeft: 10 }}>
-                  {mod.conceptName}
-                </span>
-              </div>
+              <span
+                style={{
+                  fontSize: "0.66rem",
+                  fontWeight: 700,
+                  color: "var(--forge-orange)",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  flexShrink: 0,
+                }}
+              >
+                {mod.pillar}
+              </span>
+              <span
+                style={{
+                  fontSize: "0.78rem",
+                  color: "var(--forge-muted)",
+                  flex: 1,
+                  minWidth: 0,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {mod.conceptName}
+              </span>
               <button
                 onClick={() => navigate(`/forge/module/${mod.id}`)}
-                style={{ background: "none", border: "none", color: "var(--forge-muted)", fontSize: "0.75rem", cursor: "pointer", fontFamily: "var(--font-sans)", minHeight: 36, padding: "0 8px" }}
+                style={{
+                  background: "none",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 6,
+                  color: "var(--forge-muted)",
+                  fontSize: "0.72rem",
+                  cursor: "pointer",
+                  fontFamily: "var(--font-sans)",
+                  padding: "3px 8px",
+                  flexShrink: 0,
+                  minHeight: 28,
+                  whiteSpace: "nowrap",
+                }}
               >
                 ← Lesson
               </button>
@@ -212,30 +307,72 @@ export function ForgePage() {
 
           <svg
             ref={canvasRef}
-            style={{ flex: 1, cursor: connectingFrom ? "crosshair" : "default" }}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onClick={handleCanvasClick}
+            style={{
+              flex: 1,
+              cursor: pendingElement
+                ? "crosshair"
+                : connectingFrom
+                ? "crosshair"
+                : "default",
+              touchAction: "none",
+              display: "block",
+            }}
+            onPointerDown={handleSvgPointerDown}
+            onPointerMove={handleSvgPointerMove}
+            onPointerUp={handleSvgPointerUp}
+            onPointerCancel={() => { dragging.current = null; }}
+            onClick={handleSvgClick}
             onDrop={handleDropOnCanvas}
             onDragOver={(e) => e.preventDefault()}
           >
             <defs>
-              <filter id="glow-fire"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-              <filter id="glow-water"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-              <filter id="glow-aether"><feGaussianBlur stdDeviation="4" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              {["fire", "water", "earth", "air", "aether"].map((id) => (
+                <filter key={id} id={`glow-${id}`}>
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              ))}
             </defs>
 
             <rect width="100%" height="100%" fill="transparent" />
 
             {nodes.length === 0 && (
               <text
-                x="50%" y="50%"
+                x="50%" y="45%"
                 dominantBaseline="middle"
                 textAnchor="middle"
-                style={{ fill: "rgba(255,255,255,0.12)", fontSize: "1rem", fontFamily: "var(--font-sans)", pointerEvents: "none", userSelect: "none" }}
+                style={{
+                  fill: "rgba(255,255,255,0.12)",
+                  fontSize: "0.9rem",
+                  fontFamily: "var(--font-sans)",
+                  pointerEvents: "none",
+                  userSelect: "none",
+                }}
               >
-                Drag elements from the sidebar — or start a Module for a guided build
+                {pendingElement
+                  ? `Tap to place ${ELEMENT_MAP[pendingElement].name}`
+                  : "Tap an element in the sidebar, then tap here to place it"}
+              </text>
+            )}
+
+            {pendingElement && nodes.length > 0 && (
+              <text
+                x="50%" y="92%"
+                dominantBaseline="middle"
+                textAnchor="middle"
+                style={{
+                  fill: ELEMENT_MAP[pendingElement].color,
+                  fontSize: "0.78rem",
+                  fontFamily: "var(--font-sans)",
+                  pointerEvents: "none",
+                  userSelect: "none",
+                  fontWeight: 700,
+                }}
+              >
+                Tap canvas to place {ELEMENT_MAP[pendingElement].emoji} {ELEMENT_MAP[pendingElement].name}
               </text>
             )}
 
@@ -254,18 +391,18 @@ export function ForgePage() {
                   <line
                     x1={from.x} y1={from.y} x2={to.x} y2={to.y}
                     stroke={isWeak ? "#F59E0B" : el1.color}
-                    strokeWidth={isWeak ? 2.5 : 1.5}
+                    strokeWidth={isWeak ? 3 : 1.5}
                     strokeDasharray={isWeak ? "6 4" : "none"}
                     opacity={0.6}
                     style={{ cursor: "pointer" }}
                     onClick={(e) => { e.stopPropagation(); removeConnection(conn.id); }}
                   />
-                  {[0.3, 0.7].map((t) => (
+                  {[0.35, 0.65].map((t) => (
                     <circle
                       key={t}
                       cx={from.x + (to.x - from.x) * t}
                       cy={from.y + (to.y - from.y) * t}
-                      r={2}
+                      r={2.5}
                       fill={el2.color}
                       opacity={0.5}
                       style={{ pointerEvents: "none" }}
@@ -283,20 +420,28 @@ export function ForgePage() {
                 .filter((f) => f.severity === "critical")
                 .flatMap((f) => f.affectedNodeIds) ?? [];
               const isAffected = affectedIds.includes(node.id);
-              const r = 28;
+              const r = 26;
               return (
                 <g
                   key={node.id}
+                  data-node-id={node.id}
                   transform={`translate(${node.x},${node.y})`}
                   style={{ cursor: "grab" }}
-                  onMouseDown={(e) => handleDragStart(e, node.id)}
-                  onClick={(e) => handleNodeClick(e, node.id)}
                 >
                   {(isSelected || isConnecting) && (
-                    <circle r={r + 8} fill="none" stroke={el.color} strokeWidth={1.5} strokeDasharray="4 4" opacity={0.6} />
+                    <circle
+                      r={r + 9}
+                      fill="none"
+                      stroke={el.color}
+                      strokeWidth={1.5}
+                      strokeDasharray="4 4"
+                      opacity={0.6}
+                      style={{ pointerEvents: "none" }}
+                    />
                   )}
                   {isAffected && (
-                    <circle r={r + 6} fill="none" stroke="#F59E0B" strokeWidth={2} opacity={0.7}>
+                    <circle r={r + 6} fill="none" stroke="#F59E0B" strokeWidth={2} opacity={0.7}
+                      style={{ pointerEvents: "none" }}>
                       <animate attributeName="r" values={`${r + 4};${r + 8};${r + 4}`} dur="1.5s" repeatCount="indefinite" />
                     </circle>
                   )}
@@ -306,40 +451,76 @@ export function ForgePage() {
                     stroke={el.color}
                     strokeWidth={isSelected ? 2.5 : 1.5}
                     filter={`url(#glow-${node.elementId})`}
-                  >
-                    <animate attributeName="r" values={`${r};${r + 2};${r}`} dur="3s" repeatCount="indefinite" />
-                  </circle>
+                    style={{ pointerEvents: "none" }}
+                  />
                   <text
                     textAnchor="middle"
                     dominantBaseline="central"
-                    style={{ fontSize: 18, pointerEvents: "none", userSelect: "none" }}
+                    style={{ fontSize: 17, pointerEvents: "none", userSelect: "none" }}
                   >
                     {el.emoji}
                   </text>
                   <text
-                    y={r + 14}
+                    y={r + 13}
                     textAnchor="middle"
-                    style={{ fontSize: "0.65rem", fill: el.color, fontFamily: "var(--font-sans)", fontWeight: 700, pointerEvents: "none", userSelect: "none" }}
+                    style={{
+                      fontSize: "0.62rem",
+                      fill: el.color,
+                      fontFamily: "var(--font-sans)",
+                      fontWeight: 700,
+                      pointerEvents: "none",
+                      userSelect: "none",
+                    }}
                   >
                     {el.name}
                   </text>
 
                   {isSelected && (
-                    <g>
-                      <circle cx={r + 2} cy={-(r + 2)} r={10} fill="#1a1a2e" stroke="rgba(255,255,255,0.2)" strokeWidth={1}
+                    <g style={{ pointerEvents: "all" }}>
+                      <circle
+                        cx={r + 4} cy={-(r + 4)} r={12}
+                        fill="#1a1a2e"
+                        stroke="rgba(255,100,100,0.5)"
+                        strokeWidth={1}
                         style={{ cursor: "pointer" }}
-                        onClick={(e) => { e.stopPropagation(); removeNode(node.id); }} />
-                      <text x={r + 2} y={-(r + 2)}
-                        textAnchor="middle" dominantBaseline="central"
-                        style={{ fontSize: "0.65rem", fill: "rgba(255,100,100,0.9)", pointerEvents: "none", userSelect: "none" }}>
+                        onClick={(e) => { e.stopPropagation(); removeNode(node.id); }}
+                      />
+                      <text
+                        x={r + 4} y={-(r + 4)}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        style={{
+                          fontSize: "0.7rem",
+                          fill: "rgba(255,100,100,0.9)",
+                          pointerEvents: "none",
+                          userSelect: "none",
+                        }}
+                      >
                         ✕
                       </text>
-                      <circle cx={-(r + 2)} cy={-(r + 2)} r={10} fill="#1a1a2e" stroke={connectingFrom === node.id ? el.color : "rgba(255,255,255,0.2)"} strokeWidth={1}
+                      <circle
+                        cx={-(r + 4)} cy={-(r + 4)} r={12}
+                        fill="#1a1a2e"
+                        stroke={connectingFrom === node.id ? el.color : "rgba(255,255,255,0.25)"}
+                        strokeWidth={1}
                         style={{ cursor: "pointer" }}
-                        onClick={(e) => { e.stopPropagation(); setConnectingFrom(connectingFrom === node.id ? null : node.id); setSelectedNodeId(null); }} />
-                      <text x={-(r + 2)} y={-(r + 2)}
-                        textAnchor="middle" dominantBaseline="central"
-                        style={{ fontSize: "0.65rem", fill: el.color, pointerEvents: "none", userSelect: "none" }}>
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setConnectingFrom((prev) => (prev === node.id ? null : node.id));
+                          setSelectedNodeId(null);
+                        }}
+                      />
+                      <text
+                        x={-(r + 4)} y={-(r + 4)}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        style={{
+                          fontSize: "0.75rem",
+                          fill: el.color,
+                          pointerEvents: "none",
+                          userSelect: "none",
+                        }}
+                      >
                         ⬡
                       </text>
                     </g>
@@ -352,30 +533,45 @@ export function ForgePage() {
           <div
             style={{
               flexShrink: 0,
-              padding: "10px 16px",
+              padding: "8px 12px",
+              paddingBottom: "calc(8px + env(safe-area-inset-bottom, 0px))",
+              paddingRight: "calc(12px + 88px)",
               borderTop: "1px solid rgba(255,255,255,0.06)",
               display: "flex",
               alignItems: "center",
-              gap: 10,
-              backgroundColor: "rgba(0,0,0,0.3)",
+              gap: 8,
+              backgroundColor: "rgba(0,0,0,0.4)",
+              flexWrap: "wrap",
             }}
           >
-            <span style={{ fontSize: "0.72rem", color: "var(--forge-muted)" }}>
-              {nodes.length} node{nodes.length !== 1 ? "s" : ""} · {connections.length} connection{connections.length !== 1 ? "s" : ""}
+            <span style={{ fontSize: "0.7rem", color: "var(--forge-muted)", flexShrink: 0 }}>
+              {nodes.length} node{nodes.length !== 1 ? "s" : ""} ·{" "}
+              {connections.length} conn{connections.length !== 1 ? "s" : ""}
             </span>
             {connectingFrom && (
-              <span style={{ fontSize: "0.72rem", color: "var(--forge-orange)", fontWeight: 600 }}>
-                → Click another node to connect, or click same node to cancel
+              <span style={{ fontSize: "0.7rem", color: "var(--forge-orange)", fontWeight: 600, flexShrink: 0 }}>
+                Tap a node to connect →
               </span>
             )}
-            <div style={{ flex: 1 }} />
+            {pendingElement && (
+              <span style={{ fontSize: "0.7rem", color: ELEMENT_MAP[pendingElement].color, fontWeight: 600, flexShrink: 0 }}>
+                {ELEMENT_MAP[pendingElement].emoji} Tap canvas to place
+              </span>
+            )}
+            <div style={{ flex: 1, minWidth: 0 }} />
             <button
               onClick={resetForge}
               style={{
-                padding: "6px 14px", borderRadius: 7,
+                padding: "6px 12px",
+                borderRadius: 7,
                 border: "1px solid rgba(255,255,255,0.12)",
-                background: "none", color: "var(--forge-muted)",
-                fontSize: "0.78rem", cursor: "pointer", fontFamily: "var(--font-sans)", minHeight: 36,
+                background: "none",
+                color: "var(--forge-muted)",
+                fontSize: "0.76rem",
+                cursor: "pointer",
+                fontFamily: "var(--font-sans)",
+                minHeight: 36,
+                flexShrink: 0,
               }}
             >
               Clear
@@ -383,15 +579,21 @@ export function ForgePage() {
             <button
               onClick={submitReckoning}
               style={{
-                padding: "8px 20px", borderRadius: 8,
+                padding: "8px 14px",
+                borderRadius: 8,
                 border: "none",
                 backgroundColor: "var(--forge-orange)",
                 color: "#fff",
-                fontSize: "0.88rem", fontWeight: 700,
-                cursor: "pointer", fontFamily: "var(--font-sans)", minHeight: 36,
+                fontSize: "0.82rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                fontFamily: "var(--font-sans)",
+                minHeight: 36,
+                flexShrink: 0,
+                whiteSpace: "nowrap",
               }}
             >
-              Submit to The Reckoning →
+              Submit to Reckoning →
             </button>
           </div>
         </div>
@@ -401,7 +603,7 @@ export function ForgePage() {
         <ReckoningOverlay
           result={reckoningResult}
           onReturn={() => setPhase("build")}
-          onCodetry={proceedToCodetry}
+          onCodetry={() => setPhase("codetry")}
         />
       )}
 
@@ -427,68 +629,97 @@ export function ForgePage() {
   );
 }
 
-function Sidebar({ nodes, connectingFrom }: { nodes: ForgeNode[]; connectingFrom: string | null }) {
+function Sidebar({
+  pendingElement,
+  onSelectElement,
+}: {
+  pendingElement: ElementId | null;
+  onSelectElement: (id: ElementId) => void;
+}) {
   return (
     <div
       style={{
-        width: 120,
+        width: 80,
         flexShrink: 0,
         borderRight: "1px solid rgba(255,255,255,0.06)",
-        backgroundColor: "rgba(0,0,0,0.25)",
-        padding: "16px 10px",
+        backgroundColor: "rgba(0,0,0,0.3)",
+        padding: "10px 6px",
         display: "flex",
         flexDirection: "column",
-        gap: 10,
+        gap: 7,
         overflowY: "auto",
+        overflowX: "hidden",
       }}
     >
       <p
         style={{
-          fontSize: "0.62rem",
+          fontSize: "0.55rem",
           fontWeight: 700,
           letterSpacing: "0.12em",
           textTransform: "uppercase",
           color: "var(--forge-muted)",
           textAlign: "center",
-          marginBottom: 4,
+          marginBottom: 2,
+          flexShrink: 0,
         }}
       >
         Primitives
       </p>
-      {ELEMENTS.map((el) => (
-        <div
-          key={el.id}
-          draggable
-          onDragStart={(e) => e.dataTransfer.setData("elementId", el.id)}
-          style={{
-            borderRadius: 10,
-            border: `1px solid ${el.color}60`,
-            backgroundColor: `${el.color}14`,
-            padding: "10px 6px",
-            textAlign: "center",
-            cursor: "grab",
-            userSelect: "none",
-            transition: "transform 0.15s, box-shadow 0.15s",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLDivElement).style.transform = "scale(1.05)";
-            (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 12px ${el.glowColor}`;
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLDivElement).style.transform = "scale(1)";
-            (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
-          }}
-          title={`Drag to add ${el.name} node — ${el.pillar}`}
-        >
-          <div style={{ fontSize: 22, marginBottom: 4 }}>{el.emoji}</div>
-          <div style={{ fontSize: "0.65rem", fontWeight: 700, color: el.color }}>{el.name}</div>
-          <div style={{ fontSize: "0.58rem", color: "var(--forge-muted)", marginTop: 2 }}>{el.pillar}</div>
-        </div>
-      ))}
+      {ELEMENTS.map((el) => {
+        const isPending = pendingElement === el.id;
+        return (
+          <button
+            key={el.id}
+            draggable
+            onDragStart={(e) => e.dataTransfer.setData("elementId", el.id)}
+            onClick={() => onSelectElement(el.id)}
+            style={{
+              borderRadius: 9,
+              border: `1px solid ${isPending ? el.color : el.color + "50"}`,
+              backgroundColor: isPending ? `${el.color}30` : `${el.color}10`,
+              padding: "8px 4px",
+              textAlign: "center",
+              cursor: "pointer",
+              userSelect: "none",
+              transition: "transform 0.12s, box-shadow 0.12s, background-color 0.12s",
+              boxShadow: isPending ? `0 0 14px ${el.glowColor}` : "none",
+              transform: isPending ? "scale(1.06)" : "scale(1)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+              background: "none",
+              fontFamily: "var(--font-sans)",
+              minHeight: 44,
+              width: "100%",
+            }}
+            title={`${el.name} — ${el.pillar}`}
+          >
+            <span style={{ fontSize: 20 }}>{el.emoji}</span>
+            <span style={{ fontSize: "0.6rem", fontWeight: 700, color: el.color, display: "block" }}>
+              {el.name}
+            </span>
+          </button>
+        );
+      })}
 
-      <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-        <p style={{ fontSize: "0.6rem", color: "var(--forge-muted)", textAlign: "center", lineHeight: 1.5 }}>
-          Drag to canvas.<br />Click node to select, then ⬡ to connect.
+      <div
+        style={{
+          marginTop: "auto",
+          paddingTop: 8,
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          flexShrink: 0,
+        }}
+      >
+        <p
+          style={{
+            fontSize: "0.54rem",
+            color: "var(--forge-muted)",
+            textAlign: "center",
+            lineHeight: 1.5,
+          }}
+        >
+          Tap to select, tap canvas to place
         </p>
       </div>
     </div>
@@ -513,32 +744,37 @@ function ReckoningOverlay({
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        backgroundColor: "rgba(0,0,0,0.75)",
+        backgroundColor: "rgba(0,0,0,0.8)",
         backdropFilter: "blur(4px)",
+        WebkitBackdropFilter: "blur(4px)",
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-end",
         justifyContent: "center",
-        padding: 24,
+        padding: 0,
       }}
     >
       <div
         style={{
           maxWidth: 560,
           width: "100%",
-          borderRadius: 16,
+          borderRadius: "16px 16px 0 0",
           border: "1px solid rgba(255,255,255,0.12)",
+          borderBottom: "none",
           backgroundColor: "#0f0f1a",
-          padding: "28px 28px 24px",
+          padding: "24px 20px",
+          paddingBottom: "calc(24px + env(safe-area-inset-bottom, 0px))",
+          maxHeight: "85dvh",
+          overflowY: "auto",
         }}
       >
         <p
           style={{
-            fontSize: "0.7rem",
+            fontSize: "0.68rem",
             fontWeight: 700,
             letterSpacing: "0.16em",
             textTransform: "uppercase",
             color: result.stable ? "#34D399" : "#F87171",
-            marginBottom: 6,
+            marginBottom: 4,
           }}
         >
           The Reckoning
@@ -546,59 +782,65 @@ function ReckoningOverlay({
         <h2
           style={{
             fontFamily: "var(--font-serif)",
-            fontSize: "1.4rem",
+            fontSize: "1.3rem",
             fontWeight: 700,
             color: "#f0f0f0",
-            marginBottom: 20,
+            marginBottom: 16,
           }}
         >
           {result.stable ? "Build is structurally stable." : "Structural issues detected."}
         </h2>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
           {result.findings.map((f, i) => (
             <div
               key={i}
               style={{
-                padding: "12px 16px",
+                padding: "10px 14px",
                 borderRadius: 9,
                 border: `1px solid ${severityColor[f.severity]}35`,
                 backgroundColor: `${severityColor[f.severity]}0c`,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 3 }}>
                 <span
                   style={{
-                    fontSize: "0.62rem",
+                    fontSize: "0.6rem",
                     fontWeight: 700,
-                    letterSpacing: "0.1em",
+                    letterSpacing: "0.08em",
                     color: severityColor[f.severity],
                     backgroundColor: `${severityColor[f.severity]}20`,
-                    padding: "2px 7px",
+                    padding: "2px 6px",
                     borderRadius: 4,
                   }}
                 >
                   {severityLabel[f.severity]}
                 </span>
-                <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.35)", fontFamily: "monospace" }}>
+                <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.3)", fontFamily: "monospace" }}>
                   {f.code}
                 </span>
               </div>
-              <p style={{ fontSize: "0.88rem", color: "#d0d0d0", lineHeight: 1.55, margin: 0 }}>
+              <p style={{ fontSize: "0.85rem", color: "#d0d0d0", lineHeight: 1.5, margin: 0 }}>
                 {f.message}
               </p>
             </div>
           ))}
         </div>
 
-        <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+        <div style={{ display: "flex", gap: 10 }}>
           <button
             onClick={onReturn}
             style={{
-              padding: "9px 18px", borderRadius: 9,
+              flex: 1,
+              padding: "11px 16px",
+              borderRadius: 9,
               border: "1px solid rgba(255,255,255,0.15)",
-              background: "none", color: "#888",
-              fontSize: "0.88rem", cursor: "pointer", fontFamily: "var(--font-sans)", minHeight: 44,
+              background: "none",
+              color: "#888",
+              fontSize: "0.88rem",
+              cursor: "pointer",
+              fontFamily: "var(--font-sans)",
+              minHeight: 44,
             }}
           >
             Return to Forge
@@ -607,12 +849,17 @@ function ReckoningOverlay({
             <button
               onClick={onCodetry}
               style={{
-                padding: "9px 22px", borderRadius: 9,
+                flex: 1,
+                padding: "11px 16px",
+                borderRadius: 9,
                 border: "none",
                 backgroundColor: "#C9A84C",
                 color: "#0f0f1a",
-                fontSize: "0.88rem", fontWeight: 700,
-                cursor: "pointer", fontFamily: "var(--font-sans)", minHeight: 44,
+                fontSize: "0.88rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                fontFamily: "var(--font-sans)",
+                minHeight: 44,
               }}
             >
               Name this pattern →
@@ -643,33 +890,36 @@ function CodetryModal({
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        backgroundColor: "rgba(0,0,0,0.82)",
+        backgroundColor: "rgba(0,0,0,0.88)",
         backdropFilter: "blur(6px)",
+        WebkitBackdropFilter: "blur(6px)",
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-end",
         justifyContent: "center",
-        padding: 24,
       }}
     >
       <div
         style={{
-          maxWidth: 500,
+          maxWidth: 520,
           width: "100%",
-          borderRadius: 16,
+          borderRadius: "16px 16px 0 0",
           border: "1px solid rgba(201,168,76,0.35)",
+          borderBottom: "none",
           backgroundColor: "#13100a",
-          padding: "32px 28px 28px",
-          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E\")",
+          padding: "28px 20px",
+          paddingBottom: "calc(28px + env(safe-area-inset-bottom, 0px))",
+          maxHeight: "90dvh",
+          overflowY: "auto",
         }}
       >
         <p
           style={{
-            fontSize: "0.7rem",
+            fontSize: "0.68rem",
             fontWeight: 700,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
             color: "#C9A84C",
-            marginBottom: 8,
+            marginBottom: 6,
           }}
         >
           Codetry
@@ -677,7 +927,7 @@ function CodetryModal({
         <h2
           style={{
             fontFamily: "var(--font-serif)",
-            fontSize: "1.5rem",
+            fontSize: "1.4rem",
             fontWeight: 700,
             color: "#f0e8d0",
             marginBottom: 6,
@@ -685,13 +935,13 @@ function CodetryModal({
         >
           Name this pattern
         </h2>
-        <p style={{ fontSize: "0.85rem", color: "rgba(240,232,208,0.55)", lineHeight: 1.6, marginBottom: 24 }}>
-          Precision naming is the discipline. The name should be accurate, portable, and earnable — someone else should be able to read it and know what the pattern does.
+        <p style={{ fontSize: "0.83rem", color: "rgba(240,232,208,0.5)", lineHeight: 1.6, marginBottom: 20 }}>
+          Precision naming is the discipline. The name should be accurate, portable, and earnable.
         </p>
 
         {suggestedLabels.length > 0 && (
-          <div style={{ marginBottom: 16 }}>
-            <p style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#C9A84C", marginBottom: 8 }}>
+          <div style={{ marginBottom: 14 }}>
+            <p style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#C9A84C", marginBottom: 7 }}>
               Suggested labels
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -701,15 +951,14 @@ function CodetryModal({
                   onClick={() => onNameChange(label)}
                   style={{
                     textAlign: "left",
-                    padding: "8px 14px",
+                    padding: "10px 14px",
                     borderRadius: 8,
                     border: `1px solid ${patternName === label ? "rgba(201,168,76,0.6)" : "rgba(201,168,76,0.2)"}`,
                     backgroundColor: patternName === label ? "rgba(201,168,76,0.12)" : "rgba(201,168,76,0.05)",
                     color: "#f0e8d0",
-                    fontSize: "0.85rem",
+                    fontSize: "0.88rem",
                     cursor: "pointer",
                     fontFamily: "var(--font-sans)",
-                    transition: "border-color 0.15s",
                     minHeight: 44,
                   }}
                 >
@@ -720,8 +969,8 @@ function CodetryModal({
           </div>
         )}
 
-        <div style={{ marginBottom: 20 }}>
-          <p style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#C9A84C", marginBottom: 8 }}>
+        <div style={{ marginBottom: 18 }}>
+          <p style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#C9A84C", marginBottom: 7 }}>
             Or write your own
           </p>
           <input
@@ -731,7 +980,7 @@ function CodetryModal({
             placeholder="Name this pattern precisely..."
             style={{
               width: "100%",
-              padding: "10px 14px",
+              padding: "11px 14px",
               borderRadius: 9,
               border: "1px solid rgba(201,168,76,0.3)",
               backgroundColor: "rgba(255,255,255,0.05)",
@@ -739,19 +988,27 @@ function CodetryModal({
               fontSize: "0.95rem",
               fontFamily: "var(--font-sans)",
               outline: "none",
+              WebkitAppearance: "none",
+              boxSizing: "border-box",
             }}
             onKeyDown={(e) => { if (e.key === "Enter" && patternName.trim()) onCommit(); }}
           />
         </div>
 
-        <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+        <div style={{ display: "flex", gap: 10 }}>
           <button
             onClick={onBack}
             style={{
-              padding: "9px 16px", borderRadius: 9,
+              flex: 1,
+              padding: "11px 14px",
+              borderRadius: 9,
               border: "1px solid rgba(255,255,255,0.1)",
-              background: "none", color: "rgba(240,232,208,0.4)",
-              fontSize: "0.85rem", cursor: "pointer", fontFamily: "var(--font-sans)", minHeight: 44,
+              background: "none",
+              color: "rgba(240,232,208,0.4)",
+              fontSize: "0.88rem",
+              cursor: "pointer",
+              fontFamily: "var(--font-sans)",
+              minHeight: 44,
             }}
           >
             Back
@@ -760,14 +1017,17 @@ function CodetryModal({
             onClick={onCommit}
             disabled={!patternName.trim()}
             style={{
-              padding: "10px 24px", borderRadius: 9,
+              flex: 2,
+              padding: "11px 14px",
+              borderRadius: 9,
               border: "none",
-              backgroundColor: patternName.trim() ? "#C9A84C" : "rgba(201,168,76,0.3)",
-              color: patternName.trim() ? "#0f0f1a" : "rgba(255,255,255,0.3)",
-              fontSize: "0.9rem", fontWeight: 700,
+              backgroundColor: patternName.trim() ? "#C9A84C" : "rgba(201,168,76,0.25)",
+              color: patternName.trim() ? "#0f0f1a" : "rgba(255,255,255,0.25)",
+              fontSize: "0.9rem",
+              fontWeight: 700,
               cursor: patternName.trim() ? "pointer" : "default",
-              fontFamily: "var(--font-sans)", minHeight: 44,
-              transition: "background-color 0.15s",
+              fontFamily: "var(--font-sans)",
+              minHeight: 44,
             }}
           >
             Commit to Library →
@@ -810,60 +1070,61 @@ function FactionCommentOverlay({
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        backgroundColor: "rgba(0,0,0,0.85)",
+        backgroundColor: "rgba(0,0,0,0.88)",
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-end",
         justifyContent: "center",
-        padding: 24,
       }}
     >
       <div
         style={{
           maxWidth: 480,
           width: "100%",
-          borderRadius: 16,
+          borderRadius: "16px 16px 0 0",
           border: "1px solid rgba(201,168,76,0.3)",
+          borderBottom: "none",
           backgroundColor: "#0f0f1a",
-          padding: "32px 28px",
+          padding: "28px 20px",
+          paddingBottom: "calc(28px + env(safe-area-inset-bottom, 0px))",
           textAlign: "center",
         }}
       >
-        <p style={{ fontSize: 36, marginBottom: 12 }}>📜</p>
-        <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C9A84C", marginBottom: 8 }}>
+        <p style={{ fontSize: 32, marginBottom: 10 }}>📜</p>
+        <p style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C9A84C", marginBottom: 6 }}>
           Pattern committed
         </p>
-        <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 700, color: "#f0e8d0", marginBottom: 6 }}>
+        <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontWeight: 700, color: "#f0e8d0", marginBottom: 4 }}>
           "{patternName}"
         </h2>
-        <p style={{ fontSize: "0.85rem", color: "rgba(240,232,208,0.55)", marginBottom: 20, lineHeight: 1.6 }}>
+        <p style={{ fontSize: "0.82rem", color: "rgba(240,232,208,0.5)", marginBottom: 18 }}>
           Saved to your Blueprint Library.
         </p>
 
         {dominantEl && (
           <div
             style={{
-              padding: "14px 18px",
+              padding: "12px 16px",
               borderRadius: 10,
               border: `1px solid ${dominantEl.color}35`,
               backgroundColor: `${dominantEl.color}0c`,
-              marginBottom: 24,
+              marginBottom: 20,
               textAlign: "left",
             }}
           >
-            <span style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: dominantEl.color, display: "block", marginBottom: 6 }}>
+            <span style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: dominantEl.color, display: "block", marginBottom: 5 }}>
               Faction Voice — {dominantEl.factionName}
             </span>
-            <p style={{ fontSize: "0.88rem", color: "#c0c0c0", lineHeight: 1.6, fontStyle: "italic", margin: 0 }}>
+            <p style={{ fontSize: "0.85rem", color: "#c0c0c0", lineHeight: 1.6, fontStyle: "italic", margin: 0 }}>
               {comment}
             </p>
           </div>
         )}
 
-        <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: 10 }}>
           <button
             onClick={onBuildAgain}
             style={{
-              padding: "10px 20px", borderRadius: 9,
+              flex: 1, padding: "11px 14px", borderRadius: 9,
               border: "1px solid rgba(255,255,255,0.15)",
               background: "none", color: "#888",
               fontSize: "0.88rem", cursor: "pointer", fontFamily: "var(--font-sans)", minHeight: 44,
@@ -874,7 +1135,7 @@ function FactionCommentOverlay({
           <button
             onClick={onDone}
             style={{
-              padding: "10px 22px", borderRadius: 9,
+              flex: 1, padding: "11px 14px", borderRadius: 9,
               border: "none",
               backgroundColor: "#C9A84C",
               color: "#0f0f1a",
