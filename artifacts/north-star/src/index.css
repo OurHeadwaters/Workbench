@@ -49,6 +49,23 @@ body {
   color: #1C1917;
   min-height: 100dvh;
   overscroll-behavior: none;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Mobile density pass — Fraunces drops to weight 500 on small screens so headings don't feel shouty. */
+@media (max-width: 640px) {
+  h1, h2, h3, h4 {
+    font-weight: 500;
+  }
+}
+
+/* Hide scrollbars on horizontal carousels */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 body::before {

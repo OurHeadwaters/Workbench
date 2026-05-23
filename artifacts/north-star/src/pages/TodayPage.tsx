@@ -1,37 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { format, parseISO, differenceInDays, startOfISOWeek, getDay } from "date-fns";
-import { Mic, AlertTriangle, Archive, ExternalLink, Star, Feather } from "lucide-react";
+import { AlertTriangle, ExternalLink, Star, Feather, Inbox, ListChecks, Clock, X, ChevronLeft, ChevronRight, Pencil } from "lucide-react";
 import { useStore, getTodayKey, getWeekKey, getSeasonKey } from "@/store";
 import { MorningTriage } from "@/components/MorningTriage";
-import { CaptureSheet } from "@/components/CaptureSheet";
 import { ZoneBadge } from "@/components/ZoneBadge";
-import { ZoneGate } from "@/components/ZoneGate";
-import { OdysseyTrail } from "@/components/TrailSign";
 import { cn } from "@/lib/utils";
-import { ZONE_CLASSES } from "@/lib/utils";
+import { ZONE_LABELS } from "@/lib/utils";
+import { ZONE_SOLID, ZONE_WASH, ZONE_GLOW, useActiveZone } from "@/lib/zone";
 import type { ZoneId, Constellation } from "@/types";
 import { fetchTrailSigns, getTrailSigns } from "@workspace/odyssey";
+import { OdysseyTrail } from "@/components/TrailSign";
 import { Link, useLocation } from "wouter";
 
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-
-const ZONE_SOLID: Record<ZoneId, string> = {
-  Z0: "#8A6A1A",
-  Z1: "#4F6E5C",
-  Z2: "#3B5998",
-  Z3: "#7C4E8A",
-  Z4: "#B45309",
-  Z5: "#4A6272",
-};
-
-const ZONE_GLOW: Record<ZoneId, string> = {
-  Z0: "rgba(138,106,26,0.18)",
-  Z1: "rgba(79,110,92,0.18)",
-  Z2: "rgba(59,89,152,0.18)",
-  Z3: "rgba(124,78,138,0.18)",
-  Z4: "rgba(180,83,9,0.18)",
-  Z5: "rgba(74,98,114,0.18)",
-};
+type Room = "triage" | "pick" | "log";
 
 function BackupNudge() {
   const lastBackedUpAt = useStore((s) => s.lastBackedUpAt);
@@ -48,9 +29,7 @@ function BackupNudge() {
   return (
     <div className="rounded-xl border border-[#C8923A]/40 bg-[#FEF9EE] px-4 py-3 flex items-start justify-between gap-3">
       <div className="flex items-start gap-2.5">
-        <div className="w-5 h-5 rounded-full bg-[#B45309]/10 flex items-center justify-center shrink-0 mt-0.5">
-          <AlertTriangle size={11} className="text-[#B45309]" />
-        </div>
+        <AlertTriangle size={14} className="text-[#B45309] mt-1 shrink-0" />
         <p className="text-sm text-[#78400A]">
           Back up in Settings — North Star lives only on this device.
           {lastBackedUpAt ? ` Last backup: ${daysSince}d ago.` : " No backup yet."}
@@ -58,7 +37,7 @@ function BackupNudge() {
       </div>
       <button
         onClick={() => dismissNudge(nudgeKey)}
-        className="text-xs text-[#B45309]/70 underline shrink-0 min-h-[44px] flex items-center hover:text-[#B45309] transition-colors"
+        className="text-xs text-[#B45309]/70 underline shrink-0 min-h-[44px] flex items-center"
       >
         Dismiss
       </button>
@@ -71,42 +50,33 @@ function ReviewNudges() {
   const seasonalReviews = useStore((s) => s.seasonalReviews);
   const dismissedNudges = useStore((s) => s.dismissedNudges);
   const dismissNudge = useStore((s) => s.dismissNudge);
-
   const todayKey = getTodayKey();
   const weekKey = getWeekKey();
   const seasonKey = getSeasonKey();
   const day = getDay(new Date());
   const isSunOrMon = day === 0 || day === 1;
-
   const weeklyNudgeKey = `weekly-${todayKey}`;
   const seasonalNudgeKey = `seasonal-${todayKey}`;
-
-  const hasWeeklyReview = weeklyReviews.some((r) => r.weekKey === weekKey);
-  const hasSeasonalReview = seasonalReviews.some((r) => r.seasonKey === seasonKey);
+  const hasWeekly = weeklyReviews.some((r) => r.weekKey === weekKey);
+  const hasSeasonal = seasonalReviews.some((r) => r.seasonKey === seasonKey);
 
   return (
     <>
-      {isSunOrMon && !hasWeeklyReview && !dismissedNudges[weeklyNudgeKey] && (
+      {isSunOrMon && !hasWeekly && !dismissedNudges[weeklyNudgeKey] && (
         <div className="rounded-xl border border-[#D6D0C7] bg-[#F5F0E8] px-4 py-3 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="text-base leading-none">📋</span>
-            <p className="text-sm text-[#44403C]">Weekly review ready — how did the week go?</p>
-          </div>
+          <p className="text-sm text-[#44403C]">📋 Weekly review ready</p>
           <div className="flex gap-2 shrink-0">
-            <Link href="/weekly" className="text-xs text-[#1C1917] font-medium underline min-h-[44px] flex items-center">Review</Link>
-            <button onClick={() => dismissNudge(weeklyNudgeKey)} className="text-xs text-[#78716C] min-h-[44px] flex items-center">Later</button>
+            <Link href="/weekly" className="text-sm text-[#1C1917] font-medium underline min-h-[44px] flex items-center">Review</Link>
+            <button onClick={() => dismissNudge(weeklyNudgeKey)} className="text-sm text-[#78716C] min-h-[44px] flex items-center">Later</button>
           </div>
         </div>
       )}
-      {!hasSeasonalReview && !dismissedNudges[seasonalNudgeKey] && (
+      {!hasSeasonal && !dismissedNudges[seasonalNudgeKey] && (
         <div className="rounded-xl border border-[#D6D0C7] bg-[#F5F0E8] px-4 py-3 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="text-base leading-none">🌿</span>
-            <p className="text-sm text-[#44403C]">No seasonal review yet for {seasonKey.replace("-", " ")}.</p>
-          </div>
+          <p className="text-sm text-[#44403C]">🌿 Seasonal review — {seasonKey.replace("-", " ")}</p>
           <div className="flex gap-2 shrink-0">
-            <Link href="/seasonal" className="text-xs text-[#1C1917] font-medium underline min-h-[44px] flex items-center">Review</Link>
-            <button onClick={() => dismissNudge(seasonalNudgeKey)} className="text-xs text-[#78716C] min-h-[44px] flex items-center">Later</button>
+            <Link href="/seasonal" className="text-sm text-[#1C1917] font-medium underline min-h-[44px] flex items-center">Review</Link>
+            <button onClick={() => dismissNudge(seasonalNudgeKey)} className="text-sm text-[#78716C] min-h-[44px] flex items-center">Later</button>
           </div>
         </div>
       )}
@@ -114,61 +84,208 @@ function ReviewNudges() {
   );
 }
 
-function ConstellationPicker() {
+// ─── Persistent header strip ────────────────────────────────────────────
+function HeaderStrip() {
+  const constellations = useStore((s) => s.constellations);
+  const getTodayPick = useStore((s) => s.getTodayPick);
+  const setTodayPick = useStore((s) => s.setTodayPick);
+  const pick = getTodayPick();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(pick.reflection ?? "");
+
+  const today = format(new Date(), "EEE, MMM d");
+  const picked = constellations.filter((c) => pick.constellationIds.includes(c.id));
+
+  const logged = Object.values(pick.hoursByZone ?? {}).reduce((a, b) => a + (b ?? 0), 0);
+  const planned = picked.length * 2; // rough proxy: 2h per picked
+  const pct = planned > 0 ? Math.min(100, (logged / planned) * 100) : 0;
+
+  function save() {
+    setTodayPick({ reflection: draft.trim() });
+    setEditing(false);
+  }
+
+  return (
+    <div className="sticky top-0 z-20 backdrop-blur-md bg-white/85 border-b border-[#E7E5E4]">
+      <div className="px-4 py-2.5 max-w-lg mx-auto space-y-1.5">
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-[#78716C] uppercase tracking-widest">{today}</p>
+          <p className="text-xs text-[#78716C] tabular-nums">
+            {logged.toFixed(1)}h logged{planned > 0 ? ` / ${planned}h planned` : ""}
+          </p>
+        </div>
+        {editing ? (
+          <input
+            autoFocus
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={save}
+            onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") { setDraft(pick.reflection ?? ""); setEditing(false); } }}
+            placeholder="Today, the win is…"
+            className="w-full text-base border border-[#E7E5E4] rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+          />
+        ) : (
+          <button
+            onClick={() => { setDraft(pick.reflection ?? ""); setEditing(true); }}
+            className="w-full text-left flex items-center gap-2 min-h-[28px]"
+          >
+            <Feather size={13} className="text-[#78716C] shrink-0" />
+            <span className={cn("text-base truncate", pick.reflection ? "text-[#1C1917]" : "text-[#B5AFA9] italic")}>
+              {pick.reflection || "Today, the win is…"}
+            </span>
+            <Pencil size={12} className="text-[#B5AFA9] shrink-0 ml-auto" />
+          </button>
+        )}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 -mx-1 px-1" style={{ scrollbarWidth: "none" }}>
+          {picked.length === 0 ? (
+            <span className="text-xs text-[#B5AFA9]">No constellations picked yet</span>
+          ) : (
+            picked.map((c) => {
+              const col = ZONE_SOLID[c.zone];
+              return (
+                <span
+                  key={c.id}
+                  className="text-xs px-2 py-1 rounded-full border whitespace-nowrap shrink-0"
+                  style={{ borderColor: `${col}55`, backgroundColor: `${col}1A`, color: col, fontWeight: 500 }}
+                >
+                  {c.name}
+                </span>
+              );
+            })
+          )}
+        </div>
+        {planned > 0 && (
+          <div className="h-1 rounded-full bg-[#F5F0E8] overflow-hidden">
+            <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: "#8A6A1A" }} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Triage room (collapsed → opens full-screen sheet) ──────────────────
+function TriageRoom() {
+  const inbox = useStore((s) => s.inbox);
+  const pendingReplies = useStore((s) => s.pendingReplies);
+  const [openSheet, setOpenSheet] = useState(false);
+
+  const pendingCount = Object.values(pendingReplies).filter((r) => !r?.doneAt).length;
+
+  if (!inbox.enabled) {
+    return (
+      <div className="rounded-2xl border border-[#E7E5E4] bg-white p-5 text-sm text-[#78716C] flex items-start gap-3">
+        <Inbox size={18} className="text-[#B5AFA9] shrink-0 mt-0.5" />
+        <div>
+          <p className="text-[#44403C] font-medium mb-1">Morning triage is off</p>
+          <p>Enable in <Link href="/inbox-setup" className="underline">Inbox setup</Link> to pull threads here.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <button
+        onClick={() => setOpenSheet(true)}
+        className="w-full rounded-2xl border border-[#E7E5E4] bg-white p-5 flex items-center justify-between hover:shadow-sm transition-shadow min-h-[88px]"
+      >
+        <div className="flex items-center gap-3">
+          <span className="w-10 h-10 rounded-xl bg-[#F5F0E8] flex items-center justify-center">
+            <Inbox size={20} className="text-[#8A6A1A]" />
+          </span>
+          <div className="text-left">
+            <p className="text-base font-medium text-[#1C1917]">Triage</p>
+            <p className="text-sm text-[#78716C]">{pendingCount > 0 ? `${pendingCount} to triage` : "All clear"}</p>
+          </div>
+        </div>
+        <ChevronRight size={20} className="text-[#B5AFA9]" />
+      </button>
+
+      {openSheet && (
+        <div
+          className="fixed inset-0 z-[55] bg-white flex flex-col"
+          onKeyDown={(e) => e.key === "Escape" && setOpenSheet(false)}
+        >
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[#E7E5E4]">
+            <button
+              onClick={() => setOpenSheet(false)}
+              className="flex items-center gap-1 text-sm text-[#44403C] min-h-[44px]"
+            >
+              <ChevronLeft size={18} /> Back
+            </button>
+            <h2 className="text-base font-medium" style={{ fontFamily: "Fraunces, serif" }}>Triage</h2>
+            <button
+              onClick={() => setOpenSheet(false)}
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto px-4 py-4 max-w-lg w-full mx-auto pb-24">
+            <MorningTriage />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+// ─── Pick room — horizontal zone carousel ───────────────────────────────
+function PickRoom() {
   const [, navigate] = useLocation();
   const constellations = useStore((s) => s.constellations);
   const contracts = useStore((s) => s.contracts);
+  const zoneRanking = useStore((s) => s.zoneRanking);
   const getTodayPick = useStore((s) => s.getTodayPick);
   const setTodayPick = useStore((s) => s.setTodayPick);
   const dismissedNudges = useStore((s) => s.dismissedNudges);
   const dismissNudge = useStore((s) => s.dismissNudge);
+  const dailyPicks = useStore((s) => s.dailyPicks);
 
-  const todayPick = getTodayPick();
-  const pickedIds = todayPick.constellationIds;
+  const pick = getTodayPick();
+  const pickedIds = pick.constellationIds;
   const todayKey = getTodayKey();
 
   const [guardrailPrompt, setGuardrailPrompt] = useState<string | null>(null);
   const [parkPrompt, setParkPrompt] = useState<string | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
 
-  const dailyPicks = useStore((s) => s.dailyPicks);
   const active = constellations.filter((c) => c.active);
+  const zonesWithItems = zoneRanking.filter((z) => active.some((c) => c.zone === z));
   const capBypassKey = `cap-bypass-${todayKey}`;
 
-  // Zone sort order — gates are rendered between Z1/Z2 and Z2/Z3 boundaries.
-  // Source: docs/zones-gates-reference.md § "What a Gate Looks Like in Practice"
-  const ZONE_ORDER: ZoneId[] = ["Z0", "Z1", "Z2", "Z3", "Z4", "Z5"];
-  const sorted = [...active].sort(
-    (a, b) => ZONE_ORDER.indexOf(a.zone) - ZONE_ORDER.indexOf(b.zone)
-  );
-  const hasZone = (z: ZoneId) => sorted.some((c) => c.zone === z);
+  // Track currently centered zone via scroll snap
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [zoneIdx, setZoneIdx] = useState(0);
+  function onScroll() {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const idx = Math.round(el.scrollLeft / el.clientWidth);
+    if (idx !== zoneIdx) setZoneIdx(idx);
+  }
 
   function getWeekHoursLogged(constellationId: string): number {
-    const constellation = constellations.find((c) => c.id === constellationId);
-    if (!constellation) return 0;
-    const zone = constellation.zone;
+    const c = constellations.find((co) => co.id === constellationId);
+    if (!c) return 0;
     const weekStart = startOfISOWeek(new Date());
     let total = 0;
-    for (const [dateKey, pick] of Object.entries(dailyPicks)) {
+    for (const [dateKey, p] of Object.entries(dailyPicks)) {
       const d = parseISO(dateKey);
-      if (d >= weekStart && pick.hoursByZone) {
-        total += pick.hoursByZone[zone] ?? 0;
-      }
+      if (d >= weekStart && p.hoursByZone) total += p.hoursByZone[c.zone] ?? 0;
     }
     return total;
   }
 
-  function getContractGuardrail(constellation: Constellation): string | null {
-    if (constellation.zone !== "Z3" && constellation.zone !== "Z4") return null;
-    const z2ConstellationContracts = contracts.filter(
-      (c) => c.active && constellations.find((co) => co.id === c.constellationId)?.zone === "Z2"
+  function getContractGuardrail(c: Constellation): string | null {
+    if (c.zone !== "Z3" && c.zone !== "Z4") return null;
+    const z2Contracts = contracts.filter(
+      (ct) => ct.active && constellations.find((co) => co.id === ct.constellationId)?.zone === "Z2"
     );
-    for (const contract of z2ConstellationContracts) {
-      const logged = getWeekHoursLogged(contract.constellationId);
-      const remaining = contract.weeklyHourTarget - logged;
-      if (remaining > 0.25) {
-        return `${remaining.toFixed(1)}h left on "${contract.name}" this week. Still spend today on ${constellation.name}?`;
-      }
+    for (const ct of z2Contracts) {
+      const remaining = ct.weeklyHourTarget - getWeekHoursLogged(ct.constellationId);
+      if (remaining > 0.25) return `${remaining.toFixed(1)}h left on "${ct.name}" this week. Still pick ${c.name}?`;
     }
     return null;
   }
@@ -179,78 +296,63 @@ function ConstellationPicker() {
       setTodayPick({ constellationIds: pickedIds.filter((id) => id !== c.id) });
       return;
     }
-
-    if (pickedIds.length >= 3) {
-      if (!dismissedNudges[capBypassKey]) {
-        setPendingId(c.id);
-        setParkPrompt(c.id);
-        return;
-      }
+    if (pickedIds.length >= 3 && !dismissedNudges[capBypassKey]) {
+      setPendingId(c.id);
+      setParkPrompt(c.id);
+      return;
     }
-
     const guardrail = getContractGuardrail(c);
-    const acknowledgedKey = `guardrail-${todayKey}-${c.id}`;
-    if (guardrail && !todayPick.acknowledgedGuardrails?.includes(acknowledgedKey)) {
+    const ack = `guardrail-${todayKey}-${c.id}`;
+    if (guardrail && !pick.acknowledgedGuardrails?.includes(ack)) {
       setPendingId(c.id);
       setGuardrailPrompt(guardrail);
       return;
     }
-
     setTodayPick({ constellationIds: [...pickedIds, c.id] });
   }
 
   function handlePark(parkId: string) {
     const remaining = pickedIds.filter((id) => id !== parkId);
-    const newIds = [...remaining, pendingId!];
-    setTodayPick({ constellationIds: newIds });
-    setParkPrompt(null);
-    setPendingId(null);
+    setTodayPick({ constellationIds: [...remaining, pendingId!] });
+    setParkPrompt(null); setPendingId(null);
   }
 
   function handleBypassCap() {
     dismissNudge(capBypassKey);
     setParkPrompt(null);
-    if (pendingId) {
-      setTodayPick({ constellationIds: [...pickedIds, pendingId] });
-    }
+    if (pendingId) setTodayPick({ constellationIds: [...pickedIds, pendingId] });
     setPendingId(null);
   }
 
   function handleGuardrailAck() {
-    const acknowledgedKey = `guardrail-${todayKey}-${pendingId}`;
+    const ack = `guardrail-${todayKey}-${pendingId}`;
     setTodayPick({
       constellationIds: [...pickedIds, pendingId!],
-      acknowledgedGuardrails: [...(todayPick.acknowledgedGuardrails ?? []), acknowledgedKey],
+      acknowledgedGuardrails: [...(pick.acknowledgedGuardrails ?? []), ack],
     });
-    setGuardrailPrompt(null);
-    setPendingId(null);
+    setGuardrailPrompt(null); setPendingId(null);
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl">Today's constellations</h2>
+    <div className="space-y-3">
+      <div className="flex items-center justify-between px-1">
+        <p className="text-sm text-[#78716C]">Swipe between zones · pick up to 3</p>
         <span className="text-sm text-[#78716C] tabular-nums">{pickedIds.length} / 3</span>
       </div>
 
       {guardrailPrompt && (
-        <div className="rounded-xl border border-[#C8923A]/50 bg-[#FEF9EE] p-4 space-y-3 shadow-sm">
-          <div className="flex items-start gap-2.5">
-            <div className="w-5 h-5 rounded-full bg-[#B45309]/10 flex items-center justify-center shrink-0 mt-0.5">
-              <AlertTriangle size={11} className="text-[#B45309]" />
-            </div>
-            <p className="text-sm text-[#78400A]">{guardrailPrompt}</p>
-          </div>
+        <div className="rounded-xl border border-[#C8923A]/50 bg-[#FEF9EE] p-4 space-y-3">
+          <p className="text-sm text-[#78400A]">{guardrailPrompt}</p>
           <div className="flex gap-2">
             <button
               onClick={() => { setGuardrailPrompt(null); setPendingId(null); navigate("/zones"); }}
-              className="flex-1 border border-[#C8923A]/50 rounded-lg py-2 text-sm text-[#B45309] min-h-[44px] hover:bg-[#FEF3C7] transition-colors"
+              className="flex-1 border border-[#C8923A]/50 rounded-lg py-2 text-sm text-[#B45309] min-h-[44px]"
             >
               Go to Zones
             </button>
             <button
               onClick={handleGuardrailAck}
-              className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px] hover:bg-[#2C2420] transition-colors"
+              className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px]"
             >
               Still pick it
             </button>
@@ -259,9 +361,8 @@ function ConstellationPicker() {
       )}
 
       {parkPrompt && !guardrailPrompt && (
-        <div className="rounded-xl border border-[#D6D0C7] bg-[#F5F0E8] p-4 space-y-2 shadow-sm">
+        <div className="rounded-xl border border-[#D6D0C7] bg-[#F5F0E8] p-4 space-y-2">
           <p className="text-sm font-medium">Park one to make room?</p>
-          <p className="text-xs text-[#78716C]">You already have 3. Which one steps out today?</p>
           <div className="space-y-1.5">
             {pickedIds.map((id) => {
               const c = constellations.find((co) => co.id === id);
@@ -270,137 +371,211 @@ function ConstellationPicker() {
                 <button
                   key={id}
                   onClick={() => handlePark(id)}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-white text-sm min-h-[44px] border border-[#E7E5E4] bg-white/60 transition-colors"
+                  className="w-full text-left px-3 py-2 rounded-lg bg-white text-sm min-h-[44px] border border-[#E7E5E4]"
                 >
                   Park {c.name}
                 </button>
               );
             })}
           </div>
-          <button onClick={handleBypassCap} className="text-xs text-[#78716C] underline min-h-[44px] flex items-center">
+          <button onClick={handleBypassCap} className="text-sm text-[#78716C] underline min-h-[44px] flex items-center">
             Don't ask again today
           </button>
         </div>
       )}
 
-      <div className="space-y-2.5">
-        {sorted.map((c, i) => {
-          const picked = pickedIds.includes(c.id);
-          const zoneColor = ZONE_SOLID[c.zone] ?? "#1C1917";
-          const zoneGlow = ZONE_GLOW[c.zone] ?? "transparent";
-          const prev = sorted[i - 1];
-          const showZ1Z2Gate =
-            i > 0 &&
-            prev.zone !== "Z2" &&
-            ZONE_ORDER.indexOf(prev.zone) < ZONE_ORDER.indexOf("Z2") &&
-            ZONE_ORDER.indexOf(c.zone) >= ZONE_ORDER.indexOf("Z2") &&
-            hasZone("Z1") &&
-            hasZone("Z2");
-          const showZ2Z3Gate =
-            i > 0 &&
-            prev.zone !== "Z3" &&
-            ZONE_ORDER.indexOf(prev.zone) < ZONE_ORDER.indexOf("Z3") &&
-            ZONE_ORDER.indexOf(c.zone) >= ZONE_ORDER.indexOf("Z3") &&
-            hasZone("Z2") &&
-            hasZone("Z3");
+      <div
+        ref={scrollerRef}
+        onScroll={onScroll}
+        className="-mx-4 px-4 flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2"
+        style={{ scrollbarWidth: "none", scrollPaddingLeft: 16 }}
+      >
+        {zonesWithItems.map((z) => {
+          const items = active.filter((c) => c.zone === z);
+          const col = ZONE_SOLID[z];
           return (
-            <div key={c.id} className="space-y-2.5">
-              {showZ1Z2Gate && <ZoneGate crossing="Z1→Z2" />}
-              {showZ2Z3Gate && <ZoneGate crossing="Z2→Z3" />}
             <div
-              key={`card-${c.id}`}
-              className={cn(
-                "constellation-card rounded-xl border bg-white transition-all duration-200",
-                picked
-                  ? "border-transparent shadow-md"
-                  : "border-[#E7E5E4] hover:border-[#D6D0C7] hover:shadow-sm"
-              )}
-              style={{
-                animationDelay: `${i * 40}ms`,
-                ...(picked ? {
-                  borderColor: zoneColor,
-                  boxShadow: `0 2px 12px ${zoneGlow}, 0 0 0 1.5px ${zoneColor}`,
-                } : {}),
-              }}
+              key={z}
+              className="snap-start shrink-0 rounded-2xl overflow-hidden border border-[#E7E5E4] bg-white"
+              style={{ width: "calc(100vw - 56px)", maxWidth: 460 }}
             >
-              <button
-                onClick={() => handleToggle(c)}
-                className="w-full flex items-center gap-3 px-4 py-4 min-h-[64px] text-left"
-              >
-                <div
-                  className="w-4 w-full flex-shrink-0 self-stretch rounded-full mr-1 transition-colors duration-200"
-                  style={{
-                    width: 3,
-                    minWidth: 3,
-                    maxWidth: 3,
-                    borderRadius: 99,
-                    backgroundColor: picked ? zoneColor : "#E7E5E4",
-                  }}
-                />
-                <div
-                  className={cn(
-                    "w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all duration-200",
-                    picked ? "scale-110" : ""
-                  )}
-                  style={{
-                    backgroundColor: picked ? zoneColor : "transparent",
-                    borderColor: picked ? zoneColor : "#D6D0C7",
-                  }}
-                >
-                  {picked && (
-                    <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-                      <path d="M1 3.5L3.5 6L8 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className={cn("text-sm font-medium transition-colors", picked ? "text-[#1C1917]" : "text-[#44403C]")}>{c.name}</p>
-                  {c.notes && <p className="text-xs text-[#78716C] mt-0.5">{c.notes}</p>}
-                  <ZoneBadge zone={c.zone} className="mt-1.5" />
-                </div>
-              </button>
-
-              {picked && (c.urls?.length > 0 || c.deepLinks?.length > 0) && (
-                <div className="flex flex-wrap gap-2 px-4 pb-3.5">
-                  {(c.urls?.length ? c.urls.map((u) => ({ label: u.label, path: u.url })) : c.deepLinks ?? []).map((dl, i) => (
-                    <a
-                      key={i}
-                      href={dl.path}
-                      className="flex items-center gap-1 text-xs rounded-lg px-3 py-1.5 min-h-[36px] transition-colors"
-                      style={{
-                        color: zoneColor,
-                        border: `1px solid ${zoneColor}22`,
-                        background: `${zoneColor}0F`,
-                      }}
+              <div className="px-4 py-3" style={{ backgroundColor: col }}>
+                <p className="text-white text-xs uppercase tracking-widest opacity-90">{z}</p>
+                <h3 className="text-white text-lg font-medium" style={{ fontFamily: "Fraunces, serif", fontWeight: 500 }}>
+                  {ZONE_LABELS[z].long}
+                </h3>
+              </div>
+              <div className="p-3 space-y-2" style={{ backgroundColor: ZONE_WASH[z] }}>
+                {items.length === 0 && (
+                  <p className="text-sm text-[#78716C] px-2 py-4 text-center">No constellations yet</p>
+                )}
+                {items.map((c) => {
+                  const picked = pickedIds.includes(c.id);
+                  return (
+                    <button
+                      key={c.id}
+                      onClick={() => handleToggle(c)}
+                      className={cn(
+                        "w-full flex items-start gap-3 px-3 py-3 rounded-xl border min-h-[64px] text-left transition-all",
+                        picked ? "bg-white shadow-sm" : "bg-white/80 border-[#E7E5E4]"
+                      )}
+                      style={picked ? { borderColor: col, boxShadow: `0 0 0 1.5px ${col}, 0 2px 12px ${ZONE_GLOW[c.zone]}` } : undefined}
                     >
-                      {dl.label} <ExternalLink size={10} />
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
+                      <span
+                        className="mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0"
+                        style={{ borderColor: picked ? col : "#D6D0C7", backgroundColor: picked ? col : "transparent" }}
+                      >
+                        {picked && (
+                          <svg width="10" height="8" viewBox="0 0 9 7" fill="none">
+                            <path d="M1 3.5L3.5 6L8 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-base font-medium text-[#1C1917]">{c.name}</p>
+                        {c.notes && <p className="text-sm text-[#78716C] mt-0.5">{c.notes}</p>}
+                        {picked && (c.urls?.length > 0 || c.deepLinks?.length > 0) && (
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {(c.urls?.length ? c.urls.map((u) => ({ label: u.label, path: u.url })) : c.deepLinks ?? []).map((dl, i) => (
+                              <a
+                                key={i}
+                                href={dl.path}
+                                onClick={(e) => e.stopPropagation()}
+                                className="inline-flex items-center gap-1 text-xs rounded-lg px-2.5 py-1 min-h-[32px]"
+                                style={{ color: col, border: `1px solid ${col}33`, background: `${col}0F` }}
+                              >
+                                {dl.label} <ExternalLink size={10} />
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           );
         })}
+      </div>
+
+      <div className="flex items-center justify-center gap-1.5 pt-1">
+        {zonesWithItems.map((z, i) => (
+          <span
+            key={z}
+            className="h-1.5 rounded-full transition-all"
+            style={{
+              width: i === zoneIdx ? 18 : 6,
+              backgroundColor: i === zoneIdx ? ZONE_SOLID[z] : "#E7E5E4",
+            }}
+          />
+        ))}
       </div>
     </div>
   );
 }
 
+// ─── Log room — number-pad per active constellation ─────────────────────
+function LogRoom() {
+  const constellations = useStore((s) => s.constellations);
+  const getTodayPick = useStore((s) => s.getTodayPick);
+  const setTodayPick = useStore((s) => s.setTodayPick);
+  const pick = getTodayPick();
+  const picked = constellations.filter((c) => pick.constellationIds.includes(c.id));
+
+  const ZONES_ALL: ZoneId[] = ["Z1", "Z2", "Z3", "Z4"];
+  const initialHours: Partial<Record<ZoneId, string>> = {};
+  for (const z of ZONES_ALL) initialHours[z] = pick.hoursByZone?.[z]?.toString() ?? "";
+  const [hours, setHours] = useState<Partial<Record<ZoneId, string>>>(initialHours);
+
+  function save() {
+    const hoursByZone = Object.fromEntries(
+      ZONES_ALL.map((z) => [z, parseFloat(hours[z] ?? "") || 0])
+    ) as Record<ZoneId, number>;
+    setTodayPick({ hoursByZone });
+  }
+
+  function bump(z: ZoneId, delta: number) {
+    const next = Math.max(0, (parseFloat(hours[z] ?? "0") || 0) + delta);
+    setHours((p) => ({ ...p, [z]: next.toString() }));
+  }
+
+  // Group picked by zone
+  const grouped: Partial<Record<ZoneId, Constellation[]>> = {};
+  for (const c of picked) {
+    (grouped[c.zone] ??= []).push(c);
+  }
+
+  const total = ZONES_ALL.reduce((sum, z) => sum + (parseFloat(hours[z] ?? "0") || 0), 0);
+
+  return (
+    <div className="space-y-3" onBlur={save}>
+      <p className="text-sm text-[#78716C] px-1">Tap +/− to log hours per zone. Total: <span className="text-[#1C1917] font-medium tabular-nums">{total.toFixed(1)}h</span></p>
+      {ZONES_ALL.map((z) => {
+        const col = ZONE_SOLID[z];
+        const items = grouped[z] ?? [];
+        return (
+          <div
+            key={z}
+            className="rounded-2xl border border-[#E7E5E4] bg-white overflow-hidden"
+          >
+            <div className="px-4 py-2.5 flex items-center justify-between" style={{ backgroundColor: ZONE_WASH[z] }}>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: col }} />
+                <span className="text-sm font-medium" style={{ color: col }}>{z} — {ZONE_LABELS[z].long.split(" / ")[0]}</span>
+              </div>
+              {items.length > 0 && (
+                <span className="text-xs text-[#78716C]">{items.map((i) => i.name).join(", ")}</span>
+              )}
+            </div>
+            <div className="flex items-center justify-between px-4 py-3 gap-3">
+              <button
+                onClick={() => bump(z, -0.25)}
+                className="w-11 h-11 rounded-full border border-[#E7E5E4] flex items-center justify-center text-xl text-[#44403C] active:scale-95 transition-transform"
+                aria-label={`Subtract from ${z}`}
+              >
+                −
+              </button>
+              <input
+                type="number"
+                min="0"
+                step="0.25"
+                value={hours[z]}
+                onChange={(e) => setHours((p) => ({ ...p, [z]: e.target.value }))}
+                onBlur={save}
+                className="flex-1 text-2xl text-center tabular-nums border-0 focus:outline-none bg-transparent font-medium"
+                placeholder="0"
+                style={{ color: col }}
+              />
+              <span className="text-sm text-[#78716C]">h</span>
+              <button
+                onClick={() => bump(z, 0.25)}
+                className="w-11 h-11 rounded-full border border-[#E7E5E4] flex items-center justify-center text-xl text-[#44403C] active:scale-95 transition-transform"
+                aria-label={`Add to ${z}`}
+              >
+                +
+              </button>
+            </div>
+          </div>
+        );
+      })}
+      <button
+        onClick={save}
+        className="w-full bg-[#1C1917] text-white rounded-xl py-3 text-sm min-h-[48px] hover:bg-[#2C2420] transition-colors"
+      >
+        Save log
+      </button>
+    </div>
+  );
+}
+
+// ─── North-star statement (kept as bottom anchor) ───────────────────────
 function NorthStarStatement() {
   const statement = useStore((s) => s.statement);
   if (!statement) return null;
-
   return (
-    <div className="relative rounded-2xl overflow-hidden">
-      <div
-        className="absolute inset-0 rounded-2xl"
-        style={{
-          background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)",
-          border: "1px solid #D6D0C7",
-        }}
-      />
-      <div className="relative px-5 py-5 space-y-3">
+    <div className="relative rounded-2xl overflow-hidden border border-[#D6D0C7]" style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}>
+      <div className="px-5 py-5 space-y-3">
         <div className="flex items-center gap-2">
           <Star size={13} className="text-[#8A6A1A]" fill="#8A6A1A" />
           <p className="text-xs text-[#8A6A1A] uppercase tracking-widest font-medium">North Star</p>
@@ -427,182 +602,82 @@ function NorthStarStatement() {
   );
 }
 
-function IntentionAndHours() {
-  const getTodayPick = useStore((s) => s.getTodayPick);
-  const setTodayPick = useStore((s) => s.setTodayPick);
-  const todayPick = getTodayPick();
-  const [reflection, setReflection] = useState(todayPick.reflection ?? "");
-  const [hours, setHours] = useState<Partial<Record<ZoneId, string>>>({
-    Z1: todayPick.hoursByZone?.Z1?.toString() ?? "",
-    Z2: todayPick.hoursByZone?.Z2?.toString() ?? "",
-    Z3: todayPick.hoursByZone?.Z3?.toString() ?? "",
-    Z4: todayPick.hoursByZone?.Z4?.toString() ?? "",
-  });
-
-  const ZONES: ZoneId[] = ["Z1", "Z2", "Z3", "Z4"];
-  const ZONE_SHORT: Record<ZoneId, string> = {
-    Z0: "Z0 — Center",
-    Z1: "Z1 — Afloat",
-    Z2: "Z2 — Contract",
-    Z3: "Z3 — Build",
-    Z4: "Z4 — Passion",
-    Z5: "Z5 — Wild",
-  };
-
-  function saveReflection() {
-    setTodayPick({ reflection });
-  }
-
-  function saveHours() {
-    const hoursByZone = Object.fromEntries(
-      ZONES.map((z) => [z, parseFloat(hours[z] ?? "") || 0])
-    ) as Record<ZoneId, number>;
-    setTodayPick({ hoursByZone });
-  }
-
-  return (
-    <>
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <Feather size={13} className="text-[#78716C]" />
-          <label className="text-sm font-medium">Today, the win is…</label>
-        </div>
-        <textarea
-          value={reflection}
-          onChange={(e) => setReflection(e.target.value)}
-          onBlur={saveReflection}
-          placeholder="One thing that would make today feel complete"
-          rows={3}
-          className="w-full border border-[#E7E5E4] rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 focus:border-[#8A6A1A]/50 resize-none placeholder:text-[#B5AFA9] leading-relaxed transition-all"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium block">Hours by zone (end of day)</label>
-        <div className="grid grid-cols-2 gap-2">
-          {ZONES.map((z) => {
-            const zoneColor = ZONE_SOLID[z] ?? "#78716C";
-            return (
-              <div key={z} className="flex items-center gap-2 bg-white border border-[#E7E5E4] rounded-xl px-3 py-2.5 hover:border-[#D6D0C7] transition-colors">
-                <div
-                  className="w-2 h-2 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: zoneColor }}
-                />
-                <span className="text-xs text-[#78716C] flex-1">{ZONE_SHORT[z]}</span>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.25"
-                  value={hours[z]}
-                  onChange={(e) => setHours((prev) => ({ ...prev, [z]: e.target.value }))}
-                  onBlur={saveHours}
-                  className="w-12 text-sm text-right border-0 focus:outline-none bg-transparent tabular-nums"
-                  placeholder="0"
-                />
-                <span className="text-xs text-[#B5AFA9]">h</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </>
-  );
-}
-
 const BASE_API = import.meta.env.VITE_API_URL ?? "/api";
 
 function OdysseySection() {
-  const getTodayPick = useStore((s) => s.getTodayPick);
-  const constellations = useStore((s) => s.constellations);
+  const activeZone = useActiveZone();
   const dismissedNudges = useStore((s) => s.dismissedNudges);
   const dismissNudge = useStore((s) => s.dismissNudge);
   const todayKey = getTodayKey();
-
-  const todayPick = getTodayPick();
-  const pickedIds = todayPick.constellationIds;
-
-  const activeZone: ZoneId = (() => {
-    if (pickedIds.length === 0) return "Z1";
-    const picked = constellations.filter((c) => pickedIds.includes(c.id));
-    const counts: Partial<Record<ZoneId, number>> = {};
-    for (const c of picked) counts[c.zone] = (counts[c.zone] ?? 0) + 1;
-    return (Object.entries(counts).sort((a, b) => (b[1] as number) - (a[1] as number))[0]?.[0] ?? "Z1") as ZoneId;
-  })();
-
   const [signs, setSigns] = useState(() => getTrailSigns(activeZone));
 
   useEffect(() => {
     let cancelled = false;
-    fetchTrailSigns(BASE_API, activeZone).then((live) => {
-      if (!cancelled) setSigns(live);
-    });
+    fetchTrailSigns(BASE_API, activeZone).then((live) => { if (!cancelled) setSigns(live); });
     return () => { cancelled = true; };
   }, [activeZone]);
 
   const odysseyDismissKey = `odyssey-trail-${todayKey}`;
   if (dismissedNudges[odysseyDismissKey] || signs.length === 0) return null;
-
-  return (
-    <OdysseyTrail
-      signs={signs}
-      onAllDismissed={() => dismissNudge(odysseyDismissKey)}
-    />
-  );
+  return <OdysseyTrail signs={signs} onAllDismissed={() => dismissNudge(odysseyDismissKey)} />;
 }
 
 export function TodayPage() {
-  const captures = useStore((s) => s.captures);
-  const [showCapture, setShowCapture] = useState(false);
+  const [room, setRoom] = useState<Room>(() => {
+    return new Date().getHours() >= 16 ? "log" : "pick";
+  });
 
-  const today = format(new Date(), "EEEE, MMMM d");
+  const activeZone = useActiveZone();
+  const tabs: { id: Room; label: string; icon: typeof Inbox }[] = [
+    { id: "triage", label: "Triage", icon: Inbox },
+    { id: "pick", label: "Pick", icon: ListChecks },
+    { id: "log", label: "Log", icon: Clock },
+  ];
 
   return (
-    <div className="min-h-dvh pb-24" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
-      <div className="px-5 py-7 max-w-lg mx-auto space-y-6">
+    <div
+      className="min-h-dvh pb-28"
+      style={{ background: `linear-gradient(180deg, #FAFAF9 0%, ${ZONE_WASH[activeZone]} 100%)` }}
+    >
+      <HeaderStrip />
 
-        <div className="space-y-1">
-          <p className="text-xs text-[#78716C] uppercase tracking-widest">{today}</p>
-          <div className="flex items-center justify-between mt-1">
-            <h1 className="text-2xl text-[#1C1917]">What does today get?</h1>
-            <button
-              onClick={() => setShowCapture(true)}
-              className="flex items-center gap-1.5 bg-[#1C1917] text-white rounded-xl px-3 py-2 text-xs min-h-[44px] hover:bg-[#2C2420] transition-colors shadow-sm"
-            >
-              <Mic size={14} /> Capture
-            </button>
+      <div className="sticky top-[120px] z-10 backdrop-blur-md bg-white/85 border-b border-[#E7E5E4]">
+        <div className="max-w-lg mx-auto px-4 py-2">
+          <div role="tablist" className="flex gap-1 bg-[#F5F0E8] rounded-xl p-1">
+            {tabs.map((t) => {
+              const active = room === t.id;
+              return (
+                <button
+                  key={t.id}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setRoom(t.id)}
+                  className={cn(
+                    "flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm min-h-[44px] transition-all",
+                    active ? "bg-white shadow-sm font-medium" : "text-[#78716C]"
+                  )}
+                  style={active ? { color: ZONE_SOLID[activeZone] } : undefined}
+                >
+                  <t.icon size={15} />
+                  {t.label}
+                </button>
+              );
+            })}
           </div>
         </div>
+      </div>
 
-        <MorningTriage />
-
-        {captures.slice(0, 3).length > 0 && (
-          <div className="space-y-1.5">
-            <p className="text-xs text-[#78716C] uppercase tracking-widest">Recent captures</p>
-            {captures.slice(0, 3).map((c) => (
-              <div key={c.id} className="bg-white rounded-xl border border-[#E7E5E4] px-4 py-3 text-sm text-[#44403C] leading-relaxed shadow-sm">
-                {c.text}
-              </div>
-            ))}
-          </div>
-        )}
-
+      <div className="px-4 py-4 max-w-lg mx-auto space-y-4">
         <BackupNudge />
         <ReviewNudges />
 
-        <div className="border-t border-[#E7E5E4]/60 pt-2" />
-
-        <ConstellationPicker />
+        {room === "triage" && <TriageRoom />}
+        {room === "pick" && <PickRoom />}
+        {room === "log" && <LogRoom />}
 
         <OdysseySection />
-
         <NorthStarStatement />
-
-        <div className="border-t border-[#E7E5E4]/60 pt-2" />
-
-        <IntentionAndHours />
       </div>
-
-      {showCapture && <CaptureSheet onClose={() => setShowCapture(false)} />}
     </div>
   );
 }

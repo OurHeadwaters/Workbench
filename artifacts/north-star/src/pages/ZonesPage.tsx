@@ -1,117 +1,14 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "wouter";
-import { Plus, Pencil, Trash2, Archive, ArchiveRestore, ChevronUp, ChevronDown, GripVertical, Map } from "lucide-react";
-import { useStore, ZONE_COLORS } from "@/store";
+import { Plus, Pencil, Trash2, Archive, ArchiveRestore, ChevronUp, ChevronDown, GripVertical, Map, ListOrdered, Check, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { useStore } from "@/store";
 import { ZoneBadge } from "@/components/ZoneBadge";
-import { ZONE_LABELS, ZONE_CLASSES, cn } from "@/lib/utils";
-import type { ZoneId, Constellation, Contract } from "@/types";
+import { ConstellationForm } from "@/components/ConstellationForm";
+import { ZONE_LABELS, cn } from "@/lib/utils";
+import { ZONE_SOLID, ZONE_WASH } from "@/lib/zone";
+import type { ZoneId, Contract, Constellation } from "@/types";
 
 const ZONES: ZoneId[] = ["Z0", "Z1", "Z2", "Z3", "Z4", "Z5"];
-
-const ZONE_SOLID: Record<ZoneId, string> = {
-  Z0: "#8A6A1A",
-  Z1: "#4F6E5C",
-  Z2: "#3B5998",
-  Z3: "#7C4E8A",
-  Z4: "#B45309",
-  Z5: "#4A6272",
-};
-
-function ConstellationForm({
-  initial,
-  onSave,
-  onCancel,
-}: {
-  initial?: Partial<Constellation>;
-  onSave: (data: Omit<Constellation, "id" | "slug" | "colorVar">) => void;
-  onCancel: () => void;
-}) {
-  const [name, setName] = useState(initial?.name ?? "");
-  const [zone, setZone] = useState<ZoneId>(initial?.zone ?? "Z3");
-  const [notes, setNotes] = useState(initial?.notes ?? "");
-  const [urls, setUrls] = useState<{ label: string; url: string }[]>(
-    initial?.urls?.length ? initial.urls : [{ label: "", url: "" }]
-  );
-
-  function setUrlEntry(i: number, field: "label" | "url", value: string) {
-    setUrls((prev) => prev.map((u, idx) => idx === i ? { ...u, [field]: value } : u));
-  }
-
-  function handleSave() {
-    if (!name.trim()) return;
-    onSave({
-      name: name.trim(),
-      zone,
-      notes: notes.trim(),
-      urls: urls.filter((u) => u.url.trim()),
-      deepLinks: [],
-      active: initial?.active ?? true,
-    });
-  }
-
-  return (
-    <div className="bg-[#F5F0E8] rounded-xl p-4 space-y-3 border border-[#D6D0C7]">
-      <input
-        autoFocus
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Project name"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 focus:border-[#8A6A1A]/50"
-      />
-      <input
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        placeholder="One-line description (optional)"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30 focus:border-[#8A6A1A]/50"
-      />
-      <select
-        value={zone}
-        onChange={(e) => setZone(e.target.value as ZoneId)}
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none min-h-[44px]"
-      >
-        {ZONES.map((z) => (
-          <option key={z} value={z}>{z} — {ZONE_LABELS[z].long}</option>
-        ))}
-      </select>
-      <div className="space-y-2">
-        <p className="text-xs font-medium text-[#78716C]">URLs / Links</p>
-        {urls.map((u, i) => (
-          <div key={i} className="flex gap-1.5 items-center">
-            <input
-              value={u.label}
-              onChange={(e) => setUrlEntry(i, "label", e.target.value)}
-              placeholder="Label"
-              className="w-24 shrink-0 border border-[#E7E5E4] rounded-lg px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
-            />
-            <input
-              value={u.url}
-              onChange={(e) => setUrlEntry(i, "url", e.target.value)}
-              placeholder="https:// or /path/"
-              className="flex-1 min-w-0 border border-[#E7E5E4] rounded-lg px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
-            />
-            <button
-              onClick={() => setUrls((prev) => prev.length === 1 ? [{ label: "", url: "" }] : prev.filter((_, idx) => idx !== i))}
-              className="shrink-0 text-[#78716C] hover:text-[#1C1917] p-1"
-              title="Remove"
-            >
-              <Trash2 size={14} />
-            </button>
-          </div>
-        ))}
-        <button
-          onClick={() => setUrls((prev) => [...prev, { label: "", url: "" }])}
-          className="flex items-center gap-1 text-xs text-[#8A6A1A] hover:text-[#6A4E10] font-medium py-1"
-        >
-          <Plus size={12} /> Add URL
-        </button>
-      </div>
-      <div className="flex gap-2">
-        <button onClick={onCancel} className="flex-1 border border-[#D6D0C7] rounded-lg py-2 text-sm min-h-[44px] hover:bg-white transition-colors">Cancel</button>
-        <button onClick={handleSave} className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px] hover:bg-[#2C2420] transition-colors">Save</button>
-      </div>
-    </div>
-  );
-}
 
 function ContractForm({
   initial,
@@ -142,12 +39,12 @@ function ContractForm({
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Contract name"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#3B5998]/30"
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-3 text-base bg-white focus:outline-none"
       />
       <select
         value={cId}
         onChange={(e) => setCId(e.target.value)}
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none min-h-[44px]"
+        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-3 text-base bg-white focus:outline-none min-h-[48px]"
       >
         {constellations.map((c) => (
           <option key={c.id} value={c.id}>{c.name} ({c.zone})</option>
@@ -157,13 +54,85 @@ function ContractForm({
         <input
           type="number" min="0.25" step="0.25" value={hours}
           onChange={(e) => setHours(e.target.value)}
-          className="w-24 border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none"
+          className="w-24 border border-[#E7E5E4] rounded-lg px-3 py-2 text-base bg-white focus:outline-none min-h-[44px]"
         />
         <span className="text-sm text-[#78716C]">hours / week target</span>
       </div>
       <div className="flex gap-2">
-        <button onClick={onCancel} className="flex-1 border border-[#D6D0C7] rounded-lg py-2 text-sm min-h-[44px] hover:bg-white transition-colors">Cancel</button>
-        <button onClick={handleSave} className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px] hover:bg-[#2C2420] transition-colors">Save</button>
+        <button onClick={onCancel} className="flex-1 border border-[#D6D0C7] rounded-lg py-3 text-sm min-h-[48px] hover:bg-white">Cancel</button>
+        <button onClick={handleSave} className="flex-1 bg-[#1C1917] text-white rounded-lg py-3 text-sm min-h-[48px] hover:bg-[#2C2420]">Save</button>
+      </div>
+    </div>
+  );
+}
+
+function ArrangeMode({ onExit }: { onExit: () => void }) {
+  const zoneRanking = useStore((s) => s.zoneRanking);
+  const setZoneRanking = useStore((s) => s.setZoneRanking);
+
+  const ranked = [...zoneRanking];
+  function moveZone(z: ZoneId, dir: -1 | 1) {
+    const idx = ranked.indexOf(z);
+    const newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= ranked.length) return;
+    const next = [...ranked];
+    [next[idx], next[newIdx]] = [next[newIdx], next[idx]];
+    setZoneRanking(next);
+  }
+
+  return (
+    <div className="min-h-dvh pb-28" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
+      <div className="px-4 py-6 max-w-lg mx-auto space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl" style={{ fontFamily: "Fraunces, serif", fontWeight: 500 }}>Arrange zones</h1>
+            <p className="text-sm text-[#78716C]">Order them by priority.</p>
+          </div>
+          <button
+            onClick={onExit}
+            className="flex items-center gap-1.5 text-sm bg-[#1C1917] text-white rounded-xl px-3 py-2 min-h-[44px]"
+          >
+            <Check size={16} /> Done
+          </button>
+        </div>
+
+        <div className="space-y-2">
+          {ranked.map((z, i) => {
+            const col = ZONE_SOLID[z];
+            return (
+              <div
+                key={z}
+                className="flex items-center gap-3 bg-white rounded-xl border border-[#E7E5E4] p-3"
+              >
+                <GripVertical size={18} className="text-[#B5AFA9]" />
+                <span className="w-2 h-10 rounded-full" style={{ backgroundColor: col }} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-base font-medium">{z} — {ZONE_LABELS[z].long}</p>
+                  <p className="text-sm text-[#78716C]">{ZONE_LABELS[z].desc}</p>
+                </div>
+                <span className="text-sm text-[#B5AFA9] tabular-nums mr-1">#{i + 1}</span>
+                <div className="flex flex-col gap-1">
+                  <button
+                    onClick={() => moveZone(z, -1)}
+                    disabled={i === 0}
+                    className="w-9 h-9 rounded-lg border border-[#E7E5E4] flex items-center justify-center disabled:opacity-30"
+                    aria-label="Move up"
+                  >
+                    <ChevronUp size={16} />
+                  </button>
+                  <button
+                    onClick={() => moveZone(z, 1)}
+                    disabled={i === ranked.length - 1}
+                    className="w-9 h-9 rounded-lg border border-[#E7E5E4] flex items-center justify-center disabled:opacity-30"
+                    aria-label="Move down"
+                  >
+                    <ChevronDown size={16} />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -179,156 +148,122 @@ export function ZonesPage() {
   const addContract = useStore((s) => s.addContract);
   const updateContract = useStore((s) => s.updateContract);
   const removeContract = useStore((s) => s.removeContract);
-  const setZoneRanking = useStore((s) => s.setZoneRanking);
 
-  const [addingTo, setAddingTo] = useState<ZoneId | null>(null);
+  const [arranging, setArranging] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [addingConst, setAddingConst] = useState(false);
   const [editingConst, setEditingConst] = useState<string | null>(null);
-  const [addingContract, setAddingContract] = useState<ZoneId | null>(null);
+  const [addingContract, setAddingContract] = useState(false);
   const [editingContract, setEditingContract] = useState<string | null>(null);
   const [showParked, setShowParked] = useState(false);
 
-  const ranked = [...zoneRanking];
-  function moveZone(z: ZoneId, dir: -1 | 1) {
-    const idx = ranked.indexOf(z);
-    const newIdx = idx + dir;
-    if (newIdx < 0 || newIdx >= ranked.length) return;
-    const next = [...ranked];
-    [next[idx], next[newIdx]] = [next[newIdx], next[idx]];
-    setZoneRanking(next);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  function onScroll() {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const idx = Math.round(el.scrollLeft / el.clientWidth);
+    if (idx !== activeIdx) setActiveIdx(idx);
   }
 
-  const [dragIdx, setDragIdx] = useState<number | null>(null);
-  const [overIdx, setOverIdx] = useState<number | null>(null);
-  const zoneRowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const dragStartY = useRef<number>(0);
-  const dragActive = useRef(false);
-
-  function commitDrop(from: number, to: number) {
-    if (from === to) return;
-    const next = [...ranked];
-    const [item] = next.splice(from, 1);
-    next.splice(to, 0, item);
-    setZoneRanking(next);
+  function goToZone(idx: number) {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollTo({ left: idx * el.clientWidth, behavior: "smooth" });
   }
 
-  function findRowAt(clientY: number): number | null {
-    for (let i = 0; i < zoneRowRefs.current.length; i++) {
-      const el = zoneRowRefs.current[i];
-      if (!el) continue;
-      const rect = el.getBoundingClientRect();
-      if (clientY >= rect.top && clientY <= rect.bottom) return i;
-    }
-    return null;
-  }
-
-  function handleGripPointerDown(e: React.PointerEvent, idx: number) {
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    dragStartY.current = e.clientY;
-    dragActive.current = false;
-    setDragIdx(idx);
-    setOverIdx(idx);
-  }
-
-  function handleGripPointerMove(e: React.PointerEvent) {
-    if (dragIdx === null) return;
-    if (!dragActive.current) {
-      if (Math.abs(e.clientY - dragStartY.current) < 8) return;
-      dragActive.current = true;
-    }
-    e.preventDefault();
-    const hit = findRowAt(e.clientY);
-    if (hit !== null) setOverIdx(hit);
-  }
-
-  function handleGripPointerUp() {
-    if (dragIdx !== null && overIdx !== null && dragActive.current) {
-      commitDrop(dragIdx, overIdx);
-    }
-    setDragIdx(null);
-    setOverIdx(null);
-    dragActive.current = false;
-  }
-
-  function handleGripPointerCancel() {
-    setDragIdx(null);
-    setOverIdx(null);
-    dragActive.current = false;
-  }
+  if (arranging) return <ArrangeMode onExit={() => setArranging(false)} />;
 
   const parked = constellations.filter((c) => !c.active);
+  const currentZone = zoneRanking[activeIdx];
+  const currentZoneColor = ZONE_SOLID[currentZone];
 
   return (
-    <div className="min-h-dvh pb-24" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
-      <div className="px-5 py-7 max-w-lg mx-auto space-y-6">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-2xl mb-1">Zones</h1>
-            <p className="text-sm text-[#78716C]">Your constellations by zone — drag to reorder zone priority.</p>
+    <div
+      className="min-h-dvh pb-28 transition-colors duration-300"
+      style={{ background: `linear-gradient(180deg, #FAFAF9 0%, ${ZONE_WASH[currentZone]} 100%)` }}
+    >
+      {/* Header band — full-bleed in zone color */}
+      <div
+        className="w-full transition-colors duration-300"
+        style={{ backgroundColor: currentZoneColor }}
+      >
+        <div className="px-4 pt-6 pb-5 max-w-lg mx-auto">
+          <div className="flex items-center justify-between text-white">
+            <div>
+              <p className="text-xs uppercase tracking-widest opacity-80">{currentZone}</p>
+              <h1 className="text-2xl mt-0.5" style={{ fontFamily: "Fraunces, serif", fontWeight: 500 }}>
+                {ZONE_LABELS[currentZone].long}
+              </h1>
+            </div>
+            <div className="flex flex-col gap-1.5 items-end">
+              <button
+                onClick={() => setArranging(true)}
+                className="flex items-center gap-1.5 text-xs bg-white/15 hover:bg-white/25 backdrop-blur rounded-xl px-3 py-2 min-h-[44px]"
+              >
+                <ListOrdered size={14} /> Arrange
+              </button>
+              <Link
+                href="/zone-diagram"
+                className="flex items-center gap-1.5 text-xs bg-white/15 hover:bg-white/25 backdrop-blur rounded-xl px-3 py-2 min-h-[44px]"
+              >
+                <Map size={14} /> Diagram
+              </Link>
+            </div>
           </div>
-          <Link
-            href="/zone-diagram"
-            className="flex items-center gap-1.5 shrink-0 text-xs text-[#7C4E8A] border border-[#C4B5CD] rounded-xl px-3 py-2 min-h-[44px] bg-[#F5F0FA] hover:bg-[#EDE9FE] transition-colors"
-          >
-            <Map size={14} />
-            Diagram
-          </Link>
+          <p className="text-white/90 text-sm mt-2 leading-relaxed">{ZONE_LABELS[currentZone].desc}</p>
         </div>
+      </div>
 
-        {ranked.map((zone, zIdx) => {
-          const zoneConstellations = constellations.filter((c) => c.zone === zone && c.active);
-          const zoneContracts = contracts.filter((c) =>
-            zoneConstellations.some((co) => co.id === c.constellationId) && c.active
+      {/* Zone tabs */}
+      <div className="sticky top-0 z-10 backdrop-blur-md bg-white/85 border-b border-[#E7E5E4]">
+        <div className="max-w-lg mx-auto px-4 py-2 flex items-center gap-1 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+          {zoneRanking.map((z, i) => {
+            const col = ZONE_SOLID[z];
+            const active = i === activeIdx;
+            return (
+              <button
+                key={z}
+                onClick={() => goToZone(i)}
+                className={cn(
+                  "px-3 py-2 rounded-lg text-sm min-h-[44px] transition-all whitespace-nowrap",
+                  active ? "font-semibold" : "text-[#78716C]"
+                )}
+                style={active ? { color: col, backgroundColor: `${col}1A` } : undefined}
+              >
+                {z}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Swipeable zone deck */}
+      <div
+        ref={scrollerRef}
+        onScroll={onScroll}
+        className="flex overflow-x-auto snap-x snap-mandatory"
+        style={{ scrollbarWidth: "none" }}
+      >
+        {zoneRanking.map((zone) => {
+          const zoneConsts = constellations.filter((c) => c.zone === zone && c.active);
+          const zoneContracts = contracts.filter(
+            (ct) => ct.active && zoneConsts.some((co) => co.id === ct.constellationId)
           );
-          const isDragging = dragIdx === zIdx;
-          const isOver = overIdx === zIdx && dragIdx !== null && dragIdx !== zIdx;
-          const zoneColor = ZONE_SOLID[zone] ?? "#78716C";
-          return (
-            <div
-              key={zone}
-              ref={(el) => { zoneRowRefs.current[zIdx] = el; }}
-              className={cn(
-                "space-y-2 rounded-xl transition-all duration-150",
-                isDragging && "opacity-40 scale-[0.98]",
-                isOver && "ring-2 ring-offset-1 bg-[#F5F0E8]"
-              )}
-              style={isOver ? { ringColor: zoneColor } : undefined}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div
-                    className="flex items-center justify-center min-h-[44px] min-w-[44px] cursor-grab active:cursor-grabbing touch-none select-none text-[#B5AFA9] hover:text-[#78716C] transition-colors"
-                    aria-label="Drag to reorder zone"
-                    onPointerDown={(e) => handleGripPointerDown(e, zIdx)}
-                    onPointerMove={handleGripPointerMove}
-                    onPointerUp={handleGripPointerUp}
-                    onPointerCancel={handleGripPointerCancel}
-                  >
-                    <GripVertical size={18} />
-                  </div>
-                  <div className="flex flex-col gap-0.5">
-                    <button onClick={() => moveZone(zone, -1)} disabled={zIdx === 0} className="text-[#B5AFA9] disabled:opacity-30 min-h-[22px] min-w-[22px] flex items-center justify-center hover:text-[#78716C] transition-colors" aria-label="Move up">
-                      <ChevronUp size={14} />
-                    </button>
-                    <button onClick={() => moveZone(zone, 1)} disabled={zIdx === ranked.length - 1} className="text-[#B5AFA9] disabled:opacity-30 min-h-[22px] min-w-[22px] flex items-center justify-center hover:text-[#78716C] transition-colors" aria-label="Move down">
-                      <ChevronDown size={14} />
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-1.5 h-8 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: zoneColor, opacity: 0.7 }}
-                    />
-                    <div>
-                      <h2 className="text-base font-medium">{zone} — {ZONE_LABELS[zone].long}</h2>
-                      <p className="text-xs text-[#78716C]">{ZONE_LABELS[zone].desc}</p>
-                    </div>
-                  </div>
-                </div>
-                <span className="text-xs text-[#B5AFA9] tabular-nums">#{zIdx + 1}</span>
-              </div>
+          const col = ZONE_SOLID[zone];
 
-              <div className="space-y-2 pl-12">
-                {zoneConstellations.map((c) => (
+          return (
+            <section
+              key={zone}
+              className="snap-start shrink-0 w-full"
+            >
+              <div className="px-4 py-4 max-w-lg mx-auto space-y-3 pb-24">
+                {zoneConsts.length === 0 && !addingConst && !editingConst && (
+                  <div className="text-center text-sm text-[#78716C] py-8 border border-dashed border-[#D6D0C7] rounded-2xl">
+                    No constellations in {zone} yet.
+                  </div>
+                )}
+
+                {zoneConsts.map((c) => (
                   <div key={c.id}>
                     {editingConst === c.id ? (
                       <ConstellationForm
@@ -337,28 +272,48 @@ export function ZonesPage() {
                         onCancel={() => setEditingConst(null)}
                       />
                     ) : (
-                      <div
-                        className="flex items-center gap-0 bg-white rounded-xl border border-[#E7E5E4] overflow-hidden hover:shadow-sm transition-shadow"
-                      >
-                        <div
-                          className="w-1 self-stretch flex-shrink-0"
-                          style={{ backgroundColor: zoneColor }}
-                        />
-                        <div className="flex items-center gap-2 flex-1 min-w-0 px-3 py-2.5">
+                      <div className="flex bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden">
+                        <div className="w-1.5 self-stretch shrink-0" style={{ backgroundColor: col }} />
+                        <div className="flex-1 min-w-0 p-4 flex items-start gap-3">
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium">{c.name}</p>
-                            {c.notes && <p className="text-xs text-[#78716C]">{c.notes}</p>}
-                            {c.urls?.length > 0 && <p className="text-xs text-[#B5AFA9]">{c.urls[0].url}{c.urls.length > 1 ? ` +${c.urls.length - 1} more` : ""}</p>}
+                            <p className="text-base font-medium">{c.name}</p>
+                            {c.notes && <p className="text-sm text-[#78716C] mt-0.5">{c.notes}</p>}
+                            {c.urls?.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5 mt-2">
+                                {c.urls.map((u, i) => (
+                                  <a
+                                    key={i}
+                                    href={u.url}
+                                    className="inline-flex items-center gap-1 text-xs rounded-lg px-2.5 py-1 min-h-[32px]"
+                                    style={{ color: col, border: `1px solid ${col}33`, background: `${col}0F` }}
+                                  >
+                                    {u.label} <ExternalLink size={10} />
+                                  </a>
+                                ))}
+                              </div>
+                            )}
                           </div>
-                          <div className="flex gap-1">
-                            <button onClick={() => updateConstellation(c.id, { active: false })} className="p-1.5 text-[#B5AFA9] hover:text-[#B45309] min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors" title="Park">
-                              <Archive size={14} />
+                          <div className="flex flex-col gap-1">
+                            <button
+                              onClick={() => updateConstellation(c.id, { active: false })}
+                              className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#B5AFA9] hover:text-[#B45309]"
+                              title="Park"
+                            >
+                              <Archive size={16} />
                             </button>
-                            <button onClick={() => setEditingConst(c.id)} className="p-1.5 text-[#B5AFA9] hover:text-[#1C1917] min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors">
-                              <Pencil size={14} />
+                            <button
+                              onClick={() => setEditingConst(c.id)}
+                              className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#B5AFA9] hover:text-[#1C1917]"
+                              title="Edit"
+                            >
+                              <Pencil size={16} />
                             </button>
-                            <button onClick={() => removeConstellation(c.id)} className="p-1.5 text-[#B5AFA9] hover:text-[#B45309] min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors">
-                              <Trash2 size={14} />
+                            <button
+                              onClick={() => removeConstellation(c.id)}
+                              className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#B5AFA9] hover:text-[#B45309]"
+                              title="Remove"
+                            >
+                              <Trash2 size={16} />
                             </button>
                           </div>
                         </div>
@@ -377,95 +332,109 @@ export function ZonesPage() {
                         onCancel={() => setEditingContract(null)}
                       />
                     ) : (
-                      <div className="flex items-center gap-0 rounded-xl border border-[#3B5998]/20 overflow-hidden hover:shadow-sm transition-shadow" style={{ background: "#DBEAFE" }}>
-                        <div className="w-1 self-stretch flex-shrink-0 bg-[#3B5998]" />
-                        <div className="flex items-center gap-2 flex-1 min-w-0 px-3 py-2.5 ml-0">
+                      <div className="flex rounded-2xl border border-[#3B5998]/20 overflow-hidden" style={{ background: "#DBEAFE" }}>
+                        <div className="w-1.5 self-stretch shrink-0 bg-[#3B5998]" />
+                        <div className="flex-1 min-w-0 p-3 flex items-center gap-2">
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-[#3B5998]">📋 {ct.name}</p>
+                            <p className="text-sm font-medium text-[#3B5998]">📋 {ct.name}</p>
                             <p className="text-xs text-[#3B5998]/70">{ct.weeklyHourTarget}h/week</p>
                           </div>
-                          <div className="flex gap-1">
-                            <button onClick={() => setEditingContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
-                              <Pencil size={12} className="text-[#3B5998]" />
-                            </button>
-                            <button onClick={() => removeContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
-                              <Trash2 size={12} className="text-[#3B5998]" />
-                            </button>
-                          </div>
+                          <button onClick={() => setEditingContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
+                            <Pencil size={14} className="text-[#3B5998]" />
+                          </button>
+                          <button onClick={() => removeContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
+                            <Trash2 size={14} className="text-[#3B5998]" />
+                          </button>
                         </div>
                       </div>
                     )}
                   </div>
                 ))}
 
-                {addingTo === zone ? (
+                {/* Inline add forms (only render under the active zone) */}
+                {zone === currentZone && addingConst && (
                   <ConstellationForm
                     initial={{ zone }}
-                    onSave={(data) => { addConstellation(data); setAddingTo(null); }}
-                    onCancel={() => setAddingTo(null)}
+                    onSave={(data) => { addConstellation(data); setAddingConst(false); }}
+                    onCancel={() => setAddingConst(false)}
                   />
-                ) : addingContract === zone ? (
+                )}
+                {zone === currentZone && addingContract && (
                   <ContractForm
-                    constellations={zoneConstellations}
-                    onSave={(data) => { addContract(data); setAddingContract(null); }}
-                    onCancel={() => setAddingContract(null)}
+                    constellations={zoneConsts}
+                    onSave={(data) => { addContract(data); setAddingContract(false); }}
+                    onCancel={() => setAddingContract(false)}
                   />
-                ) : (
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setAddingTo(zone)}
-                      className="flex items-center gap-1 text-xs text-[#78716C] border border-dashed border-[#D6D0C7] rounded-lg px-3 py-1.5 min-h-[44px] hover:bg-white hover:border-[#B5AFA9] transition-all"
-                    >
-                      <Plus size={12} /> Constellation
-                    </button>
-                    <button
-                      onClick={() => setAddingContract(zone)}
-                      className="flex items-center gap-1 text-xs text-[#3B5998] border border-dashed border-[#3B5998]/30 rounded-lg px-3 py-1.5 min-h-[44px] hover:bg-[#DBEAFE] transition-colors"
-                    >
-                      <Plus size={12} /> Contract
-                    </button>
-                  </div>
                 )}
               </div>
-            </div>
+            </section>
           );
         })}
-
-        {parked.length > 0 && (
-          <div>
-            <button
-              onClick={() => setShowParked(!showParked)}
-              className="flex items-center gap-2 text-sm text-[#78716C] min-h-[44px] hover:text-[#44403C] transition-colors"
-            >
-              <Archive size={14} /> Parked ({parked.length}) {showParked ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-            </button>
-            {showParked && (
-              <div className="space-y-2 mt-2">
-                {parked.map((c) => {
-                  const zoneColor = ZONE_SOLID[c.zone] ?? "#78716C";
-                  return (
-                    <div key={c.id} className="flex items-center gap-0 bg-white rounded-xl border border-[#E7E5E4] overflow-hidden opacity-50 hover:opacity-70 transition-opacity">
-                      <div className="w-1 self-stretch flex-shrink-0" style={{ backgroundColor: zoneColor }} />
-                      <div className="flex items-center gap-2 flex-1 min-w-0 px-3 py-2.5">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm">{c.name}</p>
-                          <ZoneBadge zone={c.zone} />
-                        </div>
-                        <button onClick={() => updateConstellation(c.id, { active: true })} className="p-2 text-[#4F6E5C] min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-[#2D4D3A] transition-colors" title="Unpark">
-                          <ArchiveRestore size={14} />
-                        </button>
-                        <button onClick={() => removeConstellation(c.id)} className="p-2 text-[#B5AFA9] hover:text-[#B45309] min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors">
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
       </div>
+
+      {/* Parked section */}
+      {parked.length > 0 && (
+        <div className="max-w-lg mx-auto px-4 mt-2 mb-4">
+          <button
+            onClick={() => setShowParked(!showParked)}
+            className="flex items-center gap-2 text-sm text-[#78716C] min-h-[44px]"
+          >
+            <Archive size={14} /> Parked ({parked.length}) {showParked ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+          {showParked && (
+            <div className="space-y-2 mt-2">
+              {parked.map((c) => {
+                const col = ZONE_SOLID[c.zone];
+                return (
+                  <div key={c.id} className="flex bg-white rounded-xl border border-[#E7E5E4] overflow-hidden opacity-70">
+                    <div className="w-1 self-stretch shrink-0" style={{ backgroundColor: col }} />
+                    <div className="flex-1 min-w-0 p-3 flex items-center gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm">{c.name}</p>
+                        <ZoneBadge zone={c.zone} />
+                      </div>
+                      <button
+                        onClick={() => updateConstellation(c.id, { active: true })}
+                        className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#4F6E5C]"
+                        title="Unpark"
+                      >
+                        <ArchiveRestore size={14} />
+                      </button>
+                      <button
+                        onClick={() => removeConstellation(c.id)}
+                        className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#B5AFA9]"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Bottom action bar — add constellation pinned to thumb height */}
+      {!addingConst && !addingContract && !editingConst && !editingContract && (
+        <div className="fixed left-0 right-0 z-30" style={{ bottom: "calc(72px + env(safe-area-inset-bottom, 0px))" }}>
+          <div className="max-w-lg mx-auto px-4 pb-3 flex gap-2 justify-end">
+            <button
+              onClick={() => setAddingContract(true)}
+              className="flex items-center gap-1.5 text-sm bg-white border border-[#3B5998]/30 text-[#3B5998] rounded-xl px-3 py-2.5 min-h-[44px] shadow-sm hover:bg-[#DBEAFE]"
+            >
+              <Plus size={14} /> Contract
+            </button>
+            <button
+              onClick={() => setAddingConst(true)}
+              className="flex items-center gap-1.5 text-sm text-white rounded-xl px-4 py-2.5 min-h-[44px] shadow-md"
+              style={{ backgroundColor: currentZoneColor }}
+            >
+              <Plus size={16} /> Constellation
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

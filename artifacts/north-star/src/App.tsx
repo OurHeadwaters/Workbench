@@ -2,6 +2,7 @@ import { Router as WouterRouter, Route, Switch, Redirect } from "wouter";
 import { ZoneStoreProvider } from "@workspace/zone-store";
 import { useStore } from "@/store";
 import { NavBar } from "@/components/NavBar";
+import { CaptureFab } from "@/components/CaptureFab";
 import { OnboardingPage } from "@/pages/OnboardingPage";
 import { TodayPage } from "@/pages/TodayPage";
 import { ZonesPage } from "@/pages/ZonesPage";
@@ -30,6 +31,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8]">
       {children}
+      <CaptureFab />
       <NavBar />
     </div>
   );
