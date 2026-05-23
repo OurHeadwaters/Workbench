@@ -349,6 +349,44 @@ GROUND RULES
       { q: "Q5", question: "What is the one right move to open next week well?", lead: "Grok", leadId: "grok" },
     ],
   },
+  {
+    id: "monthly",
+    label: "Month-end review",
+    sessionName: "Monthly Review",
+    brief: `MONTHLY REVIEW — Headwaters Development Services
+Convened by: Bobbie Parr
+Cadence: End of month (last weekend of the month)
+Table mode: Full review. Longer rounds. Read what actually happened, then set what comes next.
+
+PURPOSE
+One hour to close the month with honesty and open the next with intention.
+Seven habits structure: review roles, assess wins and gaps, sharpen the saw, set the targets.
+The table reads what is true — not what we hoped or feared. Then it points forward.
+
+THE SEVEN QUESTIONS
+Q1 — What actually happened this month? Hold what held. Name what didn't. (Saltbox)
+Q2 — Where did the stocks grow or deplete? What does the system health look like? (Systems)
+Q3 — What shifted in the community, the market, or with clients this month? (Community)
+Q4 — What new language or vocabulary emerged that's worth keeping? (Codetry)
+Q5 — Are we still pointed in the right direction? What do the roles and targets say? (Grok)
+Q6 — What is one commitment to sharpen the saw — capacity, rest, or learning? (Community)
+Q7 — What are the two or three clear targets for next month? Name them. (Saltbox — does this hold?)
+
+GROUND RULES
+— Be honest about what didn't move. No softening.
+— Name one thing that surprised you. Good or hard.
+— End with written targets — not intentions. Targets.
+— Same seven questions every month. Let the pattern compound.`,
+    agendaItems: [
+      { q: "Q1", question: "What actually happened this month? What held? What didn't?", lead: "Saltbox", leadId: "saltbox" },
+      { q: "Q2", question: "Where did the stocks grow or deplete? What is the system health right now?", lead: "Systems", leadId: "systems" },
+      { q: "Q3", question: "What shifted in the community, the market, or with clients this month?", lead: "Community", leadId: "community" },
+      { q: "Q4", question: "What new language or vocabulary emerged that's worth keeping?", lead: "Codetry", leadId: "codetry" },
+      { q: "Q5", question: "Are we still pointed in the right direction? What do the roles and targets say?", lead: "Grok", leadId: "grok" },
+      { q: "Q6", question: "What is one commitment to sharpen the saw — capacity, rest, or learning?", lead: "Community", leadId: "community" },
+      { q: "Q7", question: "What are the two or three clear targets for next month? Name them.", lead: "Saltbox", leadId: "saltbox" },
+    ],
+  },
 ];
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -639,21 +677,23 @@ export function KitchenTablePage() {
             {/* Template switcher */}
             <div className="flex items-center gap-3 mb-4 px-1">
               <p className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-medium flex-1">
-                {activeTemplate.id === "weekly" ? "Weekend check-in · 30 min" : "Today's agenda · 30 min"}
+                {activeTemplate.id === "weekly" ? "Weekend check-in · 30 min"
+                  : activeTemplate.id === "monthly" ? "Month-end review · 60 min"
+                  : "Today's agenda · 30 min"}
               </p>
-              <div className="flex gap-2">
+              <div className="flex gap-1.5">
                 {TEMPLATES.map((t) => (
                   <button
                     key={t.id}
                     onClick={() => loadTemplate(t)}
                     className={cn(
-                      "px-3 py-1.5 rounded-sm text-[11px] font-medium tracking-wide transition-all",
+                      "px-2.5 py-1.5 rounded-sm text-[10px] font-medium tracking-wide transition-all",
                       activeTemplateId === t.id
                         ? "bg-[#2C241D] text-[#EAE4DB] shadow-inner"
                         : "bg-[#181512] text-[#7A6A5C] border border-[#251E18] hover:text-[#A39485]"
                     )}
                   >
-                    {t.id === "weekly" ? "Weekly" : "Today"}
+                    {t.id === "weekly" ? "Weekly" : t.id === "monthly" ? "Monthly" : "Today"}
                   </button>
                 ))}
               </div>
