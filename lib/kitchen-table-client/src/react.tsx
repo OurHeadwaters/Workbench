@@ -31,6 +31,9 @@ export function useKitchenTable(source?: string, baseUrl?: string) {
 function isDev(): boolean {
   // Vite & most bundlers expose import.meta.env.DEV. We guard via try/catch
   // because some environments (Expo web) don't define import.meta.env.
+  // Note: avoid referencing `process` directly here — doing so causes
+  // vite-plugin-node-polyfills to inject a shim import that Rollup cannot
+  // resolve when this file is bundled via a workspace symlink.
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const env = (import.meta as any).env;
@@ -38,9 +41,6 @@ function isDev(): boolean {
     if (env && env.MODE) return env.MODE !== "production";
   } catch {
     // ignore
-  }
-  if (typeof process !== "undefined" && process.env) {
-    return process.env.NODE_ENV !== "production";
   }
   return false;
 }
