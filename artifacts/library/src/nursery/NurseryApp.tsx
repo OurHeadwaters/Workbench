@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { GardenFloorPage } from "./pages/GardenFloorPage";
 import { IdeaBriefPage } from "./pages/IdeaBriefPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
+import { NurseryLandingPage } from "./pages/NurseryLandingPage";
 
 export function NurseryApp() {
   const [producer, setProducer] = useState<NurseryProducer | null>(null);
@@ -42,7 +43,11 @@ export function NurseryApp() {
   }
 
   if (!producer) {
-    return <LoginPage onAuth={handleAuth} />;
+    const isProtectedRoute = location !== "/nursery";
+    if (isProtectedRoute) {
+      return <LoginPage onAuth={handleAuth} />;
+    }
+    return <NurseryLandingPage onSignIn={() => navigate("/nursery/login")} />;
   }
 
   if (location === "/nursery/onboarding") {
