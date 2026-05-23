@@ -10,7 +10,7 @@ name = "expo"
 version = "1.0.0"
 
 [[services]]
-ensurePreviewReachable = "/status"
+ensurePreviewReachable = "/codetry-handbook/status"
 name = "expo"
 paths = [ "/codetry-handbook/" ]
 localPort = 25432
@@ -18,8 +18,13 @@ localPort = 25432
 [services.development]
 run = "pnpm --filter @workspace/codetry-handbook run dev"
 
+[services.production]
+
 [services.production.build]
 args = ["pnpm", "--filter", "@workspace/codetry-handbook", "run", "build"]
+
+[services.production.build.env]
+NODE_ENV = "production"
 
 [services.production.run]
 args = ["node", "artifacts/codetry-handbook/server/serve.js"]
@@ -27,3 +32,7 @@ args = ["node", "artifacts/codetry-handbook/server/serve.js"]
 [services.production.run.env]
 PORT = "25432"
 BASE_PATH = "/codetry-handbook/"
+NODE_ENV = "production"
+
+[services.production.health.startup]
+path = "/codetry-handbook/status"
