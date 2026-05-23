@@ -474,12 +474,16 @@ export function KitchenTablePage() {
   const inSession = messages.length > 0;
 
   return (
-    <div className="flex flex-col h-dvh bg-[#1C1814] font-sans selection:bg-[#D68A3A]/30">
-
+    <div className="flex flex-col h-dvh bg-[#13110E] text-[#D8D0C5] font-sans antialiased relative overflow-hidden selection:bg-[#B75C34]/40">
+      
+      {/* Campfire glow effect */}
+      <div className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#B75C34] opacity-[0.04] blur-[100px] pointer-events-none rounded-full" />
+      
       {/* ── Header ── */}
-      <div className="flex-shrink-0 bg-[#1C1814] border-b border-[#31281F] px-4 pt-safe-top">
-        <div className="flex items-center gap-2 py-3">
-          <span className="text-[10px] uppercase tracking-widest text-[#D68A3A] font-bold">Z2 ·</span>
+      <div className="flex-shrink-0 z-10 bg-[#13110E]/80 backdrop-blur-xl border-b border-[#2C241D] px-5 pt-safe-top shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+        <div className="flex items-center gap-3 py-4">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-[#8C7B6D] font-medium">Z2</span>
+          <span className="w-1 h-1 rounded-full bg-[#3D3228]" />
           {editingSession ? (
             <input
               autoFocus
@@ -487,23 +491,23 @@ export function KitchenTablePage() {
               onChange={(e) => setSessionName(e.target.value)}
               onBlur={() => setEditingSession(false)}
               onKeyDown={(e) => { if (e.key === "Enter") setEditingSession(false); }}
-              className="flex-1 text-[15px] font-semibold text-[#E8E1D5] bg-transparent border-b border-[#D68A3A] outline-none"
+              className="flex-1 text-[16px] font-serif tracking-wide text-[#EAE4DB] bg-transparent border-b border-[#8C7B6D] outline-none"
             />
           ) : (
             <button
               onClick={() => setEditingSession(true)}
-              className="flex-1 text-left text-[15px] font-semibold text-[#E8E1D5]"
+              className="flex-1 text-left text-[16px] font-serif tracking-wide text-[#EAE4DB]"
             >
               {sessionName}
             </button>
           )}
           {inSession && (
             <div
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium text-white shadow-sm"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-[12px] font-medium text-[#13110E] shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
               style={{ background: activeSeat.color }}
             >
-              <span>{activeSeat.icon}</span>
-              <span>{activeSeat.name}</span>
+              <span className="opacity-90">{activeSeat.icon}</span>
+              <span className="tracking-wide">{activeSeat.name}</span>
             </div>
           )}
         </div>
@@ -514,14 +518,14 @@ export function KitchenTablePage() {
           Seat tiles grid + agenda visible
       ══════════════════════════════════════════════════════════════ */}
       {!inSession && (
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto relative z-10 pb-12">
 
           {/* Seat tile grid */}
-          <div className="px-4 pt-5 pb-3">
-            <p className="text-[10px] uppercase tracking-widest text-[#A99D8D] font-medium mb-3 px-1">
-              The council — tap a seat to speak
+          <div className="px-5 pt-8 pb-6">
+            <p className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-medium mb-4 px-1">
+              The council is present
             </p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               {seats.map((seat) => {
                 const isActive = seat.id === activeSeatId;
                 return (
@@ -530,35 +534,47 @@ export function KitchenTablePage() {
                     onClick={() => setActiveSeatId(seat.id)}
                     onDoubleClick={() => seat.configurable && openConfig(seat)}
                     className={cn(
-                      "relative flex flex-col items-center justify-center gap-2 rounded-xl px-3 py-5 text-center transition-all active:scale-[0.98]",
+                      "relative flex flex-col items-center justify-center gap-3 rounded-sm px-4 py-6 text-center transition-all duration-300 active:scale-[0.99]",
                       isActive
-                        ? "text-white shadow-[0_0_20px_rgba(214,138,58,0.15)] ring-1 ring-white/20"
-                        : "bg-[#251E18] border border-[#31281F] text-[#E8E1D5] shadow-sm"
+                        ? "bg-[#1C1814] shadow-[0_8px_20px_rgba(0,0,0,0.6)] border-t border-[#3A2F25] border-x border-[#1C1814] border-b border-[#0A0807]"
+                        : "bg-[#181512] shadow-[0_2px_8px_rgba(0,0,0,0.5)] border-t border-[#251E18] border-x border-[#181512] border-b border-[#0A0807] hover:bg-[#1C1814]"
                     )}
-                    style={isActive ? { background: seat.color } : {}}
                   >
+                    {isActive && (
+                      <div className="absolute inset-0 rounded-sm pointer-events-none" style={{ boxShadow: `inset 0 0 0 1px ${seat.color}40, 0 0 30px ${seat.color}15` }} />
+                    )}
                     {seat.configurable && (
                       <span
                         className={cn(
-                          "absolute top-2 right-2.5 text-[9px] uppercase tracking-wider font-medium",
-                          isActive ? "text-white/60" : "text-[#8E8373]"
+                          "absolute top-3 right-3 text-[9px] uppercase tracking-[0.1em] font-medium",
+                          isActive ? "text-[#D8D0C5]/60" : "text-[#5C5046]"
                         )}
                       >
                         open
                       </span>
                     )}
-                    <span className={cn("text-[28px] leading-none drop-shadow-sm", !isActive && "opacity-80")}>{seat.icon}</span>
-                    <span className="text-[15px] font-semibold leading-tight">{seat.name}</span>
-                    <span
+                    <span 
                       className={cn(
-                        "text-[11px] leading-snug px-1",
-                        isActive ? "text-white/80" : "text-[#A99D8D]"
+                        "text-[32px] leading-none drop-shadow-md transition-opacity duration-300", 
+                        !isActive && "opacity-60 grayscale-[0.3]"
                       )}
+                      style={isActive ? { color: seat.color } : {}}
                     >
-                      {seat.description}
+                      {seat.icon}
                     </span>
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-[15px] font-serif tracking-wide text-[#EAE4DB]">{seat.name}</span>
+                      <span
+                        className={cn(
+                          "text-[12px] leading-relaxed px-2 font-medium tracking-wide",
+                          isActive ? "text-[#A39485]" : "text-[#6B5D50]"
+                        )}
+                      >
+                        {seat.description}
+                      </span>
+                    </div>
                     {seat.configurable && !isActive && (
-                      <span className="mt-1 text-[10px] text-[#D68A3A] font-medium">Double-tap to set</span>
+                      <span className="mt-2 text-[10px] text-[#8C7B6D] font-medium tracking-wide">Double-tap to set</span>
                     )}
                   </button>
                 );
@@ -567,30 +583,31 @@ export function KitchenTablePage() {
           </div>
 
           {/* Agenda */}
-          <div className="px-4 pt-4 pb-8">
+          <div className="px-5 pt-2 pb-12">
             {/* Template switcher */}
-            <div className="flex items-center gap-2 mb-3 px-1">
-              <p className="text-[10px] uppercase tracking-widest text-[#A99D8D] font-medium flex-1">
+            <div className="flex items-center gap-3 mb-4 px-1">
+              <p className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-medium flex-1">
                 {activeTemplate.id === "weekly" ? "Weekend check-in · 30 min" : "Today's agenda · 30 min"}
               </p>
-              <div className="flex gap-1.5">
+              <div className="flex gap-2">
                 {TEMPLATES.map((t) => (
                   <button
                     key={t.id}
                     onClick={() => loadTemplate(t)}
                     className={cn(
-                      "px-2.5 py-1 rounded-full text-[10px] font-medium transition-all",
+                      "px-3 py-1.5 rounded-sm text-[11px] font-medium tracking-wide transition-all",
                       activeTemplateId === t.id
-                        ? "bg-[#D68A3A] text-white"
-                        : "bg-[#2A2118] text-[#A99D8D] border border-[#3D3125]"
+                        ? "bg-[#2C241D] text-[#EAE4DB] shadow-inner"
+                        : "bg-[#181512] text-[#7A6A5C] border border-[#251E18] hover:text-[#A39485]"
                     )}
                   >
-                    {t.id === "weekly" ? "↻ Weekly" : "Today"}
+                    {t.id === "weekly" ? "Weekly" : "Today"}
                   </button>
                 ))}
               </div>
             </div>
-            <div className="bg-[#F0EAE1] rounded-xl border border-[#DCD3C6] shadow-sm overflow-hidden">
+            
+            <div className="bg-[#181512] rounded-sm border border-[#251E18] shadow-[0_4px_12px_rgba(0,0,0,0.5)] overflow-hidden">
               {agendaItems.map((item, i) => {
                 const leadSeat = seats.find((s) => s.id === item.leadId);
                 return (
@@ -601,20 +618,20 @@ export function KitchenTablePage() {
                       setInput(item.question);
                     }}
                     className={cn(
-                      "w-full flex items-start gap-3 px-4 py-4 text-left transition-colors hover:bg-[#E9DFD2] active:bg-[#E1D5C6]",
-                      i < agendaItems.length - 1 ? "border-b border-[#DCD3C6]" : ""
+                      "w-full flex items-start gap-4 px-5 py-5 text-left transition-colors hover:bg-[#1C1814] active:bg-[#251E18]",
+                      i < agendaItems.length - 1 ? "border-b border-[#251E18]" : ""
                     )}
                   >
                     <span
-                      className="flex-shrink-0 w-7 h-7 rounded flex items-center justify-center text-[11px] font-bold text-[#F0EAE1] mt-0.5 shadow-sm"
-                      style={{ background: "#D68A3A" }}
+                      className="flex-shrink-0 w-6 h-6 rounded-sm flex items-center justify-center text-[11px] font-bold text-[#13110E] mt-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
+                      style={{ background: "#8C7B6D" }}
                     >
                       {i + 1}
                     </span>
-                    <div className="flex-1 min-w-0 pt-0.5">
-                      <p className="text-[14px] font-medium text-[#2A231C] leading-snug">{item.question}</p>
-                      <p className="text-[11px] text-[#7A6E5D] mt-1.5 font-medium flex items-center gap-1.5">
-                        <span style={{ color: leadSeat?.color ?? "#A99D8D" }} className="opacity-90">{leadSeat?.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[15px] font-medium text-[#D8D0C5] leading-relaxed">{item.question}</p>
+                      <p className="text-[12px] text-[#8C7B6D] mt-2 font-medium tracking-wide flex items-center gap-2">
+                        <span style={{ color: leadSeat?.color ?? "#5C5046" }} className="opacity-90 text-[14px]">{leadSeat?.icon}</span>
                         {item.lead} leads
                       </p>
                     </div>
@@ -622,8 +639,8 @@ export function KitchenTablePage() {
                 );
               })}
             </div>
-            <p className="text-[11px] text-[#8E8373] text-center mt-4">
-              Tap an agenda item to open that question with the right seat selected
+            <p className="text-[12px] text-[#5C5046] text-center mt-6 font-medium tracking-wide">
+              Tap an agenda item to sit down and begin
             </p>
           </div>
         </div>
@@ -636,8 +653,8 @@ export function KitchenTablePage() {
       {inSession && (
         <>
           {/* Compact seat switcher */}
-          <div className="flex-shrink-0 bg-[#1C1814] border-b border-[#31281F]">
-            <div className="flex gap-2 px-3 py-2.5 overflow-x-auto scrollbar-hide">
+          <div className="flex-shrink-0 z-10 bg-[#181512] border-b border-[#251E18] shadow-md relative">
+            <div className="flex gap-2.5 px-4 py-3 overflow-x-auto scrollbar-hide">
               {seats.map((seat) => {
                 const isActive = seat.id === activeSeatId;
                 return (
@@ -646,14 +663,14 @@ export function KitchenTablePage() {
                     onClick={() => setActiveSeatId(seat.id)}
                     onDoubleClick={() => seat.configurable && openConfig(seat)}
                     className={cn(
-                      "flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all border",
+                      "flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-sm text-[13px] font-medium tracking-wide transition-all duration-300",
                       isActive
-                        ? "text-white border-transparent shadow-sm"
-                        : "text-[#A99D8D] bg-[#251E18] border-[#31281F]"
+                        ? "text-[#13110E] shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
+                        : "text-[#8C7B6D] bg-[#1C1814] border border-[#2A231E] hover:bg-[#251E18] hover:text-[#A39485]"
                     )}
                     style={isActive ? { background: seat.color } : {}}
                   >
-                    <span className="text-[15px] opacity-90">{seat.icon}</span>
+                    <span className="text-[16px] opacity-90">{seat.icon}</span>
                     <span>{seat.name}</span>
                   </button>
                 );
@@ -662,21 +679,21 @@ export function KitchenTablePage() {
           </div>
 
           {/* Agenda toggle */}
-          <div className="flex-shrink-0 border-b border-[#31281F] bg-[#251E18]">
+          <div className="flex-shrink-0 z-10 border-b border-[#251E18] bg-[#1A1714]">
             <button
               onClick={() => { setBriefOpen((o) => !o); setEditingBrief(false); }}
-              className="flex items-center gap-2 w-full px-4 py-2.5 text-left"
+              className="flex items-center gap-3 w-full px-5 py-3.5 text-left transition-colors hover:bg-[#1C1814]"
             >
-              <span className="text-[11px] opacity-70">📋</span>
-              <span className="text-[10px] uppercase tracking-wider text-[#A99D8D] font-bold">Agenda</span>
-              <span className="text-[10px] text-[#8E8373] ml-1">— {agendaItems.length} items</span>
-              <span className="ml-auto text-[10px] text-[#A99D8D]">{briefOpen ? "▲" : "▼"}</span>
+              <span className="text-[12px] opacity-60">📋</span>
+              <span className="text-[11px] uppercase tracking-[0.15em] text-[#8C7B6D] font-bold">Agenda</span>
+              <span className="text-[11px] text-[#5C5046] ml-2 tracking-wide">— {agendaItems.length} items</span>
+              <span className="ml-auto text-[10px] text-[#5C5046]">{briefOpen ? "▲" : "▼"}</span>
             </button>
 
             {briefOpen && (
-              <div className="px-4 pb-4">
+              <div className="px-5 pb-5 bg-[#1A1714]">
                 {/* Compact agenda list */}
-                <div className="bg-[#F0EAE1] rounded-xl border border-[#DCD3C6] overflow-hidden mb-3 shadow-sm">
+                <div className="bg-[#181512] rounded-sm border border-[#251E18] overflow-hidden mb-4 shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
                   {agendaItems.map((item, i) => {
                     const leadSeat = seats.find((s) => s.id === item.leadId);
                     return (
@@ -688,17 +705,17 @@ export function KitchenTablePage() {
                           setBriefOpen(false);
                         }}
                         className={cn(
-                          "w-full flex items-start gap-3 px-3 py-3 text-left transition-colors hover:bg-[#E9DFD2] active:bg-[#E1D5C6]",
-                          i < agendaItems.length - 1 ? "border-b border-[#DCD3C6]" : ""
+                          "w-full flex items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-[#1C1814] active:bg-[#251E18]",
+                          i < agendaItems.length - 1 ? "border-b border-[#251E18]" : ""
                         )}
                       >
                         <span
-                          className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center text-[10px] font-bold text-[#F0EAE1] mt-0.5"
-                          style={{ background: "#D68A3A" }}
+                          className="flex-shrink-0 w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold text-[#13110E] mt-0.5"
+                          style={{ background: "#8C7B6D" }}
                         >
                           {i + 1}
                         </span>
-                        <p className="text-[12px] text-[#2A231C] font-medium leading-snug pt-0.5">{item.question}</p>
+                        <p className="text-[13px] text-[#D8D0C5] font-medium leading-relaxed pt-0.5">{item.question}</p>
                       </button>
                     );
                   })}
@@ -706,28 +723,28 @@ export function KitchenTablePage() {
                 {/* Brief edit */}
                 <button
                   onClick={() => setEditingBrief((b) => !b)}
-                  className="text-[11px] text-[#D68A3A] hover:text-[#C18C41] underline underline-offset-4 px-1 font-medium transition-colors"
+                  className="text-[11px] text-[#8C7B6D] hover:text-[#A39485] tracking-wide px-1 font-medium transition-colors"
                 >
-                  {editingBrief ? "close brief" : "edit session brief"}
+                  {editingBrief ? "Cancel edit" : "Edit session brief"}
                 </button>
                 {editingBrief && (
-                  <div className="mt-3">
+                  <div className="mt-4">
                     <textarea
                       autoFocus
                       value={brief}
                       onChange={(e) => setBrief(e.target.value)}
-                      rows={6}
-                      className="w-full text-[12px] font-mono leading-relaxed text-[#2A231C] bg-[#F0EAE1] border border-[#DCD3C6] rounded-lg p-3 resize-y outline-none focus:ring-1 focus:ring-[#D68A3A] focus:border-[#D68A3A]"
+                      rows={8}
+                      className="w-full text-[13px] font-mono leading-relaxed text-[#A39485] bg-[#13110E] border border-[#2A231E] rounded-sm p-4 resize-y outline-none focus:border-[#5C5046] transition-colors"
                     />
-                    <div className="flex gap-2 mt-2 justify-end">
+                    <div className="flex gap-3 mt-3 justify-end">
                       <button
                         onClick={() => setBrief(DEFAULT_BRIEF)}
-                        className="text-[11px] text-[#A99D8D] hover:text-[#E8E1D5] border border-[#31281F] rounded px-3 py-1.5 transition-colors"
-                      >reset</button>
+                        className="text-[12px] tracking-wide text-[#8C7B6D] hover:text-[#D8D0C5] border border-[#2A231E] bg-[#1C1814] rounded-sm px-4 py-2 transition-colors"
+                      >Reset</button>
                       <button
                         onClick={() => setEditingBrief(false)}
-                        className="text-[11px] text-white bg-[#183626] hover:bg-[#1A422D] rounded px-4 py-1.5 font-semibold shadow-sm transition-colors"
-                      >done</button>
+                        className="text-[12px] tracking-wide text-[#13110E] bg-[#8C7B6D] hover:bg-[#A39485] rounded-sm px-5 py-2 font-medium shadow-sm transition-colors"
+                      >Done</button>
                     </div>
                   </div>
                 )}
@@ -736,18 +753,18 @@ export function KitchenTablePage() {
           </div>
 
           {/* Chat messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4 min-h-0">
+          <div className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-6 min-h-0 relative z-0">
             {messages.map((msg) => {
               const isUser = msg.role === "user";
               const isStreaming = streaming && msg.id === streamingIdRef.current;
               return (
                 <div
                   key={msg.id}
-                  className={cn("flex gap-2.5 items-end", isUser ? "flex-row-reverse" : "flex-row")}
+                  className={cn("flex gap-4 items-end", isUser ? "flex-row-reverse" : "flex-row")}
                 >
                   {!isUser && (
                     <div
-                      className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-lg text-white mb-1 shadow-sm"
+                      className="w-10 h-10 rounded-sm flex-shrink-0 flex items-center justify-center text-xl text-[#13110E] mb-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.5)]"
                       style={{ background: msg.seatColor }}
                     >
                       {seats.find((s) => s.id === msg.seatId)?.icon ?? "◈"}
@@ -755,124 +772,127 @@ export function KitchenTablePage() {
                   )}
                   <div
                     className={cn(
-                      "max-w-[82%] px-4 py-3 text-[14px] leading-relaxed rounded-2xl",
+                      "max-w-[85%] px-5 py-4 text-[15px] leading-relaxed rounded-sm",
                       isUser
-                        ? "bg-[#183626] text-[#F3EFE7] rounded-br-sm shadow-sm"
-                        : "bg-[#F0EAE1] text-[#2A231C] border border-[#DCD3C6] rounded-bl-sm shadow-md"
+                        ? "bg-[#21241C] text-[#EAE4DB] shadow-[0_2px_10px_rgba(0,0,0,0.3)] border border-[#2D3327]"
+                        : "bg-[#181512] text-[#D8D0C5] border border-[#251E18] shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
                     )}
                     style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
                   >
                     {!isUser && (
                       <p
-                        className="text-[10px] uppercase tracking-wider font-bold mb-1.5 opacity-90"
+                        className="text-[11px] uppercase tracking-[0.15em] font-medium mb-2 opacity-80"
                         style={{ color: msg.seatColor }}
                       >
                         {msg.seatName}
                       </p>
                     )}
-                    {msg.content || (isStreaming ? <span className="opacity-40 text-[#D68A3A]">▍</span> : null)}
-                    {isStreaming && msg.content && <span className="opacity-40 text-[#D68A3A]">▍</span>}
+                    {msg.content || (isStreaming ? <span className="opacity-40" style={{ color: msg.seatColor }}>▍</span> : null)}
+                    {isStreaming && msg.content && <span className="opacity-40" style={{ color: msg.seatColor }}>▍</span>}
                   </div>
                 </div>
               );
             })}
-            <div ref={chatEndRef} />
+            <div ref={chatEndRef} className="h-4" />
           </div>
         </>
       )}
 
       {/* ── Input row (always visible) ── */}
-      <div className="flex-shrink-0 border-t border-[#31281F] bg-[#1C1814] px-4 py-3 pb-safe-bottom flex gap-3 items-end">
-        <div
-          className="flex-1 flex flex-col bg-[#251E18] rounded-xl px-4 pt-3 pb-2.5 transition-colors focus-within:bg-[#2A231C]"
-          style={{ border: `1px solid ${activeSeat.color}66` }}
-        >
-          {!inSession && (
-            <p className="text-[10px] uppercase tracking-wider font-bold mb-1.5 opacity-90" style={{ color: activeSeat.color }}>
-              {activeSeat.icon} {activeSeat.name}
-            </p>
-          )}
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                send();
-              }
-            }}
-            onInput={(e) => {
-              const el = e.target as HTMLTextAreaElement;
-              el.style.height = "auto";
-              el.style.height = Math.min(el.scrollHeight, 120) + "px";
-            }}
-            placeholder={inSession ? `Ask ${activeSeat.name}…` : `Tap a seat above, or type to speak to ${activeSeat.name}…`}
-            rows={1}
-            disabled={streaming}
-            className="flex-1 bg-transparent text-[14px] text-[#E8E1D5] placeholder:text-[#8E8373] outline-none resize-none leading-snug"
-            style={{ maxHeight: 120 }}
-          />
+      <div className="flex-shrink-0 relative z-20 border-t border-[#251E18] bg-[#181512] px-5 py-4 pb-safe-bottom shadow-[0_-10px_30px_rgba(0,0,0,0.4)]">
+        <div className="max-w-2xl mx-auto flex gap-4 items-end">
+          <div
+            className="flex-1 flex flex-col bg-[#13110E] rounded-sm px-4 pt-3.5 pb-3 transition-colors border border-[#2A231E] focus-within:border-[#4A3D33] shadow-inner"
+          >
+            {!inSession && (
+              <p className="text-[11px] uppercase tracking-[0.1em] font-medium mb-2 opacity-80" style={{ color: activeSeat.color }}>
+                <span className="mr-1">{activeSeat.icon}</span> {activeSeat.name}
+              </p>
+            )}
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  send();
+                }
+              }}
+              onInput={(e) => {
+                const el = e.target as HTMLTextAreaElement;
+                el.style.height = "auto";
+                el.style.height = Math.min(el.scrollHeight, 160) + "px";
+              }}
+              placeholder={inSession ? `Speak to ${activeSeat.name}…` : `Sit down and speak to ${activeSeat.name}…`}
+              rows={1}
+              disabled={streaming}
+              className="flex-1 bg-transparent text-[15px] font-serif tracking-wide text-[#EAE4DB] placeholder:text-[#5C5046] outline-none resize-none leading-relaxed"
+              style={{ maxHeight: 160 }}
+            />
+          </div>
+          <button
+            onClick={send}
+            disabled={streaming || !input.trim()}
+            className={cn(
+              "w-12 h-12 rounded-sm flex items-center justify-center text-[#13110E] flex-shrink-0 transition-all duration-300",
+              streaming || !input.trim() 
+                ? "opacity-40 bg-[#251E18] text-[#5C5046]" 
+                : "active:scale-[0.96] shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_4px_12px_rgba(0,0,0,0.5)]"
+            )}
+            style={{ background: streaming || !input.trim() ? undefined : activeSeat.color }}
+          >
+            <svg width="20" height="20" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1L13 7L7 13M1 7H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </div>
-        <button
-          onClick={send}
-          disabled={streaming || !input.trim()}
-          className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center text-[#F3EFE7] flex-shrink-0 transition-all",
-            streaming || !input.trim() ? "opacity-30 bg-[#31281F]" : "active:scale-95 shadow-md"
-          )}
-          style={{ background: streaming || !input.trim() ? undefined : activeSeat.color }}
-        >
-          <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
-            <path d="M7 1L13 7L7 13M1 7H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
       </div>
 
       {/* ── Config modal ── */}
       {configSeatId && (
         <div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-end"
+          className="fixed inset-0 bg-[#0A0807]/80 backdrop-blur-md z-50 flex items-end sm:items-center sm:justify-center"
           onClick={(e) => { if (e.target === e.currentTarget) setConfigSeatId(null); }}
         >
-          <div className="w-full bg-[#1C1814] border-t border-[#31281F] rounded-t-2xl p-5 pb-safe-bottom shadow-2xl">
-            <div className="w-12 h-1.5 bg-[#31281F] rounded-full mx-auto mb-6" />
-            <h3 className="text-[18px] font-bold text-[#E8E1D5] mb-1.5">Configure seat</h3>
-            <p className="text-[13px] text-[#A99D8D] mb-5">Name a thinker, advisor, or lens for this seat.</p>
+          <div className="w-full sm:w-[480px] bg-[#181512] border-t sm:border border-[#251E18] rounded-t-sm sm:rounded-sm p-6 sm:p-8 pb-safe-bottom shadow-2xl">
+            <div className="w-16 h-1 bg-[#251E18] rounded-full mx-auto mb-8 sm:hidden" />
+            <h3 className="text-[20px] font-serif tracking-wide text-[#EAE4DB] mb-2">Configure Council Seat</h3>
+            <p className="text-[14px] text-[#8C7B6D] mb-8 leading-relaxed">Bring a new lens, framework, or thinker to the table.</p>
 
-            <label className="text-[11px] uppercase tracking-wider text-[#A99D8D] font-semibold block mb-1.5">Name</label>
+            <label className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-bold block mb-2">Name</label>
             <input
               value={configDraft.name}
               onChange={(e) => setConfigDraft((d) => ({ ...d, name: e.target.value }))}
-              className="w-full text-[15px] text-[#E8E1D5] bg-[#251E18] border border-[#31281F] rounded-lg px-4 py-3 outline-none mb-4 focus:border-[#D68A3A] transition-colors"
+              className="w-full text-[16px] text-[#EAE4DB] bg-[#13110E] border border-[#251E18] rounded-sm px-4 py-3.5 outline-none mb-5 focus:border-[#5C5046] transition-colors shadow-inner"
             />
 
-            <label className="text-[11px] uppercase tracking-wider text-[#A99D8D] font-semibold block mb-1.5">Role tagline</label>
+            <label className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-bold block mb-2">Role tagline</label>
             <input
               value={configDraft.description}
               onChange={(e) => setConfigDraft((d) => ({ ...d, description: e.target.value }))}
               placeholder="e.g. Robin Wall Kimmerer — reciprocity, plant intelligence"
-              className="w-full text-[14px] text-[#E8E1D5] bg-[#251E18] border border-[#31281F] rounded-lg px-4 py-3 outline-none mb-4 focus:border-[#D68A3A] transition-colors placeholder:text-[#7A6E5D]"
+              className="w-full text-[15px] text-[#EAE4DB] bg-[#13110E] border border-[#251E18] rounded-sm px-4 py-3.5 outline-none mb-5 focus:border-[#5C5046] transition-colors placeholder:text-[#5C5046] shadow-inner"
             />
 
-            <label className="text-[11px] uppercase tracking-wider text-[#A99D8D] font-semibold block mb-1.5">Lens (system prompt)</label>
+            <label className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-bold block mb-2">Lens (system prompt)</label>
             <textarea
               value={configDraft.systemPrompt}
               onChange={(e) => setConfigDraft((d) => ({ ...d, systemPrompt: e.target.value }))}
               placeholder="Describe the knowledge framework or thinker this seat speaks from."
-              rows={4}
-              className="w-full text-[14px] text-[#E8E1D5] bg-[#251E18] border border-[#31281F] rounded-lg px-4 py-3 outline-none mb-6 resize-none leading-relaxed focus:border-[#D68A3A] transition-colors placeholder:text-[#7A6E5D]"
+              rows={5}
+              className="w-full text-[14px] font-mono leading-relaxed text-[#D8D0C5] bg-[#13110E] border border-[#251E18] rounded-sm px-4 py-4 outline-none mb-8 resize-none focus:border-[#5C5046] transition-colors placeholder:text-[#5C5046] shadow-inner"
             />
 
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <button
                 onClick={() => setConfigSeatId(null)}
-                className="flex-1 py-3.5 text-[14px] font-medium text-[#A99D8D] hover:text-[#E8E1D5] border border-[#31281F] bg-[#251E18] rounded-xl transition-colors"
+                className="flex-1 py-4 text-[13px] uppercase tracking-wide font-bold text-[#8C7B6D] hover:text-[#EAE4DB] border border-[#2A231E] bg-[#1C1814] rounded-sm transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={saveConfig}
-                className="flex-1 py-3.5 text-[14px] font-bold text-[#F3EFE7] bg-[#183626] hover:bg-[#1A422D] rounded-xl shadow-md transition-colors"
+                className="flex-1 py-4 text-[13px] uppercase tracking-wide font-bold text-[#13110E] bg-[#8C7B6D] hover:bg-[#A39485] rounded-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-colors"
               >
                 Set seat
               </button>
