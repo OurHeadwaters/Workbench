@@ -866,6 +866,15 @@ export function MapPage() {
     setQuizCollapsed(false);
   }
 
+  /* On return visits, scroll to the visitor's highlighted zone once on mount */
+  useEffect(() => {
+    if (highlightedZones.length === 0) return;
+    const timer = setTimeout(() => {
+      scrollToZone(highlightedZones[0]);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   /* Sync standby toggle with quiz situation answer */
   useEffect(() => {
     if (quizComplete && quiz.situation === "standby") {
