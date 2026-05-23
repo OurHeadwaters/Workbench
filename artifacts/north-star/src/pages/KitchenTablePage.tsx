@@ -273,6 +273,25 @@ type Message = {
   seatColor: string;
 };
 
+type SoundBite = {
+  id: string;
+  text: string;
+  seatName?: string;
+  seatColor?: string;
+  capturedAt: string;
+};
+
+const SEED_BITES: SoundBite[] = [
+  { id: "s1", text: "Pain is the tell.", capturedAt: "2026-05-23" },
+  { id: "s2", text: "Pull not push.", capturedAt: "2026-05-23" },
+  { id: "s3", text: "Own, don't lease.", capturedAt: "2026-05-23" },
+  { id: "s4", text: "Control one's own.", capturedAt: "2026-05-23" },
+  { id: "s5", text: "Exit and Build.", capturedAt: "2026-05-23" },
+  { id: "s6", text: "We always knew how to fix it. Now we can.", capturedAt: "2026-05-23" },
+  { id: "s7", text: "From the grassroots to the foundation. Let's reclaim the grass and mix some hempcrete foundation for round 2.", capturedAt: "2026-05-23" },
+  { id: "s8", text: "We'll own everything and be happy.", capturedAt: "2026-05-23" },
+];
+
 // ── Session templates ──────────────────────────────────────────────────────────
 type SessionTemplate = {
   id: string;
@@ -471,6 +490,32 @@ export function KitchenTablePage() {
     setConfigSeatId(null);
   };
 
+  const [soundBites, setSoundBites] = useState<SoundBite[]>(() => {
+    try {
+      const stored = localStorage.getItem("kitchen-table-sound-bites");
+      return stored ? (JSON.parse(stored) as SoundBite[]) : SEED_BITES;
+    } catch {
+      return SEED_BITES;
+    }
+  });
+  const [bitesOpen, setBitesOpen] = useState(false);
+  const [biteInput, setBiteInput] = useState("");
+
+  useEffect(() => {
+    try { localStorage.setItem("kitchen-table-sound-bites", JSON.stringify(soundBites)); } catch { /* noop */ }
+  }, [soundBites]);
+
+  const addBite = (text: string, seatName?: string, seatColor?: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    setSoundBites((prev) => [
+      { id: `b-${Date.now()}`, text: trimmed, seatName, seatColor, capturedAt: new Date().toLocaleDateString("en-CA") },
+      ...prev,
+    ]);
+  };
+
+  const deleteBite = (id: string) => setSoundBites((prev) => prev.filter((b) => b.id !== id));
+
   const inSession = messages.length > 0;
 
   return (
@@ -510,6 +555,13 @@ export function KitchenTablePage() {
               <span className="tracking-wide">{activeSeat.name}</span>
             </div>
           )}
+          <button
+            onClick={() => setBitesOpen(true)}
+            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#2C241D] bg-[#1C1814] text-[#8C7B6D] text-[11px] tracking-wide hover:text-[#D8D0C5] hover:border-[#3D3228] transition-colors"
+          >
+            <span className="text-[13px]">✦</span>
+            <span>{soundBites.length}</span>
+          </button>
         </div>
       </div>
 
@@ -789,6 +841,16 @@ export function KitchenTablePage() {
                     )}
                     {msg.content || (isStreaming ? <span className="opacity-40" style={{ color: msg.seatColor }}>▍</span> : null)}
                     {isStreaming && msg.content && <span className="opacity-40" style={{ color: msg.seatColor }}>▍</span>}
+                    {!isUser && msg.content && !isStreaming && (
+                      <button
+                        onClick={() => addBite(msg.content, msg.seatName, msg.seatColor)}
+                        className="mt-3 flex items-center gap-1.5 text-[10px] tracking-wider text-[#5C5046] hover:text-[#8C7B6D] transition-colors"
+                        title="Capture as sound bite"
+                      >
+                        <span>✦</span>
+                        <span>capture</span>
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -896,6 +958,86 @@ export function KitchenTablePage() {
               >
                 Set seat
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Sound Bites panel ── */}
+      {bitesOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex flex-col justify-end"
+          onClick={(e) => { if (e.target === e.currentTarget) setBitesOpen(false); }}
+        >
+          <div className="bg-[#13110E] border-t border-[#2C241D] rounded-t-2xl max-h-[85dvh] flex flex-col shadow-[0_-20px_60px_rgba(0,0,0,0.7)]">
+            {/* Panel header */}
+            <div className="flex items-center gap-3 px-5 pt-5 pb-4 border-b border-[#2C241D] flex-shrink-0">
+              <span className="text-[#8C7B6D] text-base">✦</span>
+              <span className="text-[13px] uppercase tracking-[0.15em] text-[#EAE4DB] font-medium flex-1">Sound Bites</span>
+              <span className="text-[11px] text-[#5C5046]">{soundBites.length} saved</span>
+              <button
+                onClick={() => setBitesOpen(false)}
+                className="text-[#5C5046] hover:text-[#8C7B6D] text-xl leading-none ml-2 transition-colors"
+              >×</button>
+            </div>
+
+            {/* Quick-add */}
+            <div className="flex gap-3 px-5 py-3 border-b border-[#2C241D] flex-shrink-0">
+              <input
+                value={biteInput}
+                onChange={(e) => setBiteInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    addBite(biteInput);
+                    setBiteInput("");
+                  }
+                }}
+                placeholder="Type a one-liner and press return…"
+                className="flex-1 bg-[#1C1814] border border-[#2A231E] rounded-sm px-4 py-2.5 text-[13px] text-[#D8D0C5] placeholder:text-[#4A3D33] outline-none focus:border-[#5C5046] transition-colors"
+              />
+              <button
+                onClick={() => { addBite(biteInput); setBiteInput(""); }}
+                disabled={!biteInput.trim()}
+                className="px-4 py-2.5 text-[12px] uppercase tracking-wider font-medium text-[#13110E] bg-[#8C7B6D] disabled:opacity-30 rounded-sm transition-opacity"
+              >Add</button>
+            </div>
+
+            {/* Bites list */}
+            <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-3">
+              {soundBites.length === 0 && (
+                <p className="text-[13px] text-[#4A3D33] text-center py-8">No bites yet. Type one above or capture from the council.</p>
+              )}
+              {soundBites.map((bite) => (
+                <div
+                  key={bite.id}
+                  className="flex items-start gap-3 bg-[#181512] border border-[#251E18] rounded-sm px-4 py-3.5 group"
+                >
+                  {bite.seatColor && (
+                    <span
+                      className="flex-shrink-0 w-1.5 h-full min-h-[1.5rem] rounded-full mt-0.5"
+                      style={{ background: bite.seatColor }}
+                    />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[14px] text-[#EAE4DB] leading-snug">{bite.text}</p>
+                    {bite.seatName && (
+                      <p className="text-[10px] text-[#5C5046] mt-1.5 tracking-wider uppercase">{bite.seatName}</p>
+                    )}
+                  </div>
+                  <div className="flex gap-2 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => navigator.clipboard?.writeText(bite.text)}
+                      className="text-[11px] text-[#5C5046] hover:text-[#8C7B6D] tracking-wide transition-colors"
+                      title="Copy"
+                    >copy</button>
+                    <button
+                      onClick={() => deleteBite(bite.id)}
+                      className="text-[11px] text-[#5C5046] hover:text-[#8C4A3A] tracking-wide transition-colors"
+                      title="Delete"
+                    >×</button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
