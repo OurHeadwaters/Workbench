@@ -25,6 +25,7 @@ import Phenomena, { PhenomenonDetailPage } from "@/pages/phenomena";
 import ReverseTest from "@/pages/reverse-test";
 import Login from "@/pages/login";
 import Layout from "@/components/Layout";
+import NurseryLayout from "@/components/NurseryLayout";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { ReactNode } from "react";
 import { NurseryApp } from "@/nursery/NurseryApp";
@@ -37,6 +38,14 @@ function RequireOwner({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+function NurseryWrapper() {
+  const { isLoggedIn } = useOwnerAuth();
+  if (isLoggedIn) {
+    return <Layout><NurseryApp /></Layout>;
+  }
+  return <NurseryLayout><NurseryApp /></NurseryLayout>;
+}
+
 function Router() {
   return (
     <Switch>
@@ -44,16 +53,10 @@ function Router() {
       <Route path="/share/:token" component={PublicShare} />
       <Route path="/privacy" component={PrivacyPage} />
       <Route path="/login" component={Login} />
-      {/* Nursery routes — inside Library layout shell but NOT gated by library owner auth */}
-      <Route path="/nursery/onboarding">
-        <Layout><NurseryApp /></Layout>
-      </Route>
-      <Route path="/nursery/idea/:id">
-        <Layout><NurseryApp /></Layout>
-      </Route>
-      <Route path="/nursery">
-        <Layout><NurseryApp /></Layout>
-      </Route>
+      {/* Nursery routes — clean shell for producers; full library shell for authenticated owners */}
+      <Route path="/nursery/onboarding" component={NurseryWrapper} />
+      <Route path="/nursery/idea/:id" component={NurseryWrapper} />
+      <Route path="/nursery" component={NurseryWrapper} />
       <Route>
         <RequireOwner>
           <Layout>
