@@ -216,7 +216,7 @@ export const PLAN_2026: Week[] = [
           },
           {
             title: "AGM agenda — draft the key items for the board meeting",
-            detail: "AGM is the near-term board milestone. The agenda should include: financial position ($28k startup budget, $12k 807 runway), Deer Lake partnership path for board approval, and any other items requiring a board resolution. Get this into a draft form now so there's time to refine it.",
+            detail: "AGM is the near-term board milestone. The agenda should include: financial position ($28k startup budget, $12k 807 runway), Deer Lake partnership path for board approval, a Deadhead fit discussion (does it belong as a Headwaters platform product — software fit — and does the $9/mo subscription model with free access for the 807 members belong in the financial model — financial fit), and any other items requiring a board resolution. Get this into a draft form now so there's time to refine it.",
             category: "admin",
           },
           {
@@ -261,7 +261,7 @@ export const PLAN_2026: Week[] = [
         steps: [
           {
             title: "AGM prep — confirm board members are notified and have the agenda",
-            detail: "Send the draft agenda to board members with the meeting date confirmed. Make sure the Deer Lake partnership path item is clearly framed: this is a board approval item, not just an update.",
+            detail: "Send the draft agenda to board members with the meeting date confirmed. Make sure the Deer Lake partnership path item is clearly framed as a board approval item (not just an update), and that the Deadhead fit discussion is named so board members can think about the software-fit and financial-fit questions in advance.",
             category: "admin",
           },
           {
