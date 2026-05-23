@@ -7,6 +7,37 @@ Date: May 23, 2026
 Convened by: Bobbie Parr, Headwaters Development Services
 Table mode: Sounding. Bobbie listens for the rods — the words that hold weight.
 
+TODAY'S AGENDA (run seat-by-seat, 30 minutes)
+Goal: Decide which bundles are ready to sell now, refine buyer language,
+and clarify how we talk about practitioner licensing.
+
+Q1 — Which bundles feel solid and ready to offer today without forcing anything?
+     Saltbox leads. (Does this hold?)
+
+Q2 — What are the clearest stocks and flows in our current platform that make
+     a bundle actually deliver value?
+     Systems leads.
+
+Q3 — Where do we see the strongest human-scale economic fit for these bundles
+     right now?
+     Community leads.
+
+Q4 — What naming and framing feels clean, honest, and free of drift for the
+     bundles and for practitioner licensing?
+     Codetry leads.
+
+Q5 — How should we speak about practitioner licensing so it feels like natural
+     extension rather than add-on?
+     Grok leads. (Direct whiteboard.)
+
+Q6 — What one decision or next action carries the most weight from what we've heard?
+     Saltbox leads. (Does this hold?)
+
+Run tight. Bobbie listens for the rods. Finish with clear decisions on
+readiness, language, and licensing.
+
+---
+
 ---
 WHO IS AT THIS TABLE
 This table has five named seats and two open/configurable seats.
