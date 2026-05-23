@@ -273,14 +273,63 @@ type Message = {
   seatColor: string;
 };
 
-// ── Agenda items (shown on table in AGM view) ─────────────────────────────────
-const AGENDA_ITEMS = [
-  { q: "Q1", question: "Which bundles feel solid and ready to offer today without forcing anything?", lead: "Saltbox", leadId: "saltbox" },
-  { q: "Q2", question: "What are the clearest stocks and flows in our current platform that make a bundle actually deliver value?", lead: "Systems", leadId: "systems" },
-  { q: "Q3", question: "Where do we see the strongest human-scale economic fit for these bundles right now?", lead: "Community", leadId: "community" },
-  { q: "Q4", question: "What naming and framing feels clean, honest, and free of drift for the bundles and for practitioner licensing?", lead: "Codetry", leadId: "codetry" },
-  { q: "Q5", question: "How should we speak about practitioner licensing so it feels like natural extension rather than add-on?", lead: "Grok", leadId: "grok" },
-  { q: "Q6", question: "What one decision or next action carries the most weight from what we've heard?", lead: "Saltbox", leadId: "saltbox" },
+// ── Session templates ──────────────────────────────────────────────────────────
+type SessionTemplate = {
+  id: string;
+  label: string;
+  sessionName: string;
+  brief: string;
+  agendaItems: { q: string; question: string; lead: string; leadId: string }[];
+};
+
+const TEMPLATES: SessionTemplate[] = [
+  {
+    id: "today",
+    label: "Today's session",
+    sessionName: "Kitchen Table",
+    brief: DEFAULT_BRIEF,
+    agendaItems: [
+      { q: "Q1", question: "Which bundles feel solid and ready to offer today without forcing anything?", lead: "Saltbox", leadId: "saltbox" },
+      { q: "Q2", question: "What are the clearest stocks and flows in our current platform that make a bundle actually deliver value?", lead: "Systems", leadId: "systems" },
+      { q: "Q3", question: "Where do we see the strongest human-scale economic fit for these bundles right now?", lead: "Community", leadId: "community" },
+      { q: "Q4", question: "What naming and framing feels clean, honest, and free of drift for the bundles and for practitioner licensing?", lead: "Codetry", leadId: "codetry" },
+      { q: "Q5", question: "How should we speak about practitioner licensing so it feels like natural extension rather than add-on?", lead: "Grok", leadId: "grok" },
+      { q: "Q6", question: "What one decision or next action carries the most weight from what we've heard?", lead: "Saltbox", leadId: "saltbox" },
+    ],
+  },
+  {
+    id: "weekly",
+    label: "Weekly check-in",
+    sessionName: "Weekend Check-in",
+    brief: `WEEKLY CHECK-IN — Headwaters Development Services
+Convened by: Bobbie Parr
+Cadence: Every weekend (Saturday or Sunday morning)
+Table mode: Review + direction. Short rounds. Listen for what moved and what's next.
+
+PURPOSE
+Thirty minutes to close the week honestly and open the next one with one clear move.
+The table does not console or motivate — it reads what's true.
+
+THE FIVE QUESTIONS
+Q1 — What shipped, held, or moved this week? (Saltbox)
+Q2 — Where are the stocks thinned or flows blocked? (Systems)
+Q3 — What is the community or client signal? (Community)
+Q4 — What language needs cleaning or tightening? (Codetry)
+Q5 — What is the one right move for next week? (Grok)
+
+GROUND RULES
+— No more than three minutes per seat.
+— If a question has no answer, say so and move on.
+— End with one written decision or next action.
+— Same five questions every week. Let the pattern do the work.`,
+    agendaItems: [
+      { q: "Q1", question: "What shipped, held, or moved this week? What's worth keeping?", lead: "Saltbox", leadId: "saltbox" },
+      { q: "Q2", question: "Where are the stocks thinned or the flows blocked right now?", lead: "Systems", leadId: "systems" },
+      { q: "Q3", question: "What is the community or client signal this week?", lead: "Community", leadId: "community" },
+      { q: "Q4", question: "What language or framing needs cleaning or tightening?", lead: "Codetry", leadId: "codetry" },
+      { q: "Q5", question: "What is the one right move to open next week well?", lead: "Grok", leadId: "grok" },
+    ],
+  },
 ];
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -290,6 +339,7 @@ export function KitchenTablePage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
+  const [activeTemplateId, setActiveTemplateId] = useState("today");
   const [sessionName, setSessionName] = useState("Kitchen Table");
   const [editingSession, setEditingSession] = useState(false);
   const [brief, setBrief] = useState(DEFAULT_BRIEF);
@@ -297,6 +347,17 @@ export function KitchenTablePage() {
   const [editingBrief, setEditingBrief] = useState(false);
   const [configSeatId, setConfigSeatId] = useState<string | null>(null);
   const [configDraft, setConfigDraft] = useState({ name: "", description: "", systemPrompt: "" });
+
+  const activeTemplate = TEMPLATES.find((t) => t.id === activeTemplateId) ?? TEMPLATES[0]!;
+  const agendaItems = activeTemplate.agendaItems;
+
+  const loadTemplate = (t: SessionTemplate) => {
+    setActiveTemplateId(t.id);
+    setSessionName(t.sessionName);
+    setBrief(t.brief);
+    setMessages([]);
+    setInput("");
+  };
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const streamingIdRef = useRef<string | null>(null);
@@ -413,12 +474,12 @@ export function KitchenTablePage() {
   const inSession = messages.length > 0;
 
   return (
-    <div className="flex flex-col h-dvh bg-[#FAFAF9]">
+    <div className="flex flex-col h-dvh bg-[#1C1814] font-sans selection:bg-[#D68A3A]/30">
 
       {/* ── Header ── */}
-      <div className="flex-shrink-0 bg-white border-b border-[#E7E5E4] px-4 pt-safe-top">
+      <div className="flex-shrink-0 bg-[#1C1814] border-b border-[#31281F] px-4 pt-safe-top">
         <div className="flex items-center gap-2 py-3">
-          <span className="text-[10px] uppercase tracking-widest text-[#A8A29E] font-medium">Z2 ·</span>
+          <span className="text-[10px] uppercase tracking-widest text-[#D68A3A] font-bold">Z2 ·</span>
           {editingSession ? (
             <input
               autoFocus
@@ -426,19 +487,19 @@ export function KitchenTablePage() {
               onChange={(e) => setSessionName(e.target.value)}
               onBlur={() => setEditingSession(false)}
               onKeyDown={(e) => { if (e.key === "Enter") setEditingSession(false); }}
-              className="flex-1 text-[15px] font-semibold text-[#1C1917] bg-transparent border-b border-[#8A6A1A] outline-none"
+              className="flex-1 text-[15px] font-semibold text-[#E8E1D5] bg-transparent border-b border-[#D68A3A] outline-none"
             />
           ) : (
             <button
               onClick={() => setEditingSession(true)}
-              className="flex-1 text-left text-[15px] font-semibold text-[#1C1917]"
+              className="flex-1 text-left text-[15px] font-semibold text-[#E8E1D5]"
             >
               {sessionName}
             </button>
           )}
           {inSession && (
             <div
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium text-white"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium text-white shadow-sm"
               style={{ background: activeSeat.color }}
             >
               <span>{activeSeat.icon}</span>
@@ -456,11 +517,11 @@ export function KitchenTablePage() {
         <div className="flex-1 overflow-y-auto">
 
           {/* Seat tile grid */}
-          <div className="px-3 pt-4 pb-2">
-            <p className="text-[10px] uppercase tracking-widest text-[#A8A29E] font-medium mb-3 px-1">
+          <div className="px-4 pt-5 pb-3">
+            <p className="text-[10px] uppercase tracking-widest text-[#A99D8D] font-medium mb-3 px-1">
               The council — tap a seat to speak
             </p>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-3">
               {seats.map((seat) => {
                 const isActive = seat.id === activeSeatId;
                 return (
@@ -469,10 +530,10 @@ export function KitchenTablePage() {
                     onClick={() => setActiveSeatId(seat.id)}
                     onDoubleClick={() => seat.configurable && openConfig(seat)}
                     className={cn(
-                      "relative flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4 text-center transition-all active:scale-[0.97]",
+                      "relative flex flex-col items-center justify-center gap-2 rounded-xl px-3 py-5 text-center transition-all active:scale-[0.98]",
                       isActive
-                        ? "text-white shadow-md"
-                        : "bg-white border border-[#E7E5E4] text-[#1C1917] shadow-sm"
+                        ? "text-white shadow-[0_0_20px_rgba(214,138,58,0.15)] ring-1 ring-white/20"
+                        : "bg-[#251E18] border border-[#31281F] text-[#E8E1D5] shadow-sm"
                     )}
                     style={isActive ? { background: seat.color } : {}}
                   >
@@ -480,24 +541,24 @@ export function KitchenTablePage() {
                       <span
                         className={cn(
                           "absolute top-2 right-2.5 text-[9px] uppercase tracking-wider font-medium",
-                          isActive ? "text-white/60" : "text-[#C4B5A0]"
+                          isActive ? "text-white/60" : "text-[#8E8373]"
                         )}
                       >
                         open
                       </span>
                     )}
-                    <span className="text-2xl leading-none">{seat.icon}</span>
-                    <span className="text-[14px] font-semibold leading-tight">{seat.name}</span>
+                    <span className={cn("text-[28px] leading-none drop-shadow-sm", !isActive && "opacity-80")}>{seat.icon}</span>
+                    <span className="text-[15px] font-semibold leading-tight">{seat.name}</span>
                     <span
                       className={cn(
-                        "text-[10px] leading-snug px-1",
-                        isActive ? "text-white/75" : "text-[#A8A29E]"
+                        "text-[11px] leading-snug px-1",
+                        isActive ? "text-white/80" : "text-[#A99D8D]"
                       )}
                     >
                       {seat.description}
                     </span>
                     {seat.configurable && !isActive && (
-                      <span className="mt-0.5 text-[10px] text-[#C8923A] font-medium">Double-tap to set</span>
+                      <span className="mt-1 text-[10px] text-[#D68A3A] font-medium">Double-tap to set</span>
                     )}
                   </button>
                 );
@@ -506,12 +567,31 @@ export function KitchenTablePage() {
           </div>
 
           {/* Agenda */}
-          <div className="px-3 pt-3 pb-6">
-            <p className="text-[10px] uppercase tracking-widest text-[#A8A29E] font-medium mb-3 px-1">
-              Today's agenda · 30 min
-            </p>
-            <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm overflow-hidden">
-              {AGENDA_ITEMS.map((item, i) => {
+          <div className="px-4 pt-4 pb-8">
+            {/* Template switcher */}
+            <div className="flex items-center gap-2 mb-3 px-1">
+              <p className="text-[10px] uppercase tracking-widest text-[#A99D8D] font-medium flex-1">
+                {activeTemplate.id === "weekly" ? "Weekend check-in · 30 min" : "Today's agenda · 30 min"}
+              </p>
+              <div className="flex gap-1.5">
+                {TEMPLATES.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => loadTemplate(t)}
+                    className={cn(
+                      "px-2.5 py-1 rounded-full text-[10px] font-medium transition-all",
+                      activeTemplateId === t.id
+                        ? "bg-[#D68A3A] text-white"
+                        : "bg-[#2A2118] text-[#A99D8D] border border-[#3D3125]"
+                    )}
+                  >
+                    {t.id === "weekly" ? "↻ Weekly" : "Today"}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="bg-[#F0EAE1] rounded-xl border border-[#DCD3C6] shadow-sm overflow-hidden">
+              {agendaItems.map((item, i) => {
                 const leadSeat = seats.find((s) => s.id === item.leadId);
                 return (
                   <button
@@ -521,30 +601,28 @@ export function KitchenTablePage() {
                       setInput(item.question);
                     }}
                     className={cn(
-                      "w-full flex items-start gap-3 px-4 py-3.5 text-left transition-colors active:bg-[#F5F0E8]",
-                      i < AGENDA_ITEMS.length - 1 ? "border-b border-[#F5F0E8]" : ""
+                      "w-full flex items-start gap-3 px-4 py-4 text-left transition-colors hover:bg-[#E9DFD2] active:bg-[#E1D5C6]",
+                      i < agendaItems.length - 1 ? "border-b border-[#DCD3C6]" : ""
                     )}
                   >
                     <span
-                      className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white mt-0.5"
-                      style={{ background: leadSeat?.color ?? "#A8A29E" }}
+                      className="flex-shrink-0 w-7 h-7 rounded flex items-center justify-center text-[11px] font-bold text-[#F0EAE1] mt-0.5 shadow-sm"
+                      style={{ background: "#D68A3A" }}
                     >
                       {i + 1}
                     </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px] text-[#1C1917] leading-snug">{item.question}</p>
-                      <p className="text-[10px] text-[#A8A29E] mt-1">
-                        {leadSeat?.icon} {item.lead} leads
+                    <div className="flex-1 min-w-0 pt-0.5">
+                      <p className="text-[14px] font-medium text-[#2A231C] leading-snug">{item.question}</p>
+                      <p className="text-[11px] text-[#7A6E5D] mt-1.5 font-medium flex items-center gap-1.5">
+                        <span style={{ color: leadSeat?.color ?? "#A99D8D" }} className="opacity-90">{leadSeat?.icon}</span>
+                        {item.lead} leads
                       </p>
                     </div>
-                    <svg className="flex-shrink-0 mt-1 opacity-30" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M4 2L8 6L4 10" stroke="#1C1917" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
                   </button>
                 );
               })}
             </div>
-            <p className="text-[10px] text-[#C4B5A0] text-center mt-3">
+            <p className="text-[11px] text-[#8E8373] text-center mt-4">
               Tap an agenda item to open that question with the right seat selected
             </p>
           </div>
@@ -558,8 +636,8 @@ export function KitchenTablePage() {
       {inSession && (
         <>
           {/* Compact seat switcher */}
-          <div className="flex-shrink-0 bg-white border-b border-[#E7E5E4]">
-            <div className="flex gap-2 px-3 py-2 overflow-x-auto scrollbar-hide">
+          <div className="flex-shrink-0 bg-[#1C1814] border-b border-[#31281F]">
+            <div className="flex gap-2 px-3 py-2.5 overflow-x-auto scrollbar-hide">
               {seats.map((seat) => {
                 const isActive = seat.id === activeSeatId;
                 return (
@@ -568,14 +646,14 @@ export function KitchenTablePage() {
                     onClick={() => setActiveSeatId(seat.id)}
                     onDoubleClick={() => seat.configurable && openConfig(seat)}
                     className={cn(
-                      "flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium transition-all border",
+                      "flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all border",
                       isActive
                         ? "text-white border-transparent shadow-sm"
-                        : "text-[#57534E] bg-[#F5F0E8] border-[#E7E5E4]"
+                        : "text-[#A99D8D] bg-[#251E18] border-[#31281F]"
                     )}
                     style={isActive ? { background: seat.color } : {}}
                   >
-                    <span className="text-[15px]">{seat.icon}</span>
+                    <span className="text-[15px] opacity-90">{seat.icon}</span>
                     <span>{seat.name}</span>
                   </button>
                 );
@@ -584,22 +662,22 @@ export function KitchenTablePage() {
           </div>
 
           {/* Agenda toggle */}
-          <div className="flex-shrink-0 border-b border-[#E7E5E4] bg-[#FEFCF8]">
+          <div className="flex-shrink-0 border-b border-[#31281F] bg-[#251E18]">
             <button
               onClick={() => { setBriefOpen((o) => !o); setEditingBrief(false); }}
-              className="flex items-center gap-2 w-full px-4 py-2 text-left"
+              className="flex items-center gap-2 w-full px-4 py-2.5 text-left"
             >
-              <span className="text-[11px]">📋</span>
-              <span className="text-[10px] uppercase tracking-wider text-[#A8A29E] font-medium">Agenda</span>
-              <span className="text-[9px] text-[#C4B5A0] ml-1">— {AGENDA_ITEMS.length} items</span>
-              <span className="ml-auto text-[10px] text-[#A8A29E]">{briefOpen ? "▲" : "▼"}</span>
+              <span className="text-[11px] opacity-70">📋</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#A99D8D] font-bold">Agenda</span>
+              <span className="text-[10px] text-[#8E8373] ml-1">— {agendaItems.length} items</span>
+              <span className="ml-auto text-[10px] text-[#A99D8D]">{briefOpen ? "▲" : "▼"}</span>
             </button>
 
             {briefOpen && (
-              <div className="px-3 pb-3">
+              <div className="px-4 pb-4">
                 {/* Compact agenda list */}
-                <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden mb-2">
-                  {AGENDA_ITEMS.map((item, i) => {
+                <div className="bg-[#F0EAE1] rounded-xl border border-[#DCD3C6] overflow-hidden mb-3 shadow-sm">
+                  {agendaItems.map((item, i) => {
                     const leadSeat = seats.find((s) => s.id === item.leadId);
                     return (
                       <button
@@ -610,17 +688,17 @@ export function KitchenTablePage() {
                           setBriefOpen(false);
                         }}
                         className={cn(
-                          "w-full flex items-start gap-2.5 px-3 py-2.5 text-left transition-colors active:bg-[#F5F0E8]",
-                          i < AGENDA_ITEMS.length - 1 ? "border-b border-[#F5F0E8]" : ""
+                          "w-full flex items-start gap-3 px-3 py-3 text-left transition-colors hover:bg-[#E9DFD2] active:bg-[#E1D5C6]",
+                          i < agendaItems.length - 1 ? "border-b border-[#DCD3C6]" : ""
                         )}
                       >
                         <span
-                          className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white mt-0.5"
-                          style={{ background: leadSeat?.color ?? "#A8A29E" }}
+                          className="flex-shrink-0 w-6 h-6 rounded flex items-center justify-center text-[10px] font-bold text-[#F0EAE1] mt-0.5"
+                          style={{ background: "#D68A3A" }}
                         >
                           {i + 1}
                         </span>
-                        <p className="text-[11px] text-[#44403C] leading-snug">{item.question}</p>
+                        <p className="text-[12px] text-[#2A231C] font-medium leading-snug pt-0.5">{item.question}</p>
                       </button>
                     );
                   })}
@@ -628,27 +706,27 @@ export function KitchenTablePage() {
                 {/* Brief edit */}
                 <button
                   onClick={() => setEditingBrief((b) => !b)}
-                  className="text-[10px] text-[#A8A29E] underline underline-offset-2 px-1"
+                  className="text-[11px] text-[#D68A3A] hover:text-[#C18C41] underline underline-offset-4 px-1 font-medium transition-colors"
                 >
                   {editingBrief ? "close brief" : "edit session brief"}
                 </button>
                 {editingBrief && (
-                  <div className="mt-2">
+                  <div className="mt-3">
                     <textarea
                       autoFocus
                       value={brief}
                       onChange={(e) => setBrief(e.target.value)}
                       rows={6}
-                      className="w-full text-[11px] font-mono leading-relaxed text-[#44403C] bg-white border border-[#E7E5E4] rounded-lg p-3 resize-y outline-none focus:border-[#8A6A1A]/40"
+                      className="w-full text-[12px] font-mono leading-relaxed text-[#2A231C] bg-[#F0EAE1] border border-[#DCD3C6] rounded-lg p-3 resize-y outline-none focus:ring-1 focus:ring-[#D68A3A] focus:border-[#D68A3A]"
                     />
-                    <div className="flex gap-2 mt-1.5 justify-end">
+                    <div className="flex gap-2 mt-2 justify-end">
                       <button
                         onClick={() => setBrief(DEFAULT_BRIEF)}
-                        className="text-[10px] text-[#78716C] border border-[#E7E5E4] rounded px-2.5 py-1"
+                        className="text-[11px] text-[#A99D8D] hover:text-[#E8E1D5] border border-[#31281F] rounded px-3 py-1.5 transition-colors"
                       >reset</button>
                       <button
                         onClick={() => setEditingBrief(false)}
-                        className="text-[10px] text-white bg-[#1F3D2E] rounded px-3 py-1 font-medium"
+                        className="text-[11px] text-white bg-[#183626] hover:bg-[#1A422D] rounded px-4 py-1.5 font-semibold shadow-sm transition-colors"
                       >done</button>
                     </div>
                   </div>
@@ -658,18 +736,18 @@ export function KitchenTablePage() {
           </div>
 
           {/* Chat messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3 min-h-0">
+          <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4 min-h-0">
             {messages.map((msg) => {
               const isUser = msg.role === "user";
               const isStreaming = streaming && msg.id === streamingIdRef.current;
               return (
                 <div
                   key={msg.id}
-                  className={cn("flex gap-2 items-end", isUser ? "flex-row-reverse" : "flex-row")}
+                  className={cn("flex gap-2.5 items-end", isUser ? "flex-row-reverse" : "flex-row")}
                 >
                   {!isUser && (
                     <div
-                      className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-sm text-white mb-0.5"
+                      className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-lg text-white mb-1 shadow-sm"
                       style={{ background: msg.seatColor }}
                     >
                       {seats.find((s) => s.id === msg.seatId)?.icon ?? "◈"}
@@ -677,23 +755,23 @@ export function KitchenTablePage() {
                   )}
                   <div
                     className={cn(
-                      "max-w-[78%] px-4 py-3 text-[13px] leading-relaxed rounded-2xl",
+                      "max-w-[82%] px-4 py-3 text-[14px] leading-relaxed rounded-2xl",
                       isUser
-                        ? "bg-[#1F3D2E] text-[#F4EDE0] rounded-br-sm"
-                        : "bg-white border border-[#E7E5E4] text-[#1C1917] rounded-bl-sm shadow-sm"
+                        ? "bg-[#183626] text-[#F3EFE7] rounded-br-sm shadow-sm"
+                        : "bg-[#F0EAE1] text-[#2A231C] border border-[#DCD3C6] rounded-bl-sm shadow-md"
                     )}
                     style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
                   >
                     {!isUser && (
                       <p
-                        className="text-[10px] uppercase tracking-wider font-semibold mb-1.5"
+                        className="text-[10px] uppercase tracking-wider font-bold mb-1.5 opacity-90"
                         style={{ color: msg.seatColor }}
                       >
                         {msg.seatName}
                       </p>
                     )}
-                    {msg.content || (isStreaming ? <span className="opacity-30">▍</span> : null)}
-                    {isStreaming && msg.content && <span className="opacity-30">▍</span>}
+                    {msg.content || (isStreaming ? <span className="opacity-40 text-[#D68A3A]">▍</span> : null)}
+                    {isStreaming && msg.content && <span className="opacity-40 text-[#D68A3A]">▍</span>}
                   </div>
                 </div>
               );
@@ -704,13 +782,13 @@ export function KitchenTablePage() {
       )}
 
       {/* ── Input row (always visible) ── */}
-      <div className="flex-shrink-0 border-t border-[#E7E5E4] bg-white px-3 py-2.5 pb-safe-bottom flex gap-2 items-end">
+      <div className="flex-shrink-0 border-t border-[#31281F] bg-[#1C1814] px-4 py-3 pb-safe-bottom flex gap-3 items-end">
         <div
-          className="flex-1 flex flex-col bg-[#F5F0E8] rounded-2xl px-3.5 pt-2.5 pb-2"
-          style={{ border: `1.5px solid ${activeSeat.color}44` }}
+          className="flex-1 flex flex-col bg-[#251E18] rounded-xl px-4 pt-3 pb-2.5 transition-colors focus-within:bg-[#2A231C]"
+          style={{ border: `1px solid ${activeSeat.color}66` }}
         >
           {!inSession && (
-            <p className="text-[9px] uppercase tracking-wider font-semibold mb-1" style={{ color: activeSeat.color }}>
+            <p className="text-[10px] uppercase tracking-wider font-bold mb-1.5 opacity-90" style={{ color: activeSeat.color }}>
               {activeSeat.icon} {activeSeat.name}
             </p>
           )}
@@ -731,7 +809,7 @@ export function KitchenTablePage() {
             placeholder={inSession ? `Ask ${activeSeat.name}…` : `Tap a seat above, or type to speak to ${activeSeat.name}…`}
             rows={1}
             disabled={streaming}
-            className="flex-1 bg-transparent text-[13px] text-[#1C1917] placeholder:text-[#A8A29E] outline-none resize-none leading-snug"
+            className="flex-1 bg-transparent text-[14px] text-[#E8E1D5] placeholder:text-[#8E8373] outline-none resize-none leading-snug"
             style={{ maxHeight: 120 }}
           />
         </div>
@@ -739,13 +817,13 @@ export function KitchenTablePage() {
           onClick={send}
           disabled={streaming || !input.trim()}
           className={cn(
-            "w-11 h-11 rounded-full flex items-center justify-center text-white flex-shrink-0 transition-all",
-            streaming || !input.trim() ? "opacity-25" : "active:scale-95"
+            "w-12 h-12 rounded-xl flex items-center justify-center text-[#F3EFE7] flex-shrink-0 transition-all",
+            streaming || !input.trim() ? "opacity-30 bg-[#31281F]" : "active:scale-95 shadow-md"
           )}
-          style={{ background: streaming || !input.trim() ? "#C4B5A0" : activeSeat.color }}
+          style={{ background: streaming || !input.trim() ? undefined : activeSeat.color }}
         >
-          <svg width="15" height="15" viewBox="0 0 14 14" fill="none">
-            <path d="M7 1L13 7L7 13M1 7H13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1L13 7L7 13M1 7H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
       </div>
@@ -753,48 +831,48 @@ export function KitchenTablePage() {
       {/* ── Config modal ── */}
       {configSeatId && (
         <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-end"
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-end"
           onClick={(e) => { if (e.target === e.currentTarget) setConfigSeatId(null); }}
         >
-          <div className="w-full bg-[#FAFAF9] rounded-t-3xl p-5 pb-safe-bottom">
-            <div className="w-10 h-1 bg-[#E7E5E4] rounded-full mx-auto mb-5" />
-            <h3 className="text-[16px] font-semibold text-[#1C1917] mb-1">Configure seat</h3>
-            <p className="text-[11px] text-[#A8A29E] mb-4">Name a thinker, advisor, or lens for this seat.</p>
+          <div className="w-full bg-[#1C1814] border-t border-[#31281F] rounded-t-2xl p-5 pb-safe-bottom shadow-2xl">
+            <div className="w-12 h-1.5 bg-[#31281F] rounded-full mx-auto mb-6" />
+            <h3 className="text-[18px] font-bold text-[#E8E1D5] mb-1.5">Configure seat</h3>
+            <p className="text-[13px] text-[#A99D8D] mb-5">Name a thinker, advisor, or lens for this seat.</p>
 
-            <label className="text-[10px] uppercase tracking-wider text-[#A8A29E] block mb-1">Name</label>
+            <label className="text-[11px] uppercase tracking-wider text-[#A99D8D] font-semibold block mb-1.5">Name</label>
             <input
               value={configDraft.name}
               onChange={(e) => setConfigDraft((d) => ({ ...d, name: e.target.value }))}
-              className="w-full text-[14px] text-[#1C1917] bg-white border border-[#E7E5E4] rounded-xl px-3 py-2.5 outline-none mb-3 focus:border-[#8A6A1A]/50"
+              className="w-full text-[15px] text-[#E8E1D5] bg-[#251E18] border border-[#31281F] rounded-lg px-4 py-3 outline-none mb-4 focus:border-[#D68A3A] transition-colors"
             />
 
-            <label className="text-[10px] uppercase tracking-wider text-[#A8A29E] block mb-1">Role tagline</label>
+            <label className="text-[11px] uppercase tracking-wider text-[#A99D8D] font-semibold block mb-1.5">Role tagline</label>
             <input
               value={configDraft.description}
               onChange={(e) => setConfigDraft((d) => ({ ...d, description: e.target.value }))}
               placeholder="e.g. Robin Wall Kimmerer — reciprocity, plant intelligence"
-              className="w-full text-[13px] text-[#1C1917] bg-white border border-[#E7E5E4] rounded-xl px-3 py-2.5 outline-none mb-3 focus:border-[#8A6A1A]/50"
+              className="w-full text-[14px] text-[#E8E1D5] bg-[#251E18] border border-[#31281F] rounded-lg px-4 py-3 outline-none mb-4 focus:border-[#D68A3A] transition-colors placeholder:text-[#7A6E5D]"
             />
 
-            <label className="text-[10px] uppercase tracking-wider text-[#A8A29E] block mb-1">Lens (system prompt)</label>
+            <label className="text-[11px] uppercase tracking-wider text-[#A99D8D] font-semibold block mb-1.5">Lens (system prompt)</label>
             <textarea
               value={configDraft.systemPrompt}
               onChange={(e) => setConfigDraft((d) => ({ ...d, systemPrompt: e.target.value }))}
               placeholder="Describe the knowledge framework or thinker this seat speaks from."
               rows={4}
-              className="w-full text-[12px] text-[#1C1917] bg-white border border-[#E7E5E4] rounded-xl px-3 py-2.5 outline-none mb-4 resize-none leading-relaxed focus:border-[#8A6A1A]/50"
+              className="w-full text-[14px] text-[#E8E1D5] bg-[#251E18] border border-[#31281F] rounded-lg px-4 py-3 outline-none mb-6 resize-none leading-relaxed focus:border-[#D68A3A] transition-colors placeholder:text-[#7A6E5D]"
             />
 
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <button
                 onClick={() => setConfigSeatId(null)}
-                className="flex-1 py-3 text-[13px] text-[#78716C] border border-[#E7E5E4] rounded-2xl"
+                className="flex-1 py-3.5 text-[14px] font-medium text-[#A99D8D] hover:text-[#E8E1D5] border border-[#31281F] bg-[#251E18] rounded-xl transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={saveConfig}
-                className="flex-1 py-3 text-[13px] text-white bg-[#1F3D2E] rounded-2xl font-semibold"
+                className="flex-1 py-3.5 text-[14px] font-bold text-[#F3EFE7] bg-[#183626] hover:bg-[#1A422D] rounded-xl shadow-md transition-colors"
               >
                 Set seat
               </button>
