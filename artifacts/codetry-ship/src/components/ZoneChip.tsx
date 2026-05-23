@@ -47,9 +47,19 @@ export function ZoneChip({ dark }: { dark?: boolean }) {
     }
     window.addEventListener("storage", sync);
     window.addEventListener("headwaters:zone-change", sync);
+
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel("headwaters_zone");
+      bc.onmessage = sync;
+    } catch {
+      /* BroadcastChannel not supported — fall back to storage event only */
+    }
+
     return () => {
       window.removeEventListener("storage", sync);
       window.removeEventListener("headwaters:zone-change", sync);
+      bc?.close();
     };
   }, []);
 

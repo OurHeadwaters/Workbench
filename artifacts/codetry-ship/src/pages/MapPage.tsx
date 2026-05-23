@@ -796,6 +796,17 @@ function saveQuiz(quiz: QuizState) {
   } catch {
     /* storage unavailable — fail silently */
   }
+  broadcastZoneChange();
+}
+
+function broadcastZoneChange() {
+  try {
+    const bc = new BroadcastChannel("headwaters_zone");
+    bc.postMessage("change");
+    bc.close();
+  } catch {
+    /* BroadcastChannel not supported */
+  }
 }
 
 /* ─── Main page ─────────────────────────────────────────────────────────── */
@@ -826,6 +837,7 @@ export function MapPage() {
     } catch {
       /* storage unavailable */
     }
+    broadcastZoneChange();
     const url = new URL(window.location.href);
     url.searchParams.delete("change");
     window.history.replaceState(null, "", url.toString());
@@ -862,6 +874,7 @@ export function MapPage() {
     } catch {
       /* storage unavailable */
     }
+    broadcastZoneChange();
     setQuiz({ who: null, situation: null, skipped: false });
     setQuizCollapsed(false);
   }
