@@ -713,15 +713,41 @@ function ZoneQuiz({
   );
 }
 
+/* ─── localStorage persistence ──────────────────────────────────────────── */
+
+const QUIZ_STORAGE_KEY = "headwaters_zone_quiz";
+
+function loadSavedQuiz(): { quiz: QuizState; collapsed: boolean } | null {
+  try {
+    const raw = localStorage.getItem(QUIZ_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as QuizState;
+    const isComplete =
+      !parsed.skipped && parsed.who !== null && parsed.situation !== null;
+    if (!isComplete && !parsed.skipped) return null;
+    return { quiz: parsed, collapsed: true };
+  } catch {
+    return null;
+  }
+}
+
+function saveQuiz(quiz: QuizState) {
+  try {
+    localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(quiz));
+  } catch {
+    /* storage unavailable — fail silently */
+  }
+}
+
 /* ─── Main page ─────────────────────────────────────────────────────────── */
 
 export function MapPage() {
+  const saved = loadSavedQuiz();
   const [standby, setStandby] = useState(false);
-  const [quiz, setQuiz] = useState<QuizState>({
-    who: null,
-    situation: null,
-    skipped: false,
-  });
+  const [quiz, setQuiz] = useState<QuizState>(
+    saved?.quiz ?? { who: null, situation: null, skipped: false }
+  );
+  const [quizCollapsed, setQuizCollapsed] = useState(saved?.collapsed ?? false);
 
   const highlightedZones = resolveHighlightedZones(quiz);
   const highlightedTools = resolveHighlightedTools(quiz);
@@ -729,11 +755,26 @@ export function MapPage() {
   const quizComplete = !quiz.skipped && quiz.who !== null && quiz.situation !== null;
 
   function handleQuizChange(next: Partial<QuizState>) {
-    setQuiz((prev) => ({ ...prev, ...next }));
+    const updated = { ...quiz, ...next };
+    setQuiz(updated);
+    const nowComplete =
+      !updated.skipped && updated.who !== null && updated.situation !== null;
+    if (nowComplete) {
+      saveQuiz(updated);
+      setQuizCollapsed(true);
+    }
   }
 
   function handleSkip() {
-    setQuiz({ who: null, situation: null, skipped: true });
+    const skipped: QuizState = { who: null, situation: null, skipped: true };
+    setQuiz(skipped);
+    saveQuiz(skipped);
+    setQuizCollapsed(true);
+  }
+
+  function handleChange() {
+    setQuiz({ who: null, situation: null, skipped: false });
+    setQuizCollapsed(false);
   }
 
   /* Sync standby toggle with quiz situation answer */
@@ -815,12 +856,70 @@ export function MapPage() {
             If you just arrived — from The Train, a shared link, or a QR code on a poster — this is the map. Each zone is a different kind of place. Pick the door that matches what you need.
           </p>
 
-          {/* Quiz */}
-          <ZoneQuiz
-            quiz={quiz}
-            onChange={handleQuizChange}
-            onSkip={handleSkip}
-          />
+          {/* Quiz — collapsed summary on return visits, full quiz otherwise */}
+          {quizCollapsed ? (
+            <div
+              style={{
+                borderRadius: 10,
+                border: `1px solid rgba(31,61,46,0.18)`,
+                background: "rgba(31,61,46,0.04)",
+                padding: "14px 20px",
+                marginBottom: 24,
+                maxWidth: 560,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+                flexWrap: "wrap",
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontFamily: "monospace",
+                    fontSize: 9,
+                    fontWeight: 700,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: FOREST,
+                    marginBottom: 4,
+                  }}
+                >
+                  Your zone
+                </div>
+                <div style={{ fontSize: 13, color: "#2a2520", fontWeight: 600 }}>
+                  {quiz.skipped
+                    ? "Browsing all zones"
+                    : `Zone ${resolveHighlightedZones(quiz).join(" + Zone ")}`}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleChange}
+                style={{
+                  background: "none",
+                  border: `1px solid rgba(31,61,46,0.25)`,
+                  borderRadius: 6,
+                  cursor: "pointer",
+                  fontFamily: "monospace",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: FOREST,
+                  padding: "5px 12px",
+                }}
+              >
+                Change
+              </button>
+            </div>
+          ) : (
+            <ZoneQuiz
+              quiz={quiz}
+              onChange={handleQuizChange}
+              onSkip={handleSkip}
+            />
+          )}
 
           {/* Pre-Odyssey framing block */}
           <div
