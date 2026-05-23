@@ -5,6 +5,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  Linking,
   Modal,
   Platform,
   Pressable,
@@ -40,6 +41,14 @@ const ROMAN: Record<number, string> = {
 const PHASE_ROMAN: Record<number, string> = {
   1: "I", 2: "II", 3: "III", 4: "IV", 5: "V",
 };
+
+function openSiteLink(path: string) {
+  const url =
+    Platform.OS === "web" && typeof window !== "undefined"
+      ? window.location.origin + path
+      : "https://ourheadwaters.ca" + path;
+  Linking.openURL(url);
+}
 
 export default function PathHome() {
   const c = useColors();
@@ -147,6 +156,27 @@ export default function PathHome() {
           draws from, and one thing to do on your own ground before the next
           station opens.
         </Text>
+
+        {/* Neighbourhood map reference */}
+        <Pressable
+          onPress={() => openSiteLink("/map")}
+          style={({ pressed }) => [
+            styles.mapBanner,
+            { backgroundColor: c.card, borderColor: c.rule, opacity: pressed ? 0.75 : 1 },
+          ]}
+          accessibilityLabel="Open the neighbourhood map"
+        >
+          <Text style={[styles.mapGlyph, { color: c.amber }]}>⌁</Text>
+          <View style={styles.mapBannerText}>
+            <Text style={[styles.mapBannerTitle, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
+              You are somewhere on this map.
+            </Text>
+            <Text style={[styles.mapBannerSub, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+              The Pioneer Path runs through the neighbourhood map — five phases, each one a season of real work. Open the map to see where the trail sits inside the larger community journey.
+            </Text>
+          </View>
+          <Text style={[styles.mapChevron, { color: c.amber, fontFamily: MONO }]}>→</Text>
+        </Pressable>
 
         <View style={styles.progressRow}>
           <Text style={[styles.progressLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
@@ -305,6 +335,83 @@ export default function PathHome() {
             </View>
           );
         })}
+
+        {/* Off-ramp: shown only after all stations are walked */}
+        {ready && completedCount === total && total > 0 ? (
+          <View style={styles.offrampBlock}>
+            <View style={[styles.offrampRule, { backgroundColor: c.amber }]} />
+            <Text style={[styles.offrampEyebrow, { color: c.amber, fontFamily: MONO }]}>
+              AFTER THE ODYSSEY
+            </Text>
+            <Text style={[styles.offrampTitle, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
+              What gets built next.
+            </Text>
+            <Text style={[styles.offrampIntro, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+              You walked the trail knowing exactly what your community is missing. Here are the four tools practitioners commission from Codetry — each one built for the community, handed off, no lock-in.
+            </Text>
+
+            {[
+              {
+                name: "The Lodge",
+                glyph: "⌁",
+                tagline: "Identity & trust layer",
+                desc: "Names held, credentials quiet. The Lodge is the root system — every zone in the community economy knows who is who without a server in the middle.",
+              },
+              {
+                name: "The Clearing",
+                glyph: "⊕",
+                tagline: "Exchange & settlement",
+                desc: "Where community transactions are recorded and settled. Producers, households, and the co-op can see every exchange — no ledger held by someone outside the community.",
+              },
+              {
+                name: "XBuckets",
+                glyph: "⊞",
+                tagline: "Non-custodial community wallet",
+                desc: "A community-run wallet layer on the XRP Ledger. No bank required, no vendor holding the keys. Each household keeps its own passphrase — the community keeps the asset.",
+              },
+              {
+                name: "The Wishing Well",
+                glyph: "◇",
+                tagline: "Community procurement & requests",
+                desc: "A place for the community to name what it needs before it exists. Requests surface from the household level up — so what gets built next is decided by the community, not the consultant.",
+              },
+            ].map(({ name, glyph, tagline, desc }) => (
+              <View
+                key={name}
+                style={[
+                  styles.offrampCard,
+                  { backgroundColor: c.card, borderColor: c.rule },
+                ]}
+              >
+                <View style={styles.offrampCardHead}>
+                  <Text style={[styles.offrampGlyph, { color: c.amber }]}>{glyph}</Text>
+                  <Text style={[styles.offrampName, { color: c.foreground, fontFamily: MONO }]}>
+                    {name.toUpperCase()}
+                  </Text>
+                </View>
+                <Text style={[styles.offrampTagline, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+                  {tagline}
+                </Text>
+                <Text style={[styles.offrampDesc, { color: c.foreground, fontFamily: SERIF }]}>
+                  {desc}
+                </Text>
+              </View>
+            ))}
+
+            <Text style={[styles.offrampFoot, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+              Each tool is commissioned, built, and handed off — no retainer, no lock-in.
+            </Text>
+            <Pressable
+              onPress={() => openSiteLink("/services")}
+              style={({ pressed }) => [styles.offrampLink, { opacity: pressed ? 0.6 : 1 }]}
+              accessibilityLabel="See The Work"
+            >
+              <Text style={[styles.offrampLinkLabel, { color: c.amber, fontFamily: MONO }]}>
+                SEE THE WORK →
+              </Text>
+            </Pressable>
+          </View>
+        ) : null}
 
         <View style={[styles.endRule, { backgroundColor: c.rule }]} />
         <Text style={[styles.foot, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
@@ -622,5 +729,111 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     flexShrink: 1,
     textAlign: "right",
+  },
+  mapBanner: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    marginBottom: 22,
+  },
+  mapGlyph: {
+    fontSize: 20,
+    lineHeight: 24,
+    marginTop: 1,
+  },
+  mapBannerText: {
+    flex: 1,
+  },
+  mapBannerTitle: {
+    fontSize: 15,
+    lineHeight: 20,
+    marginBottom: 4,
+  },
+  mapBannerSub: {
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  mapChevron: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginTop: 2,
+  },
+  offrampBlock: {
+    marginTop: 8,
+    marginBottom: 32,
+  },
+  offrampRule: {
+    height: 2,
+    width: 32,
+    borderRadius: 1,
+    marginBottom: 16,
+    opacity: 0.7,
+  },
+  offrampEyebrow: {
+    fontSize: 10,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
+    marginBottom: 6,
+  },
+  offrampTitle: {
+    fontSize: 28,
+    lineHeight: 32,
+    letterSpacing: 0.3,
+    marginBottom: 8,
+  },
+  offrampIntro: {
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 20,
+  },
+  offrampCard: {
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    marginBottom: 10,
+  },
+  offrampCardHead: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 4,
+  },
+  offrampGlyph: {
+    fontSize: 16,
+    lineHeight: 20,
+  },
+  offrampName: {
+    fontSize: 10,
+    letterSpacing: 1.6,
+    textTransform: "uppercase",
+  },
+  offrampTagline: {
+    fontSize: 12,
+    lineHeight: 17,
+    marginBottom: 8,
+  },
+  offrampDesc: {
+    fontSize: 14,
+    lineHeight: 21,
+  },
+  offrampFoot: {
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 12,
+    marginBottom: 10,
+  },
+  offrampLink: {
+    alignSelf: "flex-start",
+    paddingVertical: 4,
+  },
+  offrampLinkLabel: {
+    fontSize: 10,
+    letterSpacing: 1.6,
+    textTransform: "uppercase",
   },
 });
