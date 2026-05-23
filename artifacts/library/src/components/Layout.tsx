@@ -46,7 +46,7 @@ const NAV_ITEMS = [
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
-  const { logout } = useOwnerAuth();
+  const { logout, isLoggedIn } = useOwnerAuth();
   const confidentialCount = useConfidentialCount();
   const isInNursery = location.startsWith("/nursery");
   const [nurseryOpen, setNurseryOpen] = useState(isInNursery);
@@ -95,39 +95,41 @@ export default function Layout({ children }: { children: ReactNode }) {
             );
           })}
 
-          {/* Zone 4 Nursery — collapsible section */}
-          <div className="pt-3 mt-3 border-t border-border">
-            <button
-              onClick={() => setNurseryOpen((o) => !o)}
-              className="w-full flex items-center gap-2 px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground hover:text-sidebar-foreground transition-colors"
-            >
-              <Leaf className="h-3 w-3 text-[#4A7C59]" />
-              <span className="flex-1 text-left">Zone 4 Nursery</span>
-              {nurseryOpen ? (
-                <ChevronDown className="h-3 w-3" />
-              ) : (
-                <ChevronRight className="h-3 w-3" />
-              )}
-            </button>
-            {nurseryOpen && NURSERY_NAV_ITEMS.map((item) => {
-              const isActive = location === item.href || (item.href !== "/nursery" && location.startsWith(item.href));
-              return (
-                <Link key={item.href} href={item.href}>
-                  <div
-                    className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all cursor-pointer",
-                      isActive
-                        ? "bg-[#EBF3EE] text-[#4A7C59]"
-                        : "text-sidebar-foreground hover:bg-[#EBF3EE] hover:text-[#4A7C59]"
-                    )}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span className="flex-1">{item.label}</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          {/* Zone 4 Nursery — collapsible section, only shown to authenticated library owners */}
+          {isLoggedIn && (
+            <div className="pt-3 mt-3 border-t border-border">
+              <button
+                onClick={() => setNurseryOpen((o) => !o)}
+                className="w-full flex items-center gap-2 px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground hover:text-sidebar-foreground transition-colors"
+              >
+                <Leaf className="h-3 w-3 text-[#4A7C59]" />
+                <span className="flex-1 text-left">Zone 4 Nursery</span>
+                {nurseryOpen ? (
+                  <ChevronDown className="h-3 w-3" />
+                ) : (
+                  <ChevronRight className="h-3 w-3" />
+                )}
+              </button>
+              {nurseryOpen && NURSERY_NAV_ITEMS.map((item) => {
+                const isActive = location === item.href || (item.href !== "/nursery" && location.startsWith(item.href));
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <div
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all cursor-pointer",
+                        isActive
+                          ? "bg-[#EBF3EE] text-[#4A7C59]"
+                          : "text-sidebar-foreground hover:bg-[#EBF3EE] hover:text-[#4A7C59]"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span className="flex-1">{item.label}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </nav>
         <div className="p-4 border-t border-border">
           <Button
