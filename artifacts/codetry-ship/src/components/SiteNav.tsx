@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "wouter";
 import { getStoredOwnerToken, setStoredOwnerToken } from "@/lib/api";
-import { NeighbourhoodBadge } from "@workspace/zone-store";
+import { ZoneChip } from "@/components/ZoneChip";
 
 interface NavLink {
   href: string;
@@ -219,7 +219,7 @@ export function SiteNav() {
               </span>
             </a>
             <div className="hidden sm:block">
-              <NeighbourhoodBadge zoneId={5} />
+              <ZoneChip dark={dark} />
             </div>
           </div>
 
@@ -427,6 +427,10 @@ export function SiteNav() {
         data-testid="mobile-nav-drawer"
       >
         <div className="flex flex-col px-5 py-4 gap-1">
+          {/* ── Zone chip in mobile drawer ── */}
+          <div className="px-1 pb-2">
+            <ZoneChip dark={dark} />
+          </div>
           {NAV_LINKS.filter((l) => !l.desktopOnly).map(({ href, label }) => {
             const active = isActive(href, location);
             return (

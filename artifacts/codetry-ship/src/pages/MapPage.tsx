@@ -800,13 +800,37 @@ function saveQuiz(quiz: QuizState) {
 
 /* ─── Main page ─────────────────────────────────────────────────────────── */
 
+function shouldResetOnLoad(): boolean {
+  try {
+    return new URLSearchParams(window.location.search).get("change") === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function MapPage() {
-  const saved = loadSavedQuiz();
+  const resetRequested = shouldResetOnLoad();
+  const saved = resetRequested ? null : loadSavedQuiz();
+
   const [standby, setStandby] = useState(false);
   const [quiz, setQuiz] = useState<QuizState>(
     saved?.quiz ?? { who: null, situation: null, skipped: false }
   );
   const [quizCollapsed, setQuizCollapsed] = useState(saved?.collapsed ?? false);
+
+  /* When arriving via ?change=1 — clear localStorage and strip the param */
+  useEffect(() => {
+    if (!resetRequested) return;
+    try {
+      localStorage.removeItem(QUIZ_STORAGE_KEY);
+    } catch {
+      /* storage unavailable */
+    }
+    const url = new URL(window.location.href);
+    url.searchParams.delete("change");
+    window.history.replaceState(null, "", url.toString());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const highlightedZones = resolveHighlightedZones(quiz);
   const highlightedTools = resolveHighlightedTools(quiz);
