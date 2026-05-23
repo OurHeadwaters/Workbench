@@ -74,6 +74,8 @@ export function ServicesPage() {
             { href: "#store", label: "Community store" },
             { href: "#platform", label: "Co-op platform" },
             { href: "#custom", label: "Custom tool" },
+            { href: "#the-clearing", label: "The Clearing" },
+            { href: "#the-wishing-well", label: "The Wishing Well" },
             { href: "#start", label: "How it starts" },
           ].map(({ href, label }) => (
             <a
@@ -496,7 +498,181 @@ export function ServicesPage() {
         <Divider />
 
         {/* ══════════════════════════════════════
-            SECTION 4 — HOW A PROJECT STARTS
+            SECTION 4 — THE CLEARING
+        ══════════════════════════════════════ */}
+        <section id="the-clearing" className="pt-14 pb-10">
+          <SectionBand color="#b85a3e" label="Exchange & settlement">
+            The Clearing — community transactions, held by the community
+          </SectionBand>
+          <p className="font-serif text-[16px] italic mt-2 mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
+            Where producers, households, and the co-op record and settle exchanges — with no external ledger in the middle.
+          </p>
+
+          <div
+            className="rounded-md border px-6 py-5 mb-8"
+            style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+          >
+            <p className="font-mono text-[13px] uppercase tracking-[0.26em] mb-2" style={{ color: "#b85a3e" }}>
+              What it is
+            </p>
+            <p className="font-serif text-[16px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
+              The Clearing is the exchange and settlement layer of the community economy — a shared record of what moved between households, producers, and the co-op. Every transaction is visible to the community. No external accounting service holds the ledger. The community's own board governs what gets recorded and who can see what.
+            </p>
+          </div>
+
+          <SubHeading>The phases</SubHeading>
+          <Timeline items={[
+            {
+              num: "01",
+              title: "Exchange audit",
+              duration: "1–2 weeks",
+              body: "Map what the community is already exchanging — food, labour, goods, services. Identify what needs to be recorded and what can stay informal. The Clearing follows existing exchange patterns; it does not replace them.",
+            },
+            {
+              num: "02",
+              title: "Ledger spec",
+              duration: "1 week",
+              body: "A plain-language document: transaction categories, who can record what, how disputes are resolved, what the board sees. Signed off before anything is built.",
+            },
+            {
+              num: "03",
+              title: "Build",
+              duration: "3–5 weeks",
+              body: "Producer and household transaction views, board settlement panel, periodic reconciliation report. Built in front of your team — nothing goes live that the board hasn't walked through.",
+            },
+            {
+              num: "04",
+              title: "Pilot with real exchanges",
+              duration: "2 weeks",
+              body: "Run real transactions through The Clearing before full launch. Catch edge cases with the people doing the work, not in a QA session.",
+            },
+            {
+              num: "05",
+              title: "Handoff",
+              duration: "1 week",
+              body: "Board admin training. Written procedures for every role. Done when your treasurer can run a monthly reconciliation without help.",
+            },
+          ]} accentColor="#b85a3e" />
+
+          <SubHeading className="mt-10">What you leave with</SubHeading>
+          <DeliverableGrid items={[
+            { icon: "📒", title: "Community ledger", desc: "Every exchange recorded — owned by the community, not a vendor" },
+            { icon: "🌾", title: "Producer view", desc: "What each producer has contributed and received" },
+            { icon: "🏠", title: "Household view", desc: "Each household's transaction history in plain language" },
+            { icon: "🏛", title: "Board settlement panel", desc: "Periodic reconciliation, dispute log, board-level summary" },
+            { icon: "📋", title: "Governance rules wired in", desc: "Your board's rules for what gets recorded and by whom" },
+            { icon: "📖", title: "Plain-language admin guide", desc: "Written for your treasurer, not a developer" },
+          ]} />
+
+          <WhatItIsNot items={[
+            "A payment processor or bank replacement",
+            "Software the vendor controls",
+            "Built for a generic co-op template",
+            "Locked to an ongoing subscription",
+          ]} />
+
+          <div className="mt-10">
+            <a
+              href="#start"
+              className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[13px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              style={{ background: "#b85a3e", color: "#f4ede0" }}
+            >
+              Commission The Clearing →
+            </a>
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* ══════════════════════════════════════
+            SECTION 5 — THE WISHING WELL
+        ══════════════════════════════════════ */}
+        <section id="the-wishing-well" className="pt-14 pb-10">
+          <SectionBand color="#0F766E" label="Community procurement & requests">
+            The Wishing Well — let the community name what it needs next
+          </SectionBand>
+          <p className="font-serif text-[16px] italic mt-2 mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
+            Requests surface from the household level up — so what gets built next is decided by the community, not the consultant.
+          </p>
+
+          <div
+            className="rounded-md border px-6 py-5 mb-8"
+            style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+          >
+            <p className="font-mono text-[13px] uppercase tracking-[0.26em] mb-2" style={{ color: "#0F766E" }}>
+              What it is
+            </p>
+            <p className="font-serif text-[16px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
+              The Wishing Well is a structured request layer — a place for households and producers to name what the community needs before it exists. It surfaces demand from the ground up: what products, services, or tools are missing? What would households actually use? The board sees aggregated requests and can act on real need instead of guessing. No procurement committee required.
+            </p>
+          </div>
+
+          <SubHeading>The phases</SubHeading>
+          <Timeline items={[
+            {
+              num: "01",
+              title: "Needs audit",
+              duration: "1 week",
+              body: "What are households currently doing without? Where do they leave the community to spend money? Identify the top gaps before building anything to collect more of them.",
+            },
+            {
+              num: "02",
+              title: "Request flow spec",
+              duration: "1 week",
+              body: "Define request categories, visibility rules (what is public, what goes only to the board), and how the board acts on aggregated demand. One document, signed off before a line of code.",
+            },
+            {
+              num: "03",
+              title: "Build",
+              duration: "2–4 weeks",
+              body: "Household request form, category tagging, board demand dashboard. Simple enough that a household with slow internet can submit a request without friction.",
+            },
+            {
+              num: "04",
+              title: "First demand cycle",
+              duration: "2 weeks",
+              body: "Run the first real request cycle with the community. The board reviews aggregate demand and identifies one or two actionable items. The tool is only useful if it changes what gets built — this phase proves it does.",
+            },
+            {
+              num: "05",
+              title: "Handoff",
+              duration: "1 week",
+              body: "Board admin training. Documented procedure for running a quarterly demand review. Done when your board can run the cycle without help.",
+            },
+          ]} accentColor="#0F766E" />
+
+          <SubHeading className="mt-10">What you leave with</SubHeading>
+          <DeliverableGrid items={[
+            { icon: "📬", title: "Household request portal", desc: "Simple form — works on slow connections, no account required" },
+            { icon: "📊", title: "Board demand dashboard", desc: "Aggregated view of what the community is asking for" },
+            { icon: "🏷️", title: "Category tagging", desc: "Requests sorted by type so patterns are visible at a glance" },
+            { icon: "🔒", title: "Visibility controls", desc: "What is public, what only the board sees — your rules" },
+            { icon: "🔄", title: "Quarterly demand review process", desc: "Documented procedure for running the cycle each quarter" },
+            { icon: "📖", title: "Plain-language admin guide", desc: "Written for the person running the review, not a developer" },
+          ]} />
+
+          <WhatItIsNot items={[
+            "A suggestion box no one reads",
+            "A procurement software subscription",
+            "A tool that routes requests outside the community",
+            "Dependent on ongoing support to run the review cycle",
+          ]} />
+
+          <div className="mt-10">
+            <a
+              href="#start"
+              className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[13px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              style={{ background: "#0F766E", color: "#f4ede0" }}
+            >
+              Commission The Wishing Well →
+            </a>
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* ══════════════════════════════════════
+            SECTION 6 — HOW A PROJECT STARTS
         ══════════════════════════════════════ */}
         <section id="start" className="pt-14 pb-16">
           <p

@@ -626,7 +626,7 @@ export function OdysseyPage() {
                     color: "#b85a3e",
                     tagline: "Exchange & settlement",
                     desc: "Where community transactions are recorded and settled. Producers, households, and the co-op can see every exchange — no ledger held by someone outside the community.",
-                    href: "/services",
+                    href: "/services#the-clearing",
                   },
                   {
                     name: "XBuckets",
@@ -643,7 +643,7 @@ export function OdysseyPage() {
                     color: "#0F766E",
                     tagline: "Community procurement & requests",
                     desc: "A place for the community to name what it needs before it exists. Requests surface from the household level up — so what gets built next is decided by the community, not the consultant.",
-                    href: "/services",
+                    href: "/services#the-wishing-well",
                   },
                 ].map(({ name, glyph, color, tagline, desc, href, external }) => (
                   <a
@@ -682,7 +682,7 @@ export function OdysseyPage() {
                   Each tool is commissioned, built, and handed off — no retainer, no lock-in.
                 </p>
                 <a
-                  href="/services"
+                  href="/services#the-clearing"
                   className="font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-75"
                   style={{ color: "#d4a017" }}
                 >
@@ -820,12 +820,12 @@ export function OdysseyPage() {
                   Practitioners who complete the Odyssey know exactly what is missing in their community. Codetry is how you get it built — a store, a local directory, custom tooling — and handed off so the community runs it without a consultant in the room.
                 </p>
                 <a
-                  href="/codetry"
+                  href="/services#start"
                   className="inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
                   style={{ color: "rgba(244,237,224,0.45)" }}
                   data-testid="odyssey-codetry-link"
                 >
-                  What is Codetry? →
+                  Commission the work →
                 </a>
               </div>
             </div>
