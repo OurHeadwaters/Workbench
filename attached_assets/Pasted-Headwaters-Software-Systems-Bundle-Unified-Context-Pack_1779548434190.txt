@@ -1,0 +1,67 @@
+Headwaters Software Systems Bundle — Unified Context Package
+Organized for your business manager Replit agent (and any future agents). May 2026. Zone 0 Saltbox framing: Everything starts at the kitchen table (household/sovereign core) and expands outward through trust zones without breaking privacy or human warmth.1. Headwaters Overview & PhilosophyHeadwaters designs and deploys purpose-built digital tools for real people and communities — especially in Northwestern Ontario (807 area). Focus: warm, human-centered, accessible design for non-tech users (e.g., 60+ women on phones), no-shame language, privacy-first (local-first by default), and real usability.Core Principles:Codetry: Disciplined vocabulary (one word, one referent) with gates for internal vs. external language. All apps publish decisions to a shared handbook.
+Zone Model (trust layers): Z0 Saltbox (household), Z1 Eave (mutual aid), Z2 Workbench, Z3 Community, etc. Hard architectural seams prevent leakage.
+Both-States & Both-Sides Naming: Tools work empty/full from day one; vernacular + formal names.
+Shared Platform: pnpm monorepo, OpenAPI-first (codegen for Zod + React Query), Drizzle/Postgres, XRPL for finance where used, local-first where possible, calm UI (warm palette: cream, sage, terracotta; Inter/Fraunces fonts; no emojis, no guilt).
+
+Value Proposition: Sell reusable, modular software bundles (not generic SaaS). White-labelable, deployable on Replit or client infra. Emphasis on sovereignty, auditability, and human relationships over extraction.2. Ecosystem Technical FoundationMonorepo Structure: artifacts/ (per-product apps), lib/ (shared: api-spec, api-zod, api-client-react, db, zone-identity).
+Backend: Express/Fastify API server (shared), Postgres + Drizzle.
+Frontend: React/Vite/Expo (React Native Web), localStorage/IndexedDB where local-first.
+Deployment: Replit (path-routed proxy), static exports possible.
+Key Enablers: OpenAPI codegen, provider/white-label seams, XRPL integration (wallets, settlements), object storage (GCS presigned), AI via OpenRouter/Grok.
+
+This foundation lets new products spin up quickly and bundles share infrastructure.3. Major Products & CapabilitiesGrouped by primary zone/domain for bundle clarity.Zone 0 — Household / Wellness / Family Core:Keto Companion: Personalized keto meal tracker/wellness app (local-first). Macros, logging, journal, TOPS integration, reminders. Mobile-optimized PWA. Ideal for senior wellness groups.
+Saltbox / Gather: Homeschool day companion (local-first). Schedules, units, portfolio, responsibilities, moments capture.
+Family Buckets / xBuckets: Chore/goal/savings tracking with XRPL settlement. Helper roles, courage buckets, allowances.
+Kitchen: Household hub/launcher. Links to all tools, Hearth window, cupboard, invite system.
+Hearth + Toy Library + Life Badges + Campfire: Kids quest platform (game-inspired real-world tasks), peer toy trading, badges, safe feed. Parent moderation.
+Bright Side: Staff-facing care coordination for LTC/residential facilities (PHI-free). Joy bubbles, hallway feed, credits, director dashboard. Kiosk-friendly.
+Memory Lane / Family Fair: Memory archive + family social/legacy tools.
+Robit + Saltbox (parent dashboard): AI child companion (personalized, character-focused) + parent insights.
+
+Zone 1-2 — Community / Operations / Finance:Sandbox: Village bulletin (pull-based community board).
+The Eave: Mutual aid coordination (rotating support).
+North Star: ADHD entrepreneur OS + AI council (Kitchen Table).
+Homebase Ops: Workforce/property management (jobs, agreements, hours).
+Wander Together: Collaborative trip planning/journaling.
+Dryden Web Co Suite (business tools): Restaurant OS (Konstantino's — ordering, menu, programs), retail/wellness site (Hinterland), producer marketplace (807 Coop), pitch site.
+
+Other / Cross-Cutting:Stomping Path / TSP Ecosystem: Sovereign platform (web/mobile) with zone framework, episode archive, Wishing Well (V4V), workshops, practitioner intake.
+Codetry: Agency/learning tools for building sovereignty (Forge editor, assessments).
+Finance/Grant Tools: Headwaters Finance, Funding Grove, Deadhead (idea vetting), Rootwork (asset studio).
+Preparedness: Standby Supplies guide.
+Market/Community: Market Mosaic, 807 Benefits.
+
+Assets: Infographics (e.g., Keto Quick Ideas), printable packs, PDF generators (tax workpapers, handoffs).4. Software Systems Bundles — Sellable OfferingsPackage as configurable, white-label systems for organizations. Every bundle includes shared infra + branding seams + support.Bundle A: Wellness & Care Tracking (Keto Companion + Bright Side + extensions)For: TOPS groups, senior living, LTC facilities, clinics, corporate wellness.
+Features: Personalized tracking, PHI-free care visibility, admin dashboards, reminders, infographics.
+Benefits: Low-friction adoption, no privacy headaches, makes relational work visible.
+
+Bundle B: Family & Homeschool Operating System (Kitchen + Saltbox/Gather + Hearth + Family Buckets + Memory Lane)For: Homeschool co-ops, families, faith communities, youth programs.
+Features: Hub launcher, local-first learning tools, quests/badges, finance tracking, mutual aid, legacy capture.
+Benefits: Sovereign household core + safe community scaling. Pulls kids into real-world activity.
+
+Bundle C: Community Coordination & Mutual Aid (Sandbox + Eave + North Star + TSP elements)For: Rural co-ops, villages, support networks.
+Features: Bulletins, aid scheduling, entrepreneur tools, AI council, preparedness.
+Benefits: Trust-layered communication, no vendor lock-in.
+
+Bundle D: Business & Producer Operations (Dryden Web Suite + 807 Benefits + Market Mosaic + Rootwork)For: Restaurants, retail, food co-ops, farmers markets, small operators.
+Features: Admin panels, ordering/catering, marketplaces, asset management, grants.
+Benefits: Frictionless front door to institutional money, operational efficiency, local producer support.
+
+Bundle E: Full Sovereign Stack (Kitchen Table + all zones + Codetry + Practitioner tools)For: Larger co-ops, family offices, communities, grant-funded orgs.
+Includes practitioner licensing (intake/placement), XRPL finance, full zone coverage.
+Benefits: Complete digital infrastructure owned/operated by the community.
+
+Add-Ons: Custom builds on platform (e.g., medication tracker), white-label, audit retention, PDF generators, mobile apps, training.5. Benefits for Buyers & OrganizationsPrivacy/Sovereignty: Local-first default, no unnecessary data sharing, XRPL for transparent finance.
+Usability: Calm, accessible UI for real users. Quick deployment (PWA, no app stores).
+Maintainability: Codetry ensures knowledge isn't lost; shared infra reduces costs.
+Revenue/Impact: Bundles create recurring value (hosting/support, practitioner retainers, add-ons). Supports grants/wellbeing funding.
+Scalability: Start at household (Z0), expand to community without rework.
+
+6. Next Steps for Business Manager AgentThis is your "kitchen table" master view. Use it to:Map client needs to bundles.
+Scope custom extensions via shared platform.
+Generate proposals (include live demos/URLs where available).
+Update this doc as new features ship.
+
+Talk back with questions or specific buyer scenarios — we can refine bundles, prioritize artifacts, or draft sales copy. The Saltbox (Z0) core grounds everything: start small, human, and sovereign, then expand. Ready when you are.
+
