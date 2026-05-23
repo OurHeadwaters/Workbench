@@ -94,28 +94,31 @@ export interface ForgeModule {
 export const FORGE_MODULES: ForgeModule[] = [
   {
     id: "mod-1",
-    title: "Module 1 — Validator Distribution",
+    title: "Module 1 — Mining & Consensus",
     pillar: "Fire / Energy",
-    principle: "Consensus cost is not waste — it is the price of trustless agreement.",
-    conceptName: "Consensus Cost & Validator Distribution",
-    lessonBody: `## What You're Building
+    principle: "Miners compete to verify the ledger — cutting out governments and banks from centralizing our value exchange.",
+    conceptName: "How the Ledger Stays Honest",
+    lessonBody: `## What Cryptocurrency Actually Is
 
-A validator network is not just a list of computers running software. It is a distribution of energy commitments — each node spending real resources to participate in consensus.
+Cryptocurrency is a string of letters and numbers that cannot be counterfeited — like a serial number on cash. These secret codes can be exchanged with another person through a decentralized ledger.
 
-**The preparedness parallel:** In a community resilience plan, energy sources should never be concentrated in one location. A single generator that everyone depends on is a single point of failure. Distributed energy = distributed trust.
+**Miners** compete to verify this ledger and create new coins. They work together to keep the books up to date and verified — cutting out governments and banks from centralizing our value exchange. Miners also bring new money into existence. Some coins are limited (Bitcoin caps at 21 million); some are limitless.
 
-## The Core Risk Pattern
+## Proof-of-Work vs. Proof-of-Stake
 
-When validator stake or hash rate concentrates in fewer than three nodes, you get:
-- **51% attack surface** — a majority actor can rewrite recent history
-- **Geographic concentration risk** — a single jurisdiction can shut down the network
-- **Energy concentration risk** — a spike in energy cost can knock out the whole set
+- **Proof-of-Work (PoW):** Miners spend real energy solving cryptographic puzzles. The expenditure is the proof of honesty. Bitcoin runs on PoW.
+- **Proof-of-Stake (PoS):** Validators lock up ("stake") coins as collateral instead of spending energy. Ethereum moved to PoS in 2022.
+- **The trade-off:** PoW is energy-intensive but deeply battle-tested. PoS is efficient but concentrates influence with large holders.
+
+## The Preparedness Parallel
+
+A community resilience plan should never concentrate its energy sources in one location. A single generator everyone depends on is a single point of failure. Distributed energy = distributed trust. The same logic applies to validator networks: the more nodes, the more jurisdictions, the harder it is for any single actor to capture the ledger.
 
 ## Your Build Challenge
 
-Start with two Fire nodes. Connect them to each other. Submit to The Reckoning and observe what it finds. Then add an Earth node as a persistence anchor and reconnect. See how the structural assessment changes.
+Start with two Fire nodes already connected. Submit to The Reckoning — observe what it finds about concentration risk. Then add a third Fire node and an Earth node as a persistence anchor. See how distributing validators changes the structural assessment.
 
-> "A network with one dominant validator is not a network. It is a server with extra steps." — Headwaters field notes`,
+> "Miners compete to verify this ledger and create new coins — working together to keep the books up to date and verified; cutting out the govnt/banks from centralizing our value exchange." — Dryden community crypto session`,
     startingNodes: [
       { id: "sn-1", elementId: "fire", x: 200, y: 180 },
       { id: "sn-2", elementId: "fire", x: 420, y: 180 },
@@ -124,28 +127,40 @@ Start with two Fire nodes. Connect them to each other. Submit to The Reckoning a
   },
   {
     id: "mod-2",
-    title: "Module 2 — Liquidity Channels",
+    title: "Module 2 — Getting on the Blockchain",
     pillar: "Water / Distribution",
-    principle: "Value that cannot flow cannot feed — channels must have redundant paths.",
-    conceptName: "Liquidity & Bridging",
-    lessonBody: `## What You're Building
+    principle: "Avoid exchanges. Send to a private wallet. Keep your eggs in many baskets.",
+    conceptName: "Onboarding & Exchange Risk",
+    lessonBody: `## We Don't Own Crypto — We Hold Keys
 
-A liquidity channel is a committed path for value to travel between two parties. State channels (like the Lightning Network) lock funds into a bilateral agreement that settles on-chain only when the channel closes.
+A critical distinction: we don't "own" cryptocurrency the way we own a physical object. We have a list of numbers (a private key) that accesses a code on the blockchain. Whoever holds the key holds the crypto. This is why custody matters.
 
-**The preparedness parallel:** Water distribution in a remote community requires redundant pipes. If one route is cut, another route carries the supply. Single-path liquidity is a single-point-of-failure water system.
+## The Shakepay Onboard Path
 
-## The Core Risk Pattern
+The recommended path for getting onto the blockchain as a beginner:
 
-When a Water node has only one connection and no alternate path:
-- **Liquidity bottleneck** — all traffic routes through one channel
-- **Bridge dependency** — if the bridge fails, the entire sub-network is isolated
-- **Capital lock risk** — funds are stranded until the single channel closes
+1. **EMT (Interac e-Transfer)** → Shakepay account — simple, familiar, Canadian
+2. **Shakepay** → purchase Bitcoin or Ethereum
+3. **Send immediately to your private wallet** — do not leave funds on the exchange
+
+**The critical step is getting off the exchange.** Exchanges are useful onramps, but they hold your keys. If the exchange is hacked, frozen, or goes bankrupt, your funds are at risk.
+
+## Exchange Risks
+
+- **KYC requirements** — Exchanges (Coinbase, Bittru, Wealthsimple) require identity verification. More regulations will follow.
+- **Tax implications** — You must claim earnings when converting back to fiat or buying gold/silver.
+- **Custody risk** — The exchange controls your keys, not you.
+- **Single liquidity path** — Relying on one exchange creates a single point of failure for your value flow.
+
+## The Preparedness Parallel
+
+Water distribution in a remote community requires redundant pipes. If one route is cut, another carries the supply. A single exchange relationship is a single-path water system — one freeze, one hack, one regulatory action, and flow stops entirely.
 
 ## Your Build Challenge
 
-Place a Water node connected to a single Fire node. Submit to The Reckoning. It will flag a liquidity gap. Then add a second Water node with an alternate path to an Air node. Observe how redundancy changes the structural assessment.
+A Water node (your exchange) is already connected to a single Fire node (the blockchain). Submit to The Reckoning — it will flag the single-path dependency. Then add a second Water node (a private wallet path) with a direct connection. Observe how redundancy changes the structural picture.
 
-> "One pipe is infrastructure. Two pipes is resilience." — Headwaters field notes`,
+> "Keep your eggs in many baskets." — Dryden community crypto session`,
     startingNodes: [
       { id: "sn-1", elementId: "water", x: 300, y: 200 },
       { id: "sn-2", elementId: "fire", x: 480, y: 130 },
@@ -154,32 +169,133 @@ Place a Water node connected to a single Fire node. Submit to The Reckoning. It 
   },
   {
     id: "mod-3",
-    title: "Module 3 — Merkle Integrity",
+    title: "Module 3 — Self-Custody",
     pillar: "Earth / Persistence",
-    principle: "What cannot be changed cannot be argued — root hashes are the anchor of truth.",
-    conceptName: "Merkle Integrity & Ledger Immutability",
-    lessonBody: `## What You're Building
+    principle: "Not your keys, not your crypto.",
+    conceptName: "Hardware Wallets & Cold Storage",
+    lessonBody: `## The Fundamental Rule
 
-A Merkle tree hashes data in layers. Each parent hash is derived from its children. Change any leaf, and every hash up to the root changes — making tampering detectable from the root alone.
+**Not your keys, not your crypto.** This is the most important principle in the entire field. If someone else holds your private keys — an exchange, a custodian, a friend — they hold your crypto, not you. There is no recourse if they fail.
 
-**The preparedness parallel:** A root cellar inventory that can never be falsified. Every jar, every date, every count recorded in a chain where altering one record invalidates all records above it. The root is the truth anchor.
+## Software vs. Hardware Wallets
 
-## The Core Risk Pattern
+| | Software Wallet | Hardware Wallet |
+|---|---|---|
+| **What it is** | App on your phone or computer | Physical device (Ledger, Trezor) that stores keys offline |
+| **Convenience** | High — always with you | Moderate — requires the device to sign transactions |
+| **Risk** | Device can be hacked or lost | Resistant to remote attacks; must be physically compromised |
+| **Best for** | Small, everyday amounts | Long-term storage, larger holdings |
 
-When a persistence layer (Earth node) has no connection to a validation layer (Fire node):
-- **Orphaned persistence** — data is stored but not verified by consensus
-- **No integrity guarantee** — the record exists but nothing is checking it
-- **Weak anchor** — the root hash has no witnesses
+**The principle:** Convenient and portable but dependent on electricity and connected devices. Hardware is more difficult to confiscate and more resistant to remote attack — a sound means of exchange for self-sufficient communities.
+
+## Cold Storage as Resilience Architecture
+
+Cold storage means keeping private keys completely offline — never exposed to the internet. A hardware wallet in a secure location is cold storage. This is the root cellar of the crypto world: stable, offline, hard to access by outsiders.
+
+## The Preparedness Parallel
+
+An Earth node is persistence — a record that cannot be changed. Cold storage is your ledger anchor. But an isolated Earth node (a private wallet with no connection to a verification layer) has no witnesses. The Reckoning will find it: persistence without verification has no integrity guarantee.
 
 ## Your Build Challenge
 
-Place an Earth node alone. Submit to The Reckoning — it will find no connections, no witnesses. Then connect it to a Fire node (validator witness) and an Air node (oracle feed). See how anchoring changes the structural picture.
+An Earth node is pre-placed alone — representing a cold wallet with no connections. Submit to The Reckoning and read what it finds. Then connect it to a Fire node (the blockchain consensus layer) and an Air node (an oracle or verification signal). Watch how anchoring changes the structural assessment.
 
-> "A record that no one verifies is not a record. It is a note." — Headwaters field notes`,
+> "Not your keys; not your crypto." — Dryden community crypto session`,
     startingNodes: [
       { id: "sn-1", elementId: "earth", x: 300, y: 220 },
     ],
     startingConnections: [],
+  },
+  {
+    id: "mod-4",
+    title: "Module 4 — Scam Architecture",
+    pillar: "Air / Communications",
+    principle: "Bad information travels fast. Verify every signal through multiple channels before acting.",
+    conceptName: "How Scams Travel & How to Spot Them",
+    lessonBody: `## How Bad Information Spreads
+
+Scams exploit the same channels that carry legitimate information — email, social media, search results, app stores. The attack surface is communications itself.
+
+## The Major Scam Vectors
+
+**Phishing (Email & Web)**
+Emails that look like they're from services you use — requesting a password reset, asking you to confirm account details. Phishing websites replicate real sites pixel-for-pixel. They appear as sponsored results in search engines. Rule: Triple-check authenticity. Contact the company through their official website directly — not through any link in the email.
+
+**Impersonation**
+Con-artists create social media accounts nearly identical to real people. They wait until the person posts, then reply with a "free giveaway" from the fake account. Never participate in free giveaways. If you get a strange request from someone in your network, verify through a second channel (call them, text separately).
+
+**Malware Clipboard Attacks**
+When sending Bitcoin, always triple-check the address you're pasting. Some malware silently replaces clipboard contents — so the address you copied gets swapped for the hacker's address. Once confirmed on-chain, the transaction cannot be reversed. There is no undo.
+
+**Fake Exchanges & Scam Coins**
+Fake exchanges offer competitive prices to lure users in. Scam coins (altcoins) feature flashy websites and inflated community metrics to create fear-of-missing-out. They pump, then dump. Beware of any coin using "Bitcoin" in its name to imply a relationship that doesn't exist.
+
+**The Classic Patterns (Never Do These)**
+- Ponzi / pyramid schemes promising guaranteed returns
+- Ransomware — pay a professional to remove it, not the ransom
+- Meeting in person with strangers to exchange bitcoin
+- Responding to money-transfer requests from unknown senders
+
+## The Preparedness Parallel
+
+An Air node carries signal — but not all signal is clean. A communications network without verification is just a noise channel. The Reckoning checks whether your Air nodes have witnesses: unverified oracle feeds are warnings, not facts.
+
+## Your Build Challenge
+
+An Air node (the communications layer) is already connected to a Fire node (a validator that can verify its signal). Submit to The Reckoning — observe the clean result. Then disconnect the Fire node to orphan the Air node. See what The Reckoning flags when signal has no verification anchor.
+
+> "If you're not positive about putting your money there, don't." — Dryden community crypto session`,
+    startingNodes: [
+      { id: "sn-1", elementId: "air", x: 300, y: 200 },
+      { id: "sn-2", elementId: "fire", x: 480, y: 140 },
+    ],
+    startingConnections: [{ fromId: "sn-1", toId: "sn-2" }],
+  },
+  {
+    id: "mod-5",
+    title: "Module 5 — Sovereignty & Community Infrastructure",
+    pillar: "Aether / Governance",
+    principle: "Our fear of technology is really a fear of empowerment. We now have the ability to design the reality we live in.",
+    conceptName: "CBDC Resistance & Community-Owned Exchange",
+    lessonBody: `## Why This Matters for Communities Like Ours
+
+Cryptocurrency is not primarily about getting rich. The long-term benefit is having an asset that cannot be taken — a store of value outside the banking system, beyond the reach of centralized monetary control.
+
+**Three reasons a northern community should understand this:**
+1. **Hedge against inflation** — A devaluing dollar supports new need for Central Bank Digital Currency (CBDC). Holding decentralized assets is one option against currency debasement.
+2. **CBDC resistance** — A CBDC is government-issued digital currency with programmable controls. Mass adoption of decentralized currency combats the conditions that make CBDC adoption feel inevitable.
+3. **Peer-to-peer exchange** — Crypto enables direct value transfer between community members without bank infrastructure. The Dryden session explored this directly: what if neighbours could EMT each other without banks entirely?
+
+## The Satoshi Origin
+
+Thirteen years ago, a person or group using the name **Satoshi Nakamoto** released a paper describing a new software system called Bitcoin. Nobody knows who this entity was — but this gift of technology has, as one way of putting it, "taken the shackles off humanity." The bigger challenge is convincing people they don't need the shackles.
+
+## Crypto as a Tool (Three Functions)
+
+- **Store of value** — holds purchasing power over time
+- **Means of exchange** — transfers value between parties
+- **Unit of account** — measures the price of other goods
+
+This is what today's session is actually about: the practical applications of peer-to-peer exchange — not trading, not speculation, not getting rich.
+
+## Privacy Coins & The Regulatory Horizon
+
+Privacy coins (Monero, ARRR, Ghost) add cryptographic anonymity to transactions. Exchanges are already doing KYC (Know Your Customer) verification, and more regulations will follow. Understanding privacy tools now — before they become harder to access — is part of community preparedness.
+
+## Your Build Challenge
+
+An Aether node (governance/coordination layer) is pre-connected to a Fire node (consensus) and a Water node (distribution). This is the community infrastructure pattern: coordination that rests on real consensus and real value flow. Submit to The Reckoning to confirm stability. Then remove the Fire node and observe what happens to a governance layer without consensus beneath it.
+
+> "Our fear of technology is really a fear of empowerment. We now have the ability to design the reality we live in and we have to step up to that occasion." — Douglas Rushkoff, Author of *Life Inc.* (quoted at the Dryden community crypto session)`,
+    startingNodes: [
+      { id: "sn-1", elementId: "aether", x: 300, y: 220 },
+      { id: "sn-2", elementId: "fire", x: 160, y: 130 },
+      { id: "sn-3", elementId: "water", x: 440, y: 130 },
+    ],
+    startingConnections: [
+      { fromId: "sn-1", toId: "sn-2" },
+      { fromId: "sn-1", toId: "sn-3" },
+    ],
   },
 ];
 

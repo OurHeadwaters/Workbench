@@ -92,7 +92,7 @@ export function runReckoning(
     findings.push({
       severity: "critical",
       code: "ENERGY_CONCENTRATION_RISK",
-      message: `Energy concentration risk: ${elementCounts.fire} Fire nodes with no Earth anchor. High validator density without persistence is unstable.`,
+      message: `Consensus centralization risk: ${elementCounts.fire} Fire nodes with no Earth anchor. High validator density without a persistence layer is unstable — like a network of miners with no ledger to write to. Add an Earth node to anchor the record.`,
       affectedNodeIds: fireNodes.map((n) => n.id),
     });
   }
@@ -108,7 +108,7 @@ export function runReckoning(
     findings.push({
       severity: "critical",
       code: "LIQUIDITY_GAP",
-      message: `Liquidity gap: Water node${unconnectedWater.length > 1 ? "s" : ""} with no redundant path. Single-path liquidity is a bottleneck.`,
+      message: `Single liquidity path detected — exchange dependency creates centralization risk. Water node${unconnectedWater.length > 1 ? "s" : ""} with no redundant path: if this channel fails, value flow stops entirely. Add a second path or move funds to a private wallet node.`,
       affectedNodeIds: [...unconnectedWater, ...singlePathWater].map((n) => n.id),
     });
   }
@@ -122,7 +122,7 @@ export function runReckoning(
     findings.push({
       severity: "warning",
       code: "UNWITNESSED_PERSISTENCE",
-      message: `${earthUnwitnessed.length} Earth node${earthUnwitnessed.length > 1 ? "s" : ""} without a validator or oracle witness. Persistence without verification has no integrity guarantee.`,
+      message: `${earthUnwitnessed.length} Earth node${earthUnwitnessed.length > 1 ? "s" : ""} in cold storage without a validator or oracle witness. "Not your keys, not your crypto" — but an unwitnessed record is also unverifiable. Connect to a Fire or Air node to anchor integrity.`,
       affectedNodeIds: earthUnwitnessed.map((n) => n.id),
     });
   }
@@ -131,7 +131,7 @@ export function runReckoning(
     findings.push({
       severity: "warning",
       code: "GOVERNANCE_WITHOUT_CONSENSUS",
-      message: `Governance layer (Aether) present without a consensus layer (Fire). DAO coordination without validator infrastructure is unenforceable.`,
+      message: `Sovereignty layer (Aether) present without a consensus layer (Fire). Community coordination without validator infrastructure is unenforceable — like a CBDC-resistant policy with no network to run it on.`,
       affectedNodeIds: nodes.filter((n) => n.elementId === "aether").map((n) => n.id),
     });
   }
