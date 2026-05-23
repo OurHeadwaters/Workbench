@@ -1,0 +1,119 @@
+Deadhead — Agent Brief
+Project: Headwaters platform · 807 Food Co-operative & Hub deployment
+Artifact path: artifacts/deadhead/ · Preview path: /deadhead
+Stack: React + Vite + TypeScript + Wouter + Clerk + React Query + shadcn/ui
+Backend: Shared API server at artifacts/api-server/src/routes/deadhead.ts
+DB schema: lib/db/src/schema/deadhead.ts
+
+What Deadhead is
+Deadhead is a founder-only vetting tool — a single place where every idea, task, loose end, and obligation gets captured and gets a verdict before it becomes real work or gets killed. The name carries three layered meanings deliberate to this region:
+
+The lake hazard — a waterlogged log floating just below the surface in Northwestern Ontario lakes. You have to spot it and decide: navigate around it or pull it out
+The logging loss — a log that waterlogged before reaching the mill. No value extracted
+The royal verdict — off with its head. The idea is brought before the founder, makes its case, and gets a ruling: earn your place at the table, or lose your head
+It is not a task manager (that's Replit tasks / .local/tasks/). It is the vetting checkpoint that sits before tasks are created. The "Drop a deadhead" button visible in every app in the constellation is how things enter the queue from anywhere.
+
+What's built
+Pages and routes
+Route	Auth	What it does
+/deadhead/ (signed out)	Public	Landing page (intro.tsx) with testimonials, pricing, tour link
+/deadhead/ (signed in)	Clerk	Inbox — "Lay of the land" — all items with status strip and filters
+/deadhead/new	Clerk	Drop a new deadhead form
+/deadhead/items/:id	Clerk	Full item view — edit, assign spotter, view activity log, attachments
+/deadhead/triage	Clerk	Replit task triage mode — syncs task cache, dispositions per item
+/deadhead/spotter/:id?token=...	Magic link (no Clerk)	Spotter checklist — public via HMAC token in URL
+/deadhead/tour	Fully public	Feature tour — safe to share, no auth
+/deadhead/billing	Clerk	Billing management (Square)
+/deadhead/admin/testimonials	Clerk	Admin — manage landing page testimonials
+/deadhead/admin/subscriptions	Clerk	Admin — subscription overview
+Item lifecycle — the six statuses
+lay-of-the-land → forest → gift → take → done
+                                 ↘ smash
+
+Status	Label	Meaning
+lay-of-the-land	Lay of the land	Just dropped. Awaiting first look
+forest	Forest through the trees	Spotter is sizing it up
+gift	Give a gift first	Needs a goodwill gesture before action
+take	Only take what you need	Approved — do the smallest version
+smash	Smash	Killed. Off with its head
+done	Done	Promoted to a real task or completed
+Quick-action buttons on every row: Smash (flame), Take (hand), Done (checkmark). No confirmation dialogs — founder moves fast.
+
+Item fields
+Field	Values
+type	Tax · Legal · Financial · Operational · Strategic · Personal
+project	807 Benefits · Rootwork · Market Mosaic · Grants Finder · Standby Supplies · Personal
+risk	Low · Medium · Smash-the-motor
+status	Six lifecycle statuses above
+taskRef	"#607" — set when imported from Replit task cache via triage sync
+triageStatus	pinned · executed · trashed · held
+spotterToken	HMAC-signed magic-link token
+spotterRecommendation	proceed · hold · dont · need-more-info
+The Spotter system
+A Spotter is someone the founder trusts to weigh in on a specific item — an advisor, board member, accountant, lawyer. They never need a Clerk account. The flow:
+
+Founder assigns a spotter name + email from the item detail page
+Server generates an HMAC token (signed with DEADHEAD_SPOTTER_SECRET or fallback SESSION_SECRET), stores it in spotterToken
+Founder (or system) emails the magic-link: /deadhead/spotter/:id?token=...
+Spotter sees the item, reads it, answers a type-specific checklist, and submits a recommendation with an optional note
+Owner gets a one-time notification email (ownerNotifiedAt prevents duplicates)
+One auto-reminder goes to the spotter if they haven't responded (tracked in spotterReminderSentAt, cleared on reassignment)
+Spotter checklists by type (in constants.ts):
+
+Tax: Does this trigger a filing? Is the paper trail in order? Will it change tax owing?
+Legal: Is anyone exposed to liability? Is there a contract deadline? Should a lawyer see this?
+Financial: Cash impact size? Budget line needed? ROI in one sentence?
+Operational: Existing routine? Who owns it? Can smallest version ship this week?
+Strategic: Does it fit the constellation? Cost of not doing it? One-way or two-way door?
+Personal: Honestly mine to do? Cheaper way to the same outcome? Will future-me thank me?
+Triage mode
+/deadhead/triage merges two queues into one view:
+
+Deadheads already in the DB — ideas dropped from the constellation
+Replit tasks from .local/replit-tasks-cache.json — imported via POST /api/deadhead/sync-tasks
+Auto-syncs every 15 minutes. Each item gets a triage disposition:
+
+Disposition	Meaning
+pinned	Save for later, keep visible
+executed	Approved — sends to Replit as a task
+trashed	Smash — kill it
+held	Needs more info before a decision
+Items with taskRef set are known Replit tasks. Items without are native deadheads.
+
+DB tables
+Table	Purpose
+deadheads	Main items — all fields above
+deadhead_events	Append-only activity log per item. kinds: created, status, spotter-assigned, spotter-responded, note, attachment, smashed
+deadhead_attachments	File uploads via App Storage. Stored as object URLs
+deadhead_testimonials	Social proof on the landing page. Admin-managed, sorted by sortOrder
+deadhead_subscriptions	One row per Clerk user. Billing state: trial → active / expired / cancelled
+Auth and access
+Who	How they get in
+Founder	Clerk sign-in
+807 members (Harvest/Sustaining tier)	Bypass billing entirely via useHeadwatersAccess — checks /api/headwaters/access?tool=deadhead. If hasAccess: true, BillingGuard is skipped
+Spotters	HMAC magic-link — no Clerk required
+Anyone	/deadhead/tour is fully public
+Billing
+$9/month or $90/year (2 months free) via Square Payment Links
+14-day free trial — starts when user first opens billing page
+Expired trial → hard redirect to /billing (via BillingGuard)
+807 members skip billing entirely (membership = access)
+The known gap — no public demo path
+The main inbox requires Clerk sign-in. /tour is public but is a static explainer, not a live demo. There is currently no way to show a prospective subscriber what their inbox looks like with real data without giving them a full Clerk account.
+
+What's needed: a public preview/read-only mode — sanitized or seeded example deadheads, full UI, no editing. The /tour path exists and is already public; it could be extended into an interactive demo with hardcoded items that walk through the lifecycle.
+
+Where to find things
+What	Where
+All pages	artifacts/deadhead/src/pages/
+Status/type/risk constants + spotter checklists	artifacts/deadhead/src/lib/constants.ts
+Billing config (prices, trial days)	artifacts/deadhead/src/config/pricing.ts
+807 member access bypass hook	artifacts/deadhead/src/hooks/useHeadwatersAccess.ts
+API routes	artifacts/api-server/src/routes/deadhead.ts
+DB schema	lib/db/src/schema/deadhead.ts
+App entry + route map	artifacts/deadhead/src/App.tsx
+Drop button (cross-app capture)	Search for "Drop a deadhead" in artifacts/807-benefits/src/components/layout.tsx
+What the platform context means for this tool
+Deadhead is positioned as a Headwaters platform product — not 807-specific. The billing, subscription model, testimonials admin, and landing page are all built for external licensees. 807 members get free access as a benefit of their membership tier. Any future co-op tenant licensed through Headwaters would see the same billing gate unless their membership tier grants access.
+
+The project filter currently lists: 807 Benefits · Rootwork · Market Mosaic · Grants Finder · Standby Supplies · Personal. This list is hardcoded in constants.ts — a future improvement would make it tenant-configurable.
