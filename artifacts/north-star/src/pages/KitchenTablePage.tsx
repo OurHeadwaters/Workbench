@@ -697,7 +697,7 @@ export function KitchenTablePage() {
           </div>
 
           {/* Agenda */}
-          <div className="px-5 pt-2 pb-12">
+          <div className="px-8 pt-6 pb-12">
             {/* Template switcher */}
             <div className="flex items-center gap-3 mb-4 px-1">
               <p className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-medium flex-1">
