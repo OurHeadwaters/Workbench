@@ -273,6 +273,16 @@ type Message = {
   seatColor: string;
 };
 
+// ── Agenda items (shown on table in AGM view) ─────────────────────────────────
+const AGENDA_ITEMS = [
+  { q: "Q1", question: "Which bundles feel solid and ready to offer today without forcing anything?", lead: "Saltbox", leadId: "saltbox" },
+  { q: "Q2", question: "What are the clearest stocks and flows in our current platform that make a bundle actually deliver value?", lead: "Systems", leadId: "systems" },
+  { q: "Q3", question: "Where do we see the strongest human-scale economic fit for these bundles right now?", lead: "Community", leadId: "community" },
+  { q: "Q4", question: "What naming and framing feels clean, honest, and free of drift for the bundles and for practitioner licensing?", lead: "Codetry", leadId: "codetry" },
+  { q: "Q5", question: "How should we speak about practitioner licensing so it feels like natural extension rather than add-on?", lead: "Grok", leadId: "grok" },
+  { q: "Q6", question: "What one decision or next action carries the most weight from what we've heard?", lead: "Saltbox", leadId: "saltbox" },
+];
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 export function KitchenTablePage() {
   const [seats, setSeats] = useState<Seat[]>(DEFAULT_SEATS);
@@ -400,15 +410,15 @@ export function KitchenTablePage() {
     setConfigSeatId(null);
   };
 
+  const inSession = messages.length > 0;
+
   return (
-    <div className="flex flex-col h-dvh bg-[#FAFAF9] pb-[72px]">
+    <div className="flex flex-col h-dvh bg-[#FAFAF9]">
 
       {/* ── Header ── */}
-      <div className="flex-shrink-0 border-b border-[#E7E5E4] bg-white px-4 pt-safe-top">
+      <div className="flex-shrink-0 bg-white border-b border-[#E7E5E4] px-4 pt-safe-top">
         <div className="flex items-center gap-2 py-3">
-          <span className="text-[10px] uppercase tracking-widest text-[#A8A29E] font-medium">
-            Zone 0 ·
-          </span>
+          <span className="text-[10px] uppercase tracking-widest text-[#A8A29E] font-medium">Z2 ·</span>
           {editingSession ? (
             <input
               autoFocus
@@ -421,166 +431,289 @@ export function KitchenTablePage() {
           ) : (
             <button
               onClick={() => setEditingSession(true)}
-              className="flex-1 text-left text-[15px] font-semibold text-[#1C1917] border-b border-dashed border-[#C8923A]/40"
+              className="flex-1 text-left text-[15px] font-semibold text-[#1C1917]"
             >
               {sessionName}
             </button>
           )}
-          <span className="text-[11px] text-[#A8A29E]">
-            {activeSeat.icon} {activeSeat.name}
-          </span>
+          {inSession && (
+            <div
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium text-white"
+              style={{ background: activeSeat.color }}
+            >
+              <span>{activeSeat.icon}</span>
+              <span>{activeSeat.name}</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ── Seat chips ── */}
-      <div className="flex-shrink-0 border-b border-[#E7E5E4] bg-white">
-        <div className="flex gap-2 px-4 py-2.5 overflow-x-auto scrollbar-hide">
-          {seats.map((seat) => {
-            const isActive = seat.id === activeSeatId;
-            return (
-              <button
-                key={seat.id}
-                onClick={() => setActiveSeatId(seat.id)}
-                onDoubleClick={() => seat.configurable && openConfig(seat)}
-                className={cn(
-                  "flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all border",
-                  isActive
-                    ? "text-white border-transparent shadow-sm"
-                    : "text-[#57534E] bg-[#F5F0E8] border-[#E7E5E4] hover:border-[#C8923A]/40"
-                )}
-                style={isActive ? { background: seat.color, borderColor: seat.color } : {}}
-              >
-                <span>{seat.icon}</span>
-                <span>{seat.name}</span>
-              </button>
-            );
-          })}
+      {/* ══════════════════════════════════════════════════════════════
+          MODE A — TABLE IS SET (no messages yet)
+          Seat tiles grid + agenda visible
+      ══════════════════════════════════════════════════════════════ */}
+      {!inSession && (
+        <div className="flex-1 overflow-y-auto">
+
+          {/* Seat tile grid */}
+          <div className="px-3 pt-4 pb-2">
+            <p className="text-[10px] uppercase tracking-widest text-[#A8A29E] font-medium mb-3 px-1">
+              The council — tap a seat to speak
+            </p>
+            <div className="grid grid-cols-2 gap-2.5">
+              {seats.map((seat) => {
+                const isActive = seat.id === activeSeatId;
+                return (
+                  <button
+                    key={seat.id}
+                    onClick={() => setActiveSeatId(seat.id)}
+                    onDoubleClick={() => seat.configurable && openConfig(seat)}
+                    className={cn(
+                      "relative flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4 text-center transition-all active:scale-[0.97]",
+                      isActive
+                        ? "text-white shadow-md"
+                        : "bg-white border border-[#E7E5E4] text-[#1C1917] shadow-sm"
+                    )}
+                    style={isActive ? { background: seat.color } : {}}
+                  >
+                    {seat.configurable && (
+                      <span
+                        className={cn(
+                          "absolute top-2 right-2.5 text-[9px] uppercase tracking-wider font-medium",
+                          isActive ? "text-white/60" : "text-[#C4B5A0]"
+                        )}
+                      >
+                        open
+                      </span>
+                    )}
+                    <span className="text-2xl leading-none">{seat.icon}</span>
+                    <span className="text-[14px] font-semibold leading-tight">{seat.name}</span>
+                    <span
+                      className={cn(
+                        "text-[10px] leading-snug px-1",
+                        isActive ? "text-white/75" : "text-[#A8A29E]"
+                      )}
+                    >
+                      {seat.description}
+                    </span>
+                    {seat.configurable && !isActive && (
+                      <span className="mt-0.5 text-[10px] text-[#C8923A] font-medium">Double-tap to set</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Agenda */}
+          <div className="px-3 pt-3 pb-6">
+            <p className="text-[10px] uppercase tracking-widest text-[#A8A29E] font-medium mb-3 px-1">
+              Today's agenda · 30 min
+            </p>
+            <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm overflow-hidden">
+              {AGENDA_ITEMS.map((item, i) => {
+                const leadSeat = seats.find((s) => s.id === item.leadId);
+                return (
+                  <button
+                    key={item.q}
+                    onClick={() => {
+                      setActiveSeatId(item.leadId);
+                      setInput(item.question);
+                    }}
+                    className={cn(
+                      "w-full flex items-start gap-3 px-4 py-3.5 text-left transition-colors active:bg-[#F5F0E8]",
+                      i < AGENDA_ITEMS.length - 1 ? "border-b border-[#F5F0E8]" : ""
+                    )}
+                  >
+                    <span
+                      className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white mt-0.5"
+                      style={{ background: leadSeat?.color ?? "#A8A29E" }}
+                    >
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] text-[#1C1917] leading-snug">{item.question}</p>
+                      <p className="text-[10px] text-[#A8A29E] mt-1">
+                        {leadSeat?.icon} {item.lead} leads
+                      </p>
+                    </div>
+                    <svg className="flex-shrink-0 mt-1 opacity-30" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M4 2L8 6L4 10" stroke="#1C1917" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[10px] text-[#C4B5A0] text-center mt-3">
+              Tap an agenda item to open that question with the right seat selected
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* ── Brief ── */}
-      <div className="flex-shrink-0 border-b border-[#E7E5E4] bg-[#FEFCF8]">
-        <button
-          onClick={() => { setBriefOpen((o) => !o); setEditingBrief(false); }}
-          className="flex items-center gap-2 w-full px-4 py-2 text-left"
-        >
-          <span className="text-[11px]">📄</span>
-          <span className="text-[10px] uppercase tracking-wider text-[#A8A29E] font-medium">
-            Brief on the table
-          </span>
-          <span className="text-[9px] text-[#C4B5A0] ml-1">— read by every seat</span>
-          <span className="ml-auto text-[10px] text-[#A8A29E]">{briefOpen ? "▲" : "▼"}</span>
-        </button>
+      {/* ══════════════════════════════════════════════════════════════
+          MODE B — IN SESSION (messages exist)
+          Compact seat switcher + agenda toggle + chat
+      ══════════════════════════════════════════════════════════════ */}
+      {inSession && (
+        <>
+          {/* Compact seat switcher */}
+          <div className="flex-shrink-0 bg-white border-b border-[#E7E5E4]">
+            <div className="flex gap-2 px-3 py-2 overflow-x-auto scrollbar-hide">
+              {seats.map((seat) => {
+                const isActive = seat.id === activeSeatId;
+                return (
+                  <button
+                    key={seat.id}
+                    onClick={() => setActiveSeatId(seat.id)}
+                    onDoubleClick={() => seat.configurable && openConfig(seat)}
+                    className={cn(
+                      "flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium transition-all border",
+                      isActive
+                        ? "text-white border-transparent shadow-sm"
+                        : "text-[#57534E] bg-[#F5F0E8] border-[#E7E5E4]"
+                    )}
+                    style={isActive ? { background: seat.color } : {}}
+                  >
+                    <span className="text-[15px]">{seat.icon}</span>
+                    <span>{seat.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-        {briefOpen && (
-          <div className="px-4 pb-3">
-            {editingBrief ? (
-              <div>
-                <textarea
-                  autoFocus
-                  value={brief}
-                  onChange={(e) => setBrief(e.target.value)}
-                  rows={8}
-                  className="w-full text-[11px] font-mono leading-relaxed text-[#44403C] bg-white border border-[#E7E5E4] rounded-lg p-3 resize-y outline-none focus:border-[#8A6A1A]/40"
-                />
-                <div className="flex gap-2 mt-2 justify-end">
-                  <button
-                    onClick={() => setBrief(DEFAULT_BRIEF)}
-                    className="text-[10px] text-[#78716C] border border-[#E7E5E4] rounded px-2.5 py-1"
-                  >
-                    reset
-                  </button>
-                  <button
-                    onClick={() => setEditingBrief(false)}
-                    className="text-[10px] text-white bg-[#1F3D2E] rounded px-3 py-1 font-medium"
-                  >
-                    done
-                  </button>
+          {/* Agenda toggle */}
+          <div className="flex-shrink-0 border-b border-[#E7E5E4] bg-[#FEFCF8]">
+            <button
+              onClick={() => { setBriefOpen((o) => !o); setEditingBrief(false); }}
+              className="flex items-center gap-2 w-full px-4 py-2 text-left"
+            >
+              <span className="text-[11px]">📋</span>
+              <span className="text-[10px] uppercase tracking-wider text-[#A8A29E] font-medium">Agenda</span>
+              <span className="text-[9px] text-[#C4B5A0] ml-1">— {AGENDA_ITEMS.length} items</span>
+              <span className="ml-auto text-[10px] text-[#A8A29E]">{briefOpen ? "▲" : "▼"}</span>
+            </button>
+
+            {briefOpen && (
+              <div className="px-3 pb-3">
+                {/* Compact agenda list */}
+                <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden mb-2">
+                  {AGENDA_ITEMS.map((item, i) => {
+                    const leadSeat = seats.find((s) => s.id === item.leadId);
+                    return (
+                      <button
+                        key={item.q}
+                        onClick={() => {
+                          setActiveSeatId(item.leadId);
+                          setInput(item.question);
+                          setBriefOpen(false);
+                        }}
+                        className={cn(
+                          "w-full flex items-start gap-2.5 px-3 py-2.5 text-left transition-colors active:bg-[#F5F0E8]",
+                          i < AGENDA_ITEMS.length - 1 ? "border-b border-[#F5F0E8]" : ""
+                        )}
+                      >
+                        <span
+                          className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white mt-0.5"
+                          style={{ background: leadSeat?.color ?? "#A8A29E" }}
+                        >
+                          {i + 1}
+                        </span>
+                        <p className="text-[11px] text-[#44403C] leading-snug">{item.question}</p>
+                      </button>
+                    );
+                  })}
                 </div>
+                {/* Brief edit */}
+                <button
+                  onClick={() => setEditingBrief((b) => !b)}
+                  className="text-[10px] text-[#A8A29E] underline underline-offset-2 px-1"
+                >
+                  {editingBrief ? "close brief" : "edit session brief"}
+                </button>
+                {editingBrief && (
+                  <div className="mt-2">
+                    <textarea
+                      autoFocus
+                      value={brief}
+                      onChange={(e) => setBrief(e.target.value)}
+                      rows={6}
+                      className="w-full text-[11px] font-mono leading-relaxed text-[#44403C] bg-white border border-[#E7E5E4] rounded-lg p-3 resize-y outline-none focus:border-[#8A6A1A]/40"
+                    />
+                    <div className="flex gap-2 mt-1.5 justify-end">
+                      <button
+                        onClick={() => setBrief(DEFAULT_BRIEF)}
+                        className="text-[10px] text-[#78716C] border border-[#E7E5E4] rounded px-2.5 py-1"
+                      >reset</button>
+                      <button
+                        onClick={() => setEditingBrief(false)}
+                        className="text-[10px] text-white bg-[#1F3D2E] rounded px-3 py-1 font-medium"
+                      >done</button>
+                    </div>
+                  </div>
+                )}
               </div>
-            ) : (
-              <button
-                onClick={() => setEditingBrief(true)}
-                className="w-full text-left text-[10px] font-mono leading-relaxed text-[#78716C] bg-[#FFFEF9] border border-dashed border-[#E7E5E4] rounded-lg p-3 max-h-32 overflow-y-auto"
-                style={{ whiteSpace: "pre-wrap" }}
-              >
-                {brief}
-              </button>
             )}
           </div>
-        )}
-      </div>
 
-      {/* ── Chat messages ── */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3 min-h-0">
-        {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
-            <div className="w-14 h-14 rounded-full bg-[#F5F0E8] flex items-center justify-center text-2xl opacity-60">
-              ⌂
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-[#44403C]">The table is set.</p>
-              <p className="text-xs text-[#A8A29E] mt-1">
-                Select a seat and say what's on your mind.
-              </p>
-            </div>
-            <div className="mt-2 px-4 py-3 rounded-xl bg-[#F5F0E8] max-w-xs">
-              <p className="text-[11px] text-[#78716C] leading-relaxed">
-                Each seat reads the brief before responding. Tap the brief bar above to view or edit it.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {messages.map((msg) => {
-          const isUser = msg.role === "user";
-          const isStreaming = streaming && msg.id === streamingIdRef.current;
-          return (
-            <div
-              key={msg.id}
-              className={cn("flex gap-2 items-end", isUser ? "flex-row-reverse" : "flex-row")}
-            >
-              {!isUser && (
+          {/* Chat messages */}
+          <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3 min-h-0">
+            {messages.map((msg) => {
+              const isUser = msg.role === "user";
+              const isStreaming = streaming && msg.id === streamingIdRef.current;
+              return (
                 <div
-                  className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-xs text-white mb-0.5"
-                  style={{ background: msg.seatColor }}
+                  key={msg.id}
+                  className={cn("flex gap-2 items-end", isUser ? "flex-row-reverse" : "flex-row")}
                 >
-                  {seats.find((s) => s.id === msg.seatId)?.icon ?? "◈"}
-                </div>
-              )}
-              <div
-                className={cn(
-                  "max-w-[78%] px-3.5 py-2.5 text-[13px] leading-relaxed rounded-2xl",
-                  isUser
-                    ? "bg-[#1F3D2E] text-[#F4EDE0] rounded-br-sm"
-                    : "bg-white border border-[#E7E5E4] text-[#1C1917] rounded-bl-sm shadow-sm"
-                )}
-                style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-              >
-                {!isUser && (
-                  <p
-                    className="text-[9px] uppercase tracking-wider font-semibold mb-1"
-                    style={{ color: msg.seatColor }}
+                  {!isUser && (
+                    <div
+                      className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-sm text-white mb-0.5"
+                      style={{ background: msg.seatColor }}
+                    >
+                      {seats.find((s) => s.id === msg.seatId)?.icon ?? "◈"}
+                    </div>
+                  )}
+                  <div
+                    className={cn(
+                      "max-w-[78%] px-4 py-3 text-[13px] leading-relaxed rounded-2xl",
+                      isUser
+                        ? "bg-[#1F3D2E] text-[#F4EDE0] rounded-br-sm"
+                        : "bg-white border border-[#E7E5E4] text-[#1C1917] rounded-bl-sm shadow-sm"
+                    )}
+                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
                   >
-                    {msg.seatName}
-                  </p>
-                )}
-                {msg.content || (isStreaming ? <span className="opacity-30">▍</span> : null)}
-                {isStreaming && msg.content && <span className="opacity-30">▍</span>}
-              </div>
-            </div>
-          );
-        })}
+                    {!isUser && (
+                      <p
+                        className="text-[10px] uppercase tracking-wider font-semibold mb-1.5"
+                        style={{ color: msg.seatColor }}
+                      >
+                        {msg.seatName}
+                      </p>
+                    )}
+                    {msg.content || (isStreaming ? <span className="opacity-30">▍</span> : null)}
+                    {isStreaming && msg.content && <span className="opacity-30">▍</span>}
+                  </div>
+                </div>
+              );
+            })}
+            <div ref={chatEndRef} />
+          </div>
+        </>
+      )}
 
-        <div ref={chatEndRef} />
-      </div>
-
-      {/* ── Input row ── */}
-      <div className="flex-shrink-0 border-t border-[#E7E5E4] bg-white px-3 py-2.5 flex gap-2 items-end">
+      {/* ── Input row (always visible) ── */}
+      <div className="flex-shrink-0 border-t border-[#E7E5E4] bg-white px-3 py-2.5 pb-safe-bottom flex gap-2 items-end">
         <div
-          className="flex-1 flex items-end bg-[#F5F0E8] rounded-2xl px-3.5 py-2"
-          style={{ border: `1.5px solid ${activeSeat.color}33` }}
+          className="flex-1 flex flex-col bg-[#F5F0E8] rounded-2xl px-3.5 pt-2.5 pb-2"
+          style={{ border: `1.5px solid ${activeSeat.color}44` }}
         >
+          {!inSession && (
+            <p className="text-[9px] uppercase tracking-wider font-semibold mb-1" style={{ color: activeSeat.color }}>
+              {activeSeat.icon} {activeSeat.name}
+            </p>
+          )}
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -593,25 +726,25 @@ export function KitchenTablePage() {
             onInput={(e) => {
               const el = e.target as HTMLTextAreaElement;
               el.style.height = "auto";
-              el.style.height = Math.min(el.scrollHeight, 100) + "px";
+              el.style.height = Math.min(el.scrollHeight, 120) + "px";
             }}
-            placeholder={`Ask ${activeSeat.name}…`}
+            placeholder={inSession ? `Ask ${activeSeat.name}…` : `Tap a seat above, or type to speak to ${activeSeat.name}…`}
             rows={1}
             disabled={streaming}
             className="flex-1 bg-transparent text-[13px] text-[#1C1917] placeholder:text-[#A8A29E] outline-none resize-none leading-snug"
-            style={{ maxHeight: 100 }}
+            style={{ maxHeight: 120 }}
           />
         </div>
         <button
           onClick={send}
           disabled={streaming || !input.trim()}
           className={cn(
-            "w-9 h-9 rounded-full flex items-center justify-center text-white flex-shrink-0 transition-all",
-            streaming || !input.trim() ? "opacity-30" : "hover:opacity-90 active:scale-95"
+            "w-11 h-11 rounded-full flex items-center justify-center text-white flex-shrink-0 transition-all",
+            streaming || !input.trim() ? "opacity-25" : "active:scale-95"
           )}
           style={{ background: streaming || !input.trim() ? "#C4B5A0" : activeSeat.color }}
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <svg width="15" height="15" viewBox="0 0 14 14" fill="none">
             <path d="M7 1L13 7L7 13M1 7H13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
@@ -620,26 +753,27 @@ export function KitchenTablePage() {
       {/* ── Config modal ── */}
       {configSeatId && (
         <div
-          className="fixed inset-0 bg-black/40 z-50 flex items-end"
+          className="fixed inset-0 bg-black/50 z-50 flex items-end"
           onClick={(e) => { if (e.target === e.currentTarget) setConfigSeatId(null); }}
         >
-          <div className="w-full bg-[#FAFAF9] rounded-t-2xl p-5 pb-safe-bottom">
+          <div className="w-full bg-[#FAFAF9] rounded-t-3xl p-5 pb-safe-bottom">
             <div className="w-10 h-1 bg-[#E7E5E4] rounded-full mx-auto mb-5" />
-            <h3 className="text-[15px] font-semibold text-[#1C1917] mb-4">Configure seat</h3>
+            <h3 className="text-[16px] font-semibold text-[#1C1917] mb-1">Configure seat</h3>
+            <p className="text-[11px] text-[#A8A29E] mb-4">Name a thinker, advisor, or lens for this seat.</p>
 
             <label className="text-[10px] uppercase tracking-wider text-[#A8A29E] block mb-1">Name</label>
             <input
               value={configDraft.name}
               onChange={(e) => setConfigDraft((d) => ({ ...d, name: e.target.value }))}
-              className="w-full text-[13px] text-[#1C1917] bg-white border border-[#E7E5E4] rounded-lg px-3 py-2 outline-none mb-3 focus:border-[#8A6A1A]/50"
+              className="w-full text-[14px] text-[#1C1917] bg-white border border-[#E7E5E4] rounded-xl px-3 py-2.5 outline-none mb-3 focus:border-[#8A6A1A]/50"
             />
 
-            <label className="text-[10px] uppercase tracking-wider text-[#A8A29E] block mb-1">Description</label>
+            <label className="text-[10px] uppercase tracking-wider text-[#A8A29E] block mb-1">Role tagline</label>
             <input
               value={configDraft.description}
               onChange={(e) => setConfigDraft((d) => ({ ...d, description: e.target.value }))}
               placeholder="e.g. Robin Wall Kimmerer — reciprocity, plant intelligence"
-              className="w-full text-[13px] text-[#1C1917] bg-white border border-[#E7E5E4] rounded-lg px-3 py-2 outline-none mb-3 focus:border-[#8A6A1A]/50"
+              className="w-full text-[13px] text-[#1C1917] bg-white border border-[#E7E5E4] rounded-xl px-3 py-2.5 outline-none mb-3 focus:border-[#8A6A1A]/50"
             />
 
             <label className="text-[10px] uppercase tracking-wider text-[#A8A29E] block mb-1">Lens (system prompt)</label>
@@ -647,20 +781,20 @@ export function KitchenTablePage() {
               value={configDraft.systemPrompt}
               onChange={(e) => setConfigDraft((d) => ({ ...d, systemPrompt: e.target.value }))}
               placeholder="Describe the knowledge framework or thinker this seat speaks from."
-              rows={5}
-              className="w-full text-[12px] text-[#1C1917] bg-white border border-[#E7E5E4] rounded-lg px-3 py-2 outline-none mb-4 resize-none leading-relaxed focus:border-[#8A6A1A]/50"
+              rows={4}
+              className="w-full text-[12px] text-[#1C1917] bg-white border border-[#E7E5E4] rounded-xl px-3 py-2.5 outline-none mb-4 resize-none leading-relaxed focus:border-[#8A6A1A]/50"
             />
 
             <div className="flex gap-2">
               <button
                 onClick={() => setConfigSeatId(null)}
-                className="flex-1 py-2.5 text-[13px] text-[#78716C] border border-[#E7E5E4] rounded-xl"
+                className="flex-1 py-3 text-[13px] text-[#78716C] border border-[#E7E5E4] rounded-2xl"
               >
                 Cancel
               </button>
               <button
                 onClick={saveConfig}
-                className="flex-1 py-2.5 text-[13px] text-white bg-[#1F3D2E] rounded-xl font-medium"
+                className="flex-1 py-3 text-[13px] text-white bg-[#1F3D2E] rounded-2xl font-semibold"
               >
                 Set seat
               </button>
