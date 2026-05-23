@@ -27,6 +27,7 @@ import Login from "@/pages/login";
 import Layout from "@/components/Layout";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { ReactNode } from "react";
+import { NurseryApp } from "@/nursery/NurseryApp";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,16 @@ function Router() {
       <Route path="/share/:token" component={PublicShare} />
       <Route path="/privacy" component={PrivacyPage} />
       <Route path="/login" component={Login} />
+      {/* Nursery routes — inside Library layout shell but NOT gated by library owner auth */}
+      <Route path="/nursery/onboarding">
+        <Layout><NurseryApp /></Layout>
+      </Route>
+      <Route path="/nursery/idea/:id">
+        <Layout><NurseryApp /></Layout>
+      </Route>
+      <Route path="/nursery">
+        <Layout><NurseryApp /></Layout>
+      </Route>
       <Route>
         <RequireOwner>
           <Layout>

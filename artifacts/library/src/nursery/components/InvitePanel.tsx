@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { api, type NurseryInvite, type NurseryProducer } from "@/lib/api";
+import { api, type NurseryInvite, type NurseryProducer } from "../lib/api";
 import { X, Plus, Trash2, Copy, Check, ShieldCheck } from "lucide-react";
 
 interface InvitePanelProps {
@@ -66,7 +66,6 @@ export function InvitePanel({ producer, onClose }: InvitePanelProps) {
           </button>
         </div>
 
-        {/* Create new */}
         <div className="bg-[#FAF6F0] rounded-xl p-4 mb-5">
           <p className="text-xs font-medium text-[#4A3F38] uppercase tracking-wide mb-3">Create invite</p>
           <input

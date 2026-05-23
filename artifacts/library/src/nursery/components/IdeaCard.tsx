@@ -1,4 +1,4 @@
-import { type NurseryIdea, type IdeaStage } from "@/lib/api";
+import { type NurseryIdea, type IdeaStage } from "../lib/api";
 import { formatDistanceToNow } from "date-fns";
 
 interface IdeaCardProps {
@@ -59,7 +59,6 @@ export function IdeaCard({ idea, onClick }: IdeaCardProps) {
       onClick={onClick}
       className={`w-full text-left p-4 rounded-2xl border ${styles.bg} ${styles.border} hover:shadow-sm transition-all group`}
     >
-      {/* Stage badge */}
       <div className="flex items-center gap-1.5 mb-3">
         <div className={`w-1.5 h-1.5 rounded-full ${styles.dot}`} />
         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${styles.badge}`}>
@@ -67,22 +66,18 @@ export function IdeaCard({ idea, onClick }: IdeaCardProps) {
         </span>
       </div>
 
-      {/* Title */}
       <h4 className="text-[#2E2620] font-['Fraunces',serif] text-base leading-snug mb-1.5 group-hover:text-[#4A7C59] transition-colors line-clamp-2">
         {idea.title}
       </h4>
 
-      {/* Vernacular name */}
       {idea.vernacularName && (
         <p className="text-xs text-[#7A6B60] italic mb-2 line-clamp-1">"{idea.vernacularName}"</p>
       )}
 
-      {/* Problem snippet */}
       {idea.problemStatement && (
         <p className="text-xs text-[#7A6B60] line-clamp-2 mb-3">{idea.problemStatement}</p>
       )}
 
-      {/* Footer */}
       <div className="flex items-center justify-between mt-auto pt-2 border-t border-[#E4D9CC]/60">
         <span className="text-xs text-[#A89A8E]">{idea.createdByProducerName}</span>
         <span className="text-xs text-[#A89A8E]">{timeAgo}</span>

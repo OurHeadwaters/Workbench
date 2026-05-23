@@ -5,7 +5,7 @@ import {
   type NurseryProducer,
   type IdeaStage,
   type StageHistoryEntry,
-} from "@/lib/api";
+} from "../lib/api";
 import { ArrowLeft, Leaf, Pencil, Trash2, X, AlertTriangle } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 
@@ -87,16 +87,12 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
   }
 
   if (loading) {
-    return (
-      <div className="min-h-dvh bg-[#FAF6F0] flex items-center justify-center">
-        <p className="text-sm text-[#7A6B60]">Loading…</p>
-      </div>
-    );
+    return <div className="flex items-center justify-center py-16"><p className="text-sm text-[#7A6B60]">Loading…</p></div>;
   }
 
   if (error && !idea) {
     return (
-      <div className="min-h-dvh bg-[#FAF6F0] flex items-center justify-center p-6">
+      <div className="flex items-center justify-center py-16 p-6">
         <div className="text-center">
           <p className="text-sm text-[#C7613B] mb-4">{error}</p>
           <button onClick={onBack} className="text-sm text-[#4A7C59] underline">Go back</button>
@@ -112,54 +108,51 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
   const transitions = ALLOWED_TRANSITIONS[idea.stage];
 
   return (
-    <div className="min-h-dvh bg-[#FAF6F0]">
-      {/* Header */}
-      <header className="bg-[#FFFDF9] border-b border-[#E4D9CC] px-6 py-4 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
-          <button onClick={onBack} className="flex items-center gap-2 text-sm text-[#7A6B60] hover:text-[#2E2620] transition-colors min-h-[36px]">
-            <ArrowLeft className="w-4 h-4" />
-            Garden floor
-          </button>
-          <div className="flex items-center gap-2">
-            {producer.isSteward && !idea.isDraft && idea.stage !== "graduated" && transitions.length > 0 && (
-              <button
-                onClick={() => setShowStageMove(true)}
-                className="px-3 py-2 rounded-lg text-xs bg-[#EBF3EE] text-[#4A7C59] hover:bg-[#D9EBE1] transition-colors min-h-[36px]"
-              >
-                Move stage
-              </button>
-            )}
-            {producer.isSteward && idea.isDraft && (
-              <button
-                onClick={approveDraft}
-                className="px-3 py-2 rounded-lg text-xs bg-[#4A7C59] text-white hover:bg-[#3D6B4A] transition-colors min-h-[36px]"
-              >
-                Approve idea
-              </button>
-            )}
-            {producer.isSteward && (
-              <button
-                onClick={() => setShowEditCore(true)}
-                className="p-2 rounded-lg text-[#4A7C59] hover:bg-[#EBF3EE] transition-colors min-h-[36px]"
-                title="Edit idea"
-              >
-                <Pencil className="w-3.5 h-3.5" />
-              </button>
-            )}
-            {producer.isSteward && (
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="p-2 rounded-lg text-[#C7613B] hover:bg-[#FEF3EE] transition-colors min-h-[36px]"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
+    <div>
+      {/* Back + actions bar */}
+      <div className="flex items-center justify-between gap-4 mb-8 pb-4 border-b border-[#E4D9CC]">
+        <button onClick={onBack} className="flex items-center gap-2 text-sm text-[#7A6B60] hover:text-[#2E2620] transition-colors min-h-[36px]">
+          <ArrowLeft className="w-4 h-4" />
+          Garden floor
+        </button>
+        <div className="flex items-center gap-2">
+          {producer.isSteward && !idea.isDraft && idea.stage !== "graduated" && transitions.length > 0 && (
+            <button
+              onClick={() => setShowStageMove(true)}
+              className="px-3 py-2 rounded-lg text-xs bg-[#EBF3EE] text-[#4A7C59] hover:bg-[#D9EBE1] transition-colors min-h-[36px]"
+            >
+              Move stage
+            </button>
+          )}
+          {producer.isSteward && idea.isDraft && (
+            <button
+              onClick={approveDraft}
+              className="px-3 py-2 rounded-lg text-xs bg-[#4A7C59] text-white hover:bg-[#3D6B4A] transition-colors min-h-[36px]"
+            >
+              Approve idea
+            </button>
+          )}
+          {producer.isSteward && (
+            <button
+              onClick={() => setShowEditCore(true)}
+              className="p-2 rounded-lg text-[#4A7C59] hover:bg-[#EBF3EE] transition-colors min-h-[36px]"
+              title="Edit idea"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </button>
+          )}
+          {producer.isSteward && (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="p-2 rounded-lg text-[#C7613B] hover:bg-[#FEF3EE] transition-colors min-h-[36px]"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
-      </header>
+      </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-8 space-y-8">
-        {/* Stage badge */}
+      <div className="max-w-3xl space-y-8">
         <div>
           <span className={`inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full font-medium ${styles.badge}`}>
             <Leaf className="w-3 h-3" />
@@ -167,7 +160,6 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
           </span>
         </div>
 
-        {/* Title */}
         <div>
           <h1 className="text-3xl text-[#2E2620] leading-snug mb-2">{idea.title}</h1>
           <p className="text-sm text-[#7A6B60]">
@@ -175,14 +167,12 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
           </p>
         </div>
 
-        {/* Problem statement */}
         {idea.problemStatement && (
           <Section title="Problem statement">
             <p className="text-[#2E2620] text-sm leading-relaxed whitespace-pre-wrap">{idea.problemStatement}</p>
           </Section>
         )}
 
-        {/* Both-sides panel */}
         {(idea.vernacularName || idea.massityName) && (
           <Section title="Both sides of the fence">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -206,7 +196,6 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
           </Section>
         )}
 
-        {/* Steward notes */}
         {producer.isSteward && (
           <Section
             title="Steward notes"
@@ -227,14 +216,12 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
           </Section>
         )}
 
-        {/* Stage history */}
         {idea.stageHistory && (idea.stageHistory as StageHistoryEntry[]).length > 0 && (
           <Section title="Movement log">
             <StageTimeline history={idea.stageHistory as StageHistoryEntry[]} initialStage="nursery" />
           </Section>
         )}
 
-        {/* Comments */}
         <Section title={`Discussion (${idea.comments.length})`}>
           <div className="space-y-4 mb-4">
             {idea.comments.length === 0 ? (
@@ -281,7 +268,6 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
         )}
       </div>
 
-      {/* Stage move modal */}
       {showStageMove && (
         <StageMoveModal
           idea={idea}
@@ -291,7 +277,6 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
         />
       )}
 
-      {/* Delete confirm modal */}
       {showDeleteConfirm && (
         <DeleteConfirmModal
           title={idea.title}
@@ -303,7 +288,6 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
         />
       )}
 
-      {/* Edit notes modal */}
       {showEditNotes && (
         <EditNotesModal
           current={idea.stewardNotes}
@@ -316,7 +300,6 @@ export function IdeaBriefPage({ ideaId, producer, onBack }: IdeaBriefPageProps) 
         />
       )}
 
-      {/* Edit core fields modal */}
       {showEditCore && (
         <EditCoreFieldsModal
           idea={idea}
@@ -360,7 +343,7 @@ function TranslationPanel({ label, subtitle, text, accent, bg, border }: {
   );
 }
 
-function StageTimeline({ history, initialStage }: { history: StageHistoryEntry[]; initialStage: IdeaStage }) {
+function StageTimeline({ history }: { history: StageHistoryEntry[]; initialStage: IdeaStage }) {
   const dotColors: Record<IdeaStage, string> = {
     nursery: "#4A7C59",
     fodder: "#C7613B",

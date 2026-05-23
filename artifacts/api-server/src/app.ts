@@ -72,14 +72,6 @@ if (fs.existsSync(sandboxDist)) {
   });
 }
 
-// Serve nursery SPA at /nursery/ — Zone 4 producer idea workspace
-const nurseryDist = new URL("../../nursery/dist/public", import.meta.url).pathname;
-if (fs.existsSync(nurseryDist)) {
-  app.use("/nursery", express.static(nurseryDist));
-  app.get("/nursery/*path", (_req, res) => {
-    res.sendFile(path.join(nurseryDist, "index.html"));
-  });
-}
 
 // Serve field-guide-finance SPA at /field-guide-finance/
 const fieldGuideFinanceDist = new URL("../../field-guide-finance/dist/public", import.meta.url).pathname;

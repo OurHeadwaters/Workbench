@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { NeighbourhoodBadge } from "@workspace/zone-store";
-import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat, ShieldAlert, UserCog } from "lucide-react";
+import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat, ShieldAlert, UserCog, Leaf, ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,11 @@ function useConfidentialCount() {
   return count;
 }
 
+const NURSERY_NAV_ITEMS = [
+  { href: "/nursery", label: "Garden Floor", icon: Leaf },
+  { href: "/nursery/onboarding", label: "Steward Onboarding", icon: Leaf },
+];
+
 const NAV_ITEMS = [
   { href: "/", label: "Library", icon: Home },
   { href: "/entries", label: "Entries", icon: BookOpen },
@@ -43,6 +48,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const { logout } = useOwnerAuth();
   const confidentialCount = useConfidentialCount();
+  const isInNursery = location.startsWith("/nursery");
+  const [nurseryOpen, setNurseryOpen] = useState(isInNursery);
 
   return (
     <div className="min-h-[100dvh] flex flex-col md:flex-row bg-background">
@@ -87,6 +94,40 @@ export default function Layout({ children }: { children: ReactNode }) {
               </Link>
             );
           })}
+
+          {/* Zone 4 Nursery — collapsible section */}
+          <div className="pt-3 mt-3 border-t border-border">
+            <button
+              onClick={() => setNurseryOpen((o) => !o)}
+              className="w-full flex items-center gap-2 px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground hover:text-sidebar-foreground transition-colors"
+            >
+              <Leaf className="h-3 w-3 text-[#4A7C59]" />
+              <span className="flex-1 text-left">Zone 4 Nursery</span>
+              {nurseryOpen ? (
+                <ChevronDown className="h-3 w-3" />
+              ) : (
+                <ChevronRight className="h-3 w-3" />
+              )}
+            </button>
+            {nurseryOpen && NURSERY_NAV_ITEMS.map((item) => {
+              const isActive = location === item.href || (item.href !== "/nursery" && location.startsWith(item.href));
+              return (
+                <Link key={item.href} href={item.href}>
+                  <div
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all cursor-pointer",
+                      isActive
+                        ? "bg-[#EBF3EE] text-[#4A7C59]"
+                        : "text-sidebar-foreground hover:bg-[#EBF3EE] hover:text-[#4A7C59]"
+                    )}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    <span className="flex-1">{item.label}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </nav>
         <div className="p-4 border-t border-border">
           <Button

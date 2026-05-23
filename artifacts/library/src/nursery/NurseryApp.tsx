@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
-import { Switch, Route, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { api, type NurseryProducer } from "./lib/api";
 import { LoginPage } from "./pages/LoginPage";
 import { GardenFloorPage } from "./pages/GardenFloorPage";
 import { IdeaBriefPage } from "./pages/IdeaBriefPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-
-export default function App() {
+export function NurseryApp() {
   const [producer, setProducer] = useState<NurseryProducer | null>(null);
   const [loading, setLoading] = useState(true);
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
 
   useEffect(() => {
     api.me()
@@ -23,21 +21,21 @@ export default function App() {
   function handleAuth(p: NurseryProducer, isFreshSteward?: boolean) {
     setProducer(p);
     if (isFreshSteward) {
-      navigate(`${BASE}/onboarding`);
+      navigate("/nursery/onboarding");
     } else {
-      navigate(`${BASE}/`);
+      navigate("/nursery");
     }
   }
 
   async function handleSignOut() {
     await api.logout().catch(() => {});
     setProducer(null);
-    navigate(`${BASE}/`);
+    navigate("/nursery");
   }
 
   if (loading) {
     return (
-      <div className="min-h-dvh bg-[#FAF6F0] flex items-center justify-center">
+      <div className="flex items-center justify-center py-16">
         <div className="text-[#7A6B60] text-sm">Loading…</div>
       </div>
     );
@@ -47,23 +45,20 @@ export default function App() {
     return <LoginPage onAuth={handleAuth} />;
   }
 
-  return (
-    <Switch>
-      <Route path={`${BASE}/onboarding`}>
-        <OnboardingPage producer={producer} onDone={() => navigate(`${BASE}/`)} />
-      </Route>
-      <Route path={`${BASE}/idea/:id`}>
-        {(params) => (
-          <IdeaBriefPage
-            ideaId={params.id}
-            producer={producer}
-            onBack={() => navigate(`${BASE}/`)}
-          />
-        )}
-      </Route>
-      <Route>
-        <GardenFloorPage producer={producer} onSignOut={handleSignOut} />
-      </Route>
-    </Switch>
-  );
+  if (location === "/nursery/onboarding") {
+    return <OnboardingPage producer={producer} onDone={() => navigate("/nursery")} />;
+  }
+
+  const ideaMatch = location.match(/^\/nursery\/idea\/([^/]+)$/);
+  if (ideaMatch) {
+    return (
+      <IdeaBriefPage
+        ideaId={ideaMatch[1]}
+        producer={producer}
+        onBack={() => navigate("/nursery")}
+      />
+    );
+  }
+
+  return <GardenFloorPage producer={producer} onSignOut={handleSignOut} />;
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api, type NurseryProducer, type CreateIdeaInput } from "@/lib/api";
+import { api, type NurseryProducer, type CreateIdeaInput } from "../lib/api";
 import { Leaf, ChevronRight, Check } from "lucide-react";
 
 interface OnboardingPageProps {
@@ -48,10 +48,9 @@ export function OnboardingPage({ producer, onDone }: OnboardingPageProps) {
   const stepIdx = steps.indexOf(step);
 
   return (
-    <div className="min-h-dvh bg-[#FAF6F0] flex flex-col">
-      {/* Progress dots */}
+    <div className="flex flex-col">
       {step !== "done" && (
-        <div className="flex items-center justify-center gap-2 pt-8 pb-2">
+        <div className="flex items-center justify-center gap-2 pb-6">
           {steps.map((s, i) => (
             <div
               key={s}
@@ -63,7 +62,7 @@ export function OnboardingPage({ producer, onDone }: OnboardingPageProps) {
         </div>
       )}
 
-      <div className="flex-1 flex flex-col items-center justify-center p-6">
+      <div className="flex flex-col items-center">
         <div className="w-full max-w-lg">
           {step === "welcome" && (
             <WelcomeStep producerName={producer.name} onNext={() => setStep("problem")} />

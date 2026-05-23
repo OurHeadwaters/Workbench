@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api, type NurseryProducer } from "@/lib/api";
+import { api, type NurseryProducer } from "../lib/api";
 import { Eye, EyeOff, Leaf } from "lucide-react";
 
 interface LoginPageProps {
@@ -38,7 +38,7 @@ export function LoginPage({ onAuth }: LoginPageProps) {
   }
 
   return (
-    <div className="min-h-dvh bg-[#FAF6F0] flex flex-col items-center justify-center p-6">
+    <div className="flex flex-col items-center justify-center py-12 px-6">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#EBF3EE] mb-4">

@@ -1,5 +1,4 @@
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-const API = `${BASE.replace("/nursery", "")}/api/nursery`;
+const API = `/api/nursery`;
 
 async function req<T>(method: string, path: string, body?: unknown): Promise<T> {
   const res = await fetch(`${API}${path}`, {
@@ -19,7 +18,6 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
 }
 
 export const api = {
-  // Auth
   join: (name: string, passphrase: string, inviteCode?: string) =>
     req<{ producer: NurseryProducer }>("POST", "/producers", { name, passphrase, inviteCode }),
   login: (name: string, passphrase: string) =>
@@ -27,13 +25,11 @@ export const api = {
   logout: () => req<void>("DELETE", "/sessions"),
   me: () => req<NurseryProducer>("GET", "/me"),
 
-  // Invites (steward only)
   listInvites: () => req<NurseryInvite[]>("GET", "/invites"),
   createInvite: (note: string, isStewardInvite: boolean) =>
     req<NurseryInvite>("POST", "/invites", { note, isStewardInvite }),
   revokeInvite: (id: string) => req<void>("DELETE", `/invites/${id}`),
 
-  // Ideas
   listIdeas: () => req<NurseryIdea[]>("GET", "/ideas"),
   getIdea: (id: string) => req<NurseryIdeaDetail>("GET", `/ideas/${id}`),
   createIdea: (data: CreateIdeaInput) => req<NurseryIdea>("POST", "/ideas", data),
@@ -42,7 +38,6 @@ export const api = {
   moveStage: (id: string, stage: IdeaStage, note?: string, graduationReason?: string) =>
     req<NurseryIdea>("POST", `/ideas/${id}/stage`, { stage, note, graduationReason }),
 
-  // Comments
   listComments: (ideaId: string) => req<NurseryComment[]>("GET", `/ideas/${ideaId}/comments`),
   addComment: (ideaId: string, body: string) =>
     req<NurseryComment>("POST", `/ideas/${ideaId}/comments`, { body }),
