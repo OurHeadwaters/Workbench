@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { NeighbourhoodBadge } from "@workspace/zone-store";
-import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat, ShieldAlert, UserCog, Leaf, ChevronDown, ChevronRight } from "lucide-react";
+import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat, ShieldAlert, UserCog, Leaf, Sprout, UserPlus, ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { Button } from "@/components/ui/button";
@@ -24,8 +24,8 @@ function useConfidentialCount() {
 }
 
 const NURSERY_NAV_ITEMS = [
-  { href: "/nursery", label: "Garden Floor", icon: Leaf },
-  { href: "/nursery/onboarding", label: "Steward Onboarding", icon: Leaf },
+  { href: "/nursery", label: "Garden Floor", icon: Sprout },
+  { href: "/nursery/onboarding", label: "Steward Onboarding", icon: UserPlus },
 ];
 
 const NAV_ITEMS = [
