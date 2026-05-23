@@ -33,6 +33,12 @@ Q5 — How should we speak about practitioner licensing so it feels like natural
 Q6 — What one decision or next action carries the most weight from what we've heard?
      Saltbox leads. (Does this hold?)
 
+Q7 — Does the current language in North Star hold the accountability philosophy precisely —
+     flexible structure for founders wired for urgency, without breaking under anxiety or
+     letting others down? Are we using the right visions, the right words, and do we have
+     the discipline not to substitute words that don't fit?
+     Codetry leads.
+
 Run tight. Bobbie listens for the rods. Finish with clear decisions on
 readiness, language, and licensing.
 
@@ -132,6 +138,10 @@ TODAY'S OPEN QUESTIONS (bring these to the table)
    What language lands? What do we stop calling them?
 5. Which artifact is the front door for a new client coming in cold?
 6. How do we talk about practitioner licensing?
+7. A 3-month LTC study moved participation from 27% to 78% by giving people the right system —
+   not more motivation. Entrepreneurs are wired differently and have never had the right tools.
+   Does the same model apply? Is the Headwaters toolkit the container that closes that gap?
+   What does this mean for how we talk about what we're building?
 
 ---
 VOCABULARY (load-bearing terms — use precisely)
