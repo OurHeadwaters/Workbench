@@ -113,7 +113,7 @@ Q4 — What naming and framing feels clean, honest, and free of drift for the
 
 Q5 — How should we speak about practitioner licensing so it feels like natural
      extension rather than add-on?
-     Grok leads. (Direct whiteboard.)
+     Smith leads. (Direct whiteboard.)
 
 Q6 — What one decision or next action carries the most weight from what we've heard?
      Saltbox leads. (Does this hold?)
@@ -127,7 +127,7 @@ Q7 — Does the current language in North Star hold the accountability philosoph
 Q8 — The Hearth: a digital creative hub for kids using AI image generation. Where does it
      belong in the bundle stack — Bundle B (Family & Homeschool), Bundle E (Full Sovereign
      Stack), or does it need its own lane? And who leads the build?
-     Grok leads. (Direct whiteboard.)
+     Smith leads. (Direct whiteboard.)
 
 Q9 — A crypto/digital privacy onboarding guide for community members ("normies"), seeded
      from a real Dryden event presentation. Does this live as a standalone artifact, or
@@ -144,7 +144,7 @@ readiness, language, and licensing.
 WHO IS AT THIS TABLE
 This table has six named seats and two open/configurable seats.
 Saltbox (⊡) is Bobbie's Z0 agent — preserve, slow down, cure.
-Grok (◈) is the raw AI whiteboard — direct, honest, no hedging.
+Smith (⚒) is the forge — shapes raw thinking into something you can hold.
 Systems (⟳) sees through stocks, flows, and leverage points.
 Community (⌂) thinks from Schumacher and Jacobs — human scale.
 Codetry (☷) holds the naming discipline and zone model.
@@ -299,15 +299,23 @@ You are not a validator. You are a curing process.`,
   },
   {
     id: "grok",
-    name: "Grok",
-    icon: "◈",
-    color: "#4F46E5",
-    bgClass: "bg-indigo-50",
-    borderClass: "border-indigo-200",
+    name: "Smith",
+    icon: "⚒",
+    color: "#5C3D2E",
+    bgClass: "bg-stone-50",
+    borderClass: "border-stone-300",
     model: "x-ai/grok-4.20",
     configurable: false,
-    description: "Raw AI — direct, honest, no hedging",
-    systemPrompt: `You are a direct, honest AI advisor sitting at a kitchen table with a community economy founder. You give concrete, well-reasoned answers. You do not hedge unnecessarily. Short paragraphs. Plain language. When asked for design advice or a sounding board, you engage fully and push back where the thinking is weak. You know about community economics, naming discipline, trust systems, and cooperative structures.`,
+    description: "Forge — shapes raw thinking into something you can hold",
+    systemPrompt: `You are Smith — the community blacksmith and the boardroom presence who arrives with the marker already uncapped.
+
+Your function: take what is loose and shape it into something that can be held and used. A smith follows the properties of the material. You cannot hammer mud into a hinge. When an idea cannot hold the shape it needs, you say so and say why. When it can, you show what it looks like finished.
+
+At this table you are direct and concrete. You write on the board. Short paragraphs. No hedging. You push back when the thinking is soft — not to be difficult, but because a thing that won't hold in the forge won't hold in the field.
+
+You know community economics, naming discipline, preparedness thinking, cooperative structure, and the difference between a tool the community will actually use and one that sounds good in a meeting.
+
+When something is ready, say it is ready. When it needs another pass, name the pass. When the material is wrong for the job, name the material.`,
   },
   {
     id: "systems",
@@ -453,10 +461,10 @@ const TEMPLATES: SessionTemplate[] = [
       { q: "Q2", question: "What are the clearest stocks and flows in our current platform that make a bundle actually deliver value?", lead: "Systems", leadId: "systems" },
       { q: "Q3", question: "Where do we see the strongest human-scale economic fit for these bundles right now?", lead: "Community", leadId: "community" },
       { q: "Q4", question: "What naming and framing feels clean, honest, and free of drift for the bundles and for practitioner licensing?", lead: "Codetry", leadId: "codetry" },
-      { q: "Q5", question: "How should we speak about practitioner licensing so it feels like natural extension rather than add-on?", lead: "Grok", leadId: "grok" },
+      { q: "Q5", question: "How should we speak about practitioner licensing so it feels like natural extension rather than add-on?", lead: "Smith", leadId: "grok" },
       { q: "Q6", question: "What one decision or next action carries the most weight from what we've heard?", lead: "Saltbox", leadId: "saltbox" },
       { q: "Q7", question: "Does the current language in North Star hold the accountability philosophy precisely — flexible structure for founders wired for urgency, without breaking under anxiety or letting others down? Are we using the right visions, the right words, and do we have the discipline not to substitute words that don't fit?", lead: "Codetry", leadId: "codetry" },
-      { q: "Q8", question: "The Hearth: a digital creative hub for kids using AI image generation. Where does it belong in the bundle stack — Bundle B (Family & Homeschool), Bundle E (Full Sovereign Stack), or does it need its own lane? And who leads the build?", lead: "Grok", leadId: "grok" },
+      { q: "Q8", question: "The Hearth: a digital creative hub for kids using AI image generation. Where does it belong in the bundle stack — Bundle B (Family & Homeschool), Bundle E (Full Sovereign Stack), or does it need its own lane? And who leads the build?", lead: "Smith", leadId: "grok" },
       { q: "Q9", question: "A crypto/digital privacy onboarding guide for community members (\"normies\"), seeded from a real Dryden event presentation. Does this live as a standalone artifact, or does it fold into an existing one (Handbook, Library, etc.)? Who is the right audience and who holds it?", lead: "Community", leadId: "community" },
       { q: "Q10", question: "Deadhead, the founder-only vetting tool — read it on two axes. Financial model fit: can it carry subscription pricing, the 807 free-access cost, and trial-to-paid conversion the way the rest of the constellation does? Software fit: does it belong in the constellation as a platform product at all, or is it a private founder tool dressed up as one? Name the real tension before more is invested.", lead: "Saltbox", leadId: "saltbox" },
     ],
@@ -479,7 +487,7 @@ Q1 — What shipped, held, or moved this week? (Saltbox)
 Q2 — Where are the stocks thinned or flows blocked? (Systems)
 Q3 — What is the community or client signal? (Community)
 Q4 — What language needs cleaning or tightening? (Codetry)
-Q5 — What is the one right move for next week? (Grok)
+Q5 — What is the one right move for next week? (Smith)
 Q6 — What story did this week's moves enact — Taker or Leaver? (Ishmael)
 
 GROUND RULES
@@ -492,7 +500,7 @@ GROUND RULES
       { q: "Q2", question: "Where are the stocks thinned or the flows blocked right now?", lead: "Systems", leadId: "systems" },
       { q: "Q3", question: "What is the community or client signal this week?", lead: "Community", leadId: "community" },
       { q: "Q4", question: "What language or framing needs cleaning or tightening?", lead: "Codetry", leadId: "codetry" },
-      { q: "Q5", question: "What is the one right move to open next week well?", lead: "Grok", leadId: "grok" },
+      { q: "Q5", question: "What is the one right move to open next week well?", lead: "Smith", leadId: "grok" },
       { q: "Q6", question: "What story did this week's moves enact — Taker or Leaver? Where did we drift toward ownership when stewardship was the right frame?", lead: "Ishmael", leadId: "ishmael" },
     ],
   },
@@ -515,7 +523,7 @@ Q1 — What actually happened this month? Hold what held. Name what didn't. (Sal
 Q2 — Where did the stocks grow or deplete? What does the system health look like? (Systems)
 Q3 — What shifted in the community, the market, or with clients this month? (Community)
 Q4 — What new language or vocabulary emerged that's worth keeping? (Codetry)
-Q5 — Are we still pointed in the right direction? What do the roles and targets say? (Grok)
+Q5 — Are we still pointed in the right direction? What do the roles and targets say? (Smith)
 Q6 — What is one commitment to sharpen the saw — capacity, rest, or learning? (Community)
 Q7 — Which story did this month enact — Taker or Leaver? Where did ownership language creep in where stewardship belonged? (Ishmael)
 Q8 — What are the two or three clear targets for next month? Name them. (Saltbox — does this hold?)
@@ -530,7 +538,7 @@ GROUND RULES
       { q: "Q2", question: "Where did the stocks grow or deplete? What is the system health right now?", lead: "Systems", leadId: "systems" },
       { q: "Q3", question: "What shifted in the community, the market, or with clients this month?", lead: "Community", leadId: "community" },
       { q: "Q4", question: "What new language or vocabulary emerged that's worth keeping?", lead: "Codetry", leadId: "codetry" },
-      { q: "Q5", question: "Are we still pointed in the right direction? What do the roles and targets say?", lead: "Grok", leadId: "grok" },
+      { q: "Q5", question: "Are we still pointed in the right direction? What do the roles and targets say?", lead: "Smith", leadId: "grok" },
       { q: "Q6", question: "What is one commitment to sharpen the saw — capacity, rest, or learning?", lead: "Community", leadId: "community" },
       { q: "Q7", question: "Which story did this month enact — Taker or Leaver? Where did ownership language creep in where stewardship belonged?", lead: "Ishmael", leadId: "ishmael" },
       { q: "Q8", question: "What are the two or three clear targets for next month? Name them.", lead: "Saltbox", leadId: "saltbox" },
