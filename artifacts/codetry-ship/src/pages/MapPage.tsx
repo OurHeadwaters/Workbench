@@ -833,6 +833,11 @@ export function MapPage() {
   }
 
   function handleChange() {
+    try {
+      localStorage.removeItem(QUIZ_STORAGE_KEY);
+    } catch {
+      /* storage unavailable */
+    }
     setQuiz({ who: null, situation: null, skipped: false });
     setQuizCollapsed(false);
   }
