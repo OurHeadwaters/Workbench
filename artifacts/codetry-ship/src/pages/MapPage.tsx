@@ -46,6 +46,65 @@ function resolveHighlightedTools(quiz: QuizState): string[] {
   return TOOL_HIGHLIGHT_MAP[`${quiz.who}:${quiz.situation}`] ?? [];
 }
 
+interface HeaderContent {
+  h1: string;
+  intro: string;
+}
+
+function resolveHeaderContent(quiz: QuizState): HeaderContent {
+  const defaultHeader: HeaderContent = {
+    h1: "Six zones. One neighbourhood.",
+    intro:
+      "If you just arrived — from The Train, a shared link, or a QR code on a poster — this is the map. Each zone is a different kind of place. Pick the door that matches what you need.",
+  };
+  if (quiz.skipped || quiz.who === null || quiz.situation === null)
+    return defaultHeader;
+
+  if (quiz.who === "household" && quiz.situation === "normal") {
+    return {
+      h1: "You're in Zone 0 — The Saltbox.",
+      intro:
+        "Your household is your first zone. The saltbox holds what you need before winter comes — kit checked, roles assigned, everything in its place.",
+    };
+  }
+  if (quiz.who === "household" && quiz.situation === "standby") {
+    return {
+      h1: "You're in Zone 0 — The Saltbox, with Zone 3 on watch.",
+      intro:
+        "The saltbox is open and the network is watching alongside you. Your household roles are live, and Zone 3 has eyes on the horizon.",
+    };
+  }
+  if (quiz.who === "practitioner" && quiz.situation === "normal") {
+    return {
+      h1: "You're in Zone 2 — The Bench.",
+      intro:
+        "Planning season. Strategy on the bench, research in the library, the operating plan open. Your practitioner tools are ready when you are.",
+    };
+  }
+  if (quiz.who === "practitioner" && quiz.situation === "standby") {
+    return {
+      h1: "You're in Zone 2 — The Bench, with Zone 3 on watch.",
+      intro:
+        "Execution season. Your bench is live, clients are moving, and Zone 3 has the standby ladder active. The tools are hot.",
+    };
+  }
+  if (quiz.who === "community" && quiz.situation === "normal") {
+    return {
+      h1: "You're in Zone 4 — Community Hall.",
+      intro:
+        "Deliberation. The hall is set up, evidence is on the table, and the research library is open. No decision required yet — just good preparation.",
+    };
+  }
+  if (quiz.who === "community" && quiz.situation === "standby") {
+    return {
+      h1: "You're in Zone 4 — Community Hall, with Zone 3 on watch.",
+      intro:
+        "Session active. Decisions are being made, the hall is open, and Zone 3 pilots are standing by. The community is present.",
+    };
+  }
+  return defaultHeader;
+}
+
 function resolveCtaCopy(quiz: QuizState): string {
   if (quiz.skipped || quiz.who === null || quiz.situation === null)
     return "Pack your kit — Begin the Odyssey →";
@@ -753,6 +812,7 @@ export function MapPage() {
   const highlightedTools = resolveHighlightedTools(quiz);
   const quizActive = !quiz.skipped && (quiz.who !== null || quiz.situation !== null);
   const quizComplete = !quiz.skipped && quiz.who !== null && quiz.situation !== null;
+  const headerContent = resolveHeaderContent(quiz);
 
   function handleQuizChange(next: Partial<QuizState>) {
     const updated = { ...quiz, ...next };
@@ -840,9 +900,10 @@ export function MapPage() {
               color: FOREST,
               lineHeight: 1.15,
               margin: "0 0 14px",
+              transition: "opacity 0.25s",
             }}
           >
-            Six zones. One neighbourhood.
+            {headerContent.h1}
           </h1>
           <p
             style={{
@@ -851,9 +912,10 @@ export function MapPage() {
               lineHeight: 1.65,
               maxWidth: 560,
               margin: "0 0 16px",
+              transition: "opacity 0.25s",
             }}
           >
-            If you just arrived — from The Train, a shared link, or a QR code on a poster — this is the map. Each zone is a different kind of place. Pick the door that matches what you need.
+            {headerContent.intro}
           </p>
 
           {/* Quiz — collapsed summary on return visits, full quiz otherwise */}
