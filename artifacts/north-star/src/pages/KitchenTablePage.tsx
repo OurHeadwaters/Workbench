@@ -39,6 +39,17 @@ Q7 — Does the current language in North Star hold the accountability philosoph
      the discipline not to substitute words that don't fit?
      Codetry leads.
 
+Q8 — The Hearth: a digital creative hub for kids using AI image generation. Where does it
+     belong in the bundle stack — Bundle B (Family & Homeschool), Bundle E (Full Sovereign
+     Stack), or does it need its own lane? And who leads the build?
+     Grok leads. (Direct whiteboard.)
+
+Q9 — A crypto/digital privacy onboarding guide for community members ("normies"), seeded
+     from a real Dryden event presentation. Does this live as a standalone artifact, or
+     does it fold into an existing one (Handbook, Library, etc.)? Who is the right audience
+     and who holds it?
+     Community leads.
+
 Run tight. Bobbie listens for the rods. Finish with clear decisions on
 readiness, language, and licensing.
 
@@ -325,6 +336,8 @@ const TEMPLATES: SessionTemplate[] = [
       { q: "Q5", question: "How should we speak about practitioner licensing so it feels like natural extension rather than add-on?", lead: "Grok", leadId: "grok" },
       { q: "Q6", question: "What one decision or next action carries the most weight from what we've heard?", lead: "Saltbox", leadId: "saltbox" },
       { q: "Q7", question: "Does the current language in North Star hold the accountability philosophy precisely — flexible structure for founders wired for urgency, without breaking under anxiety or letting others down? Are we using the right visions, the right words, and do we have the discipline not to substitute words that don't fit?", lead: "Codetry", leadId: "codetry" },
+      { q: "Q8", question: "The Hearth: a digital creative hub for kids using AI image generation. Where does it belong in the bundle stack — Bundle B (Family & Homeschool), Bundle E (Full Sovereign Stack), or does it need its own lane? And who leads the build?", lead: "Grok", leadId: "grok" },
+      { q: "Q9", question: "A crypto/digital privacy onboarding guide for community members (\"normies\"), seeded from a real Dryden event presentation. Does this live as a standalone artifact, or does it fold into an existing one (Handbook, Library, etc.)? Who is the right audience and who holds it?", lead: "Community", leadId: "community" },
     ],
   },
   {
