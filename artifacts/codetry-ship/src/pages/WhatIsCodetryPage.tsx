@@ -1,3 +1,5 @@
+import { StompingPath } from "@/components/StompingPath";
+
 export function WhatIsCodetryPage() {
   const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
 
@@ -333,6 +335,11 @@ export function WhatIsCodetryPage() {
             ))}
           </div>
         </section>
+
+        <hr className="my-12 sm:my-14" style={{ borderColor: "hsl(var(--card-border))" }} />
+
+        {/* ── Stomping Path ── */}
+        <StompingPath />
 
         <hr className="my-12 sm:my-14" style={{ borderColor: "hsl(var(--card-border))" }} />
 
