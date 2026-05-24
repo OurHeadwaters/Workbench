@@ -19,6 +19,7 @@ import { ArchiveMiningPage } from "@/pages/ArchiveMiningPage";
 import { ZoneDiagramPage } from "@/pages/ZoneDiagramPage";
 import { KitchenTablePage } from "@/pages/KitchenTablePage";
 import { MeetingKitPage } from "@/pages/MeetingKitPage";
+import { MoneyMachinePage } from "@/pages/MoneyMachinePage";
 import { GordWidget } from "@workspace/gord-widget";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -145,6 +146,12 @@ export default function App() {
         <Route path="/council">
           <AppShell>
             <KitchenTablePage />
+          </AppShell>
+        </Route>
+
+        <Route path="/money-machine">
+          <AppShell>
+            <MoneyMachinePage />
           </AppShell>
         </Route>
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp, Bookmark, BookmarkCheck, ExternalLink } from "lucide-react";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
+import { MoneyMachineDiagram } from "@/components/MoneyMachineDiagram";
 
 interface FoundationalDoc {
   id: string;
@@ -368,6 +369,28 @@ function ChapterCard({ chapter }: { chapter: Chapter }) {
   );
 }
 
+function MoneyMachineDiagramToggle() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3 min-h-[48px] text-left"
+      >
+        <span className="text-sm text-[#44403C]">
+          {open ? "Hide diagram" : "See how it works — the plumbing diagram"}
+        </span>
+        {open ? <ChevronUp size={15} className="text-[#78716C]" /> : <ChevronDown size={15} className="text-[#78716C]" />}
+      </button>
+      {open && (
+        <div className="border-t border-[#E7E5E4] px-3 pt-3 pb-4">
+          <MoneyMachineDiagram />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function GuidePage() {
   const statement = useStore((s) => s.statement);
 
@@ -408,7 +431,10 @@ export function GuidePage() {
             </p>
             <div className="space-y-2">
               {FOUNDATIONAL_DOCS.map((doc) => (
-                <FoundationalDocCard key={doc.id} doc={doc} />
+                <div key={doc.id} className="space-y-2">
+                  <FoundationalDocCard doc={doc} />
+                  {doc.id === "money-machine" && <MoneyMachineDiagramToggle />}
+                </div>
               ))}
             </div>
           </div>
