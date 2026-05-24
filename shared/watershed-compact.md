@@ -145,3 +145,72 @@ The Watershed Compact is the operating system. It is not a brand guide or a miss
 **Versioning:**
 - This is Version 1, anchored May 2026.
 - Updates require a deliberate decision, not a drift. The version number must increment and a note must be added above naming what changed and why.
+
+---
+
+## Permaculture Design Framework
+
+*Appended Version 1 · May 2026*
+
+Headwaters is built on permaculture principles — not as metaphor, but as working design logic. The framework below maps directly to how decisions get made, how authority flows, and how the system behaves over time.
+
+---
+
+### Design Ethic
+
+Three ethics underpin everything:
+
+1. **Care for Earth** — The land sustains the people. The people are responsible for the land. Extraction without restoration is a form of theft from future generations.
+2. **Care for People** — Serve the needs of people fairly, starting with those who have been most systematically excluded from ownership and self-determination.
+3. **Return of Surplus** — Wealth generated in the watershed stays in the watershed. Surplus is reinvested into the system, not siphoned outward.
+
+These three ethics are not values statements. They are operating constraints. When a decision violates one, it doesn't get made.
+
+---
+
+### Seven Zones
+
+Permaculture uses zones to describe intensity of use and attention — the closer to the centre, the more frequent the care. We apply that logic to how information, authority, and design energy flow through the Headwaters system.
+
+| Zone | Name | What It Is |
+|------|------|------------|
+| **Zone 0** | The Kitchen Table | The family, the household, the founding circle. Highest authority. Every system we build starts here and answers here. |
+| **Zone 1** | The Practitioner's Field | The practitioners, operators, and builders doing daily work inside the system. Where the tools live and get tested. |
+| **Zone 2** | The Community | The broader community the practitioners serve — the people the wealth is staying for. Their reality is the test of everything Zone 1 builds. |
+| **Zone 3** | The Market | Where Headwaters tools and institutions connect with economic reality: stores, co-ops, vendors, buyers. Productive but not intimate. |
+| **Zone 4** | The Corridor | Partnerships, networks, and allied organizations. Less managed, more collaborative. The place of replication and cross-pollination. |
+| **Zone 5** | The Wild | The external world — funders, governments, outside platforms, the broader economy. We observe it. We do not let it govern us. |
+| **Zone 6** | The River | *Our addition.* The outward flow layer — what Headwaters sends downstream: knowledge, replicable models, tools that can be picked up by other communities and run independently. |
+
+**On Zone 6:** The original permaculture model ends at Zone 5. We add a sixth zone because our system has an outward flow layer the original model doesn't account for. We are not just designing a place — we are designing replication. Zone 6 is where finished work leaves the watershed and becomes infrastructure for another watershed to start. We own that deviation.
+
+---
+
+### 12 Principles — Mapped to Headwaters System Behaviors
+
+| # | Permaculture Principle | Headwaters Application |
+|---|----------------------|----------------------|
+| 1 | Observe and interact | Dollar-honest diagnosis before any tool gets built. We look at the actual numbers before we design anything. |
+| 2 | Catch and store energy | Keep wealth inside the community. Every dollar that doesn't leak is energy stored. |
+| 3 | Obtain a yield | The work must produce real, measurable results for the community — not just activity. Shipped, not proposed. |
+| 4 | Apply self-regulation and accept feedback | The Decision Filter runs on every proposal. The Gord test is a form of system feedback. We adjust. |
+| 5 | Use and value renewable resources | Build on what the community already has: relationships, land, knowledge, labour, trust. |
+| 6 | Produce no waste | Every process that leaks wealth, duplicates effort, or creates dependency is waste. Eliminate it. |
+| 7 | Design from patterns to details | The watershed metaphor first. The zone map second. The specific tool or product third. Sequence matters. |
+| 8 | Integrate rather than segregate | The tools, the financial models, the training, the institutions — they connect. No isolated products. |
+| 9 | Use small and slow solutions | Pilot at Zone 1. Prove at Zone 2. Replicate at Zone 4. Don't scale what hasn't worked at the kitchen table. |
+| 10 | Use and value diversity | Multiple income streams, multiple institutions, multiple community partners. Monocultures fail. |
+| 11 | Use edges and value the marginal | Rural, remote, and Indigenous communities are the edge. That is where the most resilient design work happens. We go there first. |
+| 12 | Creatively use and respond to change | When the system shifts — markets, policy, community needs — we redesign from the ethics, not from sunk cost. |
+
+---
+
+### Design Philosophy
+
+We build from the inside out, not the outside in.
+
+Zone 0 — the kitchen table — is where design begins. If it doesn't serve the family and the founding circle clearly and practically, it doesn't go to Zone 1. If it doesn't work for the practitioner in daily use, it doesn't go to Zone 2. Each zone is a test before the next one is attempted.
+
+We do not design for funders, platforms, or the extractive economy. We design for the people at the centre of the system, and we trust that good design at that centre is what eventually reaches Zone 6 and becomes infrastructure others can pick up and run.
+
+The permaculture framework is not decoration on top of the Headwaters model. It is the structural logic underneath it. The watershed metaphor and the zone map are two ways of describing the same thing: a system designed to keep wealth and sovereignty at the centre, and to let the excess flow outward — not to extraction, but to replication.
