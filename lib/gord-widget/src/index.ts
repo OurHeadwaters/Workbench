@@ -1,0 +1,1 @@
+export { GordWidget } from "./GordWidget";

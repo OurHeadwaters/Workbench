@@ -44,7 +44,7 @@ import Layout from "@/components/Layout";
 import EmbedOpenRecords from "@/embed/OpenRecords";
 import EmbedDailyClose from "@/embed/DailyClose";
 import EmbedMonthEnd from "@/embed/MonthEnd";
-import { GordWidget } from "@/components/GordWidget";
+import { GordWidget } from "@workspace/gord-widget";
 
 const queryClient = new QueryClient();
 

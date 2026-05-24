@@ -84,6 +84,7 @@
     "zod": "catalog:"
   },
   "dependencies": {
+    "@workspace/gord-widget": "workspace:*",
     "xlsx": "^0.18.5",
     "@workspace/kitchen-table-client": "workspace:*"
   }

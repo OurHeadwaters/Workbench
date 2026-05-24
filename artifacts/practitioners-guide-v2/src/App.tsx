@@ -41,7 +41,7 @@ import { GmphPathBPage } from "@/pages/GmphPathBPage";
 import { LegacyAssetManagerPage } from "@/pages/LegacyAssetManagerPage";
 import { TheGateOverridePage } from "@/pages/TheGateOverridePage";
 import NotFound from "@/pages/not-found";
-import { GordWidget } from "@/components/GordWidget";
+import { GordWidget } from "@workspace/gord-widget";
 
 const queryClient = new QueryClient();
 

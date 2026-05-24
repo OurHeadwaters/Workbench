@@ -19,7 +19,7 @@ import { ArchiveMiningPage } from "@/pages/ArchiveMiningPage";
 import { ZoneDiagramPage } from "@/pages/ZoneDiagramPage";
 import { KitchenTablePage } from "@/pages/KitchenTablePage";
 import { MeetingKitPage } from "@/pages/MeetingKitPage";
-import { GordWidget } from "@/components/GordWidget";
+import { GordWidget } from "@workspace/gord-widget";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 

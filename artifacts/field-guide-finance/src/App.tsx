@@ -18,7 +18,7 @@ import { BlueprintLibrary } from "@/pages/forge/BlueprintLibrary";
 import { ProgressPage } from "@/pages/forge/ProgressPage";
 import { BattleFeed } from "@/pages/forge/BattleFeed";
 import { Shallows } from "@/pages/forge/Shallows";
-import { GordWidget } from "@/components/GordWidget";
+import { GordWidget } from "@workspace/gord-widget";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 

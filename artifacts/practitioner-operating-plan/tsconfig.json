@@ -14,5 +14,10 @@
       "@/*": ["./src/*"],
       "@workspace/practitioners-guide-v2/*": ["../../artifacts/practitioners-guide-v2/*"]
     }
-  }
+  },
+  "references": [
+    {
+      "path": "../../lib/gord-widget"
+    }
+  ]
 }

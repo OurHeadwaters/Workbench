@@ -33,7 +33,7 @@ import EightOhSevenPage from "./pages/EightOhSevenPage";
 import NANPage from "./pages/NANPage";
 import { HeadwatersWindowPage } from "./pages/HeadwatersWindowPage";
 import EthosPage from "./pages/EthosPage";
-import { GordWidget } from "./components/GordWidget";
+import { GordWidget } from "@workspace/gord-widget";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 

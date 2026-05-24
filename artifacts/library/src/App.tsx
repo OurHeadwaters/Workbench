@@ -30,7 +30,7 @@ import NurseryLayout from "@/components/NurseryLayout";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { ReactNode } from "react";
 import { NurseryApp } from "@/nursery/NurseryApp";
-import { GordWidget } from "@/components/GordWidget";
+import { GordWidget } from "@workspace/gord-widget";
 
 const queryClient = new QueryClient();
 

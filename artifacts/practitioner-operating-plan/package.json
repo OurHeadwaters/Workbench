@@ -17,6 +17,7 @@
     "check-slide-refs": "tsx scripts/check-slide-refs.ts"
   },
   "dependencies": {
+    "@workspace/gord-widget": "workspace:*",
     "@workspace/practitioners-guide-v2": "workspace:*",
     "clsx": "catalog:",
     "tailwind-merge": "catalog:",

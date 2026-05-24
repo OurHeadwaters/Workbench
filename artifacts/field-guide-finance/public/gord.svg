@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <!-- Tail feathers -->
+  <ellipse cx="15" cy="57" rx="12" ry="4" fill="#64748b" transform="rotate(-22 15 57)"/>
+  <ellipse cx="13" cy="62" rx="10" ry="3" fill="#4e6078" transform="rotate(-32 13 62)"/>
+
+  <!-- Body — fluffy medium gray -->
+  <ellipse cx="43" cy="52" rx="24" ry="20" fill="#94a3b8"/>
+
+  <!-- Wing — slightly darker -->
+  <ellipse cx="53" cy="54" rx="16" ry="11" fill="#7a8fa6"/>
+
+  <!-- Chest / belly — pale -->
+  <ellipse cx="37" cy="57" rx="15" ry="13" fill="#dce5ef"/>
+
+  <!-- Head — dark charcoal cap -->
+  <circle cx="42" cy="26" r="18" fill="#374151"/>
+
+  <!-- White face patch -->
+  <ellipse cx="44" cy="33" rx="13" ry="11" fill="#f0f4f8"/>
+
+  <!-- Eye -->
+  <circle cx="49" cy="27" r="5.5" fill="#111827"/>
+  <circle cx="51" cy="25" r="2" fill="white"/>
+  <circle cx="50.5" cy="25.5" r="0.9" fill="rgba(255,255,255,0.55)"/>
+
+  <!-- Beak — short, dark -->
+  <path d="M54,33 L65,37 L54,40 Z" fill="#1f2937"/>
+  <path d="M54,33 L64,37 L58.5,36.5 Z" fill="#2d3f52" opacity="0.5"/>
+
+  <!-- Feet -->
+  <line x1="38" y1="72" x2="33" y2="79" stroke="#475569" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="45" y1="72" x2="41" y2="79" stroke="#475569" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Toes (front foot) -->
+  <line x1="33" y1="79" x2="28" y2="80" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="33" y1="79" x2="33" y2="83" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="33" y1="79" x2="37" y2="80" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

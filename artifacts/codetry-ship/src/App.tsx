@@ -32,7 +32,7 @@ import { WhatIsCodetryPage } from "@/pages/WhatIsCodetryPage";
 import { MapPage } from "@/pages/MapPage";
 import { CompassPage } from "@/pages/CompassPage";
 import { CapCeremonyPage } from "@/pages/CapCeremonyPage";
-import { GordWidget } from "@/components/GordWidget";
+import { GordWidget } from "@workspace/gord-widget";
 
 const queryClient = new QueryClient();
 

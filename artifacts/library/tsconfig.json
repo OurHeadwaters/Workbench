@@ -19,6 +19,9 @@
       "path": "../../lib/api-client-react"
     },
     {
+      "path": "../../lib/gord-widget"
+    },
+    {
       "path": "../../lib/why-stores-fail"
     }
   ]

@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@workspace/gord-widget": "workspace:*",
     "@workspace/odyssey": "workspace:*",
     "@workspace/kitchen-table-client": "workspace:*"
   },
