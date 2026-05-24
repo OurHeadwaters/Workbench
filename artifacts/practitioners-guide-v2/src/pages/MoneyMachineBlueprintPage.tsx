@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import { CheckSquare, RotateCcw, Square } from "lucide-react";
 import { useScenario } from "@/lib/scenario";
 import type { Scenario } from "@/data/types";
+import {
+  GOVERNANCE_AUTHORITY,
+  TABLE_TRIGGERS,
+  RESERVE_RAID_STEPS,
+} from "@/data/governanceData";
 
 const STORAGE_KEY = "mmb-checklist-v1";
 
@@ -574,6 +579,150 @@ export function MoneyMachineBlueprintPage() {
               </ul>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-base font-semibold mb-1" style={{ fontFamily: "var(--app-font-serif)" }}>
+          Governance Rules
+        </h2>
+        <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+          The machine is owned by the community that runs it. These rules answer who decides what,
+          when the full table must weigh in, and what happens when things go sideways. Full mechanics
+          live in{" "}
+          <code className="font-mono bg-muted px-1 rounded text-xs">
+            shared/community-money-machine-governance.md
+          </code>
+          .
+        </p>
+
+        <div className="space-y-4 mb-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+              Decision Authority — Steward vs. Kitchen Table
+            </p>
+            <div className="overflow-x-auto rounded-lg border" style={{ borderColor: "hsl(var(--card-border))" }}>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/40" style={{ borderColor: "hsl(var(--card-border))" }}>
+                    <th className="text-left px-4 py-2.5 font-semibold text-xs uppercase tracking-wide text-muted-foreground">Bucket</th>
+                    <th className="text-left px-4 py-2.5 font-semibold text-xs uppercase tracking-wide text-muted-foreground">Steward decides alone</th>
+                    <th className="text-left px-4 py-2.5 font-semibold text-xs uppercase tracking-wide text-muted-foreground">Kitchen Table required</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {GOVERNANCE_AUTHORITY.map((row, i) => (
+                    <tr
+                      key={row.bucket}
+                      className={i < GOVERNANCE_AUTHORITY.length - 1 ? "border-b" : ""}
+                      style={{ borderColor: "hsl(var(--card-border))" }}
+                    >
+                      <td className="px-4 py-3 align-top font-semibold text-xs whitespace-nowrap" style={{ color: row.accent }}>
+                        {row.bucket}
+                      </td>
+                      <td className="px-4 py-3 align-top">
+                        <ul className="space-y-1">
+                          {row.stewardCan.map((item, j) => (
+                            <li key={j} className="flex items-start gap-1.5 text-xs text-muted-foreground">
+                              <span className="mt-1 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: row.accent }} />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </td>
+                      <td className="px-4 py-3 align-top">
+                        <ul className="space-y-1">
+                          {row.tableRequired.map((item, j) => (
+                            <li key={j} className="flex items-start gap-1.5 text-xs text-muted-foreground">
+                              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border p-4 bg-card" style={{ borderColor: "hsl(var(--card-border))" }}>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+                Quorum &amp; Voting
+              </p>
+              <ul className="space-y-2 text-xs text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#1F5B3F" }} />
+                  <span><strong>Table seats:</strong> All four bucket stewards + at least one community witness. Minimum five seats.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#1F5B3F" }} />
+                  <span><strong>Quorum:</strong> Three-quarters of named seats — in person, on a call, or documented written consent.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#1F5B3F" }} />
+                  <span><strong>Simple majority</strong> carries most decisions.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#B45309" }} />
+                  <span><strong>Two-thirds majority</strong> for Cost Basis changes &gt;15%, Reserve draws, bucket structure changes, and Eave Flow recipient changes.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#ef4444" }} />
+                  <span><strong>Unanimous consent</strong> to wind down the machine, transfer ownership, or permanently remove a member's stake.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#1A5FA8" }} />
+                  <span><strong>Dissent is logged</strong> in the governance record — it doesn't reopen a decision, but it stands permanently as institutional memory.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="rounded-lg border p-4 bg-card" style={{ borderColor: "hsl(var(--card-border))" }}>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+                Automatic Kitchen Table Triggers
+              </p>
+              <ul className="space-y-1.5">
+                {TABLE_TRIGGERS.map((trigger, i) => (
+                  <li key={i} className="flex items-start gap-1.5 text-xs text-muted-foreground">
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                    {trigger}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+            Reserve Raid Protocol — The Named Sequence
+          </p>
+          <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+            Raiding the Reserve is a serious act. It follows a strict sequence every time — no shortcuts, no panic decisions, no one-person calls.
+          </p>
+          <div className="space-y-2">
+            {RESERVE_RAID_STEPS.map((step, i) => (
+              <div
+                key={i}
+                className="flex gap-3 rounded-lg border p-3 bg-card"
+                style={{ borderColor: "hsl(var(--card-border))", borderLeftWidth: "3px", borderLeftColor: "#1A5FA8" }}
+              >
+                <span
+                  className="h-5 w-5 rounded-full flex-shrink-0 grid place-items-center text-white text-[10px] font-bold mt-0.5"
+                  style={{ backgroundColor: "#1A5FA8" }}
+                >
+                  {i + 1}
+                </span>
+                <div>
+                  <p className="text-xs font-semibold mb-0.5">{step.label}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{step.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

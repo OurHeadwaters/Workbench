@@ -71,7 +71,9 @@ The honey principle is the governing image. The machine produces its own overflo
 
 ## Governance
 
-The machine is governed by the community that owns it. No outside institution holds authority over how the buckets are filled, emptied, or rebalanced. The governance rules are:
+The machine is governed by the community that owns it. No outside institution holds authority over how the buckets are filled, emptied, or rebalanced. The full mechanics — decision authority by bucket, quorum rules, voting method, dispute escalation, the quarterly Money Machine Report cadence, and the Reserve raid protocol — live in `shared/community-money-machine-governance.md`. The rules below are the five named principles that governance document builds on.
+
+The governance rules are:
 
 **1. The Cost Basis is set before any revenue is claimed.**
 Before any dollar is distributed to any bucket, the community's real operating cost is named, documented, and agreed to. This is the first act of governance — before revenue projections, before reinvestment plans, before anything.
@@ -188,6 +190,7 @@ That is the whole design. Stop the leak. Fill the buckets. Let the overflow reac
 
 ## Relevant Files
 
+- `shared/community-money-machine-governance.md` — full governance mechanics: decision authority by bucket, quorum, voting, dispute escalation, quarterly report cadence, and Reserve raid protocol
 - `shared/watershed-compact.md` — the full operating system and decision filter
 - `shared/stomping-path.md` — the transformation trail that brings practitioners to the machine
 - `shared/watershed-compact-system-prompt.txt` — agent prompt, watershed layer
