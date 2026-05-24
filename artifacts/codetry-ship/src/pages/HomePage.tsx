@@ -88,6 +88,14 @@ export function HomePage() {
 
         <div className="relative z-10 mx-auto max-w-[42rem] px-6 sm:px-8 pt-20 pb-20 text-center flex flex-col items-center justify-center" style={{ minHeight: "88vh" }}>
 
+          {/* The Shore eyebrow */}
+          <p
+            className="font-mono text-[8px] uppercase tracking-[0.32em] mb-6"
+            style={{ color: "rgba(212,160,23,0.50)" }}
+          >
+            The Shore · Home Base
+          </p>
+
           {/* Eagle mark — centred, luminous */}
           <div className="flex justify-center mb-8" data-testid="home-eyebrow">
             <img
@@ -165,6 +173,12 @@ export function HomePage() {
               For communities that want to own what they build — resilient food systems and community-run economies, handed off without lock-in.
             </p>
             <p
+              className="font-serif text-[13px] leading-[1.65] mb-3 pt-3"
+              style={{ color: "rgba(244,237,224,0.52)", borderTop: "1px solid rgba(244,237,224,0.07)" }}
+            >
+              Income enters at the practitioner's headwaters. It flows through four buckets in order — costs, reserve, reinvestment, community overflow — and nothing moves downstream until the bucket above it is full. Not a theory. A machine already running.
+            </p>
+            <p
               className="font-mono text-[10px] uppercase tracking-[0.2em]"
               style={{ color: "rgba(212,160,23,0.8)" }}
               data-testid="home-name-hierarchy"
@@ -227,10 +241,26 @@ export function HomePage() {
             >
               Read the neighbourhood map — orient before the Odyssey →
             </a>
+            <a
+              href="/north-star/"
+              className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-60 mt-2"
+              style={{ color: "rgba(244,237,224,0.38)" }}
+              data-testid="hero-tester-portal-link"
+            >
+              Step inside the living map → Tester Portal
+            </a>
           </div>
 
+          {/* Gord the owl */}
+          <p
+            className="mt-5 font-mono text-[9px] uppercase tracking-[0.2em]"
+            style={{ color: "rgba(244,237,224,0.18)" }}
+          >
+            Gord the owl waits in the Arc — message-in-a-bottle feedback welcome.
+          </p>
+
           {/* Youth Odyssey micro-link */}
-          <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.2em]">
+          <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.2em]">
             <a
               href={`${import.meta.env.BASE_URL}story`}
               className="transition-opacity hover:opacity-70"
@@ -1046,6 +1076,13 @@ export function HomePage() {
               ))}
             </div>
           </div>
+
+          <p
+            className="font-serif text-[13px] italic text-center mb-8"
+            style={{ color: "rgba(244,237,224,0.25)" }}
+          >
+            Headwaters is a living watershed, not a product company.
+          </p>
 
           <div className="flex flex-wrap items-center justify-between gap-4">
             <p className="signoff" style={{ color: "rgba(244,237,224,0.35)" }}>— bobbie parr · headwaters · dryden, ontario</p>
