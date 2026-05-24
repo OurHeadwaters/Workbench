@@ -43,6 +43,7 @@ import { TheGateOverridePage } from "@/pages/TheGateOverridePage";
 import { MoneyMachineBlueprintPage } from "@/pages/MoneyMachineBlueprintPage";
 import { CryptoCornerPage } from "@/pages/CryptoCornerPage";
 import { WatershedCompactPage } from "@/pages/WatershedCompactPage";
+import { StompingPathPage } from "@/pages/StompingPathPage";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
 
@@ -97,6 +98,7 @@ function Router() {
       <Route path="/the-gate-override" component={TheGateOverridePage} />
       <Route path="/money-machine" component={MoneyMachineBlueprintPage} />
       <Route path="/crypto-corner" component={CryptoCornerPage} />
+      <Route path="/stomping-path" component={StompingPathPage} />
       <Route component={NotFound} />
     </Switch>
   );
