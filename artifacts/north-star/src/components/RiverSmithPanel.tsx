@@ -1,0 +1,378 @@
+/**
+ * RiverSmithPanel — collapsible River Smith briefing section for the Kitchen Table.
+ *
+ * - Fetches the latest published briefing from /api/river-smith/briefing/latest
+ * - Owner-only "Generate Now" button triggers a fresh briefing
+ * - Archive dropdown shows past 30 briefings by date
+ * - Renders markdown using a simple in-house parser (no dep needed)
+ */
+
+import { useState, useEffect, useCallback } from "react";
+import { cn } from "@/lib/utils";
+
+interface Briefing {
+  id: string;
+  generatedAt: string;
+  rawMarkdown: string;
+  triggeredBy: string;
+}
+
+interface ArchiveEntry {
+  id: string;
+  generatedAt: string;
+  triggeredBy: string;
+  status: string;
+}
+
+function getOwnerToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return (
+    window.localStorage.getItem("library.ownerToken") ||
+    window.localStorage.getItem("ownerToken") ||
+    null
+  );
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-CA", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+// ── Lightweight markdown renderer ─────────────────────────────────────────────
+// Handles the fixed River Smith output format:
+//   ## heading, ### heading, **bold**, - bullets, *italic*, blank lines
+
+function RiverMarkdown({ text }: { text: string }) {
+  const lines = text.split("\n");
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i] ?? "";
+
+    if (line.startsWith("## ")) {
+      elements.push(
+        <h2 key={i} className="text-[17px] font-serif text-[#EAE4DB] tracking-wide mt-4 mb-1 flex items-center gap-2">
+          {inlineMarkdown(line.slice(3))}
+        </h2>,
+      );
+    } else if (line.startsWith("### ")) {
+      elements.push(
+        <h3 key={i} className="text-[12px] uppercase tracking-[0.15em] text-[#8C7B6D] font-bold mt-5 mb-2">
+          {line.slice(4)}
+        </h3>,
+      );
+    } else if (line.startsWith("**Decision ")) {
+      elements.push(
+        <p key={i} className="text-[14px] font-semibold text-[#C5A96A] mt-4 mb-1">
+          {inlineMarkdown(line)}
+        </p>,
+      );
+    } else if (line.startsWith("*Why it can't wait:*") || line.startsWith("*The options:*") || line.startsWith("*Weight:*")) {
+      elements.push(
+        <p key={i} className="text-[13px] text-[#A39485] ml-3 mb-1 leading-relaxed">
+          {inlineMarkdown(line)}
+        </p>,
+      );
+    } else if (line.startsWith("A) ") || line.startsWith("B) ") || line.startsWith("C) ")) {
+      elements.push(
+        <p key={i} className="text-[13px] text-[#D8D0C5] ml-6 mb-0.5 leading-relaxed">
+          {line}
+        </p>,
+      );
+    } else if (line.startsWith("- ") || line.startsWith("• ")) {
+      elements.push(
+        <li key={i} className="text-[13px] text-[#C5B6A5] leading-relaxed mb-1 ml-4 list-none flex gap-2">
+          <span className="text-[#5C5046] flex-shrink-0 mt-0.5">·</span>
+          <span>{inlineMarkdown(line.slice(2))}</span>
+        </li>,
+      );
+    } else if (line === "---") {
+      elements.push(<hr key={i} className="border-[#251E18] my-3" />);
+    } else if (line.trim() === "") {
+      elements.push(<div key={i} className="h-1" />);
+    } else {
+      elements.push(
+        <p key={i} className="text-[13px] text-[#C5B6A5] leading-relaxed mb-1">
+          {inlineMarkdown(line)}
+        </p>,
+      );
+    }
+
+    i++;
+  }
+
+  return <div className="select-text">{elements}</div>;
+}
+
+function inlineMarkdown(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i} className="text-[#EAE4DB] font-semibold">{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return <em key={i} className="text-[#A39485] not-italic font-medium">{part.slice(1, -1)}</em>;
+    }
+    return part;
+  });
+}
+
+// ── Panel ─────────────────────────────────────────────────────────────────────
+
+export function RiverSmithPanel() {
+  const token = getOwnerToken();
+  const isOwner = !!token;
+
+  const [open, setOpen] = useState(false);
+  const [briefing, setBriefing] = useState<Briefing | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archive, setArchive] = useState<ArchiveEntry[]>([]);
+  const [archiveLoading, setArchiveLoading] = useState(false);
+
+  const fetchLatest = useCallback(async () => {
+    if (!token) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/river-smith/briefing/latest", {
+        headers: { "x-library-owner-token": token },
+      });
+      if (res.status === 404) {
+        setBriefing(null);
+        return;
+      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as Briefing;
+      setBriefing(data);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to load briefing.");
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (open && !briefing && !loading) {
+      void fetchLatest();
+    }
+  }, [open, briefing, loading, fetchLatest]);
+
+  const handleGenerate = async () => {
+    if (!token || generating) return;
+    setGenerating(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/river-smith/generate", {
+        method: "POST",
+        headers: { "x-library-owner-token": token, "Content-Type": "application/json" },
+      });
+      if (!res.ok) {
+        const j = (await res.json()) as { error?: string };
+        throw new Error(j.error ?? `HTTP ${res.status}`);
+      }
+      const data = (await res.json()) as { rawMarkdown: string; id: string };
+      setBriefing({ id: data.id, rawMarkdown: data.rawMarkdown, generatedAt: new Date().toISOString(), triggeredBy: "manual" });
+      setArchive([]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Generation failed.");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const fetchArchive = async () => {
+    if (!token || archiveLoading) return;
+    setArchiveLoading(true);
+    try {
+      const res = await fetch("/api/river-smith/briefings", {
+        headers: { "x-library-owner-token": token },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as { briefings: ArchiveEntry[] };
+      setArchive(data.briefings);
+    } catch {
+      // silently ignore
+    } finally {
+      setArchiveLoading(false);
+    }
+  };
+
+  const loadArchiveBriefing = async (id: string) => {
+    if (!token) return;
+    setArchiveOpen(false);
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/river-smith/briefing/${id}`, {
+        headers: { "x-library-owner-token": token },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as Briefing;
+      setBriefing(data);
+    } catch {
+      // silently ignore
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!isOwner) return null;
+
+  return (
+    <div className="flex-shrink-0 z-10 border-b border-[#251E18]">
+      {/* ── Collapsed header ── */}
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center gap-3 px-5 py-3 bg-[#13110E] hover:bg-[#181512] transition-colors text-left"
+      >
+        <span className="text-[16px]">🌊</span>
+        <div className="flex-1 min-w-0">
+          <span className="text-[11px] uppercase tracking-[0.15em] text-[#4A8A7C] font-bold">
+            River Smith
+          </span>
+          {briefing && !open && (
+            <span className="ml-2 text-[10px] text-[#5C5046]">
+              — {formatDate(briefing.generatedAt)}
+            </span>
+          )}
+        </div>
+        {!briefing && !open && (
+          <span className="text-[10px] text-[#5C5046] tracking-wide">nightly briefing</span>
+        )}
+        <span className="text-[10px] text-[#4A3D33] flex-shrink-0">{open ? "▲" : "▼"}</span>
+      </button>
+
+      {/* ── Expanded panel ── */}
+      {open && (
+        <div className="bg-[#111009] border-t border-[#1E1A14]">
+          {/* Controls row */}
+          <div className="flex items-center gap-3 px-5 py-3 border-b border-[#1E1A14]">
+            {isOwner && (
+              <button
+                onClick={() => void handleGenerate()}
+                disabled={generating}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-sm text-[11px] uppercase tracking-[0.1em] font-bold transition-all",
+                  generating
+                    ? "opacity-40 bg-[#1C1814] text-[#5C5046] cursor-not-allowed"
+                    : "bg-[#1E332E] text-[#4A8A7C] hover:bg-[#253D38] border border-[#2A4A43]",
+                )}
+              >
+                {generating ? (
+                  <>
+                    <span className="animate-pulse">◌</span>
+                    <span>Reading the river…</span>
+                  </>
+                ) : (
+                  <>
+                    <span>⚡</span>
+                    <span>Generate now</span>
+                  </>
+                )}
+              </button>
+            )}
+            <button
+              onClick={() => {
+                setArchiveOpen((o) => !o);
+                if (!archiveOpen && archive.length === 0) void fetchArchive();
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-sm text-[11px] text-[#5C5046] hover:text-[#8C7B6D] border border-[#1E1A14] bg-[#181512] transition-colors"
+            >
+              <span>📂</span>
+              <span>Archive</span>
+              <span className="text-[10px]">{archiveOpen ? "▲" : "▼"}</span>
+            </button>
+            {briefing && (
+              <span className="ml-auto text-[10px] text-[#3D3228] tracking-wide">
+                {formatDate(briefing.generatedAt)}
+                {briefing.triggeredBy === "manual" && (
+                  <span className="ml-1 text-[#4A3D33]">· manual</span>
+                )}
+              </span>
+            )}
+          </div>
+
+          {/* Archive list */}
+          {archiveOpen && (
+            <div className="border-b border-[#1E1A14] bg-[#0D0C0A] max-h-48 overflow-y-auto">
+              {archiveLoading && (
+                <p className="text-[12px] text-[#4A3D33] px-5 py-3">Loading…</p>
+              )}
+              {!archiveLoading && archive.length === 0 && (
+                <p className="text-[12px] text-[#4A3D33] px-5 py-3">No archived briefings found.</p>
+              )}
+              {archive.map((entry) => (
+                <button
+                  key={entry.id}
+                  onClick={() => void loadArchiveBriefing(entry.id)}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-5 py-2.5 text-left hover:bg-[#181512] transition-colors border-b border-[#1A1814] last:border-0",
+                    briefing?.id === entry.id && "bg-[#181512]",
+                  )}
+                >
+                  <span className="text-[10px] text-[#4A8A7C]">🌊</span>
+                  <span className="text-[12px] text-[#8C7B6D]">{formatDate(entry.generatedAt)}</span>
+                  {entry.triggeredBy === "manual" && (
+                    <span className="text-[10px] text-[#4A3D33] ml-auto">manual</span>
+                  )}
+                  {briefing?.id === entry.id && (
+                    <span className="text-[10px] text-[#4A8A7C] ml-auto">current</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Error */}
+          {error && (
+            <div className="px-5 py-3 text-[12px] text-[#8C4A3A] border-b border-[#1E1A14]">
+              ⚠ {error}
+            </div>
+          )}
+
+          {/* Loading */}
+          {loading && !briefing && (
+            <div className="px-5 py-8 text-center text-[12px] text-[#4A3D33]">
+              <span className="animate-pulse">Reading the river…</span>
+            </div>
+          )}
+
+          {/* No briefing yet */}
+          {!loading && !briefing && !error && (
+            <div className="px-5 py-8 text-center">
+              <p className="text-[12px] text-[#4A3D33] mb-4 leading-relaxed">
+                No briefing has been generated yet.<br />
+                The river runs tonight at 11:45 PM.
+              </p>
+              {isOwner && (
+                <button
+                  onClick={() => void handleGenerate()}
+                  disabled={generating}
+                  className="px-5 py-3 text-[12px] uppercase tracking-[0.1em] font-bold text-[#4A8A7C] bg-[#1E332E] border border-[#2A4A43] rounded-sm hover:bg-[#253D38] transition-colors disabled:opacity-40"
+                >
+                  {generating ? "Reading the river…" : "Generate first briefing"}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Briefing content */}
+          {briefing && !loading && (
+            <div className="px-5 py-5 max-h-[60dvh] overflow-y-auto">
+              <RiverMarkdown text={briefing.rawMarkdown} />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

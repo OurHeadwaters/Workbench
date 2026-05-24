@@ -7,6 +7,7 @@ import path from "path";
 import fs from "fs";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import { scheduleNightlyBriefing } from "./lib/riverSmithScheduler";
 import {
   CLERK_PROXY_PATH,
   clerkProxyMiddleware,
@@ -86,5 +87,7 @@ if (fs.existsSync(fieldGuideFinanceDist)) {
 // Use import.meta.url so the path works regardless of CWD in dev or prod.
 const mediaManagerHtml = new URL("../src/media-manager.html", import.meta.url).pathname;
 app.get(["/media", "/media/"], (_req, res) => res.sendFile(mediaManagerHtml));
+
+scheduleNightlyBriefing();
 
 export default app;

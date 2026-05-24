@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { RiverSmithPanel } from "@/components/RiverSmithPanel";
 
 // ── Kitchen Table source roll-up ──────────────────────────────────────────────
 // Reads /api/deadhead/intake so the council can move artifact-by-artifact.
@@ -782,6 +783,9 @@ export function KitchenTablePage() {
           </button>
         </div>
       </div>
+
+      {/* ── River Smith Briefing Panel ── */}
+      <RiverSmithPanel />
 
       {/* ══════════════════════════════════════════════════════════════
           MODE A — TABLE IS SET (no messages yet)

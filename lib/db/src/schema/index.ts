@@ -1,4 +1,6 @@
 // Export your models here. Add one export per file
+export * from "./conversations";
+export * from "./messages";
 export * from "./library";
 export * from "./checkin";
 export * from "./bookkeeper";
@@ -16,3 +18,4 @@ export * from "./odysseyTrailSigns";
 export * from "./sandbox";
 export * from "./nursery";
 export * from "./gatekeeper";
+export * from "./riverSmith";

@@ -43,6 +43,13 @@
       "when": 1779600000000,
       "tag": "0005_kitchen_table_source",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1748117400000,
+      "tag": "0006_river_smith",
+      "breakpoints": true
     }
   ]
 }
