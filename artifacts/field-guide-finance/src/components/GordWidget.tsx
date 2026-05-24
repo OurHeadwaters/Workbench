@@ -32,6 +32,16 @@ function saveHistory(messages: Message[]) {
   );
 }
 
+const FINGERPRINT_KEY = "gordFingerprint";
+
+function getOrCreateFingerprint(): string {
+  const existing = localStorage.getItem(FINGERPRINT_KEY);
+  if (existing) return existing;
+  const fp = crypto.randomUUID();
+  localStorage.setItem(FINGERPRINT_KEY, fp);
+  return fp;
+}
+
 function loadBottles(): Bottle[] {
   try {
     return JSON.parse(localStorage.getItem(BOTTLES_KEY) ?? "[]") as Bottle[];
@@ -40,10 +50,46 @@ function loadBottles(): Bottle[] {
   }
 }
 
-function saveBottle(message: string) {
+function saveBottle(message: string): string {
+  const date = new Date().toLocaleString();
   const bottles = loadBottles();
-  bottles.unshift({ date: new Date().toLocaleString(), message });
+  bottles.unshift({ date, message });
   localStorage.setItem(BOTTLES_KEY, JSON.stringify(bottles));
+  return date;
+}
+
+async function syncBottlesFromServer(): Promise<void> {
+  try {
+    const fp = getOrCreateFingerprint();
+    const res = await fetch(`/api/gord/bottles?fp=${encodeURIComponent(fp)}`);
+    if (!res.ok) return;
+    const data = (await res.json()) as { bottles?: Bottle[] };
+    const serverBottles = data.bottles ?? [];
+    if (serverBottles.length === 0) return;
+    const local = loadBottles();
+    const localMessages = new Set(local.map((b) => b.message));
+    const merged = [
+      ...local,
+      ...serverBottles.filter((b) => !localMessages.has(b.message)),
+    ];
+    merged.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    localStorage.setItem(BOTTLES_KEY, JSON.stringify(merged));
+  } catch {
+    // silent — server sync is best-effort
+  }
+}
+
+async function pushBottleToServer(message: string, date: string): Promise<void> {
+  try {
+    const fp = getOrCreateFingerprint();
+    await fetch("/api/gord/bottles", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fp, message, date }),
+    });
+  } catch {
+    // silent — server sync is best-effort
+  }
 }
 
 export function GordWidget() {
@@ -72,6 +118,7 @@ export function GordWidget() {
   function handleOpen() {
     setOpen((v) => !v);
     setShowBottles(false);
+    void syncBottlesFromServer();
   }
 
   function handleClearHistory() {
@@ -79,7 +126,8 @@ export function GordWidget() {
     setMessages([{ role: "gord", content: OPENING_QUIP }]);
   }
 
-  function handleViewBottles() {
+  async function handleViewBottles() {
+    await syncBottlesFromServer();
     setBottles(loadBottles());
     setShowBottles((v) => !v);
   }
@@ -95,7 +143,8 @@ export function GordWidget() {
     setMessages(nextMessages);
 
     if (isBottle) {
-      saveBottle(text);
+      const date = saveBottle(text);
+      void pushBottleToServer(text, date);
       setIsBottle(false);
       setMessages([
         ...nextMessages,
@@ -355,7 +404,7 @@ export function GordWidget() {
               ⚡ Tip Gord
             </button>
             <button
-              onClick={handleViewBottles}
+              onClick={() => void handleViewBottles()}
               style={{
                 background: "none",
                 border: "none",

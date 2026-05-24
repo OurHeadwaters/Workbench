@@ -70,6 +70,12 @@ export default defineConfig({
         path.resolve(import.meta.dirname, "..", "..", "codetry-book"),
       ],
     },
+    proxy: {
+      "/api": {
+        target: "http://localhost:8081",
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     port,
