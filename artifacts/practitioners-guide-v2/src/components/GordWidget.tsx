@@ -143,7 +143,7 @@ export function GordWidget() {
               gap: 10,
             }}
           >
-            <span style={{ fontSize: 28 }}>🐦</span>
+            <img src="/gord.svg" alt="Gord" style={{ width: 28, height: 28, verticalAlign: "middle", display: "inline-block" }} />
             <div>
               <p style={{ margin: 0, fontWeight: 700, color: "#fef3c7", fontSize: 15 }}>
                 Gord
@@ -384,19 +384,20 @@ export function GordWidget() {
         }}
       >
         <span style={{ fontSize: 28 }}>🌿</span>
-        <span
+        <img
           className="gord-bird"
+          src="/gord.svg"
+          alt="Gord"
           style={{
             position: "absolute",
             top: -10,
             right: -10,
-            fontSize: 28,
+            width: 36,
+            height: 36,
             transition: "transform 0.3s",
             display: "block",
           }}
-        >
-          🐦
-        </span>
+        />
       </button>
     </div>
   );
