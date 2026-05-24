@@ -37,6 +37,7 @@ function resolveHighlightedZones(quiz: QuizState): number[] {
 
 const QUIZ_STORAGE_KEY = "headwaters_compass_quiz";
 const STANDBY_STORAGE_KEY = "headwaters_compass_standby";
+const MODE_STORAGE_KEY = "headwaters_compass_mode";
 
 function loadSavedQuiz(): QuizState | null {
   try {
@@ -598,12 +599,272 @@ function CompassSVG({
   );
 }
 
+/* ─── Mode tab bar ───────────────────────────────────────────────────────── */
+
+type CompassMode = "map" | "registry";
+
+function loadSavedMode(): CompassMode {
+  try {
+    const v = localStorage.getItem(MODE_STORAGE_KEY);
+    if (v === "registry") return "registry";
+  } catch { /**/ }
+  return "map";
+}
+
+function saveMode(m: CompassMode) {
+  try { localStorage.setItem(MODE_STORAGE_KEY, m); } catch { /**/ }
+}
+
+function ModeTabBar({ mode, onChange }: { mode: CompassMode; onChange: (m: CompassMode) => void }) {
+  const tabs: { id: CompassMode; label: string }[] = [
+    { id: "map", label: "Map" },
+    { id: "registry", label: "Registry" },
+  ];
+  return (
+    <div
+      style={{
+        display: "inline-flex", alignItems: "center",
+        border: `1px solid ${RULE}`, borderRadius: 999,
+        background: "rgba(255,253,248,0.7)", padding: 3,
+      }}
+      role="tablist"
+      aria-label="Compass view mode"
+    >
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          type="button"
+          role="tab"
+          aria-selected={mode === tab.id}
+          onClick={() => onChange(tab.id)}
+          style={{
+            padding: "4px 16px", borderRadius: 999, border: "none", cursor: "pointer",
+            fontFamily: "monospace", fontSize: 10, fontWeight: 700,
+            letterSpacing: "0.14em", textTransform: "uppercase",
+            background: mode === tab.id ? FOREST : "transparent",
+            color: mode === tab.id ? CREAM : MUTED,
+            transition: "all 0.15s",
+          }}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Registry view ──────────────────────────────────────────────────────── */
+
+function RegistryView() {
+  const [query, setQuery] = useState("");
+  const q = query.trim().toLowerCase();
+
+  const zonesWithTools = ZONES.map((zone) => {
+    const tools = zone.tools.filter((t) => {
+      if (!q) return true;
+      return (
+        t.name.toLowerCase().includes(q) ||
+        t.tagline.toLowerCase().includes(q) ||
+        (t.zoneAddress ?? "").toLowerCase().includes(q)
+      );
+    });
+    return { zone, tools };
+  }).filter(({ tools }) => tools.length > 0 || !q);
+
+  const totalTools = ZONES.reduce((n, z) => n + z.tools.length, 0);
+
+  return (
+    <div>
+      {/* Search */}
+      <div style={{ position: "relative", marginBottom: 20 }}>
+        <span style={{
+          position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
+          fontSize: 14, opacity: 0.45, pointerEvents: "none",
+        }}>🔍</span>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={`Search ${totalTools} tools across ${ZONES.length} zones…`}
+          style={{
+            width: "100%", boxSizing: "border-box",
+            padding: "10px 14px 10px 38px",
+            borderRadius: 8, border: `1px solid ${RULE}`,
+            background: "rgba(255,253,248,0.9)",
+            fontFamily: "monospace", fontSize: 12, color: INK,
+            outline: "none",
+          }}
+        />
+        {query && (
+          <button
+            type="button" onClick={() => setQuery("")}
+            aria-label="Clear search"
+            style={{
+              position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)",
+              background: "none", border: "none", cursor: "pointer",
+              fontFamily: "monospace", fontSize: 11, color: MUTED, padding: "2px 6px",
+            }}
+          >✕</button>
+        )}
+      </div>
+
+      {/* Zone groups */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        {zonesWithTools.map(({ zone, tools }) => {
+          const visibleTools = q ? tools : zone.tools;
+          if (visibleTools.length === 0) return null;
+          return (
+            <div key={zone.number}>
+              {/* Zone header */}
+              <div style={{
+                display: "flex", alignItems: "center", gap: 10,
+                marginBottom: 10, paddingBottom: 8,
+                borderBottom: `2px solid ${zone.color}30`,
+              }}>
+                <span style={{
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  width: 26, height: 26, borderRadius: "50%",
+                  background: zone.color, flexShrink: 0,
+                  fontFamily: "monospace", fontSize: 11, fontWeight: 900, color: "#fff",
+                }}>{zone.number}</span>
+                <div>
+                  <span style={{
+                    fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 700,
+                    color: zone.color,
+                  }}>{zone.name}</span>
+                  <span style={{
+                    fontFamily: "monospace", fontSize: 9, color: MUTED,
+                    marginLeft: 8, fontWeight: 700, letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}>
+                    {visibleTools.length} tool{visibleTools.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+              </div>
+
+              {/* Tool cards */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {visibleTools.map((tool) => {
+                  const isExternal = !tool.url.startsWith("/") && tool.url !== "#";
+                  const isComingSoon = tool.url === "#";
+                  return (
+                    <div
+                      key={`${zone.number}-${tool.name}`}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 10,
+                        padding: "10px 12px", borderRadius: 8,
+                        border: `1px solid ${RULE}`,
+                        background: isComingSoon ? "rgba(255,253,248,0.5)" : "rgba(255,253,248,0.9)",
+                        opacity: isComingSoon ? 0.55 : 1,
+                        flexWrap: "wrap" as const,
+                      }}
+                    >
+                      {/* Zone address badge */}
+                      {tool.zoneAddress && (
+                        <span style={{
+                          fontFamily: "monospace", fontSize: 8, fontWeight: 800,
+                          letterSpacing: "0.12em", color: zone.color,
+                          background: `${zone.color}14`,
+                          border: `1px solid ${zone.color}30`,
+                          borderRadius: 4, padding: "2px 6px", flexShrink: 0,
+                          whiteSpace: "nowrap" as const,
+                        }}>
+                          {tool.zoneAddress}
+                        </span>
+                      )}
+
+                      {/* Name + tagline */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{
+                          fontFamily: "monospace", fontSize: 11, fontWeight: 700,
+                          color: INK, marginBottom: 1,
+                          overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const,
+                        }}>
+                          {tool.name}
+                        </div>
+                        <div style={{
+                          fontSize: 11, color: MUTED, lineHeight: 1.4,
+                          overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const,
+                        }}>
+                          {tool.tagline}
+                        </div>
+                      </div>
+
+                      {/* Status + link */}
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                        {isExternal && (
+                          <span style={{
+                            fontFamily: "monospace", fontSize: 8, fontWeight: 700,
+                            letterSpacing: "0.1em", textTransform: "uppercase",
+                            color: "#0F766E", background: "rgba(15,118,110,0.08)",
+                            border: "1px solid rgba(15,118,110,0.2)",
+                            borderRadius: 4, padding: "2px 6px",
+                          }}>External</span>
+                        )}
+                        {isComingSoon ? (
+                          <span style={{
+                            fontFamily: "monospace", fontSize: 8, fontWeight: 700,
+                            letterSpacing: "0.1em", textTransform: "uppercase",
+                            color: MUTED, background: `${RULE}`,
+                            border: `1px solid ${RULE}`,
+                            borderRadius: 4, padding: "2px 6px",
+                          }}>Soon</span>
+                        ) : (
+                          <a
+                            href={tool.url}
+                            target={isExternal ? "_blank" : undefined}
+                            rel={isExternal ? "noopener noreferrer" : undefined}
+                            style={{
+                              display: "inline-flex", alignItems: "center", gap: 3,
+                              padding: "5px 12px", borderRadius: 5,
+                              background: zone.color, color: "#fff",
+                              fontFamily: "monospace", fontSize: 9, fontWeight: 700,
+                              letterSpacing: "0.12em", textTransform: "uppercase",
+                              textDecoration: "none",
+                              whiteSpace: "nowrap" as const,
+                            }}
+                          >
+                            Open {isExternal && <span style={{ fontSize: 10 }}>↗</span>}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+
+        {q && zonesWithTools.every(({ tools }) => tools.length === 0) && (
+          <div style={{
+            textAlign: "center" as const, padding: "40px 16px",
+            fontFamily: "monospace", fontSize: 12, color: MUTED,
+          }}>
+            No tools match "{query}" — try a different term.
+          </div>
+        )}
+      </div>
+
+      {/* Registry footer */}
+      <div style={{
+        marginTop: 24, paddingTop: 14, borderTop: `1px solid ${RULE}`,
+        fontFamily: "monospace", fontSize: 9, color: MUTED,
+        letterSpacing: "0.12em", textTransform: "uppercase",
+      }}>
+        {totalTools} tools · {ZONES.length} zones · Switch to Map view to see spatial layout
+      </div>
+    </div>
+  );
+}
+
 /* ─── Main page ──────────────────────────────────────────────────────────── */
 
 export function CompassPage() {
   const CORNERS = buildCorners();
   const savedQuiz = loadSavedQuiz();
 
+  const [mode, setMode] = useState<CompassMode>(loadSavedMode);
   const [standby, setStandby] = useState(loadSavedStandby);
   const [quiz, setQuiz] = useState<QuizState>(savedQuiz ?? { who: null, situation: null, skipped: false });
   const [showQuiz, setShowQuiz] = useState(!savedQuiz);
@@ -611,6 +872,11 @@ export function CompassPage() {
   const [pulsingZones, setPulsingZones] = useState<number[]>([]);
   const [useNarrow, setUseNarrow] = useState(false);
   const pulseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function handleModeChange(m: CompassMode) {
+    setMode(m);
+    saveMode(m);
+  }
 
   useEffect(() => {
     function check() { setUseNarrow(window.innerWidth < 640); }
@@ -688,17 +954,22 @@ export function CompassPage() {
                 Six zones. Two corners. One neighbourhood. Tap any zone or landmark to see its tools and meaning.
               </p>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" as const, flexShrink: 0 }}>
-              <ToggleSwitch value={standby} onChange={handleStandbyChange} />
-              <button type="button" onClick={() => setShowQuiz(true)}
-                style={{ background: "none", border: `1px solid rgba(31,61,46,0.25)`, borderRadius: 6, cursor: "pointer", fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: FOREST, padding: "5px 12px" }}>
-                Find my zone
-              </button>
-              {quiz.who !== null && !quiz.skipped && (
-                <button type="button" onClick={handleReset}
-                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: MUTED, textDecoration: "underline", textDecorationStyle: "dotted" as const, padding: 0 }}>
-                  Reset
-                </button>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" as const, flexShrink: 0 }}>
+              <ModeTabBar mode={mode} onChange={handleModeChange} />
+              {mode === "map" && (
+                <>
+                  <ToggleSwitch value={standby} onChange={handleStandbyChange} />
+                  <button type="button" onClick={() => setShowQuiz(true)}
+                    style={{ background: "none", border: `1px solid rgba(31,61,46,0.25)`, borderRadius: 6, cursor: "pointer", fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: FOREST, padding: "5px 12px" }}>
+                    Find my zone
+                  </button>
+                  {quiz.who !== null && !quiz.skipped && (
+                    <button type="button" onClick={handleReset}
+                      style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: MUTED, textDecoration: "underline", textDecorationStyle: "dotted" as const, padding: 0 }}>
+                      Reset
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -713,7 +984,9 @@ export function CompassPage() {
           )}
         </div>
 
-        {useNarrow ? (
+        {mode === "registry" ? (
+          <RegistryView />
+        ) : useNarrow ? (
           /* Mobile: card list */
           <div>
             <div style={{ background: "#faf5ec", borderRadius: 8, padding: "10px 14px", marginBottom: 14, border: `1px solid ${RULE}`, fontSize: 11, color: MUTED, fontStyle: "italic" }}>

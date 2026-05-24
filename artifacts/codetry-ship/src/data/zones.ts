@@ -93,6 +93,13 @@ export const ZONES: ZoneData[] = [
         inThisProject: true,
         zoneAddress: "Z1–A",
       },
+      {
+        name: "XRPL Design Hub",
+        tagline: "Trust layer design — XRPL wallet UX, passphrase architecture, identity patterns",
+        url: "https://xrpl-design-hub.replit.app",
+        inThisProject: false,
+        zoneAddress: "Z1–B",
+      },
     ],
   },
   {
@@ -230,6 +237,13 @@ export const ZONES: ZoneData[] = [
         url: "/sandbox/",
         inThisProject: true,
         zoneAddress: "Z4–VC",
+      },
+      {
+        name: "Community Knowledge Hub",
+        tagline: "Shared knowledge base — community research, policy, and decision records",
+        url: "https://community-knowledge-hub.replit.app",
+        inThisProject: false,
+        zoneAddress: "Z4–B",
       },
     ],
   },
