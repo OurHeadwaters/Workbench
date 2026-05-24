@@ -12,6 +12,9 @@ import {
   sendRiverSmithBriefingEmail,
   sendRiverSmithFailureEmail,
 } from "./riverSmithMailer";
+import { db } from "@workspace/db";
+import { riverBriefingsTable } from "@workspace/db";
+import { eq } from "drizzle-orm";
 
 function msUntilNextRun(hour: number, minute: number): number {
   const now = new Date();
@@ -28,7 +31,18 @@ async function runNightlyBriefing(): Promise<void> {
   try {
     const result = await generateRiverSmithBriefing("scheduled");
     logger.info({ id: result.id }, "river-smith: nightly briefing complete");
-    await sendRiverSmithBriefingEmail(result.rawMarkdown);
+
+    const mailResult = await sendRiverSmithBriefingEmail(result.rawMarkdown);
+
+    await db
+      .update(riverBriefingsTable)
+      .set({ emailStatus: mailResult.status })
+      .where(eq(riverBriefingsTable.id, result.id));
+
+    logger.info(
+      { id: result.id, emailStatus: mailResult.status },
+      "river-smith: email status stamped",
+    );
   } catch (err) {
     logger.error({ err }, "river-smith: nightly briefing failed");
     const message = err instanceof Error ? err.message : String(err);

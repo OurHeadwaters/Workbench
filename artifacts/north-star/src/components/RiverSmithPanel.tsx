@@ -29,6 +29,7 @@ interface ArchiveEntry {
   generatedAt: string;
   triggeredBy: string;
   status: string;
+  emailStatus: "sent" | "failed" | "skipped" | null;
 }
 
 function getOwnerToken(): string | null {
@@ -128,6 +129,53 @@ function inlineMarkdown(text: string): React.ReactNode {
     }
     return part;
   });
+}
+
+// ── Email delivery badge ──────────────────────────────────────────────────────
+
+function EmailBadge({ status }: { status: "sent" | "failed" | "skipped" | null }) {
+  if (!status) return null;
+
+  const styles: Record<string, { label: string; icon: string; text: string; bg: string; border: string }> = {
+    sent: {
+      label: "email sent",
+      icon: "✉",
+      text: "#4A8A7C",
+      bg: "#0D1F1C",
+      border: "#1A3A33",
+    },
+    failed: {
+      label: "email failed",
+      icon: "✉",
+      text: "#A05A3A",
+      bg: "#1A0E0A",
+      border: "#3A1A0A",
+    },
+    skipped: {
+      label: "email skipped",
+      icon: "✉",
+      text: "#5C5046",
+      bg: "#141210",
+      border: "#251E18",
+    },
+  };
+
+  const s = styles[status];
+  if (!s) return null;
+
+  return (
+    <span
+      title={s.label}
+      style={{
+        color: s.text,
+        background: s.bg,
+        border: `1px solid ${s.border}`,
+      }}
+      className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-mono flex-shrink-0"
+    >
+      {s.icon} {status}
+    </span>
+  );
 }
 
 // ── Panel ─────────────────────────────────────────────────────────────────────
@@ -418,6 +466,7 @@ export function RiverSmithPanel() {
                 >
                   <span className="text-[10px] text-[#4A8A7C]">🌊</span>
                   <span className="text-[12px] text-[#8C7B6D]">{formatDate(entry.generatedAt)}</span>
+                  <EmailBadge status={entry.emailStatus} />
                   {entry.triggeredBy === "manual" && (
                     <span className="text-[10px] text-[#4A3D33] ml-auto">manual</span>
                   )}

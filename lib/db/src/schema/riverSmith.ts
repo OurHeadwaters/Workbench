@@ -17,6 +17,12 @@ import {
  * triggered_by values:
  *   scheduled  — nightly cron ran automatically
  *   manual     — Bobbie pressed "Generate Now"
+ *
+ * email_status values:
+ *   sent       — email delivered successfully via Gmail
+ *   failed     — mailer attempted but Gmail returned an error
+ *   skipped    — RIVER_SMITH_NOTIFY_EMAIL not set; email not attempted
+ *   null       — email not yet attempted (row was just inserted)
  */
 export const riverBriefingsTable = pgTable(
   "river_briefings",
@@ -29,6 +35,7 @@ export const riverBriefingsTable = pgTable(
     structuredJson: jsonb("structured_json"),
     status: text("status").notNull().default("published"),
     triggeredBy: text("triggered_by").notNull().default("scheduled"),
+    emailStatus: text("email_status"),
   },
   (t) => ({
     generatedAtIdx: index("river_briefings_generated_at_idx").on(t.generatedAt),

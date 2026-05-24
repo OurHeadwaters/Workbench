@@ -837,6 +837,7 @@ router.get("/briefings", async (req: Request, res: Response) => {
       generatedAt: riverBriefingsTable.generatedAt,
       triggeredBy: riverBriefingsTable.triggeredBy,
       status: riverBriefingsTable.status,
+      emailStatus: riverBriefingsTable.emailStatus,
     })
     .from(riverBriefingsTable)
     .where(gte(riverBriefingsTable.generatedAt, cutoff))
@@ -850,6 +851,7 @@ router.get("/briefings", async (req: Request, res: Response) => {
       generatedAt: r.generatedAt.toISOString(),
       triggeredBy: r.triggeredBy,
       status: r.status,
+      emailStatus: r.emailStatus ?? null,
     })),
   });
 });
