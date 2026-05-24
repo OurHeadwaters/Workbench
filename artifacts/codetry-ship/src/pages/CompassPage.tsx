@@ -953,6 +953,24 @@ export function CompassPage() {
               <p style={{ margin: 0, fontSize: 13, color: MUTED, lineHeight: 1.6, maxWidth: 520 }}>
                 Six zones. Two corners. One neighbourhood. Tap any zone or landmark to see its tools and meaning.
               </p>
+              <div style={{ marginTop: 12, padding: "9px 13px", borderRadius: 7, background: "rgba(31,61,46,0.055)", border: "1px solid rgba(31,61,46,0.12)", maxWidth: 520 }}>
+                <div style={{ fontFamily: "monospace", fontSize: 8, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: FOREST, marginBottom: 5 }}>
+                  In the watershed
+                </div>
+                <p style={{ margin: 0, fontSize: 11, color: INK, lineHeight: 1.65 }}>
+                  Each zone is terrain in the same watershed described on the{" "}
+                  <a href="/map" style={{ color: FOREST, textDecoration: "underline", textDecorationStyle: "dotted" }}>Map</a>.
+                  {" "}Zones 0–5 run from hearthside to horizon:{" "}
+                  {ZONES.map((z, i) => (
+                    <span key={z.number}>
+                      <span style={{ color: z.color, fontWeight: 700 }}>Z{z.number}</span>
+                      {" "}<span style={{ color: MUTED }}>{z.terrain}</span>
+                      {i < ZONES.length - 1 ? " · " : "."}
+                    </span>
+                  ))}
+                  {" "}The Compass and the Map read the same ground.
+                </p>
+              </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" as const, flexShrink: 0 }}>
               <ModeTabBar mode={mode} onChange={handleModeChange} />
