@@ -3,6 +3,152 @@ import { ChevronDown, ChevronUp, Bookmark, BookmarkCheck, ExternalLink } from "l
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 
+interface FoundationalDoc {
+  id: string;
+  title: string;
+  subtitle: string;
+  version?: string;
+  description: string;
+  keyPoints: { label: string; detail: string }[];
+  closingRule?: string;
+}
+
+const FOUNDATIONAL_DOCS: FoundationalDoc[] = [
+  {
+    id: "money-machine",
+    title: "Community Money Machine Blueprint",
+    subtitle: "Foundational Economic Architecture",
+    version: "v4 · Anchored May 2026",
+    description:
+      "The economic engine underneath every Headwaters institution. Not a theory — a working description of how money flows through a community that has decided to stop leaking wealth outward and start owning its own ground. The machine has one job: take every dollar that enters and route it so the maximum amount stays inside the watershed before any exits to the extractive economy.",
+    keyPoints: [
+      {
+        label: "Bucket 1 — Cost Basis",
+        detail:
+          "Pay the real cost of running the community's institutions — practitioners, infrastructure, operations. Never borrow against this bucket. If it runs dry, the machine stops before it borrows.",
+      },
+      {
+        label: "Bucket 2 — Reserve",
+        detail:
+          "Three to six months of operating costs, held in hard, community-controlled assets. This bucket does not get touched until the machine has a confirmed income failure. It is not a slush fund.",
+      },
+      {
+        label: "Bucket 3 — Reinvestment",
+        detail:
+          "New capacity, new infrastructure, new practitioners, and new institutions inside the watershed. Every dollar must produce a measurable ownership increase — not a program, not an event, not a report.",
+      },
+      {
+        label: "Bucket 4 — Eave Flow",
+        detail:
+          "The surplus that overflows the first three buckets and flows outward — to allied watersheds, replication, and the seventh generation. This bucket does not activate until Buckets 1–3 are funded and the Reserve is full. Premature eave flow is a leak.",
+      },
+      {
+        label: "The Honey Principle",
+        detail:
+          "A hive produces honey continuously. Most feeds the hive. The excess overflows the cells and drips down the comb — that overflow is the only honey the keeper harvests. Taking from inside the comb before it overflows kills the hive. Headwaters communities do not harvest before overflow.",
+      },
+      {
+        label: "The Three Tests",
+        detail:
+          "Every dollar must pass: (1) Does it increase ownership or create dependency? (2) Does it strengthen the watershed or create a new leak? (3) Would it pass seven-generation scrutiny? If any answer is no, the dollar does not move that direction.",
+      },
+    ],
+    closingRule:
+      "The machine does not run on hope. It runs on structure. Stop the leak. Fill the buckets. Let the overflow reach the next watershed.",
+  },
+  {
+    id: "watershed-compact",
+    title: "Watershed Compact",
+    subtitle: "Operating System & Decision Filter",
+    description:
+      "The full operating system for Headwaters community economy work. The compact defines the decision filter that governs every commitment, contract, and institutional move — the rules the community agrees to hold itself to before any external relationship is formed.",
+    keyPoints: [
+      {
+        label: "The operating rule",
+        detail:
+          "The compact is the container every tool and artifact lives inside. It defines what the community is protecting, what it is building toward, and what it will not trade away.",
+      },
+      {
+        label: "Decision filter",
+        detail:
+          "Every significant decision is run through the compact before it moves. If a proposed action cannot be located inside the compact's frame, the community pauses before proceeding.",
+      },
+    ],
+  },
+  {
+    id: "stomping-path",
+    title: "The Stomping Path",
+    subtitle: "Practitioner Transformation Trail",
+    description:
+      "The transformation trail that brings practitioners to the machine. The stomping path is the sequence of moves that takes a community from extractive dependence to operating the money machine — the ordered process of reclamation and founding that precedes a machine that can run without watching.",
+    keyPoints: [
+      {
+        label: "The sequence",
+        detail:
+          "The path names the stages a practitioner moves through — not a linear checklist, but a trail with known landmarks. Knowing which landmark you are at determines which tools belong in your hands.",
+      },
+      {
+        label: "Founding vs. reclamation",
+        detail:
+          "The materials are the same. The order of operations is not. The stomping path reads the site before prescribing the mix.",
+      },
+    ],
+  },
+];
+
+function FoundationalDocCard({ doc }: { doc: FoundationalDoc }) {
+  const [open, setOpen] = useState(false);
+  const [openPoint, setOpenPoint] = useState<number | null>(null);
+
+  return (
+    <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-4 min-h-[56px] text-left"
+      >
+        <div>
+          <p className="text-sm font-medium">{doc.title}</p>
+          <p className="text-xs text-[#78716C]">{doc.subtitle}{doc.version ? ` · ${doc.version}` : ""}</p>
+        </div>
+        {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+      </button>
+
+      {open && (
+        <div className="border-t border-[#E7E5E4] px-4 pt-3 pb-4 space-y-3">
+          <p className="text-sm text-[#44403C] leading-relaxed">{doc.description}</p>
+
+          {doc.keyPoints.length > 0 && (
+            <div className="space-y-1">
+              {doc.keyPoints.map((point, i) => (
+                <div key={i} className="rounded-lg border border-[#E7E5E4] overflow-hidden">
+                  <button
+                    onClick={() => setOpenPoint(openPoint === i ? null : i)}
+                    className="w-full flex items-center justify-between px-3 py-2.5 min-h-[44px] text-left"
+                  >
+                    <span className="text-xs font-medium text-[#44403C]">{point.label}</span>
+                    {openPoint === i ? <ChevronUp size={13} className="text-[#78716C]" /> : <ChevronDown size={13} className="text-[#78716C]" />}
+                  </button>
+                  {openPoint === i && (
+                    <div className="px-3 pb-3 text-xs text-[#78716C] leading-relaxed border-t border-[#E7E5E4] pt-2">
+                      {point.detail}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {doc.closingRule && (
+            <p className="text-xs text-[#8C7B6D] italic border-t border-[#E7E5E4] pt-3 leading-relaxed">
+              {doc.closingRule}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface Chapter {
   id: string;
   title: string;
@@ -256,9 +402,27 @@ export function GuidePage() {
         </a>
 
         <div className="space-y-3">
-          {CHAPTERS.map((chapter) => (
-            <ChapterCard key={chapter.id} chapter={chapter} />
-          ))}
+          <div>
+            <p className="text-xs text-[#78716C] uppercase tracking-wider font-medium mb-2 px-1">
+              Foundational Architecture
+            </p>
+            <div className="space-y-2">
+              {FOUNDATIONAL_DOCS.map((doc) => (
+                <FoundationalDocCard key={doc.id} doc={doc} />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-xs text-[#78716C] uppercase tracking-wider font-medium mb-2 px-1">
+              Zone Model & Practice
+            </p>
+            <div className="space-y-3">
+              {CHAPTERS.map((chapter) => (
+                <ChapterCard key={chapter.id} chapter={chapter} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
