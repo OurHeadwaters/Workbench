@@ -34,6 +34,7 @@ import {
   Flag,
   TrendingUp,
   Map,
+  Key,
 } from "lucide-react";
 
 const FOCUS_STORAGE_KEY = "pgv2.whatsnext.focus";
@@ -1022,6 +1023,15 @@ export function IndexPage() {
           >
             <span className="text-[#0F766E] font-bold text-base leading-none">→</span>
             All focus areas
+          </Link>
+          <Link
+            href="/crypto-corner"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium border bg-card hover:bg-muted/30 transition-colors"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+            data-testid="nav-crypto-corner"
+          >
+            <Key className="h-3.5 w-3.5 text-[#1E3A5F]" />
+            Crypto Corner
           </Link>
           <Link
             href="/archetypes"

@@ -48,6 +48,7 @@ import {
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
+  Key,
 } from "lucide-react";
 import { Link } from "wouter";
 import { CONFIRMED_DATE, formatTagDate } from "@/data/tags";
@@ -389,6 +390,19 @@ export function ComparePage() {
                 </Link>{" "}
                 and have the conversation against the locked V7 numbers, using your alt reality as the
                 proposed counter-offer.
+              </li>
+              <li>
+                <strong className="text-foreground">Stage 2 → Stage 3 junction.</strong>{" "}
+                The operating framework lives in Stage 3 — community ownership architecture. If the
+                traveller arriving here is still working through sound money instincts and the Ron
+                Paul pivot, the named waypoint at that junction is{" "}
+                <Link
+                  href="/crypto-corner"
+                  className="underline hover:text-foreground inline-flex items-center gap-1"
+                  data-testid="link-crypto-corner-from-compare"
+                >
+                  <Key className="inline h-3 w-3" /> Crypto Corner <ArrowRight className="inline h-3 w-3" />
+                </Link>
               </li>
             </ul>
           </AccordionContent>
