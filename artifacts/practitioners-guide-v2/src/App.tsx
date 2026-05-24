@@ -41,6 +41,7 @@ import { GmphPathBPage } from "@/pages/GmphPathBPage";
 import { LegacyAssetManagerPage } from "@/pages/LegacyAssetManagerPage";
 import { TheGateOverridePage } from "@/pages/TheGateOverridePage";
 import { MoneyMachineBlueprintPage } from "@/pages/MoneyMachineBlueprintPage";
+import { CryptoCornerPage } from "@/pages/CryptoCornerPage";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
 
@@ -94,6 +95,7 @@ function Router() {
       <Route path="/gmph-path-b" component={GmphPathBPage} />
       <Route path="/the-gate-override" component={TheGateOverridePage} />
       <Route path="/money-machine" component={MoneyMachineBlueprintPage} />
+      <Route path="/crypto-corner" component={CryptoCornerPage} />
       <Route component={NotFound} />
     </Switch>
   );

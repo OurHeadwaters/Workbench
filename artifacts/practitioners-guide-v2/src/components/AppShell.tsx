@@ -35,6 +35,7 @@ import {
   Map,
   FileText,
   ShieldAlert,
+  Key,
 } from "lucide-react";
 
 interface NavItem {
@@ -158,8 +159,10 @@ const NAV_GROUPS: NavGroup[] = [
       "/workflow",
       "/deer-lake",
       "/the-gate-override",
+      "/crypto-corner",
     ],
     items: [
+      { href: "/crypto-corner", label: "Crypto Corner", icon: Key, accent: "#1E3A5F" },
       { href: "/deer-lake", label: "Deer Lake Network", icon: Truck, accent: "#1B5E8A" },
       { href: "/archetypes", label: "Archetypes", icon: Layers, accent: "#1F5B3F" },
       { href: "/compare", label: "Operating Framework", icon: GitCompareArrows },
