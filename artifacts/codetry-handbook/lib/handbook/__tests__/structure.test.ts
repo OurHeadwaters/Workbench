@@ -236,10 +236,22 @@ const FIELD_LEDGER_EXPECTED_NUMBERS = [
   "FL.11",
 ];
 
+const GOVERNANCE_APPENDIX_EXPECTED_NUMBERS = [
+  "APP.0",
+  "APP.1",
+  "APP.2",
+  "APP.3",
+  "APP.4",
+  "APP.5",
+  "APP.6",
+  "APP.7",
+];
+
 describe("handbook structure guard — back-matter parts", () => {
   const partOpenQuestions = PARTS.find((p) => p.roman === "V");
   const partDeepDives = PARTS.find((p) => p.roman === "DD");
   const partFieldLedger = PARTS.find((p) => p.roman === "FL");
+  const partGovernanceAppendix = PARTS.find((p) => p.roman === "APP");
 
   describe("Open Questions (roman V) chapter count and ordering", () => {
     it("exists in PARTS", () => {
@@ -289,6 +301,29 @@ describe("handbook structure guard — back-matter parts", () => {
         actual,
         `Field Ledger chapter numbers do not match. Expected:\n  ${FIELD_LEDGER_EXPECTED_NUMBERS.join(", ")}\nGot:\n  ${actual.join(", ")}`,
       ).toEqual(FIELD_LEDGER_EXPECTED_NUMBERS);
+    });
+  });
+
+  describe("Governance Appendix (roman APP) chapter count and ordering", () => {
+    it("exists in PARTS", () => {
+      expect(
+        partGovernanceAppendix,
+        'PARTS does not contain a part with roman "APP" — Governance Appendix may have been dropped or its roman key changed',
+      ).toBeDefined();
+    });
+
+    it("contains exactly the expected chapter numbers in order", () => {
+      const actual = (partGovernanceAppendix?.chapters ?? []).map(
+        (ch) => ch.number,
+      );
+      expect(
+        actual,
+        `Governance Appendix chapter numbers do not match. Expected:\n  ${GOVERNANCE_APPENDIX_EXPECTED_NUMBERS.join(", ")}\nGot:\n  ${actual.join(", ")}`,
+      ).toEqual(GOVERNANCE_APPENDIX_EXPECTED_NUMBERS);
+    });
+
+    it("has kind backMatter", () => {
+      expect(partGovernanceAppendix?.kind).toBe("backMatter");
     });
   });
 

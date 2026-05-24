@@ -1338,6 +1338,13 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
     blocks.push({ kind: "subhead", text: "Reflect", practitioner: true });
     blocks.push({ kind: "list", items: z.reflections, practitioner: true });
   }
+  if (z.name === "Eave") {
+    blocks.push({ kind: "rule" });
+    blocks.push({
+      kind: "small",
+      text: "The money machine's governance rules — decision authority, quorum, voting, dispute escalation, Reserve raid protocol, and the quarterly report — are in Appendix G (§APP.0–APP.7).",
+    });
+  }
   return {
     id: `3-${i + 1}`,
     number: num,
@@ -4785,7 +4792,411 @@ const partConclusion: Part = {
   ],
 };
 
-export const PARTS: Part[] = [partPrologue, partV, partI, partIII, partIV, partQuietExamples, partVI, partII, partVII, partConclusion];
+const partGovernanceAppendix: Part = {
+  roman: "APP",
+  title: "Appendix G — Community Money Machine Governance Rules",
+  blurb:
+    "The operating rules for a community-owned money machine. Decision authority, quorum, voting, dispute escalation, Reserve raid protocol, quarterly reporting, and annual audit — drawn from the canonical governance document and carried here so stewards can reference them offline.",
+  kind: "backMatter",
+  chapters: [
+    {
+      id: "app-0",
+      number: "APP.0",
+      partRoman: "APP",
+      partLabel: "Appendix G — Governance Rules",
+      title: "About this appendix",
+      blocks: [
+        {
+          kind: "small",
+          text: "Appendix G · Community Money Machine — Governance Rules · Version 1 · Anchored May 2026",
+        },
+        {
+          kind: "callout",
+          text: "These are not bylaws. They are the operating rules for a machine the community owns. The difference matters: bylaws live in a filing cabinet. Operating rules live at the kitchen table.",
+        },
+        {
+          kind: "para",
+          text: "The Community Money Machine Blueprint (v4) names five governance rules but leaves the mechanics undefined. This appendix fills that gap. It answers the questions a real community will ask when they sit down to run the machine: Who decides what? When does the whole table need to weigh in? What happens when people disagree? What does the quarterly report look like? What is the exact sequence when the Reserve has to be raided?",
+        },
+        {
+          kind: "para",
+          text: "Every rule here is grounded in the Watershed Compact decision filter and the three-tests rule from the blueprint. Nothing here contradicts a poured-concrete decision.",
+        },
+        {
+          kind: "list",
+          items: [
+            "APP.1 — Decision Authority Matrix: who decides what, and when the table must weigh in.",
+            "APP.2 — Quorum: who is at the table and what counts as a valid decision.",
+            "APP.3 — Voting Method: how decisions are recorded and what majority they require.",
+            "APP.4 — Dispute Escalation: the two-step path before a formal vote.",
+            "APP.5 — Reserve Raid Protocol: the named five-step sequence for any Reserve draw.",
+            "APP.6 — Quarterly Money Machine Report: the machine's health check, four times a year.",
+            "APP.7 — Annual Audit: the full-year reconciliation.",
+          ],
+        },
+      ],
+    },
+    {
+      id: "app-1",
+      number: "APP.1",
+      partRoman: "APP",
+      partLabel: "Appendix G — Governance Rules",
+      title: "Decision Authority Matrix",
+      blocks: [
+        {
+          kind: "small",
+          text: "Appendix G · Part 1 — who decides what",
+        },
+        {
+          kind: "para",
+          text: "The machine has two levels of authority: steward authority and Kitchen Table authority. A bucket steward is the named person responsible for that bucket's day-to-day operation. Stewards are named during the Week 7–8 Governance Setup in the 90-Day Checklist. Stewards act alone within their lane. When a decision crosses lane boundaries, increases long-term obligations, or touches the Reserve, the Kitchen Table decides.",
+        },
+        {
+          kind: "subhead",
+          text: "What each steward decides alone.",
+        },
+        {
+          kind: "list",
+          items: [
+            "Bucket 1 — Cost Basis steward: approve routine operating expenses already in the agreed Cost Basis; pay practitioners at the agreed rate; flag variances under 5% of monthly Cost Basis without a table meeting.",
+            "Bucket 2 — Reserve steward: monitor balance and report monthly. Cannot authorize any draw without a table vote.",
+            "Bucket 3 — Reinvestment steward: approve Reinvestment spends up to a single-spend ceiling set by the table at the start of each year (default: $2,500 CAD or 10% of monthly Cost Basis, whichever is lower). Must confirm ownership-increase test before any spend.",
+            "Bucket 4 — Eave Flow steward: confirm that overflow conditions are met before any Eave Flow is released. Cannot redirect Eave Flow to a new recipient without table approval.",
+          ],
+        },
+        {
+          kind: "subhead",
+          text: "What requires Kitchen Table approval.",
+        },
+        {
+          kind: "para",
+          text: "Any of the following triggers a required table decision — not a steward call, not a 'we'll sort it later':",
+        },
+        {
+          kind: "ordered",
+          items: [
+            "Any change to the monthly Cost Basis — whether up or down. Adding a practitioner, changing compensation, or cutting an operating line all require table approval.",
+            "Any draw on the Reserve — regardless of size. No exceptions. (See APP.5 for the full sequence.)",
+            "Any Reinvestment spend above the single-spend ceiling.",
+            "Any change to bucket percentages or the machine's split structure.",
+            "Any new Eave Flow recipient — who the overflow goes to is a table decision, not a steward's gift.",
+            "Any income stream that constitutes more than 25% of total monthly income — adding or losing it changes the machine's risk profile and the table needs to see it.",
+            "Any partnership, contract, or agreement that creates a new recurring obligation against the Cost Basis.",
+            "The annual audit findings — reviewed and acknowledged by the full table before they are considered closed.",
+            "Declaration of income failure — the formal trigger for Reserve access (see APP.5).",
+          ],
+        },
+      ],
+    },
+    {
+      id: "app-2",
+      number: "APP.2",
+      partRoman: "APP",
+      partLabel: "Appendix G — Governance Rules",
+      title: "Quorum",
+      blocks: [
+        {
+          kind: "small",
+          text: "Appendix G · Part 2 — who is at the table and what counts",
+        },
+        {
+          kind: "subhead",
+          text: "Who is 'at the table'.",
+        },
+        {
+          kind: "para",
+          text: "The Kitchen Table for money machine purposes is the governing circle named during Week 7–8 of the 90-Day Checklist. It must include all four bucket stewards (or their named alternates) and at least one community member who is not a steward — a witness seat that keeps the machine honest. The minimum structure is five people: four stewards plus one witness. Seat definitions are documented and filed with the machine's governance record.",
+        },
+        {
+          kind: "subhead",
+          text: "Minimum quorum for a valid decision.",
+        },
+        {
+          kind: "pull",
+          text: "Three-quarters of the named table seats must be present — in person, on a call, or by documented written consent submitted before the meeting. For a five-person table, that is four people. For an eight-person table, it is six.",
+        },
+        {
+          kind: "para",
+          text: "The witness seat counts toward quorum. The witness seat cannot be the deciding vote on a Reserve draw or a Cost Basis change — those require at least one steward majority.",
+        },
+        {
+          kind: "subhead",
+          text: "When quorum cannot be reached.",
+        },
+        {
+          kind: "para",
+          text: "If a decision is time-sensitive and quorum cannot be assembled within seven calendar days of a trigger event:",
+        },
+        {
+          kind: "ordered",
+          items: [
+            "The bucket steward most directly affected documents the situation in writing and sends it to all table members.",
+            "A 48-hour written consent window opens. Members who respond with written approval or objection count toward quorum for that specific decision only.",
+            "If written responses still do not reach quorum threshold, the default action is no change — the machine holds its current course until a full meeting can happen.",
+            "A Reserve draw cannot be authorized under the written-consent emergency path. Reserve draws require a live meeting. If a live meeting cannot happen in seven days, the machine stops spending above Cost Basis until it can.",
+          ],
+        },
+      ],
+    },
+    {
+      id: "app-3",
+      number: "APP.3",
+      partRoman: "APP",
+      partLabel: "Appendix G — Governance Rules",
+      title: "Voting Method",
+      blocks: [
+        {
+          kind: "small",
+          text: "Appendix G · Part 3 — how decisions are recorded",
+        },
+        {
+          kind: "subhead",
+          text: "How decisions are recorded.",
+        },
+        {
+          kind: "para",
+          text: "Every Kitchen Table decision on a money machine matter is recorded in the machine's governance log — a running document kept by the table's designated record-keeper. Each entry records: date and format of the meeting; who was present and whether quorum was met; what was decided, in plain language; the vote count (for / against / abstaining); any dissenting positions, summarized in one or two sentences per dissenting member. The log does not need to be long. It needs to be honest.",
+        },
+        {
+          kind: "subhead",
+          text: "What constitutes agreement.",
+        },
+        {
+          kind: "list",
+          items: [
+            "Simple majority — more than half of those present and counted toward quorum — carries most decisions.",
+            "Two-thirds majority is required for: any change to the Cost Basis that increases total monthly obligations by more than 15%; any Reserve draw; any change to bucket structure or split percentages; any Eave Flow recipient change.",
+            "Unanimous consent is required for: winding down the machine entirely; transferring machine ownership or governance to a new body; any decision that permanently removes a community member's stake in the machine.",
+          ],
+        },
+        {
+          kind: "subhead",
+          text: "How dissent is logged.",
+        },
+        {
+          kind: "para",
+          text: "A member who disagrees with a decision states their position plainly. The record-keeper captures it in one or two sentences. The decision proceeds. The dissent stands in the record permanently — it does not reopen the decision, but it exists as a flag for the annual audit and for future tables reviewing the history. There is no penalty for dissent. Dissent is a contribution to the machine's institutional memory. A table that never has a recorded dissent is a table that is not thinking hard enough.",
+        },
+      ],
+    },
+    {
+      id: "app-4",
+      number: "APP.4",
+      partRoman: "APP",
+      partLabel: "Appendix G — Governance Rules",
+      title: "Dispute Escalation",
+      blocks: [
+        {
+          kind: "small",
+          text: "Appendix G · Part 4 — the two-step path before a vote",
+        },
+        {
+          kind: "para",
+          text: "Not every disagreement needs a vote. Most disputes are navigated in two steps before a formal vote is called.",
+        },
+        {
+          kind: "subhead",
+          text: "Step 1 — Direct steward conversation.",
+        },
+        {
+          kind: "para",
+          text: "When two stewards disagree on a money machine decision, the first step is a direct conversation — just the two of them, no audience, within three business days of the disagreement surfacing. The goal is to name the actual concern underneath the disagreement: Is it a values question? A math question? A trust question? Many disputes dissolve when the actual concern is named plainly. If Step 1 resolves the dispute, the resolution is noted briefly in the governance log. No formal vote needed.",
+        },
+        {
+          kind: "subhead",
+          text: "Step 2 — Kitchen Table review.",
+        },
+        {
+          kind: "para",
+          text: "If the direct conversation does not resolve the dispute within three business days, either steward brings it to the full table at the next scheduled meeting (or calls a special session if the matter is time-sensitive). The table hears from both stewards — uninterrupted, in sequence. Then the table discusses. Then it votes if a vote is needed. The governance log captures both positions and the outcome.",
+        },
+        {
+          kind: "callout",
+          text: "There is no Step 3. The table's decision is final within the machine's operating life. If a community member believes the table has violated the machine's governance rules or the Watershed Compact, that is a separate matter handled through the community's broader governance structure — not through money machine dispute escalation.",
+        },
+        {
+          kind: "para",
+          text: "Escalation is not a punishment process. It is not about who is right. It is about naming the disagreement clearly, giving both sides a fair hearing, and making a documented decision. A dispute that goes to Step 2 and gets resolved cleanly is the machine working correctly.",
+        },
+      ],
+    },
+    {
+      id: "app-5",
+      number: "APP.5",
+      partRoman: "APP",
+      partLabel: "Appendix G — Governance Rules",
+      title: "Reserve Raid Protocol",
+      blocks: [
+        {
+          kind: "small",
+          text: "Appendix G · Part 5 — the named sequence for any Reserve draw",
+        },
+        {
+          kind: "para",
+          text: "The Reserve is the community's insurance. Raiding it is a serious act with a formal sequence. The sequence exists so that the decision is never made in a panic, never made by one person, and is always traceable.",
+        },
+        {
+          kind: "subhead",
+          text: "Step 1 — Income Failure Declaration.",
+        },
+        {
+          kind: "para",
+          text: "The Cost Basis steward observes that incoming revenue has fallen below Cost Basis for two consecutive months (or projects a shortfall within the current month that cannot be covered by any other means). The steward documents this in writing and sends it to all table members. This written notice is the formal 'income failure declaration.' A single bad month is not an income failure. Two months in a row — or a single month where the shortfall is more than 50% of Cost Basis — triggers the declaration.",
+        },
+        {
+          kind: "subhead",
+          text: "Step 2 — All-Hands Table Meeting.",
+        },
+        {
+          kind: "para",
+          text: "Within five calendar days of the income failure declaration, the full table meets (live — in person or synchronous call). This meeting cannot be replaced by written consent. Quorum rules apply. The meeting has one agenda: determine whether a Reserve draw is necessary and, if so, how much. Before authorizing a draw, the table must confirm: every Cost Basis expense has been reviewed for cuts or deferrals; no Reinvestment spending is occurring; no Eave Flow is occurring; the income failure is not a result of a governance violation or mismanagement that should be corrected differently.",
+        },
+        {
+          kind: "subhead",
+          text: "Step 3 — Authorization.",
+        },
+        {
+          kind: "para",
+          text: "The table votes. A two-thirds majority is required. The vote is recorded in the governance log with every member's position noted. If authorized, the draw amount is the minimum necessary to cover the confirmed shortfall — not a round number, not a buffer against future uncertainty. The Reserve covers what is real and documented today.",
+        },
+        {
+          kind: "subhead",
+          text: "Step 4 — Draw and Notification.",
+        },
+        {
+          kind: "para",
+          text: "The Reserve steward executes the draw within two business days of authorization. All table members receive a written confirmation of the draw amount and the date it was made. The machine's current state immediately returns to Building State — regardless of what state it was in before the draw. The Reserve must be rebuilt before Reinvestment or Eave Flow resumes.",
+        },
+        {
+          kind: "subhead",
+          text: "Step 5 — Replenishment Obligation.",
+        },
+        {
+          kind: "para",
+          text: "Within 30 days of the draw, the table meets again to establish a replenishment plan. The plan names: a monthly replenishment amount; a target date to return the Reserve to its pre-draw level; the income recovery actions being taken to prevent another income failure. The replenishment plan is documented and filed with the governance record. It is reviewed at every quarterly Money Machine Report until the Reserve is restored.",
+        },
+        {
+          kind: "callout",
+          text: "A Reserve draw that is not followed by a replenishment plan within 30 days is a governance violation.",
+        },
+      ],
+    },
+    {
+      id: "app-6",
+      number: "APP.6",
+      partRoman: "APP",
+      partLabel: "Appendix G — Governance Rules",
+      title: "Quarterly Money Machine Report",
+      blocks: [
+        {
+          kind: "small",
+          text: "Appendix G · Part 6 — the machine's health check, four times a year",
+        },
+        {
+          kind: "subhead",
+          text: "What it contains.",
+        },
+        {
+          kind: "para",
+          text: "The quarterly Money Machine Report is the machine's health check, produced four times a year. It covers:",
+        },
+        {
+          kind: "ordered",
+          items: [
+            "Opening balances — each bucket's balance at the start of the quarter, in dollars.",
+            "Income received — total, broken down by stream, with reliability category (recurring vs. one-time).",
+            "Bucket movements — how much moved into each bucket and why.",
+            "Cost Basis reconciliation — actual spend vs. agreed Cost Basis, with any variance explained.",
+            "Reserve position — current balance, current months of coverage, trajectory.",
+            "Reinvestment activity — what was spent, what ownership it produced (or why it was held).",
+            "Eave Flow activity — if active, what went where and why.",
+            "Closing balances — each bucket's balance at the end of the quarter.",
+            "Flags — anything that doesn't look right, anything that needs a table decision, any governance log items from the quarter that the full community should know about.",
+          ],
+        },
+        {
+          kind: "para",
+          text: "The report does not editorialize. It states what happened. If something went sideways, it says so plainly.",
+        },
+        {
+          kind: "subhead",
+          text: "Who produces it.",
+        },
+        {
+          kind: "para",
+          text: "The Cost Basis steward produces the report with input from all four bucket stewards. Each steward is responsible for the accuracy of their section. The record-keeper reviews the governance log entries and summarizes any decisions made during the quarter.",
+        },
+        {
+          kind: "subhead",
+          text: "Where it lands.",
+        },
+        {
+          kind: "para",
+          text: "The quarterly report is presented to the full Kitchen Table at a meeting scheduled in advance — ideally within 15 days of the quarter's end. After the table reviews it, the report is shared with the broader community in whatever format the community has agreed to (posted at the co-op, shared by email, read aloud at a community meeting). The report does not go to outside funders, governments, or platforms unless the community has explicitly decided otherwise and that decision is in the governance log.",
+        },
+        {
+          kind: "subhead",
+          text: "What triggers an unscheduled report.",
+        },
+        {
+          kind: "list",
+          items: [
+            "A Reserve draw is authorized (the draw and replenishment plan together constitute an interim report).",
+            "A new income stream representing more than 25% of monthly income begins or ends.",
+            "Any bucket falls below its minimum threshold for the first time.",
+            "The table votes to trigger one for any other reason.",
+          ],
+        },
+      ],
+    },
+    {
+      id: "app-7",
+      number: "APP.7",
+      partRoman: "APP",
+      partLabel: "Appendix G — Governance Rules",
+      title: "Annual Audit",
+      blocks: [
+        {
+          kind: "small",
+          text: "Appendix G · Part 7 — the full-year reconciliation",
+        },
+        {
+          kind: "para",
+          text: "Once a year, every bucket is reconciled publicly. The annual audit is a full review of the machine's year: every dollar in, every dollar out, every bucket movement, every governance decision.",
+        },
+        {
+          kind: "para",
+          text: "The annual audit is not the quarterly report. It is a complete accounting, reviewed by the full table and shared with the community. An outside community member — someone not serving as a bucket steward — should review the audit before it is finalized. This is not a formal accounting engagement. It is a community check. A second pair of eyes that has no stake in the numbers looking clean.",
+        },
+        {
+          kind: "para",
+          text: "The annual audit date is set in the 90-Day Governance Setup and does not move without a table vote.",
+        },
+        {
+          kind: "rule",
+        },
+        {
+          kind: "subhead",
+          text: "Grounding notes.",
+        },
+        {
+          kind: "para",
+          text: "These rules are designed to be run at the kitchen table, not in a boardroom. They do not require lawyers, accountants, or outside facilitators. They require: people who agreed to be named stewards; a governance log someone actually keeps; a table that meets when the rules say to meet.",
+        },
+        {
+          kind: "para",
+          text: "The Watershed Compact's decision filter runs underneath all of this. When a governance question arises that these rules do not answer directly, the table runs the question through the five decision filter questions. That answer is the answer.",
+        },
+        {
+          kind: "callout",
+          text: "The three tests from the blueprint — ownership vs. dependency, watershed vs. leak, seven-generation scrutiny — apply to every governance decision, not just spending decisions. A governance structure that creates dependency, leaks authority to outside institutions, or would embarrass the next generation is a governance structure that needs to change.",
+        },
+      ],
+    },
+  ],
+};
+
+export const PARTS: Part[] = [partPrologue, partV, partI, partIII, partIV, partQuietExamples, partVI, partII, partVII, partGovernanceAppendix, partConclusion];
 
 export const CHAPTERS: Chapter[] = PARTS.flatMap((p) => p.chapters);
 
