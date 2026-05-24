@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { RiverSmithPanel } from "@/components/RiverSmithPanel";
+import blueprintRaw from "../../../../shared/community-money-machine-blueprint.md?raw";
+import compactRaw from "../../../../shared/watershed-compact.md?raw";
+import stompingRaw from "../../../../shared/stomping-path.md?raw";
 
 // ── Kitchen Table source roll-up ──────────────────────────────────────────────
 // Reads /api/deadhead/intake so the council can move artifact-by-artifact.
@@ -583,6 +586,65 @@ GROUND RULES
   },
 ];
 
+// ── Reference Doc renderer ────────────────────────────────────────────────────
+function RefDocContent({ raw }: { raw: string }) {
+  const lines = raw.split("\n");
+  const elements: JSX.Element[] = [];
+  let key = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]!;
+
+    if (/^#{1,3}\s/.test(line)) {
+      const level = (line.match(/^#+/)![0]!).length;
+      const text = line.replace(/^#+\s*/, "");
+      const sizeClass = level === 1
+        ? "text-[18px] font-serif text-[#EAE4DB] mt-6 mb-2"
+        : level === 2
+        ? "text-[15px] font-semibold text-[#C5B6A5] mt-5 mb-2 tracking-wide"
+        : "text-[13px] font-semibold text-[#A39485] mt-4 mb-1 uppercase tracking-[0.1em]";
+      elements.push(<p key={key++} className={sizeClass}>{text}</p>);
+    } else if (/^---+$/.test(line.trim())) {
+      elements.push(<hr key={key++} className="border-[#2C241D] my-4" />);
+    } else if (/^\|/.test(line)) {
+      if (/^[\|\s\-:]+$/.test(line)) continue;
+      const cells = line.split("|").filter((_, ci) => ci > 0 && ci < line.split("|").length - 1);
+      elements.push(
+        <div key={key++} className="flex gap-3 py-1.5 border-b border-[#1E1A16]">
+          {cells.map((cell, ci) => (
+            <span key={ci} className={cn("text-[13px] text-[#C5B6A5] leading-relaxed flex-1", ci === 0 ? "font-semibold text-[#EAE4DB] flex-none w-24" : "")}>{cell.trim()}</span>
+          ))}
+        </div>
+      );
+    } else if (/^\s{2,}/.test(line) || /^\s*[-•·]/.test(line)) {
+      const text = line.replace(/^\s*[-•·]\s*/, "").trim();
+      if (!text) continue;
+      const indentMatch = line.match(/^(\s+)/);
+      const indent = indentMatch ? indentMatch[1]!.length : 0;
+      elements.push(
+        <div key={key++} className="flex gap-2 py-0.5" style={{ paddingLeft: Math.min(indent * 4, 24) }}>
+          <span className="text-[#5C5046] flex-shrink-0 mt-0.5 text-[11px]">·</span>
+          <span className="text-[13px] text-[#C5B6A5] leading-relaxed" dangerouslySetInnerHTML={{ __html: text.replace(/\*\*(.+?)\*\*/g, "<strong class='text-[#EAE4DB]'>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>") }} />
+        </div>
+      );
+    } else if (line.startsWith("> ")) {
+      elements.push(
+        <blockquote key={key++} className="border-l-2 border-[#8C7B6D] pl-4 my-3 text-[13px] italic text-[#A39485] leading-relaxed">
+          {line.slice(2)}
+        </blockquote>
+      );
+    } else if (line.trim()) {
+      elements.push(
+        <p key={key++} className="text-[13px] text-[#C5B6A5] leading-relaxed my-1.5"
+          dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.+?)\*\*/g, "<strong class='text-[#EAE4DB]'>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>") }}
+        />
+      );
+    }
+  }
+
+  return <div className="pb-8">{elements}</div>;
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 export function KitchenTablePage() {
   const [seats, setSeats] = useState<Seat[]>(() => {
@@ -756,6 +818,9 @@ export function KitchenTablePage() {
   const [bitesOpen, setBitesOpen] = useState(false);
   const [biteInput, setBiteInput] = useState("");
 
+  const [refOpen, setRefOpen] = useState(false);
+  const [refTab, setRefTab] = useState<"blueprint" | "compact" | "stomping">("blueprint");
+
   useEffect(() => {
     try { localStorage.setItem("kitchen-table-sound-bites", JSON.stringify(soundBites)); } catch { /* noop */ }
   }, [soundBites]);
@@ -810,6 +875,14 @@ export function KitchenTablePage() {
               <span className="tracking-wide">{activeSeat.name}</span>
             </div>
           )}
+          <button
+            onClick={() => setRefOpen(true)}
+            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#2C241D] bg-[#1C1814] text-[#8C7B6D] text-[11px] tracking-wide hover:text-[#D8D0C5] hover:border-[#3D3228] transition-colors"
+            title="Reference Docs"
+          >
+            <span className="text-[12px]">📖</span>
+            <span>Docs</span>
+          </button>
           <button
             onClick={() => setBitesOpen(true)}
             className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#2C241D] bg-[#1C1814] text-[#8C7B6D] text-[11px] tracking-wide hover:text-[#D8D0C5] hover:border-[#3D3228] transition-colors"
@@ -1220,6 +1293,64 @@ export function KitchenTablePage() {
               >
                 Set seat
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Reference Docs panel ── */}
+      {refOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex flex-col justify-end"
+          onClick={(e) => { if (e.target === e.currentTarget) setRefOpen(false); }}
+        >
+          <div className="bg-[#13110E] border-t border-[#2C241D] rounded-t-2xl max-h-[88dvh] flex flex-col shadow-[0_-20px_60px_rgba(0,0,0,0.7)]">
+            {/* Panel header */}
+            <div className="flex items-center gap-3 px-5 pt-5 pb-4 border-b border-[#2C241D] flex-shrink-0">
+              <span className="text-[#8C7B6D] text-base">📖</span>
+              <span className="text-[13px] uppercase tracking-[0.15em] text-[#EAE4DB] font-medium flex-1">Reference Docs</span>
+              <span className="text-[11px] text-[#5C5046]">Foundational Architecture</span>
+              <button
+                onClick={() => setRefOpen(false)}
+                className="text-[#5C5046] hover:text-[#8C7B6D] text-xl leading-none ml-2 transition-colors"
+              >×</button>
+            </div>
+
+            {/* Tab bar */}
+            <div className="flex gap-0 border-b border-[#2C241D] flex-shrink-0">
+              {(
+                [
+                  { id: "blueprint", label: "Money Machine Blueprint" },
+                  { id: "compact",   label: "Watershed Compact" },
+                  { id: "stomping",  label: "Stomping Path" },
+                ] as const
+              ).map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setRefTab(tab.id)}
+                  className={cn(
+                    "flex-1 px-3 py-3 text-[11px] uppercase tracking-[0.12em] font-medium transition-colors border-b-2",
+                    refTab === tab.id
+                      ? "text-[#EAE4DB] border-[#8C7B6D] bg-[#1A1714]"
+                      : "text-[#5C5046] border-transparent hover:text-[#A39485] hover:bg-[#181512]"
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Doc content */}
+            <div className="flex-1 overflow-y-auto px-5 py-5">
+              <RefDocContent
+                raw={
+                  refTab === "blueprint"
+                    ? blueprintRaw
+                    : refTab === "compact"
+                    ? compactRaw
+                    : stompingRaw
+                }
+              />
             </div>
           </div>
         </div>
