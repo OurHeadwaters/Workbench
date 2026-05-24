@@ -151,6 +151,7 @@ const ZONES = [
       { href: "/deer-lake-why-now", title: "Why Deer Lake. Why Now.", label: "Deer Lake", desc: "What Deer Lake already has, the 807 flow, and the January 2027 urgency." },
       { href: "/deer-lake-partnership", title: "Deer Lake — 2027 Partnership Pitch", label: "807 × Deer Lake", desc: "Leave-behind: grants, truck route, letter of support by May 31." },
       { href: "/northern-pilot", title: "Northern Pilot Pitch", label: "Deer Lake Pilot", desc: "Three pillars, Chief's vision, $25,000 · 6-week engagement." },
+      { href: "/money-machine-report", title: "Quarterly Money Machine Report — Template", label: "Governance · Part 6", desc: "Fillable nine-section template: opening balances through closing balances and flags. Saves locally, prints or exports to PDF." },
       { href: "/community-finance-brief", title: "Gamified Community Finance Brief", label: "Product brief · 2027", desc: "HWBAND + xbuckets circuit, five gamification mechanics, four partner angles." },
       { href: "/governance-card", title: "Governance Quick-Reference Card", label: "Community governance", desc: "Print-and-post card: decision authority matrix, quorum rules, voting thresholds, and the full Reserve Raid 5-step protocol." },
       { href: "/pace-referral", title: "PACE Referral — NWO Food Businesses", label: "Business Dev", desc: "For PACE to forward to NWO clients — Phase 1 offer, four deliverables." },
