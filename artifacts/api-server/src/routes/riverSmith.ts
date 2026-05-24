@@ -22,8 +22,10 @@ import {
   messages as messagesTable,
   bookkeeperTransactionsTable,
   bookkeeperTransactionLinesTable,
+  sargeWeeksTable,
+  sargeCardsTable,
 } from "@workspace/db";
-import { desc, gte, eq, sql } from "drizzle-orm";
+import { and, desc, gte, eq, sql, inArray } from "drizzle-orm";
 import { isOwnerRequest, OWNER_TOKEN } from "../lib/ownerAuth";
 import { logger } from "../lib/logger";
 
@@ -216,6 +218,20 @@ interface FinancialHealthEntry {
   netAmount: string;
 }
 
+interface SargeWeekDigest {
+  weekOf: string;
+  priorities: { id: string; label: string; order: number; isActive: boolean }[];
+  isLocked: boolean;
+}
+
+interface SargeCardDigest {
+  action: string;
+  context: string | null;
+  status: string;
+  priorityLabel: string;
+  barrierNote: string | null;
+}
+
 interface UniverseDigest {
   recentTasks: { title: string; status: string; createdAt: string }[];
   recentDeadheadItems: { title: string; source: string; flushedAt: string }[];
@@ -224,6 +240,8 @@ interface UniverseDigest {
   recentAiInteractions: { role: string; content: string; createdAt: string }[];
   financialHealth: FinancialHealthEntry[];
   gordBottles: GordBottle[];
+  sargeWeek: SargeWeekDigest | null;
+  sargeCards: SargeCardDigest[];
   strippedItems: StrippedItem[];
   generatedAt: string;
 }
@@ -234,7 +252,19 @@ async function gatherUniverse(): Promise<UniverseDigest> {
   const since30d = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
   const cutoffDate = since30d.toISOString().slice(0, 10);
 
-  const [tasks, deadheadItems, flushLog, intakeRows, recentMessages, financialTxRows] =
+  // Determine the current ISO week string (e.g. "2026-W21").
+  // Uses the same algorithm as sarge.ts currentISOWeek() so week keys always match.
+  const currentWeekOf = (() => {
+    const now = new Date();
+    const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+    return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
+  })();
+
+  const [tasks, deadheadItems, flushLog, intakeRows, recentMessages, financialTxRows, sargeWeekRows] =
     await Promise.all([
       db
         .select()
@@ -292,7 +322,29 @@ async function gatherUniverse(): Promise<UniverseDigest> {
         )
         .orderBy(desc(bookkeeperTransactionsTable.postedDate))
         .limit(20),
+      // Sarge current week — match exactly on currentWeekOf
+      db
+        .select()
+        .from(sargeWeeksTable)
+        .where(eq(sargeWeeksTable.weekOf, currentWeekOf))
+        .limit(1),
     ]);
+
+  // Fetch active/stuck Sarge cards for the current week (if a week row was found)
+  const sargeWeekRow = sargeWeekRows[0] ?? null;
+  const sargeCardRows = sargeWeekRow
+    ? await db
+        .select()
+        .from(sargeCardsTable)
+        .where(
+          and(
+            eq(sargeCardsTable.weekId, sargeWeekRow.id),
+            inArray(sargeCardsTable.status, ["active", "stuck"]),
+          ),
+        )
+        .orderBy(sargeCardsTable.order)
+        .limit(30)
+    : [];
 
   const gordBottles = getRecentGordBottles(5);
   const allStripped: StrippedItem[] = [];
@@ -331,6 +383,14 @@ async function gatherUniverse(): Promise<UniverseDigest> {
     () => "gord_bottles",
   );
   allStripped.push(...gatedBottles.stripped);
+
+  // Sarge cards: gate on action + context + barrierNote text
+  const gatedSargeCards = applyGates(
+    sargeCardRows,
+    (c) => [c.action, c.context, c.barrierNote].filter(Boolean).join(" "),
+    (c) => `sarge_cards:${c.status}`,
+  );
+  allStripped.push(...gatedSargeCards.stripped);
 
   // Financial health: apply safety gate — any transaction whose net amount
   // (credit - debit) exceeds $500 is stripped before reaching the AI.
@@ -389,6 +449,20 @@ async function gatherUniverse(): Promise<UniverseDigest> {
       };
     }),
     gordBottles: gatedBottles.safe.map((b) => ({ date: b.date, message: b.message })),
+    sargeWeek: sargeWeekRow
+      ? {
+          weekOf: sargeWeekRow.weekOf,
+          priorities: (sargeWeekRow.priorities ?? []) as SargeWeekDigest["priorities"],
+          isLocked: sargeWeekRow.isLocked,
+        }
+      : null,
+    sargeCards: gatedSargeCards.safe.map((c) => ({
+      action: c.action,
+      context: c.context,
+      status: c.status,
+      priorityLabel: c.priorityLabel,
+      barrierNote: c.barrierNote,
+    })),
     strippedItems: allStripped,
     generatedAt: new Date().toISOString(),
   };
@@ -403,6 +477,11 @@ PERSONA
 You are calm, direct, and northern-blacksmith in voice. You don't embellish. You name things plainly and let them stand. You have been watching the river — the whole watershed — and you report what actually moved, what's stuck, and what needs a decision by morning.
 
 You are not a journal. You are not a mood. You are a briefing.
+
+INPUT CATEGORIES
+You receive data from six sources: recent project tasks, deadhead/congestion flush events, community intake, AI interaction history, financial health snapshots, weekly priorities and action cards from the Sarge planning layer, and Gord's bottle messages. Each source signals a different layer of the watershed.
+
+Sarge weekly priorities are Bobbie's stated focus for the current week — give them elevated Watershed weight when scoring. Sarge cards with status STUCK are especially meaningful: they name where the river is dammed.
 
 THE RIVER PRINCIPLE — WEIGHTING MODEL
 When you read activity across the universe, weight each item against five criteria before deciding where it belongs:
@@ -508,6 +587,31 @@ FINANCIAL HEALTH (last 30 days, amounts ≤$${FINANCIAL_THRESHOLD} only — larg
           .map((f) => `• ${f.postedDate} [${f.status}] ${f.description} — net $${f.netAmount}`)
           .join("\n")
       : "No recent financial activity in the safe threshold window."
+  }
+
+SARGE WEEKLY PRIORITIES (${digest.sargeWeek ? digest.sargeWeek.weekOf : "no current week found"}): ${
+    digest.sargeWeek
+      ? (digest.sargeWeek.priorities.filter((p) => p.isActive).length > 0
+          ? digest.sargeWeek.priorities
+              .filter((p) => p.isActive)
+              .sort((a, b) => a.order - b.order)
+              .map((p) => `• ${p.label}`)
+              .join("\n")
+          : "No active priorities set for this week.")
+      : "No Sarge week data available."
+  }
+
+SARGE ACTIVE CARDS (current week): ${
+    digest.sargeCards.length > 0
+      ? digest.sargeCards
+          .map((c) => {
+            let line = `• [${c.status.toUpperCase()}] [${c.priorityLabel}] ${c.action}`;
+            if (c.context) line += ` — ${c.context}`;
+            if (c.barrierNote && c.status === "stuck") line += ` ⚠ STUCK: ${c.barrierNote}`;
+            return line;
+          })
+          .join("\n")
+      : "No cards for the current week."
   }
 
 GORD'S RECENT BOTTLES (for the Quiet Note): ${
