@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Watershed Compact — Collaborator Summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,400&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:         #f4ede0;
+    --cream-dark:    #ebe2d0;
+    --evergreen:     #1f3d2e;
+    --rust:          #b85a3e;
+    --ink:           #2b2116;
+    --muted:         #6b7665;
+    --font-serif:    'Fraunces', 'Iowan Old Style', Georgia, serif;
+    --font-sans:     'Inter', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @page {
+    size: letter portrait;
+    margin: 0;
+  }
+
+  html, body {
+    width: 8.5in;
+    height: 11in;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .page {
+    width: 8.5in;
+    height: 11in;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Header band ── */
+  .header {
+    flex: 0 0 auto;
+    background: var(--evergreen);
+    padding: 0.22in 0.55in 0.18in;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.25in;
+  }
+
+  .header-title {
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 20pt;
+    color: var(--cream);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .header-meta {
+    font-family: var(--font-sans);
+    font-size: 6.8pt;
+    font-weight: 500;
+    color: rgba(244,237,224,0.60);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    text-align: right;
+    white-space: nowrap;
+    padding-bottom: 1pt;
+  }
+
+  .rust-rule {
+    flex: 0 0 3px;
+    height: 3px;
+    background: var(--rust);
+  }
+
+  /* ── Body ── */
+  .body {
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 0.18in 0.55in 0.14in;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: min-content;
+    align-content: start;
+    column-gap: 0.25in;
+    overflow: hidden;
+  }
+
+  .section {
+    padding: 0.095in 0 0.08in;
+    border-top: 1px solid rgba(31,61,46,0.15);
+  }
+
+  .section.no-top { border-top: none; padding-top: 0.04in; }
+  .section.full   { grid-column: 1 / -1; }
+
+  .section-label {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 5.8pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 3.5pt;
+  }
+
+  .section-body {
+    font-family: var(--font-sans);
+    font-size: 7.6pt;
+    line-height: 1.46;
+    color: var(--ink);
+  }
+
+  .section-body p { margin-bottom: 3pt; }
+  .section-body p:last-child { margin-bottom: 0; }
+  .section-body strong { font-weight: 600; color: var(--evergreen); }
+
+  /* Ethics — 3 columns */
+  .ethics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0 0.14in;
+  }
+
+  .ethic-item {
+    font-size: 7.4pt;
+    line-height: 1.38;
+  }
+
+  .ethic-item strong {
+    display: block;
+    font-weight: 700;
+    color: var(--evergreen);
+    margin-bottom: 1.5pt;
+    font-size: 7.4pt;
+  }
+
+  /* Zone grid — 2 cols */
+  .zone-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5pt 0.18in;
+  }
+
+  .zone-item {
+    font-size: 7.3pt;
+    line-height: 1.36;
+  }
+
+  .zone-item .zone-tag {
+    font-weight: 700;
+    color: var(--evergreen);
+    font-size: 7pt;
+    display: block;
+    letter-spacing: 0.01em;
+    margin-bottom: 1pt;
+  }
+
+  .zone-item.span2 { grid-column: 1 / -1; }
+
+  /* Hard lines */
+  .hard-lines {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3pt 0.18in;
+  }
+
+  .hard-lines li {
+    font-size: 7.4pt;
+    line-height: 1.38;
+    padding-left: 10pt;
+    position: relative;
+  }
+
+  .hard-lines li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--rust);
+    font-weight: 600;
+  }
+
+  /* Decision questions */
+  .questions {
+    list-style: none;
+    counter-reset: q;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3pt 0.14in;
+  }
+
+  .questions li {
+    counter-increment: q;
+    padding-left: 12pt;
+    position: relative;
+    font-size: 7.4pt;
+    line-height: 1.38;
+  }
+
+  .questions li::before {
+    content: counter(q) ".";
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--evergreen);
+    font-size: 6.8pt;
+  }
+
+  /* ── Footer band ── */
+  .footer {
+    flex: 0 0 auto;
+    background: var(--evergreen);
+    padding: 0.13in 0.55in;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-tagline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 10pt;
+    color: var(--cream);
+    letter-spacing: -0.01em;
+  }
+
+  .footer-brand {
+    font-family: var(--font-sans);
+    font-size: 6.5pt;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: rgba(244,237,224,0.5);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-title">The Watershed Compact</div>
+    <div class="header-meta">Collaborator Summary&nbsp;·&nbsp;Headwaters Universe&nbsp;·&nbsp;May 2026</div>
+  </div>
+  <div class="rust-rule"></div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- Who We Are — full width -->
+    <div class="section full no-top">
+      <div class="section-label">Who We Are</div>
+      <div class="section-body">
+        <p>Headwaters is a practitioner-built set of tools, financial models, and institutions for families and small communities who are done leaking wealth outward. We build for people who are ready to own their own ground, their own economy, and their own future — especially in rural and Indigenous territories. The work is shipped, not proposed. The voice is plain, dollar-honest, and never pitched.</p>
+      </div>
+    </div>
+
+    <!-- Three Ethics — full width -->
+    <div class="section full">
+      <div class="section-label">The Three Ethics</div>
+      <div class="section-body">
+        <div class="ethics-grid">
+          <div class="ethic-item"><strong>Care for Earth</strong>The land sustains the people. The people are responsible for the land. Extraction without restoration is theft from future generations.</div>
+          <div class="ethic-item"><strong>Care for People</strong>Serve real needs fairly, starting with those most systematically excluded from ownership and self-determination.</div>
+          <div class="ethic-item"><strong>Return of Surplus</strong>Wealth generated in the watershed stays in the watershed. Surplus is reinvested into the system, not siphoned outward.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zone Logic — full width -->
+    <div class="section full">
+      <div class="section-label">How the System Is Organized — Zone Logic</div>
+      <div class="section-body">
+        <div class="zone-grid" style="margin-top:2pt;">
+          <div class="zone-item"><span class="zone-tag">Zone 0 — The Kitchen Table</span>The family, the household, the founding circle. Highest authority. Every system begins here and answers here.</div>
+          <div class="zone-item"><span class="zone-tag">Zone 1 — The Practitioner's Field</span>Practitioners, operators, and builders doing daily work. Where tools live and get tested.</div>
+          <div class="zone-item"><span class="zone-tag">Zone 2 — The Community</span>The people the practitioners serve. Their reality is the test of everything built in Zone 1.</div>
+          <div class="zone-item"><span class="zone-tag">Zone 3 — The Market</span>Where tools and institutions connect with economic reality — stores, co-ops, vendors, buyers.</div>
+          <div class="zone-item"><span class="zone-tag">Zone 4 — The Corridor</span>Partnerships, networks, and allied organizations. The place of replication and cross-pollination.</div>
+          <div class="zone-item"><span class="zone-tag">Zone 5 — The Wild</span>The external world — funders, governments, outside platforms, the broader economy. We observe it. We do not let it govern us.</div>
+          <div class="zone-item span2"><span class="zone-tag">Zone 6 — The River</span>Our addition to the standard permaculture model — the outward flow layer: knowledge, replicable models, and tools other communities can pick up and run independently. We added Zone 6 because we are not just designing a place; we are designing replication. We own that deviation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hard Lines (left) + Decisions (right) — two half-width sections side by side -->
+    <div class="section">
+      <div class="section-label">The Hard Lines</div>
+      <div class="section-body">
+        <ul class="hard-lines" style="grid-template-columns:1fr;">
+          <li>We do not lease our sovereignty — not to governments, corporations, or ideologies.</li>
+          <li>We do not trade privacy for convenience.</li>
+          <li>We do not build dependency — every system must increase self-reliance, not create a new reliance on us or any outside institution.</li>
+          <li>We do not dilute truth for broader appeal. The numbers are the numbers.</li>
+          <li>We own the machine. We never become the machine's tenant.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">How We Make Decisions</div>
+      <div class="section-body">
+        <p style="margin-bottom:4pt;">Every proposal, product, and partnership runs through five questions. All five must be answered honestly. A "no" on any of them stops the decision.</p>
+        <ol class="questions" style="grid-template-columns:1fr;">
+          <li>Does this strengthen the watershed or create a new leak?</li>
+          <li>Does this increase ownership or create new dependency?</li>
+          <li>Would we still do this if no outside money or approval was involved?</li>
+          <li>Is this worthy of the next seven generations?</li>
+          <li>Does it pass the Gord test? If Gord — a plain-spoken northern person who has seen enough promises fail — finds it suspicious or too clever, it doesn't ship.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- For Collaborators — full width -->
+    <div class="section full">
+      <div class="section-label">What This Means for Collaborators</div>
+      <div class="section-body">
+        <p>If you are working with Headwaters as a funder, practitioner, or community partner, this is the operating system underneath everything we do together. We are not looking for partners who want to manage us, scale us, or soften our message for broader audiences. We are looking for people who understand that communities capable of feeding, housing, and governing themselves are good for everyone — and who are willing to work from that premise, plainly and honestly.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="rust-rule"></div>
+  <div class="footer">
+    <div class="footer-tagline">This is not theory. This is infrastructure for self-reliance.</div>
+    <div class="footer-brand">Headwaters Universe</div>
+  </div>
+
+</div>
+</body>
+</html>
