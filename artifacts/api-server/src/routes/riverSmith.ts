@@ -209,6 +209,26 @@ function parseRiverMarkdown(md: string): Omit<RiverSmithStructured, "safetyFlags
   };
 }
 
+// ── ISO week helpers ──────────────────────────────────────────────────────────
+
+/**
+ * Parse an ISO week string ("YYYY-Www") into the UTC date of the Monday that
+ * starts that week. Used to determine how old a sarge_week row is.
+ */
+function parseISOWeekToDate(weekOf: string): Date {
+  const [yearStr, weekStr] = weekOf.split("-W");
+  const year = parseInt(yearStr ?? "0", 10);
+  const week = parseInt(weekStr ?? "0", 10);
+  // Jan 4 is always in ISO week 1
+  const jan4 = new Date(Date.UTC(year, 0, 4));
+  const dayOfWeek = jan4.getUTCDay() || 7; // 1 = Mon … 7 = Sun
+  const weekStart = new Date(jan4);
+  weekStart.setUTCDate(jan4.getUTCDate() - (dayOfWeek - 1) + (week - 1) * 7);
+  return weekStart;
+}
+
+const SARGE_STALE_DAYS = 10;
+
 // ── Universe aggregator ───────────────────────────────────────────────────────
 
 interface FinancialHealthEntry {
@@ -222,6 +242,8 @@ interface SargeWeekDigest {
   weekOf: string;
   priorities: { id: string; label: string; order: number; isActive: boolean }[];
   isLocked: boolean;
+  isStale: boolean;
+  ageDays: number;
 }
 
 interface SargeCardDigest {
@@ -322,11 +344,12 @@ async function gatherUniverse(): Promise<UniverseDigest> {
         )
         .orderBy(desc(bookkeeperTransactionsTable.postedDate))
         .limit(20),
-      // Sarge current week — match exactly on currentWeekOf
+      // Sarge: fetch the most recent week row regardless of whether it matches
+      // the current ISO week. We'll flag it as stale if it's too old.
       db
         .select()
         .from(sargeWeeksTable)
-        .where(eq(sargeWeeksTable.weekOf, currentWeekOf))
+        .orderBy(desc(sargeWeeksTable.weekOf))
         .limit(1),
     ]);
 
@@ -450,11 +473,24 @@ async function gatherUniverse(): Promise<UniverseDigest> {
     }),
     gordBottles: gatedBottles.safe.map((b) => ({ date: b.date, message: b.message })),
     sargeWeek: sargeWeekRow
-      ? {
-          weekOf: sargeWeekRow.weekOf,
-          priorities: (sargeWeekRow.priorities ?? []) as SargeWeekDigest["priorities"],
-          isLocked: sargeWeekRow.isLocked,
-        }
+      ? (() => {
+          const weekDate = parseISOWeekToDate(sargeWeekRow.weekOf);
+          const ageDays = Math.floor((Date.now() - weekDate.getTime()) / (1000 * 60 * 60 * 24));
+          const isStale = ageDays > SARGE_STALE_DAYS;
+          if (isStale) {
+            logger.warn(
+              { weekOf: sargeWeekRow.weekOf, ageDays },
+              "river-smith: Sarge week data is stale — priorities may not reflect current focus",
+            );
+          }
+          return {
+            weekOf: sargeWeekRow.weekOf,
+            priorities: (sargeWeekRow.priorities ?? []) as SargeWeekDigest["priorities"],
+            isLocked: sargeWeekRow.isLocked,
+            isStale,
+            ageDays,
+          };
+        })()
       : null,
     sargeCards: gatedSargeCards.safe.map((c) => ({
       action: c.action,
@@ -589,15 +625,19 @@ FINANCIAL HEALTH (last 30 days, amounts ≤$${FINANCIAL_THRESHOLD} only — larg
       : "No recent financial activity in the safe threshold window."
   }
 
-SARGE WEEKLY PRIORITIES (${digest.sargeWeek ? digest.sargeWeek.weekOf : "no current week found"}): ${
+SARGE WEEKLY PRIORITIES (${
+    digest.sargeWeek
+      ? `${digest.sargeWeek.weekOf}${digest.sargeWeek.isStale ? ` — STALE: ${digest.sargeWeek.ageDays} days old, Bobbie has not updated Sarge this week` : ""}`
+      : "no current week found"
+  }): ${
     digest.sargeWeek
       ? (digest.sargeWeek.priorities.filter((p) => p.isActive).length > 0
           ? digest.sargeWeek.priorities
               .filter((p) => p.isActive)
               .sort((a, b) => a.order - b.order)
-              .map((p) => `• ${p.label}`)
+              .map((p) => `• ${p.label}${digest.sargeWeek!.isStale ? ` (stale — ${digest.sargeWeek!.ageDays} days old)` : ""}`)
               .join("\n")
-          : "No active priorities set for this week.")
+          : `No active priorities set for this week.${digest.sargeWeek.isStale ? ` (stale — ${digest.sargeWeek.ageDays} days old)` : ""}`)
       : "No Sarge week data available."
   }
 
