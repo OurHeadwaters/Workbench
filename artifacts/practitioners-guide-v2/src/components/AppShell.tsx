@@ -131,13 +131,14 @@ const NAV_GROUPS: NavGroup[] = [
     id: "money",
     label: "Money",
     icon: TrendingDown,
-    matchPaths: ["/debt-attack", "/startup-expenses", "/engagement-pricing", "/promo-plan", "/year/check-in"],
+    matchPaths: ["/debt-attack", "/startup-expenses", "/engagement-pricing", "/promo-plan", "/year/check-in", "/money-machine"],
     items: [
       { href: "/debt-attack", label: "Debt Attack", icon: TrendingDown, accent: "#6d28d9" },
       { href: "/startup-expenses", label: "Startup Expenses", icon: Receipt, accent: "#1A5FA8" },
       { href: "/engagement-pricing", label: "Engagement Pricing", icon: DollarSign, accent: "#1F5B3F" },
       { href: "/promo-plan", label: "Promotional Plan", icon: Megaphone, accent: "#7A4E2D" },
       { href: "/year/check-in", label: "Annual Check-in", icon: CalendarCheck, accent: "#065f46" },
+      { href: "/money-machine", label: "Money Machine Blueprint", icon: Repeat, accent: "#1F5B3F" },
     ],
   },
   {
