@@ -214,3 +214,35 @@ Zone 0 — the kitchen table — is where design begins. If it doesn't serve the
 We do not design for funders, platforms, or the extractive economy. We design for the people at the centre of the system, and we trust that good design at that centre is what eventually reaches Zone 6 and becomes infrastructure others can pick up and run.
 
 The permaculture framework is not decoration on top of the Headwaters model. It is the structural logic underneath it. The watershed metaphor and the zone map are two ways of describing the same thing: a system designed to keep wealth and sovereignty at the centre, and to let the excess flow outward — not to extraction, but to replication.
+
+---
+
+## The On-Ramp
+
+*Appended Version 1 · May 2026*
+
+The Watershed Compact describes the system as it runs. This section names where the people running it came from.
+
+---
+
+### The Stomping Path
+
+Approximately 75% of the people currently holding the Headwaters walked a recognizable trail before they arrived. The Compact does not pretend otherwise.
+
+**The trail has three stages:**
+
+**Stage 1 — The Doom Crowd.** Fear-based, conspiratorial, loud. The diagnosis is largely correct — the extraction is real, the dependency is engineered, the surveillance economy is a trade most people never consented to. The ceiling is awareness without agency. Fear without a watershed.
+
+**Stage 2 — The Ron Paul Pivot.** Same diagnosis, different prescription: opt out, own hard assets, build sovereignty at the household level. Ron Paul disciples arrive at the kitchen table already carrying hard money instincts, a broken fear loop, distrust of outside institutions, and a desire to hand something forward to their children. These are real gifts. The ceiling is the household — Paul's framework has no mechanism for community-scale wealth retention or collective ownership. Individual sovereignty is the floor, not the ceiling.
+
+**The Ramsey parallel trail** runs alongside Stage 2 from a different starting point: consumer debt, not doom. Baby Steps 1–3 are almost perfectly compatible with Headwaters cost-basis discipline. Where Ramsey diverges is Baby Step 4 — surplus sent into external capital markets, still a leak. His ceiling is personal net worth. He hands people a floor and calls it a ceiling.
+
+**Stage 3 — The Headwaters Kitchen Table.** The household sovereignty principles Paul and Ramsey taught, scaled outward to community institutions, collective ownership, co-ops, and seven-generation stewardship. The traveller arrives with a household that is not leaking, an understanding of the extraction mechanics, a desire to hand something forward, and — for the first time — a community to build with, not just a household to protect.
+
+**The gap the Compact names plainly:** Paul says *own your household.* Headwaters says *now, what does the watershed look like?* The wealth that stays in the household still leaks out through the local economy if the community institutions are not owned.
+
+**Crypto Corner** is the named waypoint where sound money instinct (Stage 2) meets practical key custody discipline and community-scale stablecoin architecture. Cryptographic key custody is a Zone 0 practice — same category as the pantry and the canning season. RLUSD enters here as the Reservoir layer.
+
+**The Codetry Ship** is the Stage 3 recognition surface — where practitioners who have walked the stomping path and are now building find their crew manifest.
+
+The full trail document lives at `shared/stomping-path.md`. The agent prompt lives at `shared/stomping-path-system-prompt.txt`.
