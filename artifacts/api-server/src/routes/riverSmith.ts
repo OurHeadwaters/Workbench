@@ -133,7 +133,7 @@ function applyGates<T>(
     }
 
     if (reason) {
-      stripped.push({ text: text.slice(0, 300), reason, source: sourceFn(item) });
+      stripped.push({ text, reason, source: sourceFn(item) });
     } else {
       safe.push(item);
     }
@@ -587,6 +587,7 @@ router.post("/generate", async (req: Request, res: Response) => {
       id: result.id,
       rawMarkdown: result.rawMarkdown,
       structuredJson: result.structuredJson,
+      safetyFlagsCount: result.structuredJson.safetyFlags.length,
     });
   } catch (err) {
     logger.error({ err }, "river-smith: POST /generate failed");
@@ -623,6 +624,30 @@ router.get("/briefing/latest", async (req: Request, res: Response) => {
     triggeredBy: row.triggeredBy,
     safetyFlagsCount: structured?.safetyFlags?.length ?? 0,
   });
+});
+
+router.get("/briefing/:id/flags", async (req: Request, res: Response) => {
+  if (!requireOwner(req)) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const id = String(req.params.id);
+  const [row] = await db
+    .select({ structuredJson: riverBriefingsTable.structuredJson })
+    .from(riverBriefingsTable)
+    .where(eq(riverBriefingsTable.id, id))
+    .limit(1);
+
+  if (!row) {
+    res.status(404).json({ error: "Briefing not found." });
+    return;
+  }
+
+  const structured = row.structuredJson as RiverSmithStructured | null;
+  const flags = structured?.safetyFlags ?? [];
+
+  res.json({ briefingId: id, count: flags.length, flags });
 });
 
 router.get("/briefing/:id", async (req: Request, res: Response) => {

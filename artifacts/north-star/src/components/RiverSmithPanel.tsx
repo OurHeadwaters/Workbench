@@ -10,11 +10,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
+interface SafetyFlag {
+  text: string;
+  reason: string;
+  source: string;
+}
+
 interface Briefing {
   id: string;
   generatedAt: string;
   rawMarkdown: string;
   triggeredBy: string;
+  safetyFlagsCount?: number;
 }
 
 interface ArchiveEntry {
@@ -139,6 +146,11 @@ export function RiverSmithPanel() {
   const [archive, setArchive] = useState<ArchiveEntry[]>([]);
   const [archiveLoading, setArchiveLoading] = useState(false);
 
+  const [flagsOpen, setFlagsOpen] = useState(false);
+  const [flags, setFlags] = useState<SafetyFlag[]>([]);
+  const [flagsLoading, setFlagsLoading] = useState(false);
+  const [flagsError, setFlagsError] = useState<string | null>(null);
+
   const fetchLatest = useCallback(async () => {
     if (!token) return;
     setLoading(true);
@@ -180,9 +192,12 @@ export function RiverSmithPanel() {
         const j = (await res.json()) as { error?: string };
         throw new Error(j.error ?? `HTTP ${res.status}`);
       }
-      const data = (await res.json()) as { rawMarkdown: string; id: string };
-      setBriefing({ id: data.id, rawMarkdown: data.rawMarkdown, generatedAt: new Date().toISOString(), triggeredBy: "manual" });
+      const data = (await res.json()) as { rawMarkdown: string; id: string; safetyFlagsCount?: number };
+      setBriefing({ id: data.id, rawMarkdown: data.rawMarkdown, generatedAt: new Date().toISOString(), triggeredBy: "manual", safetyFlagsCount: data.safetyFlagsCount });
       setArchive([]);
+      setFlags([]);
+      setFlagsOpen(false);
+      setFlagsError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Generation failed.");
     } finally {
@@ -211,6 +226,9 @@ export function RiverSmithPanel() {
     if (!token) return;
     setArchiveOpen(false);
     setLoading(true);
+    setFlags([]);
+    setFlagsOpen(false);
+    setFlagsError(null);
     try {
       const res = await fetch(`/api/river-smith/briefing/${id}`, {
         headers: { "x-library-owner-token": token },
@@ -223,6 +241,31 @@ export function RiverSmithPanel() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchFlags = async (id: string) => {
+    if (!token || flagsLoading) return;
+    setFlagsLoading(true);
+    setFlagsError(null);
+    try {
+      const res = await fetch(`/api/river-smith/briefing/${id}/flags`, {
+        headers: { "x-library-owner-token": token },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as { flags: SafetyFlag[] };
+      setFlags(data.flags);
+    } catch (e) {
+      setFlagsError(e instanceof Error ? e.message : "Failed to load flagged items.");
+    } finally {
+      setFlagsLoading(false);
+    }
+  };
+
+  const toggleFlags = () => {
+    if (!briefing) return;
+    const next = !flagsOpen;
+    setFlagsOpen(next);
+    if (next && flags.length === 0) void fetchFlags(briefing.id);
   };
 
   if (!isOwner) return null;
@@ -300,6 +343,60 @@ export function RiverSmithPanel() {
               </span>
             )}
           </div>
+
+          {/* Flagged items toggle */}
+          {briefing && (briefing.safetyFlagsCount ?? 0) > 0 && (
+            <div className="border-b border-[#1E1A14]">
+              <button
+                onClick={toggleFlags}
+                className="w-full flex items-center gap-2 px-5 py-2.5 text-left hover:bg-[#181512] transition-colors"
+              >
+                <span className="text-[11px]">🚩</span>
+                <span className="text-[11px] text-[#A05A3A] font-semibold tracking-wide">
+                  Flagged for review
+                </span>
+                <span className="ml-1 text-[10px] text-[#7A4428] bg-[#2A1A0E] border border-[#4A2A15] rounded px-1.5 py-0.5">
+                  {briefing.safetyFlagsCount}
+                </span>
+                <span className="ml-auto text-[10px] text-[#4A3D33]">{flagsOpen ? "▲" : "▼"}</span>
+              </button>
+              {flagsOpen && (
+                <div className="bg-[#0E0C0A] max-h-72 overflow-y-auto">
+                  {flagsLoading && (
+                    <p className="text-[12px] text-[#4A3D33] px-5 py-3">Loading flags…</p>
+                  )}
+                  {!flagsLoading && flagsError && (
+                    <p className="text-[12px] text-[#8C4A3A] px-5 py-3">⚠ {flagsError}</p>
+                  )}
+                  {!flagsLoading && !flagsError && flags.length === 0 && (
+                    <p className="text-[12px] text-[#4A3D33] px-5 py-3">No flagged items found.</p>
+                  )}
+                  {flags.map((flag, i) => (
+                    <div
+                      key={i}
+                      className="px-5 py-3 border-b border-[#1A1510] last:border-0"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] uppercase tracking-[0.12em] text-[#7A4428] font-bold">
+                          {flag.reason}
+                        </span>
+                        <span className="text-[10px] text-[#3D3228]">·</span>
+                        <span className="text-[10px] text-[#4A3D33]">{flag.source}</span>
+                      </div>
+                      <p className="text-[12px] text-[#8C7060] leading-relaxed">
+                        {flag.text.length > 400 ? `${flag.text.slice(0, 400)}…` : flag.text}
+                      </p>
+                      {flag.text.length > 400 && (
+                        <p className="text-[10px] text-[#4A3D33] mt-0.5 italic">
+                          {flag.text.length} chars total — full text stored in the database
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Archive list */}
           {archiveOpen && (
