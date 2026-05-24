@@ -1,0 +1,95 @@
+# Money Machine Governance Rules
+
+This chapter explains how real decisions get made inside a Community Money Machine.  
+It is written for people actually running the machine — in the truck, at the kitchen table, or in the bush.
+
+**Core Principle**  
+The machine belongs to the watershed, not to any one person.  
+The Kitchen Table protects the long arc.  
+Stewards run the day-to-day.  
+
+---
+
+## Who Can Decide What
+
+| Decision                              | Who Can Decide                  | Needs Kitchen Table Approval? |
+|---------------------------------------|---------------------------------|-------------------------------|
+| Day-to-day spending (The House)       | Machine Steward                 | No |
+| Changing wages or roles (The People)  | Steward + one other person      | Yes, if change is more than 10% |
+| Spending from Reinvestment (The Future) | Steward                       | Yes, if single spend >15% of bucket |
+| Eave Flow (helping another machine)   | Steward                         | No, if under $2,000 |
+| Taking money from the Reserve         | Kitchen Table only              | Always |
+| Changing bucket percentages           | Kitchen Table                   | Always |
+| Starting or closing a machine         | Kitchen Table                   | Always |
+
+---
+
+## Kitchen Table Rules
+
+**Quorum**  
+At least 4 seated members, including one permanent steward.  
+If you can’t get quorum in 72 hours, the decision waits until next meeting.
+
+**How We Vote**  
+Simple majority of those present.  
+If someone disagrees, their dissent is written down and respected.  
+Bobbie (Keeper of the River) only breaks ties when asked.
+
+**Dispute Path**  
+1. Try to work it out directly.  
+2. Bring it to the Kitchen Table for discussion.  
+3. If still stuck, take a formal vote. The decision stands.
+
+---
+
+## Reserve Raid Protocol (Emergency Draw)
+
+Taking money from the Reserve is serious. It is only allowed when the machine is in real trouble.
+
+**Exact Steps:**
+1. Steward declares “Income Failure” with clear evidence.
+2. Kitchen Table reviews within 48 hours.
+3. If approved, take only what is needed to survive the immediate crisis.
+4. The machine goes into “Building State” until the Reserve is full again.
+5. Steward must present a recovery plan within 30 days.
+
+---
+
+## Quarterly Money Machine Report
+
+Every machine sends a short report to the Kitchen Table every 3 months.
+
+What goes in the report:
+- How much money came in
+- Where it went (buckets)
+- Any Eave Flow activity
+- Any rule violations
+- One honest sentence from the steward
+
+This report keeps everyone honest and helps the whole watershed learn.
+
+---
+
+**Final Rule**
+
+The machine does not run on hope.  
+It runs on structure.  
+
+Build it so it runs without you watching it every day.
+
+---
+
+**Signed,**  
+The Kitchen Table  
+Headwaters Universe
+
+---
+
+This chapter is short, plain, and practical for offline use. It pulls directly from the governance doc without adding or changing anything.
+
+Would you like me to:
+- Adjust tone, length, or any section?
+- Format it specifically for `handbook.ts` / `chapters.json`?
+- Or move to the next task?
+
+Let me know and we’ll keep building.
