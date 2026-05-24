@@ -152,6 +152,7 @@ const ZONES = [
       { href: "/deer-lake-partnership", title: "Deer Lake — 2027 Partnership Pitch", label: "807 × Deer Lake", desc: "Leave-behind: grants, truck route, letter of support by May 31." },
       { href: "/northern-pilot", title: "Northern Pilot Pitch", label: "Deer Lake Pilot", desc: "Three pillars, Chief's vision, $25,000 · 6-week engagement." },
       { href: "/community-finance-brief", title: "Gamified Community Finance Brief", label: "Product brief · 2027", desc: "HWBAND + xbuckets circuit, five gamification mechanics, four partner angles." },
+      { href: "/governance-card", title: "Governance Quick-Reference Card", label: "Community governance", desc: "Print-and-post card: decision authority matrix, quorum rules, voting thresholds, and the full Reserve Raid 5-step protocol." },
       { href: "/pace-referral", title: "PACE Referral — NWO Food Businesses", label: "Business Dev", desc: "For PACE to forward to NWO clients — Phase 1 offer, four deliverables." },
       { href: "/gilles-pitch", title: "Gilles Pitch — Two Weeks", label: "Private", desc: "Two-week engagement: capture knowledge, document systems, legacy at Deer Lake." },
     ],
