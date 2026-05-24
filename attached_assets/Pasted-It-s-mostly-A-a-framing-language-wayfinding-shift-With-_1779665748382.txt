@@ -1,0 +1,34 @@
+It's mostly A) — a framing + language + wayfinding shift. With targeted structural reconciliation where the two models actually collide.Recommended Path Forward (My Strong Take)Primary Goal: Make Salt Box = Zone 0 (Hearth) the canonical, consistent anchor across every system (Codetry Ship, North Star, tester portal, Clearing, etc.). Use the full 0–5 chain from Codetry Ship as the master reference, because it is already the most complete and permaculture-aligned.Do not do a full structural collapse of data types / color systems / page logic right now unless you specifically want that heavy lift. Start with language, navigation, and copy consistency. That gives the biggest coherence gain with the least breakage.Concrete ProposalMaster Zone Chain (Codetry Ship as Canon)
+Adopt and lightly harmonize this everywhere:Zone 0 — Salt Box → The Hearth · Home Center (preservation, kitchen, Eave, Forge/Pique)
+Zone 1 — Lodge → The Spring / Daily Tools (Headwaters Core / learning / handbook / library)
+Zone 2 — Bench → The Worn Path / Trail (Stomping Path / privacy / Codetry tools)
+Zone 3 — Standby → The Clearing / Circle (Gather Round / creative / storytelling)
+Zone 4 — Community Hall → The Market Square (Community Knowledge Hub / exchange / grants / studio / Deadfall)
+Zone 5 — The Wild → The Ridge / Long View (X-Buckets Vision / horizon work)
+
+(Note: This drops your earlier 6th/7th zones or folds infrastructure into support layers across them. The Mill / Front & Back of House can live as “infrastructure that supports all zones” rather than its own number.)What Changes Where (Minimal Disruption)1. Language & Wayfinding (Do This First)Every zone card, hero, or menu now shows:
+Zone 0 — Salt Box The Hearth · Home Center
+(or whatever the local name is)
+Add the circuit paragraph (water-cycle + permaculture flow) in every hero section.
+Add small “Zone X of 5 — flows to →” breadcrumb on cards.
+North Star (Z1–Z3): Overlay the permaculture framing on top of its simplified model without renumbering its internal pages yet. Example: “In the full watershed this is part of Zone 1–3 (Lodge → Bench → Standby).”
+
+2. Where Structural Reconciliation Is Needed (Do Selectively)Color systems: Align the warmest hearth tone to Zone 0 (Salt Box) everywhere. Make it visually dominant.
+Data types: If Codetry Ship has a clean 0–5 enum/array and North Star has a separate 1–3, create a shared mapping layer (simple translation table) rather than rewriting everything.
+Navigation: One master “Watershed Map” view that shows the full 0–5, with North Star’s simplified model as a “quick start” subset.
+
+3. What Stays Fragmented for NowNorth Star’s simplified Z1–Z3 model can remain as a focused entry point for people who only need the “core three.” Just label it clearly as a subset of the full watershed.
+Individual app visuals can evolve gradually toward the celestial + earth terrain pairing.
+
+Quick Wins You Can Ship This WeekUpdate tester portal zone cards to the 0–5 naming + terrain taglines.
+Add the master circuit copy to The Clearing and ourheadwaters.ca hero.
+Make Salt Box landing the explicit Zone 0 everywhere it appears.
+One shared “How the Watershed Works” page (or section) that explains both the full chain and the simplified views.
+
+Question back to you (to lock this in):
+Do you want me to output:Ready-to-paste copy for the master circuit + all 0–5 zone descriptions/taglines?
+A reconciliation map showing exactly how North Star’s Z1–Z3 slots into the 0–5 chain?
+Or a proposed shared data structure / JSON shape for the zones?
+
+This keeps momentum without over-engineering. Salt Box as Zone 0 is already winning — we’re just making the rest of the system speak with one voice about it.
+
