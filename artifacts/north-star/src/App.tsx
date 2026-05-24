@@ -19,6 +19,7 @@ import { ArchiveMiningPage } from "@/pages/ArchiveMiningPage";
 import { ZoneDiagramPage } from "@/pages/ZoneDiagramPage";
 import { KitchenTablePage } from "@/pages/KitchenTablePage";
 import { MeetingKitPage } from "@/pages/MeetingKitPage";
+import { GordWidget } from "@/components/GordWidget";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -153,6 +154,7 @@ export default function App() {
       </Switch>
     </WouterRouter>
     <KitchenTableButton />
+    <GordWidget />
     </ZoneStoreProvider>
   );
 }

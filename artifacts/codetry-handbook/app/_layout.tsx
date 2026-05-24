@@ -23,6 +23,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { GordWidget } from "@/components/GordWidget";
 import { LastReadSaveNotice } from "@/components/LastReadSaveNotice";
 import { SyncErrorBanner } from "@/components/SyncErrorBanner";
 import { UpdateAvailableBanner } from "@/components/UpdateAvailableBanner";
@@ -106,6 +107,7 @@ export default function RootLayout() {
                 <AuthorProvider>
                   <StackProvider>
                     <RootLayoutNav />
+                    <GordWidget />
                     <SyncErrorBanner />
                     <LastReadSaveNotice />
                     <UpdateAvailableBanner />

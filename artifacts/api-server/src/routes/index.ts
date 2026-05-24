@@ -28,6 +28,7 @@ import odysseyRouter from "./odyssey";
 import triageRouter from "./triage";
 import councilRouter from "./council";
 import gatekeeperRouter from "./gatekeeper";
+import gordRouter from "./gord";
 
 const router: IRouter = Router();
 
@@ -63,5 +64,6 @@ router.use("/odyssey", odysseyRouter);
 router.use("/triage", triageRouter);
 router.use("/council", councilRouter);
 router.use("/gatekeeper", gatekeeperRouter);
+router.use("/gord", gordRouter);
 
 export default router;

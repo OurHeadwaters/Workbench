@@ -55,6 +55,7 @@ import DeerLakeYouthOdyssey from "@/pages/DeerLakeYouthOdyssey";
 import InternalDocs from "@/pages/InternalDocs";
 import SoftwareSystemsBundle from "@/pages/SoftwareSystemsBundle";
 import NotFound from "@/pages/not-found";
+import { GordWidget } from "@/components/GordWidget";
 
 function Router() {
   return (
@@ -123,6 +124,7 @@ export default function App() {
         <Router />
       </WouterRouter>
       <KitchenTableButton />
+      <GordWidget />
     </PreviewProvider>
     </ZoneStoreProvider>
   );

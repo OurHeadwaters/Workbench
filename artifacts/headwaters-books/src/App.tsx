@@ -44,6 +44,7 @@ import Layout from "@/components/Layout";
 import EmbedOpenRecords from "@/embed/OpenRecords";
 import EmbedDailyClose from "@/embed/DailyClose";
 import EmbedMonthEnd from "@/embed/MonthEnd";
+import { GordWidget } from "@/components/GordWidget";
 
 const queryClient = new QueryClient();
 
@@ -219,6 +220,7 @@ function App() {
         </WouterRouter>
         <Toaster />
         <KitchenTableButton />
+        <GordWidget />
       </TooltipProvider>
     </QueryClientProvider>
     </ZoneStoreProvider>

@@ -18,6 +18,7 @@ import { BlueprintLibrary } from "@/pages/forge/BlueprintLibrary";
 import { ProgressPage } from "@/pages/forge/ProgressPage";
 import { BattleFeed } from "@/pages/forge/BattleFeed";
 import { Shallows } from "@/pages/forge/Shallows";
+import { GordWidget } from "@/components/GordWidget";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -173,6 +174,7 @@ export default function App() {
         <ClerkProviderWithRoutes />
       </WouterRouter>
       <KitchenTableButton />
+      <GordWidget />
     </ZoneStoreProvider>
   );
 }

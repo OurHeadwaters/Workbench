@@ -32,6 +32,7 @@ import { WhatIsCodetryPage } from "@/pages/WhatIsCodetryPage";
 import { MapPage } from "@/pages/MapPage";
 import { CompassPage } from "@/pages/CompassPage";
 import { CapCeremonyPage } from "@/pages/CapCeremonyPage";
+import { GordWidget } from "@/components/GordWidget";
 
 const queryClient = new QueryClient();
 
@@ -118,6 +119,7 @@ function App() {
         </WouterRouter>
         <Toaster />
         <KitchenTableButton />
+        <GordWidget />
       </TooltipProvider>
     </QueryClientProvider>
   );

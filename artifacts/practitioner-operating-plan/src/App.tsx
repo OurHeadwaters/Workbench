@@ -33,6 +33,7 @@ import EightOhSevenPage from "./pages/EightOhSevenPage";
 import NANPage from "./pages/NANPage";
 import { HeadwatersWindowPage } from "./pages/HeadwatersWindowPage";
 import EthosPage from "./pages/EthosPage";
+import { GordWidget } from "./components/GordWidget";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
@@ -81,6 +82,7 @@ export default function App() {
       <Route component={LobbyPage} />
     </Switch>
     <KitchenTableButton />
+    <GordWidget />
     </ZoneStoreProvider>
   );
 }

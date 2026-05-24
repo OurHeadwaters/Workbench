@@ -30,6 +30,7 @@ import NurseryLayout from "@/components/NurseryLayout";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { ReactNode } from "react";
 import { NurseryApp } from "@/nursery/NurseryApp";
+import { GordWidget } from "@/components/GordWidget";
 
 const queryClient = new QueryClient();
 
@@ -106,6 +107,7 @@ function App() {
         </WouterRouter>
         <Toaster />
         <KitchenTableButton />
+        <GordWidget />
       </TooltipProvider>
     </QueryClientProvider>
     </ZoneStoreProvider>

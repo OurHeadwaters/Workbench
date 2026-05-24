@@ -41,6 +41,7 @@ import { GmphPathBPage } from "@/pages/GmphPathBPage";
 import { LegacyAssetManagerPage } from "@/pages/LegacyAssetManagerPage";
 import { TheGateOverridePage } from "@/pages/TheGateOverridePage";
 import NotFound from "@/pages/not-found";
+import { GordWidget } from "@/components/GordWidget";
 
 const queryClient = new QueryClient();
 
@@ -153,6 +154,7 @@ function App() {
       </TooltipProvider>
     </QueryClientProvider>
     <KitchenTableButton />
+    <GordWidget />
     </ZoneStoreProvider>
   );
 }
