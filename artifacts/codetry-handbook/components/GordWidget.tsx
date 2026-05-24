@@ -16,6 +16,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const BOTTLES_KEY = "gordUniverseBottles";
+const HISTORY_KEY = "gordConversationHistory";
+const HISTORY_LIMIT = 20;
 const OPENING_QUIP =
   "Well, look who wandered in. Gord's on board — what's rattling around in that head of yours?";
 
@@ -34,6 +36,22 @@ interface ChatMessage {
 interface Bottle {
   date: string;
   message: string;
+}
+
+async function loadHistory(): Promise<ChatMessage[]> {
+  try {
+    const raw = await AsyncStorage.getItem(HISTORY_KEY);
+    return raw ? (JSON.parse(raw) as ChatMessage[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+async function saveHistory(messages: ChatMessage[]): Promise<void> {
+  await AsyncStorage.setItem(
+    HISTORY_KEY,
+    JSON.stringify(messages.slice(-HISTORY_LIMIT)),
+  );
 }
 
 async function loadBottles(): Promise<Bottle[]> {
@@ -65,6 +83,16 @@ export function GordWidget() {
   const birdAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    void loadHistory().then((saved) => {
+      if (saved.length > 0) setMessages(saved);
+    });
+  }, []);
+
+  useEffect(() => {
+    void saveHistory(messages);
+  }, [messages]);
+
+  useEffect(() => {
     if (open) {
       setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
     }
@@ -85,6 +113,11 @@ export function GordWidget() {
     ]).start();
     setOpen(true);
     setShowBottles(false);
+  }
+
+  async function handleClearHistory() {
+    await AsyncStorage.removeItem(HISTORY_KEY);
+    setMessages([{ role: "gord", content: OPENING_QUIP }]);
   }
 
   async function handleViewBottles() {
@@ -295,6 +328,9 @@ export function GordWidget() {
               <TouchableOpacity onPress={() => void handleViewBottles()}>
                 <Text style={styles.footerBottles}>📜 View Bottles</Text>
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => void handleClearHistory()}>
+                <Text style={styles.footerFresh}>🔄 Start fresh</Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => setOpen(false)}>
                 <Text style={styles.footerClose}>Close</Text>
               </TouchableOpacity>
@@ -481,6 +517,10 @@ const styles = StyleSheet.create({
   },
   footerBottles: {
     color: "#34d399",
+    fontSize: 13,
+  },
+  footerFresh: {
+    color: "#f87171",
     fontSize: 13,
   },
   footerClose: {

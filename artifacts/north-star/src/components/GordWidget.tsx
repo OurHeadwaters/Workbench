@@ -14,6 +14,23 @@ const OPENING_QUIP =
   "Well, look who wandered in. Gord's on board — what's rattling around in that head of yours?";
 
 const BOTTLES_KEY = "gordUniverseBottles";
+const HISTORY_KEY = "gordConversationHistory";
+const HISTORY_LIMIT = 20;
+
+function loadHistory(): Message[] {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "[]") as Message[];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(messages: Message[]) {
+  localStorage.setItem(
+    HISTORY_KEY,
+    JSON.stringify(messages.slice(-HISTORY_LIMIT)),
+  );
+}
 
 function loadBottles(): Bottle[] {
   try {
@@ -32,14 +49,19 @@ function saveBottle(message: string) {
 export function GordWidget() {
   const [open, setOpen] = useState(false);
   const [showBottles, setShowBottles] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "gord", content: OPENING_QUIP },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const saved = loadHistory();
+    return saved.length > 0 ? saved : [{ role: "gord", content: OPENING_QUIP }];
+  });
   const [input, setInput] = useState("");
   const [isBottle, setIsBottle] = useState(false);
   const [loading, setLoading] = useState(false);
   const [bottles, setBottles] = useState<Bottle[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    saveHistory(messages);
+  }, [messages]);
 
   useEffect(() => {
     if (open) {
@@ -50,6 +72,11 @@ export function GordWidget() {
   function handleOpen() {
     setOpen((v) => !v);
     setShowBottles(false);
+  }
+
+  function handleClearHistory() {
+    localStorage.removeItem(HISTORY_KEY);
+    setMessages([{ role: "gord", content: OPENING_QUIP }]);
   }
 
   function handleViewBottles() {
@@ -338,6 +365,18 @@ export function GordWidget() {
               }}
             >
               📜 View Bottles
+            </button>
+            <button
+              onClick={handleClearHistory}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#f87171",
+                cursor: "pointer",
+                fontSize: 12,
+              }}
+            >
+              🔄 Start fresh
             </button>
             <button
               onClick={() => setOpen(false)}
