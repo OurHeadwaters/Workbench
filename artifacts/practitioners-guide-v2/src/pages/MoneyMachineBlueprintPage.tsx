@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { CheckSquare, RotateCcw, Square } from "lucide-react";
+import { useScenario } from "@/lib/scenario";
+import type { Scenario } from "@/data/types";
 
 const STORAGE_KEY = "mmb-checklist-v1";
 
@@ -147,7 +149,116 @@ function itemKey(weekIdx: number, itemIdx: number) {
   return `${weekIdx}-${itemIdx}`;
 }
 
+function fmt(n: number) {
+  return n.toLocaleString("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 });
+}
+
+function fmtMonths(n: number) {
+  if (n === 0) return "0 months";
+  if (n < 1) return `${(n * 4.33).toFixed(1)} weeks`;
+  return `${n.toFixed(1)} month${n === 1 ? "" : "s"}`;
+}
+
+interface MachineState {
+  stateIndex: number;
+  reserveMonths: number;
+  costBasis: number;
+  reserveBalance: number;
+  nextThresholdLabel: string;
+  nextThresholdAmount: number | null;
+}
+
+function computeMachineState(scenario: Scenario): MachineState {
+  const agency = scenario.contracts.agency;
+  const costBasis = agency.costBasisSepOnward;
+  const reserveBalance = agency.reserveTotal;
+  const reserveMonths = costBasis > 0 ? reserveBalance / costBasis : 0;
+
+  let stateIndex: number;
+  let nextThresholdLabel: string;
+  let nextThresholdAmount: number | null;
+
+  if (reserveMonths < 1) {
+    stateIndex = 0;
+    nextThresholdLabel = "Reserve needs 1 month to enter Building State";
+    nextThresholdAmount = costBasis * 1 - reserveBalance;
+  } else if (reserveMonths < 6) {
+    stateIndex = 1;
+    nextThresholdLabel = "Reserve needs 6 months to reach Stable State";
+    nextThresholdAmount = costBasis * 6 - reserveBalance;
+  } else if (agency.innovationMonthly <= 0) {
+    stateIndex = 2;
+    nextThresholdLabel = "Activate Reinvestment (Bucket 3) to enter Strong State";
+    nextThresholdAmount = null;
+  } else {
+    stateIndex = 3;
+    nextThresholdLabel = "All four buckets funded — machine is strong";
+    nextThresholdAmount = null;
+  }
+
+  return { stateIndex, reserveMonths, costBasis, reserveBalance, nextThresholdLabel, nextThresholdAmount };
+}
+
+function CurrentStateBanner({ state }: { state: MachineState }) {
+  const currentState = STATES[state.stateIndex];
+
+  return (
+    <div
+      className="rounded-lg border-2 p-4"
+      style={{ borderColor: currentState.accent, backgroundColor: currentState.accent + "10" }}
+    >
+      <div className="flex flex-wrap items-start gap-3 mb-3">
+        <span
+          className="text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded"
+          style={{ backgroundColor: currentState.accent, color: "#fff" }}
+        >
+          Current State
+        </span>
+        <span
+          className="text-sm font-semibold"
+          style={{ color: currentState.accent }}
+        >
+          {currentState.name}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+        <div className="rounded border bg-card px-3 py-2" style={{ borderColor: "hsl(var(--card-border))" }}>
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-0.5">Reserve balance</p>
+          <p className="text-base font-bold">{fmt(state.reserveBalance)}</p>
+        </div>
+        <div className="rounded border bg-card px-3 py-2" style={{ borderColor: "hsl(var(--card-border))" }}>
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-0.5">Reserve in months</p>
+          <p className="text-base font-bold">{fmtMonths(state.reserveMonths)}</p>
+          <p className="text-[10px] text-muted-foreground">target: 6 months</p>
+        </div>
+        <div className="rounded border bg-card px-3 py-2" style={{ borderColor: "hsl(var(--card-border))" }}>
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-0.5">Monthly cost basis</p>
+          <p className="text-base font-bold">{fmt(state.costBasis)}</p>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-2 text-xs text-muted-foreground">
+        <span
+          className="mt-0.5 h-3.5 w-3.5 rounded-full flex-shrink-0"
+          style={{ backgroundColor: currentState.accent + "60" }}
+        />
+        <span>
+          <strong>Next threshold: </strong>
+          {state.nextThresholdLabel}
+          {state.nextThresholdAmount != null && state.nextThresholdAmount > 0 && (
+            <> — <span className="font-semibold">{fmt(state.nextThresholdAmount)} still needed</span></>
+          )}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function MoneyMachineBlueprintPage() {
+  const { scenario } = useScenario();
+  const machineState = computeMachineState(scenario);
+
   const [checked, setChecked] = useState<Set<string>>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -198,6 +309,8 @@ export function MoneyMachineBlueprintPage() {
           the best filters and an echo of the best version of yourself." — Bobbie Parr
         </blockquote>
       </div>
+
+      <CurrentStateBanner state={machineState} />
 
       <section>
         <h2 className="text-base font-semibold mb-1" style={{ fontFamily: "var(--app-font-serif)" }}>
@@ -338,34 +451,51 @@ export function MoneyMachineBlueprintPage() {
           The machine passes through predictable states. These rules govern the transitions.
         </p>
         <div className="space-y-3">
-          {STATES.map((state, i) => (
-            <div
-              key={state.name}
-              className="rounded-lg border p-4 bg-card"
-              style={{ borderColor: "hsl(var(--card-border))", borderLeftWidth: "4px", borderLeftColor: state.accent }}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <span
-                  className="text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded"
-                  style={{ backgroundColor: state.accent + "18", color: state.accent }}
-                >
-                  {state.name}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground italic mb-2">{state.description}</p>
-              <ul className="space-y-1">
-                {state.rules.map((rule, j) => (
-                  <li key={j} className="flex items-start gap-2 text-sm">
+          {STATES.map((state, i) => {
+            const isActive = i === machineState.stateIndex;
+            return (
+              <div
+                key={state.name}
+                className="rounded-lg border p-4 bg-card transition-all"
+                style={{
+                  borderColor: isActive ? state.accent : "hsl(var(--card-border))",
+                  borderLeftWidth: "4px",
+                  borderLeftColor: state.accent,
+                  opacity: isActive ? 1 : 0.6,
+                  boxShadow: isActive ? `0 0 0 1px ${state.accent}40` : undefined,
+                }}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span
+                    className="text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded"
+                    style={{ backgroundColor: state.accent + "18", color: state.accent }}
+                  >
+                    {state.name}
+                  </span>
+                  {isActive && (
                     <span
-                      className="mt-1 h-1.5 w-1.5 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: state.accent }}
-                    />
-                    {rule}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+                      className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded"
+                      style={{ backgroundColor: state.accent, color: "#fff" }}
+                    >
+                      ← You are here
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground italic mb-2">{state.description}</p>
+                <ul className="space-y-1">
+                  {state.rules.map((rule, j) => (
+                    <li key={j} className="flex items-start gap-2 text-sm">
+                      <span
+                        className="mt-1 h-1.5 w-1.5 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: state.accent }}
+                      />
+                      {rule}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </section>
 
