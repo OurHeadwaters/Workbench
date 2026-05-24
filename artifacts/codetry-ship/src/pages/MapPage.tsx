@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ZONES } from "@/data/zones";
 import type { ZoneData, ZoneTool } from "@/data/zones";
+import WatershedMap from "@/components/WatershedMap";
 
 const CREAM = "#f4ede0";
 const FOREST = "#1f3d2e";
@@ -1319,6 +1320,8 @@ export function MapPage() {
               </div>
             ))}
           </div>
+
+          <WatershedMap />
         </div>
 
         {/* Zone grid */}
