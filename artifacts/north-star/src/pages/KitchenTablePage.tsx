@@ -203,6 +203,74 @@ Handover as exit: Success means the community runs it without you.
 Trial first: No full hire or contract without a bounded, paid trial period.
 
 ---
+FOUNDATIONAL ARCHITECTURE
+These three documents are the operational blueprint underneath every Headwaters institution.
+Any seat at this table may reference them in deliberation.
+
+THE MONEY MACHINE BLUEPRINT (community-money-machine-blueprint.md)
+The economic engine underneath every Headwaters institution. One job: take every dollar
+that enters the community and route it so the maximum amount stays inside the watershed
+before any of it exits to the extractive economy.
+
+THE FOUR BUCKETS — every dollar is sorted into one of these four literal accounts:
+  Bucket 1 — Cost Basis: Pay the real cost of running community institutions.
+    Rule: Never borrow against this bucket. If it runs dry, the machine stops before it borrows.
+  Bucket 2 — Reserve: Three to six months of operating costs in community-controlled assets.
+    Rule: Not touched until the machine has a confirmed income failure. Not a slush fund.
+  Bucket 3 — Reinvestment: New capacity, infrastructure, and institutions inside the watershed.
+    Rule: Every spend must produce a measurable ownership increase — not a program, not an event.
+  Bucket 4 — Eave Flow: Surplus that overflows Buckets 1–3, flowing outward to allied watersheds.
+    Rule: Does not activate until Buckets 1–3 are funded and Reserve is full.
+    Premature eave flow is a leak.
+
+EAVE FLOW — THE HONEY PRINCIPLE:
+  A hive produces honey continuously. Most feeds the hive. The excess overflows and drips
+  down — that is the only honey the keeper harvests. Taking from inside the comb kills the hive.
+  Headwaters communities do not harvest before overflow.
+  Eave flow is: surplus to allied communities, shared infrastructure, endowment for the seventh
+  generation, knowledge and tools flowing to Zone 6.
+  Eave flow is NOT: early distribution, grants to outside organizations, fees to outside platforms.
+
+THE THREE TESTS — every dollar must pass all three before it moves:
+  1. Does it increase ownership or create dependency?
+  2. Does it strengthen the watershed or create a new leak?
+  3. Would it pass seven-generation scrutiny?
+  If the answer to any is no, the dollar does not move that direction. This is the operating rule.
+
+---
+THE WATERSHED COMPACT (watershed-compact.md)
+The operating system and decision filter for the entire Headwaters universe.
+Hard Boundaries (hell-no lines — refused without negotiation):
+  1. We do not lease our sovereignty.
+  2. We do not trade privacy for convenience.
+  3. We do not build dependency — every system must increase self-reliance.
+  4. We do not dilute truth for broader appeal. The numbers are the numbers.
+  5. We own the machine. We never become the machine's tenant.
+
+Decision Filter (all five must pass — a "no" on any is a stop signal):
+  1. Does this strengthen the watershed or create a new leak?
+  2. Does this increase ownership or create new dependency?
+  3. Would we still do this if no outside money or approval was involved?
+  4. Is this worthy of the next seven generations?
+  5. Does it pass the Gord test? (A plain-spoken northern person finds it credible,
+     not self-serving, not too clever by half.)
+
+---
+THE STOMPING PATH (stomping-path.md)
+The transformation trail most Headwaters practitioners walked before arriving at this table.
+~75% of the people holding Headwaters came through this trail.
+
+Stage 1 — The Doom Crowd: Diagnosis correct (extraction is real), prescription broken
+  (fear without a watershed). Ceiling: awareness without agency.
+Stage 2 — The Ron Paul Pivot: Household sovereignty, sound money, hard assets.
+  Real gifts. Ceiling: the household — Paul's framework has no community-scale mechanism.
+  Parallel trail: Dave Ramsey disciples — household cost-basis discipline maps cleanly,
+  but surplus sent to external capital markets is still a leak.
+Stage 3 — The Headwaters Kitchen Table: Household sovereignty scaled outward to community
+  institutions, collective ownership, and seven-generation stewardship.
+  The gap: Paul says own your household. Headwaters says — now, what does the watershed look like?
+
+---
 PULL QUOTES IN CIRCULATION
 "Build it. Hand it off. Community runs it."
 "The materials are the same. The order of operations is not."
@@ -210,7 +278,10 @@ PULL QUOTES IN CIRCULATION
 "Hang the gate before you invite anyone in."
 "It stops being invisible when you name it."
 "Sovereign by design. No extraction model."
-"Start at household. Expand to community without rework."`;
+"Start at household. Expand to community without rework."
+"Stop the leak. Fill the buckets. Let the overflow reach the next watershed."
+"The machine does not run on hope. It runs on structure."
+"Individual sovereignty is the floor, not the ceiling."`;
 
 // ── Today's brief — fresh header every session, permanent context below ────────
 function getTodayBrief(): string {
