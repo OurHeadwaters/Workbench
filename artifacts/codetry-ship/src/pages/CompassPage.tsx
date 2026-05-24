@@ -745,8 +745,8 @@ function RegistryView() {
               {/* Tool cards */}
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {visibleTools.map((tool) => {
-                  const isExternal = !tool.url.startsWith("/") && tool.url !== "#";
                   const isComingSoon = tool.url === "#";
+                  const isExternal = !tool.inThisProject;
                   return (
                     <div
                       key={`${zone.number}-${tool.name}`}
@@ -812,8 +812,8 @@ function RegistryView() {
                         ) : (
                           <a
                             href={tool.url}
-                            target={isExternal ? "_blank" : undefined}
-                            rel={isExternal ? "noopener noreferrer" : undefined}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             style={{
                               display: "inline-flex", alignItems: "center", gap: 3,
                               padding: "5px 12px", borderRadius: 5,

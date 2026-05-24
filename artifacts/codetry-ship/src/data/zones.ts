@@ -68,6 +68,13 @@ export const ZONES: ZoneData[] = [
         inThisProject: false,
         zoneAddress: "Z0–C",
       },
+      {
+        name: "Saltbox (External)",
+        tagline: "Household readiness — external deployment at salt-box.replit.app",
+        url: "https://salt-box.replit.app",
+        inThisProject: false,
+        zoneAddress: "Z0–D",
+      },
     ],
   },
   {
@@ -283,13 +290,6 @@ export const ZONES: ZoneData[] = [
         url: "#",
         inThisProject: false,
         zoneAddress: "Z5–B",
-      },
-      {
-        name: "salt-box.replit.app",
-        tagline: "External Saltbox deployment",
-        url: "https://salt-box.replit.app",
-        inThisProject: false,
-        zoneAddress: "Z5–C",
       },
       {
         name: "Crypto Corner — Crypto Castle",
