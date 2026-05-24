@@ -1,0 +1,97 @@
+# Community Money Machine Governance Rules
+
+**Version 1 — May 2026**  
+*Anchored to the Watershed Compact*
+
+This document defines how real decisions are made inside a Community Money Machine. It is not legal bylaws. It is operating rules for stewards and the Kitchen Table.
+
+**Core Principle**  
+The machine is owned by the watershed.  
+The Kitchen Table is the final steward of the watershed.  
+Stewards run the machine day-to-day. The Table protects the long arc.
+
+---
+
+## Decision Authority Matrix
+
+| Decision Type                        | Who Can Decide                  | Requires Kitchen Table Approval? | Notes |
+|--------------------------------------|---------------------------------|----------------------------------|-------|
+| Day-to-day operations (The House)   | Machine Steward                 | No                               | Within approved budget |
+| Wage & role changes (The People)     | Machine Steward + 1 witness     | Yes (if >10% change)             | Must stay inside living wage rules |
+| Reinvestment spending (The Future)   | Machine Steward                 | Yes (any single spend >15% of Reinvestment bucket) | Must increase ownership |
+| Eave Flow transactions               | Machine Steward                 | No (if under $2,000)             | Must strengthen another watershed machine |
+| Reserve raid / emergency draw        | Kitchen Table only              | Always                           | See Reserve Raid Protocol |
+| Changing bucket percentages          | Kitchen Table                   | Always                           | Requires full quorum |
+| Starting or closing a machine        | Kitchen Table                   | Always                           | Major watershed decision |
+
+---
+
+## Kitchen Table Oversight Rules
+
+**Quorum**  
+- Minimum 4 seated members (including at least one permanent steward)  
+- If quorum cannot be reached within 72 hours, decision is deferred until next meeting
+
+**Voting Method**  
+- Simple majority of those present  
+- Dissent is recorded and respected (no “loyalty tests”)  
+- The Keeper of the River (Bobbie) holds tie-breaker vote only when explicitly requested
+
+**Dispute Escalation Path**
+1. Steward tries to resolve directly with affected parties
+2. Bring to Kitchen Table for facilitated discussion
+3. If still unresolved → formal vote with recorded dissent
+4. Final decision is binding for the machine
+
+---
+
+## Quarterly Money Machine Report
+
+Every machine must submit a simple report to the Kitchen Table at the end of each quarter.  
+The report contains:
+- Revenue by source
+- Bucket balances and health
+- Eave Flow activity (who we traded with and why)
+- Any violations of hard rules
+- Steward’s one-sentence reflection
+
+The report is generated automatically where possible and reviewed at the Kitchen Table.
+
+---
+
+## Reserve Raid Protocol (Emergency Draw)
+
+A Reserve raid is a serious event and requires full Kitchen Table approval.
+
+**Process:**
+1. Steward declares “Income Failure” with evidence
+2. Kitchen Table reviews within 48 hours
+3. If approved, draw is limited to what is required to survive the immediate crisis
+4. The machine enters “Building State” until Reserve is restored
+5. Steward must present a recovery plan within 30 days
+
+---
+
+**Final Rule**
+
+The machine does not run on hope.  
+It runs on structure.  
+
+Build it so it runs without you watching it.
+
+---
+
+**Signed,**  
+The Kitchen Table  
+Headwaters Universe
+
+---
+
+This document is now ready to be added to the shared folder.
+
+Would you like me to:
+- Adjust anything in this draft?
+- Add it to the Practitioner's Guide page as described in task #1882?
+- Or move to the next piece?
+
+Your call, Keeper. The rules are now clear and grounded.

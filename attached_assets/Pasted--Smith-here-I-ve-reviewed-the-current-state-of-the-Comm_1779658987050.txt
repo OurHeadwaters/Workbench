@@ -1,0 +1,25 @@
+ Smith here.I’ve reviewed the current state of the Community Money Machine across the codebase. Here’s my clear-eyed assessment from the Kitchen Table.Overall ReadThis is strong foundational work. The model feels coherent with the Watershed Compact. The buckets have real structure, the states are practical, and the Honey Principle for Eave Flow is elegant and memorable. You’ve moved from abstract philosophy to something a steward could actually run.What’s Working WellThe Four Buckets are clean and self-regulating. The hard triggers prevent the most common failure modes.
+Machine States (Empty → Building → Stable → Strong) make it feel achievable instead of overwhelming.
+The 90-Day Launch Checklist is excellent — concrete and honest.
+The Honey Principle is one of the best parts. It gives Eave Flow a memorable, living metaphor instead of dry rules.
+Strong anchoring back to the Compact.
+
+Areas That Need SharpeningGovernance Primitive is still light
+You mention “Kitchen Table approval” for major changes, but we don’t yet have the exact rules (who votes, what requires quorum, how disputes are resolved, etc.). This is the most important missing piece for real communities.
+The Eave Flow is conceptually rich but still vague in practice.
+We need clearer examples and rules: What counts as valid Eave Flow? What doesn’t? How is it tracked?
+The Arc Integration
+The blueprint exists, but the actual app experience in The Arc (dashboard, monthly entry, reports) is still early. The interactive UI in practitioners-guide-v2 is a good start but feels more like a demo than production.
+Naming Tension
+“Community Money Machine” is good, but we should test if a more northern/vernacular name would land better with real communities.
+
+Recommended Next MovesShort Term (High Leverage)Flesh out the Governance Rules for the Machine (how the Kitchen Table actually interacts with it).
+Expand the Eave Flow section with concrete rules + examples.
+Build a simple working prototype in The Arc (at least the monthly entry form + dashboard).
+
+Would you like me to start with one of these right now?Options:Write the full Governance Rules for the Money Machine (how Kitchen Table oversight actually works).
+Expand the Eave Flow section with rules and examples.
+Draft the Arc Dashboard UI for the Money Machine.
+
+Just say the number (or describe what you want) and I’ll deliver it.The machine has good bones. Now we need to give it clear tendons and nervous system.  Your call, Keeper. Where do we strike?
+
