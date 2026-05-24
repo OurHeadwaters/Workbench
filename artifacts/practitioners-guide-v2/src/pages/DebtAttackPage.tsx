@@ -19,7 +19,7 @@
  */
 
 import { Link } from "wouter";
-import { CheckCircle2, Shield, Trophy, TrendingDown, Calendar, DollarSign, ArrowLeft } from "lucide-react";
+import { CheckCircle2, Shield, Trophy, TrendingDown, Calendar, DollarSign, ArrowLeft, Map } from "lucide-react";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -502,6 +502,22 @@ export function DebtAttackPage() {
           </div>
         ))}
       </div>
+
+      {/* Bucket reference link */}
+      <Link
+        href="/money-machine"
+        className="flex items-center gap-3 rounded-xl border px-4 py-3 hover:shadow-sm transition-shadow"
+        style={{ borderColor: "#1F5B3F44", backgroundColor: "#F0FDF4" }}
+        data-testid="money-machine-bucket-link"
+      >
+        <Map className="h-4 w-4 flex-shrink-0" style={{ color: "#1F5B3F" }} />
+        <p className="flex-1 text-sm text-[#14532d] font-medium">
+          Which bucket does this belong in?
+        </p>
+        <span className="text-xs text-[#1F5B3F] font-medium">
+          Money Machine Blueprint →
+        </span>
+      </Link>
     </div>
   );
 }

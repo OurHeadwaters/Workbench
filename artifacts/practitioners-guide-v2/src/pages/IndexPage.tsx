@@ -33,6 +33,7 @@ import {
   Wallet,
   Flag,
   TrendingUp,
+  Map,
 } from "lucide-react";
 
 const FOCUS_STORAGE_KEY = "pgv2.whatsnext.focus";
@@ -939,6 +940,33 @@ export function IndexPage() {
 
       {/* ── Annual snapshot (state of the business) ── */}
       <AnnualSnapshotCard />
+
+      {/* ── Money Machine Blueprint callout ── */}
+      <Link
+        href="/money-machine"
+        className="flex items-start gap-3 rounded-xl border p-4 hover:shadow-sm transition-shadow"
+        style={{ borderColor: "#1F5B3F44", backgroundColor: "#F0FDF4" }}
+        data-testid="money-machine-callout"
+      >
+        <div
+          className="h-8 w-8 rounded-md grid place-items-center flex-shrink-0 mt-0.5"
+          style={{ backgroundColor: "#1F5B3F", color: "#fff" }}
+        >
+          <Map className="h-4 w-4" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#14532d] opacity-70 mb-0.5">
+            Architecture Reference
+          </p>
+          <p className="text-sm font-semibold text-[#14532d]">
+            Community Money Machine Blueprint
+          </p>
+          <p className="text-xs text-[#14532d] opacity-70 mt-0.5 leading-relaxed">
+            Four buckets · state rules · 90-day launch checklist
+          </p>
+        </div>
+        <ChevronRight className="h-4 w-4 text-[#1F5B3F] flex-shrink-0 mt-1" />
+      </Link>
 
       {/* ── Decision tree ── */}
       <DecisionTree />
