@@ -42,6 +42,7 @@ import { LegacyAssetManagerPage } from "@/pages/LegacyAssetManagerPage";
 import { TheGateOverridePage } from "@/pages/TheGateOverridePage";
 import { MoneyMachineBlueprintPage } from "@/pages/MoneyMachineBlueprintPage";
 import { CryptoCornerPage } from "@/pages/CryptoCornerPage";
+import { WatershedCompactPage } from "@/pages/WatershedCompactPage";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
 
@@ -124,11 +125,13 @@ function AppContent() {
 // Public routes rendered outside PassphraseGate so they can be shared freely.
 // /gmph-path-b — GMPH revenue-share proposal (incoming from main)
 // /legacy-asset-manager — Legacy Asset Manager public product funnel (task #1625)
+// /watershed-compact — Watershed Compact with Permaculture Zone diagram (task #1829/1838)
 function PublicRouter() {
   return (
     <Switch>
       <Route path="/gmph-path-b" component={GmphPublicShell} />
       <Route path="/legacy-asset-manager" component={LegacyAssetManagerPage} />
+      <Route path="/watershed-compact" component={WatershedCompactPage} />
       <Route>{null}</Route>
     </Switch>
   );
@@ -145,6 +148,7 @@ function App() {
             {/* Suppress public routes so they don't fall through to PassphraseGate */}
             <Route path="/gmph-path-b">{null}</Route>
             <Route path="/legacy-asset-manager">{null}</Route>
+            <Route path="/watershed-compact">{null}</Route>
             <Route>
               <PassphraseGate>
                 <ScenarioProvider>
