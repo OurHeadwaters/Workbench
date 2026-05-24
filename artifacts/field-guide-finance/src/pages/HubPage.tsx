@@ -41,18 +41,34 @@ export function HubPage() {
           width: "100%",
         }}
       >
-        <p
-          style={{
-            fontSize: "0.72rem",
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: "var(--moss)",
-            marginBottom: 12,
-          }}
-        >
-          Guide of Guides
-        </p>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, flexWrap: "wrap" }}>
+          <p
+            style={{
+              fontSize: "0.72rem",
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "var(--moss)",
+              margin: 0,
+            }}
+          >
+            Zone 1 · The Spring · Daily Tools
+          </p>
+          <span
+            style={{
+              fontSize: "0.65rem",
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--amber)",
+              backgroundColor: "rgba(212,160,23,0.10)",
+              padding: "2px 8px",
+              borderRadius: 4,
+            }}
+          >
+            Permaculture
+          </span>
+        </div>
         <h1
           style={{
             fontFamily: "var(--font-serif)",
@@ -72,11 +88,45 @@ export function HubPage() {
             color: "var(--bark)",
             lineHeight: 1.75,
             maxWidth: 560,
-            marginBottom: 48,
+            marginBottom: 36,
           }}
         >
           Two field guides. One for building a food economy. One for understanding the architecture beneath digital sovereignty. Both grounded in the same preparedness logic.
         </p>
+
+        {/* Practical on mobile? tester prompt */}
+        <div
+          style={{
+            marginBottom: 32,
+            padding: "14px 18px",
+            borderRadius: 10,
+            border: "1px solid rgba(212,160,23,0.28)",
+            backgroundColor: "rgba(212,160,23,0.05)",
+            maxWidth: 540,
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 12,
+          }}
+        >
+          <span style={{ fontSize: "1.1rem", lineHeight: 1, paddingTop: 2 }}>📱</span>
+          <div>
+            <p
+              style={{
+                fontSize: "0.72rem",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "var(--amber)",
+                marginBottom: 4,
+              }}
+            >
+              Practical on mobile?
+            </p>
+            <p style={{ fontFamily: "var(--font-lora)", fontSize: "0.88rem", color: "var(--bark)", lineHeight: 1.6, margin: 0 }}>
+              Key concepts read fine on a phone. For the hands-on build sections, a wider screen helps — but start wherever you are. One lesson is enough to find out if it fits.
+            </p>
+          </div>
+        </div>
 
         <div
           style={{
@@ -90,6 +140,7 @@ export function HubPage() {
             title="Field Guide Finance"
             subtitle="Northwestern Ontario Food Economy"
             description="Built around Bobbie Parr's journey with Parrs Jars. Plain-language financial guidance for NWO food entrepreneurs — proof before pitch, community capital, and sustainable structure."
+            practicalTakeaway="Run your costs against a real harvest before you pitch to anyone. One honest number is worth ten projections."
             cta="Enter the Guide"
             accent="var(--forest)"
             accentLight="var(--moss-light)"
@@ -109,6 +160,7 @@ export function HubPage() {
             title="Crypto Castle"
             subtitle="Blockchain Architecture as Preparedness"
             description="Build systems from elemental primitives — Fire, Water, Earth, Air, Aether. Each maps to a Jack Spirko preparedness pillar. Survive The Reckoning. Name what you built with Codetry."
+            practicalTakeaway="Name what you built at the end of each module. If you can't name it, you don't own it yet."
             cta="Enter The Forge"
             accent="#FF6B2B"
             accentLight="rgba(255,107,43,0.12)"
@@ -164,6 +216,7 @@ function CourseCard({
   title,
   subtitle,
   description,
+  practicalTakeaway,
   cta,
   accent,
   accentLight,
@@ -175,6 +228,7 @@ function CourseCard({
   title: string;
   subtitle: string;
   description: string;
+  practicalTakeaway?: string;
   cta: string;
   accent: string;
   accentLight: string;
@@ -256,6 +310,24 @@ function CourseCard({
         <p style={{ fontSize: "0.9rem", color: "var(--bark)", lineHeight: 1.65 }}>
           {description}
         </p>
+        {practicalTakeaway && (
+          <div
+            style={{
+              marginTop: 2,
+              padding: "10px 12px",
+              borderRadius: 8,
+              backgroundColor: "rgba(27,58,45,0.05)",
+              borderLeft: `3px solid ${accent}`,
+            }}
+          >
+            <p style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--moss)", marginBottom: 3 }}>
+              Practical takeaway
+            </p>
+            <p style={{ fontFamily: "var(--font-lora)", fontSize: "0.85rem", color: "var(--bark)", lineHeight: 1.6, fontStyle: "italic", margin: 0 }}>
+              {practicalTakeaway}
+            </p>
+          </div>
+        )}
       </div>
 
       <button

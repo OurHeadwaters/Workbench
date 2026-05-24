@@ -111,6 +111,9 @@ export default function FrontPage() {
           <Text style={[styles.heroSubtitle, { fontFamily: SERIF_ITALIC }]}>
             How a Community Runs Its Own Economy
           </Text>
+          <Text style={[styles.heroCodetry, { fontFamily: MONO }]}>
+            Codetry — hands-on coding and tools for sovereignty and self-reliance.
+          </Text>
 
           {/* Amber rule */}
           <View style={styles.heroRule} />
@@ -587,6 +590,13 @@ const styles = StyleSheet.create({
     marginTop: 26,
     marginBottom: 20,
     borderRadius: 1,
+  },
+  heroCodetry: {
+    fontSize: 11,
+    letterSpacing: 0.6,
+    color: `${AMBER}55`,
+    marginTop: 10,
+    lineHeight: 18,
   },
   heroQuote: {
     fontSize: 15,

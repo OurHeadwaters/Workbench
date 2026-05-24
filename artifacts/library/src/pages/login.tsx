@@ -298,6 +298,9 @@ export default function Login() {
           >
             Bridging what community, industry, government, and research each see separately
           </h1>
+          <p className="text-base font-serif italic text-primary/60 max-w-xl mx-auto -mt-1">
+            Knowledge rises cold and clean here.
+          </p>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
             The Northern Food Systems Research Library holds the evidence base behind
             Headwaters' analysis — documents tagged, cross-referenced, and synthesized so

@@ -110,25 +110,43 @@ export function ModuleList() {
                   </p>
                 </div>
 
-                <button
-                  onClick={() => navigate(`/forge/module/${mod.id}`)}
-                  style={{
-                    flexShrink: 0,
-                    padding: "8px 16px",
-                    borderRadius: 9,
-                    border: "none",
-                    backgroundColor: done ? "rgba(201,168,76,0.15)" : "var(--forge-orange)",
-                    color: done ? "#C9A84C" : "#fff",
-                    fontWeight: 600,
-                    fontSize: "0.82rem",
-                    cursor: "pointer",
-                    fontFamily: "var(--font-sans)",
-                    minHeight: 44,
-                    alignSelf: "center",
-                  }}
-                >
-                  {done ? "Review" : "Start →"}
-                </button>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", flexShrink: 0 }}>
+                  <button
+                    onClick={() => navigate(`/forge/module/${mod.id}`)}
+                    style={{
+                      padding: "8px 16px",
+                      borderRadius: 9,
+                      border: "none",
+                      backgroundColor: done ? "rgba(201,168,76,0.15)" : "var(--forge-orange)",
+                      color: done ? "#C9A84C" : "#fff",
+                      fontWeight: 600,
+                      fontSize: "0.82rem",
+                      cursor: "pointer",
+                      fontFamily: "var(--font-sans)",
+                      minHeight: 44,
+                    }}
+                  >
+                    {done ? "Review" : "Start →"}
+                  </button>
+                  <button
+                    onClick={() => navigate("/forge/build")}
+                    style={{
+                      padding: "5px 12px",
+                      borderRadius: 7,
+                      border: "1px solid rgba(255,107,43,0.25)",
+                      backgroundColor: "transparent",
+                      color: "var(--forge-orange)",
+                      fontWeight: 500,
+                      fontSize: "0.72rem",
+                      cursor: "pointer",
+                      fontFamily: "var(--font-sans)",
+                      whiteSpace: "nowrap",
+                      opacity: 0.8,
+                    }}
+                  >
+                    Take it outside →
+                  </button>
+                </div>
               </div>
             );
           })}
