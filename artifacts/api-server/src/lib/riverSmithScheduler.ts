@@ -8,6 +8,10 @@
 
 import { generateRiverSmithBriefing } from "../routes/riverSmith";
 import { logger } from "./logger";
+import {
+  sendRiverSmithBriefingEmail,
+  sendRiverSmithFailureEmail,
+} from "./riverSmithMailer";
 
 function msUntilNextRun(hour: number, minute: number): number {
   const now = new Date();
@@ -24,8 +28,11 @@ async function runNightlyBriefing(): Promise<void> {
   try {
     const result = await generateRiverSmithBriefing("scheduled");
     logger.info({ id: result.id }, "river-smith: nightly briefing complete");
+    await sendRiverSmithBriefingEmail(result.rawMarkdown);
   } catch (err) {
     logger.error({ err }, "river-smith: nightly briefing failed");
+    const message = err instanceof Error ? err.message : String(err);
+    await sendRiverSmithFailureEmail(message);
   }
 }
 
