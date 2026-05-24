@@ -87,61 +87,8 @@ function KitchenTableSourcesPanel() {
   );
 }
 
-// ── Default brief ─────────────────────────────────────────────────────────────
-const DEFAULT_BRIEF = `SESSION: Software Systems Bundle — Business Management Decisions
-Date: May 23, 2026
-Convened by: Bobbie Parr, Headwaters Development Services
-Table mode: Sounding. Bobbie listens for the rods — the words that hold weight.
-
-TODAY'S AGENDA (run seat-by-seat, 30 minutes)
-Goal: Decide which bundles are ready to sell now, refine buyer language,
-and clarify how we talk about practitioner licensing.
-
-Q1 — Which bundles feel solid and ready to offer today without forcing anything?
-     Saltbox leads. (Does this hold?)
-
-Q2 — What are the clearest stocks and flows in our current platform that make
-     a bundle actually deliver value?
-     Systems leads.
-
-Q3 — Where do we see the strongest human-scale economic fit for these bundles
-     right now?
-     Community leads.
-
-Q4 — What naming and framing feels clean, honest, and free of drift for the
-     bundles and for practitioner licensing?
-     Codetry leads.
-
-Q5 — How should we speak about practitioner licensing so it feels like natural
-     extension rather than add-on?
-     Smith leads. (Direct whiteboard.)
-
-Q6 — What one decision or next action carries the most weight from what we've heard?
-     Saltbox leads. (Does this hold?)
-
-Q7 — Does the current language in North Star hold the accountability philosophy precisely —
-     flexible structure for founders wired for urgency, without breaking under anxiety or
-     letting others down? Are we using the right visions, the right words, and do we have
-     the discipline not to substitute words that don't fit?
-     Codetry leads.
-
-Q8 — The Hearth: a digital creative hub for kids using AI image generation. Where does it
-     belong in the bundle stack — Bundle B (Family & Homeschool), Bundle E (Full Sovereign
-     Stack), or does it need its own lane? And who leads the build?
-     Smith leads. (Direct whiteboard.)
-
-Q9 — A crypto/digital privacy onboarding guide for community members ("normies"), seeded
-     from a real Dryden event presentation. Does this live as a standalone artifact, or
-     does it fold into an existing one (Handbook, Library, etc.)? Who is the right audience
-     and who holds it?
-     Community leads.
-
-Run tight. Bobbie listens for the rods. Finish with clear decisions on
-readiness, language, and licensing.
-
----
-
----
+// ── Permanent context block — always loaded into every session ─────────────────
+const CONTEXT_BLOCK = `---
 WHO IS AT THIS TABLE
 This table has six named seats and two open/configurable seats.
 Saltbox (⊡) is Bobbie's Z0 agent — preserve, slow down, cure.
@@ -265,6 +212,24 @@ PULL QUOTES IN CIRCULATION
 "Sovereign by design. No extraction model."
 "Start at household. Expand to community without rework."`;
 
+// ── Today's brief — fresh header every session, permanent context below ────────
+function getTodayBrief(): string {
+  const today = new Date();
+  const dateStr = today.toLocaleDateString("en-CA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "long",
+  });
+  return `SESSION: Kitchen Table — ${dateStr}
+Convened by: Bobbie Parr, Headwaters Development Services
+Table mode: [Sounding / Working / Review — edit this line]
+
+TODAY'S AGENDA
+What's on the table today? Write it here before you sit down.
+
+${CONTEXT_BLOCK}`;
+}
 
 // ── Seat definitions ──────────────────────────────────────────────────────────
 type Seat = {
@@ -288,7 +253,7 @@ const DEFAULT_SEATS: Seat[] = [
     color: "#8A6A1A",
     bgClass: "bg-yellow-50",
     borderClass: "border-yellow-200",
-    model: "x-ai/grok-4.20",
+    model: "x-ai/grok-3",
     configurable: false,
     description: "Preserve, slow down, cure — does this hold?",
     systemPrompt: `You are the Saltbox seat at the Kitchen Table.
@@ -305,7 +270,7 @@ You are not a validator. You are a curing process.`,
     color: "#5C3D2E",
     bgClass: "bg-stone-50",
     borderClass: "border-stone-300",
-    model: "x-ai/grok-4.20",
+    model: "x-ai/grok-3",
     configurable: false,
     description: "Forge — shapes raw thinking into something you can hold",
     systemPrompt: `You are Smith — the community blacksmith and the boardroom presence who arrives with the marker already uncapped.
@@ -325,7 +290,7 @@ When something is ready, say it is ready. When it needs another pass, name the p
     color: "#059669",
     bgClass: "bg-emerald-50",
     borderClass: "border-emerald-200",
-    model: "x-ai/grok-4.20",
+    model: "x-ai/grok-3",
     configurable: false,
     description: "Donella Meadows — stocks, flows, leverage",
     systemPrompt: `You see through the lens of systems thinking, drawing on Donella Meadows' "Thinking in Systems." When asked a question, you identify the stocks, flows, feedback loops, delays, and leverage points at work. You name the system archetype if one applies. You are at a kitchen table helping a founder see what the system is actually doing. Short, precise answers.`,
@@ -337,7 +302,7 @@ When something is ready, say it is ready. When it needs another pass, name the p
     color: "#D97706",
     bgClass: "bg-amber-50",
     borderClass: "border-amber-200",
-    model: "x-ai/grok-4.20",
+    model: "x-ai/grok-3",
     configurable: false,
     description: "Schumacher + Jacobs — human-scale economics",
     systemPrompt: `You think from the tradition of human-scale economics: E.F. Schumacher's "Small is Beautiful," Jane Jacobs' "The Economy of Cities" and "The Death and Life of Great American Cities." You look for local multipliers, import replacement, diversity over monoculture. You are suspicious of scale for its own sake. Plain language, no jargon. Kitchen table in a small northern Ontario community.`,
@@ -349,7 +314,7 @@ When something is ready, say it is ready. When it needs another pass, name the p
     color: "#1F3D2E",
     bgClass: "bg-green-50",
     borderClass: "border-green-200",
-    model: "x-ai/grok-4.20",
+    model: "x-ai/grok-3",
     configurable: false,
     description: "Handbook — naming discipline, zone model",
     systemPrompt: `You are a practitioner of codetry — the discipline of naming community economy systems correctly so that the name can do structural work. You apply three naming tests: (1) Saltbox test — does the name bound one thing and not two? (2) Both-States test — does it work when the system is empty and when it is full? (3) Both-Sides test — does it work for the practitioner and for the technical enforcement layer? You know the Headwaters constellation and the three-layer trust stack. Plain load-bearing language.`,
@@ -361,7 +326,7 @@ When something is ready, say it is ready. When it needs another pass, name the p
     color: "#1E3A5F",
     bgClass: "bg-blue-50",
     borderClass: "border-blue-200",
-    model: "x-ai/grok-4.20",
+    model: "x-ai/grok-3",
     configurable: false,
     description: "Daniel Quinn — Taker/Leaver, what story is your culture telling?",
     systemPrompt: `You are Ishmael — the voice of Daniel Quinn's Taker/Leaver framework, drawn from Ishmael, The Story of B, and My Ishmael.
@@ -395,7 +360,7 @@ You are not a moralist. You are a teacher who asks the one question that changes
     color: "#78716C",
     bgClass: "bg-stone-50",
     borderClass: "border-stone-200",
-    model: "x-ai/grok-4.20",
+    model: "x-ai/grok-3",
     configurable: true,
     description: "Open — tap to configure",
     systemPrompt: `You are a thoughtful advisor at a kitchen table. Answer questions directly and honestly.`,
@@ -407,7 +372,7 @@ You are not a moralist. You are a teacher who asks the one question that changes
     color: "#78716C",
     bgClass: "bg-stone-50",
     borderClass: "border-stone-200",
-    model: "x-ai/grok-4.20",
+    model: "x-ai/grok-3",
     configurable: true,
     description: "Open — tap to configure",
     systemPrompt: `You are a thoughtful advisor at a kitchen table. Answer questions directly and honestly.`,
@@ -456,7 +421,7 @@ const TEMPLATES: SessionTemplate[] = [
     id: "today",
     label: "Today's session",
     sessionName: "Kitchen Table",
-    brief: DEFAULT_BRIEF,
+    brief: getTodayBrief(),
     agendaItems: [
       { q: "Q1", question: "Which bundles feel solid and ready to offer today without forcing anything?", lead: "Saltbox", leadId: "saltbox" },
       { q: "Q2", question: "What are the clearest stocks and flows in our current platform that make a bundle actually deliver value?", lead: "Systems", leadId: "systems" },
@@ -570,7 +535,7 @@ export function KitchenTablePage() {
   const [activeTemplateId, setActiveTemplateId] = useState("today");
   const [sessionName, setSessionName] = useState("Kitchen Table");
   const [editingSession, setEditingSession] = useState(false);
-  const [brief, setBrief] = useState(DEFAULT_BRIEF);
+  const [brief, setBrief] = useState(() => getTodayBrief());
   const [briefOpen, setBriefOpen] = useState(false);
   const [editingBrief, setEditingBrief] = useState(false);
   const [configSeatId, setConfigSeatId] = useState<string | null>(null);
@@ -1016,7 +981,7 @@ export function KitchenTablePage() {
                     />
                     <div className="flex gap-3 mt-3 justify-end">
                       <button
-                        onClick={() => setBrief(DEFAULT_BRIEF)}
+                        onClick={() => setBrief(getTodayBrief())}
                         className="text-[12px] tracking-wide text-[#8C7B6D] hover:text-[#D8D0C5] border border-[#2A231E] bg-[#1C1814] rounded-sm px-4 py-2 transition-colors"
                       >Reset</button>
                       <button
