@@ -194,6 +194,7 @@ export function ZonesPage() {
               <h1 className="text-2xl mt-0.5" style={{ fontFamily: "Fraunces, serif", fontWeight: 500 }}>
                 {ZONE_LABELS[currentZone].long}
               </h1>
+              <p className="text-xs mt-1 opacity-70 tracking-wide">{ZONE_LABELS[currentZone].tagline}</p>
             </div>
             <div className="flex flex-col gap-1.5 items-end">
               <button
@@ -224,6 +225,7 @@ export function ZonesPage() {
               <button
                 key={z}
                 onClick={() => goToZone(i)}
+                title={ZONE_LABELS[z].tagline}
                 className={cn(
                   "px-3 py-2 rounded-lg text-sm min-h-[44px] transition-all whitespace-nowrap",
                   active ? "font-semibold" : "text-[#78716C]"

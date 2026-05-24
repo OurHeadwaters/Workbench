@@ -6,13 +6,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const ZONE_LABELS: Record<ZoneId, { short: string; long: string; desc: string }> = {
-  Z0: { short: "Z0", long: "Center / The Practitioner", desc: "Who you are and what you hold. The north star everything else orbits." },
-  Z1: { short: "Z1", long: "Household / Afloat", desc: "Income-generating work. The floor that keeps the lights on." },
-  Z2: { short: "Z2", long: "Circle / Paid Contract", desc: "Paid contracted work with a deadline and a deliverable." },
-  Z3: { short: "Z3", long: "Home Range / Build now", desc: "Active projects being built toward future value." },
-  Z4: { short: "Z4", long: "Community / Passion", desc: "Volunteer or community work. No immediate return." },
-  Z5: { short: "Z5", long: "Wild / Long Horizon", desc: "Wilderness. Let it grow on its own terms. Tend occasionally, harvest when ready." },
+export const ZONE_LABELS: Record<ZoneId, { short: string; long: string; desc: string; tagline: string }> = {
+  Z0: { short: "Z0", long: "Center / The Practitioner", desc: "Who you are and what you hold. The north star everything else orbits.", tagline: "The Hearth · Home Center" },
+  Z1: { short: "Z1", long: "Household / Afloat", desc: "Income-generating work. The floor that keeps the lights on.", tagline: "The Spring · Daily Tools" },
+  Z2: { short: "Z2", long: "Circle / Paid Contract", desc: "Paid contracted work with a deadline and a deliverable.", tagline: "The Worn Path · Trail" },
+  Z3: { short: "Z3", long: "Home Range / Build now", desc: "Active projects being built toward future value.", tagline: "The Clearing · Circle" },
+  Z4: { short: "Z4", long: "Community / Passion", desc: "Volunteer or community work. No immediate return.", tagline: "The Market Square" },
+  Z5: { short: "Z5", long: "Wild / Long Horizon", desc: "Wilderness. Let it grow on its own terms. Tend occasionally, harvest when ready.", tagline: "The Ridge · Long View" },
 };
 
 export const ZONE_CLASSES: Record<ZoneId, { bg: string; text: string; border: string }> = {
