@@ -50,6 +50,13 @@
       "when": 1748117400000,
       "tag": "0006_river_smith",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1779655686068,
+      "tag": "0008_futuristic_chat",
+      "breakpoints": true
     }
   ]
 }

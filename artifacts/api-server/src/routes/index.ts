@@ -30,6 +30,7 @@ import councilRouter from "./council";
 import gatekeeperRouter from "./gatekeeper";
 import gordRouter from "./gord";
 import riverSmithRouter from "./riverSmith";
+import settingsRouter from "./settings";
 
 const router: IRouter = Router();
 
@@ -67,5 +68,6 @@ router.use("/council", councilRouter);
 router.use("/gatekeeper", gatekeeperRouter);
 router.use("/gord", gordRouter);
 router.use("/river-smith", riverSmithRouter);
+router.use("/settings", settingsRouter);
 
 export default router;

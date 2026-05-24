@@ -1,15 +1,22 @@
 /**
  * riverSmithMailer — sends the River Smith briefing (or a failure notice)
- * to RIVER_SMITH_NOTIFY_EMAIL via the Gmail connector.
+ * to the configured notify email via the Gmail connector.
+ *
+ * Delivery address is resolved in priority order:
+ *   1. app_settings row with key "river_smith_notify_email" (owner-editable via Kitchen Table)
+ *   2. RIVER_SMITH_NOTIFY_EMAIL environment variable (legacy fallback)
  *
  * Uses the @replit/connectors-sdk proxy pattern — tokens are refreshed
  * automatically; never cache the ReplitConnectors instance across requests.
  *
- * Email is entirely optional: if RIVER_SMITH_NOTIFY_EMAIL is unset, every
- * call is a no-op that returns { status: "skipped" }.
+ * Email is entirely optional: if no address is configured by either source,
+ * every call is a no-op that returns { status: "skipped" }.
  */
 
 import { ReplitConnectors } from "@replit/connectors-sdk";
+import { db } from "@workspace/db";
+import { appSettingsTable } from "@workspace/db";
+import { eq } from "drizzle-orm";
 import { logger } from "./logger";
 
 export type MailStatus = "sent" | "failed" | "skipped";
@@ -18,6 +25,21 @@ export interface MailResult {
   status: MailStatus;
   error?: string;
   messageId?: string;
+}
+
+async function resolveNotifyEmail(): Promise<string | null> {
+  try {
+    const rows = await db
+      .select()
+      .from(appSettingsTable)
+      .where(eq(appSettingsTable.key, "river_smith_notify_email"))
+      .limit(1);
+    const dbValue = rows[0]?.value;
+    if (dbValue) return dbValue;
+  } catch {
+    // DB unavailable — fall through to env var
+  }
+  return process.env.RIVER_SMITH_NOTIFY_EMAIL ?? null;
 }
 
 function formatSubject(date: Date): string {
@@ -92,7 +114,7 @@ async function sendViaGmail(
 export async function sendRiverSmithBriefingEmail(
   rawMarkdown: string,
 ): Promise<MailResult> {
-  const to = process.env.RIVER_SMITH_NOTIFY_EMAIL;
+  const to = await resolveNotifyEmail();
   if (!to) return { status: "skipped" };
 
   const subject = formatSubject(new Date());
@@ -110,7 +132,7 @@ export async function sendRiverSmithBriefingEmail(
 export async function sendRiverSmithFailureEmail(
   errorMessage: string,
 ): Promise<MailResult> {
-  const to = process.env.RIVER_SMITH_NOTIFY_EMAIL;
+  const to = await resolveNotifyEmail();
   if (!to) return { status: "skipped" };
 
   const subject = formatSubject(new Date());

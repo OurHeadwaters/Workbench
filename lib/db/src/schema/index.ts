@@ -19,3 +19,4 @@ export * from "./sandbox";
 export * from "./nursery";
 export * from "./gatekeeper";
 export * from "./riverSmith";
+export * from "./appSettings";

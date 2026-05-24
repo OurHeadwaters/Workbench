@@ -1,10 +1,23 @@
-import { useState, useRef } from "react";
-import { Download, Upload, RotateCcw, ExternalLink } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Download, Upload, RotateCcw, ExternalLink, Mail } from "lucide-react";
 import { useStore } from "@/store";
 import { Link } from "wouter";
-import { cn } from "@/lib/utils";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const API = import.meta.env.VITE_API_URL ?? "";
+
+function getOwnerToken(): string | null {
+  return (
+    window.localStorage.getItem("library.ownerToken") ||
+    window.localStorage.getItem("ownerToken") ||
+    null
+  );
+}
+
+function ownerHeaders(): HeadersInit {
+  const token = getOwnerToken();
+  return token ? { "x-library-owner-token": token } : {};
+}
 
 export function SettingsPage() {
   const statement = useStore((s) => s.statement);
@@ -32,6 +45,49 @@ export function SettingsPage() {
   const [showReset, setShowReset] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const isOwner = !!getOwnerToken();
+
+  const [notifyEmail, setNotifyEmail] = useState("");
+  const [notifyEmailSource, setNotifyEmailSource] = useState<"db" | "env" | "unset" | null>(null);
+  const [notifyEmailSaving, setNotifyEmailSaving] = useState(false);
+  const [notifyEmailSaved, setNotifyEmailSaved] = useState(false);
+  const [notifyEmailError, setNotifyEmailError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isOwner) return;
+    fetch(`${API}/api/settings/notify-email`, { headers: ownerHeaders() })
+      .then((r) => r.json())
+      .then((data: { email: string | null; source: "db" | "env" | "unset" }) => {
+        setNotifyEmail(data.email ?? "");
+        setNotifyEmailSource(data.source);
+      })
+      .catch(() => {});
+  }, [isOwner]);
+
+  async function handleSaveNotifyEmail() {
+    setNotifyEmailSaving(true);
+    setNotifyEmailError(null);
+    try {
+      const res = await fetch(`${API}/api/settings/notify-email`, {
+        method: "PUT",
+        headers: { ...ownerHeaders(), "Content-Type": "application/json" },
+        body: JSON.stringify({ email: notifyEmail }),
+      });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        setNotifyEmailError(data.error ?? "Save failed");
+      } else {
+        setNotifyEmailSource("db");
+        setNotifyEmailSaved(true);
+        setTimeout(() => setNotifyEmailSaved(false), 2000);
+      }
+    } catch {
+      setNotifyEmailError("Could not reach the server");
+    } finally {
+      setNotifyEmailSaving(false);
+    }
+  }
 
   function handleSaveStatement() {
     setStatement({ who: who.trim(), why: why.trim(), noFly: noFly.trim() });
@@ -208,6 +264,51 @@ export function SettingsPage() {
             {wpSaved ? "Saved ✓" : "Save workbench plan"}
           </button>
         </div>
+
+        {isOwner && (
+          <div
+            className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-4"
+            style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+          >
+            <div className="flex items-center gap-2">
+              <Mail size={15} className="text-[#78716C]" />
+              <h2 className="text-base font-medium text-[#1C1917]">River Smith briefing email</h2>
+            </div>
+
+            <p className="text-xs text-[#78716C]">
+              The nightly briefing will be delivered to this address.
+              {notifyEmailSource === "env" && (
+                <span className="ml-1 italic">Currently set via server config — saving here will override it.</span>
+              )}
+              {notifyEmailSource === "unset" && (
+                <span className="ml-1 italic">No address configured yet — briefings are not being sent.</span>
+              )}
+            </p>
+
+            <div className="space-y-2">
+              <label className="text-xs text-[#78716C] uppercase tracking-wider">Delivery address</label>
+              <input
+                type="email"
+                value={notifyEmail}
+                onChange={(e) => setNotifyEmail(e.target.value)}
+                placeholder="bobbie@example.com"
+                className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+              />
+            </div>
+
+            {notifyEmailError && (
+              <p className="text-sm text-[#B45309]">{notifyEmailError}</p>
+            )}
+
+            <button
+              onClick={handleSaveNotifyEmail}
+              disabled={notifyEmailSaving}
+              className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px] disabled:opacity-60"
+            >
+              {notifyEmailSaved ? "Saved ✓" : notifyEmailSaving ? "Saving…" : "Save briefing email"}
+            </button>
+          </div>
+        )}
 
         <div className="bg-white/70 rounded-2xl border border-[#D6D0C7] shadow-sm divide-y divide-[#E7E5E4]">
           <Link
