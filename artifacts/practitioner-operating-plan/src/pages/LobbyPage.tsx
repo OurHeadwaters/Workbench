@@ -1049,6 +1049,233 @@ function MorningBriefCard() {
   );
 }
 
+// ─── Machine State Panel ──────────────────────────────────────────────────────
+
+type MachineStateKey = "Empty" | "Building" | "Stable" | "Strong";
+
+const MACHINE_STATE_KEY = "hwop_machine_state_v1";
+
+const MACHINE_STATES: Record<
+  MachineStateKey,
+  { color: string; bg: string; border: string; description: string; rules: string[] }
+> = {
+  Empty: {
+    color: "#b85a3e",
+    bg: "rgba(184,90,62,0.08)",
+    border: "rgba(184,90,62,0.25)",
+    description: "Bucket 1 is funded. Buckets 2, 3, and 4 have nothing.",
+    rules: [
+      "All surplus above Cost Basis goes to Reserve (Bucket 2) until it reaches three months of operating costs.",
+      "No Reinvestment spending.",
+      "No Eave Flow.",
+      "No exceptions. The machine is not strong enough to give anything away yet.",
+    ],
+  },
+  Building: {
+    color: "#1A5FA8",
+    bg: "rgba(26,95,168,0.08)",
+    border: "rgba(26,95,168,0.22)",
+    description: "Reserve (Bucket 2) is between one and six months of operating costs.",
+    rules: [
+      "Continue filling Reserve to the six-month target.",
+      "Reinvestment (Bucket 3) may receive up to 10% of surplus while Reserve is building — but only for investments that demonstrably increase future Cost Basis income.",
+      "No Eave Flow.",
+    ],
+  },
+  Stable: {
+    color: "#1F5446",
+    bg: "rgba(31,84,70,0.08)",
+    border: "rgba(31,84,70,0.22)",
+    description: "Bucket 2 is at six months. Bucket 1 is covered. Bucket 3 is active.",
+    rules: [
+      "Reserve is maintained. Any draw on Reserve triggers an immediate return-to-building protocol.",
+      "Reinvestment runs at the agreed community percentage.",
+      "Eave Flow (Bucket 4) activates only after Reinvestment is funded.",
+    ],
+  },
+  Strong: {
+    color: "#3D4A5C",
+    bg: "rgba(61,74,92,0.08)",
+    border: "rgba(61,74,92,0.22)",
+    description: "All four buckets are funded. Reserve is at six months. Reinvestment is compounding. Eave Flow is active.",
+    rules: [
+      "The machine is now producing honey. The overflow is real.",
+      "Eave Flow goes outward — to replication, to allied watersheds, to the seventh generation.",
+      "The community begins the governance process to define the next generation of institutions.",
+      "The machine is documented and prepared to be replicated.",
+    ],
+  },
+};
+
+const STATE_ORDER: MachineStateKey[] = ["Empty", "Building", "Stable", "Strong"];
+
+function loadMachineState(): MachineStateKey {
+  try {
+    const raw = localStorage.getItem(MACHINE_STATE_KEY);
+    if (raw && STATE_ORDER.includes(raw as MachineStateKey)) return raw as MachineStateKey;
+  } catch { /* noop */ }
+  return "Empty";
+}
+
+function saveMachineState(state: MachineStateKey): void {
+  try { localStorage.setItem(MACHINE_STATE_KEY, state); } catch { /* noop */ }
+}
+
+function MachineStatePanel() {
+  const [state, setState] = useState<MachineStateKey>(() => loadMachineState());
+  const [picking, setPicking] = useState(false);
+
+  const cfg = MACHINE_STATES[state];
+
+  function handlePick(s: MachineStateKey) {
+    setState(s);
+    saveMachineState(s);
+    setPicking(false);
+  }
+
+  return (
+    <div
+      style={{
+        borderRadius: 10,
+        overflow: "hidden",
+        border: `1px solid ${cfg.border}`,
+        background: cfg.bg,
+      }}
+    >
+      {/* Header row */}
+      <div
+        style={{
+          padding: "10px 16px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottom: `1px solid ${cfg.border}`,
+          gap: 10,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span
+            style={{
+              fontSize: 10,
+              fontWeight: 900,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: T.muted,
+            }}
+          >
+            Machine State
+          </span>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 800,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: cfg.color,
+              background: `${cfg.bg}`,
+              border: `1.5px solid ${cfg.border}`,
+              borderRadius: 5,
+              padding: "2px 8px",
+            }}
+          >
+            {state}
+          </span>
+        </div>
+        <button
+          onClick={() => setPicking((v) => !v)}
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            color: T.muted,
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 0,
+            letterSpacing: "0.06em",
+          }}
+        >
+          {picking ? "cancel" : "change state"}
+        </button>
+      </div>
+
+      {/* State picker */}
+      {picking && (
+        <div
+          style={{
+            display: "flex",
+            gap: 6,
+            padding: "10px 16px",
+            borderBottom: `1px solid ${cfg.border}`,
+            flexWrap: "wrap",
+          }}
+        >
+          {STATE_ORDER.map((s) => {
+            const c = MACHINE_STATES[s];
+            const active = s === state;
+            return (
+              <button
+                key={s}
+                onClick={() => handlePick(s)}
+                style={{
+                  padding: "5px 12px",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: active ? "#fff" : c.color,
+                  background: active ? c.color : "transparent",
+                  border: `1.5px solid ${c.border}`,
+                  borderRadius: 5,
+                  cursor: "pointer",
+                }}
+              >
+                {s}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Description + rules */}
+      <div style={{ padding: "12px 16px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
+        <p
+          style={{
+            margin: 0,
+            fontSize: 11,
+            color: cfg.color,
+            fontStyle: "italic",
+            lineHeight: 1.5,
+          }}
+        >
+          {cfg.description}
+        </p>
+        <ul
+          style={{
+            margin: 0,
+            paddingLeft: 16,
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+          }}
+        >
+          {cfg.rules.map((rule, i) => (
+            <li
+              key={i}
+              style={{
+                fontSize: 11,
+                color: T.text,
+                lineHeight: 1.6,
+              }}
+            >
+              {rule}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function LobbyPage() {
@@ -1159,6 +1386,9 @@ export function LobbyPage() {
           </span>
         </button>
       )}
+
+      {/* Machine State */}
+      {!query && <MachineStatePanel />}
 
       {/* Search */}
       <div style={{ position: "relative" }}>
