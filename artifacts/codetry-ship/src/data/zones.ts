@@ -18,6 +18,8 @@ export interface ZoneData {
   number: number;
   name: string;
   slug: string;
+  terrain: string;
+  flowsTo: string | null;
   metaphor: string;
   goodTimesDesc: string;
   standbyDesc: string;
@@ -35,6 +37,8 @@ export const ZONES: ZoneData[] = [
     number: 0,
     name: "The Saltbox",
     slug: "saltbox",
+    terrain: "The Hearth · Home Center",
+    flowsTo: "The Lodge",
     metaphor: "Where families keep what they need before winter comes.",
     goodTimesDesc:
       "Household sorted. Kit checked. Roles assigned. Everything in its place — quiet competence on the shelf.",
@@ -81,6 +85,8 @@ export const ZONES: ZoneData[] = [
     number: 1,
     name: "The Lodge",
     slug: "lodge",
+    terrain: "The Spring · Daily Tools",
+    flowsTo: "The Bench",
     metaphor: "Where names are held and trust is recognized — the root system that connects everything above ground.",
     goodTimesDesc:
       "Credentials quiet, identities stable. The Lodge is the unseen foundation — names on record, passphrase in hand.",
@@ -113,6 +119,8 @@ export const ZONES: ZoneData[] = [
     number: 2,
     name: "The Bench",
     slug: "bench",
+    terrain: "The Worn Path · Trail",
+    flowsTo: "The Standby",
     metaphor: "Where practitioners work. Every tool a practitioner reaches for is in this zone.",
     goodTimesDesc:
       "Planning season. Strategy on the bench, research in the library, the operating plan open. The work is ordered.",
@@ -180,6 +188,8 @@ export const ZONES: ZoneData[] = [
     number: 3,
     name: "The Standby",
     slug: "standby",
+    terrain: "The Clearing · Circle",
+    flowsTo: "Community Hall",
     metaphor: "Where the network goes when something is moving — advisory, watching the horizon.",
     goodTimesDesc:
       "Advisory. The status ladder is quiet. Pilots watching. No signal yet.",
@@ -205,6 +215,8 @@ export const ZONES: ZoneData[] = [
     number: 4,
     name: "Community Hall",
     slug: "community-hall",
+    terrain: "The Market Square",
+    flowsTo: "The Wild",
     metaphor: "Where the community decides together — the hall is always set before the vote.",
     goodTimesDesc:
       "Deliberation. The hall is set up. Evidence on the table, research in the library, no decision yet required.",
@@ -258,6 +270,8 @@ export const ZONES: ZoneData[] = [
     number: 5,
     name: "The Wild",
     slug: "wild",
+    terrain: "The Ridge · Long View",
+    flowsTo: null,
     metaphor: "Where the community's work meets the world — public, open, and moving.",
     goodTimesDesc:
       "Quiet. The work is being done inside. The Wild is the horizon — reachable when ready.",

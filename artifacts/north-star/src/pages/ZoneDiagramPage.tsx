@@ -126,6 +126,27 @@ export function ZoneDiagramPage() {
           </p>
         </div>
 
+        {/* Watershed context note */}
+        <div className="rounded-xl border border-[#4F6E5C]/25 bg-[#4F6E5C]/06 px-4 py-3 flex items-start gap-3">
+          <div className="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full bg-[#4F6E5C] opacity-60" />
+          <div className="min-w-0">
+            <p className="text-xs font-mono font-semibold uppercase tracking-widest text-[#4F6E5C] mb-1">
+              Full Headwaters Watershed
+            </p>
+            <p className="text-xs text-[#78716C] leading-relaxed">
+              This diagram shows the Z1–Z3 privacy model — the core that North Star is built on. In the full 0–5 watershed, these are the inner zones: Lodge (Z1) → Bench (Z2) → Standby (Z3). The outer zones — Saltbox (Z0), Community Hall (Z4), and The Wild (Z5) — live in the neighbourhood map.
+            </p>
+            <a
+              href="/map"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 mt-2 text-[10px] font-mono font-semibold uppercase tracking-wider text-[#4F6E5C] hover:opacity-75 transition-opacity"
+            >
+              See the full map →
+            </a>
+          </div>
+        </div>
+
         <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm overflow-hidden">
           <svg
             viewBox="0 0 480 400"

@@ -179,6 +179,12 @@ export function HomePage() {
               Income enters at the practitioner's headwaters. It flows through four buckets in order — costs, reserve, reinvestment, community overflow — and nothing moves downstream until the bucket above it is full. Not a theory. A machine already running.
             </p>
             <p
+              className="font-serif text-[12px] leading-[1.65] mb-3 pt-3"
+              style={{ color: "rgba(244,237,224,0.38)", borderTop: "1px solid rgba(244,237,224,0.05)", fontStyle: "italic" }}
+            >
+              The community is the watershed. Water flows from the hearth outward — Salt Box → Lodge → Bench → Standby → Community Hall → The Wild — and back again. Six zones, one neighbourhood, all of it connected.
+            </p>
+            <p
               className="font-mono text-[10px] uppercase tracking-[0.2em]"
               style={{ color: "rgba(212,160,23,0.8)" }}
               data-testid="home-name-hierarchy"

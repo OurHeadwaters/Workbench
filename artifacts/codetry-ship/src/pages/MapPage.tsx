@@ -405,6 +405,18 @@ function ZoneCard({
               >
                 {zone.name}
               </div>
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 8.5,
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  color: "rgba(255,255,255,0.55)",
+                  marginTop: 3,
+                }}
+              >
+                {zone.terrain}
+              </div>
             </div>
           </div>
 
@@ -489,7 +501,7 @@ function ZoneCard({
       {/* Gate */}
       <div
         style={{
-          margin: "0 14px 14px",
+          margin: "0 14px 0",
           padding: "10px 13px",
           borderRadius: 8,
           border: `1px dashed rgba(200,191,167,0.6)`,
@@ -512,6 +524,63 @@ function ZoneCard({
         <p style={{ margin: 0, fontSize: 11, color: MUTED, lineHeight: 1.45 }}>
           {zone.gateDesc}
         </p>
+      </div>
+
+      {/* Flows-to breadcrumb */}
+      <div
+        style={{
+          margin: "8px 14px 14px",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "monospace",
+            fontSize: 8,
+            fontWeight: 700,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: MUTED,
+          }}
+        >
+          Zone {zone.number} of 5
+        </span>
+        {zone.flowsTo && (
+          <>
+            <span style={{ fontSize: 8, color: "rgba(200,191,167,0.7)" }}>—</span>
+            <span
+              style={{
+                fontFamily: "monospace",
+                fontSize: 8,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: zone.color,
+              }}
+            >
+              flows to {zone.flowsTo} →
+            </span>
+          </>
+        )}
+        {!zone.flowsTo && (
+          <>
+            <span style={{ fontSize: 8, color: "rgba(200,191,167,0.7)" }}>—</span>
+            <span
+              style={{
+                fontFamily: "monospace",
+                fontSize: 8,
+                fontWeight: 600,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: MUTED,
+              }}
+            >
+              the horizon
+            </span>
+          </>
+        )}
       </div>
     </div>
   );
@@ -1122,6 +1191,87 @@ export function MapPage() {
                 ? "Standby view — what each zone does when something is moving."
                 : "Good Times view — what each zone does on a normal day."}
             </span>
+          </div>
+        </div>
+
+        {/* ── How the Watershed Works ── */}
+        <div
+          style={{
+            marginBottom: 32,
+            borderRadius: 10,
+            border: `1px solid rgba(31,61,46,0.18)`,
+            background: "rgba(31,61,46,0.04)",
+            padding: "20px 22px",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "monospace",
+              fontSize: 9,
+              fontWeight: 700,
+              letterSpacing: "0.24em",
+              textTransform: "uppercase",
+              color: FOREST,
+              marginBottom: 10,
+            }}
+          >
+            How the Watershed Works
+          </div>
+          <p style={{ margin: "0 0 14px", fontSize: 13, color: "#4a4035", lineHeight: 1.65 }}>
+            In permaculture, zones radiate outward from the hearth — the place you visit most becomes Zone 0, and each zone further out is more public, more exposed, and more connected to the outside world. The Headwaters neighbourhood follows the same logic.
+          </p>
+          <p style={{ margin: "0 0 14px", fontSize: 13, color: "#4a4035", lineHeight: 1.65 }}>
+            Water flows from the hearth outward: <strong style={{ color: FOREST }}>The Saltbox (Hearth)</strong> → <strong style={{ color: "#1f3d2e" }}>The Lodge (Roots)</strong> → <strong style={{ color: "#1A5FA8" }}>The Bench (Trail)</strong> → <strong style={{ color: "#3D4A5C" }}>The Standby (Watch)</strong> → <strong style={{ color: "#0F766E" }}>Community Hall (Gather)</strong> → <strong style={{ color: "#5B3E8C" }}>The Wild (Horizon)</strong> — and back again. The community is the watershed.
+          </p>
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            {[
+              { num: 0, label: "Hearth", color: "#7A4E2D" },
+              { num: 1, label: "Spring", color: "#1f3d2e" },
+              { num: 2, label: "Trail", color: "#1A5FA8" },
+              { num: 3, label: "Circle", color: "#3D4A5C" },
+              { num: 4, label: "Square", color: "#0F766E" },
+              { num: 5, label: "Ridge", color: "#5B3E8C" },
+            ].map(({ num, label, color }, i, arr) => (
+              <div key={num} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <a
+                  href={`#zone-${num}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    padding: "3px 9px 3px 5px",
+                    borderRadius: 999,
+                    background: color,
+                    textDecoration: "none",
+                    transition: "opacity 0.15s",
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.8"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+                >
+                  <span style={{
+                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                    width: 16, height: 16, borderRadius: "50%",
+                    background: "rgba(255,255,255,0.18)",
+                    fontFamily: "monospace", fontSize: 8, fontWeight: 900, color: "#fff",
+                  }}>
+                    {num}
+                  </span>
+                  <span style={{ fontFamily: "monospace", fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.85)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                    {label}
+                  </span>
+                </a>
+                {i < arr.length - 1 && (
+                  <span style={{ fontFamily: "monospace", fontSize: 9, color: MUTED }}>→</span>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
