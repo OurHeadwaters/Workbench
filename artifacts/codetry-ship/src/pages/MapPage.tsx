@@ -1055,12 +1055,58 @@ export function MapPage() {
               color: MUTED,
               lineHeight: 1.65,
               maxWidth: 560,
-              margin: "0 0 16px",
+              margin: "0 0 14px",
               transition: "opacity 0.25s",
             }}
           >
             {headerContent.intro}
           </p>
+
+          {/* Terrain tagline callout — mirrors the Compass "In the watershed" note */}
+          {!quizComplete && (
+            <div
+              style={{
+                marginBottom: 20,
+                padding: "9px 13px",
+                borderRadius: 7,
+                background: "rgba(31,61,46,0.055)",
+                border: "1px solid rgba(31,61,46,0.12)",
+                maxWidth: 520,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 8,
+                  fontWeight: 700,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: FOREST,
+                  marginBottom: 5,
+                }}
+              >
+                In the watershed
+              </div>
+              <p style={{ margin: 0, fontSize: 11, color: MUTED, lineHeight: 1.65 }}>
+                Zones 0–5 run from hearthside to horizon:{" "}
+                {ZONES.map((z, i) => (
+                  <span key={z.number}>
+                    <span style={{ color: z.color, fontWeight: 700 }}>Z{z.number}</span>
+                    {" "}<span>{z.terrain}</span>
+                    {i < ZONES.length - 1 ? " · " : "."}
+                  </span>
+                ))}
+                {" "}The{" "}
+                <a
+                  href="/compass"
+                  style={{ color: FOREST, textDecoration: "underline", textDecorationStyle: "dotted" }}
+                >
+                  Compass
+                </a>
+                {" "}reads the same ground.
+              </p>
+            </div>
+          )}
 
           {/* Quiz — collapsed summary on return visits, full quiz otherwise */}
           {quizCollapsed ? (
