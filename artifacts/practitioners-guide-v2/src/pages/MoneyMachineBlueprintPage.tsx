@@ -1,4 +1,7 @@
-import { CheckSquare, Square } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CheckSquare, RotateCcw, Square } from "lucide-react";
+
+const STORAGE_KEY = "mmb-checklist-v1";
 
 const BUCKETS = [
   {
@@ -138,7 +141,41 @@ const CHECKLIST_WEEKS: { label: string; items: string[] }[] = [
   },
 ];
 
+const TOTAL_ITEMS = CHECKLIST_WEEKS.reduce((sum, w) => sum + w.items.length, 0);
+
+function itemKey(weekIdx: number, itemIdx: number) {
+  return `${weekIdx}-${itemIdx}`;
+}
+
 export function MoneyMachineBlueprintPage() {
+  const [checked, setChecked] = useState<Set<string>>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(checked)));
+  }, [checked]);
+
+  function toggle(key: string) {
+    setChecked((prev) => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+  }
+
+  function reset() {
+    setChecked(new Set());
+  }
+
+  const completedCount = checked.size;
+  const progressPct = Math.round((completedCount / TOTAL_ITEMS) * 100);
+
   return (
     <div className="space-y-10 max-w-3xl">
       <div>
@@ -333,16 +370,48 @@ export function MoneyMachineBlueprintPage() {
       </section>
 
       <section>
-        <h2 className="text-base font-semibold mb-3" style={{ fontFamily: "var(--app-font-serif)" }}>
-          90-Day Launch Checklist
-        </h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-semibold" style={{ fontFamily: "var(--app-font-serif)" }}>
+            90-Day Launch Checklist
+          </h2>
+          <button
+            onClick={reset}
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            title="Reset checklist"
+          >
+            <RotateCcw className="h-3 w-3" />
+            Reset
+          </button>
+        </div>
+
+        <div className="rounded-lg border p-4 bg-card mb-4" style={{ borderColor: "hsl(var(--card-border))" }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Progress
+            </span>
+            <span className="text-xs font-semibold" style={{ color: completedCount === TOTAL_ITEMS ? "#1F5B3F" : undefined }}>
+              {completedCount} / {TOTAL_ITEMS} complete
+              {completedCount === TOTAL_ITEMS && " · Machine operational ✓"}
+            </span>
+          </div>
+          <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-300"
+              style={{
+                width: `${progressPct}%`,
+                backgroundColor: completedCount === TOTAL_ITEMS ? "#1F5B3F" : "#1A5FA8",
+              }}
+            />
+          </div>
+        </div>
+
         <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
           Before the machine is considered operational, the following must be complete. These
           are not suggestions — they are the minimum conditions for the machine to run without
           breaking.
         </p>
         <div className="space-y-4">
-          {CHECKLIST_WEEKS.map((week) => (
+          {CHECKLIST_WEEKS.map((week, weekIdx) => (
             <div
               key={week.label}
               className="rounded-lg border p-4 bg-card"
@@ -352,12 +421,26 @@ export function MoneyMachineBlueprintPage() {
                 {week.label}
               </p>
               <ul className="space-y-2">
-                {week.items.map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm">
-                    <Square className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-muted-foreground" />
-                    {item}
-                  </li>
-                ))}
+                {week.items.map((item, itemIdx) => {
+                  const key = itemKey(weekIdx, itemIdx);
+                  const isChecked = checked.has(key);
+                  return (
+                    <li
+                      key={itemIdx}
+                      className="flex items-start gap-2 text-sm cursor-pointer select-none group"
+                      onClick={() => toggle(key)}
+                    >
+                      {isChecked ? (
+                        <CheckSquare className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 transition-colors" style={{ color: "#1F5B3F" }} />
+                      ) : (
+                        <Square className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      )}
+                      <span className={isChecked ? "line-through text-muted-foreground" : undefined}>
+                        {item}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
