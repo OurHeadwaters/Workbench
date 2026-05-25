@@ -164,12 +164,15 @@ These are not duplicates — they are different rings of the zone model. Documen
 ---
 
 ### Decision 3 — Should The Arc connect to the main watershed
-**Answer: Contested — table split A vs C. Bobbie's call needed.**
+**Answer: A — Stay fully sovereign. No integration.**
 
-- **Saltbox, Smith, Codetry → A (stay fully sovereign).** Reasoning: even a one-way webhook or read-only embed creates a seam that will widen under operational pressure. The Watershed Compact prohibits leased sovereignty; integration trades a small convenience for an ownership leak that seven-generation scrutiny cannot justify.
-- **Systems, Community, Ishmael → C (lightweight only).** Reasoning: C keeps the machine owned while closing the "buy a kit → use the tool" loop. One-way signals satisfy the Three Tests without creating dependency or reverse visibility.
+The Arc keeps its own auth, its own DB, and its one-way outbound stance. Stewards self-register. Machines are self-reported. No kit purchase signals are wired in. No machine health is exposed elsewhere.
 
-The table is divided on whether a one-way webhook constitutes a sovereignty leak or a controlled outflow. Bobbie decides.
+The table split 3–3 (Saltbox/Smith/Codetry → A; Systems/Community/Ishmael → C). Bobbie broke the tie: A.
+
+The sealing principle: a one-way webhook is still a seam. Seams widen. The Watershed Compact prohibits leased sovereignty — and sovereignty is the anvil, not a feature to be traded for a closed loop. The buy-a-kit loop will be closed another way, without touching The Arc's boundary.
+
+*Follow-up: identify how the buy-a-kit loop closes without an Arc integration (e.g. welcome email sequence, manual steward onboarding, or a separate lightweight tracker).*
 
 ---
 
