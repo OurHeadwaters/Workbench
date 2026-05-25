@@ -179,6 +179,17 @@ const CHAPTERS: Chapter[] = [
     ],
   },
   {
+    id: "capital-gate",
+    title: "What Makes Headwaters Kits Different",
+    sections: [
+      {
+        id: "conversion-gate",
+        title: "The Capital Conversion Gate Principle",
+        content: `Zones 0 and 1 hold a specific kind of capital: relational trust, household sovereignty, embodied skill, and the slow-built legitimacy that comes from showing up consistently inside a community. This capital is real. It is also not automatically convertible into Zone 3 financial capital — and that is by design.\n\n**The gate rule**: Zone 0–1 capital does not flow into Zone 3+ financial instruments without an explicit, named decision. That decision is the gate. If no gate decision has been made, no conversion has happened — regardless of how much relational or reputational capital has accumulated.\n\nThis is not a bug in the system. It is the system's most important feature.\n\n**Why the gate exists**: Without it, relational capital gets extracted by financial systems the community never consented to. Platforms, programs, and institutions routinely convert community trust into financial instruments — grants, valuations, data, attention markets — on behalf of the community, without the community's explicit agreement. The result is that the community does the work of building the capital and someone else captures the conversion.\n\nHeadwaters Kits do not automate that conversion. They require the gate to be opened deliberately.\n\n**The Eave Rule is the gate**: The Eave is the hard boundary between the household interior (Zones 0–1) and the organizational world above (Zones 3+). The Eave Rule defines what can cross that boundary and under what conditions. Opening the Eave — allowing Zone 0–1 capital to convert into Zone 3+ financial instruments — requires a named, intentional decision by the people whose capital is being converted.\n\nThe decision does not have to be complicated. It has to be explicit. "We are choosing to convert this into a financial arrangement" is the gate. Drift, assumption, and momentum are not.\n\n**Intentional consent is what distinguishes these Kits**: Generic platforms treat capital conversion as automatic and frictionless — that is how they extract value. Headwaters Kits treat it as a threshold that requires consent. The friction is not an obstacle to overcome. It is the protection working as intended.\n\nA community that understands the gate can choose when to open it, how wide, and for what purpose. A community that does not know the gate exists cannot make that choice. Making the gate visible is the first act of sovereignty.`,
+      },
+    ],
+  },
+  {
     id: "constellations",
     title: "Constellations & Picks",
     sections: [
