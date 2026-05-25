@@ -370,4 +370,389 @@ Find your CFDC: [Northwestern Ontario CFDCs](https://www.communityfuturesontario
       },
     ],
   },
+  {
+    id: "m6",
+    title: "Your Money, Plumbed: XRPL Wallets & the Headwaters Bucket System",
+    slug: "xrpl-wallets",
+    description: "Most of us were handed a bank account and told to figure it out. This module teaches a different model — buckets, not balances; flow, not fog. Using the XRP Ledger and Bobbie Parr's three financial systems as the worked example.",
+    lessons: [
+      {
+        id: "m6-l1",
+        title: "Why Plumbing, Not Banking",
+        body: `## Why Plumbing, Not Banking
+
+A bank account is a pool. Money goes in, money comes out, and somewhere in between you lose track of where it went. The pool has a balance, but the balance doesn't tell you anything about purpose. That $4,200 — is it for rent? Groceries? The equipment you need to replace before spring? The pool doesn't know.
+
+The Headwaters Bucket System starts from a different premise: **every dollar needs a destination before it moves.**
+
+## The Watershed Frame
+
+Think of your money as water moving through a landscape:
+
+- **Rain** is income — it falls on payday, or when an invoice clears
+- **Buckets** are named vessels — each holds water with a purpose
+- **The Payday Planner** is the routing step — you decide where the rain goes before it runs off
+- **Gate crossings** are valves — they slow your hand before a protected move
+- **The Drip Harvester** is the water wheel — savings working while they sit
+- **The Aquifer** is the substrate — the deep reserve that feeds everything above
+
+This isn't metaphor for decoration. It's a model for making decisions. When you name the buckets before the money arrives, you're not budgeting after the fact — you're plumbing the system in advance.
+
+## What Changes When You Name the Buckets
+
+| Without buckets | With buckets |
+|---|---|
+| "I have $4,200" | "Rent: $1,100. Groceries: $400. GST Reserve: $220. Equipment: $300. Owner Draw: $800. Left to assign: $1,380." |
+| Spend first, track later | Route first, spend from named source |
+| Month-end regret | Week-by-week clarity |
+| One pool, no categories | Multiple vessels, clear purposes |
+
+The bucket system isn't a budget spreadsheet. The money actually sits in named on-chain balances — real RLUSD, on the XRP Ledger, in named positions. It's plumbing, not accounting.
+
+## The Three Systems We'll Build
+
+Bobbie Parr of Parrs Jars runs three financial systems that need to stay separate:
+
+1. **Household (Salt Box)** — personal spending and savings with her partner and kids
+2. **Sole Proprietorship (Bench)** — Parrs Jars income, ingredient costs, GST, and owner draw
+3. **Business Entity (Community Hall)** — the consulting practice with payroll, tax reserve, and a locked tithe
+
+Each system gets its own Xaman wallet and its own bucket set. They share the same app — but they don't share water.
+
+> "The rain falls. You decide where it goes." — Headwaters field notes
+`,
+      },
+      {
+        id: "m6-l2",
+        title: "Installing the Pipe: Your Xaman Wallet",
+        body: `## Installing the Pipe: Your Xaman Wallet
+
+Before there are buckets, there has to be plumbing. The XRP Ledger is the infrastructure — a public, fast, low-cost financial network that has been running since 2012. Xaman (formerly XUMM) is the tap handle — the app where your keys live and where you approve transactions.
+
+Headwaters Buckets doesn't hold your money. It connects to your Xaman wallet and gives you the bucket interface on top. Your keys stay with you.
+
+## What You Need
+
+- An iPhone or Android phone
+- About 30 minutes the first time
+- ~$10–15 CAD to cover the ledger reserve and your first test deposit
+- A piece of paper and a pen
+
+## Step-by-Step: Phase 1
+
+**Step 1 — Download Xaman**
+
+Available on the App Store and Google Play. Search "Xaman wallet." It's the one with the blue icon, formerly called XUMM.
+
+**Step 2 — Create your wallet**
+
+Xaman will show you a 24-word seed phrase. Write it down on paper. Not in Notes. Not in a photo. Paper only — and store it somewhere dry and private. This phrase is the only way to recover your wallet if your phone is lost or stolen. Headwaters cannot recover it for you.
+
+**Step 3 — Activate the wallet**
+
+Every XRP Ledger address requires a 10 XRP reserve to become active. Think of it as a deposit to open the pipe — the ledger keeps it as a reserve, but it's still yours. At current prices, roughly $7–10 CAD. Send 10 XRP to your new address from any exchange (Coinbase, Newton, Shakepay) or ask someone to send it to you.
+
+> The 10 XRP reserve is locked — it can't leave the wallet while the address is active. It's not spent. It's the pipe fitting that holds everything together.
+
+**Step 4 — Connect to Headwaters**
+
+Open the Headwaters Buckets app and tap "Connect Wallet." It shows a QR code. Open Xaman, scan it, and approve the connection. You're now connected — Headwaters can read your balances and propose transactions, but you approve every move in Xaman.
+
+**Step 5 — Fund with RLUSD**
+
+RLUSD is Ripple's US dollar stablecoin on the XRP Ledger. 1 RLUSD = 1 USD, held constant. You fund your buckets with RLUSD — not XRP, not CAD directly.
+
+In the app, tap "Top Up" → enter amount → pay by card, Apple Pay, or Google Pay. The conversion happens automatically. No exchange account required.
+
+> The standard tap handles up to $250 CAD per transaction. For larger amounts — payroll runs, quarterly tax payments — use the **Abundance Bridge**, which routes through Interac e-Transfer in two steps.
+
+**Step 6 — Choose your zone template**
+
+When you first open the bucket setup, you'll be asked: Household, Sole Proprietorship, or Business? Your answer pre-loads the right bucket set with sensible defaults. You can rename, add, or remove buckets at any time.
+
+## One Wallet Per System
+
+This is the rule that makes the system work:
+
+| System | Zone | Why separate |
+|---|---|---|
+| Household (Salt Box) | Zone 0 | Personal money stays personal |
+| Sole Proprietorship (Bench) | Zone 2 | Business income needs its own track |
+| Business Entity (Community Hall) | Zone 4 | Payroll, tax, and tithe in their own vessel |
+
+You manage all three from the same Headwaters app — but each has its own Xaman address, its own bucket set, and its own gate-crossing rules. The water doesn't mix.
+`,
+      },
+      {
+        id: "m6-l3",
+        title: "Bobbie's Three Systems",
+        body: `## Bobbie's Three Systems
+
+Bobbie Parr of Parrs Jars doesn't have one financial life — she has three. They overlap in time and in her attention, but they need to stay separate in the ledger. This lesson walks through each system, its zone, its default bucket set, and which buckets get gate-crossing protection.
+
+---
+
+## System 1 — Household (Salt Box / Zone 0)
+
+The Salt Box is the hearth system. It covers everything that keeps the household running — food, shelter, transport, kids, and the reserves that smooth out the seasons.
+
+**Default bucket set:**
+
+| Bucket | Purpose | Gate-crossed? |
+|---|---|---|
+| Groceries | Weekly food spend | No |
+| Rent / Mortgage | Housing — first priority | Yes |
+| Gas & Vehicle | Fuel, insurance, maintenance | No |
+| Kids | School supplies, activities, allowance source | No |
+| Gifts | Birthdays, holidays | No |
+| Vet | Animal care reserve | No |
+| Winter Reserve | Off-season household buffer | No — savings bucket |
+
+**Household Mode:** Bobbie generates an invite code. Her partner joins on their device. Both see the same bucket balances in real time. The Payday Planner runs together on payday.
+
+**Helper role:** The kids have a Xaman address. Weekly allowance is pulled from the Kids bucket with a gate-crossing confirmation each time. They receive it to their own wallet — real money, real ledger, real practice.
+
+---
+
+## System 2 — Sole Proprietorship / Parrs Jars (Bench / Zone 2)
+
+The Bench is the workshop system. Parrs Jars income comes in when Bobbie sells at market, fulfills a wholesale order, or invoices a buyer. Payday here isn't a calendar date — it's when the payment clears.
+
+**Default bucket set:**
+
+| Bucket | Purpose | Gate-crossed? |
+|---|---|---|
+| Ingredients Supply | Raw materials, jars, lids, labels | No |
+| Market Fees | Booth fees, farmer's market dues | No |
+| GST Reserve | 5% of every taxable sale, held for remittance | Yes |
+| Equipment Fund | Savings toward replacement equipment | No — savings bucket |
+| Owner Draw | What Bobbie pays herself from the business | Yes |
+
+**Gate crossings on GST Reserve and Owner Draw** exist because both represent money with a prior claim. The GST Reserve belongs to the CRA at remittance time. The Owner Draw crossing means Bobbie explicitly decides to take money out of the business — not something that should happen by accident.
+
+When an RLUSD deposit arrives in the Bench wallet, run the Payday Planner that day. Don't let the rain sit unrouted.
+
+---
+
+## System 3 — Business Entity / Headwaters (Community Hall / Zone 4)
+
+The Community Hall is the most gate-crossed vessel. It handles client engagements, payroll, taxes, and a 10% allocation locked for community purposes.
+
+**Default bucket set:**
+
+| Bucket | Purpose | Gate-crossed? |
+|---|---|---|
+| Payroll Reserve | Funds earmarked for payroll runs | Yes |
+| Tax Reserve | Corporate tax remittance savings | Yes |
+| Operations | Day-to-day business expenses | No |
+| Client Trust | Retainer or milestone funds held until earned | No |
+| Owner Draw | Principal's draw from the business | Yes |
+| Tithe (10%) | Locked allocation for community or charitable giving | Yes — one channel only |
+
+**The Tithe bucket** is the strictest. Money that goes in can only go out through the Giving Well or a pre-approved payee. It embodies the co-op principle: a portion of what the business earns returns to the community that sustains it.
+
+**Abundance Bridge for payroll:** Payroll runs typically exceed the $250 CAD tap ceiling. These route through the Abundance Bridge — Interac e-Transfer in, RLUSD conversion, then bucket allocation.
+
+---
+
+## The Zone Map at a Glance
+
+| Zone | Name | System | First bucket to gate-cross |
+|---|---|---|---|
+| Zone 0 | Salt Box | Household | Rent |
+| Zone 2 | Bench | Sole Prop — Parrs Jars | GST Reserve |
+| Zone 4 | Community Hall | Business Entity | Payroll Reserve |
+
+> The zones don't describe where you live — they describe the territory the water moves through. Zone 0 is the hearth. Zone 2 is the workshop. Zone 4 is the hall where the community's water is managed on behalf of others.
+`,
+      },
+      {
+        id: "m6-l4",
+        title: "Payday and the Gate",
+        body: `## Payday and the Gate
+
+Payday is when the rain falls. The Payday Planner is the act of routing it before it runs off.
+
+Most people receive income and let it sit in a general account. Over the following weeks, it disperses — some to bills, some to groceries, some to things they don't fully remember. At month end, the balance is what's left, not what was planned.
+
+The bucket system reverses this. **Before you spend a dollar, you name where it goes.**
+
+## Running the Payday Planner
+
+When you open the Payday Planner, it asks one question: **How much came in?**
+
+Enter the deposit amount. The planner walks you through each bucket in order:
+
+**1. Committed expenses first** — gate-crossed buckets (Rent, GST Reserve, Payroll Reserve). These fill first. Their amounts are usually fixed. You confirm the allocation.
+
+**2. Variable expenses next** — Groceries, Gas, Kids, Market Fees, Operations. Set these based on what the month looks like.
+
+**3. Savings buckets** — Winter Reserve, Equipment Fund, Tithe. What's left after committed and variable expenses flows into savings. If nothing's left, that's the signal: the income isn't covering the plan.
+
+**4. Owner Draw** (gate-crossed) — only after everything else is allocated. The draw is what the system can support, not what you'd like it to be.
+
+At the end, the planner shows a summary: total income, total allocated, any unassigned remainder. You confirm. The allocations happen on-chain.
+
+## The Gate Crossing
+
+Not every bucket has a gate. Most spending buckets — Groceries, Gas, Market Fees — you draw from freely. The gate is reserved for buckets where the money has a prior claim or where an accidental move would cause real harm.
+
+**A gate-crossed bucket requires one extra tap before money can leave it.**
+
+Not a password. Not a second approval. Just a deliberate confirmation: *Yes, I am intentionally moving this money, and I know where it's going.*
+
+The gate crossing introduces a pause. It's the valve slowing the hand before you turn it.
+
+**Which buckets get gates:**
+
+| Zone | Gate-crossed buckets | Why |
+|---|---|---|
+| Salt Box | Rent | Committed housing expense |
+| Bench | GST Reserve, Owner Draw | One belongs to the CRA; one should be intentional |
+| Community Hall | Payroll Reserve, Tax Reserve, Owner Draw, Tithe | Every disbursement has a named purpose |
+
+## Setting Up Gate Crossings
+
+In the bucket settings screen, toggle "Gate Crossing" on for any bucket you want to protect. The rule of thumb: if accidentally spending from this bucket would cost you more than money — a missed tax remittance, a bounced rent payment — it gets a gate.
+
+## A Note on Sole Proprietor Payday
+
+Bobbie's income doesn't arrive on the 15th and 30th. It arrives when a market day is good, when a wholesale order ships, when an invoice clears. Run the Payday Planner when money lands, not on a fixed schedule. Don't let the rain sit unrouted — it will find its own path, and that path is usually not the one you intended.
+
+> "The gate isn't a lock. It's a breath. One moment between the impulse and the move." — Headwaters field notes
+`,
+      },
+      {
+        id: "m6-l5",
+        title: "The Water Wheel: Drip Harvester",
+        body: `## The Water Wheel: Drip Harvester
+
+When water sits in a bucket, it's just sitting. When it sits at the top of a mill race, it's potential energy waiting to turn a wheel.
+
+The Drip Harvester puts your savings to work while they accumulate. It's not a savings account. It's not interest. It's a position in an XRPL liquidity pool — an Automated Market Maker (AMM) — that earns trading fees proportional to your share of the pool.
+
+## How It Actually Works
+
+When you enrol a savings bucket, a sweep rule triggers when your balance crosses a threshold. Your RLUSD deposits into an AMM pool — for example, RLUSD/XRP. In return, you receive LP tokens representing your share of the pool.
+
+The pool earns 0.3% on every swap that passes through it. Those fees accumulate proportional to your share. When your harvest rule triggers, your LP tokens are redeemed: RLUSD returns to your savings bucket, minus a **5% protocol fee on yield only**. Your principal is returned in full.
+
+If you put in $500 and the position earns $25 over three months, the protocol fee is $1.25. Your $500 comes back.
+
+## Setting Up the Wheel
+
+You need a savings bucket with at least $200–500 CAD RLUSD before the wheel is worth running. Below that, XRP network fees can erode your yield.
+
+1. Open the Earn tab → Drip Harvester
+2. Select a savings bucket — Equipment Fund, Winter Reserve, or similar
+3. Set a sweep rule: "When balance exceeds $X, sweep $Y into pool"
+4. Approve the AMM deposit transaction in Xaman
+5. The wheel turns
+
+Set a harvest cadence — monthly is common. More frequent harvests mean more transactions and more network fees; less frequent means more compounding.
+
+## Rough Yield Estimates
+
+These are estimates — not guarantees. Pool performance varies with trading volume and XRP price movement.
+
+| Position | Estimated APR | Monthly yield | Protocol fee/month |
+|---|---|---|---|
+| $500 RLUSD | ~10% | ~$4 | ~$0.20 |
+| $1,000 RLUSD | ~12% | ~$10 | ~$0.50 |
+| $2,000 RLUSD | ~15% | ~$25 | ~$1.25 |
+
+For Bobbie's Equipment Fund: a $600 RLUSD position at 10% yields roughly $5/month — earned while the money was waiting to be spent anyway. Over a year, that's $60 toward new canning equipment.
+
+## Impermanent Loss: The Plain-Language Version
+
+When you deposit into an RLUSD/XRP pool, you hold a position in both assets. If XRP's price moves significantly while your position is open, the pool rebalances automatically. When you withdraw, your RLUSD equivalent may be less than if you'd simply held.
+
+**Lower risk:** stable price period, short position duration (weeks not years), small position size.
+
+**Higher risk:** high XRP volatility, long duration, large share of a thin pool.
+
+**The practical rule:** Use the Drip Harvester for savings buckets accumulating toward a goal 3–12 months out. Don't enrol your Rent bucket or your GST Reserve — those are protected vessels. They don't go in the pool.
+
+## At 6 Weeks: Treat as Experimental
+
+The Drip Harvester is live — real XRPL AMM positions, real yield, real fees. But it's early. Start with one savings bucket, a modest amount, and watch one full cycle before scaling up.
+
+> The wheel doesn't hurry. It turns with the current it's given. Start small. Let it prove itself.
+`,
+      },
+      {
+        id: "m6-l6",
+        title: "The Giving Well & What's Next",
+        body: `## The Giving Well
+
+Every watershed has a place where the water returns to the commons. In the Headwaters system, that's the Giving Well.
+
+When XRP appreciates past a threshold you set, the Giving Well diverts those unrealized gains on-chain — to a charity wallet, a community address, or a patronage account you've designated. You're donating the appreciation before it flows back into your system, not converting to cash first.
+
+Appreciated crypto assets donated on-chain may have different CRA treatment than selling and donating cash. Talk to your accountant on the specifics — we're not one.
+
+The Tithe bucket in the Community Hall system feeds the Giving Well: 10% of business earnings allocated to community, leaving through one approved channel. It's a design principle as much as a feature — a portion of what the system earns returns to the watershed that sustains it.
+
+**Setting it up:** In Giving Well settings, enter a destination Xaman address — a registered charity, a community organization, or a trusted patronage address. Set an appreciation threshold. Approve in Xaman when triggered.
+
+---
+
+## The Aquifer: Coming Next
+
+Right now, Bobbie runs three separate app sessions — one for each wallet. The Aquifer will change this.
+
+The Aquifer is the substrate — underground, always full, feeding everything above without being seen. The all-systems dashboard: total reserves across all three wallets, aggregate savings goal progress, cross-system Owner Draw tracking, and the full watershed health in one view.
+
+It's on the roadmap. Not live yet. When it arrives, the three-system setup will feel like one coherent whole instead of three separate tools.
+
+---
+
+## What's Live Now vs. What's Coming
+
+**Live at this release:**
+
+| Feature | Notes |
+|---|---|
+| Xaman wallet connection | QR scan — you hold the keys |
+| RLUSD spending and savings buckets | On-chain balances |
+| Payday Planner | Step-by-step allocation |
+| Household Mode — 2 adults | Real-time sync |
+| Stripe card top-up | Up to $250 CAD |
+| Abundance Bridge | Interac e-Transfer for larger flows |
+| Gate crossings | Zone 1 and Zone 2 protection |
+| Helper role and allowances | To child's own Xaman address |
+| Privacy toggle | Hides all balances |
+| Drip Harvester / Earn | Live but experimental |
+| Giving Well | On-chain appreciated gains |
+
+**On the roadmap:**
+
+| Feature | What it solves |
+|---|---|
+| Aquifer dashboard | All-systems substrate view |
+| Multi-wallet switcher | One session, all three wallets |
+| Invoice-triggered Payday | Sole prop payday from deposit, not calendar |
+| Zone setup wizard | Pre-loaded bucket templates at onboarding |
+| Yield projection calculator | See the wheel's output before you start it |
+| Tax-aware bucket warnings | Remittance dates and running estimates |
+| Locked Tithe bucket | One-channel-only disbursement primitive |
+
+---
+
+## Your Next Steps
+
+1. **Pick one system to begin.** Household is the easiest first install.
+2. **Download Xaman. Write down your seed phrase on paper. Activate the wallet.**
+3. **Fund with a small RLUSD amount** — $50–100 CAD to start. Run one Payday Planner cycle.
+4. **Let it sit for two weeks.** See how the buckets feel. Adjust the amounts.
+5. **Add your second system** once the first feels natural.
+6. **Start the wheel only when a savings bucket has $300+ RLUSD.**
+
+The system is patient. The rain falls when it falls. The planner routes it. The buckets hold it. The wheel turns when there's enough current.
+
+> "Channel every drop." — Headwaters
+`,
+      },
+    ],
+  },
 ];

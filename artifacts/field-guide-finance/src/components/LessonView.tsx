@@ -15,6 +15,7 @@ const MODULE_ACCENTS: Record<string, { dot: string; bg: string; text: string; bo
   m3: { dot: "#6fa8c2", bg: "#e8f4f9", text: "#2d5070", border: "#b8d8e8" },
   m4: { dot: "#4a7c5f", bg: "#eef5f0", text: "#1b3a2d", border: "#c2d9c7" },
   m5: { dot: "#c97d2e", bg: "#fdf3e3", text: "#5c3d1e", border: "#f5e2c0" },
+  m6: { dot: "#2a8a7a", bg: "#e6f4f2", text: "#1a5048", border: "#a0d4cc" },
 };
 
 function YouTubeEmbed({ url }: { url: string }) {

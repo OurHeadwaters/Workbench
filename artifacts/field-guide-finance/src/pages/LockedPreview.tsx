@@ -14,6 +14,7 @@ const MODULE_ACCENTS: Record<string, { bg: string; text: string; border: string 
   m3: { bg: "#e8f4f9", text: "#2d5070", border: "#b8d8e8" },
   m4: { bg: "#eef5f0", text: "#1b3a2d", border: "#c2d9c7" },
   m5: { bg: "#fdf3e3", text: "#5c3d1e", border: "#f5e2c0" },
+  m6: { bg: "#e6f4f2", text: "#1a5048", border: "#a0d4cc" },
 };
 
 function MistLayer() {
@@ -202,8 +203,8 @@ export function LockedPreview({ onSignIn }: LockedPreviewProps) {
           {/* Stats strip */}
           <div style={{ display: "flex", gap: 28, marginTop: 40, flexWrap: "wrap" }}>
             {[
-              { val: "5", label: "Modules" },
-              { val: "10", label: "Lessons" },
+              { val: String(courseModules.length), label: "Modules" },
+              { val: String(courseModules.reduce((a, m) => a + m.lessons.length, 0)), label: "Lessons" },
               { val: "NWO", label: "Focused" },
             ].map(({ val, label }) => (
               <div key={label} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -401,7 +402,7 @@ export function LockedPreview({ onSignIn }: LockedPreviewProps) {
                 </h2>
                 <p style={{ fontSize: "0.86rem", color: "var(--bark)", lineHeight: 1.65, marginBottom: 24, fontFamily: "var(--font-lora)" }}>
                   Available to <strong>Harvest household</strong> and <strong>Pro producer</strong> members of 807 Benefits.
-                  Sign in to unlock all five modules and start where your business is right now.
+                  Sign in to unlock all {courseModules.length} modules and start where your business is right now.
                 </p>
 
                 <button
