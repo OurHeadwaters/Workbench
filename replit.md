@@ -136,6 +136,60 @@ When the user says **"put it on the kitchen table"** (or close variants — "add
 
 The point: when Bobbie convenes the AI council in the north-star KitchenTablePage, items are grouped artifact-by-artifact, so the round-table can move through one artifact's questions at a time instead of a flat blob. Per-artifact `AGENTS.md` files repeat the locally relevant `source` value so agents working inside a single artifact don't need to re-derive it.
 
+## Headwaters Kits — Naming Decisions
+
+Decided at the Kitchen Table, May 25 2026.
+
+- **Collective name: Headwaters Kits** (not "Watershed Kits" — Headwaters is the brand).
+- **Load-bearing word: Kit** (not Bundle/Package — "Kit" keeps the maker/owner register).
+- **Rule: single word + one modifier maximum.** No stacked descriptors.
+- **"Economy Kit"** is the public name for what was previously "Community Money Machine Kit" (two bounded things in one name fails the Saltbox test).
+- The Arc steward registration note appears in Economy Kit and Community Economy Kit delivery emails. It is a plain text instruction pointing buyers to self-register at ourheadwaters.ca/arc — no integration, no auto-link.
+
+Full kit list (canonical IDs in `artifacts/api-server/src/lib/kitsRegistry.ts`):
+
+| ID | Public name |
+|---|---|
+| economy-kit | Economy Kit |
+| family-kit | Family Kit |
+| homeschool-kit | Homeschool Kit |
+| community-economy-kit | Community Economy Kit |
+| engagement-kit | Engagement Kit |
+| practitioner-kit | Practitioner Kit |
+| standby-kit | Standby Kit |
+| field-guide-finance-kit | Field Guide Finance Kit |
+| pioneer-path-kit | Pioneer Path Kit |
+| handbook-kit | Handbook Kit |
+
+---
+
+## Buy-a-Kit Loop Closure
+
+Implemented May 25 2026. Closes Decision 3 (Arc stays sovereign) + Decision 4 (TSP sells, zone apps deliver).
+
+**How it works:**
+1. TSP fires `POST /api/kits/purchase-webhook` with `{ kit_id, buyer_email, buyer_name, purchase_id }` + `X-Webhook-Secret` header.
+2. api-server generates a 30-day access token, persists it to `data/kit-tokens.json`, sends the delivery email via google-mail.
+3. Buyer receives a plain-text email with their access URL (`GET /api/kits/access/:token`).
+4. For Economy Kit and Community Economy Kit, the email includes a plain-text Arc self-registration note — no webhook, no integration.
+
+**Key files:**
+- `artifacts/api-server/src/lib/kitsRegistry.ts` — kit definitions + naming decisions
+- `artifacts/api-server/src/lib/kitsMailer.ts` — delivery email via google-mail connector
+- `artifacts/api-server/src/routes/kits.ts` — three endpoints (purchase-webhook, access/:token, registry)
+
+**Required env var:** `KIT_WEBHOOK_SECRET` — shared secret between TSP and this server. Set it and give TSP the same value. Without it, the webhook endpoint returns 401.
+
+**Optional env var:** `API_BASE_URL` — base URL for the access link in the delivery email (e.g. `https://api.ourheadwaters.ca`). Falls back to `REPLIT_DEV_DOMAIN`.
+
+**TSP integration checklist** (what TSP needs to do):
+- After a confirmed Stripe/Zaprite payment, POST to `/api/kits/purchase-webhook`
+- Set `X-Webhook-Secret: <KIT_WEBHOOK_SECRET>` header
+- Map Stripe product IDs → `kit_id` slugs (e.g. `price_xxx` → `economy-kit`)
+- On `201` response, record `token` + `access_url` in `kit_purchases` table
+
+---
+
 ## Strategic Decisions
 
 Documented May 25, 2026. Decided by Bobbie Parr at the Kitchen Table with full seat deliberation.
