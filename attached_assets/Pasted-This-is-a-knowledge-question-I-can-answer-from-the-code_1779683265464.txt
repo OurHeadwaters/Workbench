@@ -1,0 +1,100 @@
+This is a knowledge question I can answer from the codebase and app design — no file reads needed.
+
+Headwaters Bucket System — Kitchen Table Overview
+
+What it does in plain terms
+
+Most finance apps are trackers. They tell you where your money went after it's gone. Headwaters assigns money to a named purpose before you spend it. Every dollar gets a bucket. You see your balances by intention, not by account. The buckets hold stablecoins (RLUSD — a USD-pegged token on the XRP Ledger), so what's in the bucket is a real on-chain balance, not a spreadsheet number.
+
+Core features your team will use
+
+Spending Buckets
+Named envelopes for committed expenses: Groceries, Rent, Kids, Gas, whatever your categories are. On payday you pour income into them. When you spend from a bucket, that balance drops. You always know whether a bucket can cover a purchase before you make it.
+
+Savings Buckets
+Goal-tracked buckets with a target amount and timeline. Water Tower shows how full each goal is. Progress is visible at a glance.
+
+Payday Planner
+A step-by-step allocation flow you run on each paycheque. Income in → assign to buckets → done. Prevents the money from disappearing before it's directed.
+
+Privacy Toggle
+Hides all balances with one tap for when you're in a public place or just don't want the numbers visible.
+
+Household Mode (two partners)
+One person creates the household, generates an invite code, second person joins on their device. Both see the same buckets in real time. Changes sync through the server — this is cloud-backed, not just local.
+
+Helper Role (children / contributors)
+A household member can be promoted to Helper and given an allowance drawn from a named spending bucket. The allowance goes through a gate-crossing confirmation before it moves — intentional, traceable, not automatic.
+
+Gate Crossings (Zone 1 and Zone 2 buckets)
+For any bucket you've designated as a committed or contracted zone, moving money out requires an explicit confirmation step. This is the intentional-move layer — it slows the hand before the spend.
+
+Stripe Top-Up / Abundance Bridge
+You can fund your wallet with a credit card, Apple Pay, or Google Pay — no crypto required. For amounts over $250 CAD (the contactless tap ceiling), the Abundance Bridge routes through Interac e-Transfer or card as a two-step handoff.
+
+Drip Harvester / Earn
+Savings buckets can be swept into XRPL liquidity pools to earn yield. You set rules (how much, which pool, when to sweep). The protocol takes a 5% fee from yield only — never from principal.
+
+Giving Well
+When XRP appreciates past a threshold you set, you can donate unrealized gains on-chain to a charity wallet or the patronage address. Donated appreciated assets, not cash — relevant for how that's treated.
+
+Support Chat
+An in-app AI agent (GPT-based) for questions about how features work. Does not have access to your balances. Does not give financial advice.
+
+Wallet setup on Xaman — post 6-week build, kitchen table walkthrough
+
+Xaman is the XRPL wallet. Each person who holds funds needs their own.
+
+Step 1 — Download Xaman
+iOS: App Store — search "Xaman"
+Android: Google Play — search "Xaman"
+It was formerly called XUMM. Same app, renamed.
+
+Step 2 — Create a wallet
+Open Xaman. Choose "Create a new account." Write down the 24-word secret phrase on paper. Store it somewhere physical and private — not a screenshot, not a note app. This phrase is the only recovery path. If you lose it, the funds are gone.
+Each family member who will hold their own bucket balances needs their own wallet. Business funds should be a separate wallet — not the same address as personal.
+
+Step 3 — Activate the account
+An XRPL wallet address must be funded with a minimum of 10 XRP to become active (this is the ledger's account reserve — it stays locked, it's not spent). Someone needs to send 10 XRP to the new address to activate it. If you already have XRP somewhere, you can send it from there. If starting from zero, you can buy XRP from a Canadian exchange (Newton, Coinsquare, etc.) and withdraw to the new address.
+
+Step 4 — Connect to Headwaters
+Open the app. Go to the wallet section. Choose "Connect Xaman." A QR code appears. Open Xaman on your phone, tap the scan icon, scan the code, approve the connection request. The app will now read your RLUSD balance from the ledger in real time.
+
+Step 5 — Fund your buckets with RLUSD
+RLUSD is Ripple's USD stablecoin. To get RLUSD into your wallet:
+
+You can fund via Stripe (card or Apple Pay) inside the app — this is the no-crypto path, it converts and deposits directly.
+Or acquire RLUSD on an exchange that lists it and withdraw to your Xaman address.
+Or receive it from another Headwaters user.
+Step 6 — Set up buckets
+Once connected and funded, name your spending and savings buckets. Assign amounts on payday. The allocation is local until you confirm a spend — the on-chain balance moves only when you execute.
+
+Family vs. business wallet structure
+
+Family:
+
+One Xaman wallet per adult partner (or one shared, your call)
+Household Mode links them in the app
+Children get a Helper role under an adult's household, funded by allowance from a parent bucket
+Business:
+
+Separate Xaman wallet — different address from your personal one
+Separate buckets: Payroll Reserve, Tax Reserve, Operations, Owner Draw, Equipment
+Gate-crossing on the Payroll and Tax buckets means those moves require confirmation every time — no accidental taps
+Bridge handles larger disbursements (payroll runs, supplier payments) via Interac e-Transfer handoff
+What won't be live at 6 weeks vs. what will
+
+Ready at launch:
+
+Xaman + WalletConnect connection
+RLUSD balance, spending and savings buckets
+Payday planner
+Household sharing (two adults)
+Stripe top-up
+Gate crossings, Helper role, allowances
+Privacy toggle, Giving Well, Earn/Drip
+Still prototype / not for production funds yet:
+
+Drip Harvester — functional but treat it as experimental; don't sweep significant balances until you've run it through a full cycle
+Gift Premium, multi-advisor white-label — internal tooling, not kitchen-table-facing yet
+One firm rule for the 6-week window: use small amounts. Real RLUSD, real wallet, but keep balances low until the flows feel natural. The system is non-custodial — your keys, your funds, no safety net if a transaction goes wrong. The kitchen table test applies here too: if the flow is confusing enough that someone might make a mistake under pressure, slow down and run it in the app with $5 first.
