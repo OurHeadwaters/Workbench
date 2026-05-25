@@ -300,7 +300,7 @@ const CHAPTERS: Chapter[] = [
       {
         id: "step-4-gate",
         title: "Step 4 — Hang the gate",
-        content: `The gate is the regulatory hinge — the point where inside meets outside on your terms. The fence post it hangs on is the boundary. The gate is not locked; it opens and closes.\n\nIn Codetry this is the Eave: the hard privacy boundary between the household interior and the organizational world above. The gate controls what crosses.\n\nHang the gate before you invite anyone in. A fence without a gate is just a barrier. A gate without a fence is decoration.\n\nKnow where your gate is before you scale.`,
+        content: `The gate is the regulatory hinge — the point where inside meets outside on your terms. The fence post it hangs on is the boundary. The gate is not locked; it opens and closes.\n\nIn Codetry this is the Eave: the hard privacy boundary between the household interior and the organizational world above. The gate controls what crosses.\n\nHang the gate before you invite anyone in. A fence without a gate is just a barrier. A gate without a fence is decoration.\n\nKnow where your gate is before you scale.\n\nThe reason the Eave exists as a hard boundary — and not a soft preference — is the Capital Conversion Gate Principle: Zone 0–1 relational capital does not convert into financial instruments without an explicit, named decision. See "What Makes Headwaters Kits Different" for the underlying logic.`,
       },
       {
         id: "stray-from-the-plan",
