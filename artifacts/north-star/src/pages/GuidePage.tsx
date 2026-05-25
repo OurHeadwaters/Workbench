@@ -77,6 +77,37 @@ const FOUNDATIONAL_DOCS: FoundationalDoc[] = [
     ],
   },
   {
+    id: "capital-gate",
+    title: "Capital Conversion Gate Principle",
+    subtitle: "Wealth Retention & Consent Architecture",
+    description:
+      "The rule that prevents external capital from silently rewriting a community's ownership structure. Before any outside money enters the watershed, the community must understand and explicitly consent to what that money converts — because every dollar of external capital carries an implicit claim on future decisions, assets, or direction.",
+    keyPoints: [
+      {
+        label: "The gate rule",
+        detail:
+          "No external capital enters the watershed until the community has named what it converts. Conversion means any transfer of decision-making authority, asset ownership, or future obligation. If the community cannot name it precisely, the gate stays closed.",
+      },
+      {
+        label: "Why the gate exists",
+        detail:
+          "External capital does not arrive neutral. It arrives with expectations, reporting requirements, exit clauses, or ideological strings — even when those are not stated. The gate is the community's first line of defense against dependency disguised as investment.",
+      },
+      {
+        label: "The Eave Rule as gate mechanism",
+        detail:
+          "The Eave Rule operationalizes the gate: surplus may only flow outward after Buckets 1–3 are funded and the Reserve is full. Inbound capital faces the same discipline in reverse — it may only enter through a named channel with a named conversion, approved by the community before funds move.",
+      },
+      {
+        label: "Intentional consent framing",
+        detail:
+          "The gate is not a rejection of outside resources — it is a consent architecture. Communities can and do accept external capital. The principle insists the consent be informed, collective, and documented before the gate opens, not rationalized after the money has already landed.",
+      },
+    ],
+    closingRule:
+      "The gate is not a wall. It is a door with a lock the community holds. The community decides when to open it, what enters, and what it costs.",
+  },
+  {
     id: "stomping-path",
     title: "The Stomping Path",
     subtitle: "Practitioner Transformation Trail",
