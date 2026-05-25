@@ -1,0 +1,44 @@
+CONTEXT RECOVERY PROMPT
+
+You are helping archive content from this project into a central brief. I need you to search this codebase and any associated files for content related to the following concepts, then return a structured summary of everything you find. Do not paraphrase or compress — quote directly where possible.
+
+Search for any content related to:
+
+The Closet — a circular economy system for household clothing, linked to second-hand shops, built around the family growth cycle (outgrown clothes, sizing up, laundry infrastructure). May be called "The Closet," "clothing kit," "clothing exchange," or similar.
+
+The Homemakers Kit / Household Cornerstone Bucket — room stations (kitchen, kitchen table, craft table, daily table, honor shelf, workbench, resting place, personal nesting buckets), infrastructure doctrine, extension cords, "size up the pipes," standby room/closet, Spirko redundancy rule, function stacking, buffer/rotation/seasonal kits.
+
+The Machine / Community Money Machine — pressure canner metaphor, four buckets (The House 45%, The People 30%, The Future 15%, The Reserve 10%), Eave Flows, Kitchen Table Reports.
+
+Three Kits — Household Kit, Business Kit, Community Kit. Any content describing what each kit contains, how they differ, or how they connect.
+
+Helping Hands — peer-to-peer labor engine, Community Tokens, task claiming, reliability scores, food systems badge, HH connection to the Machine.
+
+RLUSD / XRP settlement layer — any mention of Ripple, RLUSD, crypto settlement, digital currency layer for the Machine or Helping Hands.
+
+The dog treat / freeze-dried liver idea — beef organs → freeze-dried dog treats → co-op buffer funding. Any notes on the Revenue Map or circular economy product line.
+
+807 Food Co-op / Dryden ON — founding story, probe results, Ben Feagin, Bobbie Parr/Bobbi Turpin, OFN (Open Food Network), coordinator failures, LFM platform.
+
+Headwaters Zone Map — Salt Box (Zone 0), Lodge/Headwaters Core (Zone 1), Bench/Trail (Zone 2), The Clearing (Zone 3), Community Hall (Zone 4), The Wild (Zone 5), The Mill (substrate). Any zone-specific content or plans.
+
+The Stomping Path / TSP — The Survival Podcast connection, Expert Council placement, Jack Spirko, Xavier Hawk / Permacredits episode.
+
+The Google Sheet — any reference to a spreadsheet tracking machines, bucket splits, member data, or financial records.
+
+Any named features, pages, or tools that are described but not yet built — anything flagged as "to be developed," "TBD," "not yet archived," or "needs design."
+
+Return format:
+
+For each item found, give me:
+
+The file name and path where it was found
+A direct quote or full copy of the relevant content
+Any links, references to other files, or "see also" connections
+If a concept is referenced but not fleshed out, note that explicitly — "referenced but not developed."
+
+If nothing is found for a concept, say so — "not found in this project."
+
+Do not skip anything that looks relevant. The goal is to get everything into one place so none of it lives only in memory.
+
+You can give that to an agent in Salt Box, Stomping Path, or any of the other zone Repls. It will give you back structured recoverable content you can paste back here and I'll archive it properly.
