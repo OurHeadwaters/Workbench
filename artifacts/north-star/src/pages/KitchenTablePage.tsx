@@ -840,9 +840,19 @@ export function KitchenTablePage() {
 
   return (
     <div className="flex flex-col bg-[#13110E] text-[#D8D0C5] font-sans antialiased relative selection:bg-[#B75C34]/40" style={{ height: "calc(100dvh - 90px)" }}>
-      
-      {/* Campfire glow effect */}
-      <div className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#B75C34] opacity-[0.04] blur-[100px] pointer-events-none rounded-full" />
+
+      {/* Wood-grain texture overlay */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{
+        backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(180,140,90,0.3) 3px, rgba(180,140,90,0.3) 4px),
+          repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(140,100,60,0.2) 18px, rgba(140,100,60,0.2) 19px)`,
+        backgroundSize: "60px 60px",
+        mixBlendMode: "screen",
+      }} />
+
+      {/* Candle glow — centre of the table */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#C8732A] opacity-[0.07] blur-[90px] pointer-events-none rounded-full" />
+      {/* Warm rim light — far edge */}
+      <div className="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[1100px] h-[600px] bg-[#7A4B1A] opacity-[0.12] blur-[140px] pointer-events-none rounded-full" />
       
       {/* ── Header ── */}
       <div className="flex-shrink-0 z-10 bg-[#13110E]/80 backdrop-blur-xl border-b border-[#2C241D] px-5 pt-safe-top shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
@@ -1196,13 +1206,13 @@ export function KitchenTablePage() {
       )}
 
       {/* ── Input row (always visible) ── */}
-      <div className="flex-shrink-0 relative z-20 border-t border-[#251E18] bg-[#181512] px-5 py-4 pb-safe-bottom shadow-[0_-10px_30px_rgba(0,0,0,0.4)]">
-        <div className="max-w-2xl mx-auto flex gap-4 items-end">
+      <div className="flex-shrink-0 relative z-20 border-t border-[#2C241D] bg-[#181512]/95 backdrop-blur-md px-5 py-5 pb-safe-bottom shadow-[0_-16px_48px_rgba(0,0,0,0.6)]">
+        <div className="mx-auto flex gap-4 items-end max-w-3xl lg:max-w-none">
           <div
-            className="flex-1 flex flex-col bg-[#13110E] rounded-sm px-4 pt-3.5 pb-3 transition-colors border border-[#2A231E] focus-within:border-[#4A3D33] shadow-inner"
+            className="flex-1 flex flex-col bg-[#0F0D0B] rounded-sm px-5 pt-4 pb-3.5 transition-colors border border-[#2A231E] focus-within:border-[#5C4A35] shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)] focus-within:shadow-[inset_0_2px_8px_rgba(0,0,0,0.4),0_0_0_1px_rgba(140,100,60,0.15)]"
           >
             {!inSession && (
-              <p className="text-[11px] uppercase tracking-[0.1em] font-medium mb-2 opacity-80" style={{ color: activeSeat.color }}>
+              <p className="text-[11px] uppercase tracking-[0.1em] font-medium mb-2.5 opacity-80" style={{ color: activeSeat.color }}>
                 <span className="mr-1">{activeSeat.icon}</span> {activeSeat.name}
               </p>
             )}
@@ -1218,23 +1228,24 @@ export function KitchenTablePage() {
               onInput={(e) => {
                 const el = e.target as HTMLTextAreaElement;
                 el.style.height = "auto";
-                el.style.height = Math.min(el.scrollHeight, 160) + "px";
+                el.style.height = Math.min(el.scrollHeight, 280) + "px";
               }}
               placeholder={inSession ? `Speak to ${activeSeat.name}…` : `Sit down and speak to ${activeSeat.name}…`}
-              rows={1}
+              rows={3}
               disabled={streaming}
-              className="flex-1 bg-transparent text-[15px] font-serif tracking-wide text-[#EAE4DB] placeholder:text-[#5C5046] outline-none resize-none leading-relaxed"
-              style={{ maxHeight: 160 }}
+              className="flex-1 bg-transparent text-[15px] font-serif tracking-wide text-[#EAE4DB] placeholder:text-[#4A3D30] outline-none resize-none leading-relaxed"
+              style={{ maxHeight: 280, minHeight: "4.5rem" }}
             />
+            <p className="text-[10px] text-[#3D3228] mt-2 font-medium tracking-wide">↵ send · shift+↵ new line</p>
           </div>
           <button
             onClick={send}
             disabled={streaming || !input.trim()}
             className={cn(
-              "w-12 h-12 rounded-sm flex items-center justify-center text-[#13110E] flex-shrink-0 transition-all duration-300",
-              streaming || !input.trim() 
-                ? "opacity-40 bg-[#251E18] text-[#5C5046]" 
-                : "active:scale-[0.96] shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_4px_12px_rgba(0,0,0,0.5)]"
+              "w-14 h-14 rounded-sm flex items-center justify-center text-[#13110E] flex-shrink-0 transition-all duration-300",
+              streaming || !input.trim()
+                ? "opacity-30 bg-[#251E18] text-[#5C5046]"
+                : "active:scale-[0.96] shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_6px_18px_rgba(0,0,0,0.6)]"
             )}
             style={{ background: streaming || !input.trim() ? undefined : activeSeat.color }}
           >

@@ -642,41 +642,68 @@ export function TodayPage() {
       <HeaderStrip />
 
       <div className="sticky top-[120px] z-10 backdrop-blur-md bg-white/85 border-b border-[#E7E5E4]">
-        <div className="max-w-lg mx-auto px-4 py-2">
-          <div role="tablist" className="flex gap-1 bg-[#F5F0E8] rounded-xl p-1">
-            {tabs.map((t) => {
-              const active = room === t.id;
-              return (
-                <button
-                  key={t.id}
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => setRoom(t.id)}
-                  className={cn(
-                    "flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm min-h-[44px] transition-all",
-                    active ? "bg-white shadow-sm font-medium" : "text-[#78716C]"
-                  )}
-                  style={active ? { color: ZONE_SOLID[activeZone] } : undefined}
-                >
-                  <t.icon size={15} />
-                  {t.label}
-                </button>
-              );
-            })}
+        <div className="max-w-5xl mx-auto px-4 py-2">
+          <div className="max-w-lg">
+            <div role="tablist" className="flex gap-1 bg-[#F5F0E8] rounded-xl p-1">
+              {tabs.map((t) => {
+                const active = room === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => setRoom(t.id)}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm min-h-[44px] transition-all",
+                      active ? "bg-white shadow-sm font-medium" : "text-[#78716C]"
+                    )}
+                    style={active ? { color: ZONE_SOLID[activeZone] } : undefined}
+                  >
+                    <t.icon size={15} />
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="px-4 py-4 max-w-lg mx-auto space-y-4">
-        <BackupNudge />
-        <ReviewNudges />
+      <div className="px-4 py-4 max-w-5xl mx-auto">
+        <div className="lg:grid lg:grid-cols-[minmax(0,520px)_1fr] lg:gap-8 lg:items-start">
 
-        {room === "triage" && <TriageRoom />}
-        {room === "pick" && <PickRoom />}
-        {room === "log" && <LogRoom />}
+          {/* ── Main column ── */}
+          <div className="space-y-4 min-w-0">
+            <BackupNudge />
+            <ReviewNudges />
 
-        <OdysseySection />
-        <NorthStarStatement />
+            {room === "triage" && <TriageRoom />}
+            {room === "pick" && <PickRoom />}
+            {room === "log" && <LogRoom />}
+
+            {/* Mobile-only: odyssey + north star below rooms */}
+            <div className="lg:hidden space-y-4">
+              <OdysseySection />
+              <NorthStarStatement />
+            </div>
+          </div>
+
+          {/* ── Desktop sidebar ── */}
+          <div className="hidden lg:flex lg:flex-col lg:gap-4 lg:sticky lg:top-[190px] min-w-0">
+            <OdysseySection />
+            <NorthStarStatement />
+            <div className="rounded-2xl border border-[#E7E5E4] bg-[#FAFAF9] px-5 py-5 space-y-3">
+              <p className="text-xs text-[#A8A29E] uppercase tracking-widest font-medium">Today</p>
+              <p className="text-sm text-[#44403C] leading-relaxed">
+                {new Date().toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}
+              </p>
+              <p className="text-xs text-[#78716C] leading-relaxed border-t border-[#E7E5E4] pt-3">
+                Triage clears the inbox. Pick sets intention. Log closes the day.
+              </p>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   );
