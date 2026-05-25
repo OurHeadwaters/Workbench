@@ -176,7 +176,8 @@ router.post("/purchase-webhook", async (req: Request, res: Response) => {
 // ── GET /kits/access/:token ───────────────────────────────────────────────────
 
 router.get("/access/:token", (req: Request, res: Response) => {
-  const { token } = req.params;
+  const raw = req.params["token"];
+  const token = Array.isArray(raw) ? (raw[0] ?? "") : (raw ?? "");
   if (!token || token.length > 128) {
     res.status(400).json({ error: "Invalid token" });
     return;
