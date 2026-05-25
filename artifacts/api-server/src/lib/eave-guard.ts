@@ -1,5 +1,15 @@
+/**
+ * EAVE GUARD + CAPITAL CONVERSION GATE
+ *
+ * Core Codetry constitutional rule:
+ * No automatic conversion of lower-zone capital (especially social/experiential)
+ * into higher-zone capital (especially financial) without an explicit gate.
+ *
+ * See CAPITAL_CONVERSION_GATE_PRINCIPLE in codetry.ts
+ */
+
 // ─────────────────────────────────────────────────────────────────────────────
-// Eave Guard — Capital Conversion Gate Principle
+// Eave Guard — enforcement layer for the Capital Conversion Gate Principle.
 //
 // The Eave is the protective overhang between Zone 0/1 (household + mutual aid)
 // and Zone 2+ (operational / contracted / financial layer).
@@ -7,21 +17,13 @@
 // Moving capital upward through the zone model is not forbidden — but it
 // requires an explicit gate decision: ceremony, not market mechanism.
 //
+// See also: codetry.ts  (doctrine — CAPITAL_CONVERSION_GATE_PRINCIPLE)
 // See also: gatekeeper.ts (translation authority between Bright Side and Systems)
 // See also: types.ts (Eave Rule — Z1–Z3 absolute prohibition, Z2–Z3 gate)
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const CAPITAL_CONVERSION_GATE_PRINCIPLE = `
-Capital Conversion Gate Principle
-
-You cannot convert capital from a lower zone into a higher zone without an explicit gate decision — ceremony, not just market mechanism.
-
-Rooted in the 8 Forms of Capital.
-Social capital lives in Zone 1 (The Eave). Financial capital lives in Zone 3+.
-The Eave Rule is the architectural enforcement of this gate.
-
-Ramsey Corollary: Build the gate so you can cross intentionally.
-`;
+import { CAPITAL_CONVERSION_GATE_PRINCIPLE } from "./codetry";
+export { CAPITAL_CONVERSION_GATE_PRINCIPLE };
 
 // ─── Zone numbers used by the guard ──────────────────────────────────────────
 //   0  Saltbox   — Household / hearth
