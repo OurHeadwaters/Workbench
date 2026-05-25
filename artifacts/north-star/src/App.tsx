@@ -20,6 +20,10 @@ import { ZoneDiagramPage } from "@/pages/ZoneDiagramPage";
 import { KitchenTablePage } from "@/pages/KitchenTablePage";
 import { MeetingKitPage } from "@/pages/MeetingKitPage";
 import { MoneyMachinePage } from "@/pages/MoneyMachinePage";
+import { CockpitPage } from "@/pages/CockpitPage";
+import { WindowPage } from "@/pages/WindowPage";
+import { ModelPage } from "@/pages/ModelPage";
+import { DebriefPage } from "@/pages/DebriefPage";
 import { GordWidget } from "@workspace/gord-widget";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -47,117 +51,114 @@ export default function App() {
       <Switch>
         <Route path="/onboarding" component={OnboardingPage} />
 
+        {/* ── Today — the front door ── */}
         <Route path="/">
           <OnboardingGuard>
-            <AppShell>
-              <TodayPage />
-            </AppShell>
+            <AppShell><TodayPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
+        {/* ── Cockpit — all ops tools ── */}
+        <Route path="/cockpit">
+          <OnboardingGuard>
+            <AppShell><CockpitPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+        {/* Debrief lives under cockpit in nav, standalone routes */}
+        <Route path="/debrief/evening">
+          <OnboardingGuard>
+            <AppShell><DebriefPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+        <Route path="/debrief">
+          <OnboardingGuard>
+            <AppShell><DebriefPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
+        {/* ── Model ── */}
+        <Route path="/model">
+          <OnboardingGuard>
+            <AppShell><ModelPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
+        {/* ── Window — public Eave Flow portal (no onboarding gate) ── */}
+        <Route path="/window">
+          <AppShell><WindowPage /></AppShell>
+        </Route>
+
+        {/* ── Zones ── */}
         <Route path="/zones">
           <OnboardingGuard>
-            <AppShell>
-              <ZonesPage />
-            </AppShell>
+            <AppShell><ZonesPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
+        {/* ── Guide ── */}
         <Route path="/guide">
           <OnboardingGuard>
-            <AppShell>
-              <GuidePage />
-            </AppShell>
+            <AppShell><GuidePage /></AppShell>
           </OnboardingGuard>
         </Route>
 
+        {/* ── Reviews ── */}
         <Route path="/weekly">
           <OnboardingGuard>
-            <AppShell>
-              <WeeklyPage />
-            </AppShell>
+            <AppShell><WeeklyPage /></AppShell>
           </OnboardingGuard>
         </Route>
-
         <Route path="/seasonal">
           <OnboardingGuard>
-            <AppShell>
-              <SeasonalPage />
-            </AppShell>
+            <AppShell><SeasonalPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
+        {/* ── Settings ── */}
         <Route path="/settings">
           <OnboardingGuard>
-            <AppShell>
-              <SettingsPage />
-            </AppShell>
+            <AppShell><SettingsPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
+        {/* ── Other preserved routes ── */}
         <Route path="/inbox-setup">
           <OnboardingGuard>
-            <AppShell>
-              <InboxSetupPage />
-            </AppShell>
+            <AppShell><InboxSetupPage /></AppShell>
           </OnboardingGuard>
         </Route>
-
         <Route path="/tester-kit">
           <OnboardingGuard>
-            <AppShell>
-              <TesterKitPage />
-            </AppShell>
+            <AppShell><TesterKitPage /></AppShell>
           </OnboardingGuard>
         </Route>
-
         <Route path="/sponsor-intake">
-          <AppShell>
-            <SponsorIntakePage />
-          </AppShell>
+          <AppShell><SponsorIntakePage /></AppShell>
         </Route>
-
         <Route path="/triage" component={TriageLandingPage} />
-
         <Route path="/archive-mining">
           <OnboardingGuard>
-            <AppShell>
-              <ArchiveMiningPage />
-            </AppShell>
+            <AppShell><ArchiveMiningPage /></AppShell>
           </OnboardingGuard>
         </Route>
-
         <Route path="/zone-diagram">
           <OnboardingGuard>
-            <AppShell>
-              <ZoneDiagramPage />
-            </AppShell>
+            <AppShell><ZoneDiagramPage /></AppShell>
           </OnboardingGuard>
         </Route>
-
         <Route path="/meeting-kit">
           <OnboardingGuard>
-            <AppShell>
-              <MeetingKitPage />
-            </AppShell>
+            <AppShell><MeetingKitPage /></AppShell>
           </OnboardingGuard>
         </Route>
-
         <Route path="/council">
-          <AppShell>
-            <KitchenTablePage />
-          </AppShell>
+          <AppShell><KitchenTablePage /></AppShell>
         </Route>
-
         <Route path="/money-machine">
-          <AppShell>
-            <MoneyMachinePage />
-          </AppShell>
+          <AppShell><MoneyMachinePage /></AppShell>
         </Route>
 
-        <Route>
-          <Redirect to="/" />
-        </Route>
+        <Route><Redirect to="/" /></Route>
       </Switch>
     </WouterRouter>
     <KitchenTableButton />

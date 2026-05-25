@@ -11,6 +11,7 @@ import type { ZoneId, Constellation } from "@/types";
 import { fetchTrailSigns, getTrailSigns } from "@workspace/odyssey";
 import { OdysseyTrail } from "@/components/TrailSign";
 import { Link, useLocation } from "wouter";
+import { LiveMoneyStrip } from "@/components/LiveMoneyStrip";
 
 type Room = "triage" | "pick" | "log";
 
@@ -676,6 +677,7 @@ export function TodayPage() {
           <div className="space-y-4 min-w-0">
             <BackupNudge />
             <ReviewNudges />
+            <LiveMoneyStrip />
 
             {room === "triage" && <TriageRoom />}
             {room === "pick" && <PickRoom />}

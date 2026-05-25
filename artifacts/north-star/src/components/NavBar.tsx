@@ -1,20 +1,22 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Star, Grid3x3, Calendar, MoreHorizontal, BookOpen, ClipboardList, Coffee, Settings, X } from "lucide-react";
+import { Star, Briefcase, BarChart2, BookOpen, Grid3x3, Calendar, Coffee, Settings, Globe, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useActiveZone, ZONE_SOLID } from "@/lib/zone";
 
 const PRIMARY = [
-  { path: "/", icon: Star, label: "Today", match: (p: string) => p === "/" },
-  { path: "/zones", icon: Grid3x3, label: "Zones", match: (p: string) => p.startsWith("/zones") },
-  { path: "/weekly", icon: Calendar, label: "Review", match: (p: string) => p.startsWith("/weekly") || p.startsWith("/seasonal") },
+  { path: "/",        icon: Star,      label: "Today",   match: (p: string) => p === "/" },
+  { path: "/cockpit", icon: Briefcase, label: "Cockpit", match: (p: string) => p.startsWith("/cockpit") || p.startsWith("/debrief") },
+  { path: "/model",   icon: BarChart2, label: "Model",   match: (p: string) => p.startsWith("/model") },
+  { path: "/zones",   icon: Grid3x3,   label: "Zones",   match: (p: string) => p.startsWith("/zones") },
 ];
 
 const MORE_ITEMS = [
-  { path: "/guide", icon: BookOpen, label: "Guide" },
-  { path: "/meeting-kit", icon: ClipboardList, label: "Kit" },
-  { path: "/council", icon: Coffee, label: "Table" },
-  { path: "/settings", icon: Settings, label: "Settings" },
+  { path: "/guide",   icon: BookOpen,  label: "Guide" },
+  { path: "/weekly",  icon: Calendar,  label: "Review" },
+  { path: "/council", icon: Coffee,    label: "Table" },
+  { path: "/window",  icon: Globe,     label: "Window" },
+  { path: "/settings",icon: Settings,  label: "Settings" },
 ];
 
 export function NavBar() {
@@ -74,7 +76,7 @@ export function NavBar() {
                 aria-hidden
               />
             )}
-            <MoreHorizontal
+            <Grid3x3
               size={moreActive ? 22 : 20}
               strokeWidth={moreActive ? 2.2 : 1.6}
               style={moreActive ? { color: zoneColor } : undefined}
@@ -85,25 +87,13 @@ export function NavBar() {
       </nav>
 
       {moreOpen && (
-        <MoreSheet
-          onClose={() => setMoreOpen(false)}
-          zoneColor={zoneColor}
-          location={location}
-        />
+        <MoreSheet onClose={() => setMoreOpen(false)} zoneColor={zoneColor} location={location} />
       )}
     </>
   );
 }
 
-function MoreSheet({
-  onClose,
-  zoneColor,
-  location,
-}: {
-  onClose: () => void;
-  zoneColor: string;
-  location: string;
-}) {
+function MoreSheet({ onClose, zoneColor, location }: { onClose: () => void; zoneColor: string; location: string }) {
   return (
     <div
       className="fixed inset-0 z-[60] flex flex-col justify-end bg-black/40"
@@ -118,9 +108,7 @@ function MoreSheet({
           <span className="block h-1.5 w-12 rounded-full bg-[#E7E5E4]" />
         </div>
         <div className="flex items-center justify-between px-5 py-2">
-          <h3 className="text-base font-medium" style={{ fontFamily: "Fraunces, serif" }}>
-            More
-          </h3>
+          <h3 className="text-base font-medium" style={{ fontFamily: "Fraunces, serif" }}>More</h3>
           <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-[#F5F5F0] min-h-[44px] min-w-[44px] flex items-center justify-center"
