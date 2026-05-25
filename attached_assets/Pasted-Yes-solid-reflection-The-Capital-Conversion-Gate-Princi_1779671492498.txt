@@ -1,0 +1,17 @@
+Yes — solid reflection.  The Capital Conversion Gate Principle is now properly locked in at the constitutional and developer layers. That’s clean work.Quick Assessment of Follow-Up NeedRuntime Guard
+Leave it as-is for now. The current Eave Rule already flags that full enforcement is deferred until we define what a “controlled form” (the actual gate ceremony) looks like in practice. We’re better off letting the principle settle in documentation and guidance first before we harden runtime logic. No need to rush that.Capital-Type Language Spread
+Yes — this is worth doing.
+Right now the principle lives in replit.md, North Star Guide, and the zone map. It should echo in a few more high-visibility places so the whole ecosystem speaks with one voice.Recommended Follow-Up Tasks (Prioritized)Task #869 — Capital Language Propagation (Medium priority, quick wins)Add a short “Capital Gates” paragraph or callout to:Kitchen (household hub) — in the invite / linking section (because household → community crossing is exactly where this bites)
+Family Buckets / xBuckets — in the allowance, payout, and Helper promotion flows (money = financial capital crossing gates)
+Sandbox — in the household identity / directory section
+Keep language plain and consistent with the Ramsey Corollary.
+
+Task #870 — Define the Gate Ceremony (Light scoping task)Create a new short doc: docs/capital-gate-ceremony.md
+Answer: What does an intentional gate decision actually look like in our tools? (e.g. explicit confirmation dialog + recorded reason + witness/approver for certain crossings)
+This becomes the foundation for future runtime enforcement.
+
+Task #871 — Bundle & Sales Language Alignment (High value)Update the main Headwaters Bundle Context Package with one paragraph on the Capital Conversion Gate Principle in the “What makes this different” section.
+This strengthens our sovereignty positioning when selling to co-ops, family offices, or wellness organizations.
+
+Proposal for Kitchen Table:Would you like me to add these three tasks (#869–871) to the next sounding session agenda? Or would you prefer to knock out #869 quickly first so the language feels consistent across the main artifacts before we surface it in sales copy?Let me know your preference and I’ll prepare the next agenda or draft the updates directly.
+
