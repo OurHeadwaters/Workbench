@@ -318,3 +318,28 @@ export const ZONES: ZoneData[] = [
 
 export const MAP_URL = "/map";
 export const COMPASS_URL = "/compass";
+
+export interface CrossingGate {
+  key: string;
+  name: string;
+  from: ZoneData["number"];
+  to: ZoneData["number"];
+  desc: string;
+}
+
+export const CROSSING_GATES: Record<string, CrossingGate> = {
+  g_z0_z1: {
+    key: "g_z0_z1",
+    name: "The Eave Overhang",
+    from: 0,
+    to: 1,
+    desc: "Household (Z0) to Mutual Aid (Z1). Social capital originates here. Any crossing requires explicit consent and ceremony.",
+  },
+  g_z1_z2: {
+    key: "g_z1_z2",
+    name: "The Workbench Gate",
+    from: 1,
+    to: 2,
+    desc: "Moving from social/experiential capital (Z1) into operational/contracted work (Z2). Conversion to financial capital beyond this point must pass a conscious gate decision.",
+  },
+};
