@@ -104,4 +104,47 @@ router.post("/chat", async (req: Request, res: Response) => {
   res.end();
 });
 
+// POST /council/chat-sync — non-streaming, returns full response as JSON
+// Used for batch/parallel calls (e.g. running multiple seats simultaneously)
+router.post("/chat-sync", async (req: Request, res: Response) => {
+  const parsed = ChatSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+
+  const { message, history, systemPrompt, model } = parsed.data;
+  const baseURL = process.env.AI_INTEGRATIONS_OPENROUTER_BASE_URL;
+  const apiKey = process.env.AI_INTEGRATIONS_OPENROUTER_API_KEY;
+
+  if (!baseURL || !apiKey) {
+    res.status(503).json({ error: "Council AI is not configured on this server." });
+    return;
+  }
+
+  const messages = [
+    { role: "system", content: systemPrompt },
+    ...history,
+    { role: "user", content: message },
+  ];
+
+  try {
+    const upstream = await fetch(`${baseURL}/chat/completions`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model, max_tokens: 512, messages, stream: false }),
+    });
+    if (!upstream.ok) {
+      const err = await upstream.text().catch(() => "upstream error");
+      res.status(502).json({ error: err });
+      return;
+    }
+    const data = await upstream.json() as { choices?: { message?: { content?: string } }[] };
+    const content = data.choices?.[0]?.message?.content ?? "";
+    res.json({ content });
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
 export default router;

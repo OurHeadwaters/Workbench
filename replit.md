@@ -135,3 +135,47 @@ When the user says **"put it on the kitchen table"** (or close variants — "add
 4. Existing rows pre-dating this protocol carry `source = 'unknown'` — that is the expected backfill value, not a bug.
 
 The point: when Bobbie convenes the AI council in the north-star KitchenTablePage, items are grouped artifact-by-artifact, so the round-table can move through one artifact's questions at a time instead of a flat blob. Per-artifact `AGENTS.md` files repeat the locally relevant `source` value so agents working inside a single artifact don't need to re-derive it.
+
+## Strategic Decisions
+
+Documented May 25, 2026. Decided by Bobbie Parr at the Kitchen Table with full seat deliberation.
+
+### Decision 1 — Official Headwaters front door
+**Answer: C — ourheadwaters.ca is the branded front door, landing on The Clearing.**
+
+Single URL you give a stranger. The domain is owned outright — no leased sovereignty, no platform subfolder dependency. The Clearing already carries the weight of the origin story; the domain makes that entry point findable and claimable. The Shore becomes a deeper practitioner resource.
+
+Table was unanimous on C. Sealing reason from Smith: "only an owned domain keeps us from becoming tenants on the very machine we claim to build."
+
+*Follow-up: configure ourheadwaters.ca redirect → The Clearing artifact.*
+
+---
+
+### Decision 2 — One canonical Kitchen or two
+**Answer: C — both Kitchens serve genuinely distinct audiences. Document the distinction.**
+
+salt-box Kitchen = family's day-to-day hub, tightly coupled to Hearth (same repo, same DB).
+creative-hub Kitchen = richer feature set, Cast Iron Rack launcher, Shelf/Cupboard, constellation map.
+
+These are not duplicates — they are different rings of the zone model. Document the distinction so future agents don't re-litigate it.
+
+*Follow-up: write a short AGENTS.md note in each Kitchen artifact naming the audience and what makes it distinct.*
+
+---
+
+### Decision 3 — Should The Arc connect to the main watershed
+**Answer: Contested — table split A vs C. Bobbie's call needed.**
+
+- **Saltbox, Smith, Codetry → A (stay fully sovereign).** Reasoning: even a one-way webhook or read-only embed creates a seam that will widen under operational pressure. The Watershed Compact prohibits leased sovereignty; integration trades a small convenience for an ownership leak that seven-generation scrutiny cannot justify.
+- **Systems, Community, Ishmael → C (lightweight only).** Reasoning: C keeps the machine owned while closing the "buy a kit → use the tool" loop. One-way signals satisfy the Three Tests without creating dependency or reverse visibility.
+
+The table is divided on whether a one-way webhook constitutes a sovereignty leak or a controlled outflow. Bobbie decides.
+
+---
+
+### Decision 4 — Where does kit sales and delivery live
+**Answer: C — TSP sells, zone apps deliver.**
+
+TSP (xrpl-design-hub.replit.app) already has Stripe + Zaprite rails and the kit_purchases table. Zone apps already have the content. The missing piece is a post-purchase routing signal from TSP to the relevant zone app. No duplication of infrastructure required.
+
+*Follow-up: design the post-purchase webhook payload and routing logic from TSP → zone content apps.*

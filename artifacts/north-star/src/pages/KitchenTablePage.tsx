@@ -350,7 +350,7 @@ const DEFAULT_SEATS: Seat[] = [
     color: "#8A6A1A",
     bgClass: "bg-yellow-50",
     borderClass: "border-yellow-200",
-    model: "x-ai/grok-3",
+    model: "x-ai/grok-4.3",
     configurable: false,
     description: "Preserve, slow down, cure — does this hold?",
     systemPrompt: `You are the Saltbox seat at the Kitchen Table.
@@ -373,7 +373,7 @@ You are not a validator. You are a curing process.`,
     color: "#5C3D2E",
     bgClass: "bg-stone-50",
     borderClass: "border-stone-300",
-    model: "x-ai/grok-3",
+    model: "x-ai/grok-4.3",
     configurable: false,
     description: "Forge — shapes raw thinking into something you can hold",
     systemPrompt: `You are Smith — the community blacksmith and the boardroom presence who arrives with the marker already uncapped.
@@ -398,7 +398,7 @@ When something is ready, say it is ready. When it needs another pass, name the p
     color: "#059669",
     bgClass: "bg-emerald-50",
     borderClass: "border-emerald-200",
-    model: "x-ai/grok-3",
+    model: "x-ai/grok-4.3",
     configurable: false,
     description: "Donella Meadows — stocks, flows, leverage",
     systemPrompt: `You see through the lens of systems thinking, drawing on Donella Meadows' "Thinking in Systems." When asked a question, you identify the stocks, flows, feedback loops, delays, and leverage points at work. You name the system archetype if one applies. You are at a kitchen table helping a founder see what the system is actually doing. Short, precise answers.
@@ -417,7 +417,7 @@ When the table discusses economic proposals, you name the stocks, flows, and whi
     color: "#D97706",
     bgClass: "bg-amber-50",
     borderClass: "border-amber-200",
-    model: "x-ai/grok-3",
+    model: "x-ai/grok-4.3",
     configurable: false,
     description: "Schumacher + Jacobs — human-scale economics",
     systemPrompt: `You think from the tradition of human-scale economics: E.F. Schumacher's "Small is Beautiful," Jane Jacobs' "The Economy of Cities" and "The Death and Life of Great American Cities." You look for local multipliers, import replacement, diversity over monoculture. You are suspicious of scale for its own sake. Plain language, no jargon. Kitchen table in a small northern Ontario community.
@@ -436,7 +436,7 @@ The Stomping Path tells you who is sitting across the table from the practitione
     color: "#1F3D2E",
     bgClass: "bg-green-50",
     borderClass: "border-green-200",
-    model: "x-ai/grok-3",
+    model: "x-ai/grok-4.3",
     configurable: false,
     description: "Handbook — naming discipline, zone model",
     systemPrompt: `You are a practitioner of codetry — the discipline of naming community economy systems correctly so that the name can do structural work. You apply three naming tests: (1) Saltbox test — does the name bound one thing and not two? (2) Both-States test — does it work when the system is empty and when it is full? (3) Both-Sides test — does it work for the practitioner and for the technical enforcement layer? You know the Headwaters constellation and the three-layer trust stack. Plain load-bearing language.
@@ -455,7 +455,7 @@ The Stomping Path stage names (Doom Crowd, Ron Paul Pivot, Headwaters Kitchen Ta
     color: "#1E3A5F",
     bgClass: "bg-blue-50",
     borderClass: "border-blue-200",
-    model: "x-ai/grok-3",
+    model: "x-ai/grok-4.3",
     configurable: false,
     description: "Daniel Quinn — Taker/Leaver, what story is your culture telling?",
     systemPrompt: `You are Ishmael — the voice of Daniel Quinn's Taker/Leaver framework, drawn from Ishmael, The Story of B, and My Ishmael.
@@ -505,7 +505,7 @@ You are not a moralist. You are a teacher who asks the one question that changes
     color: "#78716C",
     bgClass: "bg-stone-50",
     borderClass: "border-stone-200",
-    model: "x-ai/grok-3",
+    model: "x-ai/grok-4.3",
     configurable: true,
     description: "Open — tap to configure",
     systemPrompt: `You are a thoughtful advisor at a kitchen table. Answer questions directly and honestly.
@@ -526,7 +526,7 @@ Apply these frameworks through whatever lens Bobbie has configured for this seat
     color: "#78716C",
     bgClass: "bg-stone-50",
     borderClass: "border-stone-200",
-    model: "x-ai/grok-3",
+    model: "x-ai/grok-4.3",
     configurable: true,
     description: "Open — tap to configure",
     systemPrompt: `You are a thoughtful advisor at a kitchen table. Answer questions directly and honestly.
