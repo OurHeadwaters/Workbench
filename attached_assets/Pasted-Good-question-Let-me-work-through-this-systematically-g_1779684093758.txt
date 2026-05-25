@@ -1,0 +1,98 @@
+Good question. Let me work through this systematically — gaps, zone-to-bucket mapping, the money machine setup path, how the water wheel works in practice, and things we haven't discussed yet.
+
+1. Zone-to-Bucket Mapping (The Gap)
+The watershed zones describe territory and purpose. The three financial systems in the briefing are really Zone instances of the same app. Right now the app has no concept of this:
+
+Zone	Financial System	Example Wallet	Natural Bucket Set
+Zone 0 — Salt Box	Household (hearth)	Wallet A/B	Groceries, Rent, Gas, Kids, Gifts, Vet, Winter Reserve
+Zone 2 — Bench	Sole Proprietorship	Wallet C	Ingredients Supply, Market Fees, GST Reserve, Equipment, Owner Draw
+Zone 4 — Community Hall / The Mill	Business entity	Wallet D	Payroll Reserve, Tax Reserve, Operations, Client Trust, Owner Draw, Tithe
+What's missing: When someone opens the app for the first time, they get a blank slate with example buckets. There's no "which system are you setting up?" onboarding path that pre-loads the right bucket set and gate-crossing rules for their zone. That's a significant gap — it means every user has to manually reconstruct something that should be a template.
+
+2. The Money Machine Setup: What It Should Look Like
+Practically, a guided "water wheel from the gate" setup is a 4-phase flow:
+
+Phase 1 — Install the Plumbing (Day 0–1, ~30 min)
+Download Xaman, write seed phrase on paper
+Activate wallet: send 10 XRP to new address (~$7–10 CAD, the ledger reserve — locked forever but yours)
+Connect wallet to Headwaters via QR scan
+Choose your zone template (Household / Sole Prop / Business) → buckets pre-load with sensible defaults
+Fund with RLUSD via Stripe card top-up — no crypto exchange required
+Phase 2 — Name the Channels (Day 1–3, ~20 min)
+Run the Payday Planner for the first time: enter income amount, confirm allocation to each bucket
+Set gate-crossing protection on any Zone 1 (committed) or Zone 2 (contracted) buckets
+If Household mode: owner generates invite code, partner joins on their device
+Phase 3 — Let It Sit and Flow (Week 1–4)
+Use spending buckets normally — bucket balance drops as you spend
+Savings buckets accumulate toward goals
+Once a savings bucket reaches a minimum threshold (practically: $200–500 CAD RLUSD), you're ready for the wheel
+Phase 4 — Start the Water Wheel (Week 3–8)
+Open Earn tab → Drip Harvester → create a sweep rule for a savings bucket
+Set the rule: "when balance exceeds $X, sweep $Y into [pool]"
+Approve the AMM deposit transaction in Xaman
+The wheel turns — position earns trading fees proportional to your pool share
+Harvest on whatever cadence you set; 5% protocol fee on yield only, never principal
+Realistic timeline: 1–8 weeks from install to first yield harvest, depending on:
+
+How fast savings buckets accumulate
+Pool volume (higher volume = more trading fees distributed to LPs)
+Sweep rule settings
+3. How the Water Wheel Actually Works
+The Drip Harvester is an XRPL AMM (Automated Market Maker) LP position, not a savings account:
+
+Your RLUSD savings bucket
+    ↓  sweep rule triggers
+AMM Pool deposit (e.g. RLUSD/XRP pool)
+    → you receive LP tokens in return
+    → the pool earns 0.3% trading fee on every swap through it
+    → fees accumulate proportional to your share of the pool
+    ↓  harvest rule triggers
+LP tokens → RLUSD returned to savings bucket
+    → 5% protocol fee taken from yield only
+    → your principal is returned in full
+Projected returns (rough estimates, not guarantees):
+
+XRPL AMM pools currently earn ~5–25% APR depending on the pair and volume
+On a $500 RLUSD position at 10% APR: ~$4/month yield, ~$50/year
+On a $2,000 position at 15% APR: ~$25/month, ~$300/year
+Protocol fee (5% of yield): ~$0.20/month and ~$1.25/month respectively
+Important caveats the app doesn't yet surface clearly:
+
+Impermanent loss — if XRP price moves significantly vs. RLUSD, your position value in RLUSD terms can be less than if you'd just held. The Earn tab has educational content on this but it's not surfaced at the point of setup.
+Minimum viable position — below ~$100 RLUSD, gas costs (XRP transaction fees are tiny but real) can eat into yield
+Pool liquidity risk — thin pools have wider spreads and more impermanent loss risk
+4. Gaps We Haven't Discussed
+Here are things the briefing raises that aren't in the current app:
+
+A. Multi-wallet switcher (biggest gap)
+Bobbie has four wallets. The app is single-wallet per session. There's no way to flip between Household, Sole Prop, and Business contexts in one app install. This means Bobbie literally runs three separate app sessions. A workspace/context switcher (like Slack workspaces) doesn't exist yet.
+
+B. Invoice-triggered Payday
+The Payday Planner is calendar-oriented. For a sole proprietor, payday isn't biweekly — it's "when an invoice clears." There's no event type for "invoice received" or a way to trigger the planner from an incoming RLUSD deposit notification.
+
+C. Tax-aware bucket behavior
+A GST Reserve or Tax Reserve bucket should probably show a running remittance estimate and warn you before remittance dates. Right now it's just a bucket with a balance — no tax calendar awareness.
+
+D. Yield projection / forecast
+There's no "if I contribute $X/month to this pool, what will my position be worth in 6 months?" calculator. Users set up the water wheel blind to projected outcomes.
+
+E. The watershed health dashboard (The Mill layer)
+There's no view that shows all three systems at once — total reserve across wallets, aggregate goal progress, cross-system Owner Draw tracking. This is the "Mill" perspective — the hidden substrate view.
+
+F. Sole proprietor "invoice payday" bucket templates
+The Zone 2 bucket set (Ingredients Supply, Market Fees, GST Reserve, Equipment, Owner Draw) with gate crossings on GST Reserve and Owner Draw isn't a template anywhere in the app. Neither is the business Zone 4 set with the 10% locked Tithe bucket.
+
+G. Tithe / locked allocation bucket
+The briefing mentions a locked 10% Tithe bucket for the business system. The app has no concept of a "locked" bucket — one whose balance can only leave via an explicit approved channel (the giving well or a specific payee). That's a useful primitive for any disciplined allocation rule.
+
+H. Allowance disbursement via Bridge
+The Helper role (Task #1028, just merged) handles gate-crossing confirmations and the Helper member role. But the briefing specifically says helpers should receive their allowance via the Bridge so it hits their account. That disbursement flow — "send $X from Groceries bucket to child's Xaman address via the Bridge rail" — isn't built yet.
+
+5. What I'd Prioritize for Planning
+If you want tasks for any of these, the highest-leverage gaps are:
+
+Zone setup wizard — bucket templates + gate-crossing defaults per zone type, surfaced in onboarding
+Yield projection calculator — show projected monthly/annual yield at setup time so the water wheel isn't a black box
+Invoice-triggered Payday mode — a toggle that replaces the calendar-date model for sole prop wallets
+Impermanent loss education at point of setup — not just in the Earn tab reference section, but inline when someone is creating their first sweep rule
+Want me to scope any of these as tasks?
