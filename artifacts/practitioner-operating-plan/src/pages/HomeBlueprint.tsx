@@ -189,12 +189,19 @@ export default function HomeBlueprint() {
                   filter={isActive || isFire ? "url(#gs)" : undefined}
                 />
                 {!active && (
-                  <text x={CX} y={CY - z.r - 4}
-                    textAnchor="middle" fill={z.color}
-                    fontSize={5.5} fontWeight={700} letterSpacing="0.12em"
-                    opacity={isFire ? 0.9 : 0.55}>
-                    {z.name}
-                  </text>
+                  <g>
+                    <rect
+                      x={CX - z.name.length * 2.9} y={CY - z.r - 12}
+                      width={z.name.length * 5.8} height={10}
+                      rx={3} fill="#0b1812" opacity={0.72}
+                    />
+                    <text x={CX} y={CY - z.r - 5}
+                      textAnchor="middle" fill={z.color}
+                      fontSize={7.5} fontWeight={800} letterSpacing="0.1em"
+                      opacity={isFire ? 1 : 0.9}>
+                      {z.name}
+                    </text>
+                  </g>
                 )}
               </g>
             );
@@ -224,7 +231,7 @@ export default function HomeBlueprint() {
             }}>{LAYERS[layer].label}</div>
             <div style={{
               fontSize: "clamp(10px, 2.5vw, 13px)",
-              color: "rgba(255,255,255,0.35)", marginTop: 5,
+              color: "rgba(255,255,255,0.6)", marginTop: 5,
               maxWidth: "55vw", lineHeight: 1.45,
             }}>{LAYERS[layer].sub}</div>
           </div>
@@ -347,7 +354,7 @@ export default function HomeBlueprint() {
               border: "none",
               borderTop: isActive ? `2px solid ${c}` : "2px solid transparent",
               cursor: "pointer",
-              color: isActive ? c : "rgba(255,255,255,0.3)",
+              color: isActive ? c : "rgba(255,255,255,0.5)",
               fontSize: "clamp(8px, 2.2vw, 11px)", fontWeight: isActive ? 800 : 500,
               letterSpacing: "0.1em", textTransform: "uppercase",
               transition: "all 0.18s",
