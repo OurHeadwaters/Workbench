@@ -673,6 +673,65 @@ GROUND RULES
       { q: "Q8", question: "What are the two or three clear targets for next month? Name them.", lead: "Saltbox", leadId: "saltbox" },
     ],
   },
+  {
+    id: "kit-pricing",
+    label: "Kit Pricing Review",
+    sessionName: "Kit Pricing Review",
+    brief: `KIT PRICING REVIEW — Headwaters Development Services
+Convened by: Bobbie Parr
+Table mode: Structured deliberation. One price point per lens. Honest read only.
+
+PURPOSE
+Determine whether the five sellable bundles (A–E) are priced at the right point for the communities they serve.
+This session does not change any numbers — it reads the pricing as it stands and names what holds, what doesn't, and what needs a decision.
+
+THE FIVE BUNDLES
+Bundle A — Wellness & Care Tracking
+  For: TOPS groups, LTC facilities, senior living, clinics, corporate wellness
+  Tools: Keto Companion + Bright Side (PHI-free care coordination)
+  Revenue model: Hosting + support. Add-ons: custom infographics, medication tracker.
+
+Bundle B — Family & Homeschool Operating System
+  For: Homeschool co-ops, families, faith communities, youth programs
+  Tools: Kitchen + Saltbox/Gather + Hearth + Life Badges + Family Buckets + Campfire + Memory Lane
+  Revenue model: Hosting + support. White-label available.
+
+Bundle C — Community Coordination & Mutual Aid
+  For: Rural co-ops, villages, band councils, support networks
+  Tools: Sandbox + The Eave + North Star + Stomping Path elements
+  Revenue model: Hosting + support. Add-ons: custom AI council seats.
+
+Bundle D — Business & Producer Operations
+  For: Restaurants, retail, food co-ops, farmers markets, northern operators
+  Tools: Dryden Web Suite + 807 Benefits + Market Mosaic + Rootwork
+  Revenue model: Hosting + support. Add-ons: ordering flows, grant documentation.
+
+Bundle E — Full Sovereign Stack
+  For: Large co-ops, family offices, communities, grant-funded organizations
+  Includes: All zones + Codetry tools + Kitchen Table AI + XRPL + print suite
+  Revenue model: Hosting + support + practitioner retainer. White-label available.
+
+STONEMASON PRICE LADDER (Headwaters practitioner services — for context)
+  Discovery Call:       $500        (90-min scoped. Credited toward any package.)
+  Foundation Build:     $2,500      (System setup, integrations, training walk-through.)
+  Training Day:         $1,200      (On-site or virtual full-day implementation.)
+  Full Launch Package:  $6,000      (Discovery + Foundation + Training + 30-day support.)
+  Ongoing Stewardship:  $400/mo     (Monthly check-in, updates, priority support.)
+  Emergency Support:    $350/day    (Same-day or next-day on-demand engagement.)
+
+GROUND RULES
+— Read the price as it is. Do not invent numbers.
+— One lens per seat. Stay in your lane.
+— If the price holds, say so. If it doesn't, name why — specifically.
+— End with one written decision per bundle: holds / needs a revision / needs more information.`,
+    agendaItems: [
+      { q: "Q1", question: "Saltbox lens — does the price hold? For each of the five bundles, read the asking price against what the market will actually bear in northern Ontario. Which bundle is priced too high, too low, or just right? Name the one that concerns you most.", lead: "Saltbox", leadId: "saltbox" },
+      { q: "Q2", question: "Smith lens — is it buildable at this margin? For each bundle, does the current price leave enough room to build, maintain, and support the tools included — or does it underprice the labour? Name where the margin is too thin to sustain the work.", lead: "Smith", leadId: "grok" },
+      { q: "Q3", question: "Systems lens — what flow does this price create? For each bundle, trace what happens after a community says yes at this price: does the price point attract the right clients, create a sustainable revenue flow, or does it generate the wrong volume or the wrong expectations?", lead: "Systems", leadId: "systems" },
+      { q: "Q4", question: "Community lens — does it fit a northern co-op's real budget? For each bundle, name whether a rural co-op, band council, or northern community organization can realistically afford this price point without a grant. Which bundle is most accessible? Which is effectively locked behind funding?", lead: "Community", leadId: "community" },
+      { q: "Q5", question: "Ishmael lens — does this pricing story serve the community or extract from it? For each bundle, read the price through the Leaver/Taker frame: does the pricing model steward the community's capacity or does it replicate the extractive patterns we say we're replacing? Name any bundle where the pricing drifts toward extraction.", lead: "Ishmael", leadId: "ishmael" },
+    ],
+  },
 ];
 
 // ── Reference Doc renderer ────────────────────────────────────────────────────
@@ -1105,6 +1164,7 @@ export function KitchenTablePage() {
               <p className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-medium flex-1">
                 {activeTemplate.id === "weekly" ? "Weekend check-in · 30 min"
                   : activeTemplate.id === "monthly" ? "Month-end review · 60 min"
+                  : activeTemplate.id === "kit-pricing" ? "Kit pricing deliberation · 5 lenses"
                   : "Today's agenda · 30 min"}
               </p>
               <div className="flex gap-1.5">
@@ -1119,7 +1179,7 @@ export function KitchenTablePage() {
                         : "bg-[#181512] text-[#7A6A5C] border border-[#251E18] hover:text-[#A39485]"
                     )}
                   >
-                    {t.id === "weekly" ? "Weekly" : t.id === "monthly" ? "Monthly" : "Today"}
+                    {t.label}
                   </button>
                 ))}
               </div>
