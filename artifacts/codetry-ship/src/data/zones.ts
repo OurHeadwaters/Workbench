@@ -113,6 +113,20 @@ export const ZONES: ZoneData[] = [
         inThisProject: false,
         zoneAddress: "Z1–B",
       },
+      {
+        name: "XRPL Design Hub — Codetry",
+        tagline: "Codetry zone vocabulary, capital gate model, and naming canon",
+        url: "https://xrpl-design-hub.replit.app/codetry/",
+        inThisProject: false,
+        zoneAddress: "Z1–B1",
+      },
+      {
+        name: "XRPL Design Hub — Privacy Guide",
+        tagline: "Zone-keyed privacy architecture — what lives where and why",
+        url: "https://xrpl-design-hub.replit.app/privacy-guide/",
+        inThisProject: false,
+        zoneAddress: "Z1–B2",
+      },
     ],
   },
   {
