@@ -1,6 +1,5 @@
 import { lazy, Suspense } from "react";
 import { ZoneStoreProvider } from "@workspace/zone-store";
-import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
 import { Route, Switch } from "wouter";
 import { LobbyPage } from "./pages/LobbyPage";
 import OnePager from "./pages/OnePager";
@@ -34,7 +33,6 @@ import NANPage from "./pages/NANPage";
 import { HeadwatersWindowPage } from "./pages/HeadwatersWindowPage";
 import EthosPage from "./pages/EthosPage";
 import HomeBlueprint from "./pages/HomeBlueprint";
-import { GordWidget } from "@workspace/gord-widget";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
@@ -83,8 +81,6 @@ export default function App() {
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />
       <Route component={LobbyPage} />
     </Switch>
-    <KitchenTableButton />
-    <GordWidget />
     </ZoneStoreProvider>
   );
 }
