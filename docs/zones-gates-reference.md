@@ -132,6 +132,29 @@ Gates are always visible. Examples at each crossing:
 
 ---
 
+## The Capital Conversion Gate Principle
+
+**Amendment to the Eave Rule.**
+
+No capital may be converted from a lower zone into a higher zone without an explicit gate decision — a conscious ceremony of consent, not merely a market transaction.
+
+This principle is rooted in the **8 Forms of Capital** (Roland & Landua) and is the deeper structural reason the Eave Rule exists:
+
+| Capital form | Native zone |
+|---|---|
+| Living, Material, Experiential, Cultural | Z0–Z1 (household) |
+| Social | Z1 (The Eave — structural home) |
+| Intellectual | Z2–Z3 |
+| Financial | Z3+ |
+
+Each zone boundary in this model is therefore also a **capital-type boundary**. Crossing outward without a gate converts one form of capital into a less-protected, more-extractable form. That conversion is irreversible without re-crossing. The gate exists to make the conversion visible, intentional, and recorded — not to prevent it.
+
+**The Ramsey Corollary:** "Never borrow from friends and family" is the blunt heuristic used by those with no gate mechanism. The prohibition exists because there is no ceremony — no visible crossing, no terms, no record. Codetry's answer is not prohibition. It is to build the gate so that any crossing is intentional, visible, and recorded. Once the gate exists, the crossing can happen with integrity.
+
+**The Eave Overhang (constitutional hard seam):** No Z3+ identity or financial capital may compose directly into a Z0 or Z1 record without passing through a documented gate decision. This is not a default that can be overridden. It is the architectural expression of the capital-boundary principle above.
+
+---
+
 ## Relationship to the Eave Rule
 
 The Eave Rule (defined in `artifacts/north-star/src/schema-notes.md`) is the **constitutional expression** of this model — the version that governs code, schema fields, migrations, and query shapes.

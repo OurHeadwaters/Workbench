@@ -343,6 +343,8 @@ River Smith arms automatically on API server startup. Log line "river-smith: sch
 
 5. Zone language is load-bearing. The permaculture zone model (Z0 Hearth, Z1 Spring, Z2 Worn Path, Z3 Clearing, Z4 Market Square, Z5 Ridge) is pervasive and intentional. Terrain taglines are canonical. Do not invent new zone names or renumber zones without updating zones.ts and propagating everywhere.
 
+5a. The Capital Conversion Gate Principle (Amendment to the Eave Rule): No capital may be converted from a lower zone into a higher zone without an explicit gate decision — a conscious ceremony of consent, not a market transaction. Rooted in the 8 Forms of Capital (Roland & Landua): Living/Material/Experiential/Cultural capital originates at Z0–Z1; Social capital is structural to Z1 (The Eave); Intellectual capital spans Z2–Z3; Financial capital is native to Z3+. Each zone boundary is therefore also a capital-type boundary. The Eave Overhang (constitutional hard seam): no Z3+ identity or financial capital may compose directly into a Z0 or Z1 record without a documented gate decision. Full treatment in docs/zones-gates-reference.md.
+
 6. Naming conventions are deliberate. Terms like Saltbox, Lodge, Standby, Stomping Path, Gord, River Smith, Bright Side, Gate Log, Pioneer Path, Reckoning, and Shallows are project vocabulary, not informal placeholders. Do not normalize them to generic equivalents.
 
 7. Codetry is not Headwaters. Codetry = methodology and tooling layer (hands-on coding, digital sovereignty, blockchain-as-preparedness). Headwaters = practice and community layer (food economy, watershed, community ownership). They overlap but serve distinct purposes.

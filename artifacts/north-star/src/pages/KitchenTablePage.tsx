@@ -122,6 +122,29 @@ THE EAVE RULE (poured concrete):
   The Deck (Z2) holds both family conversations and sales pitches.
   The Kitchen Table deliberates here. Curtains drawn by default.
 
+THE CAPITAL CONVERSION GATE PRINCIPLE (Amendment to the Eave Rule):
+  No capital may be converted from a lower zone into a higher zone without an
+  explicit gate decision — a conscious ceremony of consent, not a market transaction.
+
+  Rooted in the 8 Forms of Capital (Roland & Landua):
+    Living, Material, Experiential, Cultural → originate at Z0–Z1 (household).
+    Social capital → structural home is Z1 (The Eave).
+    Intellectual capital → spans Z2–Z3.
+    Financial capital → native to Z3+.
+
+  Each zone boundary is also a capital-type boundary. Crossing outward without
+  a gate converts capital into a less-protected, more-extractable form — irreversibly
+  without re-crossing. The gate makes any conversion intentional, visible, recorded.
+
+  Ramsey Corollary: "Never borrow from friends and family" is the blunt heuristic
+  used by those with no gate mechanism. Codetry's answer is not prohibition — it is
+  to build the gate so that any crossing is intentional, visible, and recorded.
+
+  Eave Overhang (constitutional hard seam): No Z3+ identity or financial capital
+  may compose directly into a Z0 or Z1 record without a documented gate decision.
+  This is not a default that can be overridden. It is the architectural expression
+  of the capital-boundary principle.
+
 ---
 THE ECOSYSTEM — WHAT'S BEEN BUILT
 Shared platform: pnpm monorepo, Express API, Postgres/Drizzle, React/Vite,
