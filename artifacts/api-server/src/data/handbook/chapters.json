@@ -3389,6 +3389,59 @@
           ]
         },
         {
+          "id": "4-cg",
+          "number": "4.9a",
+          "partRoman": "IV",
+          "partLabel": "IV · The Quiet Examples",
+          "title": "Capital Gates",
+          "blocks": [
+            {
+              "kind": "small",
+              "text": "Capital Gates · the Gate Rule applied to zone crossings · conscious consent, not market transaction."
+            },
+            {
+              "kind": "para",
+              "text": "The Gate Rule is one of the most important disciplines in the Codetry zone model. You can move capital between zones — but you cannot do it invisibly or automatically."
+            },
+            {
+              "kind": "para",
+              "text": "Each zone is not only a ring of proximity. It is a capital-type boundary. Living, material, experiential, and cultural capital originate in Zone 0 and Zone 1. Social capital is structural to Zone 1 — The Eave — because that is where the relationships that generate it are held. Intellectual capital spans Zones 2 and 3. Financial capital is native to Zone 3 and above. A zone crossing is therefore always a capital-type conversion. When social capital crosses outward and becomes financial capital, something irreplaceable has been moved. The conversion cannot be undone without re-crossing."
+            },
+            {
+              "kind": "subhead",
+              "text": "The gate decision."
+            },
+            {
+              "kind": "para",
+              "text": "Converting one form of capital into another is not forbidden. But it requires a gate decision: a moment of conscious consent, recorded and witnessed. Not a market transaction. Not a convenient shortcut. A ceremony — a deliberate crossing that both sides of the gate can name and verify afterward."
+            },
+            {
+              "kind": "para",
+              "text": "This is the deeper meaning behind the Eave Rule. The rule does not say *never move capital between zones*. It says *no crossing without a gate*. The gate is what makes the crossing legible — to the practitioner, to the community, and to any future audit that needs to understand what moved and why."
+            },
+            {
+              "kind": "subhead",
+              "text": "The Ramsey Corollary."
+            },
+            {
+              "kind": "pull",
+              "text": "\"Never borrow from friends and family\" is what people say when they have no gate."
+            },
+            {
+              "kind": "para",
+              "text": "Dave Ramsey's rule is not wrong. It is the correct prescription for the diagnosis *no gate mechanism*. When there is no ceremony, no record, no defined terms — when the crossing happens because it was convenient and both parties assumed goodwill — the social capital at Zone 1 has been quietly converted into financial obligation at Zone 3, with no gate keeping the record of what crossed and on what terms. The prohibition exists to protect the relationship because the relationship has no other protection."
+            },
+            {
+              "kind": "para",
+              "text": "Codetry's answer is not the same prohibition. It is: build the gate. Once the gate exists, the crossing can happen with integrity. The practitioner and the community member can both name what moved, on what terms, recorded and witnessed. The social capital at Zone 1 does not disappear into a financial transaction at Zone 3 — it crosses through a gate that both parties can inspect. The Eave Overhang is the constitutional expression of this principle: no Z3 identity or financial capital may compose directly into a Zone 0 or Zone 1 record without a documented gate decision."
+            },
+            {
+              "kind": "callout",
+              "text": "Build the gate so you *can* cross intentionally when it truly serves the whole system. The gate is not a wall. It is the ceremony that makes the crossing honest."
+            }
+          ]
+        },
+        {
           "id": "3-18",
           "number": "4.10",
           "partRoman": "IV",
@@ -9440,6 +9493,59 @@
         {
           "kind": "callout",
           "text": "The practitioner who names Eave *the budget system* and Zone 0 *the homestead* has left the relationship between them unnamed — and the relationship is where the practice lives. Zone 0 supplies what Eave allocates. If the allocation vocabulary is borrowed from fintech and the supply vocabulary is borrowed from homesteading, the practitioner is running two systems in two languages with no shared word for the handoff. Name the handoff."
+        }
+      ]
+    },
+    {
+      "id": "4-cg",
+      "number": "4.9a",
+      "partRoman": "IV",
+      "partLabel": "IV · The Quiet Examples",
+      "title": "Capital Gates",
+      "blocks": [
+        {
+          "kind": "small",
+          "text": "Capital Gates · the Gate Rule applied to zone crossings · conscious consent, not market transaction."
+        },
+        {
+          "kind": "para",
+          "text": "The Gate Rule is one of the most important disciplines in the Codetry zone model. You can move capital between zones — but you cannot do it invisibly or automatically."
+        },
+        {
+          "kind": "para",
+          "text": "Each zone is not only a ring of proximity. It is a capital-type boundary. Living, material, experiential, and cultural capital originate in Zone 0 and Zone 1. Social capital is structural to Zone 1 — The Eave — because that is where the relationships that generate it are held. Intellectual capital spans Zones 2 and 3. Financial capital is native to Zone 3 and above. A zone crossing is therefore always a capital-type conversion. When social capital crosses outward and becomes financial capital, something irreplaceable has been moved. The conversion cannot be undone without re-crossing."
+        },
+        {
+          "kind": "subhead",
+          "text": "The gate decision."
+        },
+        {
+          "kind": "para",
+          "text": "Converting one form of capital into another is not forbidden. But it requires a gate decision: a moment of conscious consent, recorded and witnessed. Not a market transaction. Not a convenient shortcut. A ceremony — a deliberate crossing that both sides of the gate can name and verify afterward."
+        },
+        {
+          "kind": "para",
+          "text": "This is the deeper meaning behind the Eave Rule. The rule does not say *never move capital between zones*. It says *no crossing without a gate*. The gate is what makes the crossing legible — to the practitioner, to the community, and to any future audit that needs to understand what moved and why."
+        },
+        {
+          "kind": "subhead",
+          "text": "The Ramsey Corollary."
+        },
+        {
+          "kind": "pull",
+          "text": "\"Never borrow from friends and family\" is what people say when they have no gate."
+        },
+        {
+          "kind": "para",
+          "text": "Dave Ramsey's rule is not wrong. It is the correct prescription for the diagnosis *no gate mechanism*. When there is no ceremony, no record, no defined terms — when the crossing happens because it was convenient and both parties assumed goodwill — the social capital at Zone 1 has been quietly converted into financial obligation at Zone 3, with no gate keeping the record of what crossed and on what terms. The prohibition exists to protect the relationship because the relationship has no other protection."
+        },
+        {
+          "kind": "para",
+          "text": "Codetry's answer is not the same prohibition. It is: build the gate. Once the gate exists, the crossing can happen with integrity. The practitioner and the community member can both name what moved, on what terms, recorded and witnessed. The social capital at Zone 1 does not disappear into a financial transaction at Zone 3 — it crosses through a gate that both parties can inspect. The Eave Overhang is the constitutional expression of this principle: no Z3 identity or financial capital may compose directly into a Zone 0 or Zone 1 record without a documented gate decision."
+        },
+        {
+          "kind": "callout",
+          "text": "Build the gate so you *can* cross intentionally when it truly serves the whole system. The gate is not a wall. It is the ceremony that makes the crossing honest."
         }
       ]
     },
