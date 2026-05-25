@@ -1,0 +1,31 @@
+What this app is
+
+Bright Side is a tool for care-home staff — PSWs, nurses, HCAs — the people doing the floor work in a long-term care home or group home. It's not a charting system. It's the opposite. Existing care software captures the clinical record. Bright Side captures everything that doesn't go in the chart: the resident who had a good morning, the nurse who made sure three people got their moment today, the thing a staff member needs to know before they walk in the door for their shift.
+
+The framing is a fence metaphor — cognitive decline is real, the institutional walls are real, and things don't go back the way they were. Bright Side is a choice to stand on the bright side of that fence and work the small things that still travel through. That metaphor is load-bearing. It's why the words matter so much in this project.
+
+What's working well
+
+The core loop is complete. A staff member picks up a shared tablet, says who they're helping as, and they have: a list of residents with joy bubbles to pop, a hallway wall of shift notes to read and ack, a shadow list of things that need clearing, and a beat sheet for shift handoff. All of that is live, tested, and solid. The director has a real dashboard — analytics, audit logs, nudge management, staff roster, facility settings. The kiosk-mode hygiene (idle auto-clear, "Helping as" picker, visibility-resume) has been tested to a level that would surprise you, including a race-condition test for eight simultaneous acknowledgments.
+
+Two big things just landed while we were talking: Task #212 filled the demo database with 96 lived-in residents — so the 96-bed pilot home demo is no longer empty. And Task #211 built a private market research brief at /market-brief/ — a mobile-first pitch document with competitive landscape, regulatory framing, pilot economics, and walk-in talking points. That one's private-by-default (blocked from search indexing).
+
+The vocabulary discipline is documented. Four codetry passes sit in docs/codetry/ — the methodology record of every naming decision made since the project started. That's rare for a project this size.
+
+What's rough or unfinished
+
+There are two pre-existing typecheck errors in the transition templates that nobody has touched intentionally — they're tracked but parked. There's also a test that flags the word "MVP" in the credits page as a legacy vocabulary violation, which is a pre-existing issue from before the rename landed correctly. Neither of these is breaking anything in production.
+
+The bigger unfinished things are decisions, not bugs:
+
+Pass #004 (the beat sheet and the gather) is still a draft. The sidebar tab still says "Handoff" instead of "Gather." That rename is written and ready, but it's waiting on operator questions at the bottom of the pass document — questions that only you can answer.
+The Resident → Neighbour rename hasn't happened. It's the single highest-impact deferred word in the whole app — it would change the frame entirely for community-living facilities — and it's waiting on whether that word will hold politically in a real LTC facility.
+There's no mobile companion app yet. The web app installs as a PWA on a phone, but a native Expo app was always on the horizon.
+The family digest exists, but it's the only outbound surface. There's no printable shift report, no EHR export, nothing else that crosses the fence.
+What it was trying to become
+
+The care-home operating system for the human side of the work. Not the charts — the relationship layer. The shift handoff that doesn't lose anything. The brag wall that makes a PSW's best day visible to their manager. The one-tap "I've got this" that means one person owns a problem instead of three people stepping around it.
+
+The 96-bed pilot is the first real test of whether any of that matters to an actual facility. The market brief is what you'd hand a director before a meeting. Those two things landing together today is good timing.
+
+What would you like to look at first?
