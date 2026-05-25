@@ -124,6 +124,26 @@ export function LessonView({ module, lesson }: LessonViewProps) {
         </div>
       )}
 
+      {/* Hero image */}
+      {lesson.heroImage && (
+        <div
+          className="reveal"
+          style={{
+            borderRadius: 16,
+            overflow: "hidden",
+            marginBottom: 32,
+            boxShadow: "var(--shadow-card)",
+            border: `1px solid ${accent.border}`,
+          }}
+        >
+          <img
+            src={`${import.meta.env.BASE_URL}${lesson.heroImage}`}
+            alt=""
+            style={{ width: "100%", display: "block", objectFit: "cover", maxHeight: 340 }}
+          />
+        </div>
+      )}
+
       {/* Body content */}
       <div className="reveal prose-course">
         <ReactMarkdown

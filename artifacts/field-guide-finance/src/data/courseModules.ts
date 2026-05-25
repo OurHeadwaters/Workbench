@@ -2,6 +2,7 @@ export interface Lesson {
   id: string;
   title: string;
   videoUrl?: string;
+  heroImage?: string;
   body: string;
 }
 
@@ -379,6 +380,7 @@ Find your CFDC: [Northwestern Ontario CFDCs](https://www.communityfuturesontario
       {
         id: "m6-l1",
         title: "Why Plumbing, Not Banking",
+        heroImage: "channel-every-drop.png",
         body: `## Why Plumbing, Not Banking
 
 A bank account is a pool. Money goes in, money comes out, and somewhere in between you lose track of where it went. The pool has a balance, but the balance doesn't tell you anything about purpose. That $4,200 — is it for rent? Groceries? The equipment you need to replace before spring? The pool doesn't know.
@@ -625,6 +627,7 @@ Bobbie's income doesn't arrive on the 15th and 30th. It arrives when a market da
       {
         id: "m6-l5",
         title: "The Water Wheel: Drip Harvester",
+        heroImage: "drip-harvester-hero.png",
         body: `## The Water Wheel: Drip Harvester
 
 When water sits in a bucket, it's just sitting. When it sits at the top of a mill race, it's potential energy waiting to turn a wheel.
