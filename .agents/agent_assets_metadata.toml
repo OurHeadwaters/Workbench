@@ -155,3 +155,9 @@ id = "gwQAn6vMD3OReXipI6ID9"
 uri = "file://.local/tasks/807-numbers-prompt.md"
 type = "text"
 title = "Prompt for 807 Project Agent — Pull Real Numbers"
+
+[[outputs]]
+id = "d0uCY-DRag7tDEmp3fxdm"
+uri = "file://HEADWATERS_CONTEXT.md"
+type = "text"
+title = "Headwaters Project Context File"
