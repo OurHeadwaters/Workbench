@@ -25,32 +25,58 @@ function StepDots({ current }: { current: number }) {
 
 function ChoiceScreen({ onTakeOnboarding, onSkip }: { onTakeOnboarding: () => void; onSkip: () => void }) {
   return (
-    <div className="flex flex-col items-center text-center gap-6 py-8">
-      <div className="w-16 h-16 rounded-full bg-[#8A6A1A] flex items-center justify-center shadow-md">
-        <Star size={28} className="text-[#FEF3C7]" fill="#FEF3C7" />
+    <div className="flex flex-col items-center text-center gap-7 py-8">
+      <div
+        className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg"
+        style={{ backgroundColor: "hsl(38 85% 52%)", boxShadow: "0 0 32px rgba(245,162,35,0.35)" }}
+      >
+        <Star size={28} style={{ color: "#090503" }} fill="#090503" />
       </div>
       <div>
-        <h1 className="text-3xl mb-3">Welcome to North Star</h1>
-        <p className="text-[#44403C] text-base leading-relaxed max-w-xs">
-          Take a quick tour to set things up, or jump straight in and explore on your own.
+        <h1
+          className="text-4xl mb-3 leading-tight"
+          style={{ fontFamily: "Fraunces, serif", fontWeight: 800, color: "#ede8d5" }}
+        >
+          North Star
+        </h1>
+        <p className="text-base leading-relaxed max-w-xs" style={{ color: "rgba(237,232,213,0.60)" }}>
+          Take a quick tour to set things up, or jump straight in.
         </p>
       </div>
+
+      <div
+        className="text-[10px] font-black tracking-widest uppercase px-4 py-2 rounded-full"
+        style={{ color: "rgba(237,232,213,0.35)", border: "1px solid rgba(237,232,213,0.12)" }}
+      >
+        Different caps · Same eternal river
+      </div>
+
       <div className="w-full max-w-sm flex flex-col gap-3">
         <button
           onClick={onTakeOnboarding}
-          className="flex items-center justify-center gap-2 bg-[#1C1917] text-white px-6 py-4 rounded-2xl text-base font-medium min-h-[56px] hover:bg-[#2C2520] transition-colors shadow-sm"
+          className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl text-base font-semibold min-h-[56px] transition-all"
+          style={{
+            backgroundColor: "hsl(38 85% 52%)",
+            color: "#090503",
+            boxShadow: "0 0 24px rgba(245,162,35,0.25)",
+          }}
         >
           Take the onboarding <ArrowRight size={18} />
         </button>
         <button
           onClick={onSkip}
-          className="flex items-center justify-center gap-2 border border-[#D6D0C7] bg-white/70 text-[#1C1917] px-6 py-4 rounded-2xl text-base font-medium min-h-[56px] hover:bg-white transition-colors shadow-sm"
+          className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl text-base font-medium min-h-[56px] transition-all"
+          style={{
+            backgroundColor: "rgba(237,232,213,0.07)",
+            color: "#ede8d5",
+            border: "1px solid rgba(237,232,213,0.14)",
+          }}
         >
           Skip to North Star
         </button>
       </div>
-      <p className="text-xs text-[#78716C] max-w-xs">
-        The 5-step setup walks through constellations, contracts, and your north star statement. You can also skip and start using the app now.
+      <p className="text-xs max-w-xs" style={{ color: "rgba(237,232,213,0.28)" }}>
+        The 5-step setup walks through constellations, contracts, and your north star statement. You can skip and start now.
       </p>
     </div>
   );
@@ -501,8 +527,26 @@ export function OnboardingPage() {
 
   if (showChoice) {
     return (
-      <div className="min-h-dvh flex flex-col" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
-        <div className="flex-1 px-5 py-8 max-w-lg mx-auto w-full flex flex-col justify-center">
+      <div
+        className="min-h-dvh flex flex-col relative overflow-hidden"
+        style={{ backgroundColor: "#090503" }}
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${BASE}/ships-hero.png)`,
+            opacity: 0.35,
+            backgroundSize: "cover",
+            backgroundPosition: "center 40%",
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(180deg, rgba(9,5,3,0.3) 0%, rgba(9,5,3,0.7) 60%, rgba(9,5,3,0.95) 100%)",
+          }}
+        />
+        <div className="relative z-10 flex-1 px-5 py-8 max-w-lg mx-auto w-full flex flex-col justify-center">
           <ChoiceScreen
             onTakeOnboarding={() => setShowChoice(false)}
             onSkip={skipOnboarding}
@@ -513,7 +557,7 @@ export function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-dvh flex flex-col" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
+    <div className="min-h-dvh flex flex-col" style={{ backgroundColor: "#090503" }}>
       <div className="flex-1 px-5 py-8 max-w-lg mx-auto w-full">
         <StepDots current={step} />
 

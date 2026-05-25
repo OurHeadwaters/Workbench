@@ -19,6 +19,10 @@ const MORE_ITEMS = [
   { path: "/settings",icon: Settings,  label: "Settings" },
 ];
 
+const NAV_BG   = "#0D0A06";
+const INACTIVE = "rgba(237,232,213,0.38)";
+const HOVER    = "rgba(237,232,213,0.60)";
+
 export function NavBar() {
   const [location] = useLocation();
   const [moreOpen, setMoreOpen] = useState(false);
@@ -30,8 +34,12 @@ export function NavBar() {
   return (
     <>
       <nav
-        className="fixed bottom-0 left-0 right-0 z-50 safe-area-bottom border-t border-[#E7E5E4] shadow-[0_-2px_12px_rgba(28,25,23,0.08)]"
-        style={{ backgroundColor: "#FFFFFF" }}
+        className="fixed bottom-0 left-0 right-0 z-50 safe-area-bottom"
+        style={{
+          backgroundColor: NAV_BG,
+          borderTop: "1px solid rgba(237,232,213,0.08)",
+          boxShadow: "0 -4px 24px rgba(0,0,0,0.6)",
+        }}
       >
         <div className="flex items-stretch max-w-lg mx-auto">
           {PRIMARY.map(({ path, icon: Icon, label, match }) => {
@@ -41,47 +49,43 @@ export function NavBar() {
                 key={path}
                 href={path}
                 className={cn(
-                  "flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[60px] text-xs transition-all duration-200 relative",
-                  active ? "font-semibold" : "text-[#78716C] hover:text-[#44403C]"
+                  "flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[60px] text-xs transition-all duration-200 relative"
                 )}
+                style={{ color: active ? zoneColor : INACTIVE }}
               >
                 {active && (
                   <span
                     className="absolute inset-x-2 top-1.5 bottom-1.5 rounded-xl -z-10 transition-colors"
-                    style={{ backgroundColor: `${zoneColor}1A` }}
+                    style={{ backgroundColor: `${zoneColor}18` }}
                     aria-hidden
                   />
                 )}
                 <Icon
                   size={active ? 22 : 20}
                   strokeWidth={active ? 2.2 : 1.6}
-                  style={active ? { color: zoneColor } : undefined}
                 />
-                <span style={active ? { color: zoneColor } : undefined}>{label}</span>
+                <span className={active ? "font-semibold" : ""}>{label}</span>
               </Link>
             );
           })}
           <button
             type="button"
             onClick={() => setMoreOpen(true)}
-            className={cn(
-              "flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[60px] text-xs transition-all duration-200 relative",
-              moreActive ? "font-semibold" : "text-[#78716C] hover:text-[#44403C]"
-            )}
+            className="flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[60px] text-xs transition-all duration-200 relative"
+            style={{ color: moreActive ? zoneColor : INACTIVE }}
           >
             {moreActive && (
               <span
                 className="absolute inset-x-2 top-1.5 bottom-1.5 rounded-xl -z-10"
-                style={{ backgroundColor: `${zoneColor}1A` }}
+                style={{ backgroundColor: `${zoneColor}18` }}
                 aria-hidden
               />
             )}
             <Grid3x3
               size={moreActive ? 22 : 20}
               strokeWidth={moreActive ? 2.2 : 1.6}
-              style={moreActive ? { color: zoneColor } : undefined}
             />
-            <span style={moreActive ? { color: zoneColor } : undefined}>More</span>
+            <span className={moreActive ? "font-semibold" : ""}>More</span>
           </button>
         </div>
       </nav>
@@ -96,22 +100,25 @@ export function NavBar() {
 function MoreSheet({ onClose, zoneColor, location }: { onClose: () => void; zoneColor: string; location: string }) {
   return (
     <div
-      className="fixed inset-0 z-[60] flex flex-col justify-end bg-black/40"
+      className="fixed inset-0 z-[60] flex flex-col justify-end"
+      style={{ backgroundColor: "rgba(0,0,0,0.65)" }}
       onClick={onClose}
       onKeyDown={(e) => e.key === "Escape" && onClose()}
     >
       <div
-        className="bg-white rounded-t-2xl max-w-lg mx-auto w-full shadow-xl pb-8"
+        className="rounded-t-2xl max-w-lg mx-auto w-full shadow-2xl pb-8"
+        style={{ backgroundColor: "#130F08", border: "1px solid rgba(237,232,213,0.08)" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-center pt-2.5 pb-1">
-          <span className="block h-1.5 w-12 rounded-full bg-[#E7E5E4]" />
+          <span className="block h-1.5 w-12 rounded-full" style={{ backgroundColor: "rgba(237,232,213,0.15)" }} />
         </div>
         <div className="flex items-center justify-between px-5 py-2">
-          <h3 className="text-base font-medium" style={{ fontFamily: "Fraunces, serif" }}>More</h3>
+          <h3 className="text-base font-semibold" style={{ fontFamily: "Fraunces, serif", color: "#ede8d5" }}>More</h3>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-[#F5F5F0] min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="p-2 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center"
+            style={{ color: INACTIVE }}
             aria-label="Close"
           >
             <X size={18} />
@@ -125,18 +132,18 @@ function MoreSheet({ onClose, zoneColor, location }: { onClose: () => void; zone
                 key={path}
                 href={path}
                 onClick={onClose}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-3 rounded-xl min-h-[56px] transition-colors",
-                  active ? "bg-[#F5F0E8]" : "hover:bg-[#FAFAF9]"
-                )}
+                className="flex items-center gap-3 px-3 py-3 rounded-xl min-h-[56px] transition-colors"
+                style={{
+                  backgroundColor: active ? `${zoneColor}18` : "transparent",
+                }}
               >
                 <span
-                  className="w-9 h-9 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: active ? `${zoneColor}1A` : "#F5F5F0" }}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                  style={{ backgroundColor: active ? `${zoneColor}28` : "rgba(237,232,213,0.07)" }}
                 >
-                  <Icon size={18} style={{ color: active ? zoneColor : "#44403C" }} />
+                  <Icon size={18} style={{ color: active ? zoneColor : HOVER }} />
                 </span>
-                <span className="text-base text-[#1C1917]">{label}</span>
+                <span className="text-base" style={{ color: active ? zoneColor : "#ede8d5" }}>{label}</span>
               </Link>
             );
           })}

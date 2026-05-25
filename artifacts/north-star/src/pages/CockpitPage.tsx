@@ -7,12 +7,12 @@ import {
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const T = {
-  bg:     "#1f3d2e",
-  paper:  "#f4ede0",
-  text:   "#2a2520",
-  muted:  "#7a7a6e",
-  rule:   "rgba(200,191,167,0.35)",
-  accent: "#b85a3e",
+  bg:     "#090503",
+  paper:  "rgba(255,255,255,0.05)",
+  text:   "#ede8d5",
+  muted:  "rgba(237,232,213,0.45)",
+  rule:   "rgba(237,232,213,0.08)",
+  accent: "hsl(38 85% 52%)",
 } as const;
 
 const SEC = {
@@ -206,10 +206,10 @@ export function CockpitPage() {
   return (
     <div className="min-h-dvh pb-28" style={{ backgroundColor: T.bg }}>
       <div className="px-4 pt-6 pb-4 max-w-lg mx-auto">
-        <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 22, fontWeight: 700, color: T.paper, margin: 0, lineHeight: 1.2 }}>
+        <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 22, fontWeight: 800, color: T.text, margin: 0, lineHeight: 1.2 }}>
           Cockpit
         </h1>
-        <p style={{ fontSize: 12, color: "rgba(244,237,224,0.6)", marginTop: 4 }}>
+        <p style={{ fontSize: 12, color: T.muted, marginTop: 4 }}>
           Every tool. One place. Z2 layer — client and business work.
         </p>
 
@@ -223,9 +223,9 @@ export function CockpitPage() {
               width: "100%",
               padding: "10px 14px",
               borderRadius: 10,
-              border: "1px solid rgba(200,191,167,0.3)",
-              backgroundColor: "rgba(244,237,224,0.1)",
-              color: T.paper,
+              border: `1px solid ${T.rule}`,
+              backgroundColor: T.paper,
+              color: T.text,
               fontSize: 14,
               outline: "none",
             }}
@@ -235,7 +235,7 @@ export function CockpitPage() {
 
       <div className="px-4 pb-8 max-w-lg mx-auto space-y-3">
         {visible.length === 0 ? (
-          <p style={{ color: "rgba(244,237,224,0.5)", fontSize: 13, textAlign: "center", paddingTop: 32 }}>
+          <p style={{ color: T.muted, fontSize: 13, textAlign: "center", paddingTop: 32 }}>
             No tools match "{query}"
           </p>
         ) : (

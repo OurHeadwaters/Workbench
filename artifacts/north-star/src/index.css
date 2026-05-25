@@ -2,34 +2,34 @@
 @import "tw-animate-css";
 
 @theme inline {
-  --color-ink: #1C1917;
-  --color-ink-light: #44403C;
-  --color-ink-muted: #78716C;
-  --color-paper: #FAFAF9;
-  --color-paper-warm: #F5F0E8;
-  --color-border: #E7E5E4;
-  --color-amber-soft: #FEF3C7;
-  --color-amber-border: #FCD34D;
-  --color-amber-text: #92400E;
+  --color-ink: #ede8d5;
+  --color-ink-light: rgba(237,232,213,0.65);
+  --color-ink-muted: rgba(237,232,213,0.38);
+  --color-paper: #0D0A06;
+  --color-paper-warm: #120D07;
+  --color-border: rgba(237,232,213,0.10);
+  --color-amber-soft: rgba(245,162,35,0.14);
+  --color-amber-border: rgba(245,162,35,0.38);
+  --color-amber-text: hsl(38 85% 52%);
 
-  --color-z0: #8A6A1A;
-  --color-z0-light: #FDF6E3;
-  --color-z1: #4F6E5C;
-  --color-z1-light: #D1E7DB;
-  --color-z2: #3B5998;
-  --color-z2-light: #DBEAFE;
-  --color-z3: #7C4E8A;
-  --color-z3-light: #EDE9FE;
-  --color-z4: #B45309;
-  --color-z4-light: #FEF3C7;
-  --color-z5: #4A6272;
-  --color-z5-light: #E8EDF0;
+  --color-z0: #C8933A;
+  --color-z0-light: rgba(200,147,58,0.15);
+  --color-z1: #5E8F72;
+  --color-z1-light: rgba(94,143,114,0.15);
+  --color-z2: #5B8FD0;
+  --color-z2-light: rgba(91,143,208,0.15);
+  --color-z3: #A07BC0;
+  --color-z3-light: rgba(160,123,192,0.15);
+  --color-z4: #D96C3A;
+  --color-z4-light: rgba(217,108,58,0.15);
+  --color-z5: #7A9BAA;
+  --color-z5-light: rgba(122,155,170,0.15);
 }
 
 :root {
-  --background: #FAFAF9;
-  --foreground: #1C1917;
-  --border: #E7E5E4;
+  --background: #090503;
+  --foreground: #ede8d5;
+  --border: rgba(237,232,213,0.10);
 }
 
 * {
@@ -44,20 +44,86 @@ html {
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #FAFAF9;
-  color: #1C1917;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  background-color: #090503;
+  color: #ede8d5;
   min-height: 100dvh;
   overscroll-behavior: none;
   font-size: 16px;
   line-height: 1.5;
 }
 
-/* Mobile density pass — Fraunces drops to weight 500 on small screens so headings don't feel shouty. */
+/* ── Star field ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 8%  12%, rgba(237,232,213,0.70) 0%, transparent 100%),
+    radial-gradient(1px 1px at 24%  6%, rgba(237,232,213,0.45) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 37% 22%, rgba(237,232,213,0.55) 0%, transparent 100%),
+    radial-gradient(1px 1px at 53%  8%, rgba(237,232,213,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 67% 18%, rgba(237,232,213,0.60) 0%, transparent 100%),
+    radial-gradient(1px 1px at 81%  5%, rgba(237,232,213,0.40) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 92% 14%, rgba(237,232,213,0.58) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 35%, rgba(237,232,213,0.28) 0%, transparent 100%),
+    radial-gradient(1px 1px at 44% 40%, rgba(237,232,213,0.22) 0%, transparent 100%),
+    radial-gradient(1px 1px at 73% 32%, rgba(237,232,213,0.38) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 28%, rgba(237,232,213,0.30) 0%, transparent 100%),
+    radial-gradient(1px 1px at  5% 55%, rgba(237,232,213,0.18) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 31% 62%, rgba(237,232,213,0.32) 0%, transparent 100%),
+    radial-gradient(1px 1px at 58% 48%, rgba(237,232,213,0.22) 0%, transparent 100%),
+    radial-gradient(1px 1px at 76% 58%, rgba(237,232,213,0.28) 0%, transparent 100%),
+    radial-gradient(1px 1px at 19% 78%, rgba(237,232,213,0.18) 0%, transparent 100%),
+    radial-gradient(1px 1px at 47% 85%, rgba(237,232,213,0.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 63% 72%, rgba(237,232,213,0.20) 0%, transparent 100%),
+    radial-gradient(1px 1px at 95% 68%, rgba(237,232,213,0.24) 0%, transparent 100%),
+    radial-gradient(1px 1px at 11% 92%, rgba(237,232,213,0.16) 0%, transparent 100%),
+    radial-gradient(1px 1px at 82% 88%, rgba(237,232,213,0.14) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Aurora shimmer ── */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: -10%;
+  right: -10%;
+  height: 180px;
+  background: linear-gradient(
+    180deg,
+    rgba(16,185,129,0.14) 0%,
+    rgba(16,185,129,0.06) 55%,
+    transparent 100%
+  );
+  animation: aurora-drift 12s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes aurora-drift {
+  0%   { opacity: 0.6; transform: scaleX(1)    translateY(0px); }
+  40%  { opacity: 1;   transform: scaleX(1.06) translateY(10px); }
+  100% { opacity: 0.4; transform: scaleX(0.96) translateY(-6px); }
+}
+
+/* Headings: Fraunces heavy */
+h1, h2, h3, h4 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800;
+}
+
 @media (max-width: 640px) {
   h1, h2, h3, h4 {
-    font-weight: 500;
+    font-weight: 700;
   }
+}
+
+button, a, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
 }
 
 /* Hide scrollbars on horizontal carousels */
@@ -68,33 +134,13 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
-}
-
-h1, h2, h3, h4 {
-  font-family: 'Fraunces', Georgia, serif;
-  font-weight: 400;
-}
-
-button, a, [role="button"] {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-.zone-z0 { --zone-color: #8A6A1A; --zone-light: #FDF6E3; }
-.zone-z1 { --zone-color: #4F6E5C; --zone-light: #D1E7DB; }
-.zone-z2 { --zone-color: #3B5998; --zone-light: #DBEAFE; }
-.zone-z3 { --zone-color: #7C4E8A; --zone-light: #EDE9FE; }
-.zone-z4 { --zone-color: #B45309; --zone-light: #FEF3C7; }
-.zone-z5 { --zone-color: #4A6272; --zone-light: #E8EDF0; }
+/* ── Zone classes ── */
+.zone-z0 { --zone-color: #C8933A; --zone-light: rgba(200,147,58,0.15); }
+.zone-z1 { --zone-color: #5E8F72; --zone-light: rgba(94,143,114,0.15); }
+.zone-z2 { --zone-color: #5B8FD0; --zone-light: rgba(91,143,208,0.15); }
+.zone-z3 { --zone-color: #A07BC0; --zone-light: rgba(160,123,192,0.15); }
+.zone-z4 { --zone-color: #D96C3A; --zone-light: rgba(217,108,58,0.15); }
+.zone-z5 { --zone-color: #7A9BAA; --zone-light: rgba(122,155,170,0.15); }
 
 @keyframes bar-grow {
   from { width: 0%; }
@@ -112,14 +158,8 @@ button, a, [role="button"] {
 }
 
 @keyframes card-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .constellation-card {
