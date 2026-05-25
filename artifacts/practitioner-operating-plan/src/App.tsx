@@ -33,6 +33,7 @@ import EightOhSevenPage from "./pages/EightOhSevenPage";
 import NANPage from "./pages/NANPage";
 import { HeadwatersWindowPage } from "./pages/HeadwatersWindowPage";
 import EthosPage from "./pages/EthosPage";
+import HomeBlueprint from "./pages/HomeBlueprint";
 import { GordWidget } from "@workspace/gord-widget";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
@@ -76,6 +77,7 @@ export default function App() {
       <Route path={`${BASE}/nan`} component={NANPage} />
       <Route path={`${BASE}/window`} component={HeadwatersWindowPage} />
       <Route path={`${BASE}/ethos`} component={EthosPage} />
+      <Route path={`${BASE}/blueprint`} component={HomeBlueprint} />
       <Route path={`${BASE}/plan`} component={PlanYear} />
       <Route path={`${BASE}/plan/today`} component={PlanToday} />
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />
