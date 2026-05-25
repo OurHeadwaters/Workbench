@@ -65,16 +65,38 @@ const FOUNDATIONAL_DOCS: FoundationalDoc[] = [
       "The full operating system for Headwaters community economy work. The compact defines the decision filter that governs every commitment, contract, and institutional move — the rules the community agrees to hold itself to before any external relationship is formed.",
     keyPoints: [
       {
-        label: "The operating rule",
+        label: "What the community is protecting",
         detail:
-          "The compact is the container every tool and artifact lives inside. It defines what the community is protecting, what it is building toward, and what it will not trade away.",
+          "The compact names the non-negotiables up front: land tenure, decision-making authority, the practitioner network, and the internal circulation of value. These four things are not on the table in any negotiation. If a proposed deal touches any of them, the compact requires an explicit community conversation before talks continue.",
       },
       {
-        label: "Decision filter",
+        label: "What the community will not trade",
         detail:
-          "Every significant decision is run through the compact before it moves. If a proposed action cannot be located inside the compact's frame, the community pauses before proceeding.",
+          "Ownership of watershed assets, control over zone assignments, and the right to name the cost basis are held inside the community permanently. They cannot be assigned to an external funder, partner, or government body — not as collateral, not as a condition of a grant, not as a governance seat on a board the community does not control.",
+      },
+      {
+        label: "What triggers a pause",
+        detail:
+          "Three conditions automatically suspend forward motion until the compact is re-consulted: (1) a proposed commitment that would obligate a future community council, (2) any inbound capital that carries a conversion the community has not yet named, and (3) any zone-model change that would shrink the Inner Zone without a full community decision. A pause is not a veto — it is a required stop.",
+      },
+      {
+        label: "Zone model as operating architecture",
+        detail:
+          "The compact uses the zone model to locate every decision: Inner Zone (what we own and control), Middle Zone (what we cooperate on with allies), Outer Zone (what we observe and engage without depending on). A decision that moves something from the Inner Zone outward requires the highest level of consent. Movement inward is always welcome.",
+      },
+      {
+        label: "Consent before commitment",
+        detail:
+          "No practitioner, institution, or working group signs on behalf of the watershed. Every external commitment is ratified by the community body the compact recognises as the decision authority for that domain. If that body has not yet been named, the compact requires it to be constituted before the commitment can proceed.",
+      },
+      {
+        label: "Renewal and re-anchoring",
+        detail:
+          "The compact is not a founding document that gets filed and forgotten. It is re-read at the start of each seasonal planning cycle and re-anchored whenever the community crosses a capacity threshold — a new institution, a new practitioner cohort, or a significant change in the income base. The compact grows with the community or it becomes a relic.",
       },
     ],
+    closingRule:
+      "The compact does not ask whether an opportunity is good. It asks whether the community can take it without losing what it came here to protect.",
   },
   {
     id: "capital-gate",
