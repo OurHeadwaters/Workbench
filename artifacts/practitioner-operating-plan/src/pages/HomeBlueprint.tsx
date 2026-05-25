@@ -234,6 +234,24 @@ export default function HomeBlueprint() {
           </text>
         </svg>
 
+        {/* ── PRINT LINK top-right ────────────────────────────────────── */}
+        <a
+          href="blueprint/print"
+          style={{
+            position: "absolute", top: 12, right: 14,
+            fontSize: 10, fontFamily: "Inter, sans-serif",
+            fontWeight: 700, letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.3)",
+            textDecoration: "none",
+            padding: "4px 8px",
+            border: "1px solid rgba(255,255,255,0.12)",
+            borderRadius: 4,
+          }}
+        >
+          ⎙ Print
+        </a>
+
         {/* ── LAYER LABEL top-left ────────────────────────────────────── */}
         {!active && (
           <div style={{ position: "absolute", top: 12, left: 14, pointerEvents: "none" }}>
