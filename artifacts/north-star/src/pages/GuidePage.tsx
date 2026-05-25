@@ -137,16 +137,38 @@ const FOUNDATIONAL_DOCS: FoundationalDoc[] = [
       "The transformation trail that brings practitioners to the machine. The stomping path is the sequence of moves that takes a community from extractive dependence to operating the money machine — the ordered process of reclamation and founding that precedes a machine that can run without watching.",
     keyPoints: [
       {
-        label: "The sequence",
+        label: "Stage 1 — The Doom Crowd",
         detail:
-          "The path names the stages a practitioner moves through — not a linear checklist, but a trail with known landmarks. Knowing which landmark you are at determines which tools belong in your hands.",
+          "The diagnosis is correct: extraction is real, the central banking system does extract, the dependency systems are engineered. The prescription is broken: fear is the engine, and the exit prescribed is a bunker, not a community. The practitioner at this landmark has named the enemy but has no watershed. Ceiling: awareness without agency. What belongs in your hands here — the bridge language that names the gap: the enemy is real, and the exit is not a bunker.",
       },
       {
-        label: "Founding vs. reclamation",
+        label: "Stage 2 — The Ron Paul Pivot",
         detail:
-          "The materials are the same. The order of operations is not. The stomping path reads the site before prescribing the mix.",
+          "Same diagnosis as Stage 1, different prescription: opt out, own hard assets, build sovereignty at the household level. The traveller arrives carrying hard-money instincts, distrust of outside institutions, preparedness discipline, and a desire to hand something forward. Ceiling: Ron Paul stops at the household. His framework has no mechanism for community-scale wealth retention or collective ownership. What belongs in your hands here — the bridge that names the next rung: where does the surplus go, and who owns the community it flows through?",
+      },
+      {
+        label: "Parallel Trail — The Ramsey On-Ramp",
+        detail:
+          "Dave Ramsey disciples arrive from a different starting point — consumer debt, not political fear. Baby Steps 1–3 (emergency fund, debt snowball, full reserve) map almost perfectly to Headwaters cost-basis discipline. Both say: plug the household leak before you build anything. Ceiling: Baby Step 4 sends surplus into external capital markets — wealth leaving the watershed. What belongs in your hands here — the bridge that names Ramsey's floor as the floor, not the ceiling, and asks what happens to the surplus after the household is whole.",
+      },
+      {
+        label: "Crypto Corner",
+        detail:
+          "The named waypoint where Stage 2 sound-money instinct meets Stage 3 ownership architecture. The speculative moonshot framing is replaced by the sovereignty framing: cryptographic key custody is a Zone 0 practice. RLUSD and community-scale stablecoin architecture enter here as the Reservoir layer — the interface between household hard-money discipline and the community's shared economic infrastructure. What belongs in your hands here — practical key custody discipline and the connection between sound money and the community economy.",
+      },
+      {
+        label: "Stage 3 — The Headwaters Kitchen Table",
+        detail:
+          "Household sovereignty principles scaled outward to community institutions, collective ownership, co-ops, local economies, and seven-generation stewardship. The traveller has a household that is not leaking, understands the extraction mechanics, wants to hand something forward, and has a community to build with — not just a household to protect. What belongs in your hands here — the tools, models, and institutions: the practitioner's operating plan, the cost-basis discipline, the reinvestment buckets, the watershed compact, and the community economy architecture.",
+      },
+      {
+        label: "The Codetry Ship — Where Builders Manifest",
+        detail:
+          "The Ship is the recognition surface for practitioners who have walked the stomping path and are now building. It does not explain the extraction or the Ron Paul pivot — it assumes that ground has been covered. It starts at the kitchen table and asks: what do we build next? What belongs in your hands here — crew manifest, co-builder relationships, and the active construction of the institutions the trail was always pointing toward.",
       },
     ],
+    closingRule:
+      "Knowing which landmark you are standing at determines which tools belong in your hands. The path reads the site before prescribing the mix.",
   },
 ];
 
