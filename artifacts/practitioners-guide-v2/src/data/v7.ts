@@ -33,12 +33,13 @@ import {
  *   right entry rate for a proven first engagement.
  *
  * Structure.
- *   Phase 1 — Trial / Planning (8 weeks, 40 hr/wk, Bobbie solo):
- *     $25,000 flat fee. Intentionally below Bobbie's cost at full hours
- *     (8 wk × 40 hr × $105 = $33,600 draw vs $22,500 post-tithe revenue).
- *     The $11,100 gap is the entry price — a bounded, below-cost trial is the
- *     deliberate opening posture. Hardware (computer + server, ~$3k–$4k) is
- *     deferred until an ongoing commitment is confirmed.
+ *   Phase 1 — Trial / Planning (6–8 weeks, 40 hr/wk, Bobbie solo):
+ *     $28,000 flat fee. Trial closes when all 4 acceptance criteria are
+ *     delivered — as early as week 6 (break-even after tithe: 6 × 40 × $105 =
+ *     $25,200 = post-tithe revenue) or at the latest week 8 ($8,400 gap).
+ *     The intentional gap reflects the 6–8 week range: zero at minimum duration,
+ *     $8,400 at maximum. Hardware (computer + server, ~$3k–$4k) deferred until
+ *     an ongoing commitment is confirmed.
  *
  *   Phase 2 — Full engagement (12 months, Jun 2026 – May 2027):
  *     Bobbie + Tyler, 160 hr/mo each. $39,200/mo total billed to client.
@@ -55,8 +56,9 @@ import {
  *   Total:                            $1,292/mo
  *
  * The numbers (computed below):
- *   Phase 1: $25,000 flat fee.
- *            Bobbie cost at full hours: 8 × 40 × $105 = $33,600 → $8,600 below the flat fee (intentional entry gap)
+ *   Phase 1: $28,000 flat fee (6–8 weeks).
+ *            At 6 wks: Bobbie cost = 6 × 40 × $105 = $25,200 = post-tithe revenue → break-even.
+ *            At 8 wks: Bobbie cost = 8 × 40 × $105 = $33,600 → −$8,400 vs post-tithe (intentional entry gap).
  *
  *   Phase 2 monthly (160 hr/mo each):
  *     Bobbie billed:  160 × $175 = $28,000
@@ -121,15 +123,16 @@ export const v7Phase2Surplus  = v7MonthlySurplus * v7TermMonths;  // 118,896  (9
 
 // ── Phase 1 ───────────────────────────────────────────────────────────────────
 
-const v7Phase1Flat      = 25000;
-const v7Phase1Tithe     = v7Phase1Flat * 0.10; // 2,500
-const v7Phase1PostTithe = v7Phase1Flat - v7Phase1Tithe; // 22,500
-// Bobbie cost at full hours: 8 wk × 40 hr × $105 = $33,600 → -$11,100 vs post-tithe
+const v7Phase1Flat      = 28000;
+const v7Phase1Tithe     = v7Phase1Flat * 0.10; // 2,800
+const v7Phase1PostTithe = v7Phase1Flat - v7Phase1Tithe; // 25,200
+// Bobbie cost at 6 wks: 6 × 40 × $105 = $25,200 = post-tithe → break-even (minimum duration)
+// Bobbie cost at 8 wks: 8 × 40 × $105 = $33,600 → −$8,400 vs post-tithe (maximum gap)
 
 // ── Full project ──────────────────────────────────────────────────────────────
 
-const v7TotalRevenue = v7Phase1Flat + v7Phase2Revenue; // 495,400
-const v7TotalTithe   = v7Phase1Tithe + v7Phase2Tithe;  // 22,660  (2,500 + 20,160)
+const v7TotalRevenue = v7Phase1Flat + v7Phase2Revenue; // 498,400
+const v7TotalTithe   = v7Phase1Tithe + v7Phase2Tithe;  // 22,960  (2,800 + 20,160)
 
 // ── Renegotiation triggers ────────────────────────────────────────────────────
 
@@ -250,7 +253,7 @@ const v7Agency = {
   ),
 
   totals18mo: {
-    revenue: v7Phase2Revenue,    // 470,400 (Phase 2 only — Phase 1 $25k shown separately)
+    revenue: v7Phase2Revenue,    // 470,400 (Phase 2 only — Phase 1 $28k shown separately)
     tithe: v7Phase2Tithe,        // 20,160  (1,680/mo × 12 — tithe on practitioner draw, not revenue)
     payroll: v7Phase2Bobbie,     // 201,600 (Bobbie gross draw; net of tithe = 181,440)
     overheads: v7Phase2Overhead + v7Phase2Tyler, // 134,400 Tyler + 15,504 OH = 149,904
@@ -261,7 +264,7 @@ const v7Agency = {
     reserve: 0,
     innovation: 0,
     tag: tbd(
-      "Phase 2 × 12 months. Revenue $470,400 · Bobbie draw $201,600 (tithe $20,160 personal) · Tyler sub $134,400 · overheads $15,504 · business surplus $118,896. Tithe is first claim on practitioner draw, not a business deduction. Waterfall allocation TBD. Phase 1 ($25,000 flat trial) not included here.",
+      "Phase 2 × 12 months. Revenue $470,400 · Bobbie draw $201,600 (tithe $20,160 personal) · Tyler sub $134,400 · overheads $15,504 · business surplus $118,896. Tithe is first claim on practitioner draw, not a business deduction. Waterfall allocation TBD. Phase 1 ($28,000 flat trial) not included here.",
     ),
   },
 
@@ -282,7 +285,7 @@ const v7Personal = {
   perYear: v7Phase2Bobbie + SHARED_BRIGHTSIDE.surplusDeployment.ownerTake, // 232,600 (12-mo window)
   capitalRecovery: 0,
   tag: tbd(
-    "Bobbie draw $201,600 (Phase 2 × 12 mo) + Brightside owner take $31,000. Capital recovery not carried in V7 engagement waterfall — handled separately. Phase 1 trial revenue ($25k) not counted here.",
+    "Bobbie draw $201,600 (Phase 2 × 12 mo) + Brightside owner take $31,000. Capital recovery not carried in V7 engagement waterfall — handled separately. Phase 1 trial revenue ($28k) not counted here.",
   ),
 };
 
@@ -293,7 +296,7 @@ export const SCENARIO_V7: Scenario = {
   tagline:
     "Rate scenario applied to Northern Band · $175/hr lead · $70/hr support · trial-first · contract not yet signed",
   description:
-    "Northern Band rate scenario. Rates are confirmed: $175/hr lead (Bobbie) · $70/hr support (Tyler, RFF sub). The two-person lean structure is the working model. Monthly billing totals and surplus projections are scenario outputs that depend on hours agreed — they become real when a contract is signed. Phase 1: bounded 8-week trial at a flat $25,000 — intentionally below full cost as an entry posture. Phase 2 waterfall TBD pending a signed contract.",
+    "Northern Band rate scenario. Rates are confirmed: $175/hr lead (Bobbie) · $70/hr support (Tyler, RFF sub). The two-person lean structure is the working model. Monthly billing totals and surplus projections are scenario outputs that depend on hours agreed — they become real when a contract is signed. Phase 1: bounded 6–8 week trial at a flat $28,000 — break-even at 6 weeks, intentionally below full cost at 8 weeks. Phase 2 waterfall TBD pending a signed contract.",
   accent: "#3A5F8A",
   accentSoft: "#DDE8F5",
   accentInk: "#1A2E44",
@@ -307,14 +310,17 @@ export const SCENARIO_V7: Scenario = {
 };
 
 export const V7_PHASE1 = {
-  flatFee: v7Phase1Flat,          // 25,000
-  tithe: v7Phase1Tithe,           // 2,500
-  postTithe: v7Phase1PostTithe,   // 22,500
-  bobbieCost: 33600,              // 8 wk × 40 hr × $105 — exceeds post-tithe by $11,100
-  netVsCost: -11100,              // intentional below-cost entry price
-  weeks: 8,
+  flatFee: v7Phase1Flat,          // 28,000
+  tithe: v7Phase1Tithe,           // 2,800
+  postTithe: v7Phase1PostTithe,   // 25,200
+  bobbieCostMin: 25200,           // 6 wk × 40 hr × $105 — break-even at minimum duration
+  bobbieCostMax: 33600,           // 8 wk × 40 hr × $105 — maximum gap
+  netVsCostMin: 0,                // gap at 6 weeks: break-even after tithe
+  netVsCostMax: -8400,            // gap at 8 weeks: intentional below-cost entry price
+  weeksMin: 6,
+  weeksMax: 8,
   hoursPerWeek: 40,
   description:
-    "8-week trial at $25,000 flat. Bobbie solo, 40 hr/wk. Intentionally below Bobbie's cost at full hours ($33,600 draw vs $22,500 post-tithe). The $11,100 gap is the deliberate entry price for a bounded, below-cost trial. Hardware (computer + server ~$3k–$4k) deferred until ongoing commitment confirmed.",
+    "6–8 week trial at $28,000 flat. Bobbie solo, 40 hr/wk. Trial closes when all 4 acceptance criteria are delivered — as early as week 6 (break-even: $25,200 post-tithe = $25,200 cost) or at most week 8 ($8,400 gap). Hardware (computer + server ~$3k–$4k) deferred until ongoing commitment confirmed.",
 };
 

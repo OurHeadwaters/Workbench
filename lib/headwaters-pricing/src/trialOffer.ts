@@ -1,7 +1,7 @@
 /**
  * Headwaters Step 0 paid-trial offer — single source of truth.
  *
- * The "$40,000 flat / eight weeks / solo practitioner / money back if we
+ * The "$28,000 flat / six to eight weeks / solo practitioner / money back if we
  * don't deliver" offer is stated identically in four places:
  *   - Deer Lake walkthrough Ask section          (Step 0 call-out)
  *   - Deer Lake walkthrough WhatHeadwatersDelivers (in/out-of-trial framing)
@@ -24,9 +24,10 @@
  * "fourteen (14) calendar days" ≡ TRIAL_REFUND_INVOCATION_DAYS, etc.).
  */
 
-export const TRIAL_FEE_USD = 25_000;
-export const TRIAL_INSTALLMENT_USD = 12_500;
+export const TRIAL_FEE_USD = 28_000;
+export const TRIAL_INSTALLMENT_USD = 14_000;
 export const TRIAL_DURATION_WEEKS = 8;
+export const TRIAL_DURATION_WEEKS_MIN = 6;
 export const TRIAL_REFUND_INVOCATION_DAYS = 14;
 export const TRIAL_REFUND_PAYMENT_DAYS = 30;
 export const TRIAL_REFUND_THRESHOLD_FAILED_CRITERIA = 2;
@@ -46,7 +47,7 @@ export const TRIAL_WEEK_8_REVIEW_DAY = TRIAL_DURATION_WEEKS * 7;
  * Verbatim block).
  */
 export const TRIAL_HEADLINE =
-  "$25,000 flat. Eight weeks. Solo practitioner. Money back if we don't deliver.";
+  "$28,000 flat. Six to eight weeks. Solo practitioner. Money back if we don't deliver.";
 
 /**
  * Section eyebrow used on the Step 0 call-out across all surfaces.
@@ -54,14 +55,14 @@ export const TRIAL_HEADLINE =
  * walkthrough, mono-uppercase on the slide, mono-uppercase on the
  * one-pager) but the literal text reads the same.
  */
-export const TRIAL_EYEBROW = "Step 0 · Try us for eight weeks";
+export const TRIAL_EYEBROW = "Step 0 · Try us for six to eight weeks";
 
 /**
  * Fee + installment description. Quoted verbatim under the "How much"
  * label on every surface.
  */
 export const TRIAL_FEE_LINE =
-  "$25,000 flat for eight weeks (8 weeks × $80/hr, practitioner solo), paid $12,500 on signing and $12,500 at the start of week four.";
+  "$28,000 flat for six to eight weeks (practitioner solo — trial closes when all four deliverables are in hand, as early as week six), paid $14,000 on signing and $14,000 at the start of week four.";
 
 /**
  * What the contractor and band do not have to commit during the trial.
@@ -75,7 +76,7 @@ export const TRIAL_NO_TEAM_LINE =
  * gates conversion to Step 1. Quoted under the "How long" label.
  */
 export const TRIAL_HOW_LONG_LINE =
-  "Eight weeks from signing. The week-eight review meeting is where the contractor judges the four acceptance criteria below and decides whether to convert into Step 1, invoke the refund, or convert to a service credit.";
+  "Six to eight weeks from signing — the trial closes at the review meeting when all four acceptance criteria are delivered, which can happen as early as week six or at the latest week eight. At that review the contractor decides whether to convert into Step 1, invoke the refund, or convert to a service credit.";
 
 /**
  * The four acceptance criteria the practitioner delivers solo in the
@@ -104,7 +105,7 @@ export const TRIAL_ACCEPTANCE_CRITERIA: readonly string[] = [
  * to the numeric constants above.
  */
 export const TRIAL_REFUND_MECHANIC =
-  "At the week-eight review meeting the contractor judges the four criteria above. If two or more are not met, Headwaters refunds the full $25,000 within thirty (30) calendar days. The contractor invokes the refund in writing within fourteen (14) calendar days of the review; an invocation made later than that is out of time and the trial is deemed accepted. Contractor's option: convert the $25,000 to a service credit of equal value applied against the first invoice of Stage 2 instead.";
+  "At the trial review meeting the contractor judges the four criteria above. If two or more are not met, Headwaters refunds the full $28,000 within thirty (30) calendar days. The contractor invokes the refund in writing within fourteen (14) calendar days of the review; an invocation made later than that is out of time and the trial is deemed accepted. Contractor's option: convert the $28,000 to a service credit of equal value applied against the first invoice of Stage 2 instead.";
 
 /**
  * The "Step 0 is the on-ramp" framing line that closes every Step 0
@@ -114,7 +115,7 @@ export const TRIAL_REFUND_MECHANIC =
  * partial) and the worst-case / best-case outcomes for the band.
  */
 export const TRIAL_FRAMING_LINE =
-  "Stage 1 is the on-ramp to Stage 2, not a replacement. The cold-chain pilot itself, the software build, and the staff training all sit inside Stage 2 ($42,000/month — Tyler subcontracted for distribution joins the Practitioner, IT/Support partial included), not the trial. Worst case for the band: eight weeks of paid solo work, four written deliverables in hand, full refund issued. Best case: at week eight Stage 2 converts on the same paper.";
+  "Stage 1 is the on-ramp to Stage 2, not a replacement. The cold-chain pilot itself, the software build, and the staff training all sit inside Stage 2 ($42,000/month — Tyler subcontracted for distribution joins the Practitioner, IT/Support partial included), not the trial. Worst case for the band: six to eight weeks of paid solo work, four written deliverables in hand, full refund issued. Best case: at the review meeting Stage 2 converts on the same paper.";
 
 /**
  * "What survives a refund" paragraph used in the legal §7 of the
@@ -123,7 +124,7 @@ export const TRIAL_FRAMING_LINE =
  * weeks even if the cash is returned.
  */
 export const TRIAL_WHAT_SURVIVES_REFUND =
-  "Whatever has been delivered to the band during the eight weeks (steering committee minutes, co-design plan, cold-chain pilot scope, year-one budget) stays with the band at no further charge. The refund is not contingent on returning, redacting, or unlearning any of those deliverables — the band keeps what was produced with the cash that was returned.";
+  "Whatever has been delivered to the band during the trial window (steering committee minutes, co-design plan, cold-chain pilot scope, year-one budget) stays with the band at no further charge. The refund is not contingent on returning, redacting, or unlearning any of those deliverables — the band keeps what was produced with the cash that was returned.";
 
 /**
  * "Conversion to Step 1" paragraph used in the legal §7. Names the
@@ -131,7 +132,7 @@ export const TRIAL_WHAT_SURVIVES_REFUND =
  * unambiguous.
  */
 export const TRIAL_CONVERSION_TO_STEP_1 =
-  "If the contractor accepts the trial deliverables at the week-eight review and elects to proceed, the trial closes and Stage 2 of the Deer Lake engagement opens on the same paper — $42,000/month (Tyler subcontracted for distribution joins the Practitioner; IT/Support partial included) as described in the Deer Lake Walkthrough. The $25,000 trial fee is not credited against the Stage 2 monthly fee; the trial bought planning and preparation, Stage 2 buys the build.";
+  "If the contractor accepts the trial deliverables at the final-week review and elects to proceed, the trial closes and Stage 2 of the Deer Lake engagement opens on the same paper — $42,000/month (Tyler subcontracted for distribution joins the Practitioner; IT/Support partial included) as described in the Deer Lake Walkthrough. The $28,000 trial fee is not credited against the Stage 2 monthly fee; the trial bought planning and preparation, Stage 2 buys the build.";
 
 /**
  * Convenience: the four labelled "How much / How long / What you get /
@@ -340,7 +341,7 @@ export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
     meetings:
       "Steering committee meeting #2 (first read of the co-design plan). Community input session #1 (open community meeting). Existing-store MOU draft review.",
     gatingDecision:
-      "Second $12,500 installment invoiced at the start of the week.",
+      "Second $14,000 installment invoiced at the start of the week.",
     acceptanceCriterionDelivered: null,
   },
   {
@@ -385,7 +386,7 @@ export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
     deliverables:
       "Year-one budget and cash plan handed to council in writing — Stage 2 at $42,000/month (Tyler subcontracted for distribution joins the Practitioner; IT/Support partial + overhead included), plus gas card and insurance at cost.",
     meetings:
-      "Council session for the budget hand-off. The week-eight review meeting with the contractor — fifty-six (56) calendar days from signing day — at which the contractor judges all four §7 acceptance criteria and elects: convert to Stage 2, invoke the refund (within fourteen (14) calendar days of this meeting), or convert the $25,000 to a service credit against the first Stage 2 invoice.",
+      "Council session for the budget hand-off. The trial review meeting with the contractor — at the latest fifty-six (56) calendar days from signing day, and as early as forty-two (42) days — at which the contractor judges all four §7 acceptance criteria and elects: convert to Stage 2, invoke the refund (within fourteen (14) calendar days of this meeting), or convert the $28,000 to a service credit against the first Stage 2 invoice.",
     gatingDecision:
       "Week-eight review decision. Refund-invocation deadline runs from this meeting; an invocation made later than fourteen (14) calendar days is out of time and the trial is deemed accepted.",
     acceptanceCriterionDelivered: 3,
@@ -461,10 +462,10 @@ export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
  * translate regression is caught.
  */
 export const TRIAL_HEADLINE_OJICREE =
-  "$40,000 wewenig. Nishwaaso-anama'e-giizhig. Niigaanibatood eta. Azhe-miinigewin gishpin gegoo gaa-debinasinog.";
+  "$28,000 wewenig. Ingodwaaswi-nishwaaso-anama'e-giizhig. Niigaanibatood eta. Azhe-miinigewin gishpin gegoo gaa-debinasinog.";
 
 export const TRIAL_FEE_LINE_OJICREE =
-  "$40,000 wewenig nishwaaso-anama'e-giizhigak onji, $20,000 gii-mazinaakidewin ozhibii'igewing miinawaa $20,000 niiwin-anama'e-giizhig maajitaag.";
+  "$28,000 wewenig ingodwaaswi-nishwaaso-anama'e-giizhigak onji, $14,000 gii-mazinaakidewin ozhibii'igewing miinawaa $14,000 niiwin-anama'e-giizhig maajitaag.";
 
 export const TRIAL_HOW_LONG_LINE_OJICREE =
   "Nishwaaso-anama'e-giizhig ozhibii'igewing onji. Nishwaaso-anama'e-giizhigak waabamigewi-mawanjiidiwining niigaanibatood obawaadagonan iniw newin ozhitoogaadeg waabandang, miinawaa onaakoniged ji-Step 1 izhaag, gemaa azhe-miinigewin ji-andawendaagwadowin, gemaa-go anokiitaadiwi-zhooniyaa ji-meshkwajiwaag.";

@@ -61,7 +61,7 @@ export const FOCUS_AREAS: FocusArea[] = [
       {
         action: "Prepare the one-page Northern Band council brief",
         detail:
-          "One page, no appendices. Header: what the trial is. Body: Phase 1 cost ($25k flat, 8 weeks, Bobbie solo), Phase 2 rates ($175/hr + Tyler at $70/hr), what the council can stop at any time, what the community keeps. Footer: contact and the ask (30-minute meeting or BCR date).",
+          "One page, no appendices. Header: what the trial is. Body: Phase 1 cost ($28k flat, 6–8 weeks, Bobbie solo), Phase 2 rates ($175/hr + Tyler at $70/hr), what the council can stop at any time, what the community keeps. Footer: contact and the ask (30-minute meeting or BCR date).",
         timeEstimate: "half day",
       },
       {
@@ -83,7 +83,7 @@ export const FOCUS_AREAS: FocusArea[] = [
     title: "Activate the Gilles engagement",
     subtitle: "Pitch sent · $28k of $72k used · Phase 2 starts on his reply",
     whyNow:
-      "Phase 1 is complete — six weeks, $28,000, the one-pager is built and sent. $44,000 remains pre-paid. This week: a 15-minute Gilles check-in is on the W20 plan (Thursday). Use it to read the Northern Band council mood and confirm what the first two weeks of Phase 2 focus on.",
+      "Phase 1 is complete — six weeks, the one-pager is built and sent. $44,000 remains pre-paid. This week: a 15-minute Gilles check-in is on the W20 plan (Thursday). Use it to read the Northern Band council mood and confirm what the first two weeks of Phase 2 focus on.",
     effortPayoff: "medium-high-payoff",
     effortLabel: "Medium effort",
     payoffLabel: "$44k remaining pre-paid credit — delivery, not a new sale",

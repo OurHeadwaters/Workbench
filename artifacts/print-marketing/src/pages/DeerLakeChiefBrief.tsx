@@ -208,10 +208,11 @@ export function DeerLakeChiefBriefPage() {
 
         <Rule />
 
-        {/* Section 4 — 8-week trial */}
-        <Section eyebrow="The 8-week trial" heading="Here's what happens if you say yes.">
+        {/* Section 4 — 6-8 week trial */}
+        <Section eyebrow="The 6–8 week trial" heading="Here's what happens if you say yes.">
           <Body>
-            The first eight weeks are a scoped trial — not a full commitment.
+            The first six to eight weeks are a scoped trial — not a full commitment.
+            The trial closes when all four deliverables are in your hands, which can happen as early as week six.
             Here's what gets built in that time:
           </Body>
           <Bullets items={[
@@ -221,7 +222,7 @@ export function DeerLakeChiefBriefPage() {
             "A plain-language operations guide written for your staff, not consultants",
           ]} />
           <Body>
-            At the end of eight weeks you have a real document, a real plan,
+            At the end of the trial you have a real document, a real plan,
             and a real decision in front of you — not a promise.
             If it doesn't feel right, it stops there. No obligation to Phase 2.
           </Body>

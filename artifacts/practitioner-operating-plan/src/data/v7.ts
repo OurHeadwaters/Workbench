@@ -38,14 +38,17 @@ export const MONTHLY_SURPLUS       = v7MonthlySurplus;       // 9,908
 export const TERM_MONTHS           = v7TermMonths;           // 12
 export const ANNUAL_SURPLUS        = v7Phase2Surplus;        // 118,896
 
-export const PHASE1_FLAT_FEE       = V7_PHASE1.flatFee;      // 25,000
-export const PHASE1_TITHE          = V7_PHASE1.tithe;        // 2,500
-export const PHASE1_POST_TITHE     = V7_PHASE1.postTithe;    // 22,500
-export const PHASE1_BOBBIE_COST    = V7_PHASE1.bobbieCost;   // 33,600
-export const PHASE1_GAP            = V7_PHASE1.netVsCost;    // −11,100
-export const PHASE1_WEEKS          = V7_PHASE1.weeks;        // 8
-export const PHASE1_HOURS_PER_WEEK = V7_PHASE1.hoursPerWeek; // 40
-export const PHASE1_TITHE_PCT      = v7TithePct;
+export const PHASE1_FLAT_FEE          = V7_PHASE1.flatFee;        // 28,000
+export const PHASE1_TITHE             = V7_PHASE1.tithe;           // 2,800
+export const PHASE1_POST_TITHE        = V7_PHASE1.postTithe;       // 25,200
+export const PHASE1_BOBBIE_COST_MIN   = V7_PHASE1.bobbieCostMin;   // 25,200 (6 wks — break-even)
+export const PHASE1_BOBBIE_COST_MAX   = V7_PHASE1.bobbieCostMax;   // 33,600 (8 wks — max gap)
+export const PHASE1_GAP_MIN           = V7_PHASE1.netVsCostMin;    // 0      (6 wks)
+export const PHASE1_GAP_MAX           = V7_PHASE1.netVsCostMax;    // −8,400 (8 wks)
+export const PHASE1_WEEKS_MIN         = V7_PHASE1.weeksMin;        // 6
+export const PHASE1_WEEKS_MAX         = V7_PHASE1.weeksMax;        // 8
+export const PHASE1_HOURS_PER_WEEK    = V7_PHASE1.hoursPerWeek;    // 40
+export const PHASE1_TITHE_PCT         = v7TithePct;
 
 // ── Milestones (sourced from plan2026.ts) ─────────────────────────────────────
 
