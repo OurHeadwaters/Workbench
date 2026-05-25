@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 /* ─── constants ──────────────────────────────────────────────────────────── */
 const CX = 178, CY = 118;
@@ -64,6 +64,9 @@ const LAYERS = [
 
 type LayerId = 0 | 1 | 2 | 3;
 
+/* Navigation order: Hearth → Ridge */
+const NAV_ORDER: ZoneId[] = ["z0","z1","z2","z3","z4","z5"];
+
 /* ─── stomping paths ─────────────────────────────────────────────────────── */
 const STOMP_PATHS = [
   `M ${CX + 16} ${CY} C ${CX + 24} ${CY - 4} ${CX + 29} ${CY - 3} ${CX + 37} ${CY}`,
@@ -99,8 +102,17 @@ export default function HomeBlueprint() {
   const showPaths   = layer >= 1;
   const showPipes   = layer >= 2;
 
+  const touchX = useRef<number>(0);
+
   function tap(id: ZoneId) { setActive(prev => prev === id ? null : id); }
   function close()          { setActive(null); }
+
+  function navigate(dir: 1 | -1) {
+    if (!active) return;
+    const idx = NAV_ORDER.indexOf(active);
+    const next = NAV_ORDER[idx + dir];
+    if (next) setActive(next);
+  }
 
   return (
     <div style={{
@@ -251,22 +263,77 @@ export default function HomeBlueprint() {
             />
 
             {/* sheet */}
-            <div style={{
-              position: "absolute", bottom: 0, left: 0, right: 0,
-              background: CARD,
-              borderTop: `2px solid ${activeZone.color}`,
-              borderRadius: "16px 16px 0 0",
-              padding: "20px 20px 28px",
-              maxHeight: "62%",
-              overflowY: "auto",
-              WebkitOverflowScrolling: "touch",
-            }}>
+            <div
+              style={{
+                position: "absolute", bottom: 0, left: 0, right: 0,
+                background: CARD,
+                borderTop: `2px solid ${activeZone.color}`,
+                borderRadius: "16px 16px 0 0",
+                padding: "20px 20px 28px",
+                maxHeight: "62%",
+                overflowY: "auto",
+                WebkitOverflowScrolling: "touch",
+              }}
+              onTouchStart={e => { touchX.current = e.touches[0].clientX; }}
+              onTouchEnd={e => {
+                const dx = e.changedTouches[0].clientX - touchX.current;
+                if (Math.abs(dx) > 44) navigate(dx < 0 ? 1 : -1);
+              }}
+            >
               {/* drag handle */}
               <div style={{
                 width: 36, height: 4, borderRadius: 2,
                 background: "rgba(255,255,255,0.15)",
-                margin: "-8px auto 16px",
+                margin: "-8px auto 14px",
               }} />
+
+              {/* nav row: arrows + dots */}
+              <div style={{
+                display: "flex", alignItems: "center",
+                justifyContent: "space-between", marginBottom: 12,
+              }}>
+                <button
+                  onClick={() => navigate(-1)}
+                  disabled={NAV_ORDER.indexOf(active!) === 0}
+                  style={{
+                    background: "none", border: "none", cursor: "pointer",
+                    color: NAV_ORDER.indexOf(active!) === 0
+                      ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.6)",
+                    fontSize: 22, lineHeight: 1, padding: "0 4px",
+                    WebkitTapHighlightColor: "transparent",
+                  }}
+                >‹</button>
+
+                {/* position dots */}
+                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                  {NAV_ORDER.map(id => {
+                    const z = ZONES.find(z => z.id === id)!;
+                    const isCurrent = id === active;
+                    return (
+                      <div key={id} onClick={() => setActive(id as ZoneId)}
+                        style={{
+                          width: isCurrent ? 20 : 6,
+                          height: 6, borderRadius: 3,
+                          background: isCurrent ? z.color : "rgba(255,255,255,0.2)",
+                          transition: "all 0.2s", cursor: "pointer",
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={() => navigate(1)}
+                  disabled={NAV_ORDER.indexOf(active!) === NAV_ORDER.length - 1}
+                  style={{
+                    background: "none", border: "none", cursor: "pointer",
+                    color: NAV_ORDER.indexOf(active!) === NAV_ORDER.length - 1
+                      ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.6)",
+                    fontSize: 22, lineHeight: 1, padding: "0 4px",
+                    WebkitTapHighlightColor: "transparent",
+                  }}
+                >›</button>
+              </div>
 
               {/* zone name */}
               <div style={{
