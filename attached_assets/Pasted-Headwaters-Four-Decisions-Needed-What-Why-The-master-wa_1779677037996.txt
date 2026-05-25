@@ -1,0 +1,80 @@
+Headwaters — Four Decisions Needed
+
+What & Why
+
+The master watershed index revealed four structural tensions that, if left unresolved, will cause duplicated work, user confusion, and wasted build effort. These are not code tasks — they are decisions that should happen at the Kitchen Table before new features are built on top of the current ambiguity.
+
+This brief is meant to be read in a working session. Each item names the conflict, the options, and a recommended path.
+
+Done looks like
+
+Each of the four questions has a clear answer that is documented in replit.md
+The answers are shared with any agent working in the watershed so they don't re-litigate them
+A short follow-up task list is generated from the decisions
+Out of scope
+
+Making any of these decisions unilaterally — they require Bobbie's input
+Implementing the outcomes (those become separate tasks after decisions are made)
+Decision 1 — Which domain is the official Headwaters front door?
+
+The conflict: Two repos claim the root path (/):
+
+northern-store-plan.replit.app/ — The Shore (codetry-ship public site, The Arc, xbuckets PWA)
+This repo's The Clearing (/headwaters/) is the public origin story but is one level deep
+The current zone map on The Clearing links to six different .replit.app subdomains, creating a fragmented public experience. Visitors have no single authoritative starting point.
+
+Options: A. The Clearing (/headwaters/) becomes the canonical front door. All public-facing links point here first. The Shore becomes a deeper practitioner resource. B. The Shore (northern-store-plan.replit.app) is the canonical front door. The Clearing is Zone 3's origin story only. C. ourheadwaters.ca becomes the branded front door with a clean redirect to whichever artifact is the true entry point.
+
+Recommendation: Option C sets the cleanest foundation. The domain name already exists (branded as ourheadwaters.ca on northern-store-plan). Make that the one URL you'd give a stranger, and have it land on whichever artifact most clearly tells the story (The Clearing is the strongest candidate for a cold visitor).
+
+Decision 2 — One canonical Kitchen or two?
+
+The conflict: Two Kitchen artifacts exist with different scopes:
+
+salt-box Kitchen (/kitchen/) — household lobby, Window Call chat, Hearth peek, Loft peek, Eave account linking. Simple passphrase auth.
+creative-hub Kitchen (/kitchen/) — "Cast Iron Rack" app launcher, The Shelf (parenting cards), The Cupboard (Drawers + Bins), Hearth peek, Sandbox peek, Constellation Map, HearthKeeper Chat. More ambitious feature set.
+They share a concept (household hub) but live in different repos with different auth models and feature sets. Building features in one does not help the other.
+
+Options: A. creative-hub Kitchen is canonical — it has the richer feature set. Deprecate the salt-box Kitchen; migrate Window Call and Hearth/Loft peek into the creative-hub version. B. salt-box Kitchen is canonical — it's simpler and more tightly coupled to Hearth (same repo, same DB). The creative-hub Kitchen becomes a prototype or is retired. C. They serve different audiences — salt-box Kitchen is the family's day-to-day hub (close to Hearth); creative-hub Kitchen is the practitioner/operator hub (close to North Star). Document the distinction and maintain both deliberately.
+
+Recommendation: Option C may be the honest answer — but only if the two audiences are genuinely distinct. If not, Option A. Either way, the current situation (two things with the same name and no documented distinction) is the wrong state.
+
+Decision 3 — Should The Arc connect to the main watershed?
+
+The conflict: The Arc (Community Money Machine steward portal) is currently a sovereign island:
+
+Its own custom session auth (not Clerk, not Replit Auth)
+Its own PostgreSQL instance
+No shared API calls with any other Headwaters app
+One-way outbound links only (The Clearing links to The Arc; nothing links back)
+This is either intentional (privacy-first, sovereign by design) or a gap (it was built standalone and hasn't been connected yet).
+
+The Community Money Machine is one of the clearest revenue stories in the watershed (Kit revenue → The Arc tracks it → Kitchen Table Report shows the steward their machine's health). That story is currently broken because The Arc has no way to receive kit purchase signals from TSP (Zone 2), and no way to surface machine health into any other Headwaters interface.
+
+Options: A. Keep it sovereign — The Arc is a privacy-first tool. Stewards self-register, machines are self-reported. No integration with other apps. This is a feature, not a bug. B. Connect The Arc to the main API — Migrate or proxy The Arc's data through the main watershed API server, enabling kit purchase signals and cross-app machine health visibility. C. Lightweight connection only — Keep The Arc's auth and DB sovereign, but add one-way webhooks: when a Machine Kit is purchased via TSP, send a signal to The Arc to pre-register the steward. Machine health summary could be surfaced via a read-only embed.
+
+Recommendation: Option C. Full sovereignty is a good default, but a purchase webhook and a read-only embed are low-risk ways to close the "buy a kit → use the tool" loop without compromising the Arc's independence.
+
+Decision 4 — Where does kit sales and delivery live?
+
+The conflict: The Stomping Path (Zone 2, xrpl-design-hub.replit.app) is the only place where kit checkout infrastructure currently exists (Stripe + Zaprite webhooks, kit_purchases table, kit_inquiries, welcome pages). But:
+
+The Kits Overview artifact lives in this repo (/kits/)
+The kit content (Standby, Field Guide Finance, Pioneer Path, Handbook) is spread across 4+ repos
+There is no delivery sequence, content gating, or onboarding flow for any kit in any repo
+Options: A. TSP (Zone 2) is the canonical Kits engine — all $97 kit sales, delivery sequences, and welcome flows route through xrpl-design-hub.replit.app. The Kits Overview in this repo links there for checkout. B. Build kit infrastructure in this repo — The Arc and The Clearing become the commercial layer. Kits are sold and delivered from here, connected to the zones that hold the content. C. Kits are sold from TSP, delivered via zone-specific apps — TSP handles checkout; a successful purchase sends a welcome signal to the relevant zone app (e.g. buying the Physical Kit deep-links into the Standby section of the Salt Box).
+
+Recommendation: Option C is the most coherent user journey and the least duplicated infrastructure. TSP already has the payment rails. The zone apps already have the content. The missing piece is the post-purchase routing signal.
+
+Steps
+
+Schedule a Kitchen Table session — Bring this brief to a working session with Bobbie. These decisions cannot be made by an agent alone.
+Document the answers in replit.md — After decisions are made, add a "Strategic Decisions" section to replit.md so every future agent inherits the answers.
+Generate follow-up tasks — Each decision will produce 1–3 concrete build tasks. Queue them after the session.
+Relevant files
+
+replit.md
+.local/tasks/headwaters-master-index.md
+shared/watershed-compact.md
+artifacts/headwaters-landing/src/App.tsx
+artifacts/ourheadwaters-maps/src/App.tsx
