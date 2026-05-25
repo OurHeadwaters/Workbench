@@ -913,65 +913,99 @@ export function KitchenTablePage() {
       {!inSession && (
         <div className="flex-1 overflow-y-auto relative z-10 pb-12">
 
-          {/* Seat tile grid */}
-          <div className="px-5 pt-8 pb-6">
-            <p className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-medium mb-4 px-1">
-              The council is present
+          {/* ── First-person seat arc ── */}
+          <div className="px-4 pt-8 pb-2">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#3D3228] font-medium mb-6 text-center">
+              around the table
             </p>
-            <div className="grid grid-cols-2 gap-4">
-              {seats.map((seat) => {
+
+            {/* Arc of seats curving away from the viewer */}
+            <div className="flex items-end justify-center gap-1 overflow-x-auto scrollbar-hide pb-1">
+              {seats.map((seat, i) => {
                 const isActive = seat.id === activeSeatId;
+                const total = seats.length;
+                const centerIdx = (total - 1) / 2;
+                const dist = Math.abs(i - centerIdx);
+                const yPx = dist * 11;
+                const scale = 1 - dist * 0.038;
+                const opacity = 1 - dist * 0.065;
                 return (
                   <button
                     key={seat.id}
                     onClick={() => setActiveSeatId(seat.id)}
                     onDoubleClick={() => seat.configurable && openConfig(seat)}
+                    style={{
+                      transform: `translateY(-${yPx}px) scale(${scale})`,
+                      opacity,
+                      transformOrigin: "bottom center",
+                    }}
                     className={cn(
-                      "relative flex flex-col items-center justify-center gap-3 rounded-sm px-4 py-6 text-center transition-all duration-300 active:scale-[0.99]",
+                      "relative flex-shrink-0 flex flex-col items-center gap-2 w-[64px] pt-4 pb-3 px-1 rounded-sm transition-all duration-300",
                       isActive
-                        ? "bg-[#1C1814] shadow-[0_8px_20px_rgba(0,0,0,0.6)] border-t border-[#3A2F25] border-x border-[#1C1814] border-b border-[#0A0807]"
-                        : "bg-[#181512] shadow-[0_2px_8px_rgba(0,0,0,0.5)] border-t border-[#251E18] border-x border-[#181512] border-b border-[#0A0807] hover:bg-[#1C1814]"
+                        ? "bg-[#1C1814] shadow-[0_4px_20px_rgba(0,0,0,0.6)]"
+                        : "bg-[#181512] hover:bg-[#1A1714]"
                     )}
                   >
                     {isActive && (
-                      <div className="absolute inset-0 rounded-sm pointer-events-none" style={{ boxShadow: `inset 0 0 0 1px ${seat.color}40, 0 0 30px ${seat.color}15` }} />
+                      <div
+                        className="absolute inset-0 rounded-sm pointer-events-none"
+                        style={{ boxShadow: `inset 0 0 0 1px ${seat.color}45, 0 0 24px ${seat.color}10` }}
+                      />
                     )}
                     {seat.configurable && (
-                      <span
-                        className={cn(
-                          "absolute top-3 right-3 text-[9px] uppercase tracking-[0.1em] font-medium",
-                          isActive ? "text-[#D8D0C5]/60" : "text-[#5C5046]"
-                        )}
-                      >
+                      <span className="absolute top-1.5 right-1.5 text-[8px] text-[#4A3D30] uppercase tracking-wide">
                         open
                       </span>
                     )}
-                    <span 
+                    <span
                       className={cn(
-                        "text-[32px] leading-none drop-shadow-md transition-opacity duration-300", 
-                        !isActive && "opacity-60 grayscale-[0.3]"
+                        "text-[26px] leading-none transition-all duration-300",
+                        !isActive && "opacity-40 grayscale-[0.6]"
                       )}
-                      style={isActive ? { color: seat.color } : {}}
                     >
                       {seat.icon}
                     </span>
-                    <div className="flex flex-col items-center gap-1">
-                      <span className="text-[15px] font-serif tracking-wide text-[#EAE4DB]">{seat.name}</span>
-                      <span
-                        className={cn(
-                          "text-[12px] leading-relaxed px-2 font-medium tracking-wide",
-                          isActive ? "text-[#A39485]" : "text-[#6B5D50]"
-                        )}
-                      >
-                        {seat.description}
-                      </span>
-                    </div>
-                    {seat.configurable && !isActive && (
-                      <span className="mt-2 text-[10px] text-[#8C7B6D] font-medium tracking-wide">Double-tap to set</span>
+                    <span
+                      className="text-[10px] font-serif tracking-wide text-center leading-tight"
+                      style={{ color: isActive ? seat.color : "#5C5046" }}
+                    >
+                      {seat.name}
+                    </span>
+                    {isActive && (
+                      <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: seat.color }} />
                     )}
                   </button>
                 );
               })}
+            </div>
+
+            {/* Table edge — the horizon line between them and you */}
+            <div className="flex items-center gap-3 px-2 mt-3 mb-1">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22] to-transparent" />
+              <span className="text-[8px] text-[#2A221A] uppercase tracking-[0.35em] font-medium flex-shrink-0">you</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22] to-transparent" />
+            </div>
+
+            {/* Active seat name card */}
+            <div
+              className="mx-1 mt-4 px-4 py-3 rounded-sm border transition-all duration-300"
+              style={{ borderColor: `${activeSeat.color}30`, background: `${activeSeat.color}08` }}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[15px]">{activeSeat.icon}</span>
+                <span className="text-[13px] font-serif tracking-wide text-[#EAE4DB]">{activeSeat.name}</span>
+                {activeSeat.configurable && (
+                  <button
+                    onClick={() => openConfig(activeSeat)}
+                    className="ml-auto text-[9px] text-[#5C5046] uppercase tracking-wider hover:text-[#8C7B6D] transition-colors"
+                  >
+                    configure
+                  </button>
+                )}
+              </div>
+              <p className="text-[12px] leading-relaxed" style={{ color: `${activeSeat.color}CC` }}>
+                {activeSeat.description}
+              </p>
             </div>
           </div>
 
@@ -1047,29 +1081,53 @@ export function KitchenTablePage() {
       ══════════════════════════════════════════════════════════════ */}
       {inSession && (
         <>
-          {/* Compact seat switcher */}
-          <div className="flex-shrink-0 z-10 bg-[#181512] border-b border-[#251E18] shadow-md relative">
-            <div className="flex gap-2.5 px-4 py-3 overflow-x-auto scrollbar-hide">
-              {seats.map((seat) => {
+          {/* Compact first-person arc — in session */}
+          <div className="flex-shrink-0 z-10 bg-[#13110E]/95 backdrop-blur-sm border-b border-[#251E18] shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
+            <div className="flex items-end justify-center gap-1 px-3 pt-3 pb-0 overflow-x-auto scrollbar-hide">
+              {seats.map((seat, i) => {
                 const isActive = seat.id === activeSeatId;
+                const total = seats.length;
+                const centerIdx = (total - 1) / 2;
+                const dist = Math.abs(i - centerIdx);
+                const yPx = dist * 7;
+                const scale = 1 - dist * 0.04;
                 return (
                   <button
                     key={seat.id}
                     onClick={() => setActiveSeatId(seat.id)}
                     onDoubleClick={() => seat.configurable && openConfig(seat)}
-                    className={cn(
-                      "flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-sm text-[13px] font-medium tracking-wide transition-all duration-300",
-                      isActive
-                        ? "text-[#13110E] shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
-                        : "text-[#8C7B6D] bg-[#1C1814] border border-[#2A231E] hover:bg-[#251E18] hover:text-[#A39485]"
-                    )}
-                    style={isActive ? { background: seat.color } : {}}
+                    style={{
+                      transform: `translateY(-${yPx}px) scale(${scale})`,
+                      transformOrigin: "bottom center",
+                      opacity: isActive ? 1 : 0.38,
+                    }}
+                    className="flex-shrink-0 flex flex-col items-center gap-1 w-[50px] pb-2 transition-all duration-200 hover:opacity-75"
                   >
-                    <span className="text-[16px] opacity-90">{seat.icon}</span>
-                    <span>{seat.name}</span>
+                    <div
+                      className="w-9 h-9 rounded-sm flex items-center justify-center text-[18px] transition-all duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                      style={
+                        isActive
+                          ? { background: seat.color, color: "#13110E" }
+                          : { background: "#1C1814" }
+                      }
+                    >
+                      {seat.icon}
+                    </div>
+                    <span
+                      className="text-[9px] font-medium tracking-wide text-center leading-tight"
+                      style={{ color: isActive ? seat.color : "#5C5046" }}
+                    >
+                      {seat.name}
+                    </span>
                   </button>
                 );
               })}
+            </div>
+            {/* Table edge */}
+            <div className="flex items-center gap-3 px-6 py-2">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22]/60 to-transparent" />
+              <span className="text-[7px] text-[#2A221A] uppercase tracking-[0.3em] font-medium">you</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22]/60 to-transparent" />
             </div>
           </div>
 
