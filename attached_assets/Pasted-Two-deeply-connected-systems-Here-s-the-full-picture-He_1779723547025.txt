@@ -1,0 +1,107 @@
+Two deeply connected systems. Here's the full picture:
+
+Helping Hands (HH)
+Helping Hands is a community labour and credentialing platform — a structured way for community members to earn, build reputation, and get paid for real work inside the Headwaters economy.
+
+Tasks
+The core unit of work. An admin posts a task with:
+
+A description and required skill/badge level
+Pay denominated in XRP or Community Tokens
+A claim window — members claim, complete, and get confirmed
+The database tracks the full lifecycle: posted → claimed → completed → confirmed → paid. Unconfirmed completions that time out trigger no-show tracking.
+
+The Reliability System
+Every member builds a reliability record over time:
+
+Shifts completed — confirmed task completions
+No-shows — claimed but didn't deliver
+Milestone bonuses are automatic: hit 10 completed tasks, earn a reliability bonus without asking for it
+This creates a reputation layer that's machine-readable — the Partnership Portal exposes anonymized reliability scores to potential lenders or institutional partners, connecting community labour to traditional financial recognition without exposing individual data.
+
+Credentialing — The Badge Model
+Skills move through four stages:
+
+Stage	What it means
+Watching	Observing — not yet practising
+Learning	Active student, receiving instruction
+Practising	Doing the work with some oversight
+Teaching	Verified — can credential others
+Badge categories map to real domains: food, land, governance, and others. A "Teaching" badge in food systems means you can validate a "Learning" member's progress — making credentialing peer-to-peer rather than institution-to-person.
+
+Envelopes
+Members allocate their earned tokens into named envelopes — buckets. Sound familiar? It's the same model as the Headwaters Bucket System, but inside the custodial layer:
+
+"Groceries," "Savings," "Supplies" — same plumbing frame
+Balances usable at participating community merchants
+The envelope system is the bridge between earning (HH tasks) and spending (local economy)
+The P2P Community Economy Engine
+This is the always-on value exchange layer that sits beneath Helping Hands. Where HH is about structured work and credentials, the P2P engine is about continuous, ambient value flow between members.
+
+The Tip Function — Primary P2P Vector
+Tipping is the engine's heartbeat. Members can tip each other for:
+
+Information shared
+Help given informally (not a formal task)
+Any value exchange that doesn't fit a task structure
+It's intentionally low-friction. A tip can happen in conversation, not just at a transaction terminal. This is how value circulates laterally — peer to peer — rather than only top-down through task payouts.
+
+Progressive Wallet Reveal
+This is the most important UX design decision in the engine:
+
+The wallet is hidden until the user has their first real value event.
+
+On day one, a new member sees no wallet. No crypto, no balance, no complexity. Then one of three things happens:
+
+They receive a tip from another member
+They earn tokens completing a task
+A referral bonus lands
+At that moment — and only at that moment — the wallet "becomes real" and is revealed. The user's first encounter with the wallet is receiving value, not managing an empty account. That sequencing is intentional: it reverses the normal crypto onboarding problem (empty wallet, confusing interface, nothing happens).
+
+Referral Loop
+Human-friendly codes like hw-3e7a-f2c1 — short, readable, shareable. When someone joins using your code:
+
+You get community credit
+They get a welcome bonus
+The wallet reveal happens immediately for the new joiner
+This is the adoption engine. Zone 2 community members recruit Zone 2 community members. The referral loop is P2P adoption, not top-down marketing.
+
+Settlement Architecture
+V1 is simulated — transactions happen in the database, not on-chain. But the schema and API are built for XRPL settlement from the start:
+
+Task payments are designed for escrow-based disbursement on XRPL
+Tips are designed to route to Xaman addresses when members graduate to self-custody
+The migration path is custodial → self-custody, not the other way around
+Lightning / Value-for-Value
+There are references to a Value-for-Value (v4v) implementation via Lightning Network — streaming "sats" while listening to community media. This is the micro-payment layer: not a task, not a tip, but continuous ambient payment for ambient value (listening to a podcast, reading a community feed). The protocol is different from XRPL but the principle is the same: value flows continuously, not in discrete transactions.
+
+How They Connect to the Bucket System
+This is the full stack:
+
+Lightning / v4v          ← ambient value stream (media, listening)
+      ↓
+P2P Engine (Tips)        ← lateral peer-to-peer value flow
+      ↓
+Helping Hands (Tasks)    ← structured work, credentials, reliability
+      ↓
+Envelopes (Custodial)    ← named buckets, spending at local merchants
+      ↓
+Headwaters Bucket System ← self-custody, Xaman wallet, RLUSD on XRPL
+      ↓
+Drip Harvester           ← savings earning yield in AMM pools
+      ↓
+Giving Well / Tithe      ← appreciated gains return to the commons
+The design intent is a graduation path. Someone starts in Helping Hands with no crypto knowledge — they earn Community Tokens, build reputation, use envelopes at the local store. When they're ready, they migrate to the Headwaters Bucket System with a real Xaman wallet, real RLUSD, real on-chain assets. Their reliability record and badge credentials follow them.
+
+Where the Code Lives
+Layer	Backend	Frontend
+Helping Hands API	artifacts/api-server/src/routes/helpingHands.ts	artifacts/headwaters-books/src/pages/ (HHDashboard, HHTasks, HHBadges, HHEnvelopes, HHEarnings)
+P2P Engine	Same route file — tips, wallet, join endpoints	artifacts/codetry-ship/src/pages/EconomyPage.tsx
+Schema	lib/db/src/schema/helpingHands.ts	—
+Partnership Portal	API server	/partnership-portal route
+One-Line Summary for Each
+Helping Hands: Structured community work — post a task, claim it, do it, get paid in tokens, build credentials, earn reliability bonuses.
+
+P2P Engine: The ambient value layer — tips between members, progressive wallet reveal on first value received, referral loops for adoption, and a clear migration path from custodial tokens to self-custody XRPL wallets.
+
+Together they're the on-ramp. The Bucket System is where you go when you're ready to hold your own keys.
