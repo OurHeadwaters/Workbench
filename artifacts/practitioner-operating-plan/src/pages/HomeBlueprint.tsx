@@ -48,7 +48,7 @@ const ZONES = [
     line1: "Where the", line2: "fire starts.",
     headline: "This is your kitchen table.",
     body: "Everything radiates from here. If the Hearth is broken, nothing in the outer zones holds. The Salt Box is the system that protects and tends this room.",
-    maps: ["Salt Box — the core system", "Fracture Kit — board by board rebuild", "Rebuild Kit — new life on a stable floor", "Shattered Kit — for when Z0 never existed", "Key Custody — who holds the door", "Magic — Board 1, the ground rod of identity"],
+    maps: ["Salt Box — the core system", "Board 1: Magic — culture, tradition, the ground rod", "Board 2: The Jiggler — gatekeeper calibration, elevation, wandering line", "Rebuild Kit — new life on a stable floor", "Shattered Kit — for when Z0 never existed", "Key Custody — who holds the door"],
   },
 ] as const;
 

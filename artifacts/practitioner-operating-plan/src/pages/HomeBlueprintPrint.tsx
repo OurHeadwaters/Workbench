@@ -5,7 +5,7 @@ const ZONES = [
     id: "z0", name: "THE HEARTH", color: "#c4783a", zone: "Zone 0",
     headline: "This is your kitchen table.",
     body: "Everything radiates from here. If the Hearth is broken, nothing in the outer zones holds. The Salt Box is the system that protects and tends this room.",
-    maps: ["Salt Box — the core system", "Fracture Kit — board by board rebuild", "Rebuild Kit — new life on a stable floor", "Shattered Kit — for when Z0 never existed", "Key Custody — who holds the door", "Magic — Board 1, the ground rod of identity"],
+    maps: ["Salt Box — the core system", "Board 1: Magic — culture, tradition, the ground rod", "Board 2: The Jiggler — gatekeeper calibration, elevation, wandering line", "Rebuild Kit — new life on a stable floor", "Shattered Kit — for when Z0 never existed", "Key Custody — who holds the door"],
   },
   {
     id: "z1", name: "THE YARD", color: "#1f7a4a", zone: "Zone 1",
