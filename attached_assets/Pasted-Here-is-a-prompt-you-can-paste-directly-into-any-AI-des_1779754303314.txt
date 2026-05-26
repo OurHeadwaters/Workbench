@@ -1,0 +1,50 @@
+Here is a prompt you can paste directly into any AI design tool, dev agent, or visual direction brief:
+
+Headwaters Universe — Visual Design Prompt
+
+This app lives inside a living northern universe. Every visual choice should feel like standing at the edge of a boreal forest at dusk, fire behind you, aurora rising ahead, and a full moon climbing over the treeline.
+
+Palette — non-negotiable
+
+Background: #090503 — warm near-black, amber-tinged, never cold or blue-black
+Primary accent: hsl(38 85% 52%) — amber fire; use for buttons, borders, active states, and interactive highlights
+Body text: #ede8d5 — moon warm-cream
+Aurora edge: #10b981 — forest green, not neon; the living sky
+Blood layer: #c2410c — rust/copper; use sparingly as a secondary accent or hover state
+Surface cards: semi-transparent dark with a subtle warm border, never flat white or grey
+Typography — two registers only
+
+Display / headings: Fraunces, weight 800–900. Bold and substantial. Never thin, never decorative-delicate. This is the voice of the watershed.
+Labels / eyebrows / UI chrome: DM Sans, tracked uppercase small caps. Grounded, clear, quiet.
+Body copy: DM Sans at normal weight minimum. Never font-light.
+Atmosphere
+
+Subtle star field in the background — small, scattered, low opacity, not a wallpaper
+A soft aurora shimmer along the top or edge — green fading to transparent, animated slowly
+Moon imagery: partial eclipse (silver, cream) as a background layer using mix-blend-mode: screen so the black drops out and only the bright disc shows
+Blood moon: total lunar eclipse copper-rust, same blend technique, used as a secondary layer or accent moment
+Hero photo: an eagle over a northern treeline — the guardian, always present but never crowding the content
+Motifs to weave in
+
+Water cycle: every drop has a destination. Rain, rivers, the watershed as metaphor.
+Ships as vessels of purpose — not nautical decoration, but intentional carriers.
+Three celestial states: blue moon (silver/night), blood moon (copper/transition), amber sun-star (dawn/fire). Let the UI shift register between these states.
+Tagline, wherever it fits naturally: "Different caps • Same eternal river."
+What to avoid
+
+Cold blue-black space (this is a northern forest sky, not outer space)
+Cabin/cedar/rustic aesthetics — warm and grounded, not country
+Corporate gloss or hype tone
+Light mode or white backgrounds anywhere
+Thin type weights
+Emojis
+Tone
+Practitioner-warm. Quiet competence. Grounded poetry. The feeling of a kitchen table where serious, caring people are working on something real.
+
+Photos you are providing
+Assign them to these roles:
+
+Hero layer — eagle over northern treeline (full bleed background, darkened with overlay)
+Moon layer — partial eclipse, clean black sky (blend mode: screen, sits above hero)
+Blood moon layer — total lunar eclipse, copper-rust (blend mode: screen, accent moments)
+Copy that whole block and paste it wherever you're briefing the new project. When you upload your photos, label them by those three roles so the builder knows exactly where each one goes.

@@ -1,0 +1,45 @@
+#1 - Zone Agents — The Council Table
+What & Why
+Each of the seven zones (0–5 + The Mill) gets an agent in The Arc. An agent holds the lines for its zone — the commitments that keep it true — and watches for drift when things go off course. The Kitchen Table becomes a council view where all seven agents are present and can be tended by the steward.
+
+The first line is already written: "Nobody goes to sleep until the kitchen is clean." — Zone 0, Salt Box.
+
+Done looks like
+A /council page in The Arc showing all seven zone agents as cards in zone order
+Each agent card displays: zone number, name, terrain tagline, active lines held, and any open drift notes
+Steward can add a line to any zone ("hold the line")
+Steward can mark a line as released (no longer active)
+Steward can log a drift observation on any zone ("drift spotted")
+Steward can mark a drift note as resolved ("back on course")
+Zone 0 is pre-seeded with the kitchen commitment as the first line
+The Mill is represented as its own agent (not numbered, named "The Mill")
+Navigation link to /council added to the Arc sidebar/nav
+Out of scope
+AI-generated drift detection (agent watches manually for now — the steward is the sensor)
+Per-machine zone assignment
+Zone agent history or audit log
+Public visibility of the council
+Steps
+DB schema — zone lines — Add a zone_lines table: id, steward_id (FK users), zone_key (text: "0"–"5" or "mill"), line_text, is_active (boolean, default true), created_at. Add to Drizzle schema and run migration.
+
+DB schema — zone drift — Add a zone_drift table: id, steward_id (FK users), zone_key, note, is_resolved (boolean, default false), created_at, resolved_at (nullable). Add to Drizzle schema and run migration.
+
+OpenAPI spec — zone agent endpoints — Add endpoints: GET /api/council (all zones with their lines and drift for the current steward), POST /api/council/:zoneKey/lines (add a line), PATCH /api/council/:zoneKey/lines/:id (release a line), POST /api/council/:zoneKey/drift (log drift), PATCH /api/council/:zoneKey/drift/:id (resolve drift). Run codegen after.
+
+API route handlers — Implement the five route handlers in the api-server, scoped to the authenticated steward. Seed Zone 0 with the kitchen commitment on first write if no lines exist for that steward yet (or handle via a migration seed).
+
+Council page — layout and zone cards — Build /council page in The Arc. Seven zone cards in canonical order (0–5, then The Mill). Each card shows zone identity (name, tagline), active lines, and open drift notes. Match the Arc's existing card/terrain aesthetic.
+
+Council page — interactions — Add inline forms to each card: add a line (text input + "Hold the Line" button), release a line (strike through + confirm), log drift (text input + "Drift Spotted" button), resolve drift ("Back on Course" button). Use the generated React Query hooks.
+
+Navigation — Add "The Council" link to the Arc sidebar nav in the appropriate position (between machines and settings, or as a top-level nav item).
+
+Relevant files
+lib/db/src/schema/
+lib/db/src/schema/machines.ts
+lib/api-spec/openapi.yaml
+lib/api-zod/
+artifacts/api-server/src/routes/
+artifacts/arc/src/App.tsx
+artifacts/arc/src/pages/machines/report.tsx
+artifacts/arc/src/components/
