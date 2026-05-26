@@ -31,7 +31,7 @@ interface PartGroup {
 }
 
 const PARTS_DATA: Array<{ roman: string; title: string; chapterNums: string[] }> = [
-  { roman: "P", title: "Prologue", chapterNums: ["P.1", "P.2"] },
+  { roman: "P", title: "Prologue", chapterNums: ["P.0", "P.1", "P.2"] },
   { roman: "G", title: "Grounding", chapterNums: ["4.1", "4.2", "4.3", "4.4"] },
   { roman: "I", title: "The Discipline", chapterNums: ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7"] },
   { roman: "II", title: "The Constellation", chapterNums: ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9", "2.10"] },

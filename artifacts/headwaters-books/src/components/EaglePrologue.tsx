@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 interface EaglePrologueProps {
@@ -6,14 +6,33 @@ interface EaglePrologueProps {
 }
 
 const base = import.meta.env.BASE_URL;
+const SEEN_KEY = "hw-books:preface-seen";
 
 export function EaglePrologue({ continueId }: EaglePrologueProps) {
+  const [seen, setSeen] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    try {
+      setSeen(!!localStorage.getItem(SEEN_KEY));
+    } catch {
+      setSeen(false);
+    }
+  }, []);
+
   const handleContinue = useCallback(() => {
+    try {
+      localStorage.setItem(SEEN_KEY, "1");
+    } catch {}
+    setSeen(true);
     const target = document.getElementById(continueId);
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [continueId]);
+
+  if (seen === null) return null;
+
+  if (seen) return null;
 
   return (
     <section

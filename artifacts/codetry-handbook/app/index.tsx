@@ -48,10 +48,15 @@ export default function FrontPage() {
   const badgePulse = useRef(new Animated.Value(1)).current;
   const prevStationId = useRef<string | undefined>(undefined);
 
+  const PREFACE_ID = "0-0";
+  const AFTER_PREFACE_ID = "0-1";
+
   const lastChapter  = lastRead ? getChapter(lastRead.chapterId) : undefined;
   const firstChapter = CHAPTERS[0];
-  const beginTarget  = lastChapter ? lastChapter.id : firstChapter.id;
   const isReturning  = !!lastChapter;
+  const beginTarget  = isReturning
+    ? (lastChapter!.id === PREFACE_ID ? AFTER_PREFACE_ID : lastChapter!.id)
+    : firstChapter.id;
 
   const currentStation = pathReady
     ? (PIONEER_STATIONS.find((s) => isUnlocked(s.id) && !isCompleted(s.id)) ??
