@@ -24,6 +24,7 @@ import { CockpitPage } from "@/pages/CockpitPage";
 import { WindowPage } from "@/pages/WindowPage";
 import { ModelPage } from "@/pages/ModelPage";
 import { DebriefPage } from "@/pages/DebriefPage";
+import { LandPlanPage } from "@/pages/LandPlanPage";
 import { GordWidget } from "@workspace/gord-widget";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -156,6 +157,12 @@ export default function App() {
         </Route>
         <Route path="/money-machine">
           <AppShell><MoneyMachinePage /></AppShell>
+        </Route>
+
+        <Route path="/land">
+          <OnboardingGuard>
+            <AppShell><LandPlanPage /></AppShell>
+          </OnboardingGuard>
         </Route>
 
         <Route><Redirect to="/" /></Route>

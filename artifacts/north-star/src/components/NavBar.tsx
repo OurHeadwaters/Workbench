@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Star, Briefcase, BarChart2, BookOpen, Grid3x3, Calendar, Coffee, Settings, Globe, X } from "lucide-react";
+import { Star, Briefcase, BarChart2, BookOpen, Grid3x3, Calendar, Coffee, Settings, Globe, X, Trees } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useActiveZone, ZONE_SOLID } from "@/lib/zone";
 
@@ -15,6 +15,7 @@ const MORE_ITEMS = [
   { path: "/guide",   icon: BookOpen,  label: "Guide" },
   { path: "/weekly",  icon: Calendar,  label: "Review" },
   { path: "/council", icon: Coffee,    label: "Table" },
+  { path: "/land",    icon: Trees,     label: "Land" },
   { path: "/window",  icon: Globe,     label: "Window" },
   { path: "/settings",icon: Settings,  label: "Settings" },
 ];
