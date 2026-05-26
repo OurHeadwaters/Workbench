@@ -47,6 +47,43 @@ const partPrologue: Part = {
   kind: "frontMatter",
   chapters: [
     {
+      id: "0-0",
+      number: "P.0",
+      partRoman: "P",
+      partLabel: "P · Prologue",
+      title: "For the mothers",
+      blocks: [
+        {
+          kind: "para",
+          text: "I may have solved all the problems of the world from my kitchen table.",
+        },
+        {
+          kind: "para",
+          text: "I say that with a straight face, and I also say it knowing that kitchen table is not meant to be clean.",
+        },
+        {
+          kind: "para",
+          text: "This book is for the mothers. It was written at the table where the coffee DOESN'T go cold before you drink it because you use a travel mug every day, where the conversation gets interrupted before it finishes (but the shared glance built a connection worth a million words), where the system you built before breakfast gets rattled by noon and rebuilt by supper. If you are reading this and you have never had to choose between finishing a thought and feeding something that cannot feed itself — this book will still teach you something. But it was not written for you first.",
+        },
+        {
+          kind: "para",
+          text: "The women who need this book already know the work is real. They do not need me to convince them the system matters. They need to feel that I know what the system costs, where the shortcuts are and why agitation is what makes the clothes clean.",
+        },
+        {
+          kind: "para",
+          text: "Here is what I know: the coop still needs to be cleaned when the contract comes in. The dishes do not wait for the season to settle. The child who watches you hold the hard thing without dropping it is learning something that no classroom teaches and no curriculum names. You are not behind. You are in the friction. That is where the coordinates live.",
+        },
+        {
+          kind: "para",
+          text: "You always need to hold both states or you will lose your coordinates in time and space.",
+        },
+        {
+          kind: "para",
+          text: "That is the whole book. Everything that follows is the worked example.",
+        },
+      ],
+    },
+    {
       id: "0-1",
       number: "P.1",
       partRoman: "P",
