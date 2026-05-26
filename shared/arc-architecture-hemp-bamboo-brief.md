@@ -244,6 +244,34 @@ Real bamboo establishes over years and is famously hard to remove (rhizomes). XR
 
 ---
 
+## The land — where the hempcrete cures
+
+*Doctrine declared May 26, 2026. 305 acres, Northwestern Ontario, Treaty 3 Territory.*
+
+The land is not a retreat from the expansion. It is the state that makes the expansion survivable.
+
+**Both-States:** the land is the one that doesn't move so the other one can.
+
+The land holds the ground frequency. Every time the practitioner moves out into the expansion — the outer zones, the institutions, the systems, the suckers — the land holds the resting state so there is something to come back to. It recalibrates. Resets the signal. Returns the practitioner to the frequency they carry into the world.
+
+**The land as Eave.** The Eave is the structural overhang — the membrane between Zone 0 (household, private truth) and everything outside it. For most practitioners, the first Eave was held by a person — a mother, a household, a community. The land is the Eave that doesn't age out. It was there before the practitioner could name it. When the personal Eave-holders move on, the land holds the state they leave behind.
+
+**The land as Gate ceremony host.** Both-States transformation moments — when someone moves from Stage 1 to Stage 2, when a child outgrows the Eave their mother held, when a practitioner builds capacity that no longer fits the structures that protected them — require a witness. A physical ground. The land hosts these moments. People arrive between states — the old Eave has lifted, the new one isn't built yet. The land holds them in the exposure. Both sides named. Both states named. The conversion recorded in the soil before it's recorded anywhere else.
+
+**The suckers.** In permaculture, a sucker is a shoot from the rootstock below the graft. It steals energy from the productive growth. It looks like growth. It is extraction. The suckers grabbing energy beyond our bare feet are anything that pulls value out of the local ground toward an elsewhere that doesn't return it: economic extraction, dependency engineering, surveillance traded for convenience, the alarm sellers, the platforms, the systems that require translation into their language before they will acknowledge what you've built. The land is the counter-frequency. It doesn't negotiate with the suckers. It exists at a different register entirely — the register of soil, season, water table, and the weight of someone who has walked this ground for decades.
+
+**Zone 0 made physical.** Zone 0 is the Hearth. The 305 acres is Zone 0 made physical — not a diagram, not a doctrine, not an app. Soil. The Saltbox principle in the ground: every beam carries weight, nothing is decorative, names that can be removed without structural loss were not load-bearing. The land has been load-bearing longer than any name we've given it.
+
+**What this means for the system.** Every tool, every Kit, every route in every app is downstream of this ground. The Arc measures the machines. The machines hold the community's capital. The capital flows back to the watershed. The watershed flows back to the land.
+
+The land is not Zone 0 of the app. The app is Zone 5 of the land.
+
+When a practitioner loses the signal — when the expansion has pulled too far, when the suckers have gotten into the vocabulary, when the both-states trust in a relationship has broken — the land is where they return. Not to escape. To recalibrate. To rebuild from ground that was never in question.
+
+*The hempcrete cures in contact with the ground.*
+
+---
+
 ## The founding prompt — Bobbie's words, verbatim
 
 This is where The On-Ramp came from. Every use of the build sequence, the tradesperson argument, and the founding/reclamation distinction traces back to this:
