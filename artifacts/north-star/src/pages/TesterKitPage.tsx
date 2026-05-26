@@ -1,8 +1,47 @@
 import { useState } from "react";
+import { Copy, Check } from "lucide-react";
 import { useStore, getTodayKey, getWeekKey, getSeasonKey } from "@/store";
 import { ZoneBadge } from "@/components/ZoneBadge";
 import { ZONE_LABELS } from "@/lib/utils";
 import type { ZoneId } from "@/types";
+
+const BRIEF_PROMPT = `Read [BRIEF_PATH].
+
+The brief is self-contained — all context, constraints, current code, and acceptance criteria are inside it. Work only within the scope it defines. Do not touch anything outside it. When every acceptance criterion is checked, stop and report only what changed.`;
+
+function CopyPromptCard() {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    navigator.clipboard.writeText(BRIEF_PROMPT).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-base">Agent brief prompt</h2>
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium min-h-[36px] transition-colors"
+          style={{
+            backgroundColor: copied ? "#F0FDF4" : "#F5F5F0",
+            color: copied ? "#166534" : "#44403C",
+          }}
+        >
+          {copied ? <Check size={13} /> : <Copy size={13} />}
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div>
+      <pre className="text-xs text-[#44403C] leading-relaxed whitespace-pre-wrap font-mono bg-[#FAFAF9] rounded-lg p-3 border border-[#E7E5E4]">
+        {BRIEF_PROMPT}
+      </pre>
+      <p className="text-xs text-[#78716C]">Replace <span className="font-mono">[BRIEF_PATH]</span> with the actual file path before sending.</p>
+    </div>
+  );
+}
 
 const ZONES: ZoneId[] = ["Z1", "Z2", "Z3", "Z4"];
 
@@ -100,6 +139,8 @@ export function TesterKitPage() {
             Seed sample zone hours (Z1:2.5h Z2:4h Z3:1.25h Z4:0.5h)
           </button>
         </div>
+
+        <CopyPromptCard />
 
         <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-2">
           <h2 className="text-base">Zone reference</h2>
