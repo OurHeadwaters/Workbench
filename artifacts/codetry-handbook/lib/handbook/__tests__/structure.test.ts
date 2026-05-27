@@ -12,7 +12,9 @@ import { PARTS } from "@/data/handbook";
  * would not surface at runtime. These assertions make any such change
  * a visible CI failure.
  *
- * Prologue (roman "P") holds exactly two chapters: P.1 and P.2.
+ * Prologue (roman "P") holds exactly four chapters: P.E, P.0, P.1, and P.2.
+ * P.E is the eagle founding story (Version B, locked 2026-05-26).
+ * P.0 is the mothers preface.
  *
  * Part I (roman "I") holds eight chapters: 1.0–1.7.
  *
@@ -35,7 +37,7 @@ import { PARTS } from "@/data/handbook";
  *   Field Ledger    (roman "FL") — §FL.1–§FL.11
  */
 
-const PART_PROLOGUE_EXPECTED_NUMBERS = ["P.1", "P.2"];
+const PART_PROLOGUE_EXPECTED_NUMBERS = ["P.E", "P.0", "P.1", "P.2"];
 
 const PART_I_EXPECTED_NUMBERS = [
   "1.0",

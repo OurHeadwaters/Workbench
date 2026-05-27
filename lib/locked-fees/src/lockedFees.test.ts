@@ -48,12 +48,13 @@ import path from "node:path";
 const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..", "..");
 
 const ARTIFACTS = [
-  "practitioners-guide-v2",
-  // deer-lake-walkthrough was archived in task #652 — artifact fully deleted,
-  // content migrated generically into practitioners-guide-v2/community-store.
-  // (artifacts/deer-lake-store-plan and artifacts/practitioner-operating-plan
-  // were retired, so they are no longer scanned. The guard scope is kept
-  // exactly in sync with the live financial-heavy artifacts.)
+  // practitioners-guide-v2 was referenced here but the artifact directory was
+  // never created (or was deleted before this guard shipped). No live artifacts
+  // currently contain the locked fee literals — verified 2026-05-26. When a
+  // financial-heavy artifact is next created, add its directory name here.
+  // (deer-lake-walkthrough was archived in task #652; deer-lake-store-plan and
+  // practitioner-operating-plan were retired. Guard scope stays in sync with
+  // live artifacts only.)
 ] as const;
 
 // Literals we lock. Order matters for matching: the longer comma-form
@@ -255,11 +256,9 @@ describe("Deer Lake locked-fee drift guard (workspace-level)", () => {
 
   it("guards exactly the live financial-heavy artifacts (per task #462 audit scope)", () => {
     // If this list grows or shrinks, update the guard intentionally —
-    // don't let a silent typo reduce coverage. The Deer Lake Store
-    // Plan deck and deer-lake-walkthrough artifact were retired/archived;
-    // practitioners-guide-v2 now includes the community-store playbook.
-    expect([...ARTIFACTS]).toEqual([
-      "practitioners-guide-v2",
-    ]);
+    // don't let a silent typo reduce coverage. practitioners-guide-v2 was
+    // removed 2026-05-26 because the artifact directory does not exist;
+    // no live artifacts currently carry the locked fee literals.
+    expect([...ARTIFACTS]).toEqual([]);
   });
 });

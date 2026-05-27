@@ -47,6 +47,27 @@ const partPrologue: Part = {
   kind: "frontMatter",
   chapters: [
     {
+      id: "0-E",
+      number: "P.E",
+      partRoman: "P",
+      partLabel: "P · Prologue",
+      title: "The eagle answered",
+      blocks: [
+        { kind: "small", text: "Prologue · the founding moment · is this the right direction?" },
+        {
+          kind: "para",
+          text: "I was drafting this plan standing out on my deck, observing nature, and I asked myself: *is this the right direction?*",
+        },
+        {
+          kind: "para",
+          text: 'At that moment an eagle appeared overhead. I said, "well hello!" — and he lowered with force, and slowly stayed above me.',
+        },
+        { kind: "para", text: "I asked again, this time to him: *is this the right direction?*" },
+        { kind: "para", text: "He soared in a circle formation, then flew out of sight." },
+        { kind: "pull", text: "The story that sealed Headwaters' fate." },
+      ],
+    },
+    {
       id: "0-0",
       number: "P.0",
       partRoman: "P",
