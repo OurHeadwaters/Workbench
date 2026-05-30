@@ -29,7 +29,7 @@ export function AquiferPage() {
               marginBottom: 14,
             }}
           >
-            Headwaters · Identity Infrastructure
+            Headwaters
           </p>
           <h1
             style={{
@@ -41,7 +41,7 @@ export function AquiferPage() {
               letterSpacing: "-0.01em",
             }}
           >
-            The Aquifer
+            The Aquifer — Identity Infrastructure
           </h1>
           <p
             style={{
@@ -382,10 +382,10 @@ export function AquiferPage() {
               </p>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 11 }}>
                 {[
-                  { title: "Not a token or financial instrument", body: "No asset issuance. No speculative position on XRP price." },
-                  { title: "Not a DeFi protocol", body: "No liquidity pools, no yield mechanics, no AMM layer." },
-                  { title: "Not a payment system", body: "The memo field is write-once storage, not a settlement rail." },
-                  { title: "Not outside regulatory scrutiny", body: "The Clarity Act's reach into identity layers is an open question. We're watching it." },
+                  { title: "Not a token or financial instrument", body: "No asset issuance, no tokenization." },
+                  { title: "Not a DeFi protocol or asset issuance layer", body: "No liquidity pools, no yield mechanics, no AMM layer." },
+                  { title: "Not a speculative position on XRP price", body: "The ledger is used as a write-once memo store. XRP price is not a variable in this system." },
+                  { title: "Not in scope for payment system regulation", body: "The Clarity Act's reach into identity layers is an open question we're watching." },
                 ].map(({ title, body }) => (
                   <li key={title} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                     <span
