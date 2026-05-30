@@ -1,0 +1,47 @@
+Add a dedicated page at /aquifer/ to the ourheadwaters.ca site. This page is for a technical audience — specifically cryptographers and XRPL builders who click through from a social post. It should load fast and lead with the mechanism, not the mission.
+
+The page is called: The Aquifer — Identity Infrastructure
+
+What it communicates, in this order:
+
+1. The mechanism (lead with this — no preamble)
+Show the data flow as a simple visual diagram or clearly structured step list:
+
+Document (practitioner-issued record)
+  → SHA-256 hash
+  → XRPL transaction memo field
+  → Immutable ledger entry
+  → Verifiable by anyone without trusting Headwaters
+The record belongs to the person. The hash is the witness. The ledger is the notary. Headwaters is not in the verification path.
+
+2. The trust model (3–4 sentences)
+No central authority holds the record. Verification requires only the original document, its hash, and the public XRPL transaction — all independently checkable. The person controls who holds the plaintext. The ledger only ever sees the hash.
+
+3. What it carries vs. what it is not (two columns)
+
+What the ledger carries:
+
+Document hashes anchored in memo fields
+DID fragments — identity records owned by the person
+Practitioner stamps — named, witnessed lifecycle crossings
+Learning handoffs — student-owned school-year records
+What it is not:
+
+Not a token or financial instrument
+Not a DeFi protocol or asset issuance layer
+Not a speculative position on XRP price
+Not in scope for payment system regulation — the Clarity Act's reach into identity layers is an open question we're watching
+4. The governance dependency (one callout block)
+"Who controls the default validator list controls the notary. The dUNL's integrity is an infrastructure dependency for this build — not a regulatory question, an architectural one. Validator diversity is not optional when the ledger is load-bearing infrastructure for identity records."
+
+5. What's being built (brief)
+
+The Founding Drift DID: a community identity record anchored at genesis
+The Threshold App: lifecycle crossing records — birth, school transitions, care transitions — hashed and witnessed
+The Learning Identity Architecture: student-owned learning records with teacher handoffs at the XRPL/DID layer
+Visual style:
+Match the existing site — dark background (#02040a), earthy paper palette (#d4c3a8), cyan accent (rgba(56,189,248,...)) for the technical layer specifically. Sans-serif body, serif headings. No hype language, no gradients that scream crypto. This should look like infrastructure documentation, not a token sale.
+
+Navigation:
+Link to this page from the footer of the main Clearing page and from The Mill / Aquifer card in the zone map section. The URL ourheadwaters.ca/aquifer/ should be what goes in a social bio when addressing a technical audience.
+
