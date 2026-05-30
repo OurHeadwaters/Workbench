@@ -31,6 +31,7 @@ import { TipPage } from "@/pages/TipPage";
 import { WhatIsCodetryPage } from "@/pages/WhatIsCodetryPage";
 import { MapPage } from "@/pages/MapPage";
 import { CompassPage } from "@/pages/CompassPage";
+import { AquiferPage } from "@/pages/AquiferPage";
 import { CapCeremonyPage } from "@/pages/CapCeremonyPage";
 import { GordWidget } from "@workspace/gord-widget";
 
@@ -101,6 +102,9 @@ function Router() {
 
       {/* ── Cap Ceremony ── */}
       <Route path="/economy/cap-ceremony" component={CapCeremonyPage} />
+
+      {/* ── The Aquifer — Identity Infrastructure ── */}
+      <Route path="/aquifer" component={AquiferPage} />
 
       <Route component={NotFound} />
     </Switch>

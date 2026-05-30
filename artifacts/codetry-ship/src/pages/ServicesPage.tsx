@@ -571,13 +571,20 @@ export function ServicesPage() {
             "Locked to an ongoing subscription",
           ]} />
 
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap items-center gap-4">
             <a
               href="#start"
               className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[13px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
               style={{ background: "#b85a3e", color: "#f4ede0" }}
             >
               Commission The Clearing →
+            </a>
+            <a
+              href="/aquifer"
+              className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-70"
+              style={{ color: "rgba(56,189,248,0.70)", borderBottom: "1px solid rgba(56,189,248,0.22)", paddingBottom: 1 }}
+            >
+              How the ledger works — The Aquifer →
             </a>
           </div>
         </section>

@@ -107,6 +107,13 @@ export const ZONES: ZoneData[] = [
         zoneAddress: "Z1–A",
       },
       {
+        name: "The Aquifer",
+        tagline: "XRPL-anchored identity infrastructure — SHA-256 hash witnessing, DID records, lifecycle crossings",
+        url: "/aquifer/",
+        inThisProject: true,
+        zoneAddress: "Z1–A1",
+      },
+      {
         name: "XRPL Design Hub",
         tagline: "Trust layer design — XRPL wallet UX, passphrase architecture, identity patterns",
         url: "https://xrpl-design-hub.replit.app",
