@@ -397,6 +397,114 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* ── aquifer ── */}
+      <section
+        className="relative w-full overflow-hidden"
+        style={{ background: "#020812" }}
+        data-testid="home-aquifer"
+      >
+        {/* Deep-water base gradient — dark blue-black */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: "linear-gradient(180deg, #020812 0%, #040f1e 50%, #020c18 100%)",
+          }}
+        />
+        {/* Luminous cyan radial glow — centred, underground-water feel */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: "radial-gradient(ellipse 80% 55% at 50% 60%, rgba(14,165,233,0.13) 0%, rgba(6,82,140,0.08) 40%, transparent 70%)",
+          }}
+        />
+        {/* Secondary glow — cooler, deeper */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: "radial-gradient(ellipse 50% 35% at 50% 75%, rgba(56,189,248,0.07) 0%, transparent 60%)",
+          }}
+        />
+        {/* Topographic contour lines — same pattern as other sections */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.07 }} />
+        {/* Grain overlay */}
+        <GrainOverlay opacity={0.04} />
+        {/* Top fade from Odyssey green into deep water */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0"
+          style={{
+            height: 80,
+            background: "linear-gradient(to bottom, rgba(20,46,32,0.55), transparent)",
+          }}
+        />
+        {/* Bottom fade into page background */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0"
+          style={{
+            height: 80,
+            background: "linear-gradient(to top, #0F1C18, transparent)",
+          }}
+        />
+
+        <div className="relative z-10 px-6 sm:px-10 py-20 sm:py-24">
+          <div className="mx-auto max-w-[38rem] text-center">
+            <ScrollReveal>
+              {/* Eyebrow with cyan rule */}
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <div className="h-px w-6" style={{ background: "rgba(56,189,248,0.45)" }} />
+                <p
+                  className="font-mono text-[9.5px] uppercase tracking-[0.32em]"
+                  style={{ color: "rgba(56,189,248,0.70)" }}
+                >
+                  Identity Infrastructure
+                </p>
+                <div className="h-px w-6" style={{ background: "rgba(56,189,248,0.45)" }} />
+              </div>
+
+              <h2
+                className="font-serif tracking-tight leading-[1.1] mb-5"
+                style={{
+                  fontSize: "clamp(2.2rem, 7vw, 3.4rem)",
+                  color: "#e8f4f8",
+                  textShadow: "0 0 60px rgba(56,189,248,0.18), 0 2px 24px rgba(0,0,0,0.8)",
+                }}
+              >
+                The Aquifer
+              </h2>
+
+              <p
+                className="font-serif leading-[1.65] mb-9"
+                style={{
+                  fontSize: "clamp(1rem, 2.8vw, 1.15rem)",
+                  color: "rgba(200,232,248,0.72)",
+                }}
+              >
+                The identity infrastructure beneath everything — how the ledger holds, how trust is carried, how the system remembers.
+              </p>
+
+              {/* CTA */}
+              <a
+                href={`${import.meta.env.BASE_URL}aquifer`}
+                className="inline-flex items-center justify-center gap-2 rounded-sm px-8 py-3.5 font-mono text-[11px] uppercase tracking-[0.20em] transition-all hover:opacity-85"
+                style={{
+                  background: "rgba(14,165,233,0.15)",
+                  border: "1px solid rgba(56,189,248,0.40)",
+                  color: "rgba(186,230,253,0.95)",
+                  boxShadow: "0 0 32px rgba(14,165,233,0.12), inset 0 0 0 1px rgba(56,189,248,0.08)",
+                }}
+                data-testid="aquifer-cta"
+              >
+                Enter the Aquifer →
+              </a>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
       <div
         className="mx-auto max-w-[52rem] px-6 sm:px-8"
         style={{ background: "#0F1C18" }}
