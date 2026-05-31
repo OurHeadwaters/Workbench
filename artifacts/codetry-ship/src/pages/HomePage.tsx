@@ -487,19 +487,32 @@ export function HomePage() {
               </p>
 
               {/* CTA */}
-              <a
-                href={`${import.meta.env.BASE_URL}aquifer`}
-                className="inline-flex items-center justify-center gap-2 rounded-sm px-8 py-3.5 font-mono text-[11px] uppercase tracking-[0.20em] transition-all hover:opacity-85"
-                style={{
-                  background: "rgba(14,165,233,0.15)",
-                  border: "1px solid rgba(56,189,248,0.40)",
-                  color: "rgba(186,230,253,0.95)",
-                  boxShadow: "0 0 32px rgba(14,165,233,0.12), inset 0 0 0 1px rgba(56,189,248,0.08)",
-                }}
-                data-testid="aquifer-cta"
-              >
-                Enter the Aquifer →
-              </a>
+              <div className="inline-flex flex-col items-center gap-3">
+                <a
+                  href={`${import.meta.env.BASE_URL}aquifer`}
+                  className="inline-flex items-center justify-center gap-2 rounded-sm px-8 py-3.5 font-mono text-[11px] uppercase tracking-[0.20em] transition-all hover:opacity-85"
+                  style={{
+                    background: "rgba(14,165,233,0.15)",
+                    border: "1px solid rgba(56,189,248,0.40)",
+                    color: "rgba(186,230,253,0.95)",
+                    boxShadow: "0 0 32px rgba(14,165,233,0.12), inset 0 0 0 1px rgba(56,189,248,0.08)",
+                  }}
+                  data-testid="aquifer-cta"
+                >
+                  Enter the Aquifer →
+                </a>
+                <div className="flex items-center justify-center gap-3 flex-wrap">
+                  {["XRPL-anchored", "SHA-256 hash witnessing", "DID-compatible"].map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-mono text-[8.5px] uppercase tracking-[0.14em]"
+                      style={{ color: "rgba(56,189,248,0.45)" }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </ScrollReveal>
           </div>
         </div>
