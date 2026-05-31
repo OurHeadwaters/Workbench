@@ -72,7 +72,7 @@ export function HomePage() {
         {/* Radial gradient fade to dark at bottom */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 hero-fade-shimmer"
           style={{
             background: "linear-gradient(to bottom, rgba(10,20,14,0.2) 0%, rgba(10,20,14,0.0) 50%, rgba(10,20,14,0.9) 100%)",
           }}
@@ -80,7 +80,7 @@ export function HomePage() {
         {/* Edge vignette */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 hero-vignette-shimmer"
           style={{
             background: "radial-gradient(ellipse 120% 80% at 50% 50%, transparent 45%, rgba(8,16,12,0.45) 100%)",
           }}
@@ -299,7 +299,7 @@ export function HomePage() {
         {/* Darkening overlay */}
         <div
           aria-hidden
-          className="absolute inset-0"
+          className="absolute inset-0 odyssey-overlay-shimmer"
           style={{
             background: "linear-gradient(to bottom, rgba(20,46,32,0.72) 0%, rgba(20,46,32,0.88) 100%)",
           }}

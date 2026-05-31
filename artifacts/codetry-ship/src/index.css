@@ -328,6 +328,44 @@ html {
   .ambient-campfire-a, .ambient-campfire-b { animation: none; }
 }
 
+/* ── Hero section — vignette & bottom-fade shimmer ── */
+@keyframes hero-vignette-shimmer {
+  0%   { opacity: 0.72; }
+  40%  { opacity: 1;    }
+  100% { opacity: 0.72; }
+}
+@keyframes hero-fade-shimmer {
+  0%   { opacity: 0.80; }
+  50%  { opacity: 1;    }
+  100% { opacity: 0.80; }
+}
+.hero-vignette-shimmer {
+  will-change: opacity;
+  animation: hero-vignette-shimmer 18s ease-in-out infinite;
+}
+.hero-fade-shimmer {
+  will-change: opacity;
+  animation: hero-fade-shimmer 14s ease-in-out infinite reverse;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-vignette-shimmer,
+  .hero-fade-shimmer { animation: none; }
+}
+
+/* ── Odyssey section — forest canopy overlay shimmer ── */
+@keyframes odyssey-overlay-shimmer {
+  0%   { opacity: 0.82; }
+  45%  { opacity: 1;    }
+  100% { opacity: 0.82; }
+}
+.odyssey-overlay-shimmer {
+  will-change: opacity;
+  animation: odyssey-overlay-shimmer 20s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .odyssey-overlay-shimmer { animation: none; }
+}
+
 /* ── Aquifer section — water-ripple shimmer ── */
 @keyframes aquifer-shimmer {
   0%   { opacity: 0.62; }
