@@ -328,6 +328,29 @@ html {
   .ambient-campfire-a, .ambient-campfire-b { animation: none; }
 }
 
+/* ── Aquifer section — water-ripple shimmer ── */
+@keyframes aquifer-shimmer {
+  0%   { opacity: 0.62; }
+  45%  { opacity: 1;    }
+  100% { opacity: 0.62; }
+}
+@keyframes aquifer-shimmer-secondary {
+  0%   { opacity: 0.58; }
+  55%  { opacity: 0.95; }
+  100% { opacity: 0.58; }
+}
+.aquifer-glow {
+  will-change: opacity;
+  animation: aquifer-shimmer 10s ease-in-out infinite;
+}
+.aquifer-glow-secondary {
+  will-change: opacity;
+  animation: aquifer-shimmer-secondary 12s ease-in-out infinite reverse;
+}
+@media (prefers-reduced-motion: reduce) {
+  .aquifer-glow, .aquifer-glow-secondary { animation: none; }
+}
+
 /* ── Aurora gradient background ── */
 @keyframes aurora-drift {
   0%   { background-position: 0% 50%; }

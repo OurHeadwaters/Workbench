@@ -414,7 +414,7 @@ export function HomePage() {
         {/* Luminous cyan radial glow — centred, underground-water feel */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 aquifer-glow"
           style={{
             background: "radial-gradient(ellipse 80% 55% at 50% 60%, rgba(14,165,233,0.13) 0%, rgba(6,82,140,0.08) 40%, transparent 70%)",
           }}
@@ -422,7 +422,7 @@ export function HomePage() {
         {/* Secondary glow — cooler, deeper */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 aquifer-glow-secondary"
           style={{
             background: "radial-gradient(ellipse 50% 35% at 50% 75%, rgba(56,189,248,0.07) 0%, transparent 60%)",
           }}
