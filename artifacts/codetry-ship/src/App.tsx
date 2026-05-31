@@ -32,6 +32,7 @@ import { WhatIsCodetryPage } from "@/pages/WhatIsCodetryPage";
 import { MapPage } from "@/pages/MapPage";
 import { CompassPage } from "@/pages/CompassPage";
 import { AquiferPage } from "@/pages/AquiferPage";
+import { HeadwatersPage } from "@/pages/HeadwatersPage";
 import { CapCeremonyPage } from "@/pages/CapCeremonyPage";
 import { GordWidget } from "@workspace/gord-widget";
 
@@ -105,6 +106,9 @@ function Router() {
 
       {/* ── The Aquifer — Identity Infrastructure ── */}
       <Route path="/aquifer" component={AquiferPage} />
+
+      {/* ── The Clearing — origin story video ── */}
+      <Route path="/headwaters" component={HeadwatersPage} />
 
       <Route component={NotFound} />
     </Switch>

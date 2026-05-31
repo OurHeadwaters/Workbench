@@ -557,6 +557,86 @@ export function AquiferPage() {
           </div>
         </section>
 
+        {/* ── Watch the Origin Story CTA ── */}
+        <div
+          style={{
+            marginTop: 64,
+            borderRadius: 8,
+            border: "1.5px solid rgba(56,189,248,0.28)",
+            background: "rgba(56,189,248,0.06)",
+            padding: "36px 32px",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 24,
+          }}
+        >
+          <div>
+            <p
+              style={{
+                fontFamily: "monospace",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.28em",
+                textTransform: "uppercase",
+                color: "rgba(56,189,248,0.55)",
+                marginBottom: 10,
+                margin: "0 0 10px",
+              }}
+            >
+              The Clearing
+            </p>
+            <p
+              style={{
+                fontSize: "clamp(1.1rem, 2.8vw, 1.4rem)",
+                fontWeight: 700,
+                color: "#f0e8d8",
+                margin: "0 0 8px",
+                lineHeight: 1.2,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              Watch the origin story
+            </p>
+            <p
+              style={{
+                fontSize: 14,
+                lineHeight: 1.65,
+                color: "rgba(212,195,168,0.60)",
+                margin: 0,
+                maxWidth: 400,
+              }}
+            >
+              The origin story behind the system — why this community economy
+              needed a clearing at its centre.
+            </p>
+          </div>
+          <a
+            href={`${BASE}headwaters`}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              fontFamily: "monospace",
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "#02040a",
+              background: "rgba(56,189,248,0.85)",
+              borderRadius: 4,
+              padding: "12px 22px",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+              transition: "background 0.15s",
+              flexShrink: 0,
+            }}
+          >
+            Watch the video →
+          </a>
+        </div>
+
         {/* ── Footer ── */}
         <div
           style={{
