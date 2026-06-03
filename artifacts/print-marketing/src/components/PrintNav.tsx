@@ -361,7 +361,23 @@ export function PrintNav({
     )}
     <div className="screen-nav" style={{ flexDirection: "column", gap: "0.5rem", alignItems: "stretch" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Link href="/" className="no-print">← Back to suite</Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
+          <Link href="/" className="no-print">← Back to suite</Link>
+          <Link
+            href="/ecosystem-guide"
+            className="no-print"
+            style={{
+              fontFamily: "var(--font-sans, sans-serif)",
+              fontSize: "0.72rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "rgba(212,160,23,0.75)",
+              textDecoration: "none",
+            }}
+          >
+            → Ecosystem Guide
+          </Link>
+        </div>
         <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
           <button
             className={`btn-preview${previewing ? " btn-preview--active" : ""}`}
