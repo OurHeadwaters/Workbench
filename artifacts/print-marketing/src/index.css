@@ -197,6 +197,11 @@ body.print-preview .page-letter-landscape::before {
   transform: translateY(-1px);
 }
 
+/* ── Print-only Ecosystem Guide footer (hidden on screen) ── */
+.print-ecosystem-footer {
+  display: none;
+}
+
 @media print {
   .no-print,
   .screen-nav { display: none !important; }
@@ -218,6 +223,22 @@ body.print-preview .page-letter-landscape::before {
   @page {
     size: letter portrait;
     margin: 0;
+  }
+
+  /* Show Ecosystem Guide URL at the bottom of every printed page */
+  .print-ecosystem-footer {
+    display: block;
+    position: fixed;
+    bottom: 0.25in;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: var(--font-sans, sans-serif);
+    font-size: 7.5pt;
+    color: rgba(43, 33, 22, 0.45);
+    letter-spacing: 0.04em;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }
 

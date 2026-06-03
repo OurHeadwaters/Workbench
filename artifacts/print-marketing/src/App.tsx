@@ -59,6 +59,7 @@ import EcosystemGuide from "@/pages/EcosystemGuide";
 import MoneyMachineReport from "@/pages/MoneyMachineReport";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
+import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
 
 function Router() {
   return (
@@ -131,6 +132,7 @@ export default function App() {
       </WouterRouter>
       <KitchenTableButton />
       <GordWidget />
+      <PrintEcosystemFooter />
     </PreviewProvider>
     </ZoneStoreProvider>
   );

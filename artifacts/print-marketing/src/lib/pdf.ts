@@ -31,6 +31,28 @@ function findPageElement(el: HTMLElement): HTMLElement {
   return child ?? el;
 }
 
+const ECOSYSTEM_GUIDE_URL = "ourheadwaters.ca/print-marketing/ecosystem-guide";
+
+function injectEcosystemFooter(pageEl: HTMLElement): HTMLElement {
+  const footer = document.createElement("div");
+  footer.setAttribute("data-pdf-footer", "ecosystem-guide");
+  footer.style.cssText = [
+    "position:absolute",
+    "bottom:0.25in",
+    "left:0",
+    "right:0",
+    "text-align:center",
+    "font-family:Inter,ui-sans-serif,system-ui,sans-serif",
+    "font-size:7.5pt",
+    "color:rgba(43,33,22,0.45)",
+    "letter-spacing:0.04em",
+    "pointer-events:none",
+  ].join(";");
+  footer.textContent = `Ecosystem Guide: ${ECOSYSTEM_GUIDE_URL}`;
+  pageEl.appendChild(footer);
+  return footer;
+}
+
 async function renderPageToPdf(
   pdf: jsPDF,
   el: HTMLElement,
@@ -41,17 +63,27 @@ async function renderPageToPdf(
   // surrounding chrome, padding, or grey backgrounds.
   const pageEl = findPageElement(el);
 
-  const canvas = await html2canvas(pageEl, {
-    scale: 3,
-    useCORS: true,
-    logging: false,
-    backgroundColor: null,
-    // Use the element's own dimensions as the simulated viewport so layout
-    // is computed at print-page width (816 px for 8.5 in at 96 dpi), not
-    // the browser window width.
-    windowWidth: pageEl.scrollWidth,
-    windowHeight: pageEl.scrollHeight,
-  });
+  // Temporarily inject the Ecosystem Guide URL into the capture target so it
+  // appears in the downloaded PDF (html2canvas cannot pick up position:fixed
+  // elements rendered outside the target node).
+  const footer = injectEcosystemFooter(pageEl);
+
+  let canvas: HTMLCanvasElement;
+  try {
+    canvas = await html2canvas(pageEl, {
+      scale: 3,
+      useCORS: true,
+      logging: false,
+      backgroundColor: null,
+      // Use the element's own dimensions as the simulated viewport so layout
+      // is computed at print-page width (816 px for 8.5 in at 96 dpi), not
+      // the browser window width.
+      windowWidth: pageEl.scrollWidth,
+      windowHeight: pageEl.scrollHeight,
+    });
+  } finally {
+    pageEl.removeChild(footer);
+  }
 
   const imgData = canvas.toDataURL("image/png");
 
