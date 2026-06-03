@@ -350,6 +350,7 @@ function ToolSection({ tool, even }: { tool: typeof tools[0]; even: boolean }) {
               href={tool.href}
               target="_blank"
               rel="noopener noreferrer"
+              className="no-print"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
