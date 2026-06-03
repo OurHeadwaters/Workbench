@@ -165,6 +165,7 @@ const ZONES = [
     season: "Provisions laid in before the flood.",
     accent: "#9c4a2f",
     docs: [
+      { href: "/ecosystem-guide", title: "Plain-Language Guide — All 8 Headwaters Tools (PDF)", label: "Start here", desc: "Print-ready 6-page PDF: cover, one section per tool, what it does, what you can do with it, and why it matters." },
       { href: "/overview", title: "Project Overview — All 7 Headwaters Tools", label: "Start here", desc: "Plain-language visual guide showing what every tool does and how they connect." },
       { href: "/internal-scope-plan", title: "Internal Scope Plan", label: "Internal", desc: "Internal reference for active engagement scope and milestones." },
       { href: "/codetry-packet-sandy-lake", title: "Codetry Print Packet — Sandy Lake", label: "Aboriginal Outreach", desc: "Full Sandy Lake packet: cover + intro + one-pager + brief + proposal." },

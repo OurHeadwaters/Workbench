@@ -55,6 +55,7 @@ import DeerLakeYouthOdyssey from "@/pages/DeerLakeYouthOdyssey";
 import InternalDocs from "@/pages/InternalDocs";
 import SoftwareSystemsBundle from "@/pages/SoftwareSystemsBundle";
 import GovernanceCard from "@/pages/GovernanceCard";
+import EcosystemGuide from "@/pages/EcosystemGuide";
 import MoneyMachineReport from "@/pages/MoneyMachineReport";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
@@ -114,6 +115,7 @@ function Router() {
       <Route path="/community-finance-brief" component={CommunityFinanceBrief} />
       <Route path="/governance-card" component={GovernanceCard} />
       <Route path="/money-machine-report" component={MoneyMachineReport} />
+      <Route path="/ecosystem-guide" component={EcosystemGuide} />
       <Route path="/internal" component={InternalDocs} />
       <Route component={NotFound} />
     </Switch>
