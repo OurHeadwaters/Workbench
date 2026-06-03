@@ -27,6 +27,7 @@ const tools = [
     icon: "★",
     name: "North Star",
     subtitle: "Daily operating cockpit",
+    href: "/north-star/",
     color: EVERGREEN,
     what: "North Star is where the work gets done each day. It's the founder's home base — a dashboard that shows what needs attention right now, tracks every client engagement from start to hand-off, and keeps a live view of money coming in and going out. Everything that happens in the business runs through here first.",
     bullets: [
@@ -43,6 +44,7 @@ const tools = [
     icon: "◈",
     name: "Headwaters Learning",
     subtitle: "Financial field guide for food entrepreneurs",
+    href: "/headwaters-learning/",
     color: "#2e7d32",
     what: "Headwaters Learning is an online course built for food entrepreneurs in Northwestern Ontario — people selling at markets, running cottage preserves, or supplying small stores. It teaches the Headwaters money model in plain language, using a real business (Parr's Jars) as the worked example throughout.",
     bullets: [
@@ -59,6 +61,7 @@ const tools = [
     icon: "⊞",
     name: "Headwaters Books",
     subtitle: "Daily working ledger",
+    href: "/headwaters-books/",
     color: LAKE,
     what: "Headwaters Books is the internal financial record for the agency. Every dollar that comes in or goes out gets logged here. Community members who contribute labour earn credits that flow into their personal envelopes. At month-end, the books get packaged and handed to the accountant.",
     bullets: [
@@ -75,6 +78,7 @@ const tools = [
     icon: "⊖",
     name: "Research Library",
     subtitle: "Northern food systems evidence base",
+    href: "/library/",
     color: "#5c3317",
     what: "The Research Library is a curated collection of reports, research, and links about northern food systems, supply chain challenges, and community economic development. Anyone on the team can add a source; curators review what comes in. Nothing stays unsupported — every recommendation can be traced back to real evidence.",
     bullets: [
@@ -91,6 +95,7 @@ const tools = [
     icon: "◷",
     name: "Print Marketing Suite",
     subtitle: "The paper layer",
+    href: "/print-marketing/",
     color: RUST,
     what: "The Print Marketing Suite is the document toolkit for Headwaters — over forty print-ready materials organized into five zones. Flyers, posters, intro letters, pitch packets, governance cards, and internal forms. When a document needs to leave a screen and land on a table in a band office or at a farmers market, it comes from here.",
     bullets: [
@@ -107,6 +112,7 @@ const tools = [
     icon: "◎",
     name: "Codetry Ship",
     subtitle: "Crew manifest and public outreach portal",
+    href: "/",
     color: "#3a5c6e",
     what: "Codetry Ship is the public face of the Headwaters crew. It shows who is on the team, what role each person fills, and what the agency offers. It also hosts the Odyssey — a self-paced journey for adults and youth who want to learn the Codetry discipline and understand how a community economy works from the inside out.",
     bullets: [
@@ -123,6 +129,7 @@ const tools = [
     icon: "📖",
     name: "The Handbook",
     subtitle: "How a community runs its own economy",
+    href: "/codetry-handbook/",
     color: "#5a3e28",
     what: "The Handbook is the written record of the Codetry discipline — a practical guide to the Headwaters method, written in plain language so any community member can understand it. It lives as a mobile-friendly app so it can be read in the field, off-grid, without a data connection. The Pioneer Path walks readers through each of the five core stations with audio narration.",
     bullets: [
@@ -139,6 +146,7 @@ const tools = [
     icon: "⌀",
     name: "Village Board",
     subtitle: "Shared data layer",
+    href: "/sandbox/",
     color: "#37474f",
     what: "The Village Board is the shared backend service that all other Headwaters tools draw from. It stores content, manages files, handles authentication, and delivers the handbook text, pioneer path data, and vocabulary definitions to whatever tool needs them. It is not a tool the founder opens and uses directly — it runs quietly in the background, keeping everything connected.",
     bullets: [
@@ -338,6 +346,30 @@ function ToolSection({ tool, even }: { tool: typeof tools[0]; even: boolean }) {
             }}>
               {tool.subtitle}
             </span>
+            <a
+              href={tool.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.2rem",
+                fontSize: "0.6rem",
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: tool.color,
+                textDecoration: "none",
+                border: `1px solid ${tool.color}`,
+                borderRadius: "3px",
+                padding: "0.15rem 0.45rem",
+                opacity: 0.75,
+                fontFamily: "'Inter', sans-serif",
+                lineHeight: 1,
+              }}
+            >
+              Open ↗
+            </a>
           </div>
         </div>
       </div>
