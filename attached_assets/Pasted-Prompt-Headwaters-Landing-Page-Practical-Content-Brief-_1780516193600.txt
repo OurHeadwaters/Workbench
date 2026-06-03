@@ -1,0 +1,44 @@
+Prompt: Headwaters Landing Page — Practical Content Brief
+Use this prompt verbatim with another agent (or a conversation partner) to extract the content needed to rebuild the Headwaters landing page around the five divisions.
+
+The prompt
+I am rebuilding the landing page for the Headwaters Universe — a northern Ontario self-reliance network built by Bobbie Parr in Wabigoon, Ontario. The page currently explains the philosophy and origin story well but does not tell someone what they can actually DO. I need to fix that.
+
+The new top-level structure of the Headwaters Universe is five divisions:
+
+Headwaters Finance — local exchange, mutual credit, community money
+Headwaters Community — the circle, the garden, the shared knowledge
+Headwaters Studios — creative work, storytelling, making things
+Headwaters Media — content, documentation, publishing the north
+Headwaters Home — Zone 0, the household, kitchen, food, self-reliance at the hearth
+For each of the five divisions, I need you to answer these questions in plain language — not philosophy, not metaphor, just practical:
+
+For each division:
+
+Who is this for? Name a specific kind of person, not a category. ("A family in a small northern town who wants to..." not "community members who...")
+
+What is the first thing someone does when they arrive? One concrete action. Not "explore" or "connect" — something you can actually click, fill in, or pick up.
+
+What are 3–5 specific tools, pages, or features that exist right now (or are being built) inside this division? Name them by what they do, not what they're called.
+
+What does someone have in their hands after using this division for one week? A document, a list, a decision, a conversation that happened — something tangible.
+
+What is the one sentence that goes on the landing page card for this division? Not a tagline. A plain description of what it does.
+
+Which zone(s) does this division live in? Use the canonical zone numbers: 0 (Saltbox/Home), 1 (Kitchen Table/Learning), 2 (Workbench/Privacy+Tools), 3 (Greenhouse/Community), 4 (Clearing/Market), 5 (Edge/Vision).
+
+What to do with the answers
+Once you have answers for all five divisions, bring them back. The landing page will be rebuilt with:
+
+A hero section that states what Headwaters Universe IS (one clear sentence)
+Five division cards — one per heading — each answering "what can I do here?"
+A "where do I start?" entry point based on which division fits the reader
+The circuit sentence at the bottom: "From the Hearth (Zone 0) water rises at the Spring (1), runs the Worn Path (2), gathers in the Clearing (3), flows to the Market Square (4), and is held on the Ridge (5). The Aquifer keeps the entire watershed cycling."
+The design is warm atmospheric dark — Fraunces 800 headings, DM Sans body, amber accent. No emojis. No corporate language. Practitioner tone — warm northern, quiet competence.
+
+Context the other agent needs
+The project lives at ourheadwaters.ca
+The full design system is in shared/briefs/headwaters-design-brief.md
+The zone system is in replit.md (canonical zone chain table)
+The watershed compact is in shared/watershed-compact.md
+The gate/Eave Rule is in shared/generosity-with-boundaries.md
