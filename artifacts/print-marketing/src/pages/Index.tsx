@@ -237,6 +237,20 @@ export default function Index() {
         >
           → Internal docs
         </a>
+        <span style={{ color: "rgba(212,160,23,0.25)", fontSize: "0.65rem" }}>·</span>
+        <a
+          href={`${base}ecosystem-guide`}
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "0.72rem",
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "rgba(212,160,23,0.45)",
+            textDecoration: "none",
+          }}
+        >
+          → Ecosystem Guide
+        </a>
       </div>
     </div>
   );
