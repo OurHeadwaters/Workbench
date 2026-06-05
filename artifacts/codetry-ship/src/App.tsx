@@ -119,15 +119,26 @@ function Router() {
   );
 }
 
-const NO_NAV_ROUTES = ["/start"];
+const STANDALONE_ROUTES = ["/start"];
 
 function NavShell() {
   const [location] = useLocation();
-  if (NO_NAV_ROUTES.includes(location)) return null;
+  if (STANDALONE_ROUTES.includes(location)) return null;
   return (
     <div className="print:hidden">
       <SiteNav />
     </div>
+  );
+}
+
+function GlobalWidgets() {
+  const [location] = useLocation();
+  if (STANDALONE_ROUTES.includes(location)) return null;
+  return (
+    <>
+      <KitchenTableButton />
+      <GordWidget />
+    </>
   );
 }
 
@@ -138,10 +149,9 @@ function App() {
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <NavShell />
           <Router />
+          <GlobalWidgets />
         </WouterRouter>
         <Toaster />
-        <KitchenTableButton />
-        <GordWidget />
       </TooltipProvider>
     </QueryClientProvider>
   );

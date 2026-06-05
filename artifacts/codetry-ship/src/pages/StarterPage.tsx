@@ -80,7 +80,7 @@ export function StarterPage() {
     >
       {!STRIPE_LINKS_LIVE && (
         <div
-          className="no-print"
+          className="print:hidden"
           style={{
             background: "#fef08a",
             borderBottom: "2px solid #ca8a04",
