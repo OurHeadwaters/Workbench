@@ -58,6 +58,7 @@ import SoftwareSystemsBundle from "@/pages/SoftwareSystemsBundle";
 import GovernanceCard from "@/pages/GovernanceCard";
 import EcosystemGuide from "@/pages/EcosystemGuide";
 import MoneyMachineReport from "@/pages/MoneyMachineReport";
+import NorthernPantryPrintable from "@/pages/NorthernPantryPrintable";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
 import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
@@ -120,6 +121,7 @@ function Router() {
       <Route path="/money-machine-report" component={MoneyMachineReport} />
       <Route path="/ecosystem-guide" component={EcosystemGuide} />
       <Route path="/internal" component={InternalDocs} />
+      <Route path="/suite/northern-pantry" component={NorthernPantryPrintable} />
       <Route component={NotFound} />
     </Switch>
   );
