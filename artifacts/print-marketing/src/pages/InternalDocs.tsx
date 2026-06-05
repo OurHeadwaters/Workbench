@@ -181,6 +181,7 @@ const ZONES = [
       { href: "/deer-lake-youth-odyssey", title: "Deer Lake Youth Odyssey", label: "Deer Lake", desc: "Youth-focused Odyssey framing for the Deer Lake community." },
       { href: "/deer-lake-chief-brief", title: "Deer Lake Chief Brief", label: "Deer Lake", desc: "One-page brief prepared for the Chief of Deer Lake First Nation." },
       { href: "/xrpl-tip", title: "The Shallows — XRPL Tipping PoC", label: "Zone 5 · Dam Days", desc: "Peer-to-peer XRP tipping on XRPL Testnet — interactive, not printable." },
+      { href: "/pace-self-serve", title: "PACE — Start Here (Self-Serve Tools)", label: "Business Dev", desc: "Print leave-behind for PACE clients — three starter offerings with prices and QR pointing to ourheadwaters.ca/start." },
     ],
   },
 ];

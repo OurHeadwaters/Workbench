@@ -1,13 +1,16 @@
 import { QRCodeSVG } from "qrcode.react";
 
-const URL = "https://ourheadwaters.ca";
+const DEFAULT_URL = "https://ourheadwaters.ca";
 
 interface QRCodeStampProps {
   light?: boolean;
   size?: number;
+  url?: string;
 }
 
-export default function QRCodeStamp({ light = false, size = 72 }: QRCodeStampProps) {
+export default function QRCodeStamp({ light = false, size = 72, url = DEFAULT_URL }: QRCodeStampProps) {
+  const label = url.replace(/^https?:\/\//, "");
+
   return (
     <div
       style={{
@@ -27,7 +30,7 @@ export default function QRCodeStamp({ light = false, size = 72 }: QRCodeStampPro
         }}
       >
         <QRCodeSVG
-          value={URL}
+          value={url}
           size={size}
           level="M"
           fgColor="#1f3d2e"
@@ -44,7 +47,7 @@ export default function QRCodeStamp({ light = false, size = 72 }: QRCodeStampPro
           textAlign: "center",
         }}
       >
-        ourheadwaters.ca
+        {label}
       </span>
     </div>
   );

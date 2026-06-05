@@ -26,6 +26,7 @@ import NorthernPilotPitch from "@/pages/NorthernPilotPitch";
 import DeerLakePartnership from "@/pages/DeerLakePartnership";
 import GillesPitch from "@/pages/GillesPitch";
 import PaceReferral from "@/pages/PaceReferral";
+import PaceSelfServe from "@/pages/PaceSelfServe";
 import NorthernEconomicTools from "@/pages/NorthernEconomicTools";
 import InternalScopePlan from "@/pages/InternalScopePlan";
 import BrandingKit from "@/pages/BrandingKit";
@@ -88,6 +89,7 @@ function Router() {
       <Route path="/deer-lake-partnership" component={DeerLakePartnership} />
       <Route path="/gilles-pitch" component={GillesPitch} />
       <Route path="/pace-referral" component={PaceReferral} />
+      <Route path="/pace-self-serve" component={PaceSelfServe} />
       <Route path="/northern-economic-tools" component={NorthernEconomicTools} />
       <Route path="/engine-one-pager" component={EngineOnePager} />
       <Route path="/internal-scope-plan" component={InternalScopePlan} />

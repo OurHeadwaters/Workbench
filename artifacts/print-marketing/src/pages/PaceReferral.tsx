@@ -224,13 +224,13 @@ export default function PaceReferral() {
                 bobbie@ourheadwaters.ca
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(255,255,255,0.75)", marginBottom: "0.07rem" }}>
-                ourheadwaters.ca
+                ourheadwaters.ca/start
               </p>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.7rem", fontStyle: "italic", color: "rgba(255,255,255,0.6)", lineHeight: 1.4, marginTop: "0.06rem" }}>
                 Bobbie Parr — NWO practitioner, founder of Parr's Jars, founding board member of the 807 Food Co-op. Based in Wabigoon.
               </p>
             </div>
-            <QRCodeStamp />
+            <QRCodeStamp url="https://ourheadwaters.ca/start" />
           </div>
 
         </div>
