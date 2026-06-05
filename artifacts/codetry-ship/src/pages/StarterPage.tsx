@@ -65,12 +65,11 @@ const offerings = [
   },
 ];
 
-export function StarterPage() {
-  const isDev =
-    typeof window !== "undefined" &&
-    (window.location.hostname.includes("replit") ||
-      window.location.hostname === "localhost");
+const STRIPE_LINKS_LIVE =
+  !STRIPE_FIELD_GUIDE.includes("REPLACE") &&
+  !STRIPE_HANDBOOK.includes("REPLACE");
 
+export function StarterPage() {
   return (
     <div
       style={{
@@ -79,8 +78,9 @@ export function StarterPage() {
         fontFamily: "var(--font-sans, Inter, sans-serif)",
       }}
     >
-      {isDev && (
+      {!STRIPE_LINKS_LIVE && (
         <div
+          className="no-print"
           style={{
             background: "#fef08a",
             borderBottom: "2px solid #ca8a04",
@@ -91,7 +91,7 @@ export function StarterPage() {
             lineHeight: 1.5,
           }}
         >
-          <strong>Dev only — Stripe links not yet live.</strong> Replace{" "}
+          <strong>Stripe links not yet live.</strong> Replace{" "}
           <code>REPLACE_FIELD_GUIDE_LINK</code> and{" "}
           <code>REPLACE_HANDBOOK_LINK</code> in{" "}
           <code>StarterPage.tsx</code> with your real Stripe Payment Link URLs.
@@ -104,7 +104,7 @@ export function StarterPage() {
           >
             dashboard.stripe.com/payment-links
           </a>
-          . This banner is hidden on ourheadwaters.ca.
+          . This banner disappears automatically once the links are replaced.
         </div>
       )}
 
