@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
+import { Switch, Route, Router as WouterRouter, Redirect, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
 import { Toaster } from "@/components/ui/toaster";
@@ -34,6 +34,7 @@ import { CompassPage } from "@/pages/CompassPage";
 import { AquiferPage } from "@/pages/AquiferPage";
 import { HeadwatersPage } from "@/pages/HeadwatersPage";
 import { CapCeremonyPage } from "@/pages/CapCeremonyPage";
+import { StarterPage } from "@/pages/StarterPage";
 import { GordWidget } from "@workspace/gord-widget";
 
 const queryClient = new QueryClient();
@@ -110,8 +111,23 @@ function Router() {
       {/* ── The Clearing — origin story video ── */}
       <Route path="/headwaters" component={HeadwatersPage} />
 
+      {/* ── Self-serve starter offerings ── */}
+      <Route path="/start" component={StarterPage} />
+
       <Route component={NotFound} />
     </Switch>
+  );
+}
+
+const NO_NAV_ROUTES = ["/start"];
+
+function NavShell() {
+  const [location] = useLocation();
+  if (NO_NAV_ROUTES.includes(location)) return null;
+  return (
+    <div className="print:hidden">
+      <SiteNav />
+    </div>
   );
 }
 
@@ -120,9 +136,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <div className="print:hidden">
-            <SiteNav />
-          </div>
+          <NavShell />
           <Router />
         </WouterRouter>
         <Toaster />

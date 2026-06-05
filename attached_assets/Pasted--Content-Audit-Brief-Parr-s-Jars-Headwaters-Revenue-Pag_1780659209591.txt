@@ -1,0 +1,100 @@
+## Content Audit Brief — Parr's Jars / Headwaters Revenue Pages
+
+### Context
+We've built four live pages and a written email sequence for Bobbie Parr (Parr's Jars, 807 Food Co-operative, Headwaters). The architecture is done. What we're doing now is a full copy pass — adding real value, filling gaps, making every section earn its place. Your job is to review the content below and return concrete improvements: rewritten paragraphs, missing sections, stronger hooks, objection handling, social proof prompts, and anything else that would make a first-time TSP listener stay on the page and take action.
+
+### Brand voice
+- Northern Ontario. Practitioner tone. Warm, calm, quietly competent.
+- NOT: corporate, hype-y, survival-panic, Pinterest homesteading aesthetic
+- Reference points: Jack Spirko (TSP), Zone 0 = hearth/kitchen first, water-cycle metaphors
+- The five-line manifesto is the brand anchor:
+  START WHERE YOU ARE / USE WHAT YOU HAVE / DO WHAT YOU CAN / TRACK IT ALL / GROW, BABY, GROW
+
+### What exists (review each and return improvements)
+
+---
+
+**PAGE 1: /headwaters/start — TSP Landing Page**
+Primary audience: people who heard Bobbie on The Survival Podcast and followed the link in the show notes.
+
+Current sections:
+- Hero: "You heard something on The Survival Podcast."
+- Intro: Jack's audience knows something is wrong. I'm Bobbie Parr, jar kitchen in Wabigoon.
+- Five-line manifesto (quoted in full)
+- Lead magnet box: "The 3-Layer Northern Pantry" — free printable, link to print suite
+- Email signup: "Stay in the Loop" — inline ConvertKit form (email + button)
+- Products preview: Zone 0 Starter Kit ($17), Preparedness Pack ($17), Jars & Scars founding edition ($27), Course 1 ($97), Green Salt (physical)
+- Backstory: Ron Paul 2011 → homestead in Wabigoon → Parr's Jars → 807 Food Co-op → Headwaters
+- Circuit sentence footer
+
+**Gaps and questions to address:**
+- What specific episode did Bobbie appear on? What was the hook? (If known — add a direct callback like "Jack said X — here's where that lives.")
+- What is the #1 objection a TSP listener would have to buying from an unknown Canadian woman? How do we handle it?
+- What social proof exists? (Testimonials, co-op member count, years operating, crate subscribers, etc.)
+- The backstory section — is there a specific moment or story that would land harder than the current summary version?
+- Is there a "what to do first" decision tree? (New here → lead magnet → email list → starter kit → course is the intended flow — is this clear enough?)
+- What's missing that a TSP listener would expect to find and won't?
+
+---
+
+**PAGE 2: /headwaters/products — Products & Kits**
+Current sections:
+- Header: "Start where you are. Use what you have."
+- Free: Northern Pantry printable
+- Digital Kits: Zone 0 Starter Kit, Preparedness Pack, Jars & Scars founding edition
+- Courses: Course 1 ($97), coming soon tease for Courses 2 and 3
+- Physical products: Green Salt, The Salty Onion
+- Consulting: PJ Solutions section
+
+**Gaps:**
+- Every digital product needs a "what's inside" bullet list — what exactly are you getting for $17?
+- Course 1 needs a session-by-session outline (10 sessions — what does each cover?)
+- Green Salt and The Salty Onion need a story — why did you make this? What problem does it solve?
+- PJ Solutions consulting section is thin — who is this for, what does an engagement look like, what's the outcome?
+- Is there a bundle? (e.g., Zone 0 Kit + Preparedness Pack together for $27?) Should there be?
+
+---
+
+**PAGE 3: /suite/northern-pantry — The Lead Magnet (printable)**
+A one-page 8.5×11 printable. Three sections:
+- Layer 1: The Jar Kitchen (Zone 0) — active pantry, rotation discipline, root cellar
+- Layer 2: The Standby Room (Zone 1) — dry storage, home preservation, freezer system
+- Layer 3: The 72-Hour Exit Layer (Zone 2) — two packs, what's in each, the rule about when to open them
+
+Bottom has "Spirko Redundancy Rule" callout and a parrsjars.ca CTA.
+
+**Gaps:**
+- Is the content accurate and complete for Bobbie's actual system? What's wrong or missing?
+- Should there be a "this week's action" for each layer? (Something they can do today?)
+- The 72-hour pack list — is anything missing for northern Ontario specifically?
+- Does the framing match how Bobbie actually talks about this system?
+
+---
+
+**EMAIL SEQUENCE: docs/email-drip-sequence.md — 8 emails, 2 days apart**
+Email topics:
+1. Plastic Purge / intro — "The jar on your counter is already waiting"
+2. Sourcing — "What's growing near you this week"
+3. Whole food prep — "The Sunday afternoon that changes your whole week"
+4. Dry storage — "Buy once, eat all winter"
+5. Freezer system — "Your freezer is a time machine"
+6. Preservation — "What your grandmother knew that we forgot"
+7. Jar hacks — "One jar, twelve uses"
+8. Course offer — "You're already a Jarista. Here's what's next."
+
+**Gaps:**
+- These are solid but generic. Where does Bobbie's specific northern voice show up? Add at least one specific story or image from the Wabigoon homestead to each email.
+- Email 8 (the offer) has no testimonials and no urgency mechanism. What's Bobbie's actual founding-edition story — why is the course priced at $97 right now and not $197 later?
+- The weekly newsletter template at the end — does this match Bobbie's actual publishing rhythm and voice?
+- What's the strongest single thing Bobbie has said about this system that isn't in any of these emails yet?
+
+---
+
+### Your deliverables
+Return a structured response with:
+1. **For each page/sequence:** 3–5 specific improvements — rewritten copy, new sections, added detail, removed fluff
+2. **Social proof prompts:** 5–8 questions Bobbie should answer so we can add real proof to each page
+3. **One stronger hook** for the TSP landing page hero — something more specific than "You heard something on The Survival Podcast"
+4. **Anything you'd expect to find on a page like this that's completely missing**
+
+The goal: a first-time TSP listener arrives, reads the page, downloads the free guide, joins the email list, and buys the $17 Zone 0 Kit — all in one session. Every edit should serve that flow.
