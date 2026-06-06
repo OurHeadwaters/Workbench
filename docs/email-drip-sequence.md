@@ -311,8 +311,8 @@ to run the whole system year-round.
 **Why $97:** The founding cohort is being run live. The recordings from those sessions become the full course. Founding students get every session as it's released — plus any revisions after the first cohort gives feedback — at no additional cost. The price reflects work-in-progress access to a practitioner-run course, not a finished product sitting on a shelf. When the course is fully produced it will be $197. Founding students pay once and receive everything, including the updates.
 
 **What founding students say:**
-*"I've been canning for three years and thought I knew what I was doing. The session on pressure timing made me realize I'd been guessing at a step I should have understood. That's the difference between a YouTube video and someone who actually runs the process."*
-*— M.T., Thunder Bay*
+*"Bobbie really did think of everything! I'm feeling so streamlined; the shift is incredible!"*
+*— Moriah, Thunder Bay area*
 
 **Who it's for:**
 If you've been reading these emails and doing the work — even imperfectly — you're the person

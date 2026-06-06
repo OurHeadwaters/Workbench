@@ -50,10 +50,10 @@ These prompts were collected to source real evidence for `/headwaters/start` and
 
 ## 5. A Real Customer Quote
 
-- Quote: **"I didn't think a $17 kit would actually change how I think about my pantry. It did."**
-- Attribution: **M.T., Thunder Bay**
+- Quote: **"Bobbie really did think of everything! I'm feeling so streamlined; the shift is incredible!"**
+- Attribution: **Moriah, Thunder Bay area**
 
-**What's on the page:** This quote and attribution appear in the social proof block of `HeadwatersStartPage.tsx` (~line 713) and in the "What founding students say" block of Email 8 in `docs/email-drip-sequence.md`. Replace with a sourced quote when one is available.
+**What's on the page:** This quote and attribution appear in the social proof block of `HeadwatersStartPage.tsx` (~line 713) and in the "What founding students say" block of Email 8 in `docs/email-drip-sequence.md`.
 
 ---
 
@@ -95,7 +95,7 @@ Confirmation email sent 2026-06-06 asking Bobbie to verify or correct the three 
 | 2 | Parr's Jars founding year | **2015** | Yes — "10+ years" stat + "since 2015" copy |
 | 3 | 807 Co-op member count | **142 households** | Yes — stat tile + objection copy |
 | 4 | Crate / list subscriber count | Not yet recorded | No |
-| 5 | Real customer quote + attribution | M.T., Thunder Bay | Yes — social proof block + Email 8 |
+| 5 | Real customer quote + attribution | **Moriah, Thunder Bay area** | Yes — social proof block + Email 8 |
 | 6 | Founding-edition pricing story | $97 founding / $197 after / 40 spots | Yes — Email 8 |
 | 7 | Strongest unpublished line | Not yet recorded | No |
 | 8 | Specific homestead moment | Not yet recorded | No |

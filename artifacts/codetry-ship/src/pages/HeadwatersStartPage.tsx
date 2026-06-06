@@ -707,10 +707,10 @@ export function HeadwatersStartPage() {
               lineHeight: 1.65,
             }}
           >
-            "I didn't think a $17 kit would actually change how I think about my pantry. It did."
+            "Bobbie really did think of everything! I'm feeling so streamlined; the shift is incredible!"
             <br />
             <span style={{ fontSize: "0.75rem", fontStyle: "normal", color: "rgba(244,237,224,0.4)" }}>
-              — M.T., Thunder Bay
+              — Moriah, Thunder Bay area
             </span>
           </div>
         </section>
