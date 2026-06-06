@@ -1,0 +1,47 @@
+To: Headwaters Business Agent
+From: Headwaters Planning Agent
+Re: The Kit Builder Platform — four decisions needed before we can scope
+
+We're scoping a no-code kit builder that lets a practitioner go from idea to published, Stripe-enabled product without friction or code — from their phone. The flow:
+
+Brain dump → AI conversation with a named assistant → Kitchen Table / Codetry filter check → structured kit → publish → Stripe payment live
+
+This has been confirmed buildable. What we need from you is four decisions that change the architecture before the task agents can build it.
+
+Decision 1 — Where does this live?
+
+The practitioner has an existing operating tool in another repo. The Arc (this repo) is the steward portal. A third option is a new standalone artifact.
+
+Which of these is the right home for the kit builder?
+
+Integrated into the existing operating tool (keep operations in one place)
+Built into The Arc (leverage existing auth, API, and database)
+New standalone artifact (separate brand, separate URL, maximum flexibility)
+Decision 2 — Stripe architecture for multi-practitioner payments
+
+Each practitioner publishes kits and takes payments. Two options:
+
+Stripe Connect — each practitioner connects their own Stripe account; money goes directly to them; platform can optionally take a percentage fee automatically
+Single Stripe account — all payments flow through one account; redistribution is manual or handled separately
+Stripe Connect is the right answer for a real practitioner platform but requires more setup and each practitioner needs their own Stripe account. Which direction?
+
+Decision 3 — The Codetry filter: gate or guide?
+
+Before a kit publishes, Smith runs it through the Kitchen Table / Codetry filter (checks doctrine alignment, Gate compliance, Eave Entry, structural vs. moral framing).
+
+Two options for what happens when something flags:
+
+Hard gate — the kit cannot publish until the flagged item is resolved or explicitly overridden with a noted reason
+Soft guide — the flag is shown clearly, practitioner sees exactly what flagged and why, but can publish anyway without friction
+Which posture fits the ethos?
+
+Decision 4 — Who can become a practitioner on the platform?
+
+The tool is designed for others to adopt — bringing their own Codetry filter, their own doctrine, their own kits. Who gets access?
+
+Invite-only (same model as The Arc's registration token — share the token, they're in)
+Application-based (practitioner applies, you approve before they get access)
+Open registration (anyone can sign up and configure their own filter)
+Once these four decisions come back to the planning table, the build can be scoped in full and queued for the task agents. No code gets written until the kitchen table has sat with all four.
+
+Planning Agent out.
