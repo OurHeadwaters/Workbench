@@ -38,6 +38,8 @@ import { StarterPage } from "@/pages/StarterPage";
 import { HeadwatersStartPage } from "@/pages/HeadwatersStartPage";
 import { HeadwatersProductsPage } from "@/pages/HeadwatersProductsPage";
 import HeadwatersPackagePage from "@/pages/HeadwatersPackagePage";
+import { ParrsJarsKitPage } from "@/pages/ParrsJarsKitPage";
+import { ParrsJarsHubPage } from "@/pages/ParrsJarsHubPage";
 import { GordWidget } from "@workspace/gord-widget";
 
 const queryClient = new QueryClient();
@@ -122,12 +124,16 @@ function Router() {
       <Route path="/headwaters/products" component={HeadwatersProductsPage} />
       <Route path="/headwaters/package" component={HeadwatersPackagePage} />
 
+      {/* ── Parr's Jars Kit ── */}
+      <Route path="/parrsjars/kit" component={ParrsJarsKitPage} />
+      <Route path="/parrsjars/hub" component={ParrsJarsHubPage} />
+
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-const STANDALONE_ROUTES = ["/start", "/headwaters/start", "/headwaters/products", "/headwaters/package"];
+const STANDALONE_ROUTES = ["/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub"];
 
 function NavShell() {
   const [location] = useLocation();

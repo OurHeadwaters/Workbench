@@ -355,6 +355,113 @@ export function HeadwatersProductsPage() {
 
       <main style={{ maxWidth: 720, margin: "0 auto", padding: "2.5rem 1.25rem" }}>
 
+        {/* ── PJ Solutions Kit — Featured ── */}
+        <section style={{ marginBottom: "2.5rem" }}>
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.62rem",
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: EVERGREEN,
+              fontWeight: 700,
+              marginBottom: "1.1rem",
+            }}
+          >
+            Flagship Kit
+          </p>
+          <a
+            href="/parrsjars/kit"
+            style={{ textDecoration: "none", display: "block" }}
+          >
+            <div
+              style={{
+                background: "#141414",
+                borderRadius: 8,
+                overflow: "hidden",
+                borderTop: `4px solid ${RUST}`,
+                padding: "1.75rem 1.5rem",
+                position: "relative",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "0.75rem", marginBottom: "0.75rem" }}>
+                <div>
+                  <p style={{ fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD, fontWeight: 700, marginBottom: "0.25rem" }}>
+                    Digital Kit · Parr's Jars
+                  </p>
+                  <h2
+                    style={{
+                      fontFamily: "var(--font-serif, 'Playfair Display', Georgia, serif)",
+                      fontSize: "clamp(1.2rem, 3.5vw, 1.55rem)",
+                      fontWeight: 900,
+                      color: "white",
+                      lineHeight: 1.15,
+                    }}
+                  >
+                    PJ Solutions Kit
+                  </h2>
+                </div>
+                <span
+                  style={{
+                    fontFamily: "var(--font-serif)",
+                    fontSize: "clamp(1.3rem, 4vw, 1.75rem)",
+                    fontWeight: 900,
+                    color: RUST,
+                    lineHeight: 1,
+                    flexShrink: 0,
+                  }}
+                >
+                  $97
+                </span>
+              </div>
+              <p
+                style={{
+                  fontFamily: "var(--font-serif)",
+                  fontSize: "0.85rem",
+                  color: "#aaa",
+                  lineHeight: 1.65,
+                  fontStyle: "italic",
+                  marginBottom: "1rem",
+                  borderLeft: `2px solid ${RUST}`,
+                  paddingLeft: "0.75rem",
+                }}
+              >
+                Everything Bobbie learned from 2012–2023 — 5 modules, 20+ handouts, covering water-bath canning, pressure canning, blanching & freezing, and cooking from your pantry year-round.
+              </p>
+              <ul style={{ listStyle: "none", padding: 0, margin: "0 0 1.25rem", display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+                {[
+                  "Water-bath canning — pickles, salsa, tomatoes, jams",
+                  "Pressure canning — meat, broth, potatoes, fish, vegetables",
+                  "Blanching, freezing & dehydrating cheat sheets",
+                  "Cooking with preserves — local recipes & pantry meal planning",
+                  "The system — food audit, rotation, seasonal planning",
+                ].map((b) => (
+                  <li key={b} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.8rem", color: "#ccc", lineHeight: 1.5 }}>
+                    <span style={{ color: RUST, flexShrink: 0 }}>→</span>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <span
+                style={{
+                  display: "inline-block",
+                  background: RUST,
+                  color: "white",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.88rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  padding: "0.65rem 1.25rem",
+                  borderRadius: 6,
+                  textDecoration: "none",
+                }}
+              >
+                See the full kit →
+              </span>
+            </div>
+          </a>
+        </section>
+
         {/* ── Digital products ── */}
         <section style={{ marginBottom: "2.5rem" }}>
           <p
