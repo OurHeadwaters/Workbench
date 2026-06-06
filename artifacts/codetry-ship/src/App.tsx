@@ -37,6 +37,7 @@ import { CapCeremonyPage } from "@/pages/CapCeremonyPage";
 import { StarterPage } from "@/pages/StarterPage";
 import { HeadwatersStartPage } from "@/pages/HeadwatersStartPage";
 import { HeadwatersProductsPage } from "@/pages/HeadwatersProductsPage";
+import HeadwatersPackagePage from "@/pages/HeadwatersPackagePage";
 import { GordWidget } from "@workspace/gord-widget";
 
 const queryClient = new QueryClient();
@@ -119,13 +120,14 @@ function Router() {
       {/* ── Parr's Jars / TSP funnel ── */}
       <Route path="/headwaters/start" component={HeadwatersStartPage} />
       <Route path="/headwaters/products" component={HeadwatersProductsPage} />
+      <Route path="/headwaters/package" component={HeadwatersPackagePage} />
 
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-const STANDALONE_ROUTES = ["/start", "/headwaters/start", "/headwaters/products"];
+const STANDALONE_ROUTES = ["/start", "/headwaters/start", "/headwaters/products", "/headwaters/package"];
 
 function NavShell() {
   const [location] = useLocation();
