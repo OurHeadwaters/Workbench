@@ -195,76 +195,217 @@ export default function Index() {
         </div>
       </div>
 
-      {/* Footer */}
+      {/* Navigation section */}
       <div
         style={{
           position: "relative",
-          textAlign: "center",
-          padding: "1.25rem 1.5rem 2rem",
-          borderTop: "1px solid rgba(212,160,23,0.12)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "1.5rem",
+          borderTop: "1px solid rgba(212,160,23,0.18)",
+          padding: "2rem 1.5rem",
         }}
       >
-        <a
-          href="https://ourheadwaters.ca"
-          target="_blank"
-          rel="noopener noreferrer"
+        <p
           style={{
             fontFamily: "var(--font-sans)",
-            fontSize: "0.72rem",
-            letterSpacing: "0.18em",
+            fontSize: "0.68rem",
+            letterSpacing: "0.28em",
             textTransform: "uppercase",
-            color: "rgba(212,160,23,0.6)",
-            textDecoration: "none",
+            color: "rgba(212,160,23,0.65)",
+            textAlign: "center",
+            margin: "0 0 1.25rem",
           }}
         >
-          ourheadwaters.ca
-        </a>
-        <span style={{ color: "rgba(212,160,23,0.25)", fontSize: "0.65rem" }}>·</span>
-        <a
-          href={`${base}internal`}
+          Where to go next
+        </p>
+
+        {/* Nav cards — stacked on mobile, row on sm+ */}
+        <div
           style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.72rem",
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "rgba(212,160,23,0.45)",
-            textDecoration: "none",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
+            maxWidth: "38rem",
+            margin: "0 auto",
           }}
+          className="nav-card-grid"
         >
-          → Internal docs
-        </a>
-        <span style={{ color: "rgba(212,160,23,0.25)", fontSize: "0.65rem" }}>·</span>
-        <a
-          href={`${base}ecosystem-guide`}
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.72rem",
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "rgba(212,160,23,0.45)",
-            textDecoration: "none",
-          }}
-        >
-          → Ecosystem Guide
-        </a>
-        <span style={{ color: "rgba(212,160,23,0.25)", fontSize: "0.65rem" }}>·</span>
-        <a
-          href={`${base}pj-kit`}
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.72rem",
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "rgba(212,160,23,0.45)",
-            textDecoration: "none",
-          }}
-        >
-          → PJ Solutions Kit
-        </a>
+          {/* Primary: Browse all documents */}
+          <a
+            href={`${base}internal`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "1rem",
+              padding: "0.85rem 1.1rem",
+              minHeight: "56px",
+              background: "rgba(212,160,23,0.10)",
+              border: "1px solid rgba(212,160,23,0.35)",
+              borderRadius: "3px",
+              textDecoration: "none",
+              transition: "background 0.18s, border-color 0.18s",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.18)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.6)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.10)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.35)";
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "rgba(244,237,224,0.95)",
+                  fontWeight: 600,
+                  marginBottom: "0.2rem",
+                }}
+              >
+                Browse all documents
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.78rem",
+                  color: "rgba(244,237,224,0.68)",
+                  lineHeight: 1.4,
+                }}
+              >
+                Proposals, templates, and internal resources
+              </div>
+            </div>
+            <span style={{ color: "rgba(212,160,23,0.85)", fontSize: "1.1rem", flexShrink: 0 }}>→</span>
+          </a>
+
+          {/* How it all connects */}
+          <a
+            href={`${base}ecosystem-guide`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "1rem",
+              padding: "0.85rem 1.1rem",
+              minHeight: "56px",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(212,160,23,0.18)",
+              borderRadius: "3px",
+              textDecoration: "none",
+              transition: "background 0.18s, border-color 0.18s",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.10)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.4)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.18)";
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "rgba(244,237,224,0.92)",
+                  fontWeight: 500,
+                  marginBottom: "0.2rem",
+                }}
+              >
+                How it all connects
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.78rem",
+                  color: "rgba(244,237,224,0.62)",
+                  lineHeight: 1.4,
+                }}
+              >
+                The Headwaters ecosystem — roles, systems, and the full picture
+              </div>
+            </div>
+            <span style={{ color: "rgba(212,160,23,0.75)", fontSize: "1.1rem", flexShrink: 0 }}>→</span>
+          </a>
+
+          {/* Parr's Jars Workshop Kit */}
+          <a
+            href={`${base}pj-kit`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "1rem",
+              padding: "0.85rem 1.1rem",
+              minHeight: "56px",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(212,160,23,0.18)",
+              borderRadius: "3px",
+              textDecoration: "none",
+              transition: "background 0.18s, border-color 0.18s",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.10)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.4)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.18)";
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "rgba(244,237,224,0.92)",
+                  fontWeight: 500,
+                  marginBottom: "0.2rem",
+                }}
+              >
+                Parr's Jars Workshop Kit
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.78rem",
+                  color: "rgba(244,237,224,0.62)",
+                  lineHeight: 1.4,
+                }}
+              >
+                Community canning program — guides, signage, and session materials
+              </div>
+            </div>
+            <span style={{ color: "rgba(212,160,23,0.75)", fontSize: "1.1rem", flexShrink: 0 }}>→</span>
+          </a>
+        </div>
+
+        {/* Slim footer credit */}
+        <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+          <a
+            href="https://ourheadwaters.ca"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.68rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "rgba(212,160,23,0.5)",
+              textDecoration: "none",
+            }}
+          >
+            ourheadwaters.ca
+          </a>
+        </div>
       </div>
     </div>
   );
