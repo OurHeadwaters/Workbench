@@ -91,7 +91,7 @@ export function HubPage() {
             marginBottom: 36,
           }}
         >
-          Two field guides. One for building a food economy. One for understanding the architecture beneath digital sovereignty. Both grounded in the same preparedness logic.
+          Three learning tracks. A food economy field guide. A blockchain architecture forge. And a hands-on preservation workshop kit. All grounded in the same preparedness logic.
         </p>
 
         {/* Practical on mobile? tester prompt */}
@@ -168,6 +168,26 @@ export function HubPage() {
               <span style={{ fontSize: 28 }}>⚒</span>
             }
             onClick={() => navigate("/forge")}
+            locked={false}
+          />
+
+          <CourseCard
+            badge="Workshop Kit"
+            title="PJ Solutions Kit"
+            subtitle="Principles to Preservation · Parr's Jars"
+            description="Bobbie Parr's full workshop handout suite — redesigned for print. Blanching cheat sheets, dehydrating flows, station setup worksheets, and the Jarista lead magnet. Thirteen print-ready pages."
+            practicalTakeaway="Pick one preservation method and run the full process worksheet before the next growing season. One method done well beats five half-started."
+            cta="Open the Kit"
+            accent="#2B5F2B"
+            accentLight="rgba(43,95,43,0.10)"
+            icon={
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2C9.5 2 8 4 8 6v1H5a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V8a1 1 0 00-1-1h-3V6c0-2-1.5-4-4-4z" stroke="#2B5F2B" strokeWidth="1.8" strokeLinejoin="round"/>
+                <path d="M8 7V6c0-1.5 1-3 4-3s4 1.5 4 3v1" stroke="#C17D3C" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M9 13h6M9 16h4" stroke="#2B5F2B" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            }
+            onClick={() => { window.location.href = "/print-marketing/pj-kit"; }}
             locked={false}
           />
         </div>

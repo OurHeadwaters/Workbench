@@ -107,6 +107,14 @@ export const KITS: Record<string, Kit> = {
     contentNote:
       "Your kit includes the Codetry Practitioner's Handbook in full, available as an offline-first web reader (installable as a PWA) and printable PDF.",
   },
+  "pj-solutions-kit": {
+    id: "pj-solutions-kit",
+    name: "PJ Solutions Kit",
+    tagline: "Bobbie Parr's full Principles to Preservation workshop suite.",
+    arcNote: null,
+    contentNote:
+      "Your kit includes all 13 redesigned workshop handouts — blanching cheat sheets, dehydrating and freezing flows, station setup worksheets, process documentation sheets, and the Jarista lead magnet. Print-ready, no filler.",
+  },
 };
 
 export function getKit(id: string): Kit | null {
