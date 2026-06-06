@@ -1,53 +1,65 @@
 import { PrintNav } from "../components/PrintNav";
 
+const G = '#2B5F2B';
+const A = '#C17D3C';
+
 const emails = [
   {
     num: 1,
-    day: "Day 0 — sent on signup",
-    subject: "The jar on your counter is already waiting",
-    body: `You downloaded the Northern Pantry printable.
+    day: "Day 0 — sent on purchase",
+    subject: "Your PJ Solutions Kit is ready — start here",
+    body: `You bought the kit. Here's exactly what you have and where to start.
 
-Before you do anything with it, I want to say something that took me years to actually believe: the system works better when it starts ugly.
+The PJ Solutions Kit contains eleven print-ready pages:
 
-Most people — including me, in 2015 — download a printable and think they need to buy things before they can start. A better jar. A proper label. The right container. And so they don't start.
+Safe Practices — the temperature reference sheet and safety rules. Print this and tape it to the wall near your stove before you do anything else. It's not fine print. It's the whole reason the food is safe.
 
-Here's what I actually did: I stood in my kitchen in Wabigoon in March, and I looked at what was already there. A shelf of mismatched mason jars. Half a bag of rice I'd bought on sale and forgotten about. Three tins of something behind the rice that had been there so long I was embarrassed to look at the dates.
+Blanching Process + Blanching Cheat Sheet — these two go together. The process page tells you the steps. The cheat sheet tells you the times by vegetable, with a blank column to add your own.
 
-I printed the sheet I'd made for myself — the same one you just downloaded — and I started with Layer 1. Just Layer 1. I pulled everything off one shelf and sorted it.
+Blanching Uses — when blanching is the right method and when it isn't. What the end product looks like and what you can make with it.
 
-The plastic purge came second. Not because plastic is wrong, but because I realized I couldn't rotate what I couldn't see through, and I couldn't see through plastic tubs. Mason jars are cheap, clear, and stack with the lids off. That's why they're the system.
+Dehydrating Process + Freezing & Drying Cheat Sheet — same logic as blanching. The process, then the reference.
 
-This week: Do the Layer 1 audit. Pull one shelf. Note what's there. Don't buy anything yet.
+Process the Process — the science behind why all of this works. Enzymic activity, oxygen, humidity. One page. You don't need a biology degree. You need to understand why the rules exist so you can follow them confidently.
 
-The second email arrives in two days. It's about sourcing — what's actually growing near you right now, and how to find it without a farmers market within driving distance.
+Stages & Stations + Station Setup — these are the worksheets for designing your own kitchen system. Read them once, then come back after your first batch.
+
+Objective Outcomes — a reflection worksheet for after your first full session.
+
+The Jarista Guide — "How to Become a Jarista." A separate free guide included with your kit. If you haven't read it, read it this week. It gives you the framework for everything else.
+
+Where to start: Print the Safe Practices sheet. Then open the Blanching Process page.
+
+Everything is at: [KIT URL]
+
+You can reply to this email. I read them.
 
 — Bobbie
 
-Parr's Jars · Wabigoon, Ontario
-Reply to this email any time. I read them.`,
-    note: null,
+Parr's Jars · Wabigoon, Ontario`,
+    note: "Replace [KIT URL] with the actual kit link once the Square payment link is live and the URL is confirmed.",
   },
   {
     num: 2,
     day: "Day 2",
-    subject: "What's growing near you this week",
-    body: `I grew up thinking "local food" meant a farmers market with pretty signs.
+    subject: "Why blanching is the right first skill",
+    body: `Of all the preservation methods in the kit, blanching is the one I'd tell you to do first.
 
-In Northwestern Ontario, that's not a thing most of the week. The Dryden Farmers Market runs Saturdays from June to September. Dryden is the regional centre. For a lot of people here, that's the whole market season — a few months, a few hours, one morning a week.
+Not because it's the most impressive. Because it's the most forgiving, it makes the clearest difference you can actually taste, and it teaches you the logic behind every other method.
 
-So you learn to source differently.
+Here's what blanching does: it stops the enzymic activity in vegetables. Enzymes don't make food unsafe — they make food degrade. If you freeze green beans without blanching them, they'll still be technically safe six months later. They'll just taste like the underside of a lawn mower. Blanching stops that process.
 
-The sourcing system I use has three layers, and none of them require a market:
+The other reason I start here: the equipment is what you already have. A pot. Boiling water. A bowl of ice water. A slotted spoon. That's blanching. You don't need to buy anything.
 
-Layer 1: Your own ground. If you're growing anything — even a few square feet of herbs — that's Layer 1. The discipline here is harvesting at peak and preserving the surplus immediately, not letting it sit until it's past its best.
+This week:
 
-Layer 2: Farm direct. This is where I found Walls Farm — the source for The Salty Onion. They grow more than the grocery store will take. If you call and ask if they sell direct, the answer is usually yes, and the price is usually better than the store. Most farms within 50 km of you will do this. Most of them have never been asked.
+Pull out the Blanching Cheat Sheet. Pick one vegetable from the list — whatever you have or can get this week. Green beans are the easiest first batch. Asparagus if it's the season.
 
-Layer 3: Buying club math. One household can't justify a freight run from Thunder Bay. Ten households can. If you know five neighbours who buy similar things, you can pool an order and split the freight. This is how the 807 Food Co-op started — not with a mission statement, with a group text.
+Follow the steps on the Blanching Process page. Exactly. Not approximately. The times on the cheat sheet are based on average sizes, sliced or processed to one inch — that note is at the top of the sheet for a reason.
 
-This week: Call one farm within 50 km and ask if they sell direct. That's it.
+Your first batch isn't about the product. It's about learning the sequence. When blanching is in your hands — not just in your head — everything else in the kit opens up.
 
-More in two days — the Sunday afternoon that changes your whole week.
+More in two days.
 
 — Bobbie`,
     note: null,
@@ -55,22 +67,24 @@ More in two days — the Sunday afternoon that changes your whole week.
   {
     num: 3,
     day: "Day 4",
-    subject: "The Sunday afternoon that changes your whole week",
-    body: `The freeze-dryer in the back of my kitchen runs on Sundays.
+    subject: "After blanching: freeze or dehydrate?",
+    body: `You have blanched vegetables. Now what?
 
-Not always, but usually. Sunday is when I process whatever came in through the week — whatever was at peak, whatever the garden gave that I couldn't get to on Wednesday, whatever we pulled out of the freezer to make room.
+Most people default to the freezer because it's familiar. That's fine — the freezer is a good tool, and if you followed the Blanching Process page, what's in there now will last 10 to 12 months without quality loss.
 
-The thing people don't understand about a whole-food kitchen is that the work isn't happening every day. It's happening on one afternoon, and it carries the whole week. You batch the broth on Sunday. You batch the ferments on Sunday. You do the quick blanch and freeze on Sunday. And then the week is easy, because the hard thing is done.
+But the Freezing & Drying Cheat Sheet exists because the answer isn't always the freezer.
 
-The Northern Pantry system is built around this. Layer 1 (the jar kitchen) only works if you have a rotation discipline — and a rotation discipline only works if there's a weekly moment when you add to the rotation. That's the Sunday afternoon.
+Here's the decision I actually make in my kitchen:
 
-Here's what mine looks like in early June, when the garden is just starting:
+Freeze it if: the final use requires texture. Soup vegetables, stew mix, anything going into a dish where you want it to hold its shape. The freezer preserves structure in a way dehydrating doesn't.
 
-The asparagus is done. The rhubarb is done. The perennial herbs — chive, lovage, oregano — are going like mad and I can't keep up. Sunday is when I harvest them at peak, run them through the freeze-dryer or the dehydrator, and jar them. That's it. Twenty minutes of work that lasts until February.
+Dehydrate it if: the end product is powders, snacks, or long-term bulk storage. Dehydrated food takes up a fraction of the space, doesn't require freezer space, and keeps for years if stored properly. A jar of dehydrated onion powder takes up 200ml. The equivalent in frozen onions takes a full freezer bag.
 
-This week: Block 2 hours on Sunday. Not to "do prep" — just to see what's at peak and do something with it. Even if it's just writing down what would benefit from a batch day.
+Freeze-dry it (if you have the equipment) if: you want the full nutrient retention and the longest shelf life, and you're willing to deal with the process time. My freeze-dryer is the most-used machine in my kitchen. It's also the most expensive to start with.
 
-More in two days — dry storage and buying once to eat all winter.
+Open the Dehydrating Process page this week and read through the "is-it-dry?" tests at the bottom. That section alone saves most people from a batch of mouldy product — because under-dehydrated food looks done and isn't.
+
+More in two days.
 
 — Bobbie`,
     note: null,
@@ -78,23 +92,24 @@ More in two days — dry storage and buying once to eat all winter.
   {
     num: 4,
     day: "Day 6",
-    subject: "Buy once, eat all winter",
-    body: `The worst thing about the grocery store is that it teaches you to buy in small amounts.
+    subject: "Set up your station before you do your first real batch",
+    body: `Before you process more than a few pounds of anything, sit down with the Stages & Stations worksheet.
 
-A week's worth of rice. A small bag of oats. One tin of anything because you might not like it. And then you do like it, and you go back, and the price went up, or they're out, or the truck from Thunder Bay was delayed because of road conditions on the Trans-Canada.
+I know that sounds like bureaucracy before the real work. It isn't. Here's what the worksheet is actually doing: it's asking you to design your kitchen before you're in the middle of a batch, hands wet, no room to think.
 
-Dry storage is the counter to that. You buy when the price is right, the supply is good, and you have room. You store in a way that keeps it stable for 12+ months. And you draw from it as you need it, replacing from the bottom.
+The two stages in the kit — Prepare, then Remove Air & Store — each have three sub-steps (A, B, C). The worksheet asks where each sub-step happens in your space. This is important because the bottleneck in a home preservation session is almost never the equipment. It's the layout. You run out of counter space at Step B and lose 20 minutes reorganizing.
 
-The dry storage layer of the Northern Pantry (Layer 2) isn't about preparedness in the panic sense. It's about buying power. If you have 25 lbs of oats and 20 lbs of dry beans, you can wait out a supply disruption, a price spike, or a bad harvest season without changing what you eat.
+Answer these questions before your first real batch:
 
-What I store, and why:
-· Whole grains in sealed containers — not flour, because flour goes rancid. Whole grains, stored properly, stay stable for years. A grain mill is a later purchase, but even a small hand grinder changes what you can do.
-· Dry legumes over canned — a pound of dry beans takes up the same space as one tin, and gives you four tins' worth. The water content is what you're paying for in the can.
-· Salt in bulk — salt is preservation infrastructure. Buy 10 kg and never worry about it.
+Where will you set up blanching? (needs: stove access, counter for the ice bath, room to drain)
 
-This week: Take stock of your dry storage. What do you have? What's missing? The worksheet in the Northern Pantry printable is your starting point.
+Where will you package? (needs: flat surface, bags or jars, labels within arm's reach)
 
-More in two days — your freezer as a time machine.
+What's your sink strategy? (the biggest time sink in any preservation session is back-and-forth to the sink — minimize it before you start)
+
+Then open the Station Setup worksheet. It's a blank layout planner. Sketch your kitchen — rough is fine — and note where each station goes. This takes fifteen minutes once. It saves two hours the first time you do a real batch.
+
+More in two days.
 
 — Bobbie`,
     note: null,
@@ -102,21 +117,24 @@ More in two days — your freezer as a time machine.
   {
     num: 5,
     day: "Day 8",
-    subject: "Your freezer is a time machine",
-    body: `The freezer is the most underused tool in most kitchens.
+    subject: "Process the Process — the one page worth reading twice",
+    body: `The Process the Process page in your kit is the one I'd read twice.
 
-Not because people don't know it exists — but because they're afraid of it. Things go in and don't come out. The mystery meat at the bottom. The bag of something that might be peas. The casserole from 2022 that you keep meaning to eat.
+Not because it's complicated. Because it's the page that shifts preservation from a set of rules you follow to a system you understand.
 
-The freezer works as a preservation tool when you treat it like a time machine, not a storage room. You're not putting things in to forget them. You're putting them in to release them at the right moment — when something is out of season, when something is on sale, when life gets busy and you need a meal you already made.
+The short version of what it covers:
 
-The system I run:
-· Everything goes in labelled. Contents + date + quantity. Not a sticky note. A freezer label that won't fall off in the cold. A Sharpie on masking tape works if you don't have labels.
-· Meal-sized portions, not bulk. If you're thawing a 3 kg roast to use 500g of it, you've already lost. Portion before freezing.
-· Standing inventory on the door. A piece of masking tape with a running list. When something goes in, you add it. When something comes out, you cross it off. This sounds fussy. It's the difference between knowing what you have and not knowing.
+Enzymic activity is why untreated food degrades. Blanching stops it for most vegetables. Acidity stops it for high-acid foods (this is why jam and pickles are water-bath safe). Pressure stops it for low-acid foods at the temperatures needed to neutralize botulism risk — which is why pressure canning has its own process logic.
 
-This week: Thaw one mystery item from the freezer. Deal with it this week. That's how you start trusting the system again.
+Oxygen is the other enemy. Vacuum sealing, water displacement in water-bath canning, and proper headspace in freezer containers all do the same job: keep oxygen away from the food.
 
-More in two days — what your grandmother knew about preservation that we forgot.
+Humidity is what kills dehydrated food if you don't handle it right. If you dehydrate into high ambient humidity and don't condition properly, the product reabsorbs moisture before it's jarred. That's a mould batch waiting to happen.
+
+When you understand these three — enzymic activity, oxygen, humidity — every other rule in the kit has a reason. You're not following a recipe. You're working with the physics.
+
+Read through the page this week. At the bottom, there's a section called "My Process Notes" — blank lines. Write in it. What have you figured out so far about your own kitchen, your own batches?
+
+Next email is the last one. It's about what comes after the kit.
 
 — Bobbie`,
     note: null,
@@ -124,148 +142,106 @@ More in two days — what your grandmother knew about preservation that we forgo
   {
     num: 6,
     day: "Day 10",
-    subject: "What your grandmother knew that we forgot",
-    body: `The word "canning" scares people.
+    subject: "You've done the work. Here's where it goes next.",
+    body: `If you've been working through the kit this week, you've blanched something, you've made a decision about freezing or dehydrating, and you've thought about your station setup.
 
-Pressure canning especially. The gauge. The weight. The processing times. The vague fear that if you do something wrong, someone gets sick. And so people buy canned food at the store and call it a day.
+That's not nothing. Most people who buy a kit read it once and put it away. You're not those people, or you wouldn't be at email six.
 
-Here's what I want to tell you: preservation has a learning curve, but it's a short one. The rules aren't arbitrary — they're physics and chemistry, and once you understand why the rules exist, following them is easy. Botulism can't survive above a certain temperature for a certain duration. That's it. The processing times exist to get everything in the jar above that temperature for long enough. When you understand that, canning becomes legible.
+Here's what I want to tell you about where this goes:
 
-My first batch was jam. Embarrassingly simple — water-bath, high-acid, almost impossible to get wrong. My second batch was pickles. My third batch was crushed tomatoes.
+The skills in the PJ Solutions Kit are the foundation. They work for your household, your garden, your batch of whatever's in season. They're repeatable, and each time you run them, they get faster and more automatic.
 
-By the time I did my first pressure canning — chicken broth, because we'd processed a bird and I wasn't going to let the broth go — I understood what the gauge was measuring and why.
+What most people find after the first season: they want to go deeper on one method. Pressure canning is the next tier after blanching — it opens up broths, beans, low-acid vegetables, and meat. Fermentation is its own discipline. Freeze-drying changes your long-term storage math entirely.
 
-Preservation is the skill that makes everything else in the Northern Pantry possible. The jar kitchen doesn't work without it.
+If you want to go deeper, the Canning & Preservation Course is how I teach the full system — live, in ten sessions, built around actual northern food sources and conditions. It's not a YouTube video and it's not a generic canning book written for someone in Ontario farm country. It's Bobbie in Wabigoon, running the same process you're now running, teaching you how it scales.
 
-If you want to learn it properly — not from a YouTube video, but from a practitioner who runs a jar kitchen in Northwestern Ontario — Course 1 opens for its founding cohort soon. More on that in the next email.
+More information is at parrsjars.ca.
 
-This week: Water-bath something. Jam, pickles, or tomatoes. Find a tested recipe from Ball or the NCHFP and follow it exactly. Your first batch doesn't have to be fancy.
-
-More in two days — one jar, twelve uses.
-
-— Bobbie`,
-    note: null,
-  },
-  {
-    num: 7,
-    day: "Day 12",
-    subject: "One jar, twelve uses",
-    body: `People think mason jars are for canning. They're for everything.
-
-Here's what's in mason jars in my kitchen right now:
-
-The broth from last week's chicken. Three varieties of dried herbs. Sourdough starter. Loose-leaf tea. The green salt blend I make for the farmers market. Fermented garlic honey (still going — two weeks in). Rendered lard, sealed and stored in the cold room. Dry beans, because the cardboard box they came in was falling apart. Leftover soup in the fridge, because a sealed jar keeps longer than a bowl covered in plastic wrap.
-
-The mason jar is cheap, clear, stackable, airtight when sealed, safe for the freezer (if you leave headspace), safe for the oven (wide-mouth, no lid), and available at every hardware store and most dollar stores in Canada.
-
-The reason I switched out of plastic containers isn't ideology — it's that I can see what's inside without opening anything. In a system that runs on rotation, visibility is the whole game.
-
-A few things people don't know:
-· You can freeze in mason jars if you leave 1.5 inches of headspace and cool completely first
-· Wide-mouth mason jars fit most standard yogurt-making equipment
-· A mason jar with a plastic lid is a perfect sprouting jar (sprout the seeds, drain through a piece of cheesecloth held on by the band)
-· A half-pint jar is the right size for most condiments, sauces, and spice blends
-
-The next email is the last in this sequence — and it's about taking what you've been building toward and going deeper. I'll explain what Course 1 is, who it's for, and why the founding price is what it is.
-
-— Bobbie`,
-    note: null,
-  },
-  {
-    num: 8,
-    day: "Day 14",
-    subject: "You're already a Jarista. Here's what's next.",
-    body: `You've been in this for two weeks.
-
-You downloaded the Northern Pantry printable. You read seven emails about the system behind it. If you've done even one of the "this week's action" prompts, you're already running a version of the jar kitchen.
-
-I want to tell you about Course 1.
-
-What it is: Food Preservation & Canning — ten sessions, built for people who want to run a real northern kitchen, not a hobby pantry. We cover everything from your first water-bath batch to pressure canning, fermentation, dehydrating, freeze-drying, the 72-hour exit layer, selling from the kitchen under Ontario cottage food rules, and how to run the whole system year-round.
-
-Why $97: The founding cohort is being run live. The recordings from those sessions become the full course. Founding students get every session as it's released — plus any revisions after the first cohort gives feedback — at no additional cost. The price reflects work-in-progress access to a practitioner-run course, not a finished product sitting on a shelf. When the course is fully produced it will be $197. Founding students pay once and receive everything, including the updates.
-
-What founding students say:
-"I've been canning for three years and thought I knew what I was doing. The session on pressure timing made me realize I'd been guessing at a step I should have understood. That's the difference between a YouTube video and someone who actually runs the process."
-— M.T., Thunder Bay
-
-Who it's for:
-If you've been reading these emails and doing the work — even imperfectly — you're the person this course was written for. You're not a beginner who needs to be told that canning exists. You're someone who wants to understand the system behind the practice, run it without consulting a recipe every time, and eventually teach it to someone else.
-
-Who it's not for:
-If you want a quick-start guide, the Zone 0 Starter Kit ($17) is the right entry point. Course 1 is for people who are ready to go deep.
-
-How to join:
-The founding cohort is capped at 40 students. When the spots are gone, the price moves to $197 and the live-session access closes. Click the link below, complete checkout, and you'll receive a confirmation with the session schedule and access details.
-
-[Get Course 1 — $97 founding price]
-
-If you have questions before you buy, reply to this email. I read every one.
+Thank you for being part of this. Reply any time — I read every email.
 
 — Bobbie
 
-P.S. — If $97 is the wrong number right now, the Zone 0 Kit ($17) and the Preparedness Pack ($17) are both there. Start where you can. That's the whole system.`,
-    note: "NEEDS YOUR CONFIRMATION — Three details before this email can go live:\n1. Post-founding price: $197 — correct?\n2. Founding cohort cap: 40 students — correct?\n3. Live-session framing (\u201cfounding cohort run live, recordings become the course\u201d) — correct?\nPlease confirm or change these, then this email is ready.",
+Parr's Jars · Wabigoon, Ontario
+parrsjars.ca`,
+    note: "Bobbie — one item to confirm before this email is live: the Canning & Preservation Course link. If it's not live yet, the last paragraph can be held until it is. The rest of the email is ready.",
   },
 ];
 
 export default function ParrsJarsEmailSequence() {
   return (
-    <div className="min-h-screen bg-white">
+    <div style={{ minHeight: "100vh", background: "#fff", fontFamily: "Georgia, serif" }}>
       <PrintNav />
 
-      <div className="max-w-2xl mx-auto px-8 py-10 print:px-6 print:py-6">
+      <div style={{ maxWidth: "42rem", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
 
-        <div className="flex items-start justify-between mb-8 print:mb-6">
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "2rem", gap: "1.5rem", flexWrap: "wrap" }}>
           <div>
-            <p className="text-xs uppercase tracking-widest text-stone-400 mb-1">Parr's Jars · For Bobbie's review</p>
-            <h1 className="text-2xl font-bold text-stone-900">Email Sequence — All 8 Emails</h1>
-            <p className="text-sm text-stone-500 mt-1">8 emails · sent 2 days apart · written in Bobbie's voice</p>
+            <p style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.12em", color: A, marginBottom: "0.25rem", fontFamily: "var(--font-sans, system-ui)" }}>
+              Parr's Jars · PJ Solutions Kit
+            </p>
+            <h1 style={{ fontSize: "1.5rem", fontWeight: 700, color: "#1A1A1A", marginBottom: "0.25rem" }}>
+              Post-Purchase Email Sequence
+            </h1>
+            <p style={{ fontSize: "0.85rem", color: "#6B6B6B", fontFamily: "var(--font-sans, system-ui)" }}>
+              6 emails · sent 2 days apart · written in Bobbie's voice
+            </p>
           </div>
           <button
             onClick={() => window.print()}
-            className="print:hidden flex-shrink-0 ml-6 mt-1 bg-stone-900 text-white text-sm font-medium px-4 py-2 rounded hover:bg-stone-700 transition-colors"
+            style={{
+              flexShrink: 0,
+              background: G,
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              padding: "0.5rem 1.25rem",
+              fontSize: "0.82rem",
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: "var(--font-sans, system-ui)",
+            }}
+            className="print:hidden"
           >
             Print
           </button>
         </div>
 
-        <div className="space-y-12 print:space-y-10">
+        <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
           {emails.map((email) => (
-            <div key={email.num} className="break-inside-avoid">
-              <div className="border-t-2 border-stone-200 pt-8 print:pt-6">
-                <div className="flex items-baseline gap-3 mb-1">
-                  <span className="text-xs font-bold uppercase tracking-widest text-stone-400">
-                    Email {email.num}
-                  </span>
-                  <span className="text-xs text-stone-400">{email.day}</span>
-                </div>
-                <p className="text-lg font-semibold text-stone-900 mb-4">
-                  Subject: {email.subject}
-                </p>
+            <div key={email.num} style={{ borderTop: `2px solid ${email.num === 1 ? G : "#E0E0E0"}`, paddingTop: "2rem" }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", marginBottom: "0.25rem", flexWrap: "wrap" }}>
+                <span style={{ fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: A, fontFamily: "var(--font-sans, system-ui)" }}>
+                  Email {email.num}
+                </span>
+                <span style={{ fontSize: "0.75rem", color: "#9B9B9B", fontFamily: "var(--font-sans, system-ui)" }}>{email.day}</span>
+              </div>
+              <p style={{ fontSize: "1.05rem", fontWeight: 700, color: "#1A1A1A", marginBottom: "1.25rem", lineHeight: 1.4 }}>
+                Subject: {email.subject}
+              </p>
 
-                {email.note && (
-                  <div className="mb-5 border-2 border-amber-400 bg-amber-50 rounded p-4 print:border-black print:bg-white">
-                    <p className="text-xs font-bold uppercase tracking-widest text-amber-700 print:text-black mb-2">
-                      Bobbie — Action Required
-                    </p>
-                    <pre className="text-sm text-amber-900 print:text-black whitespace-pre-wrap font-sans leading-relaxed">
-                      {email.note}
-                    </pre>
-                  </div>
-                )}
-
-                <div className="text-sm text-stone-700 leading-relaxed whitespace-pre-wrap font-serif">
-                  {email.body}
+              {email.note && (
+                <div style={{ marginBottom: "1.25rem", border: `2px solid ${A}`, background: "#FEF3E2", borderRadius: "6px", padding: "0.875rem 1rem" }}>
+                  <p style={{ fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: A, marginBottom: "0.4rem", fontFamily: "var(--font-sans, system-ui)" }}>
+                    Bobbie — Action Required
+                  </p>
+                  <p style={{ fontSize: "0.85rem", color: "#7A4A1A", lineHeight: 1.6, fontFamily: "var(--font-sans, system-ui)", margin: 0 }}>
+                    {email.note}
+                  </p>
                 </div>
+              )}
+
+              <div style={{ fontSize: "0.92rem", color: "#2A2A2A", lineHeight: 1.8, whiteSpace: "pre-wrap" }}>
+                {email.body}
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-14 pt-6 border-t border-stone-200 text-xs text-stone-400 print:mt-10">
+        <div style={{ marginTop: "3.5rem", paddingTop: "1.5rem", borderTop: "1px solid #E0E0E0", fontSize: "0.75rem", color: "#9B9B9B", fontFamily: "var(--font-sans, system-ui)" }}>
           <p>Parr's Jars · Wabigoon, Ontario · parrsjars.ca</p>
-          <p className="mt-1">Prepared for Bobbie's review — {new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" })}</p>
+          <p style={{ marginTop: "0.25rem" }}>
+            Prepared for Bobbie's review — {new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" })}
+          </p>
         </div>
       </div>
     </div>
