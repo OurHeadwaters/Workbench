@@ -116,6 +116,9 @@ const ZONES = [
       { href: "/poster-services", title: "Poster — Development Services", label: "Headwaters", desc: "Three service lines, $28k trial offer — aimed at band councils." },
       { href: "/poster-market", title: "Poster — Combined Market Presence", label: "Community", desc: '"Find us at the market" poster combining Parr\'s Jars and Headwaters.' },
       { href: "/salt-of-the-earth-club", title: "Salt of the Earth Club", label: "Jarista", desc: "Product sheet for the Jarista salt line and circular economy origin." },
+      { href: "/pj-kit", title: "PJ Solutions Kit — Workshop Handouts", label: "Parr's Jars · Local Food Zone", desc: "Full print suite for the Principles to Preservation workshop — 12 redesigned handouts, cheat sheets, and worksheets." },
+      { href: "/suite/parrs-jars-email-sequence", title: "Parr's Jars Email Drip Sequence", label: "Parr's Jars · Marketing", desc: "Five-email welcome and nurture sequence for Parr's Jars workshop buyers." },
+      { href: "/suite/northern-pantry", title: "Northern Pantry Printable", label: "Local Food Zone", desc: "Print-ready pantry planning and inventory sheet for northern households." },
     ],
   },
   {

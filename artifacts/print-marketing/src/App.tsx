@@ -60,6 +60,19 @@ import EcosystemGuide from "@/pages/EcosystemGuide";
 import MoneyMachineReport from "@/pages/MoneyMachineReport";
 import NorthernPantryPrintable from "@/pages/NorthernPantryPrintable";
 import ParrsJarsEmailSequence from "@/pages/ParrsJarsEmailSequence";
+import PJKitIndex from "@/pages/PJKitIndex";
+import PJWorkshopOverview from "@/pages/PJWorkshopOverview";
+import PJSafePractices from "@/pages/PJSafePractices";
+import PJBlanchingProcess from "@/pages/PJBlanchingProcess";
+import PJBlanchingCheatSheet from "@/pages/PJBlanchingCheatSheet";
+import PJDehydratingProcess from "@/pages/PJDehydratingProcess";
+import PJFreezingDryingCheatSheet from "@/pages/PJFreezingDryingCheatSheet";
+import PJProcessTheProcess from "@/pages/PJProcessTheProcess";
+import PJBlanchingUses from "@/pages/PJBlanchingUses";
+import PJStagesStations from "@/pages/PJStagesStations";
+import PJStationSetup from "@/pages/PJStationSetup";
+import PJObjectiveOutcomes from "@/pages/PJObjectiveOutcomes";
+import PJJaristaLeadMagnet from "@/pages/PJJaristaLeadMagnet";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
 import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
@@ -124,6 +137,19 @@ function Router() {
       <Route path="/internal" component={InternalDocs} />
       <Route path="/suite/northern-pantry" component={NorthernPantryPrintable} />
       <Route path="/suite/parrs-jars-email-sequence" component={ParrsJarsEmailSequence} />
+      <Route path="/pj-kit" component={PJKitIndex} />
+      <Route path="/pj-kit/workshop-overview" component={PJWorkshopOverview} />
+      <Route path="/pj-kit/safe-practices" component={PJSafePractices} />
+      <Route path="/pj-kit/blanching-process" component={PJBlanchingProcess} />
+      <Route path="/pj-kit/blanching-cheat-sheet" component={PJBlanchingCheatSheet} />
+      <Route path="/pj-kit/dehydrating-process" component={PJDehydratingProcess} />
+      <Route path="/pj-kit/freezing-drying-cheat-sheet" component={PJFreezingDryingCheatSheet} />
+      <Route path="/pj-kit/process-the-process" component={PJProcessTheProcess} />
+      <Route path="/pj-kit/blanching-uses" component={PJBlanchingUses} />
+      <Route path="/pj-kit/stages-stations" component={PJStagesStations} />
+      <Route path="/pj-kit/station-setup" component={PJStationSetup} />
+      <Route path="/pj-kit/objective-outcomes" component={PJObjectiveOutcomes} />
+      <Route path="/pj-kit/jarista-guide" component={PJJaristaLeadMagnet} />
       <Route component={NotFound} />
     </Switch>
   );

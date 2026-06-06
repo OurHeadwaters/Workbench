@@ -251,6 +251,20 @@ export default function Index() {
         >
           → Ecosystem Guide
         </a>
+        <span style={{ color: "rgba(212,160,23,0.25)", fontSize: "0.65rem" }}>·</span>
+        <a
+          href={`${base}pj-kit`}
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "0.72rem",
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "rgba(212,160,23,0.45)",
+            textDecoration: "none",
+          }}
+        >
+          → PJ Solutions Kit
+        </a>
       </div>
     </div>
   );
