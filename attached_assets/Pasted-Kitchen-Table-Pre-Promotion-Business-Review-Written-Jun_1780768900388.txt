@@ -1,0 +1,102 @@
+Kitchen Table — Pre-Promotion Business Review
+Written June 2026. The Goodbye Kit + The Logic. Read this before any promotion begins. Mark up what needs to change.
+
+THE GOODBYE KIT
+What it is: A three-layer, guided end-of-life instrument. Not estate planning. Not grief support. A completion instrument — the goodbye that gets actually delivered.
+
+Who it's for:
+
+Adults who want to leave a legible goodbye (primary buyer)
+Families of someone approaching the crossing (gift purchaser)
+Local artisans, estate lawyers, funeral directors, notaries who want to be found by that family (practitioners)
+What a person gets for $127 CAD:
+
+Layer 1 — The Ground Work: will, protections (insurance/POA), digital estate + funeral preferences
+Layer 2 — Your Words: personal letters, memorial wishes, curated gifts, naming a Keeper
+Layer 3 — What You Leave: hempcrete keepsake spec, artisan connection, XRPL provenance record
+Progress model: Every item has two states — Done or Holding this one. Nobody stalls. The Kit moves forward with them.
+
+Revenue Streams — Current State
+Stream	Price	Status
+Kit access (one-time)	$127 CAD	✅ Live — Stripe in live mode
+Practitioner listing — Watershed (free/vetted)	$0	✅ Live (free tier)
+Practitioner listing — Licensed	$99/yr	✅ Live — Stripe in live mode
+Practitioner listing — Portfolio Verified	$199/yr	✅ Live — Stripe in live mode
+XRPL Codetry token minting (per keepsake)	TBD	❌ Not built — XRPL gap is archived, not closed
+What's Built and Working
+Full Kit instrument — all 9 steps across 3 layers
+Stripe checkout for kit purchase and practitioner tiers
+Practitioner directory with Earth Kit badge tiers (Watershed / Licensed / Portfolio Verified)
+Anonymous session + authenticated account progress — anonymous purchase links to account later
+Share link / Keeper access (token-based)
+Crossing Guard team builder (save local professionals inside the instrument)
+What's Missing Before Promotion
+XRPL minting — The Layer 3 token record is described but not executable. A user can view the spec; they cannot mint. Before promoting Layer 3 as a live feature, the minting flow must be built or the copy must be clearly framed as coming rather than here. Currently this is somewhere in between — worth deciding which.
+
+Practitioner onboarding flow — A vetted artisan can be listed, but the full onboarding (how an artisan applies, who vets them, what the object-as-credential process looks like) is informal. Before promoting the Watershed Network to artisans, a clear entry path needs to exist.
+
+Keeper distribution ceremony — How the Personal Record gets sealed, held, and released at the right moment is described in doctrine but not built as a digital instrument. Currently the Keeper is named; the Kit doesn't yet orchestrate the distribution. Fine for launch, but set expectations accordingly.
+
+Legal content — The Formalities section orients the person, but actual legal advice belongs to a lawyer. The copy should be clear that the Kit is a companion, not counsel. Worth reviewing the current framing before promotion.
+
+Promotion Readiness Checklist — Goodbye Kit
+ Decide: is XRPL minting live, coming soon, or not mentioned in launch copy?
+ Write the front door (landing page) copy — who this is for, what it costs, why now
+ Set the first practitioner listings — seed the directory before promotion so it isn't empty when the first buyer looks for an artisan
+ Clarify artisan onboarding path — at minimum, a contact/apply flow
+ Review Formalities copy for legal boundary — companion, not counsel
+ Confirm share/Keeper link works end-to-end for a real user
+ Decide the referral or gift path — who buys this for someone else, how does that work?
+ Price point review: $127 CAD — right? One-time forever, or annual access?
+ Practitioner pricing review: $99 / $199 — right for the artisan population?
+THE LOGIC
+What it is: A living reference that maps logical fallacies to Headwaters doctrine. Each fallacy gets a structural answer — not a refutation, but the doctrine that was built to prevent the failure mode in the first place.
+
+Who it's for:
+
+Stewards and practitioners inside the watershed who want to name what's happening in a conversation
+Anyone facing a coercive argument who needs a structural counter
+Educators and community builders who want a printable reference
+What a person gets (free):
+
+Searchable catalog of 30+ fallacies by category
+Each card: fallacy name, description, doctrine counterpart, guiding phrase
+Print page per fallacy — parchment aesthetic, ready for physical distribution
+Revenue Streams — Current State
+Stream	Price	Status
+Kit access	Free	✅ Live
+(No paid tier currently)	—	—
+What's Built and Working
+Full fallacy catalog with search and filter
+Category groupings: Formal, Relevance, Weak Induction, Presumption, Appeals, Cognitive
+Individual print pages (/print/:anchor) — clean, formatted, physically distributable
+Headwaters doctrine mapping for each fallacy
+Gaps to Decide Before Promotion
+Revenue question — Is The Logic a free community resource (permanent), a lead generator into the Kit ecosystem, or eventually a paid reference? This doesn't need to be resolved before promotion, but it should be named. Currently it's a free tool with no upgrade path.
+
+Entry from other artifacts — Where does someone arrive at The Logic from? The Arc? The Compass? The Clearing? If it's being promoted, the doors into it should be mapped and opened.
+
+Print bundle — Individual print pages exist. A "full set" printable bundle (all fallacies, one PDF) doesn't exist. For a practitioner, this could be a high-value physical reference.
+
+Doctrine links — Each fallacy has a doctrine counterpart. Are those counterparts linked? Can a reader follow the card to the doctrine doc? Currently this appears to be reference-only, not linked navigation.
+
+Promotion Readiness Checklist — The Logic
+ Decide: permanent free resource, or add a paid tier / bundle?
+ Map the entry doors — which artifacts link to The Logic and does the copy invite them in?
+ Consider a full print bundle (all fallacies, one PDF download)
+ Decide if doctrine references become clickable links inside the cards
+ Confirm the print page works cleanly across browsers before promoting the printable aspect
+ Write the one-paragraph description for how you'd explain The Logic to a practitioner who hasn't heard of it
+ACROSS BOTH ARTIFACTS
+The Relationship Between Them
+The Goodbye Kit is a paid lifecycle instrument. The Logic is a free doctrine reference. They serve different immediate needs but speak to the same population: practitioners and community members inside the watershed who want structural tools, not slogans.
+
+One natural connection: the Goodbye Kit practitioner (Crossing Guard) needs to be able to name what's happening in hard family conversations. The Logic is the reference for exactly that. A link from the Goodbye Kit practitioner directory to The Logic is worth considering.
+
+Shared Pre-Promotion Questions
+ Where does each artifact live in the promotion sequence — which is the front door?
+ What is the single sentence that explains each one to someone who has never heard of Headwaters?
+ Are the Stripe payment flows tested end-to-end with a real card in live mode?
+ Who handles practitioner vetting — is there a named person/process before the first artisan applies?
+ Is there a waitlist or early-access path, or is it open on day one?
+This is the kitchen table draft. Mark it up, cross off what's settled, name what needs a decision. Nothing on this list is blocking — it's the map of what to walk through before the first promotion goes out.
