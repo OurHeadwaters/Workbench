@@ -61,7 +61,6 @@ import MoneyMachineReport from "@/pages/MoneyMachineReport";
 import NorthernPantryPrintable from "@/pages/NorthernPantryPrintable";
 import ParrsJarsEmailSequence from "@/pages/ParrsJarsEmailSequence";
 import PJKitIndex from "@/pages/PJKitIndex";
-import PJWorkshopOverview from "@/pages/PJWorkshopOverview";
 import PJSafePractices from "@/pages/PJSafePractices";
 import PJBlanchingProcess from "@/pages/PJBlanchingProcess";
 import PJBlanchingCheatSheet from "@/pages/PJBlanchingCheatSheet";
@@ -138,7 +137,6 @@ function Router() {
       <Route path="/suite/northern-pantry" component={NorthernPantryPrintable} />
       <Route path="/suite/parrs-jars-email-sequence" component={ParrsJarsEmailSequence} />
       <Route path="/pj-kit" component={PJKitIndex} />
-      <Route path="/pj-kit/workshop-overview" component={PJWorkshopOverview} />
       <Route path="/pj-kit/safe-practices" component={PJSafePractices} />
       <Route path="/pj-kit/blanching-process" component={PJBlanchingProcess} />
       <Route path="/pj-kit/blanching-cheat-sheet" component={PJBlanchingCheatSheet} />

@@ -12,17 +12,10 @@ const base = import.meta.env.BASE_URL;
 
 const sections = [
   {
-    group: 'Workshop Overview',
-    color: G,
-    pages: [
-      { label: 'Workshop Overview & Structure', href: '/pj-kit/workshop-overview', desc: 'Upon arrival, workshop format, take-home fun' },
-      { label: 'Introduction & Safe Practices', href: '/pj-kit/safe-practices', desc: 'Blanching, freezing, dehydrating safety + temp guide' },
-    ],
-  },
-  {
     group: 'Process Flows',
     color: G,
     pages: [
+      { label: 'Introduction & Safe Practices', href: '/pj-kit/safe-practices', desc: 'Blanching, freezing, dehydrating safety + temp guide' },
       { label: 'Blanching Process', href: '/pj-kit/blanching-process', desc: 'Step-by-step blanching flow diagram' },
       { label: 'Dehydrating Process', href: '/pj-kit/dehydrating-process', desc: 'Dehydrating flow, watch-fors, is-it-dry tests' },
     ],
