@@ -13,7 +13,7 @@ const RUST = "#b85a3e";
 const GOLD = "#c89a2e";
 const BLACK = "#141414";
 
-const STRIPE_PJ_KIT = "https://buy.stripe.com/REPLACE_PJ_KIT_LINK";
+const SQUARE_PJ_KIT = "https://square.link/REPLACE_PJ_KIT_SQUARE_LINK";
 
 const KIT_MODULES = [
   {
@@ -137,7 +137,7 @@ export function ParrsJarsKitPage() {
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
           <a
-            href={STRIPE_PJ_KIT}
+            href={SQUARE_PJ_KIT}
             target="_blank"
             rel="noreferrer"
             style={{
@@ -398,7 +398,7 @@ export function ParrsJarsKitPage() {
           Digital download · $97 CAD · Instant access
         </p>
         <a
-          href={STRIPE_PJ_KIT}
+          href={SQUARE_PJ_KIT}
           target="_blank"
           rel="noreferrer"
           style={{
