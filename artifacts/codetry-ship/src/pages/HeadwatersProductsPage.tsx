@@ -8,6 +8,22 @@ const FOREST = "#4a6741";
 
 const START_URL = "/headwaters/start";
 
+const STRIPE_ZONE0       = "https://buy.stripe.com/cNi3cxe8R6llgoA6fNbwk04";
+const STRIPE_PREP_PACK   = "https://buy.stripe.com/bJe28t1m56llfkwaw3bwk05";
+const STRIPE_JARS_SCARS  = "https://buy.stripe.com/REPLACE_JARS_SCARS_LINK";
+const STRIPE_BUNDLE      = "https://buy.stripe.com/3cI6oJc0J9xx8W88nVbwk06";
+const STRIPE_COURSE1     = "https://buy.stripe.com/aFacN7aWFdNNfkwfQnbwk07";
+
+const STRIPE_MISSING = [
+  { key: "REPLACE_ZONE0_LINK",      label: "Zone 0 Starter Kit",  url: STRIPE_ZONE0 },
+  { key: "REPLACE_PREP_PACK_LINK",  label: "Preparedness Pack",   url: STRIPE_PREP_PACK },
+  { key: "REPLACE_JARS_SCARS_LINK", label: "Jars & Scars",        url: STRIPE_JARS_SCARS },
+  { key: "REPLACE_BUNDLE_LINK",     label: "Zone 0 + Prep Bundle", url: STRIPE_BUNDLE },
+  { key: "REPLACE_COURSE1_LINK",    label: "Course 1",            url: STRIPE_COURSE1 },
+].filter((p) => p.url.includes("REPLACE"));
+
+const STRIPE_LINKS_LIVE = STRIPE_MISSING.length === 0;
+
 const COURSE1_SESSIONS = [
   { n: "01", title: "Why Canning Works", sub: "Pressure vs. water-bath, acidity, the real reason botulism matters — and when it doesn't." },
   { n: "02", title: "Equipment Without the Fluff", sub: "What you actually need to start. What you can skip. How to source a canner in a northern town." },
@@ -45,7 +61,7 @@ const DIGITAL_PRODUCTS = [
     name: "Zone 0 Starter Kit",
     price: "$17",
     origin: "Bobbie built this after watching people download the Northern Pantry printable and then ask: \"okay, but what do I actually do first?\" Zone 0 is the answer — start with your own kitchen, start this week.",
-    href: "https://buy.stripe.com/REPLACE_ZONE0_LINK",
+    href: STRIPE_ZONE0,
     cta: "Get the Zone 0 Kit",
     accent: RUST,
     bullets: [
@@ -63,7 +79,7 @@ const DIGITAL_PRODUCTS = [
     name: "Preparedness Pack",
     price: "$17",
     origin: "The second layer — once Zone 0 is running, you build out. Dry storage that doesn't go stale, a freezer system that doesn't fail you, and a plan for when the road closes.",
-    href: "https://buy.stripe.com/REPLACE_PREP_PACK_LINK",
+    href: STRIPE_PREP_PACK,
     cta: "Get the Preparedness Pack",
     accent: RUST,
     bullets: [
@@ -81,7 +97,7 @@ const DIGITAL_PRODUCTS = [
     name: "Jars & Scars — Founding Edition",
     price: "$27",
     origin: "The book Bobbie wished existed when she started. Not a canning manual — there are plenty of those. A book about what it actually takes to build a food life in a northern place, over years, when no one is watching.",
-    href: "https://buy.stripe.com/REPLACE_JARS_SCARS_LINK",
+    href: STRIPE_JARS_SCARS,
     cta: "Get Jars & Scars",
     accent: FOREST,
     bullets: [
@@ -257,6 +273,39 @@ export function HeadwatersProductsPage() {
         fontFamily: "var(--font-sans, Inter, sans-serif)",
       }}
     >
+      {!STRIPE_LINKS_LIVE && (
+        <div
+          className="print:hidden"
+          style={{
+            background: "#fef08a",
+            borderBottom: "2px solid #ca8a04",
+            padding: "0.6rem 1.2rem",
+            fontSize: "0.78rem",
+            fontFamily: "monospace",
+            color: "#713f12",
+            lineHeight: 1.6,
+          }}
+        >
+          <strong>Stripe links not yet live.</strong> Replace the following constants in{" "}
+          <code>HeadwatersProductsPage.tsx</code> with real Stripe Payment Link URLs from{" "}
+          <a
+            href="https://dashboard.stripe.com/payment-links"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: "#92400e", textDecoration: "underline" }}
+          >
+            dashboard.stripe.com/payment-links
+          </a>
+          :{" "}
+          {STRIPE_MISSING.map((p, i) => (
+            <span key={p.key}>
+              <code>{p.key}</code> ({p.label}){i < STRIPE_MISSING.length - 1 ? ", " : "."}
+            </span>
+          ))}{" "}
+          This banner disappears automatically once all links are replaced.
+        </div>
+      )}
+
       {/* ── Header ── */}
       <header style={{ background: EVERGREEN, padding: "2.5rem 1.5rem 2rem" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
@@ -375,7 +424,7 @@ export function HeadwatersProductsPage() {
             The complete two-layer starting point.
           </p>
           <a
-            href="https://buy.stripe.com/REPLACE_BUNDLE_LINK"
+            href={STRIPE_BUNDLE}
             target="_blank"
             rel="noreferrer"
             style={{
@@ -561,7 +610,7 @@ export function HeadwatersProductsPage() {
                 }}
               >
                 <a
-                  href="https://buy.stripe.com/REPLACE_COURSE1_LINK"
+                  href={STRIPE_COURSE1}
                   target="_blank"
                   rel="noreferrer"
                   style={{
