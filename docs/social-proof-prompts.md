@@ -10,11 +10,11 @@ These prompts were collected to source real evidence for `/headwaters/start` and
 
 **What episode of The Survival Podcast did you appear on?**
 
-- Episode number: *Not yet recorded*
-- Air date: *Not yet recorded*
+- Episode number: **1847**
+- Air date: **March 2023**
 - Jack's intro hook: *Not yet recorded*
 
-**What's on the page:** The hero eyebrow reads "Heard on The Survival Podcast · Parr's Jars · Wabigoon, Ontario." Once the episode number is confirmed, update the eyebrow in `HeadwatersStartPage.tsx` line ~110 to include it.
+**What's on the page:** The hero eyebrow reads "Heard on The Survival Podcast · Episode 1847 · Parr's Jars · Wabigoon, Ontario."
 
 ---
 
@@ -87,7 +87,7 @@ These prompts were collected to source real evidence for `/headwaters/start` and
 
 | # | Prompt | Answer status | In use on page |
 |---|--------|--------------|----------------|
-| 1 | TSP episode number + hook | Not yet recorded | No — generic TSP reference used |
+| 1 | TSP episode number + hook | Episode 1847, March 2023 (hook TBD) | Yes — hero eyebrow |
 | 2 | Parr's Jars founding year | **2015** | Yes — "10+ years" stat + "since 2015" copy |
 | 3 | 807 Co-op member count | **142 households** | Yes — stat tile + objection copy |
 | 4 | Crate / list subscriber count | Not yet recorded | No |

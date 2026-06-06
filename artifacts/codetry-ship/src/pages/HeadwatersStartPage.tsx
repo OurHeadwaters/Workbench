@@ -104,7 +104,7 @@ export function HeadwatersStartPage() {
               marginBottom: "0.75rem",
             }}
           >
-              Heard on The Survival Podcast · Parr's Jars · Wabigoon, Ontario
+              Heard on The Survival Podcast · Episode 1847 · Parr's Jars · Wabigoon, Ontario
           </p>
           <h1
             style={{
