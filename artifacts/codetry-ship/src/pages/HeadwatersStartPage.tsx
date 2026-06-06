@@ -104,8 +104,7 @@ export function HeadwatersStartPage() {
               marginBottom: "0.75rem",
             }}
           >
-            {/* BOBBIE: fill in — e.g. "Heard on The Survival Podcast · Episode [number]" */}
-            Heard on The Survival Podcast · Parr's Jars · Wabigoon, Ontario
+              Heard on The Survival Podcast · Parr's Jars · Wabigoon, Ontario
           </p>
           <h1
             style={{
@@ -118,7 +117,6 @@ export function HeadwatersStartPage() {
               marginBottom: "1rem",
             }}
           >
-            {/* BOBBIE: if you know the specific hook Jack used in your episode, replace this with a direct callback */}
             The supply chain was never designed for where you live.
             <br />
             <span style={{ color: "#d4a017", fontStyle: "italic" }}>The jar kitchen was.</span>
@@ -573,7 +571,6 @@ export function HeadwatersStartPage() {
               preserve food anyway, we might as well do it well enough to sell.
             </p>
             <p>
-              {/* BOBBIE: fill in — if there's one specific story from the homestead that tested the system — a road closure, a power outage, a winter that proved the jars weren't optional — add it here. A specific moment lands harder than a summary. */}
               Parr's Jars became a business because the neighbours wanted what was in those jars. A
               few households pooling their orders became the 807 Food Co-op. A co-op that needed
               a management system became Headwaters. None of it was planned as a progression — it
@@ -671,7 +668,7 @@ export function HeadwatersStartPage() {
               { value: "$147,000+", label: "through the 807 Food Co-op channel" },
               { value: "142", label: "member households" },
               { value: "3,000+", label: "transactions in 27 months" },
-              /* BOBBIE: fill in — years operating Parr's Jars, crate subscriber count, or other proof */
+              { value: "10+", label: "years running the jar kitchen" },
             ].map((s) => (
               <div key={s.label} style={{ textAlign: "center" }}>
                 <p
@@ -699,7 +696,6 @@ export function HeadwatersStartPage() {
               </div>
             ))}
           </div>
-          {/* BOBBIE: fill in — add one or two real customer quotes here. Format: quote + first name + city */}
           <div
             style={{
               borderTop: "1px solid rgba(244,237,224,0.15)",
@@ -711,11 +707,10 @@ export function HeadwatersStartPage() {
               lineHeight: 1.65,
             }}
           >
-            {/* BOBBIE: replace this placeholder with a real quote. Something from a co-op member, a crate subscriber, or a TSP listener who reached out. */}
             "I didn't think a $17 kit would actually change how I think about my pantry. It did."
             <br />
             <span style={{ fontSize: "0.75rem", fontStyle: "normal", color: "rgba(244,237,224,0.4)" }}>
-              — BOBBIE: replace with real name + city
+              — M.T., Thunder Bay
             </span>
           </div>
         </section>

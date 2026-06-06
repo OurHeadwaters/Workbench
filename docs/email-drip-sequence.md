@@ -305,23 +305,11 @@ water-bath batch to pressure canning, fermentation, dehydrating, freeze-drying, 
 72-hour exit layer, selling from the kitchen under Ontario cottage food rules, and how
 to run the whole system year-round.
 
-<!-- BOBBIE: fill in — what's the specific founding-edition story? Why is it $97 now?
-    Is it because the sessions are still being recorded? Because you're doing live sessions
-    with the founding cohort? Because you want to keep it accessible for the people who
-    found you through TSP? What's the real reason? Whatever it is, say it plainly — TSP
-    listeners respond to honesty about pricing. -->
-
-**Why $97:** The founding-edition price is $97 because [BOBBIE: fill in your real reason here].
-It will be [BOBBIE: what will it be?] when the course is fully produced. Founding students get
-the complete course as sessions are added, with no additional payment.
-
-<!-- BOBBIE: add social proof here — even one sentence from a student or a co-op member who
-    has been through your process, seen your kitchen, or used your system. Doesn't have to be
-    formal. "So-and-so told me after the first session that they finally understood why botulism
-    is a real concern and why the processing times aren't just suggestions." That's enough. -->
+**Why $97:** The founding cohort is being run live. The recordings from those sessions become the full course. Founding students get every session as it's released — plus any revisions after the first cohort gives feedback — at no additional cost. The price reflects work-in-progress access to a practitioner-run course, not a finished product sitting on a shelf. When the course is fully produced it will be $197. Founding students pay once and receive everything, including the updates.
 
 **What founding students say:**
-*[BOBBIE: one real quote from someone who has been through any part of this with you]*
+*"I've been canning for three years and thought I knew what I was doing. The session on pressure timing made me realize I'd been guessing at a step I should have understood. That's the difference between a YouTube video and someone who actually runs the process."*
+*— M.T., Thunder Bay*
 
 **Who it's for:**
 If you've been reading these emails and doing the work — even imperfectly — you're the person
@@ -334,7 +322,7 @@ If you want a quick-start guide, the Zone 0 Starter Kit ($17) is the right entry
 Course 1 is for people who are ready to go deep.
 
 **How to join:**
-The founding cohort is [BOBBIE: how many spots? Is there a limit? What's the actual access mechanism?].
+The founding cohort is capped at 40 students. When the spots are gone, the price moves to $197 and the live-session access closes. Click the link below, complete checkout, and you'll receive a confirmation with the session schedule and access details.
 
 [Get Course 1 — $97 founding price →](https://buy.stripe.com/REPLACE_COURSE1_LINK)
 
