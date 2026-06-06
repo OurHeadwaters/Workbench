@@ -1,3 +1,5 @@
+import React from "react";
+
 const EVERGREEN = "#1f3d2e";
 const RUST = "#b85a3e";
 const CREAM = "#f4ede0";
@@ -5,7 +7,10 @@ const INK = "#2c2c2c";
 const MUTED = "#6b6b5e";
 const GOLD = "#c89a2e";
 
-const CONVERTKIT_FORM_ACTION = "https://app.convertkit.com/forms/REPLACE_CONVERTKIT_FORM_ID/subscriptions";
+const CK_FORM_ID = import.meta.env.VITE_CONVERTKIT_FORM_ID as string | undefined;
+const CONVERTKIT_FORM_ACTION = CK_FORM_ID
+  ? `https://app.convertkit.com/forms/${CK_FORM_ID}/subscriptions`
+  : null;
 const NORTHERN_PANTRY_URL = "/print-marketing/suite/northern-pantry";
 const PRODUCTS_URL = "/headwaters/products";
 
@@ -83,6 +88,37 @@ const OBJECTIONS = [
 ];
 
 export function HeadwatersStartPage() {
+  const [email, setEmail] = React.useState("");
+  const [signupStatus, setSignupStatus] = React.useState<"idle" | "loading" | "success" | "error">("idle");
+  const [signupError, setSignupError] = React.useState<string | null>(null);
+
+  async function handleSignup(e: React.FormEvent) {
+    e.preventDefault();
+    if (!CONVERTKIT_FORM_ACTION) {
+      setSignupStatus("error");
+      setSignupError("Signup is not configured yet — check back soon.");
+      return;
+    }
+    setSignupStatus("loading");
+    setSignupError(null);
+    try {
+      const body = new FormData();
+      body.append("email_address", email);
+      const res = await fetch(CONVERTKIT_FORM_ACTION, { method: "POST", body });
+      const data = await res.json().catch(() => null);
+      if (res.ok && data?.status !== "failed") {
+        setSignupStatus("success");
+        setEmail("");
+      } else {
+        setSignupStatus("error");
+        setSignupError(data?.error ?? "Something went wrong — please try again.");
+      }
+    } catch {
+      setSignupStatus("error");
+      setSignupError("Network error — please check your connection and try again.");
+    }
+  }
+
   return (
     <div
       style={{
@@ -381,49 +417,85 @@ export function HeadwatersStartPage() {
             One email a week — what's in season, what's in the jars, what's working. No noise.
             Unsubscribe any time.
           </p>
-          {/* BOBBIE: replace REPLACE_CONVERTKIT_FORM_ID with your real ConvertKit form ID */}
-          <form
-            action={CONVERTKIT_FORM_ACTION}
-            method="POST"
-            style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}
-          >
-            <input
-              type="email"
-              name="email_address"
-              placeholder="your@email.com"
-              required
+          {signupStatus === "success" ? (
+            <div
               style={{
-                flex: 1,
-                minWidth: 200,
                 background: "rgba(244,237,224,0.12)",
-                border: "1px solid rgba(244,237,224,0.25)",
+                border: "1px solid rgba(244,237,224,0.3)",
                 borderRadius: 6,
-                padding: "0.65rem 0.9rem",
+                padding: "0.85rem 1.1rem",
+                fontFamily: "var(--font-serif)",
+                fontSize: "0.9rem",
                 color: CREAM,
-                fontSize: "0.88rem",
-                fontFamily: "var(--font-sans)",
-                outline: "none",
-              }}
-            />
-            <button
-              type="submit"
-              style={{
-                background: RUST,
-                color: "white",
-                border: "none",
-                borderRadius: 6,
-                padding: "0.65rem 1.25rem",
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.88rem",
-                fontWeight: 700,
-                letterSpacing: "0.04em",
-                cursor: "pointer",
-                whiteSpace: "nowrap",
+                lineHeight: 1.5,
               }}
             >
-              Join the list
-            </button>
-          </form>
+              ✓ You're on the list. Watch for your first email from the jar kitchen.
+            </div>
+          ) : (
+            <form
+              onSubmit={handleSignup}
+              style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}
+            >
+              <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+                <input
+                  type="email"
+                  name="email_address"
+                  placeholder="your@email.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={signupStatus === "loading"}
+                  style={{
+                    flex: 1,
+                    minWidth: 200,
+                    background: "rgba(244,237,224,0.12)",
+                    border: "1px solid rgba(244,237,224,0.25)",
+                    borderRadius: 6,
+                    padding: "0.65rem 0.9rem",
+                    color: CREAM,
+                    fontSize: "0.88rem",
+                    fontFamily: "var(--font-sans)",
+                    outline: "none",
+                    opacity: signupStatus === "loading" ? 0.6 : 1,
+                  }}
+                />
+                <button
+                  type="submit"
+                  disabled={signupStatus === "loading"}
+                  style={{
+                    background: RUST,
+                    color: "white",
+                    border: "none",
+                    borderRadius: 6,
+                    padding: "0.65rem 1.25rem",
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.88rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.04em",
+                    cursor: signupStatus === "loading" ? "default" : "pointer",
+                    whiteSpace: "nowrap",
+                    opacity: signupStatus === "loading" ? 0.7 : 1,
+                  }}
+                >
+                  {signupStatus === "loading" ? "Joining…" : "Join the list"}
+                </button>
+              </div>
+              {signupStatus === "error" && signupError && (
+                <p
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.8rem",
+                    color: "#f4a07a",
+                    margin: 0,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {signupError}
+                </p>
+              )}
+            </form>
+          )}
         </section>
 
         {/* ── Products preview ── */}
