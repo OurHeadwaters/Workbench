@@ -218,16 +218,7 @@ export default function Index() {
         </p>
 
         {/* Nav cards — stacked on mobile, row on sm+ */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.75rem",
-            maxWidth: "38rem",
-            margin: "0 auto",
-          }}
-          className="nav-card-grid"
-        >
+        <div className="nav-card-grid">
           {/* Primary: Browse all documents */}
           <a
             href={`${base}internal`}

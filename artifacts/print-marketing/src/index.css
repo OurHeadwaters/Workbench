@@ -349,3 +349,23 @@ body.print-preview .page-letter-landscape::before {
   box-shadow: 0 3px 12px rgba(0,0,0,0.09);
   transform: translateY(-1px);
 }
+
+/* ── Index page nav-card grid: single column on mobile, row on tablet+ ── */
+.nav-card-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 38rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .nav-card-grid {
+    flex-direction: row;
+    max-width: 56rem;
+    align-items: stretch;
+  }
+  .nav-card-grid > a {
+    flex: 1;
+  }
+}
