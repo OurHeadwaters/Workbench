@@ -287,6 +287,9 @@ price is what it is.
 
 ## Email 8 — The Course Offer (Day 14)
 
+> **⚠ DO NOT ACTIVATE — awaiting Bobbie confirmation of pricing details.**
+> Confirmation email sent 2026-06-06. Three items need sign-off: the $197 post-founding price, the 40-student cap, and the live-session framing. Update and remove this notice once Bobbie replies. See `docs/social-proof-prompts.md` prompt #6.
+
 **Subject:** You're already a Jarista. Here's what's next.
 
 ---

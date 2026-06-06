@@ -59,11 +59,15 @@ These prompts were collected to source real evidence for `/headwaters/start` and
 
 ## 6. The Founding-Edition Pricing Story
 
-- Why $97: The founding cohort is being run live. Recordings from those sessions become the full course. Founding students get every session as it's released — plus any revisions after the first cohort gives feedback — at no additional cost. The price reflects work-in-progress access to a practitioner-run course, not a finished product.
-- Price after founding period: **$197**
-- Cap on founding spots: **40 students**
+**Status: confirmation requested from Bobbie — do not activate ConvertKit sequence until she replies.**
+Confirmation email sent 2026-06-06 asking Bobbie to verify or correct the three items below.
 
-**What's on the page:** Email 8 ("The Course Offer") contains the full pricing story using these details. Verify these numbers with Bobbie before activating the ConvertKit sequence.
+- Why $97: The founding cohort is being run live. Recordings from those sessions become the full course. Founding students get every session as it's released — plus any revisions after the first cohort gives feedback — at no additional cost. The price reflects work-in-progress access to a practitioner-run course, not a finished product.
+- Price after founding period: **$197** ← awaiting Bobbie confirmation
+- Cap on founding spots: **40 students** ← awaiting Bobbie confirmation
+- Live-session framing: "founding cohort run live, recordings become the course" ← awaiting Bobbie confirmation
+
+**What's on the page:** Email 8 ("The Course Offer") contains the full pricing story using these details. Update this section and Email 8 once Bobbie replies, then clear the "awaiting confirmation" flags.
 
 ---
 
