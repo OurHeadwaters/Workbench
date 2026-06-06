@@ -348,6 +348,19 @@ const partI: Part = {
             "The work is small and specific. The practitioner listens for the noun the community already uses. They refuse to translate it into something cleaner. They verify, when in doubt, against the human who handed them the word — not against the literature, not against the model, not against their own better idea. The discipline is built so that this is enough.",
         },
         {
+          kind: "callout",
+          text:
+            "When a hard conversation arrives — when the room names a move that the practitioner knows has a structural name — the structural reference is *The Logic*. It is a named catalog of the moves that erode a community's language and ownership, built for practitioners who need to say precisely what is happening without having to invent the vocabulary on the spot.",
+          practitioner: true,
+        },
+        {
+          kind: "tool",
+          label: "The Logic",
+          hint: "A structural reference for practitioners in hard conversations — the named moves, the fallacies, the patterns that erode community language and ownership.",
+          route: "https://stomping-path-documentation.replit.app/logic/",
+          practitioner: true,
+        },
+        {
           kind: "subhead",
           text: "The thesis, in one sentence.",
         },

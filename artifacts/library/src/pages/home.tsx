@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { useGetLibraryStats, useGetRecentActivity } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertTriangle, FileText, Users, FolderOpen, Tag, ArrowRight, UploadCloud, EyeOff, type LucideIcon } from "lucide-react";
+import { AlertTriangle, FileText, Users, FolderOpen, Tag, ArrowRight, UploadCloud, EyeOff, ExternalLink, type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EntryCard } from "@/components/EntryCard";
 import { PHENOMENA } from "@workspace/why-stores-fail";
@@ -66,6 +66,34 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <a
+          href="https://stomping-path-documentation.replit.app/logic/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Card className="hover-elevate cursor-pointer transition-all border-primary/20 bg-gradient-to-br from-primary/5 to-secondary/5 hover:border-primary/40 group h-full">
+            <CardContent className="p-6 flex items-start gap-5">
+              <div className="rounded-xl bg-primary/10 text-primary p-3 shrink-0">
+                <ExternalLink className="h-6 w-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-muted-foreground font-semibold mb-1">
+                  Doctrine · practitioner reference
+                </div>
+                <CardTitle className="text-xl font-serif text-primary group-hover:text-secondary transition-colors mb-2">
+                  The Logic
+                </CardTitle>
+                <CardDescription className="text-base leading-relaxed">
+                  A structural reference for naming what's happening in hard
+                  conversations — the moves, fallacies, and patterns that erode
+                  community language and ownership.
+                </CardDescription>
+              </div>
+              <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0 mt-1" />
+            </CardContent>
+          </Card>
+        </a>
+
         <Link href="/why-stores-fail">
           <Card className="hover-elevate cursor-pointer transition-all border-secondary/40 bg-gradient-to-br from-secondary/5 to-accent/5 hover:border-secondary group h-full">
             <CardContent className="p-6 flex items-start gap-5">

@@ -497,18 +497,45 @@ export function GuidePage() {
           </div>
         )}
 
-        <a
-          href="/codetry-handbook/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-between bg-white rounded-xl border border-[#E7E5E4] px-4 py-3 min-h-[56px]"
-        >
-          <div>
-            <p className="text-sm font-medium">Codetry Handbook</p>
-            <p className="text-xs text-[#78716C]">How a community runs its own economy</p>
-          </div>
-          <ExternalLink size={16} className="text-[#78716C]" />
-        </a>
+        <div className="space-y-2">
+          <p className="text-xs text-[#78716C] uppercase tracking-wider font-medium px-1">Practitioner Tools</p>
+          <a
+            href="/codetry-handbook/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between bg-white rounded-xl border border-[#E7E5E4] px-4 py-3 min-h-[56px]"
+          >
+            <div>
+              <p className="text-sm font-medium">Codetry Handbook</p>
+              <p className="text-xs text-[#78716C]">How a community runs its own economy</p>
+            </div>
+            <ExternalLink size={16} className="text-[#78716C]" />
+          </a>
+          <a
+            href="https://stomping-path-documentation.replit.app/goodbye/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between bg-white rounded-xl border border-[#E7E5E4] px-4 py-3 min-h-[56px]"
+          >
+            <div>
+              <p className="text-sm font-medium">The Goodbye Kit</p>
+              <p className="text-xs text-[#78716C]">For practitioners navigating exits — the language and moves for leaving well</p>
+            </div>
+            <ExternalLink size={16} className="text-[#78716C]" />
+          </a>
+          <a
+            href="https://stomping-path-documentation.replit.app/logic/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between bg-white rounded-xl border border-[#E7E5E4] px-4 py-3 min-h-[56px]"
+          >
+            <div>
+              <p className="text-sm font-medium">The Logic</p>
+              <p className="text-xs text-[#78716C]">A structural reference for naming what's happening in hard conversations</p>
+            </div>
+            <ExternalLink size={16} className="text-[#78716C]" />
+          </a>
+        </div>
 
         <div className="space-y-3">
           <div>

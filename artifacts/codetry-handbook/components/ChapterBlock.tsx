@@ -507,9 +507,11 @@ function ToolCardBlock({
       Animated.spring(scale, { toValue: 1, useNativeDriver: true, tension: 200, friction: 12 }),
     ]).start();
 
+  const isExternal = block.route.startsWith("http://") || block.route.startsWith("https://");
+
   return (
     <Pressable
-      onPress={() => router.push(block.route as any)}
+      onPress={() => isExternal ? Linking.openURL(block.route).catch(() => {}) : router.push(block.route as any)}
       onPressIn={onIn}
       onPressOut={onOut}
     >
