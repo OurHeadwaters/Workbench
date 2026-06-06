@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Router as WouterRouter, Route, Switch, Redirect } from "wouter";
 import { ZoneStoreProvider } from "@workspace/zone-store";
 import { KitchenTableButton } from "@workspace/kitchen-table-client/react";
@@ -25,9 +26,35 @@ import { WindowPage } from "@/pages/WindowPage";
 import { ModelPage } from "@/pages/ModelPage";
 import { DebriefPage } from "@/pages/DebriefPage";
 import { LandPlanPage } from "@/pages/LandPlanPage";
+import { KitsPage } from "@/pages/KitsPage";
+import { PractitionerApplicationPage } from "@/pages/PractitionerApplicationPage";
+import { PractitionerReviewPage } from "@/pages/PractitionerReviewPage";
 import { GordWidget } from "@workspace/gord-widget";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+function getOwnerToken(): string | null {
+  try {
+    return (
+      window.localStorage.getItem("library.ownerToken") ||
+      window.localStorage.getItem("ownerToken") ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
+function useIsOwner(): boolean {
+  const [isOwner, setIsOwner] = useState(() => !!getOwnerToken());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsOwner(!!getOwnerToken());
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+  return isOwner;
+}
 
 function OnboardingGuard({ children }: { children: React.ReactNode }) {
   const completed = useStore((s) => s.onboarding.completed);
@@ -46,6 +73,8 @@ function AppShell({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const isOwner = useIsOwner();
+
   return (
     <ZoneStoreProvider>
     <WouterRouter base={BASE}>
@@ -122,6 +151,21 @@ export default function App() {
           </OnboardingGuard>
         </Route>
 
+        {/* ── Kits — kit listing + owner drafts ── */}
+        <Route path="/kits">
+          <AppShell><KitsPage /></AppShell>
+        </Route>
+
+        {/* ── Practitioners — application form (public) ── */}
+        <Route path="/apply-practitioner">
+          <PractitionerApplicationPage />
+        </Route>
+
+        {/* ── Arc / Practitioners — owner review screen ── */}
+        <Route path="/arc/practitioners">
+          <AppShell><PractitionerReviewPage /></AppShell>
+        </Route>
+
         {/* ── Other preserved routes ── */}
         <Route path="/inbox-setup">
           <OnboardingGuard>
@@ -169,7 +213,7 @@ export default function App() {
       </Switch>
     </WouterRouter>
     <KitchenTableButton />
-    <GordWidget />
+    <GordWidget founderMode={isOwner} />
     </ZoneStoreProvider>
   );
 }

@@ -32,6 +32,7 @@ import gordRouter from "./gord";
 import riverSmithRouter from "./riverSmith";
 import settingsRouter from "./settings";
 import kitsRouter from "./kits";
+import practitionerApplicationsRouter from "./practitionerApplications";
 
 const router: IRouter = Router();
 
@@ -71,5 +72,6 @@ router.use("/gord", gordRouter);
 router.use("/river-smith", riverSmithRouter);
 router.use("/settings", settingsRouter);
 router.use("/kits", kitsRouter);
+router.use("/practitioner-applications", practitionerApplicationsRouter);
 
 export default router;
