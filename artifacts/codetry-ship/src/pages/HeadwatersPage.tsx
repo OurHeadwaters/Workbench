@@ -344,7 +344,7 @@ export function HeadwatersPage() {
                   margin: "0 0 14px",
                 }}
               >
-                Take the Compass
+                Craft your Compass
               </p>
 
               {/* Dominant CTA card */}
@@ -419,7 +419,7 @@ export function HeadwatersPage() {
                     borderRadius: 3,
                   }}
                 >
-                  Take the Compass →
+                  Craft your Compass →
                 </span>
               </a>
 
