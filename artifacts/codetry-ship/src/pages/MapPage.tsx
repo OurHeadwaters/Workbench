@@ -907,12 +907,25 @@ function resolveSharedZone(): ZoneData | null {
   return null;
 }
 
+function resolveSharedNote(): string | null {
+  try {
+    const value = new URLSearchParams(window.location.search).get("note");
+    if (!value) return null;
+    const trimmed = value.trim().slice(0, 120);
+    return trimmed || null;
+  } catch {
+    return null;
+  }
+}
+
 function SharedZoneBanner({
   zone,
+  note,
   visible,
   onDismiss,
 }: {
   zone: ZoneData;
+  note: string | null;
   visible: boolean;
   onDismiss: () => void;
 }) {
@@ -985,6 +998,36 @@ function SharedZoneBanner({
           >
             {zone.terrain}
           </div>
+          {note && (
+            <div
+              style={{
+                marginTop: 6,
+                fontFamily: "Georgia, serif",
+                fontSize: 11,
+                fontStyle: "italic",
+                color: "rgba(255,255,255,0.88)",
+                lineHeight: 1.45,
+                borderTop: "1px solid rgba(255,255,255,0.18)",
+                paddingTop: 5,
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 8,
+                  fontStyle: "normal",
+                  fontWeight: 700,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.5)",
+                  marginRight: 6,
+                }}
+              >
+                With a note:
+              </span>
+              {note}
+            </div>
+          )}
         </div>
         <button
           type="button"
@@ -1025,6 +1068,7 @@ export function MapPage() {
 
   /* Share-link landing — detect ?zone=N and show a banner */
   const [sharedZone] = useState<ZoneData | null>(resolveSharedZone);
+  const [sharedNote] = useState<string | null>(resolveSharedNote);
   const [shareBannerVisible, setShareBannerVisible] = useState(true);
 
   useEffect(() => {
@@ -1180,6 +1224,7 @@ export function MapPage() {
       {sharedZone && (
         <SharedZoneBanner
           zone={sharedZone}
+          note={sharedNote}
           visible={shareBannerVisible}
           onDismiss={() => setShareBannerVisible(false)}
         />

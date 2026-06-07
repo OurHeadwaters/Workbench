@@ -221,7 +221,9 @@ export default function WatershedMap() {
   const [pinned, setPinned] = useState<number | null>(null);
   /* compass: whether the initial pin came from Compass/URL */
   const [isCompassPin, setIsCompassPin] = useState(false);
-  /* share: clipboard feedback */
+  /* share popover */
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareNote, setShareNote] = useState("");
   const [shareCopied, setShareCopied] = useState(false);
 
   useEffect(() => {
@@ -254,14 +256,33 @@ export default function WatershedMap() {
     }
   }
 
-  function handleShare() {
-    const url = `${window.location.origin}${window.location.pathname}?zone=${pinned}`;
+  function handleShareOpen() {
+    setShareOpen(true);
+    setShareNote("");
+    setShareCopied(false);
+  }
+
+  function handleShareCopy() {
+    const base = `${window.location.origin}${window.location.pathname}?zone=${pinned}`;
+    const url = shareNote.trim()
+      ? `${base}&note=${encodeURIComponent(shareNote.trim())}`
+      : base;
     navigator.clipboard.writeText(url).then(() => {
       setShareCopied(true);
-      setTimeout(() => setShareCopied(false), 2000);
+      setTimeout(() => {
+        setShareCopied(false);
+        setShareOpen(false);
+        setShareNote("");
+      }, 1800);
     }).catch(() => {
-      /* fallback: select a temp input */
+      /* fallback */
     });
+  }
+
+  function handleShareCancel() {
+    setShareOpen(false);
+    setShareNote("");
+    setShareCopied(false);
   }
 
   return (
@@ -515,46 +536,160 @@ export default function WatershedMap() {
 
             {/* Action row */}
             {pinned !== null && (
-              <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  style={{
-                    background: shareCopied ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.15)",
-                    border: "1px solid rgba(255,255,255,0.25)",
-                    borderRadius: 4,
-                    color: "rgba(255,255,255,0.9)",
-                    fontFamily: "monospace",
-                    fontSize: 9,
-                    fontWeight: 700,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    cursor: "pointer",
-                    padding: "3px 10px",
-                    transition: "background 0.15s",
-                  }}
-                >
-                  {shareCopied ? "Link copied ✓" : "Share this zone"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setPinned(null); setIsCompassPin(false); }}
-                  style={{
-                    background: "rgba(255,255,255,0.10)",
-                    border: "1px solid rgba(255,255,255,0.18)",
-                    borderRadius: 4,
-                    color: "rgba(255,255,255,0.65)",
-                    fontFamily: "monospace",
-                    fontSize: 9,
-                    fontWeight: 700,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    cursor: "pointer",
-                    padding: "3px 10px",
-                  }}
-                >
-                  Close ✕
-                </button>
+              <div style={{ marginTop: 10 }}>
+                {!shareOpen ? (
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <button
+                      type="button"
+                      onClick={handleShareOpen}
+                      style={{
+                        background: "rgba(255,255,255,0.15)",
+                        border: "1px solid rgba(255,255,255,0.25)",
+                        borderRadius: 4,
+                        color: "rgba(255,255,255,0.9)",
+                        fontFamily: "monospace",
+                        fontSize: 9,
+                        fontWeight: 700,
+                        letterSpacing: "0.14em",
+                        textTransform: "uppercase",
+                        cursor: "pointer",
+                        padding: "3px 10px",
+                        transition: "background 0.15s",
+                      }}
+                    >
+                      Share this zone
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setPinned(null); setIsCompassPin(false); }}
+                      style={{
+                        background: "rgba(255,255,255,0.10)",
+                        border: "1px solid rgba(255,255,255,0.18)",
+                        borderRadius: 4,
+                        color: "rgba(255,255,255,0.65)",
+                        fontFamily: "monospace",
+                        fontSize: 9,
+                        fontWeight: 700,
+                        letterSpacing: "0.14em",
+                        textTransform: "uppercase",
+                        cursor: "pointer",
+                        padding: "3px 10px",
+                      }}
+                    >
+                      Close ✕
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      background: "rgba(0,0,0,0.18)",
+                      border: "1px solid rgba(255,255,255,0.20)",
+                      borderRadius: 7,
+                      padding: "10px 12px",
+                    }}
+                  >
+                    <label
+                      htmlFor="ws-share-note"
+                      style={{
+                        display: "block",
+                        fontFamily: "monospace",
+                        fontSize: 8,
+                        fontWeight: 700,
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase",
+                        color: "rgba(255,255,255,0.55)",
+                        marginBottom: 6,
+                      }}
+                    >
+                      Add a personal note (optional)
+                    </label>
+                    <textarea
+                      id="ws-share-note"
+                      value={shareNote}
+                      onChange={(e) => setShareNote(e.target.value.slice(0, 120))}
+                      placeholder="I thought of you when I saw this zone…"
+                      rows={2}
+                      style={{
+                        width: "100%",
+                        boxSizing: "border-box",
+                        resize: "none",
+                        background: "rgba(255,255,255,0.10)",
+                        border: "1px solid rgba(255,255,255,0.22)",
+                        borderRadius: 4,
+                        color: "rgba(255,255,255,0.9)",
+                        fontFamily: "Georgia, serif",
+                        fontSize: 12,
+                        lineHeight: 1.45,
+                        padding: "6px 8px",
+                        outline: "none",
+                        marginBottom: 4,
+                      }}
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: 8,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "monospace",
+                          fontSize: 8,
+                          color: shareNote.length >= 110
+                            ? "rgba(255,200,100,0.85)"
+                            : "rgba(255,255,255,0.38)",
+                          letterSpacing: "0.08em",
+                        }}
+                      >
+                        {shareNote.length} / 120
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <button
+                        type="button"
+                        onClick={handleShareCopy}
+                        style={{
+                          background: shareCopied ? "rgba(255,255,255,0.30)" : "rgba(255,255,255,0.18)",
+                          border: "1px solid rgba(255,255,255,0.28)",
+                          borderRadius: 4,
+                          color: "rgba(255,255,255,0.92)",
+                          fontFamily: "monospace",
+                          fontSize: 9,
+                          fontWeight: 700,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          cursor: "pointer",
+                          padding: "4px 12px",
+                          transition: "background 0.15s",
+                          flex: 1,
+                        }}
+                      >
+                        {shareCopied ? "Link copied ✓" : "Copy link"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleShareCancel}
+                        style={{
+                          background: "transparent",
+                          border: "1px solid rgba(255,255,255,0.16)",
+                          borderRadius: 4,
+                          color: "rgba(255,255,255,0.55)",
+                          fontFamily: "monospace",
+                          fontSize: 9,
+                          fontWeight: 700,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          cursor: "pointer",
+                          padding: "4px 10px",
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </>
