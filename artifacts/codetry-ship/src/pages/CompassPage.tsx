@@ -1111,6 +1111,7 @@ export function CompassPage() {
     if (zones.length > 0) {
       setSelectedId(zones[0]);
       triggerPulse(zones);
+      try { localStorage.setItem("compassResult", String(zones[0])); } catch { /**/ }
     }
     if (next.situation === "standby") handleStandbyChange(true);
     else if (next.situation === "normal") handleStandbyChange(false);
@@ -1132,7 +1133,10 @@ export function CompassPage() {
   }
 
   function handleReset() {
-    try { localStorage.removeItem(QUIZ_STORAGE_KEY); } catch { /**/ }
+    try {
+      localStorage.removeItem(QUIZ_STORAGE_KEY);
+      localStorage.removeItem("compassResult");
+    } catch { /**/ }
     setQuiz({ who: null, situation: null, skipped: false });
     setShowQuiz(true);
     setSelectedId(null);
