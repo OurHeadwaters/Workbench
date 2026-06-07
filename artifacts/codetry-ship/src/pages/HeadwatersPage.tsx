@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Redirect } from "wouter";
 import WatershedMap from "@/components/WatershedMap";
 
@@ -113,7 +114,45 @@ const rule: React.CSSProperties = {
 
 /* ─── HeadwatersPage ────────────────────────────────────────────────────────── */
 export function HeadwatersPage() {
+  const [visibleZones, setVisibleZones] = useState<boolean[]>(() =>
+    new Array(ZONES.length).fill(false)
+  );
+  const zoneRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.getAttribute("data-zone-idx"));
+            setVisibleZones((prev) => {
+              if (prev[idx]) return prev;
+              const next = [...prev];
+              next[idx] = true;
+              return next;
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    zoneRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
+    <>
+      <style>{`
+        @keyframes hwZoneCardIn {
+          from { opacity: 0; transform: translateY(22px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     <main
       style={{
         background: "#02040a",
@@ -698,10 +737,15 @@ export function HeadwatersPage() {
               const baseColor = colors[i] || "255, 255, 255";
               const href = isAquifer ? `${BASE}map#zone-aquifer` : `${BASE}map#zone-${z.id}`;
 
+              const isVisible = visibleZones[i];
+              const staggerDelay = `${i * 90}ms`;
+
               return (
                 <a
                   key={z.id}
                   href={href}
+                  ref={(el) => { zoneRefs.current[i] = el; }}
+                  data-zone-idx={i}
                   style={{
                     position: "relative",
                     display: "flex",
@@ -715,8 +759,12 @@ export function HeadwatersPage() {
                     borderLeft: isAquifer ? `1px solid rgba(${baseColor}, 0.1)` : `3px solid rgba(${baseColor}, 0.5)`,
                     padding: "28px 32px",
                     overflow: "hidden",
-                    transition: "all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)",
                     cursor: "pointer",
+                    opacity: isVisible ? undefined : 0,
+                    animation: isVisible
+                      ? `hwZoneCardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) ${staggerDelay} both`
+                      : undefined,
+                    transition: "all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateX(6px)";
@@ -974,6 +1022,7 @@ export function HeadwatersPage() {
         </a>
       </footer>
     </main>
+    </>
   );
 }
 
