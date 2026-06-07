@@ -368,16 +368,17 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 1,
-      "name": "Eave",
+      "name": "Kitchen Table",
       "domain": "Non-custodial XRPL stablecoin envelope-budgeting installable web app (PWA) — household balance is the source of the watershed",
       "url": "https://x-buckets-vision.replit.app/",
       "status": "live",
       "formerNames": [
         "xBuckets",
         "Watershed",
-        "Headwaters"
+        "Headwaters",
+        "Eave"
       ],
-      "formerNamesNote": "Watershed was an earlier product name for xBuckets before The Margin existed as a separate zone. The name was retired as a product identifier but its metaphor — diversified income streams, flow not restriction — is retained as active concept language in Zone 1. The Zone 5 app (watershed.replit.app) inherited the name as an infrastructure artifact of that earlier period; the conceptual separation is now resolved. Watershed belongs to Zone 1.",
+      "formerNamesNote": "Watershed was an earlier product name for xBuckets before Edge (formerly The Margin) existed as a separate zone. The name was retired as a product identifier but its metaphor — diversified income streams, flow not restriction — is retained as active concept language in Zone 1. The Zone 5 app (watershed.replit.app) inherited the name as an infrastructure artifact of that earlier period; the conceptual separation is now resolved. Watershed belongs to Zone 1.",
       "tagline": "Channel every drop. Nothing from nowhere.",
       "workedExamples": [
         {
@@ -533,7 +534,7 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 3,
-      "name": "Commons",
+      "name": "Greenhouse",
       "domain": "Community production for NWO food systems — multi-tenant member-portal pattern",
       "url": "https://community-knowledge-hub.replit.app/",
       "status": "live",
@@ -601,7 +602,7 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 4,
-      "name": "Arc",
+      "name": "Clearing",
       "domain": "Conventional → regenerative track for industries — multi-year, sector-scale; current sector is regen beef in NWO",
       "url": "https://regen-revolution-zone-4.replit.app/",
       "status": "live (v0.1 anchor shipping)",
@@ -648,11 +649,13 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 5,
-      "name": "The Margin",
+      "name": "Edge",
       "domain": "Wild / observation — private capture (takes) with structured channel-out and opt-in float to the Shallows",
       "url": "https://conversation-log.replit.app/",
       "status": "live",
-      "formerNames": [],
+      "formerNames": [
+        "The Margin"
+      ],
       "workedExamples": [
         {
           "name": "The rebrand without a rewrite",
@@ -671,7 +674,7 @@ export const constellation: ConstellationSnapshot = {
           "rule": "A user posts anonymously; their pseudonym in that thread is stable; in another thread they're someone else. The 'depths below the shallows' framing is literally the session-hash one-way derivation."
         }
       ],
-      "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in The Margin unless its author chooses to float it. The Standby gives the chapter hint.",
+      "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in Edge unless its author chooses to float it. The Standby gives the chapter hint.",
       "opening": "A dam day is a day without rhyme or reason — where a spark was lit and a fire burst forth. It may be a creative hyperfocus, or a day that required a shift of energy that no constellation can contain. Dam days are fleeting. But there are gems worth harnessing in them — they may just be covered in muck.\n\nThe Shallows is where you clean them off. Not every take becomes something. But the practice of catching it before it disappears is the whole discipline.",
       "inlinePrompt": "What was the last dam day you had — and what did you catch from it before it passed?",
       "reflections": [
@@ -702,7 +705,7 @@ export const constellation: ConstellationSnapshot = {
   ],
   "z3": {
     "zone": 3,
-    "name": "Commons",
+    "name": "Greenhouse",
     "memberFacingBrand": "807 Benefits",
     "standby": "Host zone for The Standby. Centralized disruptions (drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down) are felt collectively here first — at the co-op shelf, the producer pipeline, the orders ledger. Call history is the record kept here; standby stock is the inventory primitive; The Common Pantry is the food/supply sub-shelf; The Watch is the active-monitoring sub-noun."
   }

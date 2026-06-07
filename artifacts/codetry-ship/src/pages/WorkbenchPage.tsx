@@ -239,7 +239,7 @@ export function WorkbenchPage() {
               }}
               data-testid="workbench-title"
             >
-              The Lodge
+              Workbench
             </h1>
             <p
               className="font-serif text-lg"

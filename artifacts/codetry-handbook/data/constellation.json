@@ -337,13 +337,14 @@
     },
     {
       "zone": 1,
-      "name": "Eave",
+      "name": "Kitchen Table",
       "formerNames": [
         "xBuckets",
         "Watershed",
-        "Headwaters"
+        "Headwaters",
+        "Eave"
       ],
-      "formerNamesNote": "Watershed was an earlier product name for xBuckets before The Margin existed as a separate zone. The name was retired as a product identifier but its metaphor — diversified income streams, flow not restriction — is retained as active concept language in Zone 1. The Zone 5 app (watershed.replit.app) inherited the name as an infrastructure artifact of that earlier period; the conceptual separation is now resolved. Watershed belongs to Zone 1.",
+      "formerNamesNote": "Watershed was an earlier product name for xBuckets before Edge (formerly The Margin) existed as a separate zone. The name was retired as a product identifier but its metaphor — diversified income streams, flow not restriction — is retained as active concept language in Zone 1. The Zone 5 app (watershed.replit.app) inherited the name as an infrastructure artifact of that earlier period; the conceptual separation is now resolved. Watershed belongs to Zone 1.",
       "identityLayer": "Lodge — confirmed Zone 1 identity layer name (May 2026, §5.9). Private, invitation-only, held by a group with shared values, revocable by the keeper of the door. Rename test held against Membership, Profile, and Household ID — all three cracked. Lodge is load-bearing.",
       "careCircleDesignPrinciples": "Zone 1 care circle design principles (from Mama Support Hub, May 2026): (1) Language is the circle — task-tracker language quietly changes how people relate to showing up. Needs/Moments/I've got it/Someone's on it are not cosmetic; they are the architecture. (2) The ask dissolves when it is answered — no permanent audit log of care. The record that the circle existed is enough; what was needed and by whom is not the system's to keep. (3) Dissolution is the organizer's act of stewardship — not the system's automatic action, not the supported person's burden. What survives dissolution: the circle's name (first name only, surname cleared), date range, member count, dissolved flag. What goes: situation, address, logistics, slot content, comments, activity, memories (export-then-delete offered before dissolution). (4) Impact sections measure the wrong thing — quantifying care as productivity output (14 tasks completed) tells the circle nothing about whether the person felt held. Remove without replacement. (5) Invite links create closed circles by architecture — no open registration into a care circle is the correct posture, regardless of link expiry enforcement.",
       "domain": "Non-custodial XRPL stablecoin envelope-budgeting installable web app (PWA) \u2014 household balance is the source of the watershed",
@@ -538,7 +539,7 @@
         },
         {
           "to": "Zone 5",
-          "seam": "Spring stage-transition events as triggers for private takes entries in The Margin. Z5's /api/takes/sync is the natural ingestion endpoint (could accept a take with chapterHint='headwaters' for stage transitions). Awaiting practitioner relay to wire the emit on Z1 side."
+          "seam": "Spring stage-transition events as triggers for private takes entries in Edge. Z5's /api/takes/sync is the natural ingestion endpoint (could accept a take with chapterHint='headwaters' for stage transitions). Awaiting practitioner relay to wire the emit on Z1 side."
         },
         {
           "to": "Pre-zone",
@@ -600,7 +601,7 @@
         "weekly": "Week-card with notes + close-the-week ritual",
         "annual": "Snapshot with green/yellow/red plan-curve check-in",
         "ad-hoc": "Cost-review walkthroughs (~70 dollar figures, walked one at a time with Approve/Edit/Skip + private notes)",
-        "print-target": "/codetry working-doc \u2014 the version-controlled paper trail; live page lives in The Margin"
+        "print-target": "/codetry working-doc \u2014 the version-controlled paper trail; live page lives in Edge"
       },
       "namingWeight": "'Practitioner' (not user/customer/founder \u2014 craft-as-livelihood not startup-as-bet); 'Operating' (not strategic \u2014 a working day plan not a business-school exercise); 'Plan' (not platform \u2014 a printed plan a practitioner walks with, even though it lives in a browser). All three commitments would erase under 'Founder Dashboard'.",
       "workedExamples": [
@@ -627,10 +628,10 @@
       ],
       "interfaces": {
         "needs": {
-          "Z1 (Headwaters)": "household balance to gate weekly steps; Spring level to inform cost-review priority; Payday Planner / Surplus Pool to flag weeks with slack for new commitments",
+          "Z1 (Kitchen Table)": "household balance to gate weekly steps; Spring level to inform cost-review priority; Payday Planner / Surplus Pool to flag weeks with slack for new commitments",
           "Z3 (CKH)": "deal-flow signal \u2014 807 Co-op proposals matching Idea\u2192Pitch\u2192Contract\u2192Fulfillment\u2192Impact stages; producer activity as where workbench deals come from",
-          "Z4 (Arc)": "deal-flow from CCM sector contacts (Jude, Lisa, Dave, Tim, Marie, Lisa Koshel, four other regional abattoirs); industry-track tagging on deals",
-          "Z5 (The Margin)": "weekly digest of shallows-surfaced patterns to land in Today view as soft prompts. Z5 published concrete endpoints (/api/takes/sync, /api/channel, /api/dedications) Z2 can read today; an event bus (SSE) is offered if Z2 wants reactive coordination."
+          "Z4 (Clearing)": "deal-flow from CCM sector contacts (Jude, Lisa, Dave, Tim, Marie, Lisa Koshel, four other regional abattoirs); industry-track tagging on deals",
+          "Z5 (Edge)": "weekly digest of shallows-surfaced patterns to land in Today view as soft prompts. Z5 published concrete endpoints (/api/takes/sync, /api/channel, /api/dedications) Z2 can read today; an event bus (SSE) is offered if Z2 wants reactive coordination."
         },
         "offers": {
           "all": "/codetry as the constellation's name registry; /constellation.json as the machine-readable mirror; deal-flow phase as a published value other zones can read; cross-zone synthesis surfaced weekly to the practitioner"
@@ -689,7 +690,7 @@
     },
     {
       "zone": 3,
-      "name": "Commons",
+      "name": "Greenhouse",
       "memberFacingBrand": "807 Benefits",
       "aliases": [
         "807 Benefits",
@@ -775,7 +776,7 @@
         "production": "community-knowledge-hub.replit.app",
         "ping": "edits to Z3 codebase land via project tasks in Z3's monorepo; cross-monorepo to Z2 requires practitioner relay"
       },
-      "z1Z3InterfaceStatus": "Z1 Eave proposed: 807 proposals \u2192 Community Well monthly rounds (shared schema needed). Z3's pack focused on offerings to Z4 governance and asks of Z2; did not address the Z1 proposal directly. Status: pending practitioner relay to confirm or decline.",
+      "z1Z3InterfaceStatus": "Z1 Kitchen Table proposed: 807 proposals \u2192 Community Well monthly rounds (shared schema needed). Z3's pack focused on offerings to Z4 governance and asks of Z2; did not address the Z1 proposal directly. Status: pending practitioner relay to confirm or decline.",
       "z3Z4InterfaceStatus": "Z4 raised: shared anonymized customer-ID convention before 807 (Z3) and CCM (Z4) both ship their own. CCM share-box pickup audience and 807 members portal audience are largely the same people. Standing decision needed; pending practitioner relay.",
       "standby": "Host zone for The Standby. Centralized disruptions (drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down) are felt collectively here first \u2014 at the co-op shelf, the producer pipeline, the orders ledger. Call history is the record kept here; standby stock is the inventory primitive; The Common Pantry is the food/supply sub-shelf; The Watch is the active-monitoring sub-noun.",
       "opening": "Treasurer is the job nobody wants. Some try and fail; a few do well. It is a big commitment for a volunteer organization, and this generation does not have the same bookkeeping skills that the last one had. Nobody wants to step up because they do not want to mess up.\n\nThe answer is not to lower the standard \u2014 it is to make the job fail-safe, stress-free, and easy as pie for the people willing to take it on. Calm is the contract. The name is not a vibe; it is a promise the system makes to the person who was brave enough to say yes.",
@@ -790,7 +791,7 @@
     },
     {
       "zone": 4,
-      "name": "Arc",
+      "name": "Clearing",
       "domain": "Conventional \u2192 regenerative track for industries \u2014 multi-year, sector-scale; current sector is regen beef in NWO",
       "url": "https://regen-revolution-zone-4.replit.app/",
       "status": "live (v0.1 anchor shipping)",
@@ -908,10 +909,10 @@
     },
     {
       "zone": 5,
-      "name": "The Margin",
-      "formerNames": [],
-      "infrastructureNote": "The Zone 5 app is deployed at watershed.replit.app with watershed:* storage keys. This is a legacy infrastructure artifact — the app was built when Watershed was still an undifferentiated name. The conceptual name Watershed was never Zone 5's; it belongs to Zone 1 (diversified income streams). The URL and storage namespace are plumbing; they carry no conceptual weight for The Margin.",
-      "z1DirectFeed": "Zone 5 public presence can feed the Zone 1 watershed directly — without Zones 2-3-4 as the economic engine — if a practitioner's Margin contributions get massive outside attention. Audience-generated income flows straight to the household. The ideal standby posture is both running simultaneously: the Z2-3-4 economic engine as the steady floor, and the Z5 direct feed as the abundance layer above it. A practitioner who has only Z5 income is not in standby. One who has both is.",
+      "name": "Edge",
+      "formerNames": ["The Margin"],
+      "infrastructureNote": "The Zone 5 app is deployed at watershed.replit.app with watershed:* storage keys. This is a legacy infrastructure artifact — the app was built when Watershed was still an undifferentiated name. The conceptual name Watershed was never Zone 5's; it belongs to Zone 1 (diversified income streams). The URL and storage namespace are plumbing; they carry no conceptual weight for Edge.",
+      "z1DirectFeed": "Zone 5 public presence can feed the Zone 1 watershed directly — without Zones 2-3-4 as the economic engine — if a practitioner's Edge contributions get massive outside attention. Audience-generated income flows straight to the household. The ideal standby posture is both running simultaneously: the Z2-3-4 economic engine as the steady floor, and the Z5 direct feed as the abundance layer above it. A practitioner who has only Z5 income is not in standby. One who has both is.",
       "domain": "Wild / observation \u2014 private capture (takes) with structured channel-out and opt-in float to the Shallows",
       "url": "https://conversation-log.replit.app/",
       "alsoAt": "published Expo mobile artifact; legacy Watershed URL still active at watershed.replit.app + watershed:* storage namespace",
@@ -1005,9 +1006,9 @@
         "Chapter cover illustrations still depict watershed scenes (filenames preserved as IDs); rescue-at-sea cover art not yet generated.",
         "Mobile push doesn't yet send baseUpdatedAt, so mobile edits can't participate in twin-take conflict detection. Filed."
       ],
-      "z1Z5InterfaceStatus": "Z1 Eave proposed: Spring stage-transition events as triggers for private takes entries in The Margin. Z5's /api/takes/sync is the natural ingestion endpoint (could accept a take with chapterHint='headwaters' for stage transitions). Awaiting practitioner relay to wire the actual emit on Z1 side.",
-      "z4Z5InterfaceStatus": "Z4 (Arc) proposed candidate skip-stone: 'abattoir as commons, not service' \u2014 half-formed. Z5's Shallows is the natural surface when it's ready to float.",
-      "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in The Margin unless its author chooses to float it. The Standby gives the chapter hint.",
+      "z1Z5InterfaceStatus": "Z1 Kitchen Table proposed: Spring stage-transition events as triggers for private takes entries in Edge. Z5's /api/takes/sync is the natural ingestion endpoint (could accept a take with chapterHint='headwaters' for stage transitions). Awaiting practitioner relay to wire the actual emit on Z1 side.",
+      "z4Z5InterfaceStatus": "Z4 (Clearing) proposed candidate skip-stone: 'abattoir as commons, not service' \u2014 half-formed. Z5's Shallows is the natural surface when it's ready to float.",
+      "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in Edge unless its author chooses to float it. The Standby gives the chapter hint.",
       "opening": "A dam day is a day without rhyme or reason \u2014 where a spark was lit and a fire burst forth. It may be a creative hyperfocus, or a day that required a shift of energy that no constellation can contain. Dam days are fleeting. But there are gems worth harnessing in them \u2014 they may just be covered in muck.\n\nThe Shallows is where you clean them off. Not every take becomes something. But the practice of catching it before it disappears is the whole discipline.",
       "inlinePrompt": "What was the last dam day you had \u2014 and what did you catch from it before it passed?",
       "reflections": [
@@ -1022,8 +1023,8 @@
   "interfaces": {
     "convention": "Each zone publishes its own /api/zone.json (or equivalent) when ready. This site's /constellation.json aggregates references. Cross-zone signals route through Zone 5's shallows.",
     "writePolicy": "Zone 2 reads, synthesizes, surfaces. Other zones own their own writes. Naming, strategy, and money decisions stay with the practitioner.",
-    "namingDiscipline": "Some collapses to avoid: Lock-In \u2260 Focus Timer (reintroduces measurement). Memory bucket \u2260 gallery or album. Moment (Saltbox keepsake) \u2260 Note \u2260 Entry. Buckets \u2260 Categories (would suggest balances can grow by clicking). Headwaters \u2260 Watershed \u2260 xBuckets (former names of Z1; current canonical name is Headwaters; note Z5 still uses 'Watershed' at URL/storage layer). Snooze \u2260 defer/pause (the verb commits the system to wake you). Borrow \u2260 rent (kitchen access \u2014 naming carries policy). Stuck \u2260 overdue (Stuck Board is a cross-domain aging-item aggregator, not a deadline list). Playbook \u2260 wiki (ordered plays, not browsable info). Calm \u2260 comfortable/easy (treasurer monthly-journey contract). Share split \u2260 cut sheet management (the math AFTER the kill, not the spec at booking \u2014 Z4 v0.1 centerpiece). Byproduct \u2260 feature (OMAFRA log falls out for free, doesn't get its own ledger). Loop \u2260 three features (estimate \u2192 actual \u2192 variance read together). Take \u2260 Note \u2260 Entry \u2260 Moment (Z5 Take is a fragment for channel-or-Forge; Saltbox Moment is a keepsake; both deliberately resist 'note'/'entry' flattening). Channel \u2260 Tag \u2260 Categorize (Z5's Channel produces a structured 6-zone read of the user's life, not a label).",
-    "monorepoTopology": "Saltbox + Headwaters (with Family Buckets sibling) + 807 Benefits / Commons + Arc / CCM all share one pnpm monorepo (artifacts/gather, artifacts/xbuckets, artifacts/807-benefits, artifacts/ccm-ops-tool, with shared lib/api-spec, lib/db, artifacts/api-server). The Workbench is in a separate monorepo. Z5's monorepo location not specified in the pack \u2014 worth confirming. Z3 and Z4 agents both wrote as if Z2 is in their monorepo \u2014 that assumption is incorrect. Cross-monorepo coordination still requires manifest URL + per-zone status JSONs, or practitioner relay."
+    "namingDiscipline": "Some collapses to avoid: Lock-In \u2260 Focus Timer (reintroduces measurement). Memory bucket \u2260 gallery or album. Moment (Saltbox keepsake) \u2260 Note \u2260 Entry. Buckets \u2260 Categories (would suggest balances can grow by clicking). Kitchen Table \u2260 Headwaters \u2260 Watershed \u2260 xBuckets (former names of Z1; current canonical name is Kitchen Table; note Z5 still uses 'Watershed' at URL/storage layer). Snooze \u2260 defer/pause (the verb commits the system to wake you). Borrow \u2260 rent (kitchen access \u2014 naming carries policy). Stuck \u2260 overdue (Stuck Board is a cross-domain aging-item aggregator, not a deadline list). Playbook \u2260 wiki (ordered plays, not browsable info). Calm \u2260 comfortable/easy (treasurer monthly-journey contract). Share split \u2260 cut sheet management (the math AFTER the kill, not the spec at booking \u2014 Z4 v0.1 centerpiece). Byproduct \u2260 feature (OMAFRA log falls out for free, doesn't get its own ledger). Loop \u2260 three features (estimate \u2192 actual \u2192 variance read together). Take \u2260 Note \u2260 Entry \u2260 Moment (Z5 Take is a fragment for channel-or-Forge; Saltbox Moment is a keepsake; both deliberately resist 'note'/'entry' flattening). Channel \u2260 Tag \u2260 Categorize (Z5's Channel produces a structured 6-zone read of the user's life, not a label).",
+    "monorepoTopology": "Saltbox + Headwaters (with Family Buckets sibling) + 807 Benefits / Greenhouse + Clearing / CCM all share one pnpm monorepo (artifacts/gather, artifacts/xbuckets, artifacts/807-benefits, artifacts/ccm-ops-tool, with shared lib/api-spec, lib/db, artifacts/api-server). The Workbench is in a separate monorepo. Z5's monorepo location not specified in the pack \u2014 worth confirming. Z3 and Z4 agents both wrote as if Z2 is in their monorepo \u2014 that assumption is incorrect. Cross-monorepo coordination still requires manifest URL + per-zone status JSONs, or practitioner relay."
   },
   "preZone": [
     {
@@ -1063,7 +1064,7 @@
         "Moment",
         "Goals (per-child)"
       ],
-      "Z1 (Headwaters + Family Buckets)": [
+      "Z1 (Kitchen Table + Family Buckets)": [
         "Headwaters",
         "Bucket",
         "Spring",
@@ -1083,7 +1084,7 @@
         "Carry-over",
         "codetry"
       ],
-      "Z3 (Commons)": [
+      "Z3 (Greenhouse)": [
         "snooze",
         "stack",
         "playbook",
@@ -1095,7 +1096,7 @@
         "tenant (as seam)",
         "borrow"
       ],
-      "Z4 (Arc)": [
+      "Z4 (Clearing)": [
         "share split (per-customer)",
         "share box",
         "chokepoint",
@@ -1106,13 +1107,13 @@
         "v0.1",
         "Don't fix my book"
       ],
-      "Z5 (The Margin)": [
+      "Z5 (Edge)": [
         "Take",
         "Forge",
         "Channel",
         "Shallows",
         "Dedication Wall",
-        "The Margin (takes-capture surface)",
+        "Edge (takes-capture surface)",
         "Compass / Cast Off / Breakers / Adrift / Aboard (rescue-at-sea chapter labels)",
         "headwaters / tributaries / confluence / burst / delta (chapter ID enum)",
         "watershed (URL + storage namespace)",
@@ -1121,10 +1122,10 @@
     },
     "watchedCollisions": [
       "Library \u2014 three meanings already in play: Z3 (recipe-book library of audience-aware shelves), pre-zone (Brainstorm Library \u2014 idea seeds), and Z2's monorepo has artifacts/library (Northern Food Systems Research Library). Real forking risk; practitioner attention warranted.",
-      "Bucket \u2014 Z1 Eave has envelope buckets; Z1 Family Buckets sibling has memory + savings buckets. Same root metaphor (a thing that holds what you put in it), namespaced by app function, consistent with water-grammar.",
+      "Bucket \u2014 Z1 Kitchen Table has envelope buckets; Z1 Family Buckets sibling has memory + savings buckets. Same root metaphor (a thing that holds what you put in it), namespaced by app function, consistent with water-grammar.",
       "Moment \u2014 Saltbox keepsake; the Z0 agent flagged 'Moment \u2260 Note \u2260 Entry'. If any zone introduces 'Moment' as a noun, route through Z2 first.",
       "customer-ID schema \u2014 Z3 (807 members portal) and Z4 (CCM share-box pickup) audiences overlap heavily. Both apps will need to assign customer identifiers; without a shared anonymized convention, the same person becomes two different IDs across the constellation. Z4 explicitly raised this as a standing decision.",
-      "Watershed / headwaters \u2014 Z5 owns watershed.replit.app + watershed:* storage namespace + 'headwaters' as one of the chapter ID enum values. Z1 lists 'Watershed' and 'Headwaters' as former names and now goes by 'Eave'. Real cross-zone naming overlap at the URL/data layer (Z5) and the app-name layer (Z1). Practitioner attention to disambiguate the history before the registry calcifies.",
+      "Watershed / headwaters \u2014 Z5 owns watershed.replit.app + watershed:* storage namespace + 'headwaters' as one of the chapter ID enum values. Z1 lists 'Watershed', 'Headwaters', and 'Eave' as former names and now goes by 'Kitchen Table'. Real cross-zone naming overlap at the URL/data layer (Z5) and the app-name layer (Z1). Practitioner attention to disambiguate the history before the registry calcifies.",
       "Channel \u2014 Z5's primary output verb (POST /api/channel returns 6-zone shape). Watch for collisions if Z2 or other zones develop their own 'channel' verb. Also: Z5's Channel feature reads the user's life into Z0\u2013Z5 shape \u2014 naming overlap with the constellation's own zone vocabulary is intentional, not accidental.",
       "Legacy \u2014 three meanings emerging across the scratch projects: Surface Legacy (Legacy Gatekeeper, The Gate's prior live surface), Life Legacy (Legacy Builder Journey, memoir for retiring men), Asset Legacy (Legacy Asset Manager, extended-family planning). Same forking risk Library hit before disambiguation. Disambiguate with prefixes (Surface Legacy / Life Legacy / Asset Legacy) before any of these scratch projects come off scratch, or accept the polysemy?"
     ]
@@ -1139,13 +1140,13 @@
   ],
   "openQuestions": [
     "Saltbox vs SaltBox vs Salt box \u2014 three writings have appeared. Z0 agent uses 'Saltbox' (one word, capital S). Pending practitioner decision.",
-    "Headwaters in /codetry doc title \u2014 Z1 agent confirmed xBuckets is FORMER name. Doc now reads 'Eave (parent)' with '(was xBuckets / Watershed)' inline. Easy to flip if practitioner wants xBuckets visible in title.",
-    "Watershed namespace \u2014 Z5 owns watershed.replit.app + watershed:* storage + 'headwaters' as a chapter ID enum value. Z1 lists 'Watershed' as a former name and now uses 'Headwaters'. Practitioner: was Watershed historically Z1's, then renamed in deference to Z5? Or some other history? Worth disambiguating before the registry calcifies.",
+    "Headwaters in /codetry doc title \u2014 Z1 agent confirmed xBuckets is FORMER name. Doc now reads 'Kitchen Table (parent)' with '(was xBuckets / Watershed / Eave)' inline. Easy to flip if practitioner wants xBuckets visible in title.",
+    "Watershed namespace \u2014 Z5 owns watershed.replit.app + watershed:* storage + 'headwaters' as a chapter ID enum value. Z1 lists 'Watershed' as a former name and now uses 'Kitchen Table'. Practitioner: was Watershed historically Z1's, then renamed in deference to Z5? Or some other history? Worth disambiguating before the registry calcifies.",
     "/business \u2014 real route to create on this Z2 site, or shorthand for 'this site as a whole'?",
     "Bilingual surface area \u2014 Headwaters has copy.en.ts + copy.fr.ts. Does the codetry doc need a French mirror, or do the codetry names stay English everywhere with only descriptive copy translated?",
     "Z3 patterns to hoist into shared vocabulary \u2014 practitioner call needed: verb-as-route (currently Z3-local; Z1/Z2/Z5 could lean on it without re-deriving), role-rooms (Z4 governance could mirror), tenant seam (Z3 pattern for community-production co-ops). Hoist? Keep Z3-local? Per-pattern?",
     "Three Libraries \u2014 Z3's recipe-book library, pre-zone Brainstorm Library, and Z2 monorepo's artifacts/library (Northern Food Systems Research Library). Same word, three meanings; collision risk on the rise. Disambiguate with prefixes (Recipe Library / Brainstorm Library / Research Library), or accept the polysemy?",
-    "Z1\u2194Z3 proposal queue \u2014 Z1 Eave proposed 807 proposals \u2192 Community Well monthly rounds. Z3's pack didn't address it. Pending practitioner relay to confirm or decline.",
+    "Z1\u2194Z3 proposal queue \u2014 Z1 Kitchen Table proposed 807 proposals \u2192 Community Well monthly rounds. Z3's pack didn't address it. Pending practitioner relay to confirm or decline.",
     "Z1\u2194Z4 seam divergence \u2014 Z1 proposed 'regen-aligned' marker on Drip Harvester pools (pool tagging). Z4 proposed Local Line export from Black Barn pilot flowing into Headwaters household budget (cash-flow read-through). Two different seams; both could coexist. Which to pursue first?",
     "Cloverbelt Country Meats vs Coleman Custom Meats \u2014 Z4 reports both names in the codebase: Cloverbelt is the real coop; Coleman is test/demo branding in the live UI. Intentional separation (real pilot vs demo facade) or drift to converge?",
     "Customer-ID convention \u2014 Z4 raises a standing decision needed before Z3 (807 members portal) and Z4 (CCM share-box pickup) both ship their own. Audiences overlap heavily across Dryden + corridor. Anonymized shared schema, or scoped per-app?",

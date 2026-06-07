@@ -38,7 +38,7 @@ We use a zone map to describe where authority and attention flow. The closer to 
 
 **Zone 4 — The Corridor.** Partnerships, networks, and allied organizations. The place of replication and cross-pollination.
 
-**Zone 5 — The Wild.** The external world — funders, governments, outside platforms, the broader economy. We observe it. We do not let it govern us.
+**Zone 5 — Edge.** The external world — funders, governments, outside platforms, the broader economy. We observe it. We do not let it govern us.
 
 **Zone 6 — The River.** Our addition to the standard permaculture model. The outward flow layer: what Headwaters sends downstream — knowledge, replicable models, and tools that other communities can pick up and run independently. The original model ends at Zone 5. We added Zone 6 because we are not just designing a place; we are designing replication. We own that deviation.
 

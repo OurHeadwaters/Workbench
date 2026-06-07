@@ -17,7 +17,7 @@ interface RingDef {
 const RINGS: RingDef[] = [
   {
     number: 5,
-    name: "The Wild",
+    name: "Edge",
     color: "#5B3E8C",
     outerR: 240,
     innerR: 200,
@@ -30,7 +30,7 @@ const RINGS: RingDef[] = [
   },
   {
     number: 4,
-    name: "Community Hall",
+    name: "Clearing",
     color: "#0F766E",
     outerR: 200,
     innerR: 160,
@@ -43,7 +43,7 @@ const RINGS: RingDef[] = [
   },
   {
     number: 3,
-    name: "The Standby",
+    name: "Greenhouse",
     color: "#3D4A5C",
     outerR: 160,
     innerR: 120,
@@ -51,12 +51,12 @@ const RINGS: RingDef[] = [
     plainDesc:
       "People ready when called — not daily, but reliable when something is moving.",
     practiceNote:
-      "The electrician who clears their schedule when the lodge calls, or the credit union that moves quickly in a crunch.",
+      "The electrician who clears their schedule when the kitchen table calls, or the credit union that moves quickly in a crunch.",
     icon: "🤝",
   },
   {
     number: 2,
-    name: "The Bench",
+    name: "Workbench",
     color: "#1A5FA8",
     outerR: 120,
     innerR: 80,
@@ -69,7 +69,7 @@ const RINGS: RingDef[] = [
   },
   {
     number: 1,
-    name: "The Lodge",
+    name: "Kitchen Table",
     color: "#1f3d2e",
     outerR: 80,
     innerR: 40,
@@ -82,7 +82,7 @@ const RINGS: RingDef[] = [
   },
   {
     number: 0,
-    name: "The Saltbox",
+    name: "Saltbox",
     color: "#7A4E2D",
     outerR: 40,
     innerR: 0,

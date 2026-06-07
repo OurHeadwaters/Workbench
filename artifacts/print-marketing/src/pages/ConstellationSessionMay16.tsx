@@ -81,7 +81,7 @@ const constellationRows = [
   },
   {
     zone: "Zone 5",
-    label: "The Wild",
+    label: "Edge",
     projects: "Dam Days · The Shallows",
     shield: "No algorithm · No self-promotion · Flag-to-hide moderation only",
   },
@@ -111,7 +111,7 @@ const ledgerEntries = [
 ];
 
 const decisionsToday = [
-  { text: "Zone 4 renamed Arc → Community Hall. Arc was a single-producer transition frame; Community Hall is the correct voluntary formation layer. Abattoir pilot remains valid as one Zone 4 expression.", status: "locked" as StatusKind },
+  { text: "Zone 4 renamed Arc → Clearing. Arc was a single-producer transition frame; Clearing is the correct voluntary formation layer. Abattoir pilot remains valid as one Zone 4 expression.", status: "locked" as StatusKind },
   { text: "Lodge confirmed as the Zone 1 identity layer name. Rename test run against Membership, Profile, and Household ID — all three cracked on Zone 1 constraints. §5.9 closed.", status: "locked" as StatusKind },
   { text: "Watershed disambiguation resolved. Watershed concept (diversified income streams, flow not restriction) belongs exclusively to Zone 1. Zone 5's watershed.replit.app URL is infrastructure legacy with no conceptual weight.", status: "locked" as StatusKind },
   { text: "Z5→Z1 direct feed documented as a named structural path. Massive Zone 5 public attention can feed the household watershed directly, bypassing Z2-3-4. Ideal standby posture: both the Z2-3-4 engine and Z5 direct feed running simultaneously.", status: "locked" as StatusKind },
@@ -198,7 +198,7 @@ export function ConstellationSessionMay16Page() {
             ))}
           </div>
           <p style={{ fontSize: "0.5rem", color: MUTED, marginTop: "0.07in", marginBottom: 0, fontStyle: "italic" }}>
-            Codetry model zones (Zone 0=Household → Zone 1=Local → Zone 3=Org → Zone 4=Community Hall → Zone 5=The Wild) are the design framework being built, not the Replit project map.
+            Codetry model zones (Zone 0=Household → Zone 1=Local → Zone 3=Org → Zone 4=Clearing → Zone 5=Edge) are the design framework being built, not the Replit project map.
           </p>
         </section>
 

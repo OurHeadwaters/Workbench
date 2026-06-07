@@ -112,7 +112,7 @@ band councils, northern co-ops, community organizations in Northwestern Ontario.
 ---
 THE ZONE MODEL (Headwaters — trust-gradient)
 Z0 — Saltbox / Household: Identity, voice, the mark before anything moves.
-Z1 — Eave / Circle: Mutual aid, internal coordination, the people closest in.
+Z1 — Kitchen Table / Circle: Mutual aid, internal coordination, the people closest in.
 Z2 — Workbench / The Deck: Where the practitioner works, sells, accounts.
 Z3+ — Open Market / Picnic Table: Public-facing, third-party, broader world.
 
@@ -128,7 +128,7 @@ THE CAPITAL CONVERSION GATE PRINCIPLE (Amendment to the Eave Rule):
 
   Rooted in the 8 Forms of Capital (Roland & Landua):
     Living, Material, Experiential, Cultural → originate at Z0–Z1 (household).
-    Social capital → structural home is Z1 (The Eave).
+    Social capital → structural home is Z1 (Kitchen Table).
     Intellectual capital → spans Z2–Z3.
     Financial capital → native to Z3+.
 

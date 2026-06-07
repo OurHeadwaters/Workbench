@@ -415,9 +415,9 @@ The bucket system isn't a budget spreadsheet. The money actually sits in named o
 
 Bobbie Parr of Parrs Jars runs three financial systems that need to stay separate:
 
-1. **Household (Salt Box)** — personal spending and savings with her partner and kids
-2. **Sole Proprietorship (Bench)** — Parrs Jars income, ingredient costs, GST, and owner draw
-3. **Business Entity (Community Hall)** — the consulting practice with payroll, tax reserve, and a locked tithe
+1. **Household (Saltbox)** — personal spending and savings with her partner and kids
+2. **Sole Proprietorship (Workbench)** — Parrs Jars income, ingredient costs, GST, and owner draw
+3. **Business Entity (Clearing)** — the consulting practice with payroll, tax reserve, and a locked tithe
 
 Each system gets its own Xaman wallet and its own bucket set. They share the same app — but they don't share water.
 
@@ -478,9 +478,9 @@ This is the rule that makes the system work:
 
 | System | Zone | Why separate |
 |---|---|---|
-| Household (Salt Box) | Zone 0 | Personal money stays personal |
-| Sole Proprietorship (Bench) | Zone 2 | Business income needs its own track |
-| Business Entity (Community Hall) | Zone 4 | Payroll, tax, and tithe in their own vessel |
+| Household (Saltbox) | Zone 0 | Personal money stays personal |
+| Sole Proprietorship (Workbench) | Zone 2 | Business income needs its own track |
+| Business Entity (Clearing) | Zone 4 | Payroll, tax, and tithe in their own vessel |
 
 You manage all three from the same Headwaters app — but each has its own Xaman address, its own bucket set, and its own gate-crossing rules. The water doesn't mix.
 `,
@@ -494,9 +494,9 @@ Bobbie Parr of Parrs Jars doesn't have one financial life — she has three. The
 
 ---
 
-## System 1 — Household (Salt Box / Zone 0)
+## System 1 — Household (Saltbox / Zone 0)
 
-The Salt Box is the hearth system. It covers everything that keeps the household running — food, shelter, transport, kids, and the reserves that smooth out the seasons.
+The Saltbox is the hearth system. It covers everything that keeps the household running — food, shelter, transport, kids, and the reserves that smooth out the seasons.
 
 **Default bucket set:**
 
@@ -516,9 +516,9 @@ The Salt Box is the hearth system. It covers everything that keeps the household
 
 ---
 
-## System 2 — Sole Proprietorship / Parrs Jars (Bench / Zone 2)
+## System 2 — Sole Proprietorship / Parrs Jars (Workbench / Zone 2)
 
-The Bench is the workshop system. Parrs Jars income comes in when Bobbie sells at market, fulfills a wholesale order, or invoices a buyer. Payday here isn't a calendar date — it's when the payment clears.
+The Workbench is the workshop system. Parrs Jars income comes in when Bobbie sells at market, fulfills a wholesale order, or invoices a buyer. Payday here isn't a calendar date — it's when the payment clears.
 
 **Default bucket set:**
 
@@ -532,13 +532,13 @@ The Bench is the workshop system. Parrs Jars income comes in when Bobbie sells a
 
 **Gate crossings on GST Reserve and Owner Draw** exist because both represent money with a prior claim. The GST Reserve belongs to the CRA at remittance time. The Owner Draw crossing means Bobbie explicitly decides to take money out of the business — not something that should happen by accident.
 
-When an RLUSD deposit arrives in the Bench wallet, run the Payday Planner that day. Don't let the rain sit unrouted.
+When an RLUSD deposit arrives in the Workbench wallet, run the Payday Planner that day. Don't let the rain sit unrouted.
 
 ---
 
-## System 3 — Business Entity / Headwaters (Community Hall / Zone 4)
+## System 3 — Business Entity / Headwaters (Clearing / Zone 4)
 
-The Community Hall is the most gate-crossed vessel. It handles client engagements, payroll, taxes, and a 10% allocation locked for community purposes.
+Clearing is the most gate-crossed vessel. It handles client engagements, payroll, taxes, and a 10% allocation locked for community purposes.
 
 **Default bucket set:**
 
@@ -561,9 +561,9 @@ The Community Hall is the most gate-crossed vessel. It handles client engagement
 
 | Zone | Name | System | First bucket to gate-cross |
 |---|---|---|---|
-| Zone 0 | Salt Box | Household | Rent |
-| Zone 2 | Bench | Sole Prop — Parrs Jars | GST Reserve |
-| Zone 4 | Community Hall | Business Entity | Payroll Reserve |
+| Zone 0 | Saltbox | Household | Rent |
+| Zone 2 | Workbench | Sole Prop — Parrs Jars | GST Reserve |
+| Zone 4 | Clearing | Business Entity | Payroll Reserve |
 
 > The zones don't describe where you live — they describe the territory the water moves through. Zone 0 is the hearth. Zone 2 is the workshop. Zone 4 is the hall where the community's water is managed on behalf of others.
 `,
@@ -609,9 +609,9 @@ The gate crossing introduces a pause. It's the valve slowing the hand before you
 
 | Zone | Gate-crossed buckets | Why |
 |---|---|---|
-| Salt Box | Rent | Committed housing expense |
-| Bench | GST Reserve, Owner Draw | One belongs to the CRA; one should be intentional |
-| Community Hall | Payroll Reserve, Tax Reserve, Owner Draw, Tithe | Every disbursement has a named purpose |
+| Saltbox | Rent | Committed housing expense |
+| Workbench | GST Reserve, Owner Draw | One belongs to the CRA; one should be intentional |
+| Clearing | Payroll Reserve, Tax Reserve, Owner Draw, Tithe | Every disbursement has a named purpose |
 
 ## Setting Up Gate Crossings
 
@@ -694,7 +694,7 @@ When XRP appreciates past a threshold you set, the Giving Well diverts those unr
 
 Appreciated crypto assets donated on-chain may have different CRA treatment than selling and donating cash. Talk to your accountant on the specifics — we're not one.
 
-The Tithe bucket in the Community Hall system feeds the Giving Well: 10% of business earnings allocated to community, leaving through one approved channel. It's a design principle as much as a feature — a portion of what the system earns returns to the watershed that sustains it.
+The Tithe bucket in the Clearing system feeds the Giving Well: 10% of business earnings allocated to community, leaving through one approved channel. It's a design principle as much as a feature — a portion of what the system earns returns to the watershed that sustains it.
 
 **Setting it up:** In Giving Well settings, enter a destination Xaman address — a registered charity, a community organization, or a trusted patronage address. Set an appreciation threshold. Approve in Xaman when triggered.
 

@@ -35,10 +35,10 @@ export interface ZoneData {
 export const ZONES: ZoneData[] = [
   {
     number: 0,
-    name: "The Saltbox",
+    name: "Saltbox",
     slug: "saltbox",
     terrain: "The Hearth · Home Center",
-    flowsTo: "The Lodge",
+    flowsTo: "Kitchen Table",
     metaphor: "Where families keep what they need before winter comes.",
     goodTimesDesc:
       "Household sorted. Kit checked. Roles assigned. Everything in its place — quiet competence on the shelf.",
@@ -83,18 +83,18 @@ export const ZONES: ZoneData[] = [
   },
   {
     number: 1,
-    name: "The Lodge",
-    slug: "lodge",
+    name: "Kitchen Table",
+    slug: "kitchen-table",
     terrain: "The Spring · Daily Tools",
-    flowsTo: "The Bench",
+    flowsTo: "Workbench",
     metaphor: "Where names are held and trust is recognized — the root system that connects everything above ground.",
     goodTimesDesc:
-      "Credentials quiet, identities stable. The Lodge is the unseen foundation — names on record, passphrase in hand.",
+      "Credentials quiet, identities stable. The Kitchen Table is the unseen foundation — names on record, passphrase in hand.",
     standbyDesc:
-      "Identity active. The passphrase is the key. The Lodge proves who you are to any zone that asks.",
+      "Identity active. The passphrase is the key. The Kitchen Table proves who you are to any zone that asks.",
     gateName: "The Passphrase Gate",
     gateDesc:
-      "A scrypt-derived passphrase that lives only on your device. No server holds your identity — the Lodge is local.",
+      "A scrypt-derived passphrase that lives only on your device. No server holds your identity — the Kitchen Table is local.",
     rootLabel: "Rooted",
     fruitLabel: "Recognized",
     color: "#1f3d2e",
@@ -138,18 +138,18 @@ export const ZONES: ZoneData[] = [
   },
   {
     number: 2,
-    name: "The Bench",
-    slug: "bench",
+    name: "Workbench",
+    slug: "workbench",
     terrain: "The Worn Path · Trail",
-    flowsTo: "The Standby",
+    flowsTo: "Greenhouse",
     metaphor: "Where practitioners work. Every tool a practitioner reaches for is in this zone.",
     goodTimesDesc:
-      "Planning season. Strategy on the bench, research in the library, the operating plan open. The work is ordered.",
+      "Planning season. Strategy on the workbench, research in the library, the operating plan open. The work is ordered.",
     standbyDesc:
-      "Execution season. Clients are active, invoices moving. The bench is clear and the tools are hot.",
+      "Execution season. Clients are active, invoices moving. The workbench is clear and the tools are hot.",
     gateName: "The Practitioner Gate",
     gateDesc:
-      "The five Codetry filter questions — every engagement must clear all five before the bench opens.",
+      "The five Codetry filter questions — every engagement must clear all five before the workbench opens.",
     rootLabel: "Planning",
     fruitLabel: "Delivering",
     color: "#1A5FA8",
@@ -177,7 +177,7 @@ export const ZONES: ZoneData[] = [
       },
       {
         name: "The Operating Plan",
-        tagline: "Daily bench — morning debrief, week plan, year overview",
+        tagline: "Daily workbench — morning debrief, week plan, year overview",
         url: "/practitioner-operating-plan/",
         inThisProject: true,
         zoneAddress: "Z2–D",
@@ -207,10 +207,10 @@ export const ZONES: ZoneData[] = [
   },
   {
     number: 3,
-    name: "The Standby",
-    slug: "standby",
-    terrain: "The Clearing · Circle",
-    flowsTo: "Community Hall",
+    name: "Greenhouse",
+    slug: "greenhouse",
+    terrain: "The Greenhouse · Circle",
+    flowsTo: "Clearing",
     metaphor: "Where the network goes when something is moving — advisory, watching the horizon.",
     goodTimesDesc:
       "Advisory. The status ladder is quiet. Pilots watching. No signal yet.",
@@ -234,10 +234,10 @@ export const ZONES: ZoneData[] = [
   },
   {
     number: 4,
-    name: "Community Hall",
-    slug: "community-hall",
+    name: "Clearing",
+    slug: "clearing",
     terrain: "The Market Square",
-    flowsTo: "The Wild",
+    flowsTo: "Edge",
     metaphor: "Where the community decides together — the hall is always set before the vote.",
     goodTimesDesc:
       "Deliberation. The hall is set up. Evidence on the table, research in the library, no decision yet required.",
@@ -266,7 +266,7 @@ export const ZONES: ZoneData[] = [
       },
       {
         name: "NWO Regional Abattoir (CCM)",
-        tagline: "Community Hall pilot — single-animal traceability",
+        tagline: "Clearing pilot — single-animal traceability",
         url: "#",
         inThisProject: false,
         zoneAddress: "Z4–A",
@@ -289,18 +289,18 @@ export const ZONES: ZoneData[] = [
   },
   {
     number: 5,
-    name: "The Wild",
-    slug: "wild",
+    name: "Edge",
+    slug: "edge",
     terrain: "The Ridge · Long View",
     flowsTo: null,
     metaphor: "Where the community's work meets the world — public, open, and moving.",
     goodTimesDesc:
-      "Quiet. The work is being done inside. The Wild is the horizon — reachable when ready.",
+      "Quiet. The work is being done inside. The Edge is the horizon — reachable when ready.",
     standbyDesc:
       "Public. The door is open. Massive Zone 5 attention can feed the household watershed directly.",
     gateName: "The Proposal",
     gateDesc:
-      "No algorithm. No self-promotion. The Wild is public presence earned by the work, not manufactured by it.",
+      "No algorithm. No self-promotion. The Edge is public presence earned by the work, not manufactured by it.",
     rootLabel: "Horizon",
     fruitLabel: "Public",
     color: "#5B3E8C",

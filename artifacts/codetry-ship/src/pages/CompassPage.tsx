@@ -663,9 +663,9 @@ const NEXT_STEPS: Record<string, NextStep[]> = {
 };
 
 const ZONE_LABEL: Record<string, string> = {
-  household: "Zone 0 — your kitchen table",
-  practitioner: "Zone 2 — your working bench",
-  community: "Zone 4 — Community Hall",
+  household: "Zone 0 — your saltbox",
+  practitioner: "Zone 2 — your workbench",
+  community: "Zone 4 — Clearing",
 };
 
 const ZONE_COLOUR: Record<string, string> = {

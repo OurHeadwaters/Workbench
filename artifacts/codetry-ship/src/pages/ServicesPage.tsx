@@ -74,7 +74,7 @@ export function ServicesPage() {
             { href: "#store", label: "Community store" },
             { href: "#platform", label: "Co-op platform" },
             { href: "#custom", label: "Custom tool" },
-            { href: "#the-clearing", label: "The Clearing" },
+            { href: "#the-clearing", label: "Clearing" },
             { href: "#the-wishing-well", label: "The Wishing Well" },
             { href: "#start", label: "How it starts" },
           ].map(({ href, label }) => (
@@ -135,7 +135,7 @@ export function ServicesPage() {
               {
                 type: "Homesteaders & rural households",
                 icon: "🏡",
-                tool: "The Lodge + XBuckets",
+                tool: "Kitchen Table + XBuckets",
                 why: "Start with identity and a non-custodial wallet. Names on record, passphrase in hand — the household runs its own keys without a bank in the middle.",
                 href: "#custom",
                 color: "hsl(30 55% 38%)",
@@ -143,7 +143,7 @@ export function ServicesPage() {
               {
                 type: "Food co-ops & producer networks",
                 icon: "🌾",
-                tool: "The Clearing + Co-op Platform",
+                tool: "Clearing + Co-op Platform",
                 why: "Exchange and settlement between producers, households, and the board — every transaction visible to the community, no external ledger required.",
                 href: "#platform",
                 color: "hsl(145 36% 22%)",
@@ -502,7 +502,7 @@ export function ServicesPage() {
         ══════════════════════════════════════ */}
         <section id="the-clearing" className="pt-14 pb-10">
           <SectionBand color="#b85a3e" label="Exchange & settlement">
-            The Clearing — community transactions, held by the community
+            Clearing — community transactions, held by the community
           </SectionBand>
           <p className="font-serif text-[16px] italic mt-2 mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
             Where producers, households, and the co-op record and settle exchanges — with no external ledger in the middle.
@@ -516,7 +516,7 @@ export function ServicesPage() {
               What it is
             </p>
             <p className="font-serif text-[16px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
-              The Clearing is the exchange and settlement layer of the community economy — a shared record of what moved between households, producers, and the co-op. Every transaction is visible to the community. No external accounting service holds the ledger. The community's own board governs what gets recorded and who can see what.
+              Clearing is the exchange and settlement layer of the community economy — a shared record of what moved between households, producers, and the co-op. Every transaction is visible to the community. No external accounting service holds the ledger. The community's own board governs what gets recorded and who can see what.
             </p>
           </div>
 
@@ -526,7 +526,7 @@ export function ServicesPage() {
               num: "01",
               title: "Exchange audit",
               duration: "1–2 weeks",
-              body: "Map what the community is already exchanging — food, labour, goods, services. Identify what needs to be recorded and what can stay informal. The Clearing follows existing exchange patterns; it does not replace them.",
+              body: "Map what the community is already exchanging — food, labour, goods, services. Identify what needs to be recorded and what can stay informal. Clearing follows existing exchange patterns; it does not replace them.",
             },
             {
               num: "02",
@@ -544,7 +544,7 @@ export function ServicesPage() {
               num: "04",
               title: "Pilot with real exchanges",
               duration: "2 weeks",
-              body: "Run real transactions through The Clearing before full launch. Catch edge cases with the people doing the work, not in a QA session.",
+              body: "Run real transactions through Clearing before full launch. Catch edge cases with the people doing the work, not in a QA session.",
             },
             {
               num: "05",
@@ -577,7 +577,7 @@ export function ServicesPage() {
               className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[13px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
               style={{ background: "#b85a3e", color: "#f4ede0" }}
             >
-              Commission The Clearing →
+              Commission Clearing →
             </a>
             <a
               href="/aquifer"

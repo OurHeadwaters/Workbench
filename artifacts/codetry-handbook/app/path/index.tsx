@@ -352,13 +352,13 @@ export default function PathHome() {
 
             {[
               {
-                name: "The Lodge",
+                name: "Kitchen Table",
                 glyph: "⌁",
                 tagline: "Identity & trust layer",
-                desc: "Names held, credentials quiet. The Lodge is the root system — every zone in the community economy knows who is who without a server in the middle.",
+                desc: "Names held, credentials quiet. Kitchen Table is the root system — every zone in the community economy knows who is who without a server in the middle.",
               },
               {
-                name: "The Clearing",
+                name: "Clearing",
                 glyph: "⊕",
                 tagline: "Exchange & settlement",
                 desc: "Where community transactions are recorded and settled. Producers, households, and the co-op can see every exchange — no ledger held by someone outside the community.",

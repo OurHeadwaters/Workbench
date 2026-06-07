@@ -613,15 +613,15 @@ export function OdysseyPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ background: "rgba(244,237,224,0.06)" }}>
                 {[
                   {
-                    name: "The Lodge",
+                    name: "Kitchen Table",
                     glyph: "⌁",
                     color: "#1f3d2e",
                     tagline: "Identity & trust layer",
-                    desc: "Names held, credentials quiet. The Lodge is the root system — every zone in the community economy knows who is who without a server in the middle.",
+                    desc: "Names held, credentials quiet. The Kitchen Table is the root system — every zone in the community economy knows who is who without a server in the middle.",
                     href: "/map#zone-1",
                   },
                   {
-                    name: "The Clearing",
+                    name: "Clearing",
                     glyph: "⊕",
                     color: "#b85a3e",
                     tagline: "Exchange & settlement",

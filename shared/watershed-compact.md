@@ -179,7 +179,7 @@ Permaculture uses zones to describe intensity of use and attention — the close
 | **Zone 2** | The Community | The broader community the practitioners serve — the people the wealth is staying for. Their reality is the test of everything Zone 1 builds. |
 | **Zone 3** | The Market | Where Headwaters tools and institutions connect with economic reality: stores, co-ops, vendors, buyers. Productive but not intimate. |
 | **Zone 4** | The Corridor | Partnerships, networks, and allied organizations. Less managed, more collaborative. The place of replication and cross-pollination. |
-| **Zone 5** | The Wild | The external world — funders, governments, outside platforms, the broader economy. We observe it. We do not let it govern us. |
+| **Zone 5** | Edge | The external world — funders, governments, outside platforms, the broader economy. We observe it. We do not let it govern us. |
 | **Zone 6** | The River | *Our addition.* The outward flow layer — what Headwaters sends downstream: knowledge, replicable models, tools that can be picked up by other communities and run independently. |
 
 **On Zone 6:** The original permaculture model ends at Zone 5. We add a sixth zone because our system has an outward flow layer the original model doesn't account for. We are not just designing a place — we are designing replication. Zone 6 is where finished work leaves the watershed and becomes infrastructure for another watershed to start. We own that deviation.

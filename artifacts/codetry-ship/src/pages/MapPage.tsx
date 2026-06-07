@@ -65,44 +65,44 @@ function resolveHeaderContent(quiz: QuizState): HeaderContent {
 
   if (quiz.who === "household" && quiz.situation === "normal") {
     return {
-      h1: "You're in Zone 0 — The Saltbox.",
+      h1: "You're in Zone 0 — Saltbox.",
       intro:
         "Your household is your first zone. The saltbox holds what you need before winter comes — kit checked, roles assigned, everything in its place.",
     };
   }
   if (quiz.who === "household" && quiz.situation === "standby") {
     return {
-      h1: "You're in Zone 0 — The Saltbox, with Zone 3 on watch.",
+      h1: "You're in Zone 0 — Saltbox, with Zone 3 on watch.",
       intro:
         "The saltbox is open and the network is watching alongside you. Your household roles are live, and Zone 3 has eyes on the horizon.",
     };
   }
   if (quiz.who === "practitioner" && quiz.situation === "normal") {
     return {
-      h1: "You're in Zone 2 — The Bench.",
+      h1: "You're in Zone 2 — Workbench.",
       intro:
-        "Planning season. Strategy on the bench, research in the library, the operating plan open. Your practitioner tools are ready when you are.",
+        "Planning season. Strategy on the workbench, research in the library, the operating plan open. Your practitioner tools are ready when you are.",
     };
   }
   if (quiz.who === "practitioner" && quiz.situation === "standby") {
     return {
-      h1: "You're in Zone 2 — The Bench, with Zone 3 on watch.",
+      h1: "You're in Zone 2 — Workbench, with Zone 3 on watch.",
       intro:
-        "Execution season. Your bench is live, clients are moving, and Zone 3 has the standby ladder active. The tools are hot.",
+        "Execution season. Your workbench is live, clients are moving, and Zone 3 has the standby ladder active. The tools are hot.",
     };
   }
   if (quiz.who === "community" && quiz.situation === "normal") {
     return {
-      h1: "You're in Zone 4 — Community Hall.",
+      h1: "You're in Zone 4 — Clearing.",
       intro:
-        "Deliberation. The hall is set up, evidence is on the table, and the research library is open. No decision required yet — just good preparation.",
+        "Deliberation. The clearing is set up, evidence is on the table, and the research library is open. No decision required yet — just good preparation.",
     };
   }
   if (quiz.who === "community" && quiz.situation === "standby") {
     return {
-      h1: "You're in Zone 4 — Community Hall, with Zone 3 on watch.",
+      h1: "You're in Zone 4 — Clearing, with Zone 3 on watch.",
       intro:
-        "Session active. Decisions are being made, the hall is open, and Zone 3 pilots are standing by. The community is present.",
+        "Session active. Decisions are being made, the clearing is open, and Zone 3 pilots are standing by. The community is present.",
     };
   }
   return defaultHeader;
@@ -116,13 +116,13 @@ function resolveCtaCopy(quiz: QuizState): string {
   if (quiz.who === "household" && quiz.situation === "standby")
     return "Your saltbox is open and your pilots are watching — Begin the Odyssey →";
   if (quiz.who === "practitioner" && quiz.situation === "normal")
-    return "Your practitioner bench is ready — Begin the Odyssey →";
+    return "Your practitioner workbench is ready — Begin the Odyssey →";
   if (quiz.who === "practitioner" && quiz.situation === "standby")
-    return "Your bench is hot and your standby network is live — Begin the Odyssey →";
+    return "Your workbench is hot and your standby network is live — Begin the Odyssey →";
   if (quiz.who === "community" && quiz.situation === "normal")
-    return "Your community hall is set — Begin the Odyssey →";
+    return "Your clearing is set — Begin the Odyssey →";
   if (quiz.who === "community" && quiz.situation === "standby")
-    return "The hall is open and the session is active — Begin the Odyssey →";
+    return "The clearing is open and the session is active — Begin the Odyssey →";
   return "Pack your kit — Begin the Odyssey →";
 }
 
@@ -1282,7 +1282,7 @@ export function MapPage() {
                 (e.currentTarget as HTMLAnchorElement).style.borderColor = RULE;
               }}
             >
-              ← The Clearing
+              ← Clearing
             </a>
           </div>
         )}
@@ -1557,7 +1557,7 @@ export function MapPage() {
             In permaculture, zones radiate outward from the hearth — the place you visit most becomes Zone 0, and each zone further out is more public, more exposed, and more connected to the outside world. The Headwaters neighbourhood follows the same logic.
           </p>
           <p style={{ margin: "0 0 14px", fontSize: 13, color: "#4a4035", lineHeight: 1.65 }}>
-            Water flows from the hearth outward: <strong style={{ color: FOREST }}>The Saltbox (Hearth)</strong> → <strong style={{ color: "#1f3d2e" }}>The Lodge (Roots)</strong> → <strong style={{ color: "#1A5FA8" }}>The Bench (Trail)</strong> → <strong style={{ color: "#3D4A5C" }}>The Standby (Watch)</strong> → <strong style={{ color: "#0F766E" }}>Community Hall (Gather)</strong> → <strong style={{ color: "#5B3E8C" }}>The Wild (Horizon)</strong> — and back again. The community is the watershed.
+            Water flows from the hearth outward: <strong style={{ color: FOREST }}>Saltbox (Hearth)</strong> → <strong style={{ color: "#1f3d2e" }}>Kitchen Table (Roots)</strong> → <strong style={{ color: "#1A5FA8" }}>Workbench (Trail)</strong> → <strong style={{ color: "#3D4A5C" }}>Greenhouse (Watch)</strong> → <strong style={{ color: "#0F766E" }}>Clearing (Gather)</strong> → <strong style={{ color: "#5B3E8C" }}>Edge (Horizon)</strong> — and back again. The community is the watershed.
           </p>
           <div
             style={{
@@ -1773,7 +1773,7 @@ export function MapPage() {
         </div>
       </div>
 
-      {/* Sticky "← The Clearing" — fixed to bottom-left, only when arriving via a zone hash */}
+      {/* Sticky "← Clearing" — fixed to bottom-left, only when arriving via a zone hash */}
       {hasInboundZone && (
         <a
           href={BASE}
@@ -1810,7 +1810,7 @@ export function MapPage() {
             (e.currentTarget as HTMLAnchorElement).style.borderColor = RULE;
           }}
         >
-          ← The Clearing
+          ← Clearing
         </a>
       )}
     </main>

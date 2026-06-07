@@ -12,37 +12,37 @@ const BASE = import.meta.env.BASE_URL;
 const ZONES = [
   {
     id: "0",
-    name: "Zone 0 — Salt Box",
+    name: "Zone 0 — Saltbox",
     description:
       "The hearth. The home itself. Where decisions are made at the kitchen table and trust is built before it's needed.",
   },
   {
     id: "1",
-    name: "Zone 1 — Lodge",
+    name: "Zone 1 — Kitchen Table",
     description:
       "Immediate neighbours and close allies. The people you'd call in a storm. The inner ring of a community-run economy.",
   },
   {
     id: "2",
-    name: "Zone 2 — Bench",
+    name: "Zone 2 — Workbench",
     description:
-      "The working neighbourhood. Local producers, traders, and organizers who show up to the bench and stay.",
+      "The working neighbourhood. Local producers, traders, and organizers who show up to the workbench and stay.",
   },
   {
     id: "3",
-    name: "Zone 3 — Standby",
+    name: "Zone 3 — Greenhouse",
     description:
       "The wider circle — people and institutions who are ready when called but not yet daily participants.",
   },
   {
     id: "4",
-    name: "Zone 4 — Community Hall",
+    name: "Zone 4 — Clearing",
     description:
       "Public community gathering. Where the economy becomes visible and newcomers find the door.",
   },
   {
     id: "5",
-    name: "Zone 5 — The Wild",
+    name: "Zone 5 — Edge",
     description:
       "Beyond the community's edge. The world outside — where resources come from and where relationships reach.",
   },
@@ -241,7 +241,7 @@ export function HeadwatersPage() {
               textShadow: "0 2px 40px rgba(0,0,0,0.8)",
             }}
           >
-            The Clearing
+            Clearing
           </h1>
 
           <p
@@ -1002,7 +1002,7 @@ export function HeadwatersPage() {
             margin: 0,
           }}
         >
-          ourheadwaters.ca · The Clearing · Northwestern Ontario · Treaty 3
+          ourheadwaters.ca · Clearing · Northwestern Ontario · Treaty 3
         </p>
         <a
           href={`${BASE}home`}

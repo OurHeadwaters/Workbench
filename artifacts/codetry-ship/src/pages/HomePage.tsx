@@ -182,7 +182,7 @@ export function HomePage() {
               className="font-serif text-[12px] leading-[1.65] mb-3 pt-3"
               style={{ color: "rgba(244,237,224,0.38)", borderTop: "1px solid rgba(244,237,224,0.05)", fontStyle: "italic" }}
             >
-              The community is the watershed. Water flows from the hearth outward — Salt Box → Lodge → Bench → Standby → Community Hall → The Wild — and back again. Six zones, one neighbourhood, all of it connected.
+              The community is the watershed. Water flows from the hearth outward — Saltbox → Kitchen Table → Workbench → Greenhouse → Clearing → Edge — and back again. Six zones, one neighbourhood, all of it connected.
             </p>
             <p
               className="font-mono text-[10px] uppercase tracking-[0.2em]"

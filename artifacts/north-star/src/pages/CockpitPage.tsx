@@ -88,7 +88,7 @@ const SECTIONS: ToolSection[] = [
       { label: "Reference Call — Handyman", sub: "Child-safety extended · C5 is the key",       detail: "6 standard + 5 child-safety questions. Hesitation is a no on C2, C3, C5.",                  path: `${BASE}/cockpit/reference-handyman`, accent: "#b85a3e" },
       { label: "Candidate Tracker",         sub: "Log candidates across all roles",             detail: "Track every candidate: role, status, notes, reference results.",                              path: `${BASE}/cockpit/candidates`,        accent: "#3D4A5C" },
       { label: "Contract Terms",            sub: "Locked Deer Lake role baselines",             detail: "Amendment log, contracted hours, rate baselines.",                                            path: `${BASE}/cockpit/contract-terms`,    accent: "#3D4A5C" },
-      { label: "Bench — Week",              sub: "Weekly 4-person depot bench rotation",        detail: "SIN, banking, WSIB compliance. Auto-updating roster.",                                        path: `${BASE}/cockpit/bench-week`,        accent: "#3D4A5C" },
+      { label: "Workbench — Week",           sub: "Weekly 4-person depot bench rotation",        detail: "SIN, banking, WSIB compliance. Auto-updating roster.",                                        path: `${BASE}/cockpit/bench-week`,        accent: "#3D4A5C" },
     ],
   },
   {

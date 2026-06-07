@@ -51,8 +51,8 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
   },
   {
     id: "z1",
-    name: "Headwaters",
-    subtitle: "Eave \u00b7 envelope budgeting \u00b7 the household source",
+    name: "Kitchen Table",
+    subtitle: "Zone 1 \u00b7 kitchen table \u00b7 envelope budgeting \u00b7 the household source",
     prompts: [
       {
         id: "z1-01",
@@ -120,8 +120,8 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
   },
   {
     id: "z3",
-    name: "Commons",
-    subtitle: "Zone 3 \u00b7 commons \u00b7 community production",
+    name: "Greenhouse",
+    subtitle: "Zone 3 \u00b7 greenhouse \u00b7 community production",
     prompts: [
       {
         id: "z3-01",
@@ -189,12 +189,12 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
   },
   {
     id: "z5",
-    name: "The Margin",
-    subtitle: "Zone 5 \u00b7 wild observation \u00b7 private first, shared by choice",
+    name: "Edge",
+    subtitle: "Zone 5 \u00b7 edge \u00b7 private first, shared by choice",
     prompts: [
       {
         id: "z5-01",
-        question: "What\u2019s a take in The Margin \u2014 not the definition, a real one you remember keeping?",
+        question: "What\u2019s a take in Edge \u2014 not the definition, a real one you remember keeping?",
         hint: "Describe a specific take. What you noticed, what made you write it down.",
       },
       {
@@ -204,7 +204,7 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
       },
       {
         id: "z5-03",
-        question: "What\u2019s the difference between a thought staying in The Margin and floating to the Shallows?",
+        question: "What\u2019s the difference between a thought staying in Edge and floating to the Shallows?",
         hint: "What makes you choose to share? What makes you keep something private?",
       },
       {
@@ -214,12 +214,12 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
       },
       {
         id: "z5-05",
-        question: "What\u2019s the relationship between The Margin and the rest of the constellation?",
+        question: "What\u2019s the relationship between Edge and the rest of the constellation?",
         hint: "It\u2019s Zone 5 \u2014 the outermost zone. What does that position mean?",
       },
       {
         id: "z5-06",
-        question: "What would be lost if you made The Margin public by default?",
+        question: "What would be lost if you made Edge public by default?",
         hint: "Why does privacy-first matter for this kind of thinking?",
       },
     ],

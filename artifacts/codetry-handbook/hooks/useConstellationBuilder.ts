@@ -38,7 +38,7 @@ export const ZONE_GUIDES = [
     zone: 5,
     label: "Zone 5",
     hint: "The wild edge — the primary sourcing layer beyond the built world",
-    example: "e.g. The Wild Edge, The Land, The Harvest Layer",
+    example: "e.g. Edge, The Land, The Harvest Layer",
   },
 ];
 

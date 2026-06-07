@@ -26,12 +26,12 @@ import { CAPITAL_CONVERSION_GATE_PRINCIPLE } from "./codetry";
 export { CAPITAL_CONVERSION_GATE_PRINCIPLE };
 
 // ─── Zone numbers used by the guard ──────────────────────────────────────────
-//   0  Saltbox   — Household / hearth
-//   1  Lodge     — Mutual aid / social capital
-//   2  Bench     — Operational / practitioner layer
-//   3  Standby   — Community / co-op / financial capital
-//   4  Territory — Land / long-horizon stewardship
-//   5  Wild Edge — Public / horizon presence
+//   0  Saltbox       — Household / hearth
+//   1  Kitchen Table — Mutual aid / social capital
+//   2  Workbench     — Operational / practitioner layer
+//   3  Greenhouse    — Community / co-op / financial capital
+//   4  Clearing      — Land / long-horizon stewardship
+//   5  Edge          — Public / horizon presence
 
 export type ZoneNumber = 0 | 1 | 2 | 3 | 4 | 5;
 
@@ -75,7 +75,7 @@ export const GATE_SEAMS: Record<string, GateSeam> = {
     name: "The Eave Overhang",
     from: 0,
     to: 1,
-    desc: "Household (Z0) to Mutual Aid (Z1). Social capital originates here. Any crossing requires explicit consent and ceremony.",
+    desc: "Household (Z0) to Kitchen Table (Z1). Social capital originates here. Any crossing requires explicit consent and ceremony.",
     absolute: false,
   },
   g_z1_z2: {

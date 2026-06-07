@@ -62,7 +62,7 @@ const PC_ZONES: PcZone[] = [
   },
   {
     id: "Z5",
-    name: "The Wild",
+    name: "Edge",
     blurb: "You've built something and you're ready to help others replicate it.",
     guidance:
       "The Odyssey is the method written down — five phases, twenty stations, the same discipline used to build the 807 Food Co-op. If you're at the stage where you want to teach it forward, start there.",

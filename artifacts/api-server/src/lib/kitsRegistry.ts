@@ -70,10 +70,10 @@ export const KITS: Record<string, Kit> = {
   "practitioner-kit": {
     id: "practitioner-kit",
     name: "Practitioner Kit",
-    tagline: "The full constellation — Operating Plan, Bench, and Codetry practice.",
+    tagline: "The full constellation — Operating Plan, Workbench, and Codetry practice.",
     arcNote: null,
     contentNote:
-      "Your kit includes the Practitioner's Operating Plan, the Bench toolkit, Codetry practice guides, and the Pioneer Path companion.",
+      "Your kit includes the Practitioner's Operating Plan, the Workbench toolkit, Codetry practice guides, and the Pioneer Path companion.",
   },
   "standby-kit": {
     id: "standby-kit",

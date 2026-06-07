@@ -1469,7 +1469,7 @@
           "number": "2.2",
           "partRoman": "II",
           "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-          "title": "Eave",
+          "title": "Kitchen Table",
           "blocks": [
             {
               "kind": "small",
@@ -1494,7 +1494,7 @@
             },
             {
               "kind": "small",
-              "text": "Formerly: xBuckets, Watershed, Headwaters"
+              "text": "Formerly: xBuckets, Watershed, Headwaters, Eave"
             },
             {
               "kind": "small",
@@ -1732,7 +1732,7 @@
           "number": "2.4",
           "partRoman": "II",
           "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-          "title": "Commons",
+          "title": "Greenhouse",
           "blocks": [
             {
               "kind": "small",
@@ -1844,7 +1844,7 @@
           "number": "2.5",
           "partRoman": "II",
           "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-          "title": "Arc",
+          "title": "Clearing",
           "blocks": [
             {
               "kind": "small",
@@ -1936,7 +1936,7 @@
           "number": "2.6",
           "partRoman": "II",
           "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-          "title": "The Margin",
+          "title": "Edge",
           "blocks": [
             {
               "kind": "small",
@@ -1954,6 +1954,10 @@
             {
               "kind": "para",
               "text": "Wild / observation — private capture (takes) with structured channel-out and opt-in float to the Shallows"
+            },
+            {
+              "kind": "small",
+              "text": "Formerly: The Margin"
             },
             {
               "kind": "small",
@@ -3446,15 +3450,15 @@
           "number": "4.9",
           "partRoman": "IV",
           "partLabel": "IV · The Quiet Examples",
-          "title": "Eave — The Operational Centre",
+          "title": "Kitchen Table — The Operational Centre",
           "blocks": [
             {
               "kind": "small",
-              "text": "Eave · the most-frequented ring of the constellation."
+              "text": "Kitchen Table · the most-frequented ring of the constellation."
             },
             {
               "kind": "para",
-              "text": "Eave in the constellation is Headwaters itself — the immediate operational layer the practitioner organizes outward from. In the permaculture frame Eave is the territory visited every day; in the constellation it holds the practitioner's own ledger, the household budget system, the daily coordination tools, and the codetry practice itself. Eave is not a category. It is the practitioner's working territory — everything that lives within daily reach of the household door."
+              "text": "Kitchen Table in the constellation is Headwaters itself — the immediate operational layer the practitioner organizes outward from. In the permaculture frame Kitchen Table is the territory visited every day; in the constellation it holds the practitioner's own ledger, the household budget system, the daily coordination tools, and the codetry practice itself. Kitchen Table is not a category. It is the practitioner's working territory — everything that lives within daily reach of the household door."
             },
             {
               "kind": "subhead",
@@ -3462,11 +3466,11 @@
             },
             {
               "kind": "para",
-              "text": "Rename *Eave* to *the budget system* or *the household finance layer*. What changes? The budget system is one function that Eave holds; the name narrows the zone to its financial role and hides the operational reality that Eave also holds the practitioner's time discipline, their codetry practice, and the daily decisions that translate Zone 0's household abundance into outward-facing activity. The zone name is not a category label. It names the practitioner's own immediate working territory — the full scope of what is tended daily, not only what is tracked financially."
+              "text": "Rename *Kitchen Table* to *the budget system* or *the household finance layer*. What changes? The budget system is one function that Kitchen Table holds; the name narrows the zone to its financial role and hides the operational reality that Kitchen Table also holds the practitioner's time discipline, their codetry practice, and the daily decisions that translate Zone 0's household abundance into outward-facing activity. The zone name is not a category label. It names the practitioner's own immediate working territory — the full scope of what is tended daily, not only what is tracked financially."
             },
             {
               "kind": "callout",
-              "text": "The practitioner who names Eave *the budget system* and Zone 0 *the homestead* has left the relationship between them unnamed — and the relationship is where the practice lives. Zone 0 supplies what Eave allocates. If the allocation vocabulary is borrowed from fintech and the supply vocabulary is borrowed from homesteading, the practitioner is running two systems in two languages with no shared word for the handoff. Name the handoff."
+              "text": "The practitioner who names Kitchen Table *the budget system* and Zone 0 *the homestead* has left the relationship between them unnamed — and the relationship is where the practice lives. Zone 0 supplies what Kitchen Table allocates. If the allocation vocabulary is borrowed from fintech and the supply vocabulary is borrowed from homesteading, the practitioner is running two systems in two languages with no shared word for the handoff. Name the handoff."
             }
           ]
         },
@@ -3487,7 +3491,7 @@
             },
             {
               "kind": "para",
-              "text": "Each zone is not only a ring of proximity. It is a capital-type boundary. Living, material, experiential, and cultural capital originate in Zone 0 and Zone 1. Social capital is structural to Zone 1 — The Eave — because that is where the relationships that generate it are held. Intellectual capital spans Zones 2 and 3. Financial capital is native to Zone 3 and above. A zone crossing is therefore always a capital-type conversion. When social capital crosses outward and becomes financial capital, something irreplaceable has been moved. The conversion cannot be undone without re-crossing."
+              "text": "Each zone is not only a ring of proximity. It is a capital-type boundary. Living, material, experiential, and cultural capital originate in Zone 0 and Zone 1. Social capital is structural to Zone 1 — Kitchen Table — because that is where the relationships that generate it are held. Intellectual capital spans Zones 2 and 3. Financial capital is native to Zone 3 and above. A zone crossing is therefore always a capital-type conversion. When social capital crosses outward and becomes financial capital, something irreplaceable has been moved. The conversion cannot be undone without re-crossing."
             },
             {
               "kind": "subhead",
@@ -3536,7 +3540,7 @@
             },
             {
               "kind": "para",
-              "text": "Zone 2 is the practitioner's coordination layer — the formal record of intent, schedule, capacity, and commitment that translates Eave's daily action into structured accountability. In Headwaters this is the Operating Plan: a living document, not a pitch deck. It holds the practitioner's role, the constellation's rules of engagement, the current pilot's scope, and the standing commitments that Zones 3 and 4 are built on top of. Zone 2 is visited less frequently than Eave but consulted whenever a new commitment is being made or an existing one is being reviewed."
+              "text": "Zone 2 is the practitioner's coordination layer — the formal record of intent, schedule, capacity, and commitment that translates Kitchen Table's daily action into structured accountability. In Headwaters this is the Operating Plan: a living document, not a pitch deck. It holds the practitioner's role, the constellation's rules of engagement, the current pilot's scope, and the standing commitments that Zones 3 and 4 are built on top of. Zone 2 is visited less frequently than Kitchen Table but consulted whenever a new commitment is being made or an existing one is being reviewed."
             },
             {
               "kind": "subhead",
@@ -3623,7 +3627,7 @@
           "number": "4.13",
           "partRoman": "IV",
           "partLabel": "IV · The Quiet Examples",
-          "title": "Zone 5 — The Wild Edge",
+          "title": "Zone 5 — Edge",
           "blocks": [
             {
               "kind": "small",
@@ -4223,7 +4227,7 @@
             },
             {
               "kind": "para",
-              "text": "The apparent tension between Zone 4 as *Arc* (individual producer transition, conventional → regenerative) and Zone 4 as *Community Hall* (voluntary collective formation) is resolved: *Arc* was an earlier lens that named Zone 4 from the vantage of a single producer's trajectory. That framing has been superseded. Zone 4 is now understood as *voluntary informal association* — small groups of people finding each other around an idea and beginning to organize, without contracts, without board authority, without an exchange. The abattoir pilot and the pilot farm operation are still valid Zone 4 examples, now understood as one expression of that voluntary formation process rather than the defining one. Zone 4 has been renamed Community Hall in the constellation data to reflect this."
+              "text": "The apparent tension between Zone 4 as *Arc* (individual producer transition, conventional → regenerative) and Zone 4 as *Clearing* (voluntary collective formation) is resolved: *Arc* was an earlier lens that named Zone 4 from the vantage of a single producer's trajectory. That framing has been superseded. Zone 4 is now understood as *voluntary informal association* — small groups of people finding each other around an idea and beginning to organize, without contracts, without board authority, without an exchange. The abattoir pilot and the pilot farm operation are still valid Zone 4 examples, now understood as one expression of that voluntary formation process rather than the defining one. Zone 4 has been renamed Clearing in the constellation data to reflect this."
             },
             {
               "kind": "para",
@@ -7673,7 +7677,7 @@
       "number": "2.2",
       "partRoman": "II",
       "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-      "title": "Eave",
+      "title": "Kitchen Table",
       "blocks": [
         {
           "kind": "small",
@@ -7698,7 +7702,7 @@
         },
         {
           "kind": "small",
-          "text": "Formerly: xBuckets, Watershed, Headwaters"
+          "text": "Formerly: xBuckets, Watershed, Headwaters, Eave"
         },
         {
           "kind": "small",
@@ -7936,7 +7940,7 @@
       "number": "2.4",
       "partRoman": "II",
       "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-      "title": "Commons",
+      "title": "Greenhouse",
       "blocks": [
         {
           "kind": "small",
@@ -8048,7 +8052,7 @@
       "number": "2.5",
       "partRoman": "II",
       "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-      "title": "Arc",
+      "title": "Clearing",
       "blocks": [
         {
           "kind": "small",
@@ -8140,7 +8144,7 @@
       "number": "2.6",
       "partRoman": "II",
       "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-      "title": "The Margin",
+      "title": "Edge",
       "blocks": [
         {
           "kind": "small",
@@ -8158,6 +8162,10 @@
         {
           "kind": "para",
           "text": "Wild / observation — private capture (takes) with structured channel-out and opt-in float to the Shallows"
+        },
+        {
+          "kind": "small",
+          "text": "Formerly: The Margin"
         },
         {
           "kind": "small",
@@ -9636,15 +9644,15 @@
       "number": "4.9",
       "partRoman": "IV",
       "partLabel": "IV · The Quiet Examples",
-      "title": "Eave — The Operational Centre",
+      "title": "Kitchen Table — The Operational Centre",
       "blocks": [
         {
           "kind": "small",
-          "text": "Eave · the most-frequented ring of the constellation."
+          "text": "Kitchen Table · the most-frequented ring of the constellation."
         },
         {
           "kind": "para",
-          "text": "Eave in the constellation is Headwaters itself — the immediate operational layer the practitioner organizes outward from. In the permaculture frame Eave is the territory visited every day; in the constellation it holds the practitioner's own ledger, the household budget system, the daily coordination tools, and the codetry practice itself. Eave is not a category. It is the practitioner's working territory — everything that lives within daily reach of the household door."
+          "text": "Kitchen Table in the constellation is Headwaters itself — the immediate operational layer the practitioner organizes outward from. In the permaculture frame Kitchen Table is the territory visited every day; in the constellation it holds the practitioner's own ledger, the household budget system, the daily coordination tools, and the codetry practice itself. Kitchen Table is not a category. It is the practitioner's working territory — everything that lives within daily reach of the household door."
         },
         {
           "kind": "subhead",
@@ -9652,11 +9660,11 @@
         },
         {
           "kind": "para",
-          "text": "Rename *Eave* to *the budget system* or *the household finance layer*. What changes? The budget system is one function that Eave holds; the name narrows the zone to its financial role and hides the operational reality that Eave also holds the practitioner's time discipline, their codetry practice, and the daily decisions that translate Zone 0's household abundance into outward-facing activity. The zone name is not a category label. It names the practitioner's own immediate working territory — the full scope of what is tended daily, not only what is tracked financially."
+          "text": "Rename *Kitchen Table* to *the budget system* or *the household finance layer*. What changes? The budget system is one function that Kitchen Table holds; the name narrows the zone to its financial role and hides the operational reality that Kitchen Table also holds the practitioner's time discipline, their codetry practice, and the daily decisions that translate Zone 0's household abundance into outward-facing activity. The zone name is not a category label. It names the practitioner's own immediate working territory — the full scope of what is tended daily, not only what is tracked financially."
         },
         {
           "kind": "callout",
-          "text": "The practitioner who names Eave *the budget system* and Zone 0 *the homestead* has left the relationship between them unnamed — and the relationship is where the practice lives. Zone 0 supplies what Eave allocates. If the allocation vocabulary is borrowed from fintech and the supply vocabulary is borrowed from homesteading, the practitioner is running two systems in two languages with no shared word for the handoff. Name the handoff."
+          "text": "The practitioner who names Kitchen Table *the budget system* and Zone 0 *the homestead* has left the relationship between them unnamed — and the relationship is where the practice lives. Zone 0 supplies what Kitchen Table allocates. If the allocation vocabulary is borrowed from fintech and the supply vocabulary is borrowed from homesteading, the practitioner is running two systems in two languages with no shared word for the handoff. Name the handoff."
         }
       ]
     },
@@ -9677,7 +9685,7 @@
         },
         {
           "kind": "para",
-          "text": "Each zone is not only a ring of proximity. It is a capital-type boundary. Living, material, experiential, and cultural capital originate in Zone 0 and Zone 1. Social capital is structural to Zone 1 — The Eave — because that is where the relationships that generate it are held. Intellectual capital spans Zones 2 and 3. Financial capital is native to Zone 3 and above. A zone crossing is therefore always a capital-type conversion. When social capital crosses outward and becomes financial capital, something irreplaceable has been moved. The conversion cannot be undone without re-crossing."
+          "text": "Each zone is not only a ring of proximity. It is a capital-type boundary. Living, material, experiential, and cultural capital originate in Zone 0 and Zone 1. Social capital is structural to Zone 1 — Kitchen Table — because that is where the relationships that generate it are held. Intellectual capital spans Zones 2 and 3. Financial capital is native to Zone 3 and above. A zone crossing is therefore always a capital-type conversion. When social capital crosses outward and becomes financial capital, something irreplaceable has been moved. The conversion cannot be undone without re-crossing."
         },
         {
           "kind": "subhead",
@@ -9726,7 +9734,7 @@
         },
         {
           "kind": "para",
-          "text": "Zone 2 is the practitioner's coordination layer — the formal record of intent, schedule, capacity, and commitment that translates Eave's daily action into structured accountability. In Headwaters this is the Operating Plan: a living document, not a pitch deck. It holds the practitioner's role, the constellation's rules of engagement, the current pilot's scope, and the standing commitments that Zones 3 and 4 are built on top of. Zone 2 is visited less frequently than Eave but consulted whenever a new commitment is being made or an existing one is being reviewed."
+          "text": "Zone 2 is the practitioner's coordination layer — the formal record of intent, schedule, capacity, and commitment that translates Kitchen Table's daily action into structured accountability. In Headwaters this is the Operating Plan: a living document, not a pitch deck. It holds the practitioner's role, the constellation's rules of engagement, the current pilot's scope, and the standing commitments that Zones 3 and 4 are built on top of. Zone 2 is visited less frequently than Kitchen Table but consulted whenever a new commitment is being made or an existing one is being reviewed."
         },
         {
           "kind": "subhead",
@@ -9813,7 +9821,7 @@
       "number": "4.13",
       "partRoman": "IV",
       "partLabel": "IV · The Quiet Examples",
-      "title": "Zone 5 — The Wild Edge",
+      "title": "Zone 5 — Edge",
       "blocks": [
         {
           "kind": "small",
@@ -10406,7 +10414,7 @@
         },
         {
           "kind": "para",
-          "text": "The apparent tension between Zone 4 as *Arc* (individual producer transition, conventional → regenerative) and Zone 4 as *Community Hall* (voluntary collective formation) is resolved: *Arc* was an earlier lens that named Zone 4 from the vantage of a single producer's trajectory. That framing has been superseded. Zone 4 is now understood as *voluntary informal association* — small groups of people finding each other around an idea and beginning to organize, without contracts, without board authority, without an exchange. The abattoir pilot and the pilot farm operation are still valid Zone 4 examples, now understood as one expression of that voluntary formation process rather than the defining one. Zone 4 has been renamed Community Hall in the constellation data to reflect this."
+          "text": "The apparent tension between Zone 4 as *Arc* (individual producer transition, conventional → regenerative) and Zone 4 as *Clearing* (voluntary collective formation) is resolved: *Arc* was an earlier lens that named Zone 4 from the vantage of a single producer's trajectory. That framing has been superseded. Zone 4 is now understood as *voluntary informal association* — small groups of people finding each other around an idea and beginning to organize, without contracts, without board authority, without an exchange. The abattoir pilot and the pilot farm operation are still valid Zone 4 examples, now understood as one expression of that voluntary formation process rather than the defining one. Zone 4 has been renamed Clearing in the constellation data to reflect this."
         },
         {
           "kind": "para",
