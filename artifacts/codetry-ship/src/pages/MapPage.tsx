@@ -891,6 +891,128 @@ function shouldResetOnLoad(): boolean {
   }
 }
 
+function resolveSharedZone(): ZoneData | null {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const qz = params.get("zone");
+    if (qz !== null) {
+      const n = parseInt(qz, 10);
+      if (!isNaN(n) && n >= 0 && n <= 5) {
+        return ZONES.find((z) => z.number === n) ?? null;
+      }
+    }
+  } catch {
+    /* SSR / private-mode guard */
+  }
+  return null;
+}
+
+function SharedZoneBanner({
+  zone,
+  visible,
+  onDismiss,
+}: {
+  zone: ZoneData;
+  visible: boolean;
+  onDismiss: () => void;
+}) {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        display: "flex",
+        justifyContent: "center",
+        padding: "10px 16px",
+        pointerEvents: visible ? "auto" : "none",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(-100%)",
+        transition: "opacity 0.4s ease, transform 0.4s ease",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "10px 16px",
+          borderRadius: 10,
+          background: zone.color,
+          boxShadow: `0 4px 20px ${zone.color}55, 0 1px 4px rgba(0,0,0,0.12)`,
+          maxWidth: 520,
+          width: "100%",
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              fontFamily: "monospace",
+              fontSize: 8,
+              fontWeight: 700,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.62)",
+              marginBottom: 2,
+            }}
+          >
+            Shared with you
+          </div>
+          <div
+            style={{
+              fontFamily: "Georgia, serif",
+              fontSize: 14,
+              fontWeight: 700,
+              color: "#fff",
+              lineHeight: 1.2,
+            }}
+          >
+            Zone {zone.number} — {zone.name}
+          </div>
+          <div
+            style={{
+              fontFamily: "monospace",
+              fontSize: 9,
+              color: "rgba(255,255,255,0.65)",
+              marginTop: 2,
+              letterSpacing: "0.04em",
+            }}
+          >
+            {zone.terrain}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onDismiss}
+          aria-label="Dismiss banner"
+          style={{
+            background: "rgba(255,255,255,0.15)",
+            border: "1px solid rgba(255,255,255,0.22)",
+            borderRadius: 5,
+            color: "rgba(255,255,255,0.85)",
+            fontFamily: "monospace",
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+            padding: "4px 10px",
+            flexShrink: 0,
+            transition: "background 0.15s",
+          }}
+        >
+          Got it ✕
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function MapPage() {
   const resetRequested = shouldResetOnLoad();
   const saved = resetRequested ? null : loadSavedQuiz();
@@ -900,6 +1022,35 @@ export function MapPage() {
     saved?.quiz ?? { who: null, situation: null, skipped: false }
   );
   const [quizCollapsed, setQuizCollapsed] = useState(saved?.collapsed ?? false);
+
+  /* Share-link landing — detect ?zone=N and show a banner */
+  const [sharedZone] = useState<ZoneData | null>(resolveSharedZone);
+  const [shareBannerVisible, setShareBannerVisible] = useState(true);
+
+  useEffect(() => {
+    if (!sharedZone) return;
+    /* Scroll to the zone card after a short delay so the page has painted */
+    const scrollTimer = setTimeout(() => {
+      const el = document.getElementById(`zone-${sharedZone.number}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 450);
+    /* Auto-dismiss banner after 5 seconds */
+    const dismissTimer = setTimeout(() => setShareBannerVisible(false), 5000);
+    /* Dismiss on user scroll — attach listener after auto-scroll animation
+       settles (smooth scroll takes ~600 ms) to avoid self-dismissal */
+    let scrollHandler: (() => void) | null = null;
+    const scrollListenerTimer = setTimeout(() => {
+      scrollHandler = () => setShareBannerVisible(false);
+      window.addEventListener("scroll", scrollHandler, { once: true, passive: true });
+    }, 1200);
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(dismissTimer);
+      clearTimeout(scrollListenerTimer);
+      if (scrollHandler) window.removeEventListener("scroll", scrollHandler);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* When arriving via ?change=1 — clear localStorage and strip the param */
   useEffect(() => {
@@ -1025,6 +1176,15 @@ export function MapPage() {
         color: "#2a2520",
       }}
     >
+      {/* Share-link landing banner */}
+      {sharedZone && (
+        <SharedZoneBanner
+          zone={sharedZone}
+          visible={shareBannerVisible}
+          onDismiss={() => setShareBannerVisible(false)}
+        />
+      )}
+
       {/* Topographic texture */}
       <div
         aria-hidden
