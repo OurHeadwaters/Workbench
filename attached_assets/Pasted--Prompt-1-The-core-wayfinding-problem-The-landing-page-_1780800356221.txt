@@ -1,0 +1,76 @@
+**Prompt 1: The core wayfinding problem**
+
+The landing page should open with a quiet, grounded invitation that mirrors a real kitchen-table conversation in Northwestern Ontario: warm firelight, honest questions, no hard sell. Start with a short, atmospheric hero section—perhaps an image or illustration of a literal clearing in the woods, with soft light filtering through trees, evoking Treaty 3 territory without romanticizing.
+
+Overlay or follow immediately with a simple, human-centered prompt:  
+**“Where are you standing today?”**  
+Below it, show a subtle, beautiful rendering of the Watershed Map (more on this in Prompt 5) with the six concentric zones labeled in plain language first:
+
+- **Zone 0: Kitchen Table** (your inner circle, deepest trust)
+- **Zone 1: The Lodge** (close community)
+- … up to **Zone 5: The Wider World**
+
+Let visitors hover or tap a zone for a short, voice-driven description (“This is where band councils often begin…”). No forced login. The goal is instant recognition: “Oh, that’s me.”
+
+Next step flows naturally: a prominent but gentle button like **“Find My Path with the Compass”** or **“Tell me more about my zone.”** This creates a “you are here” moment that feels like being welcomed by a neighbor, not funneled. It respects different entry points (curious citizen vs. council evaluator) by letting people self-locate without declaring intent upfront.<grok:render card_id=“925f66” card_type=“citation_card” type=“render_inline_citation”><argument name="citation_id">1</argument></grok:render>
+
+**Prompt 2: The Compass as front door**
+
+Reposition **The Compass** as the dominant, inviting first action—make it the hero element right after (or integrated with) the hero image and zone teaser. Treat it like stepping onto the land together, not a quiz.
+
+**Ideal flow and feel:**
+
+- **Entry:** A large, earthy card or full-width section titled **“Where do you stand in the Watershed?”** with a short intro in your rooted voice: “Like finding your bearings on the lake, this helps you see where you are and what flows next.” One prominent button: **“Take the Compass”** (subtle secondary: “See the map first”).
+- **Questions:** Keep it short (5-7 questions max), conversational, and story-based rather than clinical. Examples:
+  - “Are you sitting at your own kitchen table wondering how this could fit your community?” (for council members)
+  - “Are you a neighbor curious about what’s growing here?”
+  - “Have you built something similar and wondering about a Headwaters node?”
+  - “Are you carrying resources or questions from farther away?”  
+    Use simple radio buttons or illustrated cards with images/icons (a lodge, a bench, open water) for warmth. Progress feels like walking a trail.
+- **Output/Landing:** Personalized but not creepy—e.g., “You’re in Zone 2 territory right now—here’s what that often looks like for folks like you.” Then show tailored next steps: specific pages, stories from similar people, contact for a real conversation, or invitation to the Aquifer layer. End with “This isn’t final—waters shift. Come back anytime.”
+
+It feels like guidance from an elder or neighbor, not data harvesting. This turns passive visitors into oriented participants quickly.<grok:render card_id=“92a7d5” card_type=“citation_card” type=“render_inline_citation”><argument name="citation_id">32</argument></grok:render>
+
+**Prompt 3: Role-differentiated paths without feeling like a survey**
+
+Create warm, human entry paths by embedding gentle invitations in the storytelling and map, rather than a dropdown. Here are three approaches with increasing explicitness:
+
+1. **Implicit / Narrative-led (least explicit, most respectful for your voice):**  
+   Weave short “voices from the watershed” stories or vignettes across the page and Compass results. E.g., “Band councils we’ve walked with often start here…” or “Practitioners building nodes tell us…”. Visitors see themselves reflected without declaring.  
+   *Tradeoff:* Highest warmth and lowest barrier; some (especially funders or researchers) might take longer to find their exact path. Feels organic, like community gossip at the dock.
+2. **Lightly guided self-selection (medium explicit):**  
+   After the map or during Compass, offer illustrated “paths” as choose-your-own-adventure cards: “I’m here as a community member,” “I’m evaluating for my Nation,” “I’m a founder/practitioner,” “I’m bringing resources/questions.” Each card uses your honest tone and leads to a tailored mini-landing with relevant stories, resources, and next steps.  
+   *Tradeoff:* Clearer direction without cold segmentation; still feels human. Risk of slight choice paralysis if too many cards, but visuals keep it light.
+3. **Conversational invitation (more explicit but warm):**  
+   A soft modal or dedicated section: “Different folks come to The Clearing for different reasons. Which feels closest?” with the same warm cards + option to “Just browse.”  
+   *Tradeoff:* Most efficient for busy decision-makers (councils, funders); slightly higher “onboarding” feel, but grounded language keeps it from SaaS territory. Best as optional.
+
+Start with Approach 1 or 2 to honor the kitchen-table ethos; test with real visitors from Treaty 3 communities.<grok:render card_id=“392bbf” card_type=“citation_card” type=“render_inline_citation”><argument name="citation_id">8</argument></grok:render>
+
+**Prompt 4: Plain language before the terminology**
+
+**Lead with plain language.** Introduce your special terms gradually, as people earn curiosity.
+
+- Hero and first map layer: Use everyday words (“your closest circle,” “the gathering place,” “the deep shared memory”).
+- As they engage (Compass, deeper scroll, hover): Gently reveal terms in context—“This is what we call Zone 0, the kitchen table…” or “The Aquifer—our shared ledger of trust and memory.” Link or tooltip to short explanations/stories.
+
+**Risks:**
+
+- **Plain first:** Lower barrier, higher immediate understanding and trust—crucial for band councils or elders who may not want opaque poetry upfront. Risk: Loses some poetic intrigue that draws the curious.
+- **Terminology first:** Creates mystery and cultural depth (good for a rooted project), but risks alienating practical visitors or making it feel insider-only. For a community project, exclusion risk outweighs intrigue—people need to see themselves quickly.
+
+Your voice can bridge this: use the terms as living language that grows with relationship, not gatekeeping. This mirrors how real communities teach newcomers.<grok:render card_id=“6586b5” card_type=“citation_card” type=“render_inline_citation”><argument name="citation_id">20</argument></grok:render>
+
+**Prompt 5: Visualizing the Watershed Map on arrival**
+
+Present the six-zone concentric model as a living **Watershed Map**, not a static org chart. Make it feel like territory you can step into.
+
+**Design ideas:**
+
+- **Interactive illustration:** Concentric ripples or tree rings expanding from a central clearing/lake (evoking the land). Zones glow softly on hover/tap. Use earthy tones, water textures, subtle animations like gentle flowing. Label first in plain language, with your terms secondary.
+- **“You are here” function:** On load or after a quick Compass teaser, highlight or mark a default (e.g., “Most visitors start around Zone 1-2”) with ability to drag or select your position. Click a zone to zoom in—reveal stories, people, or actions from that layer.
+- **Map vs. Chart difference:** A *map* invites entry (navigable, spatial, story-rich, oriented to the land). An *org chart* is hierarchical and read-only. Make yours spatial: north toward the wider world (Zone 5), deep roots in the Aquifer below. Add a legend with “flows” (arrows showing movement between zones) and real community examples as pins or leaves.
+
+This turns the model into orientation tool and invitation at once—people don’t just read it; they locate themselves and take the next step on the land.<grok:render card_id=“6b30fb” card_type=“citation_card” type=“render_inline_citation”><argument name="citation_id">25</argument></grok:render>
+
+Overall, keep the redesign feeling like The Clearing itself: atmospheric, credible, rooted, and human-first. Test iteratively with people from your zones—perhaps a small kitchen-table session. This will strengthen the ecosystem without losing its soul. If you’d like wireframe sketches, example copy, or more specifics, just say the word.
