@@ -599,6 +599,211 @@ function CompassSVG({
   );
 }
 
+/* ─── Zone-aware next steps ──────────────────────────────────────────────── */
+
+interface NextStep {
+  label: string;
+  href: string;
+  desc: string;
+  external?: boolean;
+}
+
+const NEXT_STEPS: Record<string, NextStep[]> = {
+  household: [
+    {
+      label: "Set up your Saltbox",
+      href: "/gather/",
+      desc: "Your household readiness kit — roles, checklist, and standby status.",
+    },
+    {
+      label: "The Handbook",
+      href: "/codetry-handbook/",
+      desc: "How a community runs its own economy — offline-first reading.",
+    },
+    {
+      label: "Begin the Odyssey",
+      href: "/odyssey",
+      desc: "The Arc: language, discipline, and practice for a practitioner household.",
+    },
+  ],
+  practitioner: [
+    {
+      label: "Practitioner's Guide",
+      href: "/practitioners-guide-v2/",
+      desc: "Your financial cockpit — money, contracts, scenarios, and debt attack.",
+    },
+    {
+      label: "The Operating Plan",
+      href: "/practitioner-operating-plan/",
+      desc: "Daily bench — morning debrief, week plan, year overview.",
+    },
+    {
+      label: "Research Library",
+      href: "/library/",
+      desc: "Northern food systems evidence to back your practice.",
+    },
+  ],
+  community: [
+    {
+      label: "Research Library",
+      href: "/library/",
+      desc: "Northern food systems evidence for grants and governance arguments.",
+    },
+    {
+      label: "Village Corner — Village Board",
+      href: "/sandbox/",
+      desc: "The co-op governance layer — 60-family community board.",
+    },
+    {
+      label: "The Handbook",
+      href: "/codetry-handbook/",
+      desc: "How the community economy runs — foundational reading for boards.",
+    },
+  ],
+};
+
+const ZONE_LABEL: Record<string, string> = {
+  household: "Zone 0 — your kitchen table",
+  practitioner: "Zone 2 — your working bench",
+  community: "Zone 4 — Community Hall",
+};
+
+const ZONE_COLOUR: Record<string, string> = {
+  household: "#7A4E2D",
+  practitioner: "#1A5FA8",
+  community: "#0F766E",
+};
+
+function ZoneNextSteps({
+  who,
+  standby,
+}: {
+  who: "household" | "practitioner" | "community";
+  standby: boolean;
+}) {
+  const steps = NEXT_STEPS[who] ?? [];
+  const color = ZONE_COLOUR[who] ?? FOREST;
+  const zoneLabel = ZONE_LABEL[who] ?? "";
+
+  return (
+    <div
+      style={{
+        marginTop: 16,
+        padding: "16px 18px",
+        borderRadius: 8,
+        background: `${color}08`,
+        border: `1px solid ${color}25`,
+        maxWidth: 600,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+          marginBottom: 12,
+          flexWrap: "wrap" as const,
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontFamily: "monospace",
+              fontSize: 8,
+              fontWeight: 700,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase" as const,
+              color,
+              marginBottom: 2,
+            }}
+          >
+            What's next for you
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              color: MUTED,
+              fontStyle: "italic",
+            }}
+          >
+            {zoneLabel}
+            {standby && (
+              <span style={{ color: STANDBY_AMBER, marginLeft: 6 }}>
+                · Standby mode
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+        {steps.map((step) => (
+          <a
+            key={step.label}
+            href={step.href}
+            style={{
+              display: "flex",
+              gap: 10,
+              alignItems: "flex-start",
+              padding: "9px 12px",
+              borderRadius: 6,
+              border: `1px solid ${color}20`,
+              background: "rgba(255,253,248,0.85)",
+              textDecoration: "none",
+              transition: "background 0.15s, border-color 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = `${color}0c`;
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = `${color}45`;
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,253,248,0.85)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = `${color}20`;
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "monospace",
+                fontSize: 9,
+                fontWeight: 800,
+                color,
+                flexShrink: 0,
+                marginTop: 2,
+              }}
+            >
+              →
+            </span>
+            <div>
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color,
+                  marginBottom: 2,
+                  letterSpacing: "0.06em",
+                }}
+              >
+                {step.label}
+              </div>
+              <div
+                style={{
+                  fontSize: 11,
+                  color: MUTED,
+                  lineHeight: 1.45,
+                }}
+              >
+                {step.desc}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Mode tab bar ───────────────────────────────────────────────────────── */
 
 type CompassMode = "map" | "registry";
@@ -999,6 +1204,11 @@ export function CompassPage() {
               <strong>Zone {highlightedZones.join(" + Zone ")}</strong>
               {quiz.situation === "standby" && <span style={{ color: STANDBY_AMBER, marginLeft: 2 }}>· Standby active</span>}
             </div>
+          )}
+
+          {/* Zone-aware next steps */}
+          {!showQuiz && quiz.who !== null && !quiz.skipped && (
+            <ZoneNextSteps who={quiz.who} standby={quiz.situation === "standby"} />
           )}
         </div>
 

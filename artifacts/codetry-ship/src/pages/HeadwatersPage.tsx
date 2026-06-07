@@ -1,8 +1,9 @@
 import { Redirect } from "wouter";
+import WatershedMap from "@/components/WatershedMap";
 
 /* ─────────────────────────────────────────────────────────────────────────────
    The Clearing — ourheadwaters.ca root page
-   Full-bleed ambient video + origin story + zone map + tool entry points
+   Full-bleed ambient video + wayfinding + origin story + zone map
 ───────────────────────────────────────────────────────────────────────────── */
 
 const BASE = import.meta.env.BASE_URL;
@@ -223,6 +224,265 @@ export function HeadwatersPage() {
             <span style={{ fontFamily: "monospace", fontSize: 8, letterSpacing: "0.28em", textTransform: "uppercase", color: "#d4c3a8" }}>
               Scroll
             </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════
+          WAYFINDING — Where are you standing today?
+      ══════════════════════════════════════════════════════════════ */}
+      <section
+        style={{
+          background: "rgba(10,18,28,0.96)",
+          borderTop: "1px solid rgba(56,189,248,0.10)",
+          borderBottom: "1px solid rgba(56,189,248,0.10)",
+          width: "100%",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 740,
+            margin: "0 auto",
+            padding: "80px 32px",
+            width: "100%",
+          }}
+        >
+          <p style={{ ...eyebrow, color: "rgba(56,189,248,0.65)" }}>Find your place</p>
+          <h2 style={{ ...sectionHeading, fontSize: "clamp(1.8rem, 5vw, 2.8rem)", marginBottom: 12 }}>
+            Where are you standing today?
+          </h2>
+          <p
+            style={{
+              fontSize: "clamp(0.95rem, 2.4vw, 1.05rem)",
+              lineHeight: 1.7,
+              color: "rgba(212,195,168,0.65)",
+              margin: "0 0 52px",
+              maxWidth: 540,
+            }}
+          >
+            The Compass finds your zone in two questions. The watershed map shows
+            where you already are — from your kitchen table out to the horizon.
+          </p>
+
+          {/* Map + Compass CTA — side by side on wider screens */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: 40,
+              alignItems: "start",
+              marginBottom: 40,
+            }}
+          >
+            {/* Watershed Map */}
+            <div>
+              <p
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: "0.26em",
+                  textTransform: "uppercase" as const,
+                  color: "rgba(56,189,248,0.45)",
+                  margin: "0 0 14px",
+                }}
+              >
+                Watershed Map
+              </p>
+              <WatershedMap />
+            </div>
+
+            {/* Compass CTA */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <p
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: "0.26em",
+                  textTransform: "uppercase" as const,
+                  color: "rgba(56,189,248,0.45)",
+                  margin: "0 0 14px",
+                }}
+              >
+                Take the Compass
+              </p>
+
+              {/* Dominant CTA card */}
+              <a
+                href={`${BASE}compass`}
+                style={{
+                  display: "block",
+                  padding: "36px 32px",
+                  background: "rgba(212,164,23,0.08)",
+                  border: "2px solid rgba(212,164,23,0.45)",
+                  borderRadius: 4,
+                  textDecoration: "none",
+                  transition: "background 0.2s, border-color 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,164,23,0.14)";
+                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,164,23,0.7)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,164,23,0.08)";
+                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,164,23,0.45)";
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "monospace",
+                    fontSize: 9,
+                    fontWeight: 700,
+                    letterSpacing: "0.28em",
+                    textTransform: "uppercase" as const,
+                    color: "rgba(212,164,23,0.70)",
+                    margin: "0 0 10px",
+                  }}
+                >
+                  Community Orientation
+                </p>
+                <h3
+                  style={{
+                    fontFamily: "Georgia, serif",
+                    fontSize: "clamp(1.4rem, 3.5vw, 1.9rem)",
+                    fontWeight: 700,
+                    color: "#f0e8d8",
+                    lineHeight: 1.15,
+                    margin: "0 0 12px",
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  The Compass
+                </h3>
+                <p
+                  style={{
+                    fontSize: 14,
+                    lineHeight: 1.65,
+                    color: "rgba(212,195,168,0.70)",
+                    margin: "0 0 28px",
+                  }}
+                >
+                  Two questions. Your zone, your role, your next move — in the
+                  watershed and in the community.
+                </p>
+                <span
+                  style={{
+                    display: "inline-block",
+                    padding: "11px 24px",
+                    background: "#d4a017",
+                    color: "#02040a",
+                    fontFamily: "monospace",
+                    fontSize: 10,
+                    fontWeight: 800,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase" as const,
+                    borderRadius: 3,
+                  }}
+                >
+                  Take the Compass →
+                </span>
+              </a>
+
+              {/* Secondary tools */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <a
+                  href={`${BASE}odyssey`}
+                  style={{
+                    display: "block",
+                    padding: "18px 20px",
+                    background: "rgba(184,90,62,0.07)",
+                    border: "1px solid rgba(184,90,62,0.25)",
+                    borderRadius: 4,
+                    textDecoration: "none",
+                    transition: "background 0.18s",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background = "rgba(184,90,62,0.13)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background = "rgba(184,90,62,0.07)";
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "monospace",
+                      fontSize: 8,
+                      fontWeight: 700,
+                      letterSpacing: "0.22em",
+                      textTransform: "uppercase" as const,
+                      color: "rgba(184,90,62,0.65)",
+                      margin: "0 0 6px",
+                    }}
+                  >
+                    The Arc
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "Georgia, serif",
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "#f0e8d8",
+                      margin: "0 0 5px",
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    Headwaters Odyssey
+                  </p>
+                  <p style={{ fontSize: 11, color: "rgba(212,195,168,0.55)", margin: 0, lineHeight: 1.5 }}>
+                    A guided journey through language, discipline, and practice.
+                  </p>
+                </a>
+
+                <a
+                  href={`${BASE}headwaters/start`}
+                  style={{
+                    display: "block",
+                    padding: "18px 20px",
+                    background: "rgba(56,189,248,0.05)",
+                    border: "1px solid rgba(56,189,248,0.18)",
+                    borderRadius: 4,
+                    textDecoration: "none",
+                    transition: "background 0.18s",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background = "rgba(56,189,248,0.10)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background = "rgba(56,189,248,0.05)";
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "monospace",
+                      fontSize: 8,
+                      fontWeight: 700,
+                      letterSpacing: "0.22em",
+                      textTransform: "uppercase" as const,
+                      color: "rgba(56,189,248,0.50)",
+                      margin: "0 0 6px",
+                    }}
+                  >
+                    The Kits
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "Georgia, serif",
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "#f0e8d8",
+                      margin: "0 0 5px",
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    Starter Offerings
+                  </p>
+                  <p style={{ fontSize: 11, color: "rgba(212,195,168,0.55)", margin: 0, lineHeight: 1.5 }}>
+                    Self-serve tools for communities ready to start building.
+                  </p>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
