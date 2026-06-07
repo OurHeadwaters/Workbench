@@ -271,7 +271,9 @@ describe("WatershedMap — Share this zone button", () => {
     const user = userEvent.setup();
 
     await user.click(getRingButton(3));
+    // "Share this zone" opens the share panel; "Copy link" triggers the clipboard write.
     await user.click(screen.getByText(/Share this zone/i));
+    await user.click(screen.getByRole("button", { name: /Copy link/i }));
 
     await waitFor(() => {
       expect(writeTextSpy).toHaveBeenCalledTimes(1);
@@ -287,6 +289,7 @@ describe("WatershedMap — Share this zone button", () => {
 
     await user.click(getRingButton(5));
     await user.click(screen.getByText(/Share this zone/i));
+    await user.click(screen.getByRole("button", { name: /Copy link/i }));
 
     await waitFor(() => {
       expect(writeTextSpy).toHaveBeenCalledTimes(1);
@@ -302,6 +305,7 @@ describe("WatershedMap — Share this zone button", () => {
 
     await user.click(getRingButton(1));
     await user.click(screen.getByText(/Share this zone/i));
+    await user.click(screen.getByRole("button", { name: /Copy link/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/Link copied/i)).toBeInTheDocument();

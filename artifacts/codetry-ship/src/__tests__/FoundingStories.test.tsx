@@ -84,7 +84,7 @@ async function submitOdysseyForm() {
   fireEvent.change(screen.getByPlaceholderText(/where i can reach you/i), {
     target: { value: "alex@example.com" },
   });
-  fireEvent.change(screen.getByPlaceholderText(/band council, co-op/i), {
+  fireEvent.change(screen.getByPlaceholderText(/village, co-op, settlement/i), {
     target: { value: "Test Community" },
   });
   fireEvent.change(screen.getByPlaceholderText(/a word people use/i), {

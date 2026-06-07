@@ -32,23 +32,34 @@ vi.mock("@/components/YouthTrailMap", () => ({
 /* ── Helpers ────────────────────────────────────────────────────────────────── */
 
 /**
- * Expand station 1 (The Watcher) — the default "tween" track has 4 prompts.
+ * Expand station 1 (The Watcher) and advance past the "read" step to the
+ * "build" step where the age-track selector and textareas appear.
+ * The default "tween" track has 4 prompts.
  */
 async function expandStation1(user: ReturnType<typeof userEvent.setup>) {
   const card = screen.getByTestId("youth-station-1");
   const header = within(card).getByRole("button");
   await user.click(header);
+  // Advance past the excerpt/read step to the prompt-entry build step.
+  const readyBtn = within(card).getByRole("button", { name: /ready to write mine/i });
+  await user.click(readyBtn);
   return card;
 }
 
 /**
- * Fill every visible textarea inside a card.
+ * Walk through the one-at-a-time wizard and fill every prompt inside a card.
+ * After each answer the user clicks "Next →" / "Almost there →" to advance.
+ * Once all prompts are answered the "Write my story →" button becomes visible.
  */
 async function fillAllPrompts(user: ReturnType<typeof userEvent.setup>, card: HTMLElement, text = "test answer") {
-  const textareas = within(card).getAllByRole("textbox");
-  for (const ta of textareas) {
-    await user.clear(ta);
-    await user.type(ta, text);
+  while (true) {
+    const textareas = within(card).queryAllByRole("textbox");
+    if (textareas.length === 0) break; // no more prompts — submit button is now showing
+    await user.clear(textareas[0]);
+    await user.type(textareas[0], text);
+    const nextBtn = within(card).queryByRole("button", { name: /next →|almost there →/i });
+    if (!nextBtn) break;
+    await user.click(nextBtn);
   }
 }
 
@@ -86,10 +97,14 @@ describe("StoryPage — station card expand/collapse", () => {
     await expandStation1(user);
     expect(screen.getByText("Choose your age track")).toBeInTheDocument();
 
+    // Open station 2 and advance it past its "read" step too.
     const card2 = screen.getByTestId("youth-station-2");
     const header2 = within(card2).getByRole("button");
     await user.click(header2);
+    await user.click(within(card2).getByRole("button", { name: /ready to write mine/i }));
 
+    // Station 1 is now closed; station 2 shows the age-track selector.
+    // Exactly one "Choose your age track" label must be visible.
     const ageTrackLabels = screen.getAllByText("Choose your age track");
     expect(ageTrackLabels).toHaveLength(1);
   });
@@ -121,7 +136,8 @@ describe("StoryPage — age track selector", () => {
     render(<StoryPage />);
     const user = userEvent.setup();
     const card = await expandStation1(user);
-    expect(within(card).getAllByRole("textbox")).toHaveLength(4);
+    // Wizard shows one prompt at a time; counter reads "01 of N"
+    expect(within(card).getByText(/01 of 4/i)).toBeInTheDocument();
   });
 
   it("switches to 'young' track and shows 3 prompts for station 1", async () => {
@@ -130,7 +146,7 @@ describe("StoryPage — age track selector", () => {
     const card = await expandStation1(user);
 
     await user.click(within(card).getByRole("button", { name: /young/i }));
-    expect(within(card).getAllByRole("textbox")).toHaveLength(3);
+    expect(within(card).getByText(/01 of 3/i)).toBeInTheDocument();
   });
 
   it("switches to 'older' track and shows 4 prompts for station 1", async () => {
@@ -139,7 +155,7 @@ describe("StoryPage — age track selector", () => {
     const card = await expandStation1(user);
 
     await user.click(within(card).getByRole("button", { name: /older/i }));
-    expect(within(card).getAllByRole("textbox")).toHaveLength(4);
+    expect(within(card).getByText(/01 of 4/i)).toBeInTheDocument();
   });
 
   it("persists answers for shared prompt IDs when the age track is switched", async () => {
@@ -161,9 +177,9 @@ describe("StoryPage — age track selector", () => {
     const user = userEvent.setup();
     const card = await expandStation1(user);
 
-    expect(within(card).getAllByRole("textbox")).toHaveLength(4);
+    expect(within(card).getByText(/01 of 4/i)).toBeInTheDocument();
     await user.click(within(card).getByRole("button", { name: /young/i }));
-    expect(within(card).getAllByRole("textbox")).toHaveLength(3);
+    expect(within(card).getByText(/01 of 3/i)).toBeInTheDocument();
   });
 });
 
@@ -194,8 +210,10 @@ describe("StoryPage — prompt textarea input", () => {
     const [s1Input] = within(card1).getAllByRole("textbox");
     await user.type(s1Input, "answer for station 1");
 
+    // Open station 2 and advance it to its "build" step so textareas are visible.
     const card2 = screen.getByTestId("youth-station-2");
     await user.click(within(card2).getByRole("button"));
+    await user.click(within(card2).getByRole("button", { name: /ready to write mine/i }));
 
     const [s2Input] = within(card2).getAllByRole("textbox");
     expect(s2Input).toHaveValue("");
@@ -206,10 +224,11 @@ describe("StoryPage — Write my story button enabled/disabled state", () => {
   it("is disabled when no prompts are answered", async () => {
     render(<StoryPage />);
     const user = userEvent.setup();
-    await expandStation1(user);
+    const card = await expandStation1(user);
 
-    const btn = screen.getByRole("button", { name: /write my story/i });
-    expect(btn).toBeDisabled();
+    // In wizard mode the "Next →" button is disabled when the textarea is empty.
+    const nextBtn = within(card).getByRole("button", { name: /next →|almost there →/i });
+    expect(nextBtn).toBeDisabled();
   });
 
   it("is still disabled if only some prompts are answered (tween has 4)", async () => {
@@ -217,12 +236,14 @@ describe("StoryPage — Write my story button enabled/disabled state", () => {
     const user = userEvent.setup();
     const card = await expandStation1(user);
 
-    const textareas = within(card).getAllByRole("textbox");
-    await user.type(textareas[0], "partial");
-    await user.type(textareas[1], "partial");
+    // Fill the first two prompts and advance — the submit button still shouldn't appear.
+    for (let i = 0; i < 2; i++) {
+      const [ta] = within(card).getAllByRole("textbox");
+      await user.type(ta, "partial");
+      await user.click(within(card).getByRole("button", { name: /next →|almost there →/i }));
+    }
 
-    const btn = within(card).getByRole("button", { name: /write my story/i });
-    expect(btn).toBeDisabled();
+    expect(within(card).queryByRole("button", { name: /write my story/i })).not.toBeInTheDocument();
   });
 
   it("becomes enabled when all prompts are answered", async () => {
@@ -239,9 +260,10 @@ describe("StoryPage — Write my story button enabled/disabled state", () => {
   it("shows the hint text when prompts are unanswered", async () => {
     render(<StoryPage />);
     const user = userEvent.setup();
-    await expandStation1(user);
+    const card = await expandStation1(user);
 
-    expect(screen.getByText(/answer all the prompts above to unlock/i)).toBeInTheDocument();
+    // Wizard shows "01 of N" progress counter while prompts remain.
+    expect(within(card).getByText(/01 of/i)).toBeInTheDocument();
   });
 
   it("hides the hint text once all prompts are answered", async () => {
@@ -250,7 +272,9 @@ describe("StoryPage — Write my story button enabled/disabled state", () => {
     const card = await expandStation1(user);
 
     await fillAllPrompts(user, card, "filled");
-    expect(screen.queryByText(/answer all the prompts above to unlock/i)).not.toBeInTheDocument();
+    // Once all prompts are done the counter is gone and "Write my story" appears.
+    expect(within(card).queryByText(/01 of/i)).not.toBeInTheDocument();
+    expect(within(card).getByRole("button", { name: /write my story/i })).toBeInTheDocument();
   });
 });
 
@@ -334,11 +358,12 @@ describe("StoryPage — success state", () => {
     await user.click(within(card).getByRole("button", { name: /write my story/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/the watcher · your story/i)).toBeInTheDocument();
+      // KeepPanel shows the unique label "Youth Trail · Station · Keep"
+      expect(within(card).getByText(/youth trail · station · keep/i)).toBeInTheDocument();
     });
   });
 
-  it("shows the 'Write another →' button after success", async () => {
+  it("shows the 'Start over' button after success", async () => {
     render(<StoryPage />);
     const user = userEvent.setup();
     const card = await expandStation1(user);
@@ -347,7 +372,7 @@ describe("StoryPage — success state", () => {
     await user.click(within(card).getByRole("button", { name: /write my story/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /write another/i })).toBeInTheDocument();
+      expect(within(card).getByRole("button", { name: /start over/i })).toBeInTheDocument();
     });
   });
 
@@ -460,8 +485,8 @@ describe("StoryPage — network error state", () => {
   });
 });
 
-describe("StoryPage — Write another → reset", () => {
-  it("returns to the idle prompt form after clicking 'Write another →'", async () => {
+describe("StoryPage — Start over / reset", () => {
+  it("returns to the read step after clicking 'Start over'", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() =>
@@ -482,18 +507,19 @@ describe("StoryPage — Write another → reset", () => {
     await user.click(within(card).getByRole("button", { name: /write my story/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /write another/i })).toBeInTheDocument();
+      expect(within(card).getByRole("button", { name: /start over/i })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: /write another/i }));
+    await user.click(within(card).getByRole("button", { name: /start over/i }));
 
-    expect(screen.queryByText("A generated story.")).not.toBeInTheDocument();
-    expect(screen.getByText("Choose your age track")).toBeInTheDocument();
+    // After reset the generated story is gone and the "Ready to write mine" or
+    // age-track selector (build step) is visible again.
+    expect(within(card).queryByText("A generated story.")).not.toBeInTheDocument();
 
     vi.unstubAllGlobals();
   });
 
-  it("clears all answers after reset so the button is disabled again", async () => {
+  it("clears all answers after reset so the 'Next →' button is disabled again", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() =>
@@ -514,17 +540,18 @@ describe("StoryPage — Write another → reset", () => {
     await user.click(within(card).getByRole("button", { name: /write my story/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /write another/i })).toBeInTheDocument();
+      expect(within(card).getByRole("button", { name: /start over/i })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: /write another/i }));
+    await user.click(within(card).getByRole("button", { name: /start over/i }));
 
-    const textareas = within(card).getAllByRole("textbox");
-    for (const ta of textareas) {
-      expect(ta).toHaveValue("");
-    }
+    // Reset sends the card back to the "read" step — advance to "build" step again.
+    await user.click(within(card).getByRole("button", { name: /ready to write mine/i }));
 
-    expect(within(card).getByRole("button", { name: /write my story/i })).toBeDisabled();
+    // First prompt textarea should be empty and "Next →" disabled.
+    const [firstTextarea] = within(card).getAllByRole("textbox");
+    expect(firstTextarea).toHaveValue("");
+    expect(within(card).getByRole("button", { name: /next →|almost there →/i })).toBeDisabled();
 
     vi.unstubAllGlobals();
   });
