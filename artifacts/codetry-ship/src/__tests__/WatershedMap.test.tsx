@@ -12,6 +12,7 @@
  *   Share button       — writes the expected URL to the clipboard
  *   Share feedback     — button label changes to "Link copied ✓" after write
  *   Close button       — clears the pinned zone and hides the panel
+ *   Keyboard nav       — Enter/Space pin and unpin; Tab cycles focus between ring buttons
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
@@ -360,5 +361,70 @@ describe("WatershedMap — Close button", () => {
 
     await user.click(screen.getByText(/^Close/));
     expect(screen.queryByText(/Share this zone/i)).not.toBeInTheDocument();
+  });
+});
+
+describe("WatershedMap — keyboard navigation", () => {
+  afterEach(() => {
+    resetLocation();
+    localStorage.clear();
+  });
+
+  it("pins a ring and shows the description panel when Enter is pressed", async () => {
+    render(<WatershedMap />);
+    const user = userEvent.setup();
+
+    const ring = getRingButton(5);
+    ring.focus();
+    await user.keyboard("{Enter}");
+
+    expect(ring).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.getByText(/The world outside — where resources come from/i),
+    ).toBeInTheDocument();
+  });
+
+  it("pins a ring and shows the description panel when Space is pressed", async () => {
+    render(<WatershedMap />);
+    const user = userEvent.setup();
+
+    const ring = getRingButton(3);
+    ring.focus();
+    await user.keyboard(" ");
+
+    expect(ring).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.getByText(/People ready when called/i),
+    ).toBeInTheDocument();
+  });
+
+  it("unpins an already-pinned ring when Enter is pressed a second time", async () => {
+    render(<WatershedMap />);
+    const user = userEvent.setup();
+
+    const ring = getRingButton(2);
+    ring.focus();
+    await user.keyboard("{Enter}");
+    expect(ring).toHaveAttribute("aria-pressed", "true");
+
+    await user.keyboard("{Enter}");
+
+    expect(ring).toHaveAttribute("aria-pressed", "false");
+    /* Share button only appears when pinned — absence confirms the unpin */
+    expect(screen.queryByText(/Share this zone/i)).not.toBeInTheDocument();
+  });
+
+  it("moves focus to the next ring button when Tab is pressed", async () => {
+    render(<WatershedMap />);
+    const user = userEvent.setup();
+
+    /*
+     * Rings are rendered in DOM order: zone 5 first, zone 0 last.
+     * Tab from zone 5 should land on zone 4.
+     */
+    getRingButton(5).focus();
+    await user.tab();
+
+    expect(getRingButton(4)).toHaveFocus();
   });
 });
