@@ -1567,6 +1567,47 @@ export function MapPage() {
           </a>
         </div>
       </div>
+
+      {/* Sticky "← The Clearing" — fixed to bottom-left, only when arriving via a zone hash */}
+      {hasInboundZone && (
+        <a
+          href={BASE}
+          style={{
+            position: "fixed",
+            bottom: 20,
+            left: 20,
+            zIndex: 50,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            fontFamily: "monospace",
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: MUTED,
+            textDecoration: "none",
+            padding: "6px 11px",
+            borderRadius: 6,
+            border: `1px solid ${RULE}`,
+            background: "rgba(244,237,224,0.92)",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+            transition: "color 0.15s, border-color 0.15s",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLAnchorElement).style.color = FOREST;
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(31,61,46,0.3)";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLAnchorElement).style.color = MUTED;
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = RULE;
+          }}
+        >
+          ← The Clearing
+        </a>
+      )}
     </main>
   );
 }
