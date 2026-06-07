@@ -96,6 +96,12 @@ uri = "file://artifacts/codetry-ship/public/story/chapter-saltbox.png"
 type = "image"
 title = "saltbox wooden box seeds herbs"
 
+[[generated]]
+id = "YM1s0ZIbD_katkPtcK5I-"
+uri = "file://attached_assets/generated_images/clearing-poster.png"
+type = "image"
+title = "generated_image"
+
 [[outputs]]
 id = "fAkXwaa1zHxK8nTbCpXPq"
 uri = "file://artifacts/practitioner-operating-plan/public/practitioner-operating-plan-onepager.pdf"

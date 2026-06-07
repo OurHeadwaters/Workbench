@@ -139,7 +139,6 @@ export function HeadwatersPage() {
         }}
       >
         {/* Ambient video background */}
-        {/* TODO: replace with real video src once file is available */}
         <video
           autoPlay
           muted
