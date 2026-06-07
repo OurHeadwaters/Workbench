@@ -13,7 +13,7 @@ const RUST = "#b85a3e";
 const GOLD = "#c89a2e";
 const BLACK = "#141414";
 
-const SQUARE_PJ_KIT = "https://square.link/REPLACE_PJ_KIT_SQUARE_LINK";
+const PJ_KIT_BUY_URL = "https://stomping-path-documentation.replit.app/headwaters/products";
 
 const KIT_MODULES = [
   {
@@ -137,7 +137,7 @@ export function ParrsJarsKitPage() {
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
           <a
-            href={SQUARE_PJ_KIT}
+            href={PJ_KIT_BUY_URL}
             target="_blank"
             rel="noreferrer"
             style={{
@@ -193,7 +193,6 @@ export function ParrsJarsKitPage() {
         <h2
           style={{
             fontFamily: "var(--font-serif)",
-            fontSize: "clamp(1.1rem, 3vw, 1.4rem)",
             fontWeight: 800,
             color: GOLD,
             letterSpacing: "0.1em",
@@ -398,7 +397,7 @@ export function ParrsJarsKitPage() {
           Digital download · $97 CAD · Instant access
         </p>
         <a
-          href={SQUARE_PJ_KIT}
+          href={PJ_KIT_BUY_URL}
           target="_blank"
           rel="noreferrer"
           style={{

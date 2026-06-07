@@ -30,14 +30,14 @@ The Jarista Guide — "How to Become a Jarista." A separate free guide included 
 
 Where to start: Print the Safe Practices sheet. Then open the Blanching Process page.
 
-Everything is at: [KIT URL]
+Everything is at: https://northern-store-plan.replit.app/print-marketing/pj-kit
 
 You can reply to this email. I read them.
 
 — Bobbie
 
 Parr's Jars · Wabigoon, Ontario`,
-    note: "Replace [KIT URL] with the actual kit link once the Square payment link is live and the URL is confirmed.",
+    note: null,
   },
   {
     num: 2,

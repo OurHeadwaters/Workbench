@@ -1,0 +1,101 @@
+Agent Brief — Kits & Payment Gateways
+Headwaters / Zone 2 pnpm Monorepo — June 2026
+Who This Is For
+Any agent working on:
+
+Kit content, structure, or the kit-finder wizard
+Stripe checkout flows (kits, workshops, Brigade subscriptions, Compass)
+Zaprite/Bitcoin payment integration
+The products page at /headwaters/products
+Delivery emails and purchase fulfillment
+Read this before touching anything. The commerce layer is live and real buyers are using it.
+
+Monorepo Structure
+artifacts/
+  api-server/        ← Express backend, port 8080
+  survival-podcast/  ← TSP frontend (React/Vite) — houses /headwaters/products, /start, /compass
+  headwaters/        ← Practitioner tool (passphrase-gated)
+  codetry/           ← Zone 3 — XRPL/Bitcoin only, NO Stripe
+  tsp-mobile/        ← Expo app
+  privacy-guide/     ← Static guide
+
+All packages managed with pnpm workspaces. After any OpenAPI change: run codegen. After any DB schema change: run db:push.
+
+What's Live and Selling Today
+Product	Price	Gateway	Delivery
+Zone 0 Starter Kit	$17	Stripe	Email → PDF download link
+Northern Preparedness Pack	$17	Stripe	Email → PDF download link
+Bundle (both kits)	$27	Stripe	Email → PDF download links
+Course 1 — Food Preservation & Canning	$97	Stripe	Email → course access link (placeholder until Lodge is live)
+Brigade Membership	$9/mo or $97/yr	Stripe	Subscription — badge on practitioner profile
+Compass Crew View	—	Stripe link	Direct on /compass page
+Green Salt / The Salty Onion	varies	External	Redirects to parrsjars.ca (Shopify — do NOT intercept)
+Payment Architecture
+Stripe — all card payments. The pattern throughout the codebase:
+
+artifacts/api-server/src/lib/kit-products.ts — auto-creates Stripe Products + Prices on startup for direct-purchase kits. Use KIT_STRIPE_PRICE_IDS env var (JSON) to skip API calls in prod.
+artifacts/api-server/src/lib/brigade-products.ts — Brigade monthly ($9/mo) and annual ($97/yr). Controlled by BRIGADE_MONTHLY_PRICE_ID and BRIGADE_ANNUAL_PRICE_ID env vars.
+artifacts/api-server/src/routes/stripe-workshops.ts — Stripe Connect for workshop hosts (split payments).
+Webhook fires on successful payment → records purchase → sends delivery email → adds buyer to Kit.com email list. This fires even if browser closes before the thank-you page loads.
+Each buyer gets a permanent session link (bookmarkable, device-recoverable via receipt email address).
+Zaprite / Bitcoin — TSP-specific, Jack Spirko's channel. Rules:
+
+Zaprite handles Bitcoin-only payments on TSP content
+ZAPRITE_WEBHOOK_SECRET is not yet set — do not put real Bitcoin payments live until this is configured
+XRPL wallets live in artifacts/codetry/ only — the Eave Rule forbids any DB join connecting a Zone 3 wallet address to a Zone 1 household record
+The Kits System
+8 kits in the Stomping Path — each has a slug, priceType, priceCents, and stripePriceId:
+
+Slug	Name	Price Type
+family-kit	Family Kit	direct
+homeschool	Family Homeschool Kit	direct
+producer-kit	Producer Kit	direct
+care-kit	Care Kit	direct
+digital-kit	Digital Sovereignty Kit	direct
+(+ 3 others)		
+Source of truth: artifacts/api-server/src/lib/kits.ts
+
+The kit-finder wizard on the TSP frontend (/kit-finder) takes household situation → recommends a kit → lands on kit detail page → Stripe checkout. The kit detail page (artifacts/survival-podcast/src/pages/kit-detail.tsx) is the longest file in the repo (~1010 lines) — read it in sections, not all at once.
+
+Known Open Items (as of June 2026)
+Confirmed gaps you may be asked to close:
+
+Course 1 access link — points to placeholder page. Task #877 tracking it. Needs a real URL once the Lodge course platform is live. The variable to update is in the delivery email template and the thank-you page component.
+
+Kit.com subscriber verification — Task #870. Integration is wired; nobody has confirmed a test subscriber flowed through to Bobbie's Kit.com account. Check the Kit.com API response on the webhook handler.
+
+Compass + Goodbye Kit not tagged in Stripe — Task #883. These two products lack the brand and type metadata that kit products have. Minor, but affects programmatic filtering on the Stripe side.
+
+Stripe receipt email with course link — Task #878. The Headwaters delivery email includes the course link; the Stripe auto-receipt (first email buyer sees) does not. Decision pending.
+
+Jars & Scars chapter titles — The 8 chapter titles in the code are placeholders with a comment: // BOBBIE: replace with actual chapter titles. Current placeholders: The Jar as Infrastructure / Zone 0 Before Anything Else / What the Garden Teaches About Failure / Sourcing in the North / Pricing What You Make / The 72-Hour Test / Scars / The Long Game. Do not ship these as final titles without Bobbie's confirmation.
+
+Course founding cap + post-founding price — $97 founding price, 40-spot cap, and $197 post-founding price are documented in the email sequence but flagged "awaiting Bobbie confirmation." Do not display these numbers on any live page until confirmed.
+
+Content That's Ready to Drop In (from content brief work)
+These fills are confirmed and can be placed now:
+
+Hero callback → "If you found this from Episode 3411 — that's Bobbie."
+Founding year → Parr's Jars: 2020 / 807 Food Co-op: 2021
+Testimonial → "Bobbie really did think of everything! I'm feeling so streamlined — the shift is incredible!" — Moriah, Thunder Bay area
+Green Salt origin → freeze-dried hydroponics/microgreens + smoked Himalayan salt + homegrown tomato powder. Born from surplus, not a product idea.
+Salty Onion origin → Walls Farm onion/greens volume; health unit required commercial ingredient substitution; Bobbie refused; this is what came out the other side.
+Course session list → 10 sessions fully built in code (see kit-detail.tsx and the products page). Titles: Why Canning Works / Equipment Without the Fluff / Your First Water-Bath Batch / Pressure Canning Basics / Rotation Discipline / Fermentation as Preservation / Dehydrating and Freeze-Drying / Building the 72-Hour Layer / Selling from the Kitchen / Running the Jar Kitchen Year-Round
+Hard Rules — Do Not Cross
+Eave Rule — No database join may ever connect a Zone 3 XRPL wallet address to a Zone 1 household record. If your feature touches both zones, stop and flag it.
+Bitcoin on TSP = Zaprite only — No Lightning or XRPL on the Stomping Path. Codetry only.
+ZAPRITE_WEBHOOK_SECRET must be set before real Bitcoin payments go live — it is currently not set.
+Shopify is external — Green Salt and The Salty Onion redirect to parrsjars.ca. Do not build checkout for them here.
+Headwaters is passphrase-gated — env var HEADWATERS_PASSPHRASE. Unguarded routes: /stomping-path/*, /shallows, /overview, /print, /guide. Everything else requires the passphrase.
+API server is port 8080 — hard requirement, do not change.
+Brand voice — warm, practitioner, northern Ontario. No "platform / onboarding / ecosystem / stakeholder / synergy / scalable". Five-line manifesto: START WHERE YOU ARE / USE WHAT YOU HAVE / DO WHAT YOU CAN / TRACK IT ALL / GROW, BABY, GROW
+Where to Start
+If you're working on kits: read artifacts/api-server/src/lib/kits.ts first, then kit-detail.tsx.
+
+If you're working on Stripe checkout: read kit-products.ts, brigade-products.ts, and stripe-workshops.ts. Check whether the env vars KIT_STRIPE_PRICE_IDS, BRIGADE_MONTHLY_PRICE_ID, and BRIGADE_ANNUAL_PRICE_ID are set before creating new prices.
+
+If you're working on Zaprite: ZAPRITE_WEBHOOK_SECRET must be set first. Do not wire real payments without it.
+
+If you're working on the products page (/headwaters/products): the page lives in artifacts/survival-podcast/src/ — search for "products" there. The Jars & Scars chapter titles are placeholders; the course session list is real.
+
+If you have questions about the content layer (copy, descriptions, email sequence): coordinate with the content agent who has been working on the Parr's Jars brief — that context is in this thread and in attached_assets/.

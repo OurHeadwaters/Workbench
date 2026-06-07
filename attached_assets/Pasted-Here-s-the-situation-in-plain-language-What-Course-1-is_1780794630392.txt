@@ -1,0 +1,28 @@
+Here's the situation in plain language.
+
+What Course 1 is:
+Bobbie's food preservation and canning course. Ten recorded sessions from her kitchen. Sells for $97. It's listed and the payment works — someone can buy it right now.
+
+What happens when they buy it:
+They pay → they get a confirmation email → the email says "here's how to access your course" and includes a link.
+
+The problem:
+That link currently points nowhere useful. The course content — the actual videos, the session recordings — doesn't have a home yet. There's no website, no page, no platform where someone can log in and watch Session 1. Both this repo and the Arc repo have a placeholder link sitting there waiting.
+
+What COURSE1_ACCESS_URL is:
+Just a web address. When someone buys the course, this is the URL they get sent to. Right now it's either a placeholder or pointing at something generic. When the real course page exists, you update this one setting and every future buyer gets the right link — no code changes.
+
+The kitchen table question:
+Where does the course actually live? Three options:
+
+You build a simple course page inside one of the existing repos — a password-protected page with the videos embedded. Cheapest, fastest, you own it completely.
+
+You use an existing platform — Teachable, Kajabi, Thinkific, etc. You upload the videos there, get a URL from them, paste it into COURSE1_ACCESS_URL. Done. Costs a monthly fee but they handle the video hosting, progress tracking, and access control.
+
+Someone builds the Lodge — the longer-term plan referenced in the project notes. A proper course platform that's part of this whole ecosystem. Right for the future, not right for getting Course 1 in front of founding cohort buyers this month.
+
+What I'd do if this were my kitchen:
+Anyone who already bought is waiting. Set up the simplest possible thing — even a password-protected Google Drive folder with the recordings — paste that URL into COURSE1_ACCESS_URL, and email the founding buyers today. Upgrade to a real platform when the cohort is done and you're editing the final version.
+
+What you need to tell me:
+Which of those three. One sentence is enough. Once you decide, I can either build the simple course page here or walk you through the platform setup — whichever you pick.
