@@ -949,8 +949,42 @@ export function MapPage() {
     setQuizCollapsed(false);
   }
 
-  /* On return visits, scroll to the visitor's highlighted zone once on mount */
+  /* On arrival with a #zone-N or #zone-aquifer hash, scroll to that element */
+  const [inboundZoneId, setInboundZoneId] = useState<string | null>(() => {
+    try {
+      const hash = window.location.hash;
+      if (/^#zone-(\d+)$/.test(hash) || hash === "#zone-aquifer") {
+        return hash.slice(1); // e.g. "zone-0" or "zone-aquifer"
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  });
+
   useEffect(() => {
+    if (inboundZoneId === null) return;
+    const timer = setTimeout(() => {
+      const el = document.getElementById(inboundZoneId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        el.style.outline = "2px solid rgba(31,61,46,0.35)";
+        el.style.outlineOffset = "4px";
+        setTimeout(() => {
+          el.style.outline = "";
+          el.style.outlineOffset = "";
+        }, 2000);
+      }
+      setInboundZoneId(null);
+    }, 350);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* On return visits, scroll to the visitor's highlighted zone once on mount
+     (only when no inbound hash is present) */
+  useEffect(() => {
+    if (inboundZoneId !== null) return;
     if (highlightedZones.length === 0) return;
     const timer = setTimeout(() => {
       scrollToZone(highlightedZones[0]);
@@ -1346,6 +1380,99 @@ export function MapPage() {
               />
             );
           })}
+        </div>
+
+        {/* ── The Aquifer ── */}
+        <div
+          id="zone-aquifer"
+          style={{
+            marginTop: 24,
+            borderRadius: 12,
+            border: `1px solid rgba(13,148,136,0.22)`,
+            background: "rgba(13,148,136,0.04)",
+            padding: "24px 22px",
+            scrollMarginTop: 24,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 16,
+              marginBottom: 14,
+            }}
+          >
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                background: "rgba(13,148,136,0.10)",
+                border: "1px solid rgba(13,148,136,0.25)",
+                color: "rgba(13,148,136,0.9)",
+                fontFamily: "monospace",
+                fontSize: 18,
+                fontWeight: 700,
+                flexShrink: 0,
+              }}
+            >
+              ∿
+            </span>
+            <div>
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: "rgba(13,148,136,0.7)",
+                  marginBottom: 4,
+                }}
+              >
+                Identity Infrastructure
+              </div>
+              <div
+                style={{
+                  fontFamily: "Georgia, serif",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: FOREST,
+                  lineHeight: 1.15,
+                }}
+              >
+                The Aquifer
+              </div>
+            </div>
+          </div>
+          <p style={{ margin: "0 0 14px", fontSize: 13, color: MUTED, lineHeight: 1.65, maxWidth: 540 }}>
+            Not a zone but the layer beneath all of them. Identity infrastructure — how the ledger
+            holds, how trust is carried, how the system remembers across time. The Aquifer flows
+            below every zone; you don't visit it, you rely on it.
+          </p>
+          <a
+            href="/aquifer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              fontFamily: "monospace",
+              fontSize: 9,
+              fontWeight: 700,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "rgba(13,148,136,0.8)",
+              textDecoration: "none",
+              borderBottom: "1px solid rgba(13,148,136,0.30)",
+              paddingBottom: 1,
+              transition: "opacity 0.15s",
+            }}
+          >
+            Read about The Aquifer →
+          </a>
         </div>
 
         {/* Footer — Odyssey CTA */}

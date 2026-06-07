@@ -376,18 +376,31 @@ export function HeadwatersPage() {
       ══════════════════════════════════════════════════════════════ */}
       <section
         style={{
-          background: "rgba(56,189,248,0.03)",
-          borderTop: "1px solid rgba(56,189,248,0.08)",
-          borderBottom: "1px solid rgba(56,189,248,0.08)",
+          background: "rgba(56,189,248,0.02)",
+          borderTop: "1px solid rgba(56,189,248,0.06)",
+          borderBottom: "1px solid rgba(56,189,248,0.06)",
           width: "100%",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(circle at 50% 100%, rgba(13,148,136,0.04) 0%, transparent 60%)",
+            pointerEvents: "none",
+          }}
+        />
         <div
           style={{
             maxWidth: 740,
             margin: "0 auto",
             padding: "96px 32px",
             width: "100%",
+            position: "relative",
+            zIndex: 1,
           }}
         >
           <p style={eyebrow}>Watershed Map</p>
@@ -395,7 +408,7 @@ export function HeadwatersPage() {
           <p
             style={{
               ...bodyText,
-              marginBottom: 48,
+              marginBottom: 56,
               maxWidth: 540,
               color: "rgba(212,195,168,0.62)",
             }}
@@ -406,64 +419,145 @@ export function HeadwatersPage() {
 
           <div
             style={{
-              display: "grid",
-              gap: 2,
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
             }}
           >
-            {ZONES.map((z, i) => (
-              <div
-                key={z.id}
-                style={{
-                  padding: "24px 28px",
-                  background: i < 6
-                    ? `rgba(212,195,168,${0.02 + i * 0.008})`
-                    : "rgba(56,189,248,0.05)",
-                  borderLeft: i < 6
-                    ? `2px solid rgba(212,195,168,${0.12 + i * 0.04})`
-                    : "2px solid rgba(56,189,248,0.30)",
-                  transition: "background 0.2s",
-                }}
-              >
-                <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
-                  <span
-                    style={{
+            {ZONES.map((z, i) => {
+              const isAquifer = z.id === "A";
+              const colors = [
+                "234, 88, 12", // 0: Hearth (Warm Orange)
+                "217, 119, 6", // 1: Lodge (Amber)
+                "202, 138, 4", // 2: Bench (Yellow)
+                "101, 163, 13", // 3: Standby (Olive)
+                "14, 165, 233", // 4: Hall (Sky)
+                "59, 130, 246", // 5: Wild (Blue)
+                "13, 148, 136", // A: Aquifer (Teal)
+              ];
+              const baseColor = colors[i] || "255, 255, 255";
+              const href = isAquifer ? `${BASE}map#zone-aquifer` : `${BASE}map#zone-${z.id}`;
+
+              return (
+                <a
+                  key={z.id}
+                  href={href}
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    alignItems: "center",
+                    textDecoration: "none",
+                    background: isAquifer 
+                      ? "radial-gradient(ellipse at 50% 0%, rgba(13,148,136,0.12) 0%, rgba(0,0,0,0) 80%), rgba(255,255,255,0.01)" 
+                      : `linear-gradient(90deg, rgba(${baseColor}, 0.06) 0%, rgba(0,0,0,0) 100%)`,
+                    border: `1px solid rgba(${baseColor}, 0.1)`,
+                    borderRadius: isAquifer ? 12 : 2,
+                    borderLeft: isAquifer ? `1px solid rgba(${baseColor}, 0.1)` : `3px solid rgba(${baseColor}, 0.5)`,
+                    padding: "28px 32px",
+                    overflow: "hidden",
+                    transition: "all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateX(6px)";
+                    e.currentTarget.style.background = isAquifer 
+                      ? "radial-gradient(ellipse at 50% 0%, rgba(13,148,136,0.2) 0%, rgba(0,0,0,0) 80%), rgba(255,255,255,0.03)" 
+                      : `linear-gradient(90deg, rgba(${baseColor}, 0.12) 0%, rgba(0,0,0,0) 100%)`;
+                    e.currentTarget.style.borderColor = `rgba(${baseColor}, 0.25)`;
+                    if (!isAquifer) {
+                      e.currentTarget.style.borderLeft = `3px solid rgba(${baseColor}, 0.8)`;
+                    }
+                    const arrow = e.currentTarget.querySelector('.zone-arrow') as HTMLElement;
+                    if (arrow) arrow.style.transform = "translateX(4px)";
+                    const num = e.currentTarget.querySelector('.zone-num') as HTMLElement;
+                    if (num) {
+                      num.style.background = `rgba(${baseColor}, 0.15)`;
+                      num.style.borderColor = `rgba(${baseColor}, 0.4)`;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateX(0)";
+                    e.currentTarget.style.background = isAquifer 
+                      ? "radial-gradient(ellipse at 50% 0%, rgba(13,148,136,0.12) 0%, rgba(0,0,0,0) 80%), rgba(255,255,255,0.01)" 
+                      : `linear-gradient(90deg, rgba(${baseColor}, 0.06) 0%, rgba(0,0,0,0) 100%)`;
+                    e.currentTarget.style.borderColor = `rgba(${baseColor}, 0.1)`;
+                    if (!isAquifer) {
+                      e.currentTarget.style.borderLeft = `3px solid rgba(${baseColor}, 0.5)`;
+                    }
+                    const arrow = e.currentTarget.querySelector('.zone-arrow') as HTMLElement;
+                    if (arrow) arrow.style.transform = "translateX(0)";
+                    const num = e.currentTarget.querySelector('.zone-num') as HTMLElement;
+                    if (num) {
+                      num.style.background = `rgba(${baseColor}, 0.06)`;
+                      num.style.borderColor = `rgba(${baseColor}, 0.15)`;
+                    }
+                  }}
+                >
+                  <div 
+                    className="zone-num"
+                    style={{ 
+                      display: "flex", 
+                      alignItems: "center", 
+                      justifyContent: "center",
+                      width: 52,
+                      height: 52,
+                      borderRadius: "50%",
+                      background: `rgba(${baseColor}, 0.06)`,
+                      border: `1px solid rgba(${baseColor}, 0.15)`,
+                      color: `rgba(${baseColor}, 0.9)`,
                       fontFamily: "monospace",
-                      fontSize: 11,
+                      fontSize: isAquifer ? 24 : 18,
                       fontWeight: 700,
-                      letterSpacing: "0.18em",
-                      color: i < 6 ? "rgba(212,195,168,0.30)" : "rgba(56,189,248,0.50)",
-                      minWidth: 24,
-                      paddingTop: 3,
-                    }}
-                  >
-                    {i < 6 ? i : "∿"}
-                  </span>
-                  <div>
-                    <p
-                      style={{
-                        fontSize: "clamp(0.9rem, 2.2vw, 1rem)",
+                      marginRight: 24,
+                      flexShrink: 0,
+                      transition: "all 0.3s ease",
+                      boxShadow: `0 0 20px rgba(${baseColor}, 0.1) inset`
+                    }}>
+                    {isAquifer ? "∿" : z.id}
+                  </div>
+                  
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 8, flexWrap: "wrap" }}>
+                      <h3 style={{
+                        fontSize: "clamp(1.1rem, 2.5vw, 1.25rem)",
                         fontWeight: 700,
-                        color: i < 6 ? "#f0e8d8" : "rgba(186,230,253,0.90)",
-                        marginBottom: 6,
-                        letterSpacing: "-0.005em",
-                      }}
-                    >
-                      {z.name}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "clamp(0.85rem, 2vw, 0.95rem)",
-                        lineHeight: 1.65,
-                        color: "rgba(212,195,168,0.60)",
+                        color: "#f0e8d8",
                         margin: 0,
-                      }}
-                    >
+                        letterSpacing: "-0.01em",
+                        fontFamily: "Georgia, serif"
+                      }}>
+                        {z.name}
+                      </h3>
+                    </div>
+                    <p style={{
+                      fontSize: "clamp(0.9rem, 2vw, 0.95rem)",
+                      lineHeight: 1.6,
+                      color: "rgba(212,195,168,0.65)",
+                      margin: 0,
+                      fontFamily: "Georgia, serif"
+                    }}>
                       {z.description}
                     </p>
                   </div>
-                </div>
-              </div>
-            ))}
+
+                  <div 
+                    className="zone-arrow"
+                    style={{ 
+                      marginLeft: 20,
+                      color: `rgba(${baseColor}, 0.6)`,
+                      fontFamily: "monospace",
+                      fontSize: 20,
+                      transition: "transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}
+                  >
+                    →
+                  </div>
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>
