@@ -8,6 +8,8 @@ const FOREST = "#1f3d2e";
 const MUTED = "#7a7a6e";
 const RULE = "rgba(200,191,167,0.35)";
 
+const BASE = import.meta.env.BASE_URL;
+
 /* ─── Quiz types & routing ──────────────────────────────────────────────── */
 
 type WhoAnswer = "household" | "practitioner" | "community" | null;
@@ -962,6 +964,18 @@ export function MapPage() {
     }
   });
 
+  /* Persistent flag — true when the page was opened via a #zone-N link.
+     Unlike inboundZoneId this is never cleared, so the breadcrumb stays
+     visible for the whole visit. */
+  const [hasInboundZone] = useState<boolean>(() => {
+    try {
+      const hash = window.location.hash;
+      return /^#zone-(\d+)$/.test(hash) || hash === "#zone-aquifer";
+    } catch {
+      return false;
+    }
+  });
+
   useEffect(() => {
     if (inboundZoneId === null) return;
     const timer = setTimeout(() => {
@@ -1032,6 +1046,42 @@ export function MapPage() {
           padding: "48px 20px 80px",
         }}
       >
+        {/* Back-to-Clearing breadcrumb — only when arriving via a zone link */}
+        {hasInboundZone && (
+          <div style={{ marginBottom: 20 }}>
+            <a
+              href={BASE}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                fontFamily: "monospace",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: MUTED,
+                textDecoration: "none",
+                padding: "5px 10px",
+                borderRadius: 6,
+                border: `1px solid ${RULE}`,
+                background: "rgba(255,253,248,0.7)",
+                transition: "color 0.15s, border-color 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.color = FOREST;
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(31,61,46,0.3)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.color = MUTED;
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = RULE;
+              }}
+            >
+              ← The Clearing
+            </a>
+          </div>
+        )}
+
         {/* Orientation header */}
         <div style={{ marginBottom: 40 }}>
           <div
