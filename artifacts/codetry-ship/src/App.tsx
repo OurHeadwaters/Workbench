@@ -32,7 +32,7 @@ import { WhatIsCodetryPage } from "@/pages/WhatIsCodetryPage";
 import { MapPage } from "@/pages/MapPage";
 import { CompassPage } from "@/pages/CompassPage";
 import { AquiferPage } from "@/pages/AquiferPage";
-import { HeadwatersPage } from "@/pages/HeadwatersPage";
+import { HeadwatersPage, HeadwatersRedirect } from "@/pages/HeadwatersPage";
 import { CapCeremonyPage } from "@/pages/CapCeremonyPage";
 import { StarterPage } from "@/pages/StarterPage";
 import { HeadwatersStartPage } from "@/pages/HeadwatersStartPage";
@@ -53,12 +53,12 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 
 // When visited from codetry.ca, the root path should land on /codetry
 // (the practitioner-facing "What is Codetry?" page) rather than the
-// community home page. ourheadwaters.ca continues to land on HomePage.
+// community home page. ourheadwaters.ca lands on The Clearing (HeadwatersPage).
 function CodetryHostRoot() {
   if (typeof window !== "undefined" && window.location.hostname === "codetry.ca") {
     return <Redirect to="/codetry" />;
   }
-  return <HomePage />;
+  return <HeadwatersPage />;
 }
 
 function Router() {
@@ -113,8 +113,8 @@ function Router() {
       {/* ── The Aquifer — Identity Infrastructure ── */}
       <Route path="/aquifer" component={AquiferPage} />
 
-      {/* ── The Clearing — origin story video ── */}
-      <Route path="/headwaters" component={HeadwatersPage} />
+      {/* ── The Clearing — lives at / ; /headwaters redirects there ── */}
+      <Route path="/headwaters" component={HeadwatersRedirect} />
 
       {/* ── Self-serve starter offerings ── */}
       <Route path="/start" component={StarterPage} />
@@ -133,7 +133,7 @@ function Router() {
   );
 }
 
-const STANDALONE_ROUTES = ["/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub"];
+const STANDALONE_ROUTES = ["/", "/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub"];
 
 function NavShell() {
   const [location] = useLocation();
