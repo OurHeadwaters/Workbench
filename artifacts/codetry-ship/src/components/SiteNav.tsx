@@ -19,10 +19,6 @@ const NAV_LINKS: NavLink[] = [
   { href: "/window",   label: "The Window" },
   { href: "/bio",      label: "About" },
   { href: "/listen",   label: "Listen" },
-  { href: "/economy",  label: "Economy", desktopOnly: true },
-  { href: "/odyssey",  label: "Odyssey" },
-  { href: "/map",      label: "Map" },
-  { href: "/compass",  label: "Compass" },
 ];
 
 const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[] = [
@@ -32,6 +28,13 @@ const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[
   { icon: "🔬", name: "Research Library",      href: "/library/" },
   { icon: "🖨️", name: "Print Marketing Suite", href: "/print-marketing/" },
   { icon: "🚢", name: "Crew Manifest",         href: "/", comingSoon: true },
+];
+
+const EXPLORE_LINKS: { icon: string; name: string; href: string }[] = [
+  { icon: "🌿", name: "Economy",  href: "/economy" },
+  { icon: "🧭", name: "Odyssey",  href: "/odyssey" },
+  { icon: "🗺️", name: "Map",      href: "/map" },
+  { icon: "🔭", name: "Compass",  href: "/compass" },
 ];
 
 function isActive(path: string, location: string): boolean {
@@ -295,7 +298,7 @@ export function SiteNav() {
                       : "0 8px 24px rgba(10,22,14,0.12)",
                   }}
                   role="menu"
-                  aria-label={`Tools menu, ${TOOLS.length} items`}
+                  aria-label={`Tools menu, ${TOOLS.length + EXPLORE_LINKS.length} items`}
                   onKeyDown={handleToolsMenuKeyDown}
                   data-testid="nav-tools-dropdown"
                 >
@@ -342,6 +345,47 @@ export function SiteNav() {
                           Soon
                         </span>
                       )}
+                    </a>
+                  ))}
+                  <div
+                    className="mx-4 my-1.5"
+                    style={{
+                      height: "1px",
+                      background: dark ? "rgba(212,160,23,0.12)" : "hsl(var(--card-border))",
+                    }}
+                    role="separator"
+                  />
+                  <p
+                    className="px-4 pt-1 pb-2 font-mono text-[8px] uppercase tracking-[0.22em]"
+                    style={{ color: dark ? "rgba(212,160,23,0.55)" : "hsl(var(--muted-foreground))", opacity: 0.8 }}
+                  >
+                    Explore
+                  </p>
+                  {EXPLORE_LINKS.map(({ icon, name, href }, i) => (
+                    <a
+                      key={name}
+                      ref={(el) => { toolItemRefs.current[TOOLS.length + i] = el; }}
+                      href={`${base}${href}`}
+                      className="flex items-center gap-3 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all"
+                      style={{
+                        color: dark ? "rgba(244,237,224,0.82)" : "hsl(var(--foreground))",
+                        borderLeft: "2px solid transparent",
+                      }}
+                      role="menuitem"
+                      tabIndex={-1}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.borderLeftColor = "#d4a017";
+                        (e.currentTarget as HTMLElement).style.color = dark ? "#f4ede0" : "hsl(var(--foreground))";
+                        (e.currentTarget as HTMLElement).style.background = dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.borderLeftColor = "transparent";
+                        (e.currentTarget as HTMLElement).style.background = "transparent";
+                      }}
+                      data-testid={`nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                    >
+                      <span className="text-base leading-none shrink-0">{icon}</span>
+                      <span className="flex-1">{name}</span>
                     </a>
                   ))}
                 </div>
@@ -486,7 +530,7 @@ export function SiteNav() {
               <div
                 id="mobile-tools-menu"
                 role="menu"
-                aria-label={`Tools menu, ${TOOLS.length} items`}
+                aria-label={`Tools menu, ${TOOLS.length + EXPLORE_LINKS.length} items`}
                 className="border-t"
                 style={{ borderColor: dark ? "rgba(212,160,23,0.12)" : "hsl(var(--card-border))" }}
               >
@@ -514,6 +558,36 @@ export function SiteNav() {
                         Soon
                       </span>
                     )}
+                  </a>
+                ))}
+                <div
+                  className="mx-5 my-1"
+                  style={{
+                    height: "1px",
+                    background: dark ? "rgba(212,160,23,0.12)" : "hsl(var(--card-border))",
+                  }}
+                  role="separator"
+                />
+                <p
+                  className="px-5 pt-2 pb-1.5 font-mono text-[8px] uppercase tracking-[0.22em]"
+                  style={{ color: dark ? "rgba(212,160,23,0.55)" : "hsl(var(--muted-foreground))", opacity: 0.8 }}
+                >
+                  Explore
+                </p>
+                {EXPLORE_LINKS.map(({ icon, name, href }) => (
+                  <a
+                    key={name}
+                    href={`${base}${href}`}
+                    className="flex items-center gap-3 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors border-l-2"
+                    style={{
+                      color: dark ? "rgba(244,237,224,0.75)" : "hsl(var(--foreground))",
+                      borderLeftColor: "transparent",
+                    }}
+                    role="menuitem"
+                    data-testid={`mobile-nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                  >
+                    <span className="text-base leading-none shrink-0">{icon}</span>
+                    <span className="flex-1">{name}</span>
                   </a>
                 ))}
               </div>
