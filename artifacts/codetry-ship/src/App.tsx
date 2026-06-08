@@ -116,6 +116,14 @@ function Router() {
       {/* ── The Clearing — lives at / ; /headwaters redirects there ── */}
       <Route path="/headwaters" component={HeadwatersRedirect} />
 
+      {/* ── Legacy / stale hyphenated paths → current routes ── */}
+      <Route path="/the-shore">{() => <Redirect to="/home" />}</Route>
+      <Route path="/what-is-codetry">{() => <Redirect to="/codetry" />}</Route>
+      <Route path="/the-work">{() => <Redirect to="/services" />}</Route>
+      <Route path="/the-clearing">{() => <Redirect to="/" />}</Route>
+      <Route path="/case-studies">{() => <Redirect to="/work" />}</Route>
+      <Route path="/the-window">{() => <Redirect to="/window" />}</Route>
+
       {/* ── Self-serve starter offerings ── */}
       <Route path="/start" component={StarterPage} />
 
