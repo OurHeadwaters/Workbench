@@ -118,6 +118,35 @@ export function HeadwatersPage() {
     new Array(ZONES.length).fill(false)
   );
   const zoneRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const attemptPlay = () => {
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
+    };
+
+    video.addEventListener("canplay", attemptPlay);
+    attemptPlay();
+
+    const onTouch = () => {
+      attemptPlay();
+      document.removeEventListener("touchstart", onTouch);
+    };
+
+    if (video.paused) {
+      document.addEventListener("touchstart", onTouch, { passive: true });
+    }
+
+    return () => {
+      video.removeEventListener("canplay", attemptPlay);
+      document.removeEventListener("touchstart", onTouch);
+    };
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -180,6 +209,7 @@ export function HeadwatersPage() {
       >
         {/* Ambient video background */}
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
@@ -194,6 +224,7 @@ export function HeadwatersPage() {
             objectFit: "cover",
             opacity: 0.38,
             zIndex: 0,
+            pointerEvents: "none",
           }}
         />
 
