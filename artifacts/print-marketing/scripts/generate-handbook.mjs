@@ -33,8 +33,15 @@ function escapeJs(str) {
 
 // ── card HTML ────────────────────────────────────────────────────────────────
 
+function computeCharInfo(text) {
+  const chars = text.length.toLocaleString('en-CA');
+  const lines = text.split('\n').length;
+  return `${chars} characters · ${lines} lines`;
+}
+
 function renderCard(chunk, index) {
   const num = String(index + 1).padStart(2, '0');
+  const charInfo = computeCharInfo(chunk.text);
   return `<div class="card" id="chunk-${chunk.id}">
   <div class="card-header">
     <div class="card-meta">
@@ -45,7 +52,7 @@ function renderCard(chunk, index) {
     <button class="copy-btn" onclick="copyChunk('${chunk.id}')">Copy</button>
   </div>
   <textarea class="chunk-text" id="text-${chunk.id}" readonly rows="6" spellcheck="false"></textarea>
-  <div class="char-count">${chunk.charInfo}</div>
+  <div class="char-count">${charInfo}</div>
 </div>`;
 }
 
