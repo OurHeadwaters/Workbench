@@ -34,7 +34,7 @@ const EXPLORE_LINKS: { icon: string; name: string; href: string }[] = [
   { icon: "🌿", name: "Economy",  href: "/economy" },
   { icon: "🧭", name: "Odyssey",  href: "/odyssey" },
   { icon: "🗺️", name: "Map",      href: "/map" },
-  { icon: "🔭", name: "Compass",  href: "/compass" },
+  { icon: "🔭", name: "The Legend",  href: "/legend" },
 ];
 
 function isActive(path: string, location: string): boolean {

@@ -338,7 +338,7 @@ export const ZONES: ZoneData[] = [
 ];
 
 export const MAP_URL = "/map";
-export const COMPASS_URL = "/compass";
+export const LEGEND_URL = "/legend";
 
 export interface CrossingGate {
   key: string;

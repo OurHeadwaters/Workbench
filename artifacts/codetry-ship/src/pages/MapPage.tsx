@@ -1388,10 +1388,10 @@ export function MapPage() {
                 ))}
                 {" "}The{" "}
                 <a
-                  href="/compass"
+                  href="/legend"
                   style={{ color: FOREST, textDecoration: "underline", textDecorationStyle: "dotted" }}
                 >
-                  Compass
+                  The Legend
                 </a>
                 {" "}reads the same ground.
               </p>

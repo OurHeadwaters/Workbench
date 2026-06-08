@@ -63,10 +63,10 @@ const TOOLS = [
     accent: "#b85a3e",
   },
   {
-    label: "The Compass",
-    subtitle: "Community Orientation",
-    description: "Find where you stand in the watershed. The Compass orients you — your zone, your role, your next move.",
-    href: `${BASE}compass`,
+    label: "The Legend",
+    subtitle: "Zone Key",
+    description: "The key to the six zones. Find where you stand in the watershed — your zone, your role, your next move.",
+    href: `${BASE}legend`,
     accent: "#d4a017",
   },
   {
@@ -299,7 +299,7 @@ export function HeadwatersPage() {
               maxWidth: 540,
             }}
           >
-            The Compass finds your zone in two questions. The watershed map shows
+            The Legend is the key to the six zones. The watershed map shows
             where you already are — from your kitchen table out to the horizon.
           </p>
 
@@ -344,12 +344,12 @@ export function HeadwatersPage() {
                   margin: "0 0 14px",
                 }}
               >
-                Craft your Compass
+                Read The Legend
               </p>
 
               {/* Dominant CTA card */}
               <a
-                href={`${BASE}compass`}
+                href={`${BASE}legend`}
                 style={{
                   display: "block",
                   padding: "36px 32px",
@@ -379,7 +379,7 @@ export function HeadwatersPage() {
                     margin: "0 0 10px",
                   }}
                 >
-                  Community Orientation
+                  Zone Key
                 </p>
                 <h3
                   style={{
@@ -392,7 +392,7 @@ export function HeadwatersPage() {
                     letterSpacing: "-0.01em",
                   }}
                 >
-                  The Compass
+                  The Legend
                 </h3>
                 <p
                   style={{
@@ -402,7 +402,7 @@ export function HeadwatersPage() {
                     margin: "0 0 28px",
                   }}
                 >
-                  Two questions. Your zone, your role, your next move — in the
+                  The key to the six zones. Your zone, your role, your next move — in the
                   watershed and in the community.
                 </p>
                 <span
@@ -419,7 +419,7 @@ export function HeadwatersPage() {
                     borderRadius: 3,
                   }}
                 >
-                  Craft your Compass →
+                  Open The Legend →
                 </span>
               </a>
 

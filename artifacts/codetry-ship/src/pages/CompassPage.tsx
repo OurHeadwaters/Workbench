@@ -393,7 +393,7 @@ function QuizOverlay({ quiz, onComplete, onSkip }: { quiz: QuizState; onComplete
             </div>
           </div>
         )}
-        <p style={{ margin: "14px 0 0", fontSize: 10, color: MUTED, lineHeight: 1.5 }}>Tap a zone on the compass to explore its tools — or use this to highlight your starting territory.</p>
+        <p style={{ margin: "14px 0 0", fontSize: 10, color: MUTED, lineHeight: 1.5 }}>Tap a zone on the legend to explore its tools — or use this to highlight your starting territory.</p>
       </div>
     </div>
   );
@@ -475,7 +475,7 @@ function CompassSVG({
   }
 
   return (
-    <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" style={{ display: "block", borderRadius: "4px 4px 0 0" }} aria-label="Headwaters Compass — spatial zone map" role="img">
+    <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" style={{ display: "block", borderRadius: "4px 4px 0 0" }} aria-label="Headwaters Legend — spatial zone map" role="img">
       <defs>
         <pattern id="parchment-dots" patternUnits="userSpaceOnUse" width="6" height="6">
           <rect width="6" height="6" fill="none" />
@@ -593,7 +593,7 @@ function CompassSVG({
       })}
 
       <text x={SVG_W / 2} y={SVG_H - 8} textAnchor="middle" fontSize="8" fill={INK} fontFamily="monospace" opacity={0.22} letterSpacing="0.18em">
-        HEADWATERS COMPASS — SIX ZONES · TWO CORNERS · ONE NEIGHBOURHOOD
+        HEADWATERS LEGEND — SIX ZONES · TWO CORNERS · ONE NEIGHBOURHOOD
       </text>
     </svg>
   );
@@ -1157,10 +1157,10 @@ export function CompassPage() {
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
             <div>
               <h1 style={{ fontFamily: "Georgia, serif", fontSize: "clamp(26px, 5vw, 38px)", fontWeight: 700, color: FOREST, lineHeight: 1.15, margin: "0 0 6px" }}>
-                The Compass
+                The Legend
               </h1>
               <p style={{ margin: 0, fontSize: 13, color: MUTED, lineHeight: 1.6, maxWidth: 520 }}>
-                Six zones. Two corners. One neighbourhood. Tap any zone or landmark to see its tools and meaning.
+                The key to the six zones. A map legend — what each territory holds, who belongs there, and what moves through it. Tap any zone or landmark to see its tools and meaning.
               </p>
               <div style={{ marginTop: 12, padding: "9px 13px", borderRadius: 7, background: "rgba(31,61,46,0.055)", border: "1px solid rgba(31,61,46,0.12)", maxWidth: 520 }}>
                 <div style={{ fontFamily: "monospace", fontSize: 8, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: FOREST, marginBottom: 5 }}>
@@ -1177,7 +1177,15 @@ export function CompassPage() {
                       {i < ZONES.length - 1 ? " · " : "."}
                     </span>
                   ))}
-                  {" "}The Compass and the Map read the same ground.
+                  {" "}The Legend and the Map read the same ground.
+                </p>
+              </div>
+              <div style={{ marginTop: 10, padding: "8px 13px", borderRadius: 7, background: "rgba(180,160,120,0.07)", border: "1px solid rgba(180,160,120,0.22)", maxWidth: 520 }}>
+                <p style={{ margin: 0, fontSize: 11, color: MUTED, lineHeight: 1.6 }}>
+                  <strong style={{ color: INK, fontWeight: 700 }}>Looking for the Compass?</strong>{" "}
+                  The orientation quiz that reads your role and situation lives in the{" "}
+                  <a href="https://replit.com/@headwaters/compass" target="_blank" rel="noopener noreferrer" style={{ color: FOREST, textDecoration: "underline", textDecorationStyle: "dotted" as const }}>Replit app</a>
+                  {" "}— it points here once it has your bearings.
                 </p>
               </div>
             </div>
@@ -1293,7 +1301,7 @@ export function CompassPage() {
         {/* Footer */}
         <div style={{ marginTop: 28, paddingTop: 18, borderTop: `1px solid ${RULE}`, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <p style={{ margin: 0, fontSize: 11, color: MUTED, lineHeight: 1.5 }}>
-            The Compass shows the six zones of the Headwaters neighbourhood. The original list view is at{" "}
+            The Legend is the key to the six zones of the Headwaters neighbourhood. The full list view is at{" "}
             <a href="/map" style={{ color: FOREST, textDecoration: "underline" }}>/map</a>.
           </p>
           <a href="/odyssey" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 18px", borderRadius: 6, background: FOREST, color: CREAM, fontFamily: "monospace", fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", textDecoration: "none", flexShrink: 0 }}>

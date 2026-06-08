@@ -104,8 +104,9 @@ function Router() {
       {/* ── Neighbourhood Map ── */}
       <Route path="/map" component={MapPage} />
 
-      {/* ── Headwaters Compass ── */}
-      <Route path="/compass" component={CompassPage} />
+      {/* ── The Legend (zone grid) — /compass redirects here ── */}
+      <Route path="/legend" component={CompassPage} />
+      <Route path="/compass">{() => <Redirect to="/legend" />}</Route>
 
       {/* ── Cap Ceremony ── */}
       <Route path="/economy/cap-ceremony" component={CapCeremonyPage} />
