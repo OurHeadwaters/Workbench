@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+import { execFileSync } from "child_process";
 
 const rawPort = process.env.PORT;
 
@@ -27,6 +28,32 @@ if (!basePath) {
   );
 }
 
+function handbookWatcherPlugin() {
+  const contentJson = path.normalize(path.resolve(import.meta.dirname, "scripts/handbook-content.json"));
+  const generator = path.resolve(import.meta.dirname, "scripts/generate-handbook.mjs");
+
+  function runGenerator(logger) {
+    try {
+      execFileSync(process.execPath, [generator], { stdio: "inherit" });
+    } catch (e) {
+      logger.error(`[handbook-watcher] Generator failed: ${e.message}\n${e.stderr ?? ""}`);
+    }
+  }
+
+  return {
+    name: "handbook-watcher",
+    configureServer(server) {
+      server.watcher.add(contentJson);
+      server.watcher.on("change", (file) => {
+        if (path.normalize(path.resolve(file)) === contentJson) {
+          server.config.logger.info("[handbook-watcher] handbook-content.json changed — regenerating…");
+          runGenerator(server.config.logger);
+        }
+      });
+    },
+  };
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [
@@ -34,6 +61,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
+    handbookWatcherPlugin(),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
