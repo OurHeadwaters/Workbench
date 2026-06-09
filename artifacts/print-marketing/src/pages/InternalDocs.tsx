@@ -213,9 +213,10 @@ const ZONES: Array<{
     season: "Provincial scale starts with one table.",
     accent: "#2e6b4f",
     docs: [
+      { href: "/oca-intro-letter", title: "OCA Intro Letter", label: "Ontario Co-ops · OCA", desc: "Personalized opening letter for individual co-op contacts — salutation and first paragraph adapt to ?org= query parameter." },
       { href: "/oca-partnership-brief", title: "OCA Partnership Brief", label: "Ontario Co-ops · OCA", desc: "Letter-format brief for OCA: platform suite overview, two-tier model (consulting vs. license), CDP proof point ($20k → provincial scale), and the ask." },
       { href: "/cdp-grant-narrative", title: "CDP Grant Narrative", label: "CDP · Grant Application", desc: "Printable letter-format grant narrative — $75–100k ask, seven numbered sections, OCA as proposed operator, named deliverables and outcomes." },
-      { href: "/oca-outreach-packet", title: "OCA Outreach Packet (3-page PDF)", label: "Ontario Co-ops · OCA", desc: "One click — OCA Partnership Brief + CDP Grant Narrative + Capability Statement bundled as a single PDF. Includes personalized org-name link generator." },
+      { href: "/oca-outreach-packet", title: "OCA Outreach Packet (4-page PDF)", label: "Ontario Co-ops · OCA", desc: "One click — Intro Letter + OCA Partnership Brief + CDP Grant Narrative + Capability Statement bundled as a single PDF. Includes personalized org-name link generator." },
       { href: "/capability-statement/view", title: "Capability Statement — Public", label: "Headwaters", desc: "Full platform suite (Market Mosaic, 807 Benefits, Grants Finder), CDP proof-point case study, and two engagement paths (consulting + licensing)." },
       { href: "/rack-card-indigenous", title: "Rack Card — Indigenous & Community Orgs", label: "Headwaters", desc: "4×9 rack card updated for Treaty 3 · Treaty 9 territory with platform suite listed in services and NAN in who-we-work-with." },
     ],

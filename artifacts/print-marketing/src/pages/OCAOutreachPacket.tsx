@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { downloadAsPdf } from "@/lib/pdf";
+import { OCAIntroLetterPage } from "./OCAIntroLetter";
 import { OCAPartnershipBriefPage } from "./OCAPartnershipBrief";
 import { CDPGrantNarrativePage } from "./CDPGrantNarrative";
 import { CapabilityStatementPublicPage } from "./CapabilityStatementPublic";
@@ -17,10 +18,12 @@ function buildPersonalizedUrl(slug: string, org: string): string {
 }
 
 const personalizedDocs = [
+  { label: "Intro Letter", slug: "oca-intro-letter" },
   { label: "Partnership Brief", slug: "oca-partnership-brief" },
 ];
 
 const docs = [
+  { label: "OCA Intro Letter", href: "/oca-intro-letter" },
   { label: "OCA Partnership Brief", href: "/oca-partnership-brief" },
   { label: "CDP Grant Narrative", href: "/cdp-grant-narrative" },
   { label: "Capability Statement", href: "/capability-statement/view" },
@@ -73,7 +76,7 @@ export default function OCAOutreachPacket() {
             disabled={loading}
             style={{ fontSize: "0.9rem", padding: "0.4rem 1.2rem" }}
           >
-            {loading ? "⏳ Generating PDF…" : "⬇ Download full packet (3 pages)"}
+            {loading ? "⏳ Generating PDF…" : "⬇ Download full packet (4 pages)"}
           </button>
         </div>
       </div>
@@ -111,7 +114,7 @@ export default function OCAOutreachPacket() {
               margin: "0 0 0.5rem",
               lineHeight: 1.2,
             }}>
-              Download all three documents as one PDF
+              Download all four documents as one PDF
             </h2>
             <p style={{
               fontFamily: "var(--font-sans, Inter, system-ui, sans-serif)",
@@ -120,7 +123,7 @@ export default function OCAOutreachPacket() {
               margin: 0,
               lineHeight: 1.6,
             }}>
-              One click produces a single letter-size PDF ready to attach to an email or hand to an OCA contact: partnership brief, CDP grant narrative, and capability statement.
+              One click produces a single letter-size PDF ready to attach to an email or hand to an OCA contact: personalized intro letter, partnership brief, CDP grant narrative, and capability statement.
             </p>
           </div>
           <button
@@ -304,8 +307,9 @@ export default function OCAOutreachPacket() {
         </div>
       </div>
 
-      {/* Hidden render target — all three pages for paginate mode */}
+      {/* Hidden render target — all four pages for paginate mode */}
       <div id="oca-packet-target">
+        <OCAIntroLetterPage org={trimmed || undefined} />
         <OCAPartnershipBriefPage />
         <CDPGrantNarrativePage />
         <CapabilityStatementPublicPage />
