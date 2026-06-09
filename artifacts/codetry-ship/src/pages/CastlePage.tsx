@@ -173,19 +173,18 @@ export function CastlePage() {
             <a
               key={wing.name}
               href={`${base}${wing.href}`}
-              className="group relative rounded-lg overflow-hidden transition-all hover:scale-[1.015]"
+              className="wing-card relative rounded-lg overflow-hidden hover:scale-[1.015]"
               style={{
                 background: "rgba(15,28,24,0.70)",
-                border: "1px solid rgba(244,237,224,0.07)",
                 textDecoration: "none",
                 display: "block",
               }}
               data-testid={`castle-wing-${wing.name.toLowerCase().replace(/\s+/g, "-")}`}
             >
-              {/* torch glow on hover */}
+              {/* torch glow on hover — pulses via wing-card-glow keyframe */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="wing-card-glow pointer-events-none absolute inset-0"
                 style={{
                   background:
                     "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,160,23,0.10) 0%, transparent 65%)",
@@ -229,7 +228,7 @@ export function CastlePage() {
               {/* bottom glow bar — torch accent */}
               <div
                 aria-hidden
-                className="h-0.5 w-0 group-hover:w-full transition-all duration-300 ease-out"
+                className="wing-card-bar h-0.5"
                 style={{ background: "linear-gradient(to right, rgba(212,160,23,0.6), rgba(184,90,62,0.4))" }}
               />
             </a>
