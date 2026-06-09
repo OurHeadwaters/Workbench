@@ -401,8 +401,43 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
         }
         return next;
       });
+      // Record in local audit log with projectId so the constellation origin is traceable
+      const approvedTasks = (section.tasks ?? []).filter((t) => taskIds.includes(t.id)).map((t) => ({ id: t.id, title: t.title }));
+      fetch(`${BASE_API}/tasks/audit-log/constellation`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tasks: approvedTasks.length ? approvedTasks : taskIds.map((id) => ({ id })),
+          projectId: section.project.id,
+          projectLabel: section.project.label,
+          tier: tier.toUpperCase(),
+        }),
+      }).catch(() => { /* best-effort */ });
     } catch (e) {
       setError(e instanceof Error ? e.message : `Approve on ${section.project.label} failed`);
+    }
+  };
+
+  // Add a new task to a constellation project's proposed queue
+  const addTaskToConstellation = async (projectId: string, title: string): Promise<boolean> => {
+    const section = constellationSections.get(projectId);
+    if (!section || !title.trim()) return false;
+    try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (section.project.token) headers["Authorization"] = `Bearer ${section.project.token}`;
+      const res = await fetch(`${section.project.baseUrl}/api/tasks/import`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ tasks: [{ title: title.trim() }] }),
+      });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({})) as { error?: string };
+        throw new Error(j.error ?? `Could not add task to ${section.project.label} (${res.status})`);
+      }
+      return true;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : `Could not add task to ${section.project.label}`);
+      return false;
     }
   };
 
@@ -630,6 +665,8 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
               key={section.project.id}
               section={section}
               onApprove={(taskIds, tier) => approveConstellation(section.project.id, taskIds, tier)}
+              onAddTask={(title) => addTaskToConstellation(section.project.id, title)}
+              onRefresh={() => pullConstellation(section.project)}
               onOpenDeliberation={onOpenDeliberation}
               onClose={() => setConstellationSections((prev) => { const next = new Map(prev); next.delete(section.project.id); return next; })}
             />
@@ -863,13 +900,31 @@ function RedSection({
 // ── ConstellationProjectSection ───────────────────────────────────────────────
 
 function ConstellationProjectSection({
-  section, onApprove, onOpenDeliberation, onClose,
+  section, onApprove, onAddTask, onRefresh, onOpenDeliberation, onClose,
 }: {
   section: ConstellationSection;
   onApprove: (taskIds: string[], tier: "green" | "amber") => void;
+  onAddTask: (title: string) => Promise<boolean>;
+  onRefresh: () => void;
   onOpenDeliberation?: (seatId: string, brief: string) => void;
   onClose: () => void;
 }) {
+  const [addTitle, setAddTitle] = useState("");
+  const [adding, setAdding] = useState(false);
+  const [addFeedback, setAddFeedback] = useState<string | null>(null);
+
+  const handleAddTask = async () => {
+    if (!addTitle.trim()) return;
+    setAdding(true);
+    setAddFeedback(null);
+    const ok = await onAddTask(addTitle.trim());
+    if (ok) {
+      setAddTitle("");
+      setAddFeedback("Added — refresh to see it in the triage queue");
+    }
+    setAdding(false);
+  };
+
   const { project, triaged, loading, error, pendingIds } = section;
   const c = TIER_COLOR.AMBER;
 
@@ -976,6 +1031,38 @@ ${seatName}, this task from ${project.label} needs your voice before it can move
             )}
           </div>
         )}
+
+        {/* ── Add task row ── */}
+        <div className="mt-3 pt-3 border-t border-[#2A231E]">
+          <p className="text-[10px] uppercase tracking-[0.15em] text-[#5C5046] font-bold mb-2">Add task to {project.label}</p>
+          <div className="flex gap-2">
+            <input
+              value={addTitle}
+              onChange={(e) => { setAddTitle(e.target.value); setAddFeedback(null); }}
+              onKeyDown={(e) => { if (e.key === "Enter") handleAddTask(); }}
+              placeholder="Task title…"
+              className="flex-1 text-[12px] text-[#EAE4DB] bg-[#13110E] border border-[#251E18] rounded-sm px-3 py-2 outline-none focus:border-[#5C5046] transition-colors placeholder:text-[#3D3228]"
+            />
+            <button
+              onClick={handleAddTask}
+              disabled={adding || !addTitle.trim()}
+              className="px-3 py-2 text-[11px] uppercase tracking-wider font-bold rounded-sm border border-[#2A231E] text-[#8C7B6D] hover:text-[#EAE4DB] hover:border-[#3D3228] disabled:opacity-30 transition-colors flex-shrink-0"
+            >
+              {adding ? "…" : "+ Add"}
+            </button>
+            <button
+              onClick={onRefresh}
+              disabled={section.loading}
+              className="px-2.5 py-2 text-[12px] text-[#5C5046] hover:text-[#8C7B6D] border border-[#2A231E] rounded-sm transition-colors disabled:opacity-30 flex-shrink-0"
+              title="Refresh task list"
+            >
+              ↻
+            </button>
+          </div>
+          {addFeedback && (
+            <p className="mt-2 text-[11px] text-[#4ADE80]">{addFeedback}</p>
+          )}
+        </div>
       </div>
     </div>
   );

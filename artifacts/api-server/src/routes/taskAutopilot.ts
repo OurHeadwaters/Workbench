@@ -93,13 +93,15 @@ function writeTasks(tasks: StoredTask[]) {
 interface AuditEntry {
   taskId: string;
   taskTitle?: string;
-  event: "imported" | "approved" | "unapproved" | "cleared" | "override";
+  event: "imported" | "approved" | "unapproved" | "cleared" | "override" | "constellation-approved";
   fromStatus?: TaskStatus;
   toStatus?: TaskStatus;
   fromTier?: string;
   toTier?: string;
   tier?: string;
   reason?: string;
+  projectId?: string;
+  projectLabel?: string;
   at: string;
 }
 
@@ -490,6 +492,41 @@ router.post("/audit-log", (req: Request, res: Response) => {
   }
   appendAudit({ ...parsed.data, event: "override", at: new Date().toISOString() });
   res.json({ ok: true });
+});
+
+// POST /tasks/audit-log/constellation — record approvals that happened on an external constellation project
+const ConstellationAuditSchema = z.object({
+  tasks: z.array(z.object({
+    id: z.string(),
+    title: z.string().optional(),
+  })).min(1).max(200),
+  projectId: z.string().min(1),
+  projectLabel: z.string().optional(),
+  tier: z.string().optional(),
+});
+
+router.post("/audit-log/constellation", (req: Request, res: Response) => {
+  const parsed = ConstellationAuditSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+  const { tasks, projectId, projectLabel, tier } = parsed.data;
+  const now = new Date().toISOString();
+  for (const task of tasks) {
+    appendAudit({
+      taskId: task.id,
+      taskTitle: task.title,
+      event: "constellation-approved",
+      toStatus: "pending",
+      tier,
+      projectId,
+      projectLabel,
+      at: now,
+    });
+  }
+  logger.info({ count: tasks.length, projectId, projectLabel }, "task-autopilot: constellation tasks recorded in audit log");
+  res.json({ ok: true, recorded: tasks.length });
 });
 
 export default router;
