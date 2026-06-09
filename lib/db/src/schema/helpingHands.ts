@@ -10,6 +10,11 @@ import {
 } from "drizzle-orm/pg-core";
 
 // ---------- hh_bands ----------
+// XRPL mapping:
+//   community_token_code   → XRPL IOU currency code (3-char or 20-byte hex) for the band's community token
+//   community_token_issuer → XRPL issuer account address that creates IOU trust-lines for band members;
+//                            also the source account for EscrowCreate/EscrowFinish on token payments
+//   default_pay_currency   → determines whether task escrow uses XRP drops ("xrp") or IOU ("token")
 export const hhBandsTable = pgTable("hh_bands", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
@@ -25,6 +30,19 @@ export const hhBandsTable = pgTable("hh_bands", {
 });
 
 // ---------- hh_members ----------
+// XRPL mapping (see docs/learning-identity-architecture.md §2 — Three-Table DID Model):
+//   xrpl_address → XRPL Account field; destination for EscrowFinish and direct payments;
+//                  null for custodial members (platform holds key), set on Xaman handoff
+//   did_ref      → Canonical DID URI: "did:xrpl:1:<xrpl_address>"; written to ledger via
+//                  DIDSet transaction during the Xaman handoff ceremony; null until then
+//   wallet_type  → "custodial": platform escrow wallet used; "self_custody": member's own
+//                  Xaman wallet used as Destination for all payments
+//   wallet_revealed_at → first value event timestamp; triggers wallet reveal UX and is the
+//                        natural prompt for the custodial → self_custody migration offer
+//   total_earned_xrp   → running sum of on-chain XRP payments; mirrors sum of hh_earnings
+//                        rows where currency = "xrp" and xrpl_tx_hash is populated
+//   total_earned_token → running sum of custodial token credits; mirrors hh_earnings rows
+//                        where currency = "token"
 export const hhMembersTable = pgTable(
   "hh_members",
   {
@@ -71,6 +89,14 @@ export const hhMembersTable = pgTable(
 );
 
 // ---------- hh_tasks ----------
+// XRPL mapping (see docs/learning-identity-architecture.md §3 — Escrow Payment Design):
+//   pay_amount      → EscrowCreate.Amount (convert to drops for XRP; IOU object for token)
+//   pay_currency    → determines Amount shape: "xrp" → drops, "token" → IOU currency code
+//   escrow_sequence → EscrowCreate.Sequence on the band issuer account; required to reference
+//                     the escrow in a subsequent EscrowFinish or EscrowCancel transaction
+//   escrow_tx_hash  → hash of the submitted EscrowCreate transaction; audit trail
+// V1 [LIVE]: escrow_sequence and escrow_tx_hash are null — payments are DB-simulated.
+// V2 [BUILD TARGET]: escrow_sequence/tx_hash populated at task post; EscrowFinish fired at confirm.
 export const hhTasksTable = pgTable(
   "hh_tasks",
   {
@@ -101,6 +127,10 @@ export const hhTasksTable = pgTable(
 );
 
 // ---------- hh_earnings ----------
+// XRPL mapping:
+//   xrpl_tx_hash → hash of the EscrowFinish transaction that settled this earning on-chain;
+//                  null in V1 (DB-simulated). When populated, the earning is verifiably
+//                  on-chain and the member's XRPL address received the funds.
 export const hhEarningsTable = pgTable(
   "hh_earnings",
   {
@@ -144,6 +174,10 @@ export const hhBonusesTable = pgTable(
 // ---------- hh_merchants ----------
 // Reserve stores and service providers that accept community tokens at POS.
 // Registered by a band admin; merchantWallet is the XRPL address payments flow to.
+// XRPL mapping:
+//   merchant_wallet → XRPL account address of the merchant; Destination for POS payment
+//                     transactions when envelope spend is settled on-chain (V2). In V1,
+//                     this field is stored but payments are DB-simulated.
 export const hhMerchantsTable = pgTable(
   "hh_merchants",
   {
@@ -195,6 +229,11 @@ export const hhEnvelopesTable = pgTable(
 // ---------- hh_envelope_transactions ----------
 // Immutable spend log — one row per checkout event.
 // V1: XRPL payment is simulated (same pattern as task escrow).
+// XRPL mapping:
+//   xrpl_tx_hash → hash of the Payment transaction from member's XRPL address to
+//                  hh_merchants.merchant_wallet; null in V1 (DB-simulated).
+//                  In V2 (self_custody members): member signs a Payment tx via Xaman at POS.
+//                  In V2 (custodial members): platform submits Payment on member's behalf.
 export const hhEnvelopeTransactionsTable = pgTable(
   "hh_envelope_transactions",
   {
@@ -221,6 +260,13 @@ export const hhEnvelopeTransactionsTable = pgTable(
 // information, knowledge, and practical help shared. This is the primary
 // P2P value exchange vector and the moment the wallet "becomes real" for
 // most users. V1: XRPL payment simulated; schema ready for on-chain.
+// XRPL mapping:
+//   xrpl_tx_hash → hash of the Payment transaction routing tip to hh_members.xrpl_address
+//                  of the recipient (to_member_id); null in V1 (DB-simulated).
+//                  For self_custody recipients: Payment goes directly to their Xaman address.
+//                  For custodial recipients: credited to the platform's custodial sub-wallet
+//                  until the member migrates. The wallet_revealed_at trigger fires here when
+//                  to_member.wallet_revealed_at is null — this tip is their first value event.
 export const hhTipsTable = pgTable(
   "hh_tips",
   {
@@ -248,6 +294,12 @@ export const hhTipsTable = pgTable(
 // Proposed by any member (Zone 4 idea pool), activated by band admin after
 // Elder/Knowledge Keeper validation. Headwaters develops training resources
 // that map to active categories. stageModel governs which stages are used.
+// XRPL/DID mapping (see docs/learning-identity-architecture.md §4 — Badge Credentials as XRPL DIDs):
+//   name   → VC credentialSubject.badgeCategory label in Verifiable Credentials issued at
+//             "practicing" and "teaching" stages
+//   domain → VC credentialSubject.domain taxonomy value (food | land | care | craft | governance | knowledge)
+//   id     → referenced in VC "type" array as the credential type identifier
+// No on-chain footprint for the category itself — only member badge advancement rows generate VCs.
 //   binary       — verified (practicing) only; for clear pass/fail skills
 //   three_stage  — learning → practicing → teaching
 //   four_stage   — watching → learning → practicing → teaching (full model)
@@ -283,6 +335,17 @@ export const hhBadgeCategoriesTable = pgTable(
 // Admin/Knowledge Keeper required to advance beyond watching.
 // Unique on (member_id, category_id) so there is exactly one badge record
 // per person per skill — no duplicate rows at different stages.
+// XRPL/DID mapping (see docs/learning-identity-architecture.md §4 — Badge Credentials as XRPL DIDs):
+//   id (UUID)           → VC "id" claim — used as the credential's unique identifier URI
+//   stage               → gates whether a VC is generated: "practicing" and "teaching" produce
+//                         on-chain VCs (V2); "watching" and "learning" are off-chain only
+//   issued_by_member_id → VC "issuer" DID: the advancing member's did_ref (their XRPL DID URI).
+//                         For "teaching" stage: must be a peer who holds teaching in same category
+//                         (peer-to-peer validation ceremony); for "practicing": admin/Knowledge Keeper.
+//   updated_at          → VC "issuanceDate" — timestamp of the most recent stage advancement
+// V1 [LIVE]: all badge records are DB-only. No VCs generated or signed.
+// V2 [BUILD TARGET]: add vc_json column (text, nullable) to store the signed VC payload;
+//                    wire Xaman sign-request into badge advancement for practicing/teaching.
 export const hhMemberBadgesTable = pgTable(
   "hh_member_badges",
   {

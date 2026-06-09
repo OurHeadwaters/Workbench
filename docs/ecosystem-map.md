@@ -152,7 +152,13 @@ This framing matters for any UX decision about entry points. The Clearing (the p
 | Purchase webhook (Zone 4 Clearing storefront → Aquifer) | **Endpoint built** | `/api/kits/purchase-webhook` exists; the Stomping Path Stripe side not yet wired to fire it |
 | Zone 0 Saltbox | **External** | Lives at salt-box.replit.app (target saltboxhomes.ca); separate Repl and separate DB; Hearth frontend calls this repo's Aquifer for `hearth_*` routes |
 | Zone 5 Edge | **External** | Long-view content at x-buckets-vision.replit.app (target codetry.ca); no current API bridge |
-| XRPL settlement layer | **Not yet built** | The gap is held, not hidden — see `docs/learning-identity-architecture.md` and the XRPL gap archive task |
+| XRPL settlement layer | **Architecture complete — build pending** | Three-table DID model, escrow payment design, badge credentials, and Xaman handoff ceremony are fully specified. V1 runs simulated in DB today; V2 wires to XRPL mainnet. See `docs/learning-identity-architecture.md`. |
+
+---
+
+## XRPL/DID Graduation Path — Status Summary
+
+The Helping Hands on-chain settlement layer is architecturally complete and formally specified in [`docs/learning-identity-architecture.md`](./learning-identity-architecture.md). V1 runs today with all transactions simulated in the database — the schema carries XRPL fields (`xrpl_address`, `did_ref`, `escrow_sequence`, `escrow_tx_hash`, `xrpl_tx_hash`) that are null until the v2 build activates them. The v2 build target covers: XRPL escrow-based task payments (EscrowCreate at task post, EscrowFinish at admin confirm), W3C Verifiable Credentials anchored to member XRPL DIDs for `practicing` and `teaching` badge stages, and the Xaman wallet handoff ceremony (challenge-response ownership verification, DIDSet transaction, custodial balance sweep). Long-range layers — Drip Harvester (AMM yield) and Giving Well (commons contribution) — are architecturally positioned but not scheduled. No builder should construct against a speculative XRPL interface; hold the gap at the DB-simulation boundary until the v2 track opens.
 
 ---
 
