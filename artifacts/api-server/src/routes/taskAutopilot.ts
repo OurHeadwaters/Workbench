@@ -121,6 +121,70 @@ function readAudit(): AuditEntry[] {
     .slice(-500);
 }
 
+// ── Override learning index ───────────────────────────────────────────────────
+
+/**
+ * Normalise a task title to a stable lookup key:
+ *   - lowercase
+ *   - collapse whitespace / punctuation to single space
+ *   - trim
+ */
+function normaliseTitle(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+type TierVotes = { GREEN: number; AMBER: number; RED: number };
+
+/**
+ * Scan the audit log for "override" events and tally per-title votes.
+ * Returns a Map<normalisedTitle → TierVotes>.
+ *
+ * A minimum of OVERRIDE_THRESHOLD votes in one direction is required before
+ * the learned tier is applied (see classifyTask).
+ */
+const OVERRIDE_THRESHOLD = 3;
+
+function buildOverrideIndex(): Map<string, TierVotes> {
+  const index = new Map<string, TierVotes>();
+  const entries = readAudit();
+  for (const e of entries) {
+    if (e.event !== "override" || !e.taskTitle || !e.toTier) continue;
+    const key = normaliseTitle(e.taskTitle);
+    const tier = e.toTier as Tier;
+    if (!["GREEN", "AMBER", "RED"].includes(tier)) continue;
+    if (!index.has(key)) index.set(key, { GREEN: 0, AMBER: 0, RED: 0 });
+    index.get(key)![tier]++;
+  }
+  return index;
+}
+
+/**
+ * Given an override vote tally, return the dominant learned tier only when
+ * there is clear directional consensus:
+ *   1. The top tier has >= OVERRIDE_THRESHOLD votes.
+ *   2. The top tier's count is strictly greater than twice the second-highest
+ *      tier's count (supermajority).  This rejects ties (GREEN=3, AMBER=3)
+ *      and rejects conflicting signal (GREEN=3, RED=2) while still allowing
+ *      the system to learn when a small number of noise overrides exist
+ *      (GREEN=5, RED=1 → 5 > 2×1 passes).
+ *
+ * Returns null if no tier meets both criteria.
+ */
+function learnedTier(votes: TierVotes): { tier: Tier; count: number } | null {
+  const tiers: Tier[] = ["GREEN", "AMBER", "RED"];
+  const sorted = tiers.slice().sort((a, b) => votes[b] - votes[a]);
+  const top = sorted[0];
+  const second = sorted[1];
+  const topCount = votes[top];
+  const secondCount = votes[second];
+
+  // Require threshold AND supermajority over second-highest
+  if (topCount < OVERRIDE_THRESHOLD) return null;
+  if (topCount <= secondCount * 2) return null;
+
+  return { tier: top, count: topCount };
+}
+
 // ── Classification engine ─────────────────────────────────────────────────────
 
 type Tier = "GREEN" | "AMBER" | "RED";
@@ -186,9 +250,41 @@ const GREEN_SIGNALS = [
   /\becho.*ethos\b/i, /\bmatch.*timeline\b/i, /\bsame.*export\b/i,
 ];
 
-function classifyTask(task: { id: string; title: string; description?: string }): TaskClassification {
+function classifyTask(
+  task: { id: string; title: string; description?: string },
+  overrideIndex?: Map<string, TierVotes>,
+): TaskClassification {
   const text = `${task.title} ${task.description ?? ""}`;
+  const key = normaliseTitle(task.title);
 
+  // ── Step 1: check learned overrides ──────────────────────────────────────
+  // If the founder has overridden this title pattern 3+ times consistently,
+  // trust the learned tier and skip the default rules entirely.
+  if (overrideIndex) {
+    const votes = overrideIndex.get(key);
+    if (votes) {
+      const learned = learnedTier(votes);
+      if (learned) {
+        const total = votes.GREEN + votes.AMBER + votes.RED;
+        const learnedRule = `Learned from ${learned.count} of ${total} override(s) → ${learned.tier}`;
+        const learnedReasoning =
+          `"${task.title}" has been manually overridden to ${learned.tier} ${learned.count} time(s) ` +
+          `(out of ${total} total override(s) recorded). The classifier is applying the founder's ` +
+          `established preference rather than the default keyword rules.`;
+        return {
+          ...task,
+          tier: learned.tier,
+          rule: learnedRule,
+          reasoning: learnedReasoning,
+          councilSeat: learned.tier === "RED" ? pickRedSeat(text) : learned.tier === "AMBER" ? pickAmberSeat(text) : undefined,
+          themeCluster: learned.tier === "AMBER" ? detectThemeCluster(text) : undefined,
+          hardGuardrail: learned.tier === "RED",
+        };
+      }
+    }
+  }
+
+  // ── Step 2: hard-RED guardrails ───────────────────────────────────────────
   for (const { pattern, rule } of HARD_RED_PATTERNS) {
     if (pattern.test(text)) {
       return {
@@ -202,6 +298,7 @@ function classifyTask(task: { id: string; title: string; description?: string })
     }
   }
 
+  // ── Step 3: GREEN signals ─────────────────────────────────────────────────
   if (GREEN_SIGNALS.some((p) => p.test(text))) {
     return {
       ...task,
@@ -211,6 +308,7 @@ function classifyTask(task: { id: string; title: string; description?: string })
     };
   }
 
+  // ── Step 4: AMBER default ─────────────────────────────────────────────────
   const cluster = detectThemeCluster(text);
   return {
     ...task,
@@ -371,7 +469,11 @@ router.post("/triage", (req: Request, res: Response) => {
     return;
   }
 
-  const results = parsed.data.tasks.map(classifyTask);
+  // Build the override learning index once per request so every task in this
+  // batch benefits from the same up-to-date history.
+  const overrideIndex = buildOverrideIndex();
+
+  const results = parsed.data.tasks.map((t) => classifyTask(t, overrideIndex));
 
   const amberGroups = new Map<string, TaskClassification[]>();
   for (const t of results) {
@@ -383,12 +485,15 @@ router.post("/triage", (req: Request, res: Response) => {
     }
   }
 
+  const learnedResults = results.filter((t) => t.rule.startsWith("Learned from"));
+
   res.json({
     tasks: results,
     summary: {
       green: results.filter((t) => t.tier === "GREEN").length,
       amber: results.filter((t) => t.tier === "AMBER").length,
       red: results.filter((t) => t.tier === "RED").length,
+      learned: learnedResults.length,
       total: results.length,
     },
     amberGroups: Object.fromEntries(
@@ -475,6 +580,21 @@ router.post("/unapprove", (req: Request, res: Response) => {
   writeTasks(all);
   logger.info({ reverted }, "task-autopilot: batch reverted → PROPOSED");
   res.json({ ok: true, reverted });
+});
+
+// GET /tasks/learned-patterns
+// Returns the current set of title patterns that have reached the override
+// threshold, along with their vote tallies. Useful for transparency / debugging.
+router.get("/learned-patterns", (_req: Request, res: Response) => {
+  const index = buildOverrideIndex();
+  const patterns: Array<{ title: string; votes: TierVotes; learnedTier: Tier | null; threshold: number }> = [];
+  for (const [title, votes] of index.entries()) {
+    const lt = learnedTier(votes);
+    patterns.push({ title, votes, learnedTier: lt?.tier ?? null, threshold: OVERRIDE_THRESHOLD });
+  }
+  const active = patterns.filter((p) => p.learnedTier !== null);
+  const pending = patterns.filter((p) => p.learnedTier === null);
+  res.json({ threshold: OVERRIDE_THRESHOLD, active, pending, total: patterns.length });
 });
 
 // GET /tasks/audit-log
