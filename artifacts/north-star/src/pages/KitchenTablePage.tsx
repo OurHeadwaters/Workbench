@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { RiverSmithPanel } from "@/components/RiverSmithPanel";
+import { TaskAutopilot } from "@/components/TaskAutopilot";
 import blueprintRaw from "../../../../shared/community-money-machine-blueprint.md?raw";
 import compactRaw from "../../../../shared/watershed-compact.md?raw";
 import stompingRaw from "../../../../shared/stomping-path.md?raw";
@@ -1053,6 +1054,16 @@ export function KitchenTablePage() {
 
       {/* ── River Smith Briefing Panel ── */}
       <RiverSmithPanel />
+
+      {/* ── Task Autopilot ── */}
+      <div className="flex-shrink-0 z-10">
+        <TaskAutopilot
+          onOpenDeliberation={(seatId, brief) => {
+            setActiveSeatId(seatId);
+            setInput(brief);
+          }}
+        />
+      </div>
 
       {/* ══════════════════════════════════════════════════════════════
           MODE A — TABLE IS SET (no messages yet)

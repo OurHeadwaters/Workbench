@@ -1,0 +1,20 @@
+Looked at it against your actual repo. The plan is well-shaped conceptually, but it's resting on a few things that don't exist in this codebase yet — so before "anything to add," there are some load-bearing assumptions worth catching, then real additions.
+
+⚠️ Three things in the plan that aren't real yet (will break the build agent)
+There is no north-star artifact. The "Relevant files" point to artifacts/north-star/src/pages/KitchenTablePage.tsx and MorningTriage.tsx — neither the artifact nor those files exist. Searching the whole repo, there's no Kitchen Table page, no AI-council UI, no Morning Triage component anywhere. In this repo "Kitchen Table" is the Zone 1 finance concept (jar budgeting + "Kitchen Table Reports" about money), not a deliberation/command-center screen. So the plan's premise — "The Kitchen Table already has the right infrastructure — an AI council, the Watershed Compact, and the Three Tests" — isn't true here. That infra has to be built first, or this rides on top of nothing.
+
+The "Replit task API" the whole thing depends on probably doesn't exist as a callable HTTP API. Steps 4 and 5 assume the app server can "call the Replit task API to move tasks PROPOSED → PENDING" and "paste another project's API token to pull its task list." The PROPOSED→PENDING task system is an agent/skill surface, not a public authenticated REST endpoint an Express server can hit — and there's no supported way to pull another Replit project's agent backlog by token. This is the single biggest risk: if it's false, Steps 4–5 (the actual "autopilot") can't be built as written. This needs verification before the build agent starts, or it'll get 80% done and stall at the part that matters.
+
+Two referenced files are wrong paths: shared/community-money-machine-blueprint.md doesn't exist (the real ones are shared/kits/blueprints-community-architecture.md and the Money Machine blueprint), and routes don't live in api-server/src/index.ts — they're in api-server/src/routes/. shared/watershed-compact.md and docs/ecosystem-map.md do exist. ✅
+
+Things genuinely worth adding (if the above gets sorted)
+A "why this tier" provenance the founder can trust — you have the audit tag, but add an explicit "which of the 5 Compact rules + which of the 3 Tests fired, and the one sentence of reasoning" per task. Classification of titles only (your own out-of-scope rule) is thin; a wrong GREEN that auto-clears to PENDING is the dangerous failure mode.
+A hard guardrail: anything that touches money, real-world commitments, DNS/domains, secrets, or deletes data is forced to RED regardless of classifier confidence. One bad GREEN auto-approval should be impossible by construction, not by the model getting it right.
+An "undo / un-accept" path. Once tasks flip to PENDING in bulk, the founder needs a way to pull a batch back if a tier was misjudged.
+Idempotency on the dispatch. Bulk approve must not double-accept if clicked twice or the call retries.
+A dry-run / preview mode — show exactly which task refs would move before committing the batch.
+Decide where this actually lives. Since there's no North Star artifact, is this a new artifact, or does it belong in The Arc (the existing private steward portal — the natural home for an operator command center)? That choice changes the whole plan.
+My recommendation
+The plan is two plans wearing one coat: (A) build the Kitchen Table / council / command-center surface that doesn't exist yet, and (B) the task-triage autopilot on top of it. I'd split them, and I'd spike assumption #2 first — because if there's no callable task API, the autopilot needs a completely different mechanism (and the business agent should know that on day one, not day three).
+
+Want me to turn this into a corrected, grounded task (or two) for this repo — with the right file paths, the API-feasibility spike as step one, and the guardrails above? Or are you just collecting feedback to hand back to the business agent?
