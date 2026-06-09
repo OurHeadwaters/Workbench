@@ -172,6 +172,8 @@ const ZONES: Array<{
       { href: "/northern-pilot", title: "Northern Pilot Pitch", label: "Deer Lake Pilot", desc: "Three pillars, Chief's vision, $28,000 · 6–8 week engagement." },
       { href: "/money-machine-report", title: "Quarterly Money Machine Report — Template", label: "Governance · Part 6", desc: "Fillable nine-section template: opening balances through closing balances and flags. Saves locally, prints or exports to PDF." },
       { href: "/community-finance-brief", title: "Gamified Community Finance Brief", label: "Product brief · 2027", desc: "HWBAND + xbuckets circuit, five gamification mechanics, four partner angles." },
+      { href: "/cdp-grant-narrative", title: "CDP Grant Narrative — Helping Hands", label: "Grant · 2026", desc: "Full narrative: problem, engine, wallet reveal, badges, Partnership Portal, XRPL sovereignty, and the ask." },
+      { href: "/cdp-grant-narrative/one-pager", title: "CDP Grant Narrative — One-Pager", label: "Grant · 2026", desc: "Single-page leave-behind for program officers: problem in two sentences, engine in three, three proof points, the ask." },
       { href: "/governance-card", title: "Governance Quick-Reference Card", label: "Community governance", desc: "Print-and-post card: decision authority matrix, quorum rules, voting thresholds, and the full Reserve Raid 5-step protocol." },
       { href: "/pace-referral", title: "PACE Referral — NWO Food Businesses", label: "Business Dev", desc: "For PACE to forward to NWO clients — Phase 1 offer, four deliverables." },
       { href: "/gilles-pitch", title: "Gilles Pitch — Two Weeks", label: "Private", desc: "Two-week engagement: capture knowledge, document systems, legacy at Deer Lake." },

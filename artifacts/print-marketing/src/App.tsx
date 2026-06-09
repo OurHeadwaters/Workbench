@@ -74,8 +74,9 @@ import PJStationSetup from "@/pages/PJStationSetup";
 import PJObjectiveOutcomes from "@/pages/PJObjectiveOutcomes";
 import PJJaristaLeadMagnet from "@/pages/PJJaristaLeadMagnet";
 import OCAPartnershipBrief from "@/pages/OCAPartnershipBrief";
-import CDPGrantNarrative from "@/pages/CDPGrantNarrative";
 import OCAOutreachPacket from "@/pages/OCAOutreachPacket";
+import CdpGrantNarrative from "@/pages/CdpGrantNarrative";
+import CdpGrantNarrativeOnePager from "@/pages/CdpGrantNarrativeOnePager";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
 import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
@@ -154,8 +155,9 @@ function Router() {
       <Route path="/pj-kit/objective-outcomes" component={PJObjectiveOutcomes} />
       <Route path="/pj-kit/jarista-guide" component={PJJaristaLeadMagnet} />
       <Route path="/oca-partnership-brief" component={OCAPartnershipBrief} />
-      <Route path="/cdp-grant-narrative" component={CDPGrantNarrative} />
       <Route path="/oca-outreach-packet" component={OCAOutreachPacket} />
+      <Route path="/cdp-grant-narrative" component={CdpGrantNarrative} />
+      <Route path="/cdp-grant-narrative/one-pager" component={CdpGrantNarrativeOnePager} />
       <Route component={NotFound} />
     </Switch>
   );
