@@ -5,6 +5,9 @@ import { CodetryIntroLetterPage } from "./CodetryIntroLetter";
 import { CodetryFundingBriefPage } from "./CodetryFundingBrief";
 import { CodetryOnePagerPage } from "./CodetryOnePager";
 import { CodetryPilotProposalPage } from "./CodetryPilotProposal";
+import { OCAPartnershipBriefPage } from "./OCAPartnershipBrief";
+import { CDPGrantNarrativePage } from "./CDPGrantNarrative";
+import { CapabilityStatementPublicPage } from "./CapabilityStatementPublic";
 
 const base = import.meta.env.BASE_URL;
 
@@ -15,6 +18,7 @@ function buildPersonalizedUrl(slug: string, community: string): string {
 const personalizedDocs = [
   { label: "Intro Letter", slug: "codetry-intro-letter" },
   { label: "Pilot Proposal", slug: "codetry-pilot-proposal" },
+  { label: "OCA Brief", slug: "oca-partnership-brief" },
 ];
 
 
@@ -234,6 +238,7 @@ const MECHANIC_TAGS = [
 /* ── Main component ──────────────────────────────────────────────────────── */
 export default function InternalDocs() {
   const [packetLoading, setPacketLoading] = useState(false);
+  const [ocaPacketLoading, setOcaPacketLoading] = useState(false);
   const [community, setCommunity] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
   const [activeZone, setActiveZone] = useState<number | null>(null);
@@ -264,6 +269,15 @@ export default function InternalDocs() {
       await downloadAsPdf("nan-packet", "headwaters-nan-outreach-packet.pdf", { paginate: true });
     } finally {
       setPacketLoading(false);
+    }
+  }
+
+  async function handleOcaPacketDownload() {
+    setOcaPacketLoading(true);
+    try {
+      await downloadAsPdf("oca-packet", "headwaters-oca-packet.pdf", { paginate: true });
+    } finally {
+      setOcaPacketLoading(false);
     }
   }
 
@@ -929,6 +943,63 @@ export default function InternalDocs() {
           </button>
         </div>
 
+        {/* OCA packet download */}
+        <div style={{
+          background: "#f0e8d8",
+          border: "1.5px dashed rgba(31,61,46,0.22)",
+          borderRadius: "7px",
+          padding: "1.1rem 1.4rem",
+          marginBottom: "1rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "0.75rem",
+        }}>
+          <div>
+            <p style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.65rem",
+              fontWeight: 700,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "#2e5a3f",
+              marginBottom: "0.3rem",
+            }}>
+              Zone 3 · OCA Partnership Packet
+            </p>
+            <p style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.82rem",
+              color: "var(--muted)",
+              lineHeight: 1.5,
+              margin: 0,
+            }}>
+              One click — three pages bundled as a single PDF ready to attach to an email.
+            </p>
+          </div>
+          <button
+            onClick={handleOcaPacketDownload}
+            disabled={ocaPacketLoading}
+            style={{
+              background: ocaPacketLoading ? "rgba(31,61,46,0.5)" : "#1f3d2e",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              padding: "0.5rem 1.1rem",
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              cursor: ocaPacketLoading ? "default" : "pointer",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+              transition: "background 0.15s",
+            }}
+          >
+            {ocaPacketLoading ? "⏳ Generating…" : "⬇ Download packet (3 pages)"}
+          </button>
+        </div>
+
         {/* Personalized link generator */}
         <div style={{
           background: "#f4ede0",
@@ -1123,6 +1194,24 @@ export default function InternalDocs() {
         <CodetryFundingBriefPage />
         <CodetryOnePagerPage />
         <CodetryPilotProposalPage />
+      </div>
+
+      {/* Hidden OCA packet render target for PDF generation */}
+      <div
+        id="oca-packet"
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          left: "-9999px",
+          top: 0,
+          width: "8.5in",
+          pointerEvents: "none",
+          zIndex: -1,
+        }}
+      >
+        <OCAPartnershipBriefPage />
+        <CDPGrantNarrativePage />
+        <CapabilityStatementPublicPage />
       </div>
     </div>
   );
