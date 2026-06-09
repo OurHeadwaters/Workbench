@@ -825,3 +825,23 @@ html {
     color: #111111 !important;
   }
 }
+
+/* ── Boot-print scroll particles ────────────────────────────────────────── */
+@keyframes boot-print-fade {
+  0%   { opacity: 0; transform: translateY(0) scale(0.7); }
+  20%  { opacity: 0.55; transform: translateY(-4px) scale(1); }
+  80%  { opacity: 0.40; transform: translateY(-8px) scale(1); }
+  100% { opacity: 0; transform: translateY(-14px) scale(0.9); }
+}
+
+.boot-print {
+  display: inline-block;
+  opacity: 0;
+  animation: boot-print-fade 2.4s ease-in-out infinite;
+  will-change: opacity, transform;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-print { animation: none; opacity: 0.25; }
+}

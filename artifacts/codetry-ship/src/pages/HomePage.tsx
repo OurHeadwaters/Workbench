@@ -3,6 +3,7 @@ import { ApiError, postIntake } from "@/lib/api";
 import testimonials from "@/data/testimonials";
 import { TrailSignPost } from "@/components/TrailSignPost";
 import { AmbientBackground, GrainOverlay, ScrollReveal } from "@/components/AmbientBackground";
+import { WatershedRibbon } from "@/components/WatershedRibbon";
 
 interface IntakeFormState {
   name: string;
@@ -277,8 +278,92 @@ export function HomePage() {
             </a>
           </p>
 
+          {/* ── Crypto Castle CTA ── */}
+          <div
+            className="mt-8 w-full rounded-lg overflow-hidden"
+            style={{
+              maxWidth: 500,
+              background: "rgba(8,13,10,0.85)",
+              border: "1px solid rgba(184,90,62,0.28)",
+              boxShadow: "0 0 40px rgba(184,90,62,0.10), inset 0 0 0 1px rgba(212,160,23,0.05)",
+            }}
+            data-testid="castle-hero-block"
+          >
+            {/* Castle image */}
+            <div className="relative overflow-hidden flex justify-center pt-6 pb-4" style={{ background: "rgba(0,0,0,0.35)" }}>
+              {/* torch glow behind image */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background: "radial-gradient(ellipse 70% 60% at 50% 80%, rgba(212,160,23,0.22) 0%, rgba(184,90,62,0.14) 35%, transparent 65%)",
+                }}
+              />
+              <img
+                src={`${import.meta.env.BASE_URL}crypto-castle.png`}
+                alt="The Crypto Castle — Headwaters Faction Hub"
+                style={{
+                  width: "clamp(140px, 28vw, 200px)",
+                  height: "auto",
+                  objectFit: "contain",
+                  position: "relative",
+                  zIndex: 1,
+                  filter: "brightness(1.08) drop-shadow(0 0 24px rgba(212,160,23,0.40)) drop-shadow(0 0 48px rgba(184,90,62,0.25))",
+                }}
+                data-testid="hero-castle-image"
+              />
+            </div>
+            <div className="px-5 py-4 text-center">
+              <p
+                className="font-mono text-[8px] uppercase tracking-[0.30em] mb-2"
+                style={{ color: "rgba(212,160,23,0.55)" }}
+              >
+                Crypto Faction · Castle Hub
+              </p>
+              <p
+                className="font-serif text-[14px] leading-[1.55] mb-4"
+                style={{ color: "rgba(244,237,224,0.65)" }}
+              >
+                The castle stands at the centre. Four wings, five stomping stations,
+                one community-owned machine.
+              </p>
+              <a
+                href={`${import.meta.env.BASE_URL}castle`}
+                className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[10px] uppercase tracking-[0.20em] w-full transition-all hover:opacity-85"
+                style={{
+                  background: "rgba(184,90,62,0.20)",
+                  border: "1px solid rgba(184,90,62,0.50)",
+                  color: "#f4ede0",
+                  boxShadow: "0 0 20px rgba(184,90,62,0.15)",
+                }}
+                data-testid="hero-castle-cta"
+              >
+                Enter the Crypto Castle →
+              </a>
+            </div>
+          </div>
+
+          {/* Boot-print scroll particles */}
+          <div aria-hidden className="hero-boot-prints pointer-events-none select-none mt-6" style={{ height: 32, position: "relative", width: "100%" }}>
+            {["15%","35%","55%","75%","90%"].map((left, i) => (
+              <span
+                key={i}
+                className="boot-print"
+                style={{
+                  position: "absolute",
+                  left,
+                  top: i % 2 === 0 ? 0 : 10,
+                  fontSize: "12px",
+                  animationDelay: `${i * 0.4}s`,
+                }}
+              >
+                🥾
+              </span>
+            ))}
+          </div>
+
           {/* Scroll indicator */}
-          <div className="mt-10 flex flex-col items-center gap-2 opacity-30">
+          <div className="mt-4 flex flex-col items-center gap-2 opacity-30">
             <div className="w-px h-8" style={{ background: "linear-gradient(to bottom, transparent, rgba(244,237,224,0.6))" }} />
             <span className="font-mono text-[8px] uppercase tracking-[0.28em]" style={{ color: "#f4ede0" }}>Scroll</span>
           </div>
@@ -1240,6 +1325,8 @@ export function HomePage() {
         </footer>
 
       </div>
+
+      <WatershedRibbon />
     </main>
   );
 }

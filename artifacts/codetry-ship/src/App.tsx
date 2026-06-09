@@ -41,6 +41,8 @@ import HeadwatersPackagePage from "@/pages/HeadwatersPackagePage";
 import { ParrsJarsKitPage } from "@/pages/ParrsJarsKitPage";
 import { ParrsJarsHubPage } from "@/pages/ParrsJarsHubPage";
 import { GordWidget } from "@workspace/gord-widget";
+import { StompingGroundsPage } from "@/pages/StompingGroundsPage";
+import { CastlePage } from "@/pages/CastlePage";
 
 const queryClient = new QueryClient();
 
@@ -136,6 +138,10 @@ function Router() {
       {/* ── Parr's Jars Kit ── */}
       <Route path="/parrsjars/kit" component={ParrsJarsKitPage} />
       <Route path="/parrsjars/hub" component={ParrsJarsHubPage} />
+
+      {/* ── Crypto Castle ── */}
+      <Route path="/castle" component={CastlePage} />
+      <Route path="/stomping-grounds" component={StompingGroundsPage} />
 
       <Route component={NotFound} />
     </Switch>

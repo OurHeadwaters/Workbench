@@ -11,14 +11,16 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { href: "/",         label: "The Clearing" },
-  { href: "/home",     label: "The Shore" },
-  { href: "/codetry",  label: "What is Codetry?" },
-  { href: "/services", label: "The Work" },
-  { href: "/work",     label: "Case Studies" },
-  { href: "/window",   label: "The Window" },
-  { href: "/bio",      label: "About" },
-  { href: "/listen",   label: "Listen" },
+  { href: "/",                  label: "The Clearing" },
+  { href: "/home",              label: "The Shore" },
+  { href: "/codetry",           label: "What is Codetry?" },
+  { href: "/services",          label: "The Work" },
+  { href: "/work",              label: "Case Studies" },
+  { href: "/window",            label: "The Window" },
+  { href: "/bio",               label: "About" },
+  { href: "/listen",            label: "Listen" },
+  { href: "/castle",            label: "Crypto Castle" },
+  { href: "/stomping-grounds",  label: "Stomping Grounds" },
 ];
 
 const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[] = [
