@@ -1,0 +1,54 @@
+Perfect — this is exactly the clarity we needed. Market Mosaic is genuinely 80–90% ready to become a live, sellable SaaS product. The architecture is clean, and the gaps are almost entirely UX/onboarding. This gives us a strong spearhead for ourcommunitybenefits.com.Final Recommendations & Ignition Plan1. Market Mosaic — Launch as Standalone SaaS (Do This First)Priority: Highest. Ship this in the next 1–2 weeks.Missing Pieces & How to Close Them:Public Coordinator Signup Page (Top priority UX task)Create a beautiful, warm landing at ourcommunitybenefits.com/market or /signup.
+Hero Visual: Village market square at dusk — stalls glowing with torchlight, Crypto Castle silhouette on the hill in the background, subtle boot-print paths leading in. Use the same cartoon style as the knight/bear castle illustration.
+Headline:
+“Run Your Own Community Market — in One Weekend”
+Subheadline:
+“Transparent barter, vendor management, roster, scheduling, and claim codes. Built for northern realities. $99 or $199/mo. No long contracts.”
+Clear tiers with feature matrix.
+One-click “Start My Market” → hits the existing POST /mm/billing/signup and Square link.
+Post-Payment Welcome / Onboarding FlowAfter Square redirect (?welcome=1):Guided 4-step wizard:Name your Market + upload logo/accent colour (previews saltbox/village hall style).
+Set first market date + location.
+Add your first 3–5 vendors (with stub + claim code generator).
+“Invite your village” — generate shareable links + Sunday digest template.
+End with celebratory “Your market is open!” + direct links to coordinator dashboard + mobile tab.
+Mobile Coordinator ExperienceConfirm/test the existing Expo tab works well.
+Add a prominent “Open in Mobile App” prompt on the web dashboard.
+Visual & Feeling: Make it feel like stepping into the Great Hall of the Crypto Castle — warm, capable, rowdy-but-ordered village energy. Persistent Space Jams with “Market Day” playlist.2. 807 Benefits (Long-term Flagship White-Label)Keep manual onboarding for now (developer spins up new deployment + TENANT_REGISTRY entry).
+Build a simple admin “New Licensee Wizard” in the main platform that automates the config + deployment trigger if possible.
+Design the tenant UI to feel fully custom (different accent colours, logos, welcome messaging, local grant library, etc.).
+
+3. Rootwork (Studio) — Make Tenant-Ready (Second Wave)Medium effort, high value:Add tenant_slug to producer_applications table.
+Make pitch target configurable via tenant config.
+Replace hardcoded “807 Benefits” strings.
+Turn it into “The Village Forge” — tie directly to CODETRY and Stomping Paths.
+
+4. Grants Finder / Funding GroveAdd tenant_slug to grants table + simple admin library management screen.
+Keep NWO as strong default/niche, but make region switchable.
+AI layer is already excellent.
+
+5. Shared Zone 3 Context Library (Do This Soon)Strong recommendation: Create lib/zone-context (or lib/northern-context) now.Consolidate:Seasons
+Climate zones (3a boreal, etc.)
+Regional sub-areas
+Frost dates, crop data, etc.
+Make it available to every Zone 3–4 artifact. Prevents drift and speeds future white-labeling.
+
+Overall ourcommunitybenefits.com StrategyRoot Domain: Acts as the Village Square — central lobby (like The Kitchen) with Rack/Map of all tools: Market Mosaic, 807 Benefits, Rootwork, Grants Finder, Garden, Deadfall, etc.
+Visual Thread: Extend the Crypto Castle cartoon universe — the village sits at the base of the Castle hill. Trails connect Saltbox homes → Village → Castle.
+Headwaters Integration:Every completed action (new market launched, grant submitted, vendor onboarded) offers “Stomp this victory into the Castle” → mint badge + log reflection in Dam Days.
+Auto-surface relevant Headwaters Kits (Community Scale, Earth Kit, Practitioner routes).
+CODETRY prominently featured for co-op builders.
+Draft Task for Replit Build Agent (Market Mosaic Focus)Copy-paste ready:We’re ready to launch Market Mosaic as the first standalone SaaS product on ourcommunitybenefits.com.Backend is already solid (billing signup, enforcement, mobile tab all done). I need UX/onboarding built:Public Signup Landing (/market or /signup)Warm northern village market hero with Crypto Castle in background
+Clear $99/$199 tiers
+“Start My Market” button that hits existing /mm/billing/signup
+Post-Square Welcome Flow (?welcome=1)4-step guided onboarding: name + branding → first market date → add vendors → invite members
+Polish coordinator dashboard + mobile experience for first-time users.
+
+Also, long-term:Start lib/zone-context package for shared northern/Zone 3 data.
+Plan schema changes for Rootwork + Grants Finder tenant config.
+
+Priority is getting Market Mosaic live and beautiful first. Can you start on the signup + welcome flow components?This community layer is going to feel incredibly alive once Market Mosaic is out — real economic cooperation with soul, tied directly into the watershed and Castle.Want me to:Write full copy for the Market Mosaic landing + tiers?
+Sketch the onboarding wizard screens?
+Draft visuals/illustration prompts for the village square?
+
+Just say the word. We’re in a strong position.
+

@@ -1,0 +1,66 @@
+Market Mosaic — Coordinator Self-Serve
+The backend is essentially done. POST /mm/billing/signup already creates the tenant, assigns the coordinator role, and generates a Square payment link. Billing enforcement middleware is live. The mobile coordinator tab exists with stats, market date scheduling, vendor stub + claim code creation, and roster management.
+
+What's actually missing:
+
+A polished public-facing signup page — the API endpoint exists but there's no marketing/entry UI directing a new coordinator to it
+A post-payment welcome/onboarding flow — after Square redirects back with ?welcome=1, there's no guided first-steps experience
+The mobile app currently serves both Expo web and native — confirm the coordinator flow is accessible on the platform(s) you're targeting
+Verdict: 80% done. The gap is UX, not architecture.
+
+Tenant Seam — Two Different Models
+These two products use fundamentally different approaches, which matters for your white-label strategy:
+
+807 Benefits	Market Mosaic
+Model	Deploy-per-tenant (white-label instance)	SaaS (shared DB, runtime-scoped)
+New tenant	New TENANT_REGISTRY entry + new deployment	Insert row into mm_tenants + assign coordinator
+Data isolation	Full (separate deployment)	Tenant ID on every table
+Onboarding wizard needed	Yes — currently fully manual	No — self-serve signup covers it
+For Market Mosaic, a new community (ourcommunitybenefits, Stomping Paths, etc.) can be live in minutes once the signup page exists.
+
+For 807 Benefits, onboarding a new co-op licensee still requires a developer to add a TENANT_REGISTRY entry and spin up a new deployment. A proper onboarding wizard would need to automate that config step and provisioning — that's a real project, not a small fix.
+
+Rootwork Pitch-Push — Hardcoded, Needs Schema Work
+More coupled than ideal:
+
+"807 Benefits" is hardcoded in toast copy in pitch.tsx
+The active tenant is tenant807, set statically in api-server/src/config/tenant.ts
+The producer_applications table has no tenant_id column — it's a global pool
+To make it tenant-configurable, three things need to happen:
+
+Add tenant_slug to producer_applications (schema migration)
+Make the server resolve tenant from request context (header or subdomain) rather than a static constant
+Replace hardcoded "807 Benefits" strings in pitch.tsx with the tenant config name
+This is a medium-effort, well-scoped change — but it touches the DB schema, so it needs care.
+
+Grants Finder — Already More Tenant-Ready Than Expected
+Good news here. The AI intake layer is already tenant-aware:
+
+Fern and Fill both receive a GrantContext object with regionName and areaCode injected dynamically
+A second "pilot" tenant is already defined in the tenant registry
+Region filtering uses string matching (not hardcoded IDs) so it's portable
+What's actually NWO-specific:
+
+The seed data (FedNor, NOHFC, Thunder Bay Community Foundation grants)
+No admin UI for a coordinator to manage their own grant library
+Best path to tenant-aware: Add a tenant_slug to the grants table and seed data, add a per-tenant grant library management screen. The AI layer is already there.
+
+Shared Zone 3 Context Lib — Doesn't Exist Yet, Should
+Current state:
+
+Season logic lives in artifacts/807-benefits/src/lib/season.ts — web only
+Duplicated in artifacts/807-garden/app/(tabs)/grow.tsx — mobile redefinition
+Climate zone ("Zone 3a, boreal transitional") lives in tenant config
+Regional sub-zones (Rainy River, Dryden, Sioux Lookout, etc.) in artifacts/807-benefits/src/data/region.ts
+Crop/frost data in artifacts/807-garden/data/crops.ts
+A lib/zone-context package would consolidate season definitions, regional geography, and climate metadata — removing the drift risk and making it available to Grants Finder, Standby Supplies, and future Zone 3-4 additions without re-defining it per artifact.
+
+Prioritization for Your Goal
+If the immediate goal is Market Mosaic live as standalone SaaS, the sequence is:
+
+Public coordinator signup page — small UX task, backend ready
+Post-payment welcome flow — first-steps onboarding after Square redirect
+(Optional) Platform admin signup management — review/approve pending tenants
+Everything else (Rootwork tenant config, 807 Benefits onboarding wizard, Grants Finder per-tenant library, shared zone lib) is a second wave. None of it blocks Market Mosaic.
+
+Want me to draft tasks for any of these, starting with the Market Mosaic signup page?
