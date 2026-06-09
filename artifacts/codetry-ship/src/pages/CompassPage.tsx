@@ -1051,6 +1051,68 @@ function RegistryView() {
         )}
       </div>
 
+      {/* Castle & Stomping Grounds callout */}
+      {!q && (
+        <div style={{
+          marginTop: 20,
+          borderRadius: 10,
+          border: `1px solid rgba(91,62,140,0.22)`,
+          background: "rgba(91,62,140,0.04)",
+          padding: "16px 18px",
+        }}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 10 }}>
+            <span style={{ fontSize: 20, flexShrink: 0, lineHeight: 1 }}>⛵</span>
+            <div>
+              <div style={{
+                fontFamily: "monospace", fontSize: 8, fontWeight: 700,
+                letterSpacing: "0.22em", textTransform: "uppercase",
+                color: "rgba(91,62,140,0.7)", marginBottom: 3,
+              }}>
+                Z5 — Edge · Crypto Corner
+              </div>
+              <div style={{
+                fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 700,
+                color: "#5B3E8C", lineHeight: 1.2,
+              }}>
+                The Crypto Castle & Stomping Grounds
+              </div>
+            </div>
+          </div>
+          <p style={{ margin: "0 0 12px", fontSize: 12, color: MUTED, lineHeight: 1.6, maxWidth: 520 }}>
+            Docked at Zone 5's Crypto Corner — the outward edge of the watershed. The Castle holds the tools, the archive, and the armory. The Stomping Grounds is where the community gathers, tips flow, and the transformation trail begins.
+          </p>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" as const }}>
+            <a
+              href="/castle"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                padding: "5px 12px", borderRadius: 5,
+                background: "#5B3E8C", color: "#fff",
+                fontFamily: "monospace", fontSize: 9, fontWeight: 700,
+                letterSpacing: "0.12em", textTransform: "uppercase",
+                textDecoration: "none",
+              }}
+            >
+              Enter the Castle
+            </a>
+            <a
+              href="/stomping-grounds"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                padding: "5px 12px", borderRadius: 5,
+                background: "rgba(91,62,140,0.12)", color: "#5B3E8C",
+                border: "1px solid rgba(91,62,140,0.25)",
+                fontFamily: "monospace", fontSize: 9, fontWeight: 700,
+                letterSpacing: "0.12em", textTransform: "uppercase",
+                textDecoration: "none",
+              }}
+            >
+              Stomping Grounds
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Registry footer */}
       <div style={{
         marginTop: 24, paddingTop: 14, borderTop: `1px solid ${RULE}`,
@@ -1294,6 +1356,68 @@ export function CompassPage() {
                 </button>
               ))}
               <span style={{ fontFamily: "monospace", fontSize: 8, color: MUTED, marginLeft: "auto" }}>⛵ Crypto Corner &nbsp;·&nbsp; 🏛 Village Corner</span>
+            </div>
+          </div>
+        )}
+
+        {/* Castle & Stomping Grounds callout — shown in map and mobile views */}
+        {mode !== "registry" && (
+          <div style={{
+            marginTop: 20,
+            borderRadius: 10,
+            border: `1px solid rgba(91,62,140,0.22)`,
+            background: "rgba(91,62,140,0.04)",
+            padding: "16px 18px",
+          }}>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 10 }}>
+              <span style={{ fontSize: 20, flexShrink: 0, lineHeight: 1 }}>⛵</span>
+              <div>
+                <div style={{
+                  fontFamily: "monospace", fontSize: 8, fontWeight: 700,
+                  letterSpacing: "0.22em", textTransform: "uppercase",
+                  color: "rgba(91,62,140,0.7)", marginBottom: 3,
+                }}>
+                  Z5 — Edge · Crypto Corner
+                </div>
+                <div style={{
+                  fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 700,
+                  color: "#5B3E8C", lineHeight: 1.2,
+                }}>
+                  The Crypto Castle & Stomping Grounds
+                </div>
+              </div>
+            </div>
+            <p style={{ margin: "0 0 12px", fontSize: 12, color: MUTED, lineHeight: 1.6, maxWidth: 520 }}>
+              Docked at Zone 5's Crypto Corner — the outward edge of the watershed. The Castle holds the tools, the archive, and the armory. The Stomping Grounds is where the community gathers, tips flow, and the transformation trail begins.
+            </p>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" as const }}>
+              <a
+                href="/castle"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 4,
+                  padding: "5px 12px", borderRadius: 5,
+                  background: "#5B3E8C", color: "#fff",
+                  fontFamily: "monospace", fontSize: 9, fontWeight: 700,
+                  letterSpacing: "0.12em", textTransform: "uppercase",
+                  textDecoration: "none",
+                }}
+              >
+                Enter the Castle
+              </a>
+              <a
+                href="/stomping-grounds"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 4,
+                  padding: "5px 12px", borderRadius: 5,
+                  background: "rgba(91,62,140,0.12)", color: "#5B3E8C",
+                  border: "1px solid rgba(91,62,140,0.25)",
+                  fontFamily: "monospace", fontSize: 9, fontWeight: 700,
+                  letterSpacing: "0.12em", textTransform: "uppercase",
+                  textDecoration: "none",
+                }}
+              >
+                Stomping Grounds
+              </a>
             </div>
           </div>
         )}

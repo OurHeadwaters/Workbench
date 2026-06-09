@@ -1730,6 +1730,117 @@ export function MapPage() {
           </a>
         </div>
 
+        {/* ── The Crypto Castle & Stomping Grounds ── */}
+        <div
+          id="zone-castle"
+          style={{
+            marginTop: 24,
+            borderRadius: 12,
+            border: `1px solid rgba(91,62,140,0.22)`,
+            background: "rgba(91,62,140,0.04)",
+            padding: "24px 22px",
+            scrollMarginTop: 24,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 16,
+              marginBottom: 14,
+            }}
+          >
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                background: "rgba(91,62,140,0.10)",
+                border: "1px solid rgba(91,62,140,0.25)",
+                color: "rgba(91,62,140,0.9)",
+                fontSize: 18,
+                flexShrink: 0,
+              }}
+            >
+              ⛵
+            </span>
+            <div>
+              <div
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: "rgba(91,62,140,0.7)",
+                  marginBottom: 4,
+                }}
+              >
+                Z5 — Edge · Crypto Corner
+              </div>
+              <div
+                style={{
+                  fontFamily: "Georgia, serif",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: FOREST,
+                  lineHeight: 1.15,
+                }}
+              >
+                The Crypto Castle & Stomping Grounds
+              </div>
+            </div>
+          </div>
+          <p style={{ margin: "0 0 16px", fontSize: 13, color: MUTED, lineHeight: 1.65, maxWidth: 540 }}>
+            Docked at Zone 5's Crypto Corner — the outward edge of the watershed where the Headwaters ship meets the world. The Castle is where the tools are shaped, the archive lives, and the armory is stocked. The Stomping Grounds is where the community gathers: tips flow, the transformation trail begins, and the water wheel turns.
+          </p>
+          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+            <a
+              href="/castle"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontFamily: "monospace",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "rgba(91,62,140,0.85)",
+                textDecoration: "none",
+                borderBottom: "1px solid rgba(91,62,140,0.30)",
+                paddingBottom: 1,
+                transition: "opacity 0.15s",
+              }}
+            >
+              Enter the Castle →
+            </a>
+            <a
+              href="/stomping-grounds"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontFamily: "monospace",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "rgba(91,62,140,0.85)",
+                textDecoration: "none",
+                borderBottom: "1px solid rgba(91,62,140,0.30)",
+                paddingBottom: 1,
+                transition: "opacity 0.15s",
+              }}
+            >
+              Visit the Stomping Grounds →
+            </a>
+          </div>
+        </div>
+
         {/* Footer — Odyssey CTA */}
         <div
           style={{
