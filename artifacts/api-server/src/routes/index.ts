@@ -33,6 +33,7 @@ import riverSmithRouter from "./riverSmith";
 import settingsRouter from "./settings";
 import kitsRouter from "./kits";
 import practitionerApplicationsRouter from "./practitionerApplications";
+import stompingGroundsRouter from "./stompingGrounds";
 
 const router: IRouter = Router();
 
@@ -73,5 +74,6 @@ router.use("/river-smith", riverSmithRouter);
 router.use("/settings", settingsRouter);
 router.use("/kits", kitsRouter);
 router.use("/practitioner-applications", practitionerApplicationsRouter);
+router.use("/stomping-grounds", stompingGroundsRouter);
 
 export default router;

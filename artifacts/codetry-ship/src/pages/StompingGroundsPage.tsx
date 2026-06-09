@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WatershedRibbon } from "@/components/WatershedRibbon";
 import { GrainOverlay } from "@/components/AmbientBackground";
 
@@ -65,10 +65,40 @@ const STATIONS: Station[] = [
   },
 ];
 
-const STOMPER_COUNT = 2847;
+const STOMPER_SEED = 2847;
+const SESSION_KEY = "stomping-grounds:visited";
+const COUNT_API = "/api/stomping-grounds/count";
 
 export function StompingGroundsPage() {
   const [open, setOpen] = useState<string | null>(null);
+  const [stomperCount, setStomperCount] = useState<number>(STOMPER_SEED);
+
+  useEffect(() => {
+    const alreadyVisited = sessionStorage.getItem(SESSION_KEY) === "1";
+
+    async function recordVisit() {
+      try {
+        if (!alreadyVisited) {
+          const res = await fetch(COUNT_API, { method: "POST" });
+          if (res.ok) {
+            const data = (await res.json()) as { count: number };
+            setStomperCount(data.count);
+            sessionStorage.setItem(SESSION_KEY, "1");
+            return;
+          }
+        }
+        const res = await fetch(COUNT_API);
+        if (res.ok) {
+          const data = (await res.json()) as { count: number };
+          setStomperCount(data.count);
+        }
+      } catch {
+        // Silently fall back to the seed number already shown
+      }
+    }
+
+    recordVisit();
+  }, []);
 
   const toggle = (id: string) => setOpen((prev) => (prev === id ? null : id));
 
@@ -134,7 +164,7 @@ export function StompingGroundsPage() {
             }}
             data-testid="stomper-count"
           >
-            🥾 {STOMPER_COUNT.toLocaleString()} humans have stomped these grounds
+            🥾 {stomperCount.toLocaleString()} humans have stomped these grounds
           </div>
 
           <a
