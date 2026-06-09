@@ -1,5 +1,18 @@
 import { Link } from "wouter";
 
+const HH_BADGES = [
+  { label: "Watching", color: "#1f3d2e" },
+  { label: "Learning", color: "#1A5FA8" },
+  { label: "Practising", color: "#b85a3e" },
+  { label: "Teaching", color: "#d4a017" },
+];
+
+const HH_SAMPLE_TASKS = [
+  { title: "Stack and cover the firewood at the band hall", time: "~45 min", pay: "12 tokens", tag: "Land & Grounds" },
+  { title: "Translate the meeting notes into Cree (written)", time: "~1.5 h", pay: "25 tokens", tag: "Language" },
+  { title: "Drive the Elder to her Thursday appointment", time: "~2 h", pay: "30 tokens", tag: "Care & Transport" },
+];
+
 export function EconomyPage() {
   return (
     <main className="min-h-screen w-full bg-background text-foreground">
@@ -171,6 +184,174 @@ export function EconomyPage() {
 
         <hr className="rule mt-12 sm:mt-16" />
 
+        {/* ── Helping Hands Hub Panel ── */}
+        <section className="mt-12 sm:mt-16">
+          <div
+            className="rounded-sm border overflow-hidden"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          >
+            {/* Panel header bar */}
+            <div
+              className="px-6 sm:px-8 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+              style={{ background: "#1a2e1e" }}
+            >
+              <div className="flex items-center gap-3">
+                <HandsIconSmall />
+                <div>
+                  <p
+                    className="font-mono text-[9px] uppercase tracking-[0.24em] mb-0.5"
+                    style={{ color: "rgba(212,160,23,0.75)" }}
+                  >
+                    community labour
+                  </p>
+                  <h2
+                    className="font-serif text-xl sm:text-2xl leading-tight"
+                    style={{ color: "#f4ede0" }}
+                  >
+                    Helping Hands
+                  </h2>
+                </div>
+              </div>
+              <Link
+                href="/economy/helping-hands"
+                className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] rounded-sm px-4 py-2.5 shrink-0 transition-all hover:opacity-90"
+                style={{ background: "#d4a017", color: "#1a1a0e" }}
+              >
+                Full hub →
+              </Link>
+            </div>
+
+            {/* Panel body */}
+            <div
+              className="px-6 sm:px-8 py-7 space-y-6"
+              style={{ background: "hsl(var(--card))" }}
+            >
+              <p className="font-serif text-base sm:text-lg leading-relaxed">
+                Helping Hands is the task-and-credit layer of the Codetry economy. Real work posted by
+                your band, your co-op, or your neighbours. Real pay that lands in a wallet that belongs to
+                you. Your name on the contributor board.
+              </p>
+
+              {/* What / How / Join columns */}
+              <div className="grid sm:grid-cols-3 gap-5 pt-2">
+                <HHPillar
+                  label="What it is"
+                  text="Community tasks with a posted rate. Chop wood. Translate a notice. Drive someone to an appointment. Every task shows what it pays."
+                />
+                <HHPillar
+                  label="How you earn"
+                  text="Claim a task. Do the work. Mark it done. An admin confirms — and credits land in your wallet immediately, no waiting."
+                />
+                <HHPillar
+                  label="How to join"
+                  text="Sign up with your email. A wallet is created in the background. You'll meet it when your first credit arrives."
+                />
+              </div>
+
+              {/* Sample task feed */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <p
+                    className="font-mono text-[9px] uppercase tracking-[0.22em]"
+                    style={{ color: "hsl(var(--muted-foreground))" }}
+                  >
+                    What&rsquo;s on the board now
+                  </p>
+                  <a
+                    href="/headwaters-books/helping-hands"
+                    className="font-mono text-[9px] uppercase tracking-[0.14em] hover:opacity-80"
+                    style={{ color: "hsl(var(--accent))" }}
+                  >
+                    See all →
+                  </a>
+                </div>
+                <div className="space-y-2">
+                  {HH_SAMPLE_TASKS.map((t) => (
+                    <div
+                      key={t.title}
+                      className="flex items-center justify-between gap-4 rounded-sm px-4 py-3"
+                      style={{ background: "hsl(var(--muted))" }}
+                    >
+                      <div className="min-w-0">
+                        <p className="font-sans text-sm font-medium text-foreground truncate">{t.title}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span
+                            className="font-mono text-[8px] uppercase tracking-[0.14em]"
+                            style={{ color: "hsl(var(--muted-foreground))" }}
+                          >
+                            {t.tag}
+                          </span>
+                          <span
+                            className="font-mono text-[8px]"
+                            style={{ color: "hsl(var(--muted-foreground))" }}
+                          >
+                            · {t.time}
+                          </span>
+                        </div>
+                      </div>
+                      <span
+                        className="font-mono text-sm font-bold shrink-0"
+                        style={{ color: "#1f3d2e" }}
+                      >
+                        {t.pay}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Badge progression strip */}
+              <div>
+                <p
+                  className="font-mono text-[9px] uppercase tracking-[0.22em] mb-3"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                >
+                  Badge progression — every confirmed shift moves you forward
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {HH_BADGES.map((b, i) => (
+                    <div
+                      key={b.label}
+                      className="flex items-center gap-2 rounded-sm px-3 py-1.5"
+                      style={{ background: `${b.color}18`, border: `1px solid ${b.color}40` }}
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{ background: b.color }}
+                      />
+                      <span
+                        className="font-mono text-[10px] uppercase tracking-[0.14em]"
+                        style={{ color: b.color }}
+                      >
+                        {String(i + 1).padStart(2, "0")} · {b.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3 pt-1">
+                <a
+                  href="/headwaters-books/helping-hands"
+                  className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+                  style={{ color: "hsl(var(--accent))" }}
+                >
+                  Open the task board →
+                </a>
+                <Link
+                  href="/economy/helping-hands"
+                  className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-60"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                >
+                  Learn more about Helping Hands →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <hr className="rule mt-12 sm:mt-16" />
+
         {/* ── CTA ── */}
         <section className="mt-12 sm:mt-16 space-y-6">
           <p className="font-serif text-base sm:text-lg leading-relaxed">
@@ -204,6 +385,45 @@ export function EconomyPage() {
         </footer>
       </div>
     </main>
+  );
+}
+
+interface HHPillarProps {
+  label: string;
+  text: string;
+}
+
+function HHPillar({ label, text }: HHPillarProps) {
+  return (
+    <div>
+      <p
+        className="font-mono text-[9px] uppercase tracking-[0.22em] mb-1.5"
+        style={{ color: "hsl(var(--accent))" }}
+      >
+        {label}
+      </p>
+      <p
+        className="font-serif text-sm leading-relaxed"
+        style={{ color: "hsl(var(--muted-foreground))" }}
+      >
+        {text}
+      </p>
+    </div>
+  );
+}
+
+function HandsIconSmall() {
+  return (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+      <circle cx="18" cy="18" r="18" fill="rgba(212,160,23,0.12)" />
+      <path
+        d="M12 20 C10 19 8 16 9 13 C9.5 11 11.5 10 13 11 L13 8 C13 6.9 13.9 6 15 6 C15.7 6 16.3 6.4 16.7 7 C17 6.2 17.8 5.6 18.7 5.6 C19.5 5.6 20.2 6 20.6 6.7 C21 5.8 21.9 5.2 23 5.2 C24.3 5.2 25.4 6.3 25.4 7.5 L25.4 11 C26.9 10 29 11 29.5 13 C30.5 16 28.5 19 26.5 20 L26.5 26 C26.5 28 24.5 30 22.5 30 L19 30 C17 30 15 28 15 26 L15 20 C14 20 12.5 20.5 12 20 Z"
+        fill="rgba(212,160,23,0.15)"
+        stroke="rgba(212,160,23,0.7)"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 

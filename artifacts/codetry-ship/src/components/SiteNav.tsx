@@ -33,10 +33,11 @@ const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[
 ];
 
 const EXPLORE_LINKS: { icon: string; name: string; href: string }[] = [
-  { icon: "🌿", name: "Economy",  href: "/economy" },
-  { icon: "🧭", name: "Odyssey",  href: "/odyssey" },
-  { icon: "🗺️", name: "Map",      href: "/map" },
-  { icon: "🔭", name: "The Legend",  href: "/legend" },
+  { icon: "🌿", name: "Economy",        href: "/economy" },
+  { icon: "🤝", name: "Helping Hands",  href: "/economy/helping-hands" },
+  { icon: "🧭", name: "Odyssey",        href: "/odyssey" },
+  { icon: "🗺️", name: "Map",            href: "/map" },
+  { icon: "🔭", name: "The Legend",     href: "/legend" },
 ];
 
 function isActive(path: string, location: string): boolean {

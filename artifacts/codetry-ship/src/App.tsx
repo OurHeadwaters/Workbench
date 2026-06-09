@@ -43,6 +43,7 @@ import { ParrsJarsHubPage } from "@/pages/ParrsJarsHubPage";
 import { GordWidget } from "@workspace/gord-widget";
 import { StompingGroundsPage } from "@/pages/StompingGroundsPage";
 import { CastlePage } from "@/pages/CastlePage";
+import { HelpingHandsPage } from "@/pages/HelpingHandsPage";
 
 const queryClient = new QueryClient();
 
@@ -96,6 +97,7 @@ function Router() {
 
       {/* ── P2P Community Economy Engine ── */}
       <Route path="/economy" component={EconomyPage} />
+      <Route path="/economy/helping-hands" component={HelpingHandsPage} />
       <Route path="/economy/wallet" component={WalletPage} />
       <Route path="/economy/tip" component={TipPage} />
       <Route path="/economy/join/:code" component={EconomyJoinPage} />

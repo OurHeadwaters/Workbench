@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useGetHhTasks,
   useClaimHhTask,
@@ -12,12 +12,115 @@ import {
 import { useGetBookkeeperMe } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Loader2, Plus, Clock, Coins } from "lucide-react";
+import { Loader2, Plus, Clock, Coins, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 type TaskStatus = "all" | "available" | "claimed" | "completed" | "confirmed" | "missed";
+
+interface StompCelebration {
+  taskTitle: string;
+  payAmount: string;
+  payCurrency: string;
+}
+
+function StompCard({ celebration, onDismiss }: { celebration: StompCelebration; onDismiss: () => void }) {
+  const pay = `${parseFloat(celebration.payAmount).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${celebration.payCurrency === "xrp" ? "XRP" : "tokens"}`;
+
+  return (
+    <div
+      className="relative rounded-sm border px-5 py-5 overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, #1a2e1e 0%, #1f3d2e 60%, #152918 100%)",
+        borderColor: "rgba(212,160,23,0.4)",
+        animation: "stomp-in 0.4s cubic-bezier(0.34,1.56,0.64,1) both",
+      }}
+    >
+      <style>{`
+        @keyframes stomp-in {
+          from { opacity: 0; transform: scale(0.88) translateY(12px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes stomp-pulse {
+          0%, 100% { opacity: 0.4; transform: scale(1); }
+          50%       { opacity: 0.8; transform: scale(1.06); }
+        }
+      `}</style>
+      <div
+        aria-hidden
+        style={{
+          position: "absolute", inset: 0,
+          background: "radial-gradient(ellipse at 50% 0%, rgba(212,160,23,0.14) 0%, transparent 65%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <button
+        type="button"
+        onClick={onDismiss}
+        className="absolute top-3 right-3 p-1 rounded-sm opacity-50 hover:opacity-100 transition-opacity"
+        style={{ color: "rgba(244,237,224,0.7)" }}
+        aria-label="Dismiss"
+      >
+        <X className="w-4 h-4" />
+      </button>
+
+      <div className="relative z-10 flex items-start gap-4">
+        <div
+          className="shrink-0 text-3xl leading-none select-none"
+          style={{ animation: "stomp-pulse 1.4s ease-in-out 3" }}
+          aria-hidden
+        >
+          🏕️
+        </div>
+        <div className="flex-1 min-w-0">
+          <p
+            className="font-mono text-[9px] uppercase tracking-[0.24em] mb-1"
+            style={{ color: "rgba(212,160,23,0.75)" }}
+          >
+            Stomp · Task confirmed
+          </p>
+          <p
+            className="font-serif text-base leading-snug mb-0.5"
+            style={{ color: "#f4ede0" }}
+          >
+            {celebration.taskTitle}
+          </p>
+          <p
+            className="font-mono text-sm font-bold"
+            style={{ color: "#d4a017" }}
+          >
+            +{pay} landed in your wallet.
+          </p>
+          <p
+            className="font-serif text-xs mt-2"
+            style={{ color: "rgba(244,237,224,0.55)" }}
+          >
+            The community saw you show up. That counts, and it&rsquo;s on record.
+          </p>
+          <div className="mt-3 flex items-center gap-3">
+            <a
+              href="#"
+              className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+              style={{ color: "rgba(212,160,23,0.8)" }}
+              onClick={(e) => e.preventDefault()}
+              title="Dam Days integration coming soon"
+            >
+              📅 Log this in Dam Days?
+            </a>
+            <span
+              className="font-mono text-[8px] uppercase tracking-[0.12em] rounded-sm px-1.5 py-0.5"
+              style={{ background: "rgba(212,160,23,0.12)", color: "rgba(212,160,23,0.6)" }}
+            >
+              Coming soon
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function statusBadge(status: string) {
   switch (status) {
@@ -45,7 +148,14 @@ function formatMinutes(mins: number) {
 export default function HHTasks() {
   const qc = useQueryClient();
   const [status, setStatus] = useState<TaskStatus>("all");
+  const [stomp, setStomp] = useState<StompCelebration | null>(null);
   const today = new Date().toISOString().slice(0, 10);
+
+  useEffect(() => {
+    if (!stomp) return;
+    const timer = setTimeout(() => setStomp(null), 12000);
+    return () => clearTimeout(timer);
+  }, [stomp]);
 
   const { data: me } = useGetBookkeeperMe();
   const isAdmin = me?.role === "owner" || me?.role === "ops_manager";
@@ -77,9 +187,17 @@ export default function HHTasks() {
     };
 
     if (action === "confirm") {
+      const task = tasks?.find((t) => t.id === id);
       confirmTask.mutate({ id }, {
         onSuccess: (result) => {
           toast.success(`${labels.confirm}: "${title}"`);
+          if (task) {
+            setStomp({
+              taskTitle: task.title,
+              payAmount: task.payAmount,
+              payCurrency: task.payCurrency,
+            });
+          }
           if (result.bonusAwarded) {
             const b = result.bonusAwarded;
             const name = `${b.firstName ?? ""} ${b.lastName ?? ""}`.trim();
@@ -155,6 +273,14 @@ export default function HHTasks() {
           </Link>
         )}
       </div>
+
+      {/* ── Stomp celebration card ── */}
+      {stomp && (
+        <StompCard
+          celebration={stomp}
+          onDismiss={() => setStomp(null)}
+        />
+      )}
 
       {/* Status filter tabs */}
       <div className="flex flex-wrap gap-2">
