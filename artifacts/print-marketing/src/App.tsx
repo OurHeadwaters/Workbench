@@ -55,6 +55,7 @@ import DeerLakeFirstEngine from "@/pages/DeerLakeFirstEngine";
 import DeerLakeYouthOdyssey from "@/pages/DeerLakeYouthOdyssey";
 import InternalDocs from "@/pages/InternalDocs";
 import SoftwareSystemsBundle from "@/pages/SoftwareSystemsBundle";
+import WatershedVisionPage from "@/pages/WatershedVision";
 import GovernanceCard from "@/pages/GovernanceCard";
 import EcosystemGuide from "@/pages/EcosystemGuide";
 import MoneyMachineReport from "@/pages/MoneyMachineReport";
@@ -128,6 +129,7 @@ function Router() {
       <Route path="/codetry-packet-deer-lake" component={CodetryPacketDeerLake} />
       <Route path="/codetry-packet-food-systems" component={CodetryPacketFoodSystems} />
       <Route path="/constellation-session-may16" component={ConstellationSessionMay16} />
+      <Route path="/watershed-vision" component={WatershedVisionPage} />
       <Route path="/xrpl-tip" component={XRPLTip} />
       <Route path="/community-finance-brief" component={CommunityFinanceBrief} />
       <Route path="/governance-card" component={GovernanceCard} />

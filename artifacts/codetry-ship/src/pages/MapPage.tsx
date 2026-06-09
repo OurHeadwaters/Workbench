@@ -93,14 +93,14 @@ function resolveHeaderContent(quiz: QuizState): HeaderContent {
   }
   if (quiz.who === "community" && quiz.situation === "normal") {
     return {
-      h1: "You're in Zone 4 — Clearing.",
+      h1: "You're in Zone 4 — The Clearing.",
       intro:
         "Deliberation. The clearing is set up, evidence is on the table, and the research library is open. No decision required yet — just good preparation.",
     };
   }
   if (quiz.who === "community" && quiz.situation === "standby") {
     return {
-      h1: "You're in Zone 4 — Clearing, with Zone 3 on watch.",
+      h1: "You're in Zone 4 — The Clearing, with Zone 3 on watch.",
       intro:
         "Session active. Decisions are being made, the clearing is open, and Zone 3 pilots are standing by. The community is present.",
     };
@@ -1282,7 +1282,7 @@ export function MapPage() {
                 (e.currentTarget as HTMLAnchorElement).style.borderColor = RULE;
               }}
             >
-              ← Clearing
+              ← The Clearing
             </a>
           </div>
         )}
@@ -1557,7 +1557,7 @@ export function MapPage() {
             In permaculture, zones radiate outward from the hearth — the place you visit most becomes Zone 0, and each zone further out is more public, more exposed, and more connected to the outside world. The Headwaters neighbourhood follows the same logic.
           </p>
           <p style={{ margin: "0 0 14px", fontSize: 13, color: "#4a4035", lineHeight: 1.65 }}>
-            Water flows from the hearth outward: <strong style={{ color: FOREST }}>Saltbox (Hearth)</strong> → <strong style={{ color: "#1f3d2e" }}>Kitchen Table (Roots)</strong> → <strong style={{ color: "#1A5FA8" }}>Workbench (Trail)</strong> → <strong style={{ color: "#3D4A5C" }}>Greenhouse (Watch)</strong> → <strong style={{ color: "#0F766E" }}>Clearing (Gather)</strong> → <strong style={{ color: "#5B3E8C" }}>Edge (Horizon)</strong> — and back again. The community is the watershed.
+            Water flows from the hearth outward: <strong style={{ color: FOREST }}>Saltbox (Hearth)</strong> → <strong style={{ color: "#1f3d2e" }}>Kitchen Table (Roots)</strong> → <strong style={{ color: "#1A5FA8" }}>Workbench (Trail)</strong> → <strong style={{ color: "#3D4A5C" }}>Greenhouse (Watch)</strong> → <strong style={{ color: "#0F766E" }}>The Clearing (Gather)</strong> → <strong style={{ color: "#5B3E8C" }}>Edge (Horizon)</strong> — and back again. The community is the watershed.
           </p>
           <div
             style={{
@@ -1773,7 +1773,7 @@ export function MapPage() {
         </div>
       </div>
 
-      {/* Sticky "← Clearing" — fixed to bottom-left, only when arriving via a zone hash */}
+      {/* Sticky "← The Clearing" — fixed to bottom-left, only when arriving via a zone hash */}
       {hasInboundZone && (
         <a
           href={BASE}
@@ -1810,7 +1810,7 @@ export function MapPage() {
             (e.currentTarget as HTMLAnchorElement).style.borderColor = RULE;
           }}
         >
-          ← Clearing
+          ← The Clearing
         </a>
       )}
     </main>

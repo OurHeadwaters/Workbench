@@ -134,7 +134,7 @@ export function ZoneDiagramPage() {
               Full Headwaters Watershed
             </p>
             <p className="text-xs text-[#78716C] leading-relaxed">
-              This diagram shows the Z1–Z3 privacy model — the core that North Star is built on. In the full 0–5 watershed, these are the inner zones: Lodge (Z1) → Bench (Z2) → Standby (Z3). The outer zones — Saltbox (Z0), Community Hall (Z4), and The Wild (Z5) — live in the neighbourhood map.
+              This diagram shows the Z1–Z3 privacy model — the core that North Star is built on. In the full 0–5 watershed, these are the inner zones: Lodge (Z1) → Bench (Z2) → Standby (Z3). The outer zones — Saltbox (Z0), The Clearing (Z4), and The Wild (Z5) — live in the neighbourhood map.
             </p>
             <a
               href="/map"

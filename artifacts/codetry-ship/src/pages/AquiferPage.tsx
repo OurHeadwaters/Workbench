@@ -585,7 +585,7 @@ export function AquiferPage() {
                 margin: "0 0 10px",
               }}
             >
-              Clearing
+              The Clearing
             </p>
             <p
               style={{

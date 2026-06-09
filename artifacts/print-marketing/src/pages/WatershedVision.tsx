@@ -33,6 +33,7 @@ const today = new Date().toLocaleDateString("en-CA", {
 });
 
 // ── Zone circuit rows ───────────────────────────────────────────────
+// Z4 = The Clearing (zone). Stomping Paths is a platform within The Clearing, not the zone name.
 const ZONES = [
   { tag: "Z0", name: "Saltbox", terrain: "The Hearth", desc: "Household sovereignty. Zone 0 kits, crate subscriptions, the jar kitchen." },
   { tag: "Z1", name: "Kitchen Table", terrain: "The Spring", desc: "Daily tools. Course 1 — Food Preservation. Weekly rhythm and the teaching kitchen." },

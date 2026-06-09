@@ -621,7 +621,7 @@ export function OdysseyPage() {
                     href: "/map#zone-1",
                   },
                   {
-                    name: "Clearing",
+                    name: "The Clearing",
                     glyph: "⊕",
                     color: "#b85a3e",
                     tagline: "Exchange & settlement",

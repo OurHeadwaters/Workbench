@@ -74,7 +74,7 @@ export function ServicesPage() {
             { href: "#store", label: "Community store" },
             { href: "#platform", label: "Co-op platform" },
             { href: "#custom", label: "Custom tool" },
-            { href: "#the-clearing", label: "Clearing" },
+            { href: "#the-clearing", label: "The Clearing" },
             { href: "#the-wishing-well", label: "The Wishing Well" },
             { href: "#start", label: "How it starts" },
           ].map(({ href, label }) => (

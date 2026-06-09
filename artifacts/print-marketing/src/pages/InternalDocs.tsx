@@ -175,6 +175,7 @@ const ZONES = [
       { href: "/codetry-packet-deer-lake", title: "Codetry Print Packet — Deer Lake", label: "Deer Lake", desc: "Eight pages in one PDF — declaration through Chief Brief." },
       { href: "/codetry-one-pager", title: "Codetry Economic Development One-Pager", label: "Aboriginal Outreach", desc: "Compact single-page: four service lines, trial-first model." },
       { href: "/coop-compliance-notice", title: "807 Co-op — Compliance Notice (2025)", label: "807 Co-op", desc: "CPA engagement letter and members' waiver resolution before the AGM." },
+      { href: "/watershed-vision", title: "Watershed Vision & Financial Projections — Sheet 39", label: "Internal reference", desc: "Zone circuit, revenue streams, and three-year financial projections. Z4 = The Clearing. Landscape print sheet." },
       { href: "/constellation-session-may16", title: "Constellation Session — May 16, 2026", label: "Internal reference", desc: "Full personal constellation map + four new ledger entries + open decisions." },
       { href: "/northern-economic-tools", title: "Tools & Training for Northern Economic Systems", label: "Working document", desc: "Codetry discipline mapped onto reserve labour pools and work-share." },
       { href: "/square-setup", title: "Square — Parr's Jars to Headwaters", label: "Square identity", desc: "Step-by-step walkthrough for changing the Square account name." },

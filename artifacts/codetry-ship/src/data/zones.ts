@@ -210,7 +210,7 @@ export const ZONES: ZoneData[] = [
     name: "Greenhouse",
     slug: "greenhouse",
     terrain: "The Greenhouse · Circle",
-    flowsTo: "Clearing",
+    flowsTo: "The Clearing",
     metaphor: "Where the network goes when something is moving — advisory, watching the horizon.",
     goodTimesDesc:
       "Advisory. The status ladder is quiet. Pilots watching. No signal yet.",
@@ -233,10 +233,11 @@ export const ZONES: ZoneData[] = [
     ],
   },
   {
+    // Z4 = The Clearing (zone). Stomping Paths is a platform within The Clearing, not the zone name.
     number: 4,
-    name: "Clearing",
+    name: "The Clearing",
     slug: "clearing",
-    terrain: "The Market Square",
+    terrain: "The Clearing · Public Gathering",
     flowsTo: "Edge",
     metaphor: "Where the community decides together — the hall is always set before the vote.",
     goodTimesDesc:

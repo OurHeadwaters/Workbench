@@ -11,7 +11,7 @@ export const ZONE_LABELS: Record<ZoneId, { short: string; long: string; desc: st
   Z1: { short: "Z1", long: "Household / Afloat", desc: "Income-generating work. The floor that keeps the lights on.", tagline: "The Spring · Daily Tools" },
   Z2: { short: "Z2", long: "Circle / Paid Contract", desc: "Paid contracted work with a deadline and a deliverable.", tagline: "The Worn Path · Trail" },
   Z3: { short: "Z3", long: "Home Range / Build now", desc: "Active projects being built toward future value.", tagline: "The Clearing · Circle" },
-  Z4: { short: "Z4", long: "Community / Passion", desc: "Volunteer or community work. No immediate return.", tagline: "The Market Square" },
+  Z4: { short: "Z4", long: "Community / Passion", desc: "Volunteer or community work. No immediate return.", tagline: "The Clearing · Community" },
   Z5: { short: "Z5", long: "Wild / Long Horizon", desc: "Wilderness. Let it grow on its own terms. Tend occasionally, harvest when ready.", tagline: "The Ridge · Long View" },
 };
 

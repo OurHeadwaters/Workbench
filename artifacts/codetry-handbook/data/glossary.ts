@@ -132,7 +132,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "Zone",
     chapter: "Ch4",
     definition:
-      "A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — Saltbox (household); Zone 1 — Kitchen Table — your circle (invite), identity layer: Lodge; Zone 2 — Workbench (practitioner's workbench, operating plan, contracted work); Zone 3 — Greenhouse (community exchange, 807 co-op, board-governed); Zone 4 — Clearing (voluntary informal association, Nursery / Fodder / Fallow, graduation gate to Zone 3); Zone 5 — Edge / Shallows (open public, anonymous DID). Primitives are hosted in zones but read by all zones. Full zone flow: Zone 5 wild idea → Zone 4 informal shaping → Zone 3 approval + contract → Zone 2 paid execution → Zone 3 operation → Zone 4 collective benefit → Path A return drift to Zone 5.",
+      "A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — Saltbox (household); Zone 1 — Kitchen Table — your circle (invite), identity layer: Lodge; Zone 2 — Workbench (practitioner's workbench, operating plan, contracted work); Zone 3 — Greenhouse (community exchange, 807 co-op, board-governed); Zone 4 — The Clearing (voluntary informal association, Nursery / Fodder / Fallow, graduation gate to Zone 3); Zone 5 — Edge / Shallows (open public, anonymous DID). Primitives are hosted in zones but read by all zones. Full zone flow: Zone 5 wild idea → Zone 4 informal shaping → Zone 3 approval + contract → Zone 2 paid execution → Zone 3 operation → Zone 4 collective benefit → Path A return drift to Zone 5.",
     section: "formal",
   },
 

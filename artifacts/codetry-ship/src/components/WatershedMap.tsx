@@ -30,7 +30,7 @@ const RINGS: RingDef[] = [
   },
   {
     number: 4,
-    name: "Clearing",
+    name: "The Clearing",
     color: "#0F766E",
     outerR: 200,
     innerR: 160,

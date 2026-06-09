@@ -36,7 +36,7 @@ const ZONES = [
   },
   {
     id: "4",
-    name: "Zone 4 — Clearing",
+    name: "Zone 4 — The Clearing",
     description:
       "Public community gathering. Where the economy becomes visible and newcomers find the door.",
   },
@@ -272,7 +272,7 @@ export function HeadwatersPage() {
               textShadow: "0 2px 40px rgba(0,0,0,0.8)",
             }}
           >
-            Clearing
+            The Clearing
           </h1>
 
           <p
@@ -1033,7 +1033,7 @@ export function HeadwatersPage() {
             margin: 0,
           }}
         >
-          ourheadwaters.ca · Clearing · Northwestern Ontario · Treaty 3
+          ourheadwaters.ca · The Clearing · Northwestern Ontario · Treaty 3
         </p>
         <a
           href={`${BASE}home`}
