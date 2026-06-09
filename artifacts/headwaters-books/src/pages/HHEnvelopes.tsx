@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader2, Plus, Wallet, ShoppingCart, Fuel, BookOpen, Pill, PiggyBank, Pencil, Trash2, Store, ChevronRight } from "lucide-react";
+import { Loader2, Plus, Wallet, ShoppingCart, Fuel, BookOpen, Pill, PiggyBank, Pencil, Trash2, Store, ChevronRight, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -208,6 +208,16 @@ export default function HHEnvelopes() {
         <Button onClick={() => setShowNew(true)} className="shrink-0">
           <Plus className="w-4 h-4 mr-1" /> New envelope
         </Button>
+      </div>
+
+      {/* Inline "What is this?" explainer — always visible */}
+      <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm">
+        <HelpCircle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+        <p className="text-amber-900">
+          <strong>Is this real money?</strong>{" "}
+          Yes — community credits are real value you own outright. They don't expire, they're not points.
+          Split them into envelopes (like groceries or fuel) and spend them at stores your band has approved.
+        </p>
       </div>
 
       {/* Health score */}

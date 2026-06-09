@@ -1948,6 +1948,146 @@ router.get("/my/wallet", requireAuth(), async (req: Request, res: Response) => {
     alreadyRevealed ||
     (!alreadyRevealed && parseFloat(tokenBalance) > 0);
 
+  // walletRevealSeenAt: has the member already dismissed the reveal ceremony?
+  const alreadyRevealSeen =
+    (member as { walletRevealSeenAt?: Date | null }).walletRevealSeenAt !== null &&
+    (member as { walletRevealSeenAt?: Date | null }).walletRevealSeenAt !== undefined;
+
+  // walletRevealPending: wallet has first value BUT member hasn't seen the ceremony yet
+  const walletRevealPending = walletRevealed && !alreadyRevealSeen;
+
+  // ── First-value event metadata for the reveal overlay ─────────────────────
+  // Determine the earliest value event so the overlay can say exactly what
+  // landed and who sent it — task payment, tip received, or referral bonus.
+  let firstValueAmount: string | null = null;
+  let firstValueCurrency: string | null = null;
+  let firstValueSourceType: "task" | "tip" | "referral" | null = null;
+  let firstValueSourceName: string | null = null;
+
+  if (walletRevealPending) {
+    // Query candidates in parallel
+    const [firstEarning, firstTipRow, firstReferralRow] = await Promise.all([
+      db
+        .select({
+          amount: hhEarningsTable.amount,
+          currency: hhEarningsTable.currency,
+          earnedAt: hhEarningsTable.earnedAt,
+          taskId: hhEarningsTable.taskId,
+        })
+        .from(hhEarningsTable)
+        .where(
+          and(eq(hhEarningsTable.memberId, member.id), eq(hhEarningsTable.bandId, band.id)),
+        )
+        .orderBy(hhEarningsTable.earnedAt)
+        .limit(1),
+
+      db
+        .select({
+          amount: hhTipsTable.amount,
+          currency: hhTipsTable.currency,
+          sentAt: hhTipsTable.sentAt,
+          fromMemberId: hhTipsTable.fromMemberId,
+        })
+        .from(hhTipsTable)
+        .where(
+          and(eq(hhTipsTable.toMemberId, member.id), eq(hhTipsTable.bandId, band.id)),
+        )
+        .orderBy(hhTipsTable.sentAt)
+        .limit(1),
+
+      db
+        .select({
+          amount: hhReferralsTable.referredBonusAmount,
+          currency: hhReferralsTable.currency,
+          awardedAt: hhReferralsTable.awardedAt,
+          referrerId: hhReferralsTable.referrerId,
+        })
+        .from(hhReferralsTable)
+        .where(
+          and(eq(hhReferralsTable.referredMemberId, member.id), eq(hhReferralsTable.bandId, band.id)),
+        )
+        .orderBy(hhReferralsTable.awardedAt)
+        .limit(1),
+    ]);
+
+    // Find the earliest event among the candidates
+    const candidates: Array<{
+      at: Date;
+      amount: string;
+      currency: string;
+      type: "task" | "tip" | "referral";
+      sourceId?: string;
+    }> = [];
+
+    if (firstEarning[0]) {
+      candidates.push({
+        at: firstEarning[0].earnedAt instanceof Date ? firstEarning[0].earnedAt : new Date(firstEarning[0].earnedAt as string),
+        amount: firstEarning[0].amount,
+        currency: firstEarning[0].currency,
+        type: "task",
+      });
+    }
+    if (firstTipRow[0]) {
+      candidates.push({
+        at: firstTipRow[0].sentAt instanceof Date ? firstTipRow[0].sentAt : new Date(firstTipRow[0].sentAt as string),
+        amount: firstTipRow[0].amount,
+        currency: firstTipRow[0].currency,
+        type: "tip",
+        sourceId: firstTipRow[0].fromMemberId,
+      });
+    }
+    if (firstReferralRow[0]) {
+      candidates.push({
+        at: firstReferralRow[0].awardedAt instanceof Date ? firstReferralRow[0].awardedAt : new Date(firstReferralRow[0].awardedAt as string),
+        amount: firstReferralRow[0].amount,
+        currency: firstReferralRow[0].currency,
+        type: "referral",
+        sourceId: firstReferralRow[0].referrerId,
+      });
+    }
+
+    if (candidates.length > 0) {
+      candidates.sort((a, b) => a.at.getTime() - b.at.getTime());
+      const earliest = candidates[0];
+      firstValueAmount = parseFloat(earliest.amount).toFixed(2);
+      firstValueCurrency = earliest.currency;
+      firstValueSourceType = earliest.type;
+
+      if (earliest.type === "task") {
+        firstValueSourceName = null; // task payment — from the band
+      } else if (earliest.type === "referral") {
+        // Referral: look up who referred them
+        if (earliest.sourceId) {
+          const [referrer] = await db
+            .select({ firstName: hhMembersTable.firstName, lastName: hhMembersTable.lastName })
+            .from(hhMembersTable)
+            .where(eq(hhMembersTable.id, earliest.sourceId))
+            .limit(1);
+          firstValueSourceName = referrer
+            ? `${referrer.firstName} ${referrer.lastName}`.trim()
+            : null;
+        }
+      } else if (earliest.type === "tip") {
+        // Tip: look up sender name
+        if (earliest.sourceId) {
+          const [sender] = await db
+            .select({ firstName: hhMembersTable.firstName, lastName: hhMembersTable.lastName })
+            .from(hhMembersTable)
+            .where(eq(hhMembersTable.id, earliest.sourceId))
+            .limit(1);
+          firstValueSourceName = sender
+            ? `${sender.firstName} ${sender.lastName}`.trim()
+            : null;
+        }
+      }
+    } else {
+      // Positive balance without a traceable event (e.g. direct DB credit) — show balance
+      firstValueAmount = tokenBalance;
+      firstValueCurrency = "token";
+      firstValueSourceType = "referral"; // closest fallback for "welcome bonus" copy
+    }
+  }
+
   res.json({
     memberId: member.id,
     firstName: member.firstName,
@@ -1957,10 +2097,46 @@ router.get("/my/wallet", requireAuth(), async (req: Request, res: Response) => {
     tokenCode: band.communityTokenCode,
     walletType: (member as { walletType?: string }).walletType ?? "custodial",
     walletRevealed,
+    walletRevealPending,
+    firstValueAmount,
+    firstValueCurrency,
+    firstValueSourceType,
+    firstValueSourceName,
     referralCode,
     referralBonusAmount: "5",
     referralCount: referralRow?.count ?? 0,
   });
+});
+
+// ──────────────────────────────────────────────
+// POST /helping-hands/my/wallet/reveal-seen
+// Called by the frontend when the member dismisses the wallet reveal overlay.
+// Sets walletRevealSeenAt so the ceremony never re-fires on any device.
+// ──────────────────────────────────────────────
+router.post("/my/wallet/reveal-seen", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const { member } = ctx;
+
+  // Idempotent — if already seen, no-op
+  const alreadySeen =
+    (member as { walletRevealSeenAt?: Date | null }).walletRevealSeenAt !== null &&
+    (member as { walletRevealSeenAt?: Date | null }).walletRevealSeenAt !== undefined;
+
+  if (!alreadySeen) {
+    await db
+      .update(hhMembersTable)
+      .set({ walletRevealSeenAt: new Date(), updatedAt: new Date() })
+      .where(
+        and(
+          eq(hhMembersTable.id, member.id),
+          sql`${hhMembersTable.walletRevealSeenAt} IS NULL`,
+        ),
+      );
+  }
+
+  res.json({ ok: true });
 });
 
 // ──────────────────────────────────────────────

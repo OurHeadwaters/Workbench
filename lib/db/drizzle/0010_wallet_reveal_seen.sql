@@ -1,0 +1,13 @@
+-- Add wallet_reveal_seen_at to hh_members
+-- Separates "wallet has first value" (wallet_revealed_at) from
+-- "member has dismissed the reveal ceremony" (wallet_reveal_seen_at).
+-- Server-tracked so the one-time ceremony fires exactly once per member
+-- regardless of device or browser session.
+--
+-- Backfill decision: NOT backfilling wallet_reveal_seen_at for existing rows.
+-- Members who already have wallet_revealed_at set but have never seen the
+-- reveal overlay SHOULD see it once — the ceremony is new and they haven't
+-- experienced it yet. If operators want to suppress it for historical members,
+-- run: UPDATE hh_members SET wallet_reveal_seen_at = wallet_revealed_at
+--      WHERE wallet_revealed_at IS NOT NULL;
+ALTER TABLE "hh_members" ADD COLUMN "wallet_reveal_seen_at" timestamp with time zone;

@@ -7,6 +7,7 @@ import { CheckCircle2, Clock, Users, AlertTriangle, Loader2, Coins, RefreshCw, S
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import WalletRevealOverlay from "@/components/WalletRevealOverlay";
 
 function statusBadge(status: string) {
   switch (status) {
@@ -82,6 +83,7 @@ export default function HHDashboard() {
 
   return (
     <div className="space-y-8">
+      <WalletRevealOverlay />
       <div>
         <h1 className="text-3xl font-serif font-bold text-foreground">Helping Hands</h1>
         <p className="text-muted-foreground mt-1">Today's workforce overview for your band.</p>

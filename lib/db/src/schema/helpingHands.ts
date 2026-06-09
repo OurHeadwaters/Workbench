@@ -73,6 +73,12 @@ export const hhMembersTable = pgTable(
     // the wallet exists silently from signup but users only "meet" it when
     // motivation is highest: at the moment of first real value exchange.
     walletRevealedAt: timestamp("wallet_revealed_at", { withTimezone: true }),
+    // walletRevealSeenAt: null until the member has actively dismissed the
+    // wallet reveal overlay (POSTed to /my/wallet/reveal-seen). Used to
+    // distinguish "wallet has value" (walletRevealedAt) from "member has
+    // seen the ceremony" (walletRevealSeenAt). Server-tracked so the reveal
+    // fires exactly once per member regardless of device or browser.
+    walletRevealSeenAt: timestamp("wallet_reveal_seen_at", { withTimezone: true }),
     // referralCode: unique short code the member can share.
     // Auto-generated on member creation.
     referralCode: text("referral_code").unique(),

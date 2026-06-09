@@ -1,5 +1,5 @@
 import { useGetMyHhEarnings, useGetHhBand } from "@workspace/api-client-react";
-import { Loader2, Coins, ExternalLink } from "lucide-react";
+import { Loader2, Coins, ExternalLink, HelpCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 
@@ -23,6 +23,16 @@ export default function HHEarnings() {
       <div>
         <h1 className="text-3xl font-serif font-bold text-foreground">My earnings</h1>
         <p className="text-muted-foreground mt-1">Every payment you've received, recorded on XRPL and owned by you.</p>
+      </div>
+
+      {/* Inline "What is this?" explainer — always visible */}
+      <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm">
+        <HelpCircle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+        <p className="text-amber-900">
+          <strong>What is this?</strong>{" "}
+          These are community credits, not bank dollars — but they're real value you own completely.
+          They don't expire and you can spend them at participating stores in your community, or tip them to other members.
+        </p>
       </div>
 
       {/* Totals */}
