@@ -84,11 +84,27 @@ function ZoneIcon({ zone, className }: { zone: number; className?: string }) {
       <circle cx="12" cy="13" r="2" fill="currentColor" opacity="0.65" stroke="none"/>
     </svg>
   );
+  if (zone === 5) return (
+    <svg viewBox="0 0 24 24" fill="none" style={style}>
+      <path d="M5 12 C5 8.686 8.134 6 12 6 C15.866 6 19 8.686 19 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <path d="M3 13 L7 12 L10 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M21 13 L17 12 L14 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="12" cy="16" r="3" stroke="currentColor" strokeWidth="1.8"/>
+      <line x1="12" y1="19" x2="12" y2="21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
   return null;
 }
 
 /* ── Zone & document data ────────────────────────────────────────────────── */
-const ZONES = [
+const ZONES: Array<{
+  n: number;
+  name: string;
+  subtitle: string;
+  season: string;
+  accent: string;
+  docs: Array<{ href: string; title: string; label: string; desc: string }>;
+}> = [
   {
     n: 0,
     name: "Saltbox",
@@ -186,6 +202,20 @@ const ZONES = [
       { href: "/deer-lake-chief-brief", title: "Deer Lake Chief Brief", label: "Deer Lake", desc: "One-page brief prepared for the Chief of Deer Lake First Nation." },
       { href: "/xrpl-tip", title: "The Shallows — XRPL Tipping PoC", label: "Zone 5 · Dam Days", desc: "Peer-to-peer XRP tipping on XRPL Testnet — interactive, not printable." },
       { href: "/pace-self-serve", title: "PACE — Start Here (Self-Serve Tools)", label: "Business Dev", desc: "Print leave-behind for PACE clients — three starter offerings with prices and QR pointing to ourheadwaters.ca/start." },
+    ],
+  },
+  {
+    n: 5,
+    name: "The Corridor",
+    subtitle: "Ontario Co-operatives & CDP",
+    season: "Provincial scale starts with one table.",
+    accent: "#2e6b4f",
+    docs: [
+      { href: "/oca-partnership-brief", title: "OCA Partnership Brief", label: "Ontario Co-ops · OCA", desc: "Letter-format brief for OCA: platform suite overview, two-tier model (consulting vs. license), CDP proof point ($20k → provincial scale), and the ask." },
+      { href: "/cdp-grant-narrative", title: "CDP Grant Narrative", label: "CDP · Grant Application", desc: "Printable letter-format grant narrative — $75–100k ask, seven numbered sections, OCA as proposed operator, named deliverables and outcomes." },
+      { href: "/oca-outreach-packet", title: "OCA Outreach Packet (3-page PDF)", label: "Ontario Co-ops · OCA", desc: "One click — OCA Partnership Brief + CDP Grant Narrative + Capability Statement bundled as a single PDF. Includes personalized org-name link generator." },
+      { href: "/capability-statement/view", title: "Capability Statement — Public", label: "Headwaters", desc: "Full platform suite (Market Mosaic, 807 Benefits, Grants Finder), CDP proof-point case study, and two engagement paths (consulting + licensing)." },
+      { href: "/rack-card-indigenous", title: "Rack Card — Indigenous & Community Orgs", label: "Headwaters", desc: "4×9 rack card updated for Treaty 3 · Treaty 9 territory with platform suite listed in services and NAN in who-we-work-with." },
     ],
   },
 ];

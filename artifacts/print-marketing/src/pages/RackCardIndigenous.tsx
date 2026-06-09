@@ -20,6 +20,10 @@ const services = [
     desc: "Market coordination, bulk buying, preservation programs, and Standby supply planning.",
   },
   {
+    title: "Platform Suite",
+    desc: "Market Mosaic, 807 Benefits, and Grants Finder — licensable to co-ops and First Nations organizations province-wide.",
+  },
+  {
     title: "Custom Software",
     desc: "Tools that speak the community's language. Built to last, not to impress a funder.",
   },
@@ -32,14 +36,14 @@ function buildPlainText(): string {
 
   return [
     "HEADWATERS DEVELOPMENT SERVICES",
-    "Development Services · Treaty 3 Territory",
+    "Development Services · Treaty 3 · Treaty 9 Territory",
     "Building community capacity and economic infrastructure in northern Ontario.",
     "",
     "---",
     "",
     "WHO WE WORK WITH",
     "",
-    "Band councils, Indigenous businesses, First Nations organizations, Métis communities, and northern co-ops — anyone building something real for their people.",
+    "Band councils, Indigenous businesses, First Nations organizations, Nishnawbe Aski Nation (NAN) communities, Métis communities, and northern co-ops — anyone building something real for their people.",
     "",
     "---",
     "",
@@ -116,7 +120,7 @@ export default function RackCardIndigenous() {
             <div
               style={{
                 background: EVERGREEN,
-                padding: "0.35in 0.3in 0.3in",
+                padding: "0.35in 0.3in 0.28in",
                 flexShrink: 0,
                 position: "relative",
               }}
@@ -143,7 +147,7 @@ export default function RackCardIndigenous() {
                   marginBottom: "0.12in",
                 }}
               >
-                Development Services · Treaty 3 Territory
+                Development Services · Treaty 3 · Treaty 9 Territory
               </p>
               <h1
                 style={{
@@ -163,7 +167,7 @@ export default function RackCardIndigenous() {
                   width: "0.6in",
                   height: 2,
                   background: RUST,
-                  marginBottom: "0.14in",
+                  marginBottom: "0.12in",
                 }}
               />
               <p
@@ -183,13 +187,51 @@ export default function RackCardIndigenous() {
             <div
               style={{
                 flex: 1,
-                padding: "0.28in 0.3in",
+                padding: "0.24in 0.3in",
                 display: "flex",
                 flexDirection: "column",
               }}
             >
               {/* Who we work with */}
-              <div style={{ marginBottom: "0.22in" }}>
+              <div style={{ marginBottom: "0.18in" }}>
+                <p
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.38rem",
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: RUST,
+                    marginBottom: "0.09in",
+                  }}
+                >
+                  Who we work with
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-serif)",
+                    fontSize: "0.68rem",
+                    lineHeight: 1.52,
+                    color: EVERGREEN,
+                  }}
+                >
+                  Band councils, Indigenous businesses, First Nations
+                  organizations, Nishnawbe Aski Nation (NAN) communities,
+                  Métis communities, and northern co-ops —
+                  anyone building something real for their people.
+                </p>
+              </div>
+
+              {/* Divider */}
+              <div
+                style={{
+                  height: 1,
+                  background: "rgba(31,61,46,0.15)",
+                  marginBottom: "0.18in",
+                }}
+              />
+
+              {/* Services */}
+              <div style={{ marginBottom: "0.16in" }}>
                 <p
                   style={{
                     fontFamily: "var(--font-sans)",
@@ -200,50 +242,13 @@ export default function RackCardIndigenous() {
                     marginBottom: "0.1in",
                   }}
                 >
-                  Who we work with
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "0.72rem",
-                    lineHeight: 1.55,
-                    color: EVERGREEN,
-                  }}
-                >
-                  Band councils, Indigenous businesses, First Nations
-                  organizations, Métis communities, and northern co-ops —
-                  anyone building something real for their people.
-                </p>
-              </div>
-
-              {/* Divider */}
-              <div
-                style={{
-                  height: 1,
-                  background: "rgba(31,61,46,0.15)",
-                  marginBottom: "0.22in",
-                }}
-              />
-
-              {/* Services */}
-              <div style={{ marginBottom: "0.22in" }}>
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.38rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: RUST,
-                    marginBottom: "0.12in",
-                  }}
-                >
                   What we build
                 </p>
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: "0.13in",
+                    gap: "0.1in",
                   }}
                 >
                   {services.map((s) => (
@@ -251,10 +256,10 @@ export default function RackCardIndigenous() {
                       <p
                         style={{
                           fontFamily: "var(--font-serif)",
-                          fontSize: "0.65rem",
+                          fontSize: "0.62rem",
                           fontWeight: 700,
                           color: EVERGREEN,
-                          marginBottom: "0.03in",
+                          marginBottom: "0.02in",
                         }}
                       >
                         {s.title}
@@ -262,9 +267,9 @@ export default function RackCardIndigenous() {
                       <p
                         style={{
                           fontFamily: "var(--font-sans)",
-                          fontSize: "0.52rem",
+                          fontSize: "0.49rem",
                           color: MUTED,
-                          lineHeight: 1.5,
+                          lineHeight: 1.45,
                         }}
                       >
                         {s.desc}
@@ -279,19 +284,19 @@ export default function RackCardIndigenous() {
                 style={{
                   height: 1,
                   background: "rgba(31,61,46,0.15)",
-                  marginBottom: "0.18in",
+                  marginBottom: "0.15in",
                 }}
               />
 
               {/* How we work */}
-              <div style={{ marginBottom: "0.18in" }}>
+              <div style={{ marginBottom: "0.15in" }}>
                 <p
                   style={{
                     fontFamily: "var(--font-serif)",
-                    fontSize: "0.68rem",
+                    fontSize: "0.63rem",
                     fontStyle: "italic",
                     color: EVERGREEN,
-                    lineHeight: 1.5,
+                    lineHeight: 1.48,
                   }}
                 >
                   "We don't parachute in. We sit at your table, learn your
@@ -301,9 +306,9 @@ export default function RackCardIndigenous() {
                 <p
                   style={{
                     fontFamily: "var(--font-sans)",
-                    fontSize: "0.45rem",
+                    fontSize: "0.43rem",
                     color: MUTED,
-                    marginTop: "0.07in",
+                    marginTop: "0.06in",
                     letterSpacing: "0.05em",
                   }}
                 >
@@ -318,7 +323,7 @@ export default function RackCardIndigenous() {
                 style={{
                   background: EVERGREEN,
                   borderRadius: 5,
-                  padding: "0.2in 0.22in",
+                  padding: "0.18in 0.22in",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",

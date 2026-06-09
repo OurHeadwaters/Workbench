@@ -1,32 +1,7 @@
 import { useEffect } from "react";
 import QRCodeStamp from "../components/QRCodeStamp";
 
-export default function CapabilityStatementPublic() {
-  useEffect(() => {
-    const prev = document.title;
-    document.title = "Headwaters Development Services — Capability Statement";
-
-    let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-    const created = !meta;
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.name = "description";
-      document.head.appendChild(meta);
-    }
-    const prevContent = meta.content;
-    meta.content =
-      "Headwaters Development Services — practitioner-built community capacity tools for northern Ontario. Community store planning, co-op platforms, and custom internal tools. Led by Bobbie Parr, Wabigoon, Ontario.";
-
-    return () => {
-      document.title = prev;
-      if (created && meta) {
-        document.head.removeChild(meta);
-      } else if (meta) {
-        meta.content = prevContent;
-      }
-    };
-  }, []);
-
+export function CapabilityStatementPublicPage() {
   return (
     <div
       id="pdf-target"
@@ -60,7 +35,7 @@ export default function CapabilityStatementPublic() {
         </div>
 
         {/* Body */}
-        <div style={{ flex: 1, padding: "0.38in 0.65in 0.25in", display: "flex", flexDirection: "column", gap: "0.28in" }}>
+        <div style={{ flex: 1, padding: "0.35in 0.65in 0.2in", display: "flex", flexDirection: "column", gap: "0.22in" }}>
 
           {/* Who we are */}
           <section>
@@ -68,16 +43,16 @@ export default function CapabilityStatementPublic() {
               Who we are
             </p>
             <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.83rem", color: "var(--ink)", lineHeight: 1.6 }}>
-              Headwaters is a Northwestern Ontario practice led by Bobbie Parr — a community development practitioner, founder of Parr's Jars, and founding board member of the 807 Food Co-op. Headwaters builds community capacity through operational plans, digital platforms, and custom internal tools for band councils and community organizations in northern Ontario. The work is plain-language, dollar-honest, and designed to run without a consultant in the room.
+              Headwaters is a Northwestern Ontario practice led by Bobbie Parr — a community development practitioner, founder of Parr's Jars, and founding board member of the 807 Food Co-op. Headwaters builds community capacity through operational plans, digital platforms, and custom internal tools for band councils, First Nations organizations, and Ontario co-operatives. The work is plain-language, dollar-honest, and designed to run without a consultant in the room.
             </p>
           </section>
 
-          {/* Services */}
+          {/* Services — 2×2 grid */}
           <section>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.16rem" }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.14rem" }}>
               Core services
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.25in" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.18in 0.28in" }}>
               {[
                 {
                   num: "01",
@@ -94,11 +69,16 @@ export default function CapabilityStatementPublic() {
                   title: "Custom Internal Tools",
                   desc: "Purpose-built software for band councils and community organizations — replacing paper and spreadsheet workflows with tools your team actually uses.",
                 },
+                {
+                  num: "04",
+                  title: "Provincial Platform Suite",
+                  desc: "Market Mosaic, 807 Benefits, and Grants Finder — licensable to co-operatives and umbrella organizations. OCA as operator. Built solo using AI-assisted development at a fraction of traditional software cost.",
+                },
               ].map((s) => (
-                <div key={s.num} style={{ borderTop: "2px solid var(--rust)", paddingTop: "0.18in" }}>
-                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--rust)", marginBottom: "0.05rem" }}>{s.num}</p>
-                  <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "0.82rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.1rem" }}>{s.title}</h2>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.73rem", color: "var(--muted)", lineHeight: 1.55 }}>{s.desc}</p>
+                <div key={s.num} style={{ borderTop: "2px solid var(--rust)", paddingTop: "0.15in" }}>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--rust)", marginBottom: "0.04rem" }}>{s.num}</p>
+                  <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "0.82rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.08rem" }}>{s.title}</h2>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)", lineHeight: 1.52 }}>{s.desc}</p>
                 </div>
               ))}
             </div>
@@ -106,34 +86,40 @@ export default function CapabilityStatementPublic() {
 
           {/* Case studies */}
           <section>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.16rem" }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.14rem" }}>
               Selected work
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.22in" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.18in" }}>
               {[
                 {
                   title: "Parr's Jars — Rebrand",
                   type: "Brand identity",
                   problem: "Original brand couldn't carry both a preserves business and a development consulting practice.",
-                  outcome: "Dual-identity brand system — wordmarks, colour system, copy architecture, and parrsjars.ca — that works for a market table and a band council office.",
+                  outcome: "Dual-identity brand system — wordmarks, colour system, copy architecture, and parrsjars.ca — that works at a market table and a band council office.",
                 },
                 {
                   title: "807 Food Co-op — Membership Platform",
                   type: "Platform delivery · Founding board",
                   problem: "Founding board needed a working platform — member registration, equity tracking, governance tooling — before the co-op could open to members.",
-                  outcome: "Full member portal, producer onboarding, board admin panel, and AGM tools. Platform ready for June launch. Board owns it outright — no licensing fees.",
+                  outcome: "Full member portal, producer onboarding, board admin panel, and AGM tools. Platform ready for launch. Board owns it outright — no licensing fees.",
+                },
+                {
+                  title: "807 Benefits — Provincial Scale",
+                  type: "CDP-funded · Platform licensing",
+                  problem: "CDP funded a single-co-op member benefits platform at $20k. The same infrastructure now needs to reach every OCA member co-op.",
+                  outcome: "Production-grade benefits platform ready for provincial licensing. Proposed operating partner: OCA. One CDP investment — infrastructure for all.",
                 },
               ].map((cs) => (
                 <div
                   key={cs.title}
-                  style={{ background: "white", border: "1px solid rgba(31,61,46,0.12)", borderRadius: 5, padding: "0.18in 0.2in" }}
+                  style={{ background: "white", border: "1px solid rgba(31,61,46,0.12)", borderRadius: 5, padding: "0.16in 0.18in" }}
                 >
                   <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.06rem" }}>{cs.type}</p>
-                  <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "0.82rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.1rem" }}>{cs.title}</h3>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.71rem", color: "var(--muted)", lineHeight: 1.5, marginBottom: "0.08rem" }}>
+                  <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "0.8rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.08rem" }}>{cs.title}</h3>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.69rem", color: "var(--muted)", lineHeight: 1.5, marginBottom: "0.06rem" }}>
                     <strong style={{ color: "var(--ink)" }}>Problem:</strong> {cs.problem}
                   </p>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.71rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.69rem", color: "var(--muted)", lineHeight: 1.5 }}>
                     <strong style={{ color: "var(--ink)" }}>Outcome:</strong> {cs.outcome}
                   </p>
                 </div>
@@ -141,32 +127,36 @@ export default function CapabilityStatementPublic() {
             </div>
           </section>
 
-          {/* Rate */}
-          <div style={{ background: "var(--rust)", borderRadius: 5, padding: "0.22in 0.3in", display: "grid", gridTemplateColumns: "1fr auto", gap: "1rem", alignItems: "center" }}>
+          {/* Rate — two engagement paths */}
+          <div style={{ background: "var(--rust)", borderRadius: 5, padding: "0.18in 0.3in", display: "grid", gridTemplateColumns: "1fr auto auto", gap: "0.8rem", alignItems: "center" }}>
             <div>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.72)", marginBottom: "0.06rem" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.72)", marginBottom: "0.05rem" }}>
                 Engagement terms
               </p>
-              <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: "white", marginBottom: "0.1rem" }}>
-                Capacity-building engagement, not a contract
+              <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "white", marginBottom: "0.07rem" }}>
+                Two paths — consulting engagement or platform license
               </h3>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
-                The first step is a six-week capacity-building engagement at $28,000 flat. Stop at any point. No retainer, no long commitment. For smaller asks, 1–2 week engagements are available at a fixed fee.
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
+                The first step is a six-week capacity-building engagement at $28,000 flat — or, for co-ops and umbrella organizations, a platform licensing agreement (annual fee + development retainer, OCA as operator). Stop at any point. No retainer lock-in.
               </p>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", color: "rgba(255,255,255,0.6)", marginTop: "0.06rem", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", color: "rgba(255,255,255,0.6)", marginTop: "0.05rem", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                 All fees CAD · excludes HST
               </p>
             </div>
+            <div style={{ textAlign: "center", flexShrink: 0, borderRight: "1px solid rgba(255,255,255,0.22)", paddingRight: "0.8rem" }}>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.65rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$28,000</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase" }}>consulting · 6–8 wks</p>
+            </div>
             <div style={{ textAlign: "center", flexShrink: 0 }}>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.9rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$28,000</p>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase" }}>flat · 6–8 weeks</p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.05rem", fontWeight: 700, color: "white", lineHeight: 1.15 }}>License<br />+ Retainer</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase" }}>platform · OCA</p>
             </div>
           </div>
 
         </div>
 
         {/* Footer */}
-        <div style={{ padding: "0.25in 0.65in 0.35in", display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(31,61,46,0.12)" }}>
+        <div style={{ padding: "0.2in 0.65in 0.28in", display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(31,61,46,0.12)" }}>
           <div>
             <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.92rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)" }}>Bobbie Parr · practitioner · Wabigoon, Ontario</p>
@@ -183,4 +173,33 @@ export default function CapabilityStatementPublic() {
       </div>
     </div>
   );
+}
+
+export default function CapabilityStatementPublic() {
+  useEffect(() => {
+    const prev = document.title;
+    document.title = "Headwaters Development Services — Capability Statement";
+
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    const created = !meta;
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "description";
+      document.head.appendChild(meta);
+    }
+    const prevContent = meta.content;
+    meta.content =
+      "Headwaters Development Services — practitioner-built community capacity tools for northern Ontario. Community store planning, co-op platforms, and custom internal tools. Led by Bobbie Parr, Wabigoon, Ontario.";
+
+    return () => {
+      document.title = prev;
+      if (created && meta) {
+        document.head.removeChild(meta);
+      } else if (meta) {
+        meta.content = prevContent;
+      }
+    };
+  }, []);
+
+  return <CapabilityStatementPublicPage />;
 }
