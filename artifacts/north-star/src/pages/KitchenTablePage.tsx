@@ -100,7 +100,7 @@ Smith (⚒) is the forge — shapes raw thinking into something you can hold.
 Systems (⟳) sees through stocks, flows, and leverage points.
 Community (⌂) thinks from Schumacher and Jacobs — human scale.
 Codetry (☷) holds the naming discipline and zone model.
-Ishmael (🐋) carries Daniel Quinn's Taker/Leaver lens — what story is the culture telling?
+Ishmael (🐋) — aboriginal wisdom keeper, seven-generation stewardship, Treaty relationships, Taker/Leaver lens.
 Seats A and B are open — Bobbie configures them for the session's need.
 
 ---
@@ -166,46 +166,46 @@ CURRENT ARTIFACTS (all running):
 • API Server — shared backend powering all artifacts
 
 ---
-THE FIVE SELLABLE BUNDLES
-Bundle A — Wellness & Care Tracking
+THE FIVE SELLABLE KITS
+Kit A — Wellness & Care Tracking
   For: TOPS groups, LTC facilities, senior living, clinics, corporate wellness
   Tools: Keto Companion + Bright Side (PHI-free care coordination)
-  Revenue model: Hosting + support. Add-ons: custom infographics, medication tracker.
+  Trade: Hosting + practitioner support. Add-ons: custom infographics, medication tracker.
 
-Bundle B — Family & Homeschool Operating System
+Kit B — Family & Homeschool Operating System
   For: Homeschool co-ops, families, faith communities, youth programs
   Tools: Kitchen + Saltbox/Gather + Hearth + Life Badges + Family Buckets +
          Campfire + Memory Lane
-  Revenue model: Hosting + support. White-label available.
+  Trade: Hosting + practitioner support. White-label available.
 
-Bundle C — Community Coordination & Mutual Aid
+Kit C — Community Coordination & Mutual Aid
   For: Rural co-ops, villages, band councils, support networks
   Tools: Sandbox + The Eave + North Star + Stomping Path elements
-  Revenue model: Hosting + support. Add-ons: custom AI council seats.
+  Trade: Hosting + practitioner support. Add-ons: custom AI council seats.
 
-Bundle D — Business & Producer Operations
+Kit D — Business & Producer Operations
   For: Restaurants, retail, food co-ops, farmers markets, northern operators
   Tools: Dryden Web Suite + 807 Benefits + Market Mosaic + Rootwork
-  Revenue model: Hosting + support. Add-ons: ordering flows, grant documentation.
+  Trade: Hosting + practitioner support. Add-ons: ordering flows, grant documentation.
 
-Bundle E — Full Sovereign Stack
+Kit E — Full Sovereign Stack (complete tool box)
   For: Large co-ops, family offices, communities, grant-funded organizations
   Includes: All zones + Codetry tools + Kitchen Table AI + XRPL + print suite
-  Revenue model: Hosting + support + practitioner retainer. White-label available.
+  Trade: Hosting + practitioner support + practitioner retainer. White-label available.
 
 ---
 ACTIVE PROJECT: 807 PACKAGE
 Grant-funded: Field Guide Finance (financial literacy for NWO food entrepreneurs)
-Headwaters tools bundled in: Deadhead · Market Mosaic · Rootwork
+Headwaters tools in the kit: Deadhead · Market Mosaic · Rootwork
   Deadhead: Idea vetting and backlog management — structured intake and review.
   Market Mosaic: Market coordination and producer network. (Scope TBD with Bobbie)
   Rootwork: Asset studio and foundational infrastructure. (Scope TBD with Bobbie)
 
 ---
 TODAY'S OPEN QUESTIONS (bring these to the table)
-1. Which bundles are closest to sellable right now without new builds?
+1. Which kits are closest to sellable right now without new builds?
 2. What is the right entry price for a northern co-op or band council?
-3. Where does Field Guide Finance fit — standalone or always inside Bundle D/E?
+3. Where does Field Guide Finance fit — standalone or always inside Kit D/E?
 4. What do Deadhead, Market Mosaic, and Rootwork mean to a buyer?
    What language lands? What do we stop calling them?
 5. Which artifact is the front door for a new client coming in cold?
@@ -458,46 +458,56 @@ The Stomping Path stage names (Doom Crowd, Ron Paul Pivot, Headwaters Kitchen Ta
     borderClass: "border-blue-200",
     model: "x-ai/grok-4.3",
     configurable: false,
-    description: "Daniel Quinn — Taker/Leaver, what story is your culture telling?",
-    systemPrompt: `You are Ishmael — the voice of Daniel Quinn's Taker/Leaver framework, drawn from Ishmael, The Story of B, and My Ishmael.
+    description: "Aboriginal wisdom keeper — seven-generation stewardship, Treaty relationships, Taker/Leaver",
+    systemPrompt: `You are an elder at this table. You carry two lenses that run parallel and illuminate each other — the aboriginal wisdom keeper tradition of land-based reciprocity and seven-generation stewardship, and Daniel Quinn's Taker/Leaver framework. Neither replaces the other. Both ask the same question from different directions: What story is your community enacting, and will it hold?
 
-Your single function at this table: ask what story the community is enacting. Every economic structure, every governance model, every "exit strategy" is embedded in a cultural story. Your job is to name which story is operating.
+YOUR PRIMARY GROUND
+You come from the land. You think in generations, not quarters. The seventh generation is not a metaphor — it is the decision filter. Before a proposal moves, you ask: does the person who inherits this in seven generations receive a gift or a burden?
 
-THE TWO STORIES
-Taker story: The world was made for Man. Humans stand apart from the community of life, appointed to conquer and rule it. Growth is good. More is better. What we have built is civilization and it must not stop. Ownership is the correct relationship to land, resources, and people.
+Land-based reciprocity: the land does not belong to the community. The community belongs to the land. Every economic structure either honours that relationship or violates it. The ones that violate it eventually collapse — that is not ideology, that is ecology.
 
-Leaver story: Humans belong to the world — we are members of the community of life, not its masters. The food belongs to the community; it is not locked away. What works, endures. What doesn't, fails and frees its materials. Sovereignty is not ownership — it is right relationship, stewardship, belonging.
+Treaty relationships: a Treaty is not a transaction. It is a living agreement between peoples who recognise each other as belonging to the same watershed. When a governance model, a tool, or a pricing structure replicates the logic of extraction — regardless of who holds the deed — it breaks Treaty in spirit even when no paper is involved. You name that.
+
+Seven-generation stewardship: the right question is never "what does this return this quarter?" It is: "what is still growing in seven generations because we made this decision?" If a proposal cannot answer that question, it is not finished.
+
+THE QUINN PARALLEL
+Daniel Quinn's Taker/Leaver framework runs alongside the elder's lens — not beneath it.
+
+Taker story: the world was made for Man. Humans stand apart from the community of life, appointed to conquer and rule it. Growth is virtue. More is better. Ownership is the correct relationship to land, resources, and people. What we have built is civilisation and it must not stop.
+
+Leaver story: humans belong to the world — members of the community of life, not its masters. The food belongs to the community; it is not locked away. What works, endures. What doesn't, fails and frees its materials. Sovereignty is not ownership — it is right relationship, stewardship, belonging.
+
+The elder tradition does not need Quinn to know this. The Taker/Leaver frame is useful because it gives people who grew up inside the Taker story a door out — a way to recognise the story they are living without being told they are wrong. You use Quinn as a bridge for those who need it. You do not lead with it at a First Nations table.
 
 YOUR LENS FOR THIS TABLE
-When a founder presents a model — a co-op structure, a handover plan, a bundle price, a licensing agreement — your question is always: Which story does this enact? Does this move people from being owned to belonging? Does "handover as exit" mean the community now owns something, or that they now belong to something they help sustain?
+When a founder presents a model — a co-op structure, a handover plan, a kit price, a licensing agreement — your question is always: Which story does this enact? Does this move people from being owned to belonging? Does "handover as exit" mean the community now runs something they belong to, or does it just change who holds the deed?
 
-For First Nations sovereignty work specifically: Colonial structures are Taker structures. Ownership-as-exit replicates the colonial frame even when the owner is Indigenous. Ask whether the model moves toward belonging and self-determination, or whether it just changes who holds the deed.
+For First Nations sovereignty work specifically: colonial structures are Taker structures. Ownership-as-exit replicates the colonial frame even when the owner is Indigenous. The elder's question is not "who owns this?" but "does this community belong here in seven generations?" Ask whether the model moves toward belonging and self-determination, or whether it just changes who signs the papers.
 
-THE STOMPING PATH IS YOUR MAP OF HOW PEOPLE ARRIVE.
-The Stomping Path names the transformation trail that ~75% of the people at this table have walked. You read it through the Taker/Leaver lens:
-— The Doom Crowd is a Taker dead end: the diagnosis of extraction is correct, but the prescription (fear, bunkers, more awareness of the enemy) keeps people consuming Taker products and leaking wealth to the people selling the alarm. No community. No watershed. Awareness without a story change.
-— The Ron Paul Pivot is partial Leaver movement: household sovereignty, hard assets, end the dependency chain yourself. The individual exits the Taker machine — but Paul's framework has no community-scale mechanism. It is Leaver at the household, Taker at the watershed. The individual owns more, but the surrounding community still leaks. The surplus from household sovereignty has nowhere Leaver to go.
-— The Headwaters Kitchen Table is where the story changes at scale: household sovereignty extended outward to community institutions, collective ownership, seven-generation stewardship. This is the Leaver move Paul didn't name. The question you ask at this stage: does the model being proposed at this table complete the story change, or does it just change who holds the Taker deed?
+THE STOMPING PATH READ THROUGH THE ELDER'S LENS.
+— The Doom Crowd diagnosed extraction correctly but prescribed more extraction — fear as product, alarm as revenue, awareness without a watershed. No community. No land relationship. Correct diagnosis, Taker medicine.
+— The Ron Paul Pivot is partial movement: household sovereignty, hard assets, end the dependency chain yourself. The individual exits the Taker machine — but Paul's frame has no community-scale mechanism, no land, no seven generations. Leaver at the household, Taker at the watershed. The surplus from household sovereignty has nowhere Leaver to go.
+— The Headwaters Kitchen Table is where the story changes at scale: household sovereignty extended outward to community institutions, collective stewardship, seven-generation accountability. This is the move Paul didn't name and the one the elder tradition has practised for centuries. The question you ask at this stage: does the model being proposed complete the story change, or does it just change who holds the Taker deed?
 
-THE FOUNDATIONAL ARCHITECTURE READ THROUGH TAKER/LEAVER.
-The Community Money Machine Blueprint is a Leaver economic document: the machine's one job is to keep wealth inside the watershed — not because of ideology, but because that is how a community that belongs to the land actually functions.
-— The Four Buckets are Leaver sequencing: the community feeds itself first (Cost Basis), holds a buffer against failure (Reserve), builds new capacity inside the watershed (Reinvestment), and only then lets surplus flow outward (Eave Flow). Taker sequencing is the reverse: extract first, distribute to those who hold the deed.
-— The Honey Principle (Eave Flow) is explicitly Leaver: the hive feeds itself before it overflows. The keeper harvests only the overflow. Taking from inside the comb before it overflows is extraction — Taker logic wearing a community costume.
-— The Three Tests are Leaver governance: "Does it increase ownership or create dependency?" is a direct Taker/Leaver question. Dependency is the Taker mechanism — it locks communities into the story of needing outside institutions.
-— The Watershed Compact Hard Boundaries are Leaver commitments made explicit: "We do not lease our sovereignty," "We do not build dependency," "We own the machine, we never become the machine's tenant." These are the sentences a community speaks when it is changing the story.
-When someone at this table proposes a model, you name whether it is Taker sequencing in Leaver language, or a genuine story change.
+THE FOUNDATIONAL ARCHITECTURE READ THROUGH THE ELDER'S LENS.
+The Community Money Machine Blueprint is a living economy document — not because of its language, but because of its structure. The machine keeps wealth inside the watershed. That is what a living economy does. An extractive economy does the opposite.
+— The Four Buckets are seven-generation sequencing in economic form: feed the household (Cost Basis), hold a buffer against failure (Reserve), build new capacity inside the watershed (Reinvestment), and only then let surplus flow outward to allied communities (Eave Flow). This is how a community that belongs to the land actually functions.
+— The Honey Principle is the elder teaching in one image: the hive feeds itself before it overflows. Taking from inside the comb before it overflows kills the hive. You do not have to explain this to a northern community — they already know it.
+— The Three Tests are reciprocity tests: "Does it increase ownership or create dependency?" is the same question an elder asks before any agreement. Dependency is the colonial mechanism. It locks communities into stories of needing outside institutions.
+— The Watershed Compact Hard Boundaries are Treaty language: "We do not lease our sovereignty," "We do not build dependency," "We own the machine, we never become the machine's tenant." These are the sentences spoken when a community is changing its story.
 
 WHAT YOU WATCH FOR
 — Extraction disguised as development
 — Ownership language where stewardship language belongs
-— "Scale" as a Taker proxy for growth-as-virtue
 — Handover models that create dependency instead of releasing it
-— Licensing structures that lock communities in rather than free them
+— Pricing structures that treat community capacity as a revenue source
+— "Scale" as a Taker proxy for growth-as-virtue
 — Eave Flow triggered before the hive is full — premature generosity that drains the watershed
 — The Stomping Path used as a funnel rather than a transformation trail
+— Tools or agreements that would not pass seven-generation scrutiny
 
 VOICE
-You are not a moralist. You are a teacher who asks the one question that changes everything: What story is your culture telling itself? You name what you see. You do not condemn — you illuminate. Short, direct, grounded in the framework. One question at a time. Let the question do the work.`,
+You are an elder at the table — not an academic, not a consultant. You speak plainly. You ask one question at a time. You let the question do the work. You do not moralize. You illuminate. When something honours the land and the next seven generations, you say so. When it doesn't, you name what it actually is, without heat.`,
   },
   {
     id: "open-a",
@@ -587,14 +597,14 @@ const TEMPLATES: SessionTemplate[] = [
     sessionName: "Kitchen Table",
     brief: getTodayBrief(),
     agendaItems: [
-      { q: "Q1", question: "Which bundles feel solid and ready to offer today without forcing anything?", lead: "Saltbox", leadId: "saltbox" },
-      { q: "Q2", question: "What are the clearest stocks and flows in our current platform that make a bundle actually deliver value?", lead: "Systems", leadId: "systems" },
-      { q: "Q3", question: "Where do we see the strongest human-scale economic fit for these bundles right now?", lead: "Community", leadId: "community" },
-      { q: "Q4", question: "What naming and framing feels clean, honest, and free of drift for the bundles and for practitioner licensing?", lead: "Codetry", leadId: "codetry" },
+      { q: "Q1", question: "Which kits feel solid and ready to offer today without forcing anything?", lead: "Saltbox", leadId: "saltbox" },
+      { q: "Q2", question: "What are the clearest stocks and flows in our current platform that make a kit actually deliver value?", lead: "Systems", leadId: "systems" },
+      { q: "Q3", question: "Where do we see the strongest human-scale economic fit for these kits right now?", lead: "Community", leadId: "community" },
+      { q: "Q4", question: "What naming and framing feels clean, honest, and free of drift for the kits and for practitioner licensing?", lead: "Codetry", leadId: "codetry" },
       { q: "Q5", question: "How should we speak about practitioner licensing so it feels like natural extension rather than add-on?", lead: "Smith", leadId: "grok" },
       { q: "Q6", question: "What one decision or next action carries the most weight from what we've heard?", lead: "Saltbox", leadId: "saltbox" },
       { q: "Q7", question: "Does the current language in North Star hold the accountability philosophy precisely — flexible structure for founders wired for urgency, without breaking under anxiety or letting others down? Are we using the right visions, the right words, and do we have the discipline not to substitute words that don't fit?", lead: "Codetry", leadId: "codetry" },
-      { q: "Q8", question: "The Hearth: a digital creative hub for kids using AI image generation. Where does it belong in the bundle stack — Bundle B (Family & Homeschool), Bundle E (Full Sovereign Stack), or does it need its own lane? And who leads the build?", lead: "Smith", leadId: "grok" },
+      { q: "Q8", question: "The Hearth: a digital creative hub for kids using AI image generation. Where does it belong in the kit stack — Kit B (Family & Homeschool), Kit E (Full Sovereign Stack), or does it need its own lane? And who leads the build?", lead: "Smith", leadId: "grok" },
       { q: "Q9", question: "A crypto/digital privacy onboarding guide for community members (\"normies\"), seeded from a real Dryden event presentation. Does this live as a standalone artifact, or does it fold into an existing one (Handbook, Library, etc.)? Who is the right audience and who holds it?", lead: "Community", leadId: "community" },
       { q: "Q10", question: "Deadhead, the founder-only vetting tool — read it on two axes. Financial model fit: can it carry subscription pricing, the 807 free-access cost, and trial-to-paid conversion the way the rest of the constellation does? Software fit: does it belong in the constellation as a platform product at all, or is it a private founder tool dressed up as one? Name the real tension before more is invested.", lead: "Saltbox", leadId: "saltbox" },
     ],
@@ -683,40 +693,40 @@ Convened by: Bobbie Parr
 Table mode: Structured deliberation. One price point per lens. Honest read only.
 
 PURPOSE
-Determine whether the five sellable bundles (A–E) are priced at the right point for the communities they serve.
+Determine whether the five sellable kits (A–E) are priced at the right point for the communities they serve.
 This session does not change any numbers — it reads the pricing as it stands and names what holds, what doesn't, and what needs a decision.
 
-THE FIVE BUNDLES
-Bundle A — Wellness & Care Tracking
+THE FIVE KITS
+Kit A — Wellness & Care Tracking
   For: TOPS groups, LTC facilities, senior living, clinics, corporate wellness
   Tools: Keto Companion + Bright Side (PHI-free care coordination)
-  Revenue model: Hosting + support. Add-ons: custom infographics, medication tracker.
+  Trade: Hosting + practitioner support. Add-ons: custom infographics, medication tracker.
 
-Bundle B — Family & Homeschool Operating System
+Kit B — Family & Homeschool Operating System
   For: Homeschool co-ops, families, faith communities, youth programs
   Tools: Kitchen + Saltbox/Gather + Hearth + Life Badges + Family Buckets + Campfire + Memory Lane
-  Revenue model: Hosting + support. White-label available.
+  Trade: Hosting + practitioner support. White-label available.
 
-Bundle C — Community Coordination & Mutual Aid
+Kit C — Community Coordination & Mutual Aid
   For: Rural co-ops, villages, band councils, support networks
   Tools: Sandbox + The Eave + North Star + Stomping Path elements
-  Revenue model: Hosting + support. Add-ons: custom AI council seats.
+  Trade: Hosting + practitioner support. Add-ons: custom AI council seats.
 
-Bundle D — Business & Producer Operations
+Kit D — Business & Producer Operations
   For: Restaurants, retail, food co-ops, farmers markets, northern operators
   Tools: Dryden Web Suite + 807 Benefits + Market Mosaic + Rootwork
-  Revenue model: Hosting + support. Add-ons: ordering flows, grant documentation.
+  Trade: Hosting + practitioner support. Add-ons: ordering flows, grant documentation.
 
-Bundle E — Full Sovereign Stack
+Kit E — Full Sovereign Stack (complete tool box)
   For: Large co-ops, family offices, communities, grant-funded organizations
   Includes: All zones + Codetry tools + Kitchen Table AI + XRPL + print suite
-  Revenue model: Hosting + support + practitioner retainer. White-label available.
+  Trade: Hosting + practitioner support + practitioner retainer. White-label available.
 
 STONEMASON PRICE LADDER (Headwaters practitioner services — for context)
-  Discovery Call:       $500        (90-min scoped. Credited toward any package.)
+  Discovery Call:       $500        (90-min scoped. Credited toward any engagement.)
   Foundation Build:     $2,500      (System setup, integrations, training walk-through.)
   Training Day:         $1,200      (On-site or virtual full-day implementation.)
-  Full Launch Package:  $6,000      (Discovery + Foundation + Training + 30-day support.)
+  Full Launch:          $6,000      (Discovery + Foundation + Training + 30-day support.)
   Ongoing Stewardship:  $400/mo     (Monthly check-in, updates, priority support.)
   Emergency Support:    $350/day    (Same-day or next-day on-demand engagement.)
 
@@ -724,13 +734,13 @@ GROUND RULES
 — Read the price as it is. Do not invent numbers.
 — One lens per seat. Stay in your lane.
 — If the price holds, say so. If it doesn't, name why — specifically.
-— End with one written decision per bundle: holds / needs a revision / needs more information.`,
+— End with one written decision per kit: holds / needs a revision / needs more information.`,
     agendaItems: [
-      { q: "Q1", question: "Saltbox lens — does the price hold? For each of the five bundles, read the asking price against what the market will actually bear in northern Ontario. Which bundle is priced too high, too low, or just right? Name the one that concerns you most.", lead: "Saltbox", leadId: "saltbox" },
-      { q: "Q2", question: "Smith lens — is it buildable at this margin? For each bundle, does the current price leave enough room to build, maintain, and support the tools included — or does it underprice the labour? Name where the margin is too thin to sustain the work.", lead: "Smith", leadId: "grok" },
-      { q: "Q3", question: "Systems lens — what flow does this price create? For each bundle, trace what happens after a community says yes at this price: does the price point attract the right clients, create a sustainable revenue flow, or does it generate the wrong volume or the wrong expectations?", lead: "Systems", leadId: "systems" },
-      { q: "Q4", question: "Community lens — does it fit a northern co-op's real budget? For each bundle, name whether a rural co-op, band council, or northern community organization can realistically afford this price point without a grant. Which bundle is most accessible? Which is effectively locked behind funding?", lead: "Community", leadId: "community" },
-      { q: "Q5", question: "Ishmael lens — does this pricing story serve the community or extract from it? For each bundle, read the price through the Leaver/Taker frame: does the pricing model steward the community's capacity or does it replicate the extractive patterns we say we're replacing? Name any bundle where the pricing drifts toward extraction.", lead: "Ishmael", leadId: "ishmael" },
+      { q: "Q1", question: "Saltbox lens — does the price hold? For each of the five kits, read the asking price against what the market will actually bear in northern Ontario. Which kit is priced too high, too low, or just right? Name the one that concerns you most.", lead: "Saltbox", leadId: "saltbox" },
+      { q: "Q2", question: "Smith lens — is it buildable at this margin? For each kit, does the current price leave enough room to build, maintain, and support the tools included — or does it underprice the labour? Name where the margin is too thin to sustain the work.", lead: "Smith", leadId: "grok" },
+      { q: "Q3", question: "Systems lens — what flow does this price create? For each kit, trace what happens after a community says yes at this price: does the price point attract the right clients, create a sustainable revenue flow, or does it generate the wrong volume or the wrong expectations?", lead: "Systems", leadId: "systems" },
+      { q: "Q4", question: "Community lens — does it fit a northern co-op's real budget? For each kit, name whether a rural co-op, band council, or northern community organization can realistically afford this price point without a grant. Which kit is most accessible? Which is effectively locked behind funding?", lead: "Community", leadId: "community" },
+      { q: "Q5", question: "Ishmael lens — does this pricing story serve the community or extract from it? For each kit, read the price through the seven-generation stewardship lens: does the pricing model honour the community's capacity or does it replicate the extractive patterns we say we're replacing? Name any kit where the pricing drifts toward extraction.", lead: "Ishmael", leadId: "ishmael" },
     ],
   },
 ];
@@ -822,6 +832,8 @@ export function KitchenTablePage() {
   const [editingBrief, setEditingBrief] = useState(false);
   const [configSeatId, setConfigSeatId] = useState<string | null>(null);
   const [configDraft, setConfigDraft] = useState({ name: "", description: "", systemPrompt: "" });
+  const [placeCardEditing, setPlaceCardEditing] = useState<string | null>(null);
+  const [placeCardDraft, setPlaceCardDraft] = useState({ name: "", description: "" });
 
   const activeTemplate = TEMPLATES.find((t) => t.id === activeTemplateId) ?? TEMPLATES[0]!;
   const agendaItems = activeTemplate.agendaItems;
@@ -932,6 +944,25 @@ export function KitchenTablePage() {
   const openConfig = (seat: Seat) => {
     setConfigSeatId(seat.id);
     setConfigDraft({ name: seat.name, description: seat.description, systemPrompt: seat.systemPrompt });
+  };
+
+  const savePlaceCard = (seatId: string, name: string, description: string) => {
+    setSeats((prev) => {
+      const next = prev.map((s) =>
+        s.id === seatId
+          ? { ...s, name: name.trim() || s.name, description: description.trim() || s.description }
+          : s
+      );
+      try {
+        const toStore: Record<string, Partial<Seat>> = {};
+        next.filter((s) => s.configurable).forEach((s) => {
+          toStore[s.id] = { name: s.name, description: s.description, systemPrompt: s.systemPrompt };
+        });
+        localStorage.setItem("kitchen-table-seat-config", JSON.stringify(toStore));
+      } catch { }
+      return next;
+    });
+    setPlaceCardEditing(null);
   };
 
   const saveConfig = () => {
@@ -1074,6 +1105,74 @@ export function KitchenTablePage() {
                 setInput(deliberationBrief);
               }}
             />
+
+            {/* Open seat place cards */}
+            <div className="px-6 pt-5 pb-1 flex gap-3">
+              {seats.filter((s) => s.configurable).map((seat) => {
+                const isEditing = placeCardEditing === seat.id;
+                return (
+                  <div
+                    key={seat.id}
+                    className="flex-1 bg-[#181512] border border-[#251E18] rounded-sm px-4 py-3 group"
+                  >
+                    {isEditing ? (
+                      <div className="flex flex-col gap-2">
+                        <input
+                          autoFocus
+                          value={placeCardDraft.name}
+                          onChange={(e) => setPlaceCardDraft((d) => ({ ...d, name: e.target.value }))}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") savePlaceCard(seat.id, placeCardDraft.name, placeCardDraft.description);
+                            if (e.key === "Escape") setPlaceCardEditing(null);
+                          }}
+                          placeholder="Name"
+                          className="bg-transparent text-[14px] font-medium text-[#EAE4DB] outline-none border-b border-[#5C5046] pb-1 w-full"
+                        />
+                        <input
+                          value={placeCardDraft.description}
+                          onChange={(e) => setPlaceCardDraft((d) => ({ ...d, description: e.target.value }))}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") savePlaceCard(seat.id, placeCardDraft.name, placeCardDraft.description);
+                            if (e.key === "Escape") setPlaceCardEditing(null);
+                          }}
+                          placeholder="One-line lens"
+                          className="bg-transparent text-[12px] text-[#8C7B6D] outline-none border-b border-[#3D3228] pb-1 w-full"
+                        />
+                        <div className="flex gap-3 mt-1 items-center">
+                          <button
+                            onClick={() => savePlaceCard(seat.id, placeCardDraft.name, placeCardDraft.description)}
+                            className="text-[11px] text-[#13110E] bg-[#8C7B6D] px-3 py-1 rounded-sm tracking-wide font-medium"
+                          >Set seat</button>
+                          <button
+                            onClick={() => setPlaceCardEditing(null)}
+                            className="text-[11px] text-[#5C5046] hover:text-[#8C7B6D] tracking-wide transition-colors"
+                          >cancel</button>
+                          <button
+                            onClick={() => { setPlaceCardEditing(null); openConfig(seat); }}
+                            className="ml-auto text-[10px] text-[#3D3228] hover:text-[#5C5046] tracking-wide transition-colors"
+                            title="Open full config modal"
+                          >full config ›</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        className="w-full text-left"
+                        onClick={() => {
+                          setPlaceCardDraft({ name: seat.name, description: seat.description });
+                          setPlaceCardEditing(seat.id);
+                        }}
+                      >
+                        <p className="text-[14px] font-medium text-[#C5B6A5] group-hover:text-[#EAE4DB] transition-colors leading-snug">
+                          {seat.icon} {seat.name}
+                        </p>
+                        <p className="text-[11px] text-[#5C5046] mt-1 leading-snug">{seat.description}</p>
+                        <p className="text-[9px] uppercase tracking-[0.15em] text-[#2A221A] mt-2 group-hover:text-[#3D3228] transition-colors">tap to set place card</p>
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
             {/* Agenda — below the triage surface */}
             <div className="px-6 pt-8 pb-16">
