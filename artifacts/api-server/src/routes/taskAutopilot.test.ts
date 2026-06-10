@@ -11,6 +11,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
+import path from "path";
 
 // ── Stateful in-memory fs mock ────────────────────────────────────────────────
 //
@@ -48,8 +49,8 @@ vi.mock("../lib/ownerAuth", () => ({
   OWNER_TOKEN: "test-owner-token",
 }));
 
-// Import the pure function after mocks are hoisted
-const { classifyTask } = await import("./taskAutopilot.js");
+// Import the pure functions after mocks are hoisted
+const { classifyTask, archiveClearedTasks } = await import("./taskAutopilot.js");
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -472,5 +473,432 @@ describe("POST /approve — idempotent approval", () => {
     expect(res.status).toBe(200);
     expect(res.body.approved).toBe(0);
     expect(res.body.alreadyPending).toBe(0);
+  });
+});
+
+// ── Shared file-path constants (mirror the module's DATA_DIR layout) ──────────
+
+const DATA_DIR = path.resolve(process.cwd(), "data");
+const TASKS_FILE_PATH = path.join(DATA_DIR, "task-autopilot-tasks.jsonl");
+const ARCHIVE_FILE_PATH = path.join(DATA_DIR, "task-autopilot-archive.jsonl");
+
+// ── Store seed / read helpers ─────────────────────────────────────────────────
+
+type StoredTask = {
+  id: string;
+  title: string;
+  status: "proposed" | "pending" | "cleared";
+  importedAt: string;
+  updatedAt: string;
+  description?: string;
+};
+
+/** ISO timestamp for N days before "now" */
+function daysAgo(n: number): string {
+  return new Date(Date.now() - n * 24 * 60 * 60 * 1000).toISOString();
+}
+
+/** Build a minimal cleared task with a predictable updatedAt */
+function clearedTask(id: string, updatedAtDaysAgo: number): StoredTask {
+  const ts = daysAgo(updatedAtDaysAgo);
+  return { id, title: `Cleared task ${id}`, status: "cleared", importedAt: ts, updatedAt: ts };
+}
+
+function proposedTask(id: string): StoredTask {
+  const ts = daysAgo(0);
+  return { id, title: `Proposed task ${id}`, status: "proposed", importedAt: ts, updatedAt: ts };
+}
+
+function pendingTask(id: string): StoredTask {
+  const ts = daysAgo(0);
+  return { id, title: `Pending task ${id}`, status: "pending", importedAt: ts, updatedAt: ts };
+}
+
+function seedTasks(tasks: StoredTask[]) {
+  fsStore[TASKS_FILE_PATH] = tasks.map((t) => JSON.stringify(t)).join("\n") + (tasks.length ? "\n" : "");
+}
+
+function readArchivedTasks(): StoredTask[] {
+  const raw = fsStore[ARCHIVE_FILE_PATH] ?? "";
+  return raw.split("\n").filter(Boolean).map((l) => JSON.parse(l) as StoredTask);
+}
+
+function readLiveTasks(): StoredTask[] {
+  const raw = fsStore[TASKS_FILE_PATH] ?? "";
+  return raw.split("\n").filter(Boolean).map((l) => JSON.parse(l) as StoredTask);
+}
+
+// ── writeTasks auto-prune tests (exercised via POST /import) ──────────────────
+//
+// writeTasks() is not exported so we drive it through the import HTTP endpoint,
+// which always calls writeTasks(all) after processing incoming tasks.
+
+describe("writeTasks — auto-prune of CLEARED tasks", () => {
+  let server: Server;
+  let baseUrl: string;
+
+  beforeEach(async () => {
+    resetStore();
+
+    const express = (await import("express")).default;
+    const { default: router } = await import("./taskAutopilot.js");
+
+    const app = express();
+    app.use(express.json());
+    app.use("/", router);
+
+    await new Promise<void>((resolve) => {
+      server = createServer(app);
+      server.listen(0, "127.0.0.1", resolve);
+    });
+
+    const { port } = server.address() as AddressInfo;
+    baseUrl = `http://127.0.0.1:${port}`;
+  });
+
+  afterEach(async () => {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  });
+
+  async function triggerWrite(uniqueTitle: string) {
+    await fetch(`${baseUrl}/import`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: "Bearer test-owner-token",
+      },
+      body: JSON.stringify({ tasks: [{ title: uniqueTitle }] }),
+    });
+  }
+
+  it("does NOT evict when cleared count equals MAX_CLEARED_RETAINED (200)", async () => {
+    const tasks = Array.from({ length: 200 }, (_, i) =>
+      clearedTask(`c${i}`, 200 - i)
+    );
+    seedTasks(tasks);
+
+    await triggerWrite("New unique proposed task A");
+
+    expect(fsStore[ARCHIVE_FILE_PATH]).toBeUndefined();
+    const live = readLiveTasks().filter((t) => t.status === "cleared");
+    expect(live).toHaveLength(200);
+  });
+
+  it("evicts the single oldest when cleared count reaches 201", async () => {
+    const tasks = Array.from({ length: 201 }, (_, i) =>
+      clearedTask(`c${i}`, 201 - i)
+    );
+    seedTasks(tasks);
+
+    await triggerWrite("New unique proposed task B");
+
+    const archived = readArchivedTasks();
+    expect(archived).toHaveLength(1);
+    // The oldest task had updatedAt = daysAgo(201) — it has id "c0"
+    expect(archived[0]!.id).toBe("c0");
+
+    const live = readLiveTasks().filter((t) => t.status === "cleared");
+    expect(live).toHaveLength(200);
+  });
+
+  it("evicts exactly (total - 200) oldest when many surplus cleared tasks exist", async () => {
+    const tasks = Array.from({ length: 210 }, (_, i) =>
+      clearedTask(`c${i}`, 210 - i)
+    );
+    seedTasks(tasks);
+
+    await triggerWrite("New unique proposed task C");
+
+    const archived = readArchivedTasks();
+    expect(archived).toHaveLength(10);
+
+    // The 10 evicted tasks should be the oldest (ids c0…c9)
+    const archivedIds = archived.map((t) => t.id).sort();
+    expect(archivedIds).toEqual(["c0","c1","c2","c3","c4","c5","c6","c7","c8","c9"]);
+
+    const live = readLiveTasks().filter((t) => t.status === "cleared");
+    expect(live).toHaveLength(200);
+  });
+
+  it("newest 200 CLEARED tasks are kept (not the oldest)", async () => {
+    // 202 cleared tasks: c0 is oldest (daysAgo(202)), c201 is newest (daysAgo(1))
+    const tasks = Array.from({ length: 202 }, (_, i) =>
+      clearedTask(`c${i}`, 202 - i)
+    );
+    seedTasks(tasks);
+
+    await triggerWrite("New unique proposed task D");
+
+    const archived = readArchivedTasks();
+    expect(archived).toHaveLength(2);
+
+    const archivedIds = new Set(archived.map((t) => t.id));
+    expect(archivedIds.has("c0")).toBe(true);
+    expect(archivedIds.has("c1")).toBe(true);
+
+    // The newest tasks must still be in the live store
+    const liveCleared = readLiveTasks().filter((t) => t.status === "cleared");
+    const liveIds = new Set(liveCleared.map((t) => t.id));
+    expect(liveIds.has("c201")).toBe(true);
+    expect(liveIds.has("c200")).toBe(true);
+  });
+
+  it("PROPOSED and PENDING tasks are never evicted regardless of cleared count", async () => {
+    // 201 cleared + 5 proposed + 3 pending
+    const cleared = Array.from({ length: 201 }, (_, i) => clearedTask(`c${i}`, 201 - i));
+    const proposed = Array.from({ length: 5 }, (_, i) => proposedTask(`p${i}`));
+    const pending = Array.from({ length: 3 }, (_, i) => pendingTask(`q${i}`));
+    seedTasks([...cleared, ...proposed, ...pending]);
+
+    await triggerWrite("New unique proposed task E");
+
+    // Eviction fires for surplus CLEARED only
+    const archived = readArchivedTasks();
+    expect(archived.every((t) => t.status === "cleared")).toBe(true);
+
+    const live = readLiveTasks();
+    const liveProposed = live.filter((t) => t.status === "proposed");
+    const livePending = live.filter((t) => t.status === "pending");
+
+    // All 5 original proposed + 1 newly imported = 6 proposed
+    expect(liveProposed.length).toBeGreaterThanOrEqual(5);
+    expect(livePending).toHaveLength(3);
+  });
+});
+
+// ── archiveClearedTasks — direct unit tests ───────────────────────────────────
+
+describe("archiveClearedTasks — direct", () => {
+  beforeEach(() => {
+    resetStore();
+  });
+
+  it("returns archived=0 when there are no tasks at all", () => {
+    const result = archiveClearedTasks(30);
+    expect(result.archived).toBe(0);
+    expect(result.cutoff).toBeTruthy();
+  });
+
+  it("returns archived=0 when no tasks are CLEARED", () => {
+    seedTasks([proposedTask("p1"), pendingTask("q1")]);
+    const result = archiveClearedTasks(30);
+    expect(result.archived).toBe(0);
+    expect(fsStore[ARCHIVE_FILE_PATH]).toBeUndefined();
+  });
+
+  it("returns archived=0 when CLEARED tasks are newer than the cutoff", () => {
+    // 5-day-old cleared task, cutoff is 30 days → should NOT be archived
+    seedTasks([clearedTask("c1", 5)]);
+    const result = archiveClearedTasks(30);
+    expect(result.archived).toBe(0);
+    expect(fsStore[ARCHIVE_FILE_PATH]).toBeUndefined();
+  });
+
+  it("archives CLEARED tasks older than the cutoff", () => {
+    // 60-day-old cleared task, cutoff is 30 days → should be archived
+    seedTasks([clearedTask("old", 60)]);
+    const result = archiveClearedTasks(30);
+    expect(result.archived).toBe(1);
+
+    const archived = readArchivedTasks();
+    expect(archived).toHaveLength(1);
+    expect(archived[0]!.id).toBe("old");
+
+    // Removed from the live store
+    const live = readLiveTasks();
+    expect(live.every((t) => t.id !== "old")).toBe(true);
+  });
+
+  it("keeps CLEARED tasks newer than the cutoff in the live store", () => {
+    seedTasks([clearedTask("recent", 10), clearedTask("old", 60)]);
+    const result = archiveClearedTasks(30);
+    expect(result.archived).toBe(1);
+
+    const live = readLiveTasks();
+    expect(live.some((t) => t.id === "recent")).toBe(true);
+    expect(live.every((t) => t.id !== "old")).toBe(true);
+  });
+
+  it("olderThanDays=0 archives ALL cleared tasks (cutoff is ~now)", () => {
+    // Even a 0-second-old task would have updatedAt < cutoff only if it's strictly before now.
+    // Use tasks from 1 second ago effectively via daysAgo(0) — they will be < Date.now()
+    // Use 1-day-old cleared tasks to be unambiguous
+    seedTasks([clearedTask("c1", 1), clearedTask("c2", 2), proposedTask("p1")]);
+    const result = archiveClearedTasks(0);
+    expect(result.archived).toBe(2);
+
+    const live = readLiveTasks();
+    expect(live.filter((t) => t.status === "cleared")).toHaveLength(0);
+    expect(live.filter((t) => t.status === "proposed")).toHaveLength(1);
+  });
+
+  it("PROPOSED and PENDING tasks are never archived regardless of age", () => {
+    const old = { ...proposedTask("p-old"), updatedAt: daysAgo(365) };
+    const oldPending = { ...pendingTask("q-old"), updatedAt: daysAgo(365) };
+    seedTasks([old, oldPending, clearedTask("c-old", 60)]);
+
+    const result = archiveClearedTasks(30);
+    expect(result.archived).toBe(1);
+
+    const live = readLiveTasks();
+    expect(live.some((t) => t.id === "p-old")).toBe(true);
+    expect(live.some((t) => t.id === "q-old")).toBe(true);
+  });
+
+  it("returns the correct cutoff ISO string for olderThanDays=30", () => {
+    const before = Date.now();
+    const result = archiveClearedTasks(30);
+    const after = Date.now();
+
+    const cutoffMs = new Date(result.cutoff).getTime();
+    const expectedMs = 30 * 24 * 60 * 60 * 1000;
+
+    expect(cutoffMs).toBeGreaterThanOrEqual(before - expectedMs - 1000);
+    expect(cutoffMs).toBeLessThanOrEqual(after - expectedMs + 1000);
+  });
+
+  it("archives multiple tasks in a single call and appends all to archive file", () => {
+    seedTasks([
+      clearedTask("old1", 90),
+      clearedTask("old2", 60),
+      clearedTask("old3", 45),
+      clearedTask("recent", 10),
+    ]);
+    const result = archiveClearedTasks(30);
+    expect(result.archived).toBe(3);
+
+    const archived = readArchivedTasks();
+    expect(archived).toHaveLength(3);
+
+    const archivedIds = new Set(archived.map((t) => t.id));
+    expect(archivedIds.has("old1")).toBe(true);
+    expect(archivedIds.has("old2")).toBe(true);
+    expect(archivedIds.has("old3")).toBe(true);
+    expect(archivedIds.has("recent")).toBe(false);
+  });
+});
+
+// ── POST /archive — HTTP tests ────────────────────────────────────────────────
+
+describe("POST /archive — HTTP", () => {
+  let server: Server;
+  let baseUrl: string;
+
+  beforeEach(async () => {
+    resetStore();
+
+    const express = (await import("express")).default;
+    const { default: router } = await import("./taskAutopilot.js");
+
+    const app = express();
+    app.use(express.json());
+    app.use("/", router);
+
+    await new Promise<void>((resolve) => {
+      server = createServer(app);
+      server.listen(0, "127.0.0.1", resolve);
+    });
+
+    const { port } = server.address() as AddressInfo;
+    baseUrl = `http://127.0.0.1:${port}`;
+  });
+
+  afterEach(async () => {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  });
+
+  async function archivePost(body: unknown, withToken = true) {
+    const headers: Record<string, string> = { "content-type": "application/json" };
+    if (withToken) headers["authorization"] = "Bearer test-owner-token";
+    const res = await fetch(`${baseUrl}/archive`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+    return { status: res.status, body: (await res.json()) as Record<string, unknown> };
+  }
+
+  it("returns 401 when no owner token is provided", async () => {
+    // The global ownerAuth mock always returns true; temporarily override it
+    // so this test can exercise the actual 401 branch.
+    const ownerAuth = await import("../lib/ownerAuth.js");
+    vi.mocked(ownerAuth.isOwnerRequest).mockReturnValueOnce(false);
+
+    const res = await archivePost({}, false);
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBeTruthy();
+  });
+
+  it("returns ok=true and archived=0 when there are no tasks", async () => {
+    const res = await archivePost({ olderThanDays: 30 });
+    expect(res.status).toBe(200);
+    expect(res.body.ok).toBe(true);
+    expect(res.body.archived).toBe(0);
+  });
+
+  it("uses olderThanDays=30 by default when body is empty", async () => {
+    const res = await archivePost({});
+    expect(res.status).toBe(200);
+    expect(res.body.olderThanDays).toBe(30);
+  });
+
+  it("returns archived=0 when no tasks are CLEARED", async () => {
+    seedTasks([proposedTask("p1"), pendingTask("q1")]);
+    const res = await archivePost({ olderThanDays: 30 });
+    expect(res.status).toBe(200);
+    expect(res.body.archived).toBe(0);
+  });
+
+  it("archives CLEARED tasks older than olderThanDays and returns correct count", async () => {
+    seedTasks([clearedTask("old", 60), clearedTask("recent", 5)]);
+    const res = await archivePost({ olderThanDays: 30 });
+    expect(res.status).toBe(200);
+    expect(res.body.ok).toBe(true);
+    expect(res.body.archived).toBe(1);
+
+    const archived = readArchivedTasks();
+    expect(archived).toHaveLength(1);
+    expect(archived[0]!.id).toBe("old");
+  });
+
+  it("olderThanDays=0 archives all cleared tasks", async () => {
+    seedTasks([clearedTask("c1", 1), clearedTask("c2", 2), proposedTask("p1")]);
+    const res = await archivePost({ olderThanDays: 0 });
+    expect(res.status).toBe(200);
+    expect(res.body.archived).toBe(2);
+  });
+
+  it("PROPOSED and PENDING tasks are never archived", async () => {
+    const oldProposed = { ...proposedTask("p-old"), updatedAt: daysAgo(365) };
+    const oldPending = { ...pendingTask("q-old"), updatedAt: daysAgo(365) };
+    seedTasks([oldProposed, oldPending]);
+
+    const res = await archivePost({ olderThanDays: 30 });
+    expect(res.status).toBe(200);
+    expect(res.body.archived).toBe(0);
+  });
+
+  it("response includes a cutoff ISO timestamp", async () => {
+    const res = await archivePost({ olderThanDays: 30 });
+    expect(res.status).toBe(200);
+    const cutoff = res.body.cutoff as string;
+    expect(typeof cutoff).toBe("string");
+    expect(new Date(cutoff).getTime()).not.toBeNaN();
+  });
+
+  it("response echoes back the olderThanDays value sent", async () => {
+    const res = await archivePost({ olderThanDays: 14 });
+    expect(res.status).toBe(200);
+    expect(res.body.olderThanDays).toBe(14);
+  });
+
+  it("rejects olderThanDays=-1 with 400", async () => {
+    const res = await archivePost({ olderThanDays: -1 });
+    expect(res.status).toBe(400);
+  });
+
+  it("rejects olderThanDays=9999 (> max 3650) with 400", async () => {
+    const res = await archivePost({ olderThanDays: 9999 });
+    expect(res.status).toBe(400);
   });
 });
