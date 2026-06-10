@@ -184,12 +184,40 @@ export function TaskAutopilot({ onOpenDeliberation }: TaskAutopilotProps) {
   });
   const [constellationDraft, setConstellationDraft] = useState({ label: "", baseUrl: "", token: "" });
 
+  // ── Aquifer: pre-curated list of all known projects, sweepable in one click ──
+  const [aquifer, setAquifer] = useState<ConstellationProject[]>(() => {
+    try {
+      const stored = localStorage.getItem("headwaters-aquifer-projects");
+      if (stored) {
+        const parsed = JSON.parse(stored) as ConstellationProject[];
+        if (parsed.length > 0) return parsed;
+      }
+      // Migration: seed aquifer from legacy constellation config on first load
+      const legacy = localStorage.getItem("task-autopilot-constellation");
+      if (legacy) {
+        const legacyProjects = JSON.parse(legacy) as ConstellationProject[];
+        if (legacyProjects.length > 0) {
+          localStorage.setItem("headwaters-aquifer-projects", JSON.stringify(legacyProjects));
+          return legacyProjects;
+        }
+      }
+      return [];
+    } catch { return []; }
+  });
+  const [aquiferSettingsOpen, setAquiferSettingsOpen] = useState(false);
+  const [aquiferDraft, setAquiferDraft] = useState({ label: "", baseUrl: "", token: "" });
+  const [aquiferPulling, setAquiferPulling] = useState(false);
+
   // Tracks whether the auto-seed has been attempted this session (prevents re-seeding on panel re-opens)
   const autoSeededRef = useRef(false);
 
   useEffect(() => {
     try { localStorage.setItem("task-autopilot-constellation", JSON.stringify(constellation)); } catch { /**/ }
   }, [constellation]);
+
+  useEffect(() => {
+    try { localStorage.setItem("headwaters-aquifer-projects", JSON.stringify(aquifer)); } catch { /**/ }
+  }, [aquifer]);
 
   // ── Triage ──
 
@@ -485,6 +513,15 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
     }
   };
 
+  // ── Pull all aquifer projects in parallel ──
+
+  const pullAquifer = async () => {
+    if (!aquifer.length) return;
+    setAquiferPulling(true);
+    await Promise.all(aquifer.map((p) => pullConstellation(p)));
+    setAquiferPulling(false);
+  };
+
   // ── Computed ──
 
   const greenTasks  = (triaged?.tasks ?? []).filter((t) => effectiveTier(t) === "GREEN");
@@ -576,6 +613,32 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
               ↻
             </button>
             <div className="flex-1" />
+            {/* ── Aquifer sweep button ── */}
+            <button
+              onClick={pullAquifer}
+              disabled={aquiferPulling || aquifer.length === 0}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] uppercase tracking-wider font-medium rounded-sm border border-[#1A3028] text-[#4ADE80] hover:text-[#86EFAC] hover:border-[#2A4A38] transition-colors disabled:opacity-40"
+              title={aquifer.length === 0 ? "Add projects in Aquifer settings first" : `Pull from ${aquifer.length} aquifer project${aquifer.length !== 1 ? "s" : ""}`}
+            >
+              {aquiferPulling ? (
+                <div className="w-3 h-3 border-2 border-[#4ADE80]/40 border-t-[#4ADE80] rounded-full animate-spin" />
+              ) : (
+                <span>◎</span>
+              )}
+              <span>Pull Aquifer</span>
+              {aquifer.length > 0 && (
+                <span className="ml-1 text-[10px] bg-[#0D2010] text-[#4ADE80] rounded-full px-1.5 py-0.5">
+                  {aquifer.length}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setAquiferSettingsOpen((o) => !o)}
+              className="px-2.5 py-1.5 text-[11px] uppercase tracking-wider font-medium rounded-sm border border-[#1A3028] text-[#4ADE80]/60 hover:text-[#4ADE80] hover:border-[#2A4A38] transition-colors"
+              title="Aquifer project settings"
+            >
+              ⚙
+            </button>
             <button
               onClick={() => setConfigOpen(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] uppercase tracking-wider font-medium rounded-sm border border-[#2A231E] text-[#5C5046] hover:text-[#A39485] hover:border-[#3D3228] transition-colors"
@@ -589,6 +652,22 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
               )}
             </button>
           </div>
+
+          {/* ── Inline Aquifer settings panel ── */}
+          {aquiferSettingsOpen && (
+            <AquiferSettingsPanel
+              projects={aquifer}
+              onAdd={(p) => setAquifer((prev) => [...prev, p])}
+              onRemove={(id) => setAquifer((prev) => prev.filter((p) => p.id !== id))}
+              onUpdate={(updated) => setAquifer((prev) => prev.map((p) => p.id === updated.id ? updated : p))}
+              onPull={(p) => pullConstellation(p)}
+              onPullAll={pullAquifer}
+              draft={aquiferDraft}
+              setDraft={setAquiferDraft}
+              pulling={aquiferPulling}
+              onClose={() => setAquiferSettingsOpen(false)}
+            />
+          )}
 
           {error && (
             <div className="mb-4 px-4 py-3 rounded-sm border border-[#5C1A1A] bg-[#1E0A0A] text-[12px] text-[#FCA5A5] flex items-start gap-3">
@@ -1156,6 +1235,199 @@ function OverrideMenu({ task, onOverride }: { task: ClassifiedTask; onOverride: 
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+// ── AquiferSettingsPanel ──────────────────────────────────────────────────────
+// Inline (not a modal) — collapses in the main panel.
+
+function AquiferProjectRow({
+  project, onRemove, onUpdate, onPull,
+}: {
+  project: ConstellationProject;
+  onRemove: (id: string) => void;
+  onUpdate: (updated: ConstellationProject) => void;
+  onPull: (p: ConstellationProject) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [editFields, setEditFields] = useState({ label: project.label, baseUrl: project.baseUrl, token: project.token });
+
+  const handleSave = () => {
+    if (!editFields.label.trim() || !editFields.baseUrl.trim()) return;
+    onUpdate({ ...project, label: editFields.label.trim(), baseUrl: editFields.baseUrl.trim(), token: editFields.token.trim() });
+    setEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditFields({ label: project.label, baseUrl: project.baseUrl, token: project.token });
+    setEditing(false);
+  };
+
+  if (editing) {
+    return (
+      <div className="bg-[#0D2010] border border-[#4ADE80]/30 rounded-sm px-3 py-2.5 space-y-2">
+        <input
+          value={editFields.label}
+          onChange={(e) => setEditFields((f) => ({ ...f, label: e.target.value }))}
+          placeholder="Project label"
+          className="w-full text-[12px] text-[#86EFAC] bg-[#0A1A10] border border-[#1A3028] rounded-sm px-2.5 py-1.5 outline-none focus:border-[#4ADE80] transition-colors placeholder:text-[#2A4A38]"
+        />
+        <input
+          value={editFields.baseUrl}
+          onChange={(e) => setEditFields((f) => ({ ...f, baseUrl: e.target.value }))}
+          placeholder="Base URL"
+          className="w-full text-[12px] text-[#86EFAC] bg-[#0A1A10] border border-[#1A3028] rounded-sm px-2.5 py-1.5 outline-none focus:border-[#4ADE80] transition-colors placeholder:text-[#2A4A38]"
+        />
+        <input
+          type="password"
+          value={editFields.token}
+          onChange={(e) => setEditFields((f) => ({ ...f, token: e.target.value }))}
+          placeholder="Bearer token (optional)"
+          className="w-full text-[12px] text-[#86EFAC] bg-[#0A1A10] border border-[#1A3028] rounded-sm px-2.5 py-1.5 outline-none focus:border-[#4ADE80] transition-colors placeholder:text-[#2A4A38]"
+        />
+        <div className="flex gap-2 pt-0.5">
+          <button
+            onClick={handleSave}
+            disabled={!editFields.label.trim() || !editFields.baseUrl.trim()}
+            className="px-3 py-1 text-[10px] uppercase tracking-wider font-bold rounded-sm bg-[#16A34A] text-[#0A1A10] hover:bg-[#4ADE80] disabled:opacity-30 transition-colors"
+          >
+            Save
+          </button>
+          <button
+            onClick={handleCancel}
+            className="px-3 py-1 text-[10px] uppercase tracking-wider rounded-sm border border-[#1A3028] text-[#4ADE80] hover:text-[#86EFAC] transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2 bg-[#0D2010] border border-[#1A3028] rounded-sm px-3 py-2">
+      <div className="flex-1 min-w-0">
+        <p className="text-[12px] text-[#86EFAC] font-medium leading-tight">{project.label}</p>
+        <p className="text-[10px] text-[#3A6A4A] truncate">{project.baseUrl}/api/tasks/proposed</p>
+      </div>
+      <button
+        onClick={() => onPull(project)}
+        className="px-2 py-1 text-[10px] uppercase tracking-wider rounded-sm border border-[#1A3028] text-[#4ADE80] hover:text-[#86EFAC] hover:border-[#2A4A38] transition-colors flex-shrink-0"
+      >
+        Pull
+      </button>
+      <button
+        onClick={() => setEditing(true)}
+        className="px-2 py-1 text-[10px] uppercase tracking-wider rounded-sm border border-[#1A3028] text-[#3A6A4A] hover:text-[#4ADE80] hover:border-[#2A4A38] transition-colors flex-shrink-0"
+        title="Edit project"
+      >
+        Edit
+      </button>
+      <button onClick={() => onRemove(project.id)} className="text-[#2A4A38] hover:text-[#FCA5A5] text-[14px] leading-none transition-colors flex-shrink-0">×</button>
+    </div>
+  );
+}
+
+function AquiferSettingsPanel({
+  projects, onAdd, onRemove, onUpdate, onPull, onPullAll, draft, setDraft, pulling, onClose,
+}: {
+  projects: ConstellationProject[];
+  onAdd: (p: ConstellationProject) => void;
+  onRemove: (id: string) => void;
+  onUpdate: (updated: ConstellationProject) => void;
+  onPull: (p: ConstellationProject) => void;
+  onPullAll: () => void;
+  draft: { label: string; baseUrl: string; token: string };
+  setDraft: (d: { label: string; baseUrl: string; token: string }) => void;
+  pulling: boolean;
+  onClose: () => void;
+}) {
+  const canAdd = draft.label.trim() && draft.baseUrl.trim();
+
+  const handleAdd = () => {
+    if (!canAdd) return;
+    onAdd({ id: `aquifer-${Date.now()}`, label: draft.label.trim(), baseUrl: draft.baseUrl.trim(), token: draft.token.trim() });
+    setDraft({ label: "", baseUrl: "", token: "" });
+  };
+
+  return (
+    <div className="mb-4 rounded-sm border border-[#1A3028] bg-[#0A1A10] overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[#1A3028]">
+        <span className="text-[10px] text-[#4ADE80]">◎</span>
+        <span className="text-[11px] uppercase tracking-[0.18em] text-[#4ADE80] font-bold flex-1">Aquifer Projects</span>
+        {projects.length > 0 && (
+          <button
+            onClick={onPullAll}
+            disabled={pulling}
+            className="flex items-center gap-1.5 px-3 py-1 text-[10px] uppercase tracking-wider font-bold rounded-sm bg-[#16A34A] text-[#0A1A10] hover:bg-[#4ADE80] disabled:opacity-40 transition-colors"
+          >
+            {pulling && <div className="w-2.5 h-2.5 border-2 border-current/40 border-t-current rounded-full animate-spin" />}
+            Pull all {projects.length}
+          </button>
+        )}
+        <button onClick={onClose} className="text-[#2A4A38] hover:text-[#4ADE80] text-[16px] leading-none transition-colors ml-1">×</button>
+      </div>
+
+      <div className="px-4 py-3">
+        <p className="text-[11px] text-[#3A6A4A] mb-3 leading-relaxed">
+          One "Pull Aquifer" sweeps all projects below in parallel.
+          Each project must expose <code className="text-[#4ADE80] text-[10px] bg-[#0D2010] px-1 py-0.5 rounded">GET /api/tasks/proposed</code>.
+          Results appear as separate triage sections — never merged into the local queue.
+        </p>
+
+        {/* Project list with edit/remove per row */}
+        {projects.length > 0 ? (
+          <div className="space-y-1.5 mb-4">
+            {projects.map((p) => (
+              <AquiferProjectRow
+                key={p.id}
+                project={p}
+                onRemove={onRemove}
+                onUpdate={onUpdate}
+                onPull={onPull}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-[11px] text-[#2A4A38] mb-4 italic">No projects yet — add one below.</p>
+        )}
+
+        {/* Add form */}
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <input
+              value={draft.label}
+              onChange={(e) => setDraft({ ...draft, label: e.target.value })}
+              placeholder="Project label (e.g. Headwaters Books)"
+              className="flex-1 text-[12px] text-[#86EFAC] bg-[#0D2010] border border-[#1A3028] rounded-sm px-3 py-2 outline-none focus:border-[#4ADE80] transition-colors placeholder:text-[#2A4A38]"
+            />
+          </div>
+          <div className="flex gap-2">
+            <input
+              value={draft.baseUrl}
+              onChange={(e) => setDraft({ ...draft, baseUrl: e.target.value })}
+              placeholder="Base URL (e.g. https://project.replit.app)"
+              className="flex-1 text-[12px] text-[#86EFAC] bg-[#0D2010] border border-[#1A3028] rounded-sm px-3 py-2 outline-none focus:border-[#4ADE80] transition-colors placeholder:text-[#2A4A38]"
+            />
+            <input
+              type="password"
+              value={draft.token}
+              onChange={(e) => setDraft({ ...draft, token: e.target.value })}
+              placeholder="Token (optional)"
+              className="w-32 text-[12px] text-[#86EFAC] bg-[#0D2010] border border-[#1A3028] rounded-sm px-3 py-2 outline-none focus:border-[#4ADE80] transition-colors placeholder:text-[#2A4A38]"
+            />
+            <button
+              onClick={handleAdd}
+              disabled={!canAdd}
+              className="px-3 py-2 text-[11px] uppercase tracking-wider font-bold rounded-sm bg-[#1A3028] text-[#4ADE80] hover:bg-[#2A4A38] disabled:opacity-30 transition-colors flex-shrink-0"
+            >
+              + Add
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
