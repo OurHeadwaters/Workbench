@@ -27,6 +27,7 @@ import { ModelPage } from "@/pages/ModelPage";
 import { DebriefPage } from "@/pages/DebriefPage";
 import { LandPlanPage } from "@/pages/LandPlanPage";
 import { KitsPage } from "@/pages/KitsPage";
+import { VisionBoardPage } from "@/pages/VisionBoardPage";
 import { PractitionerApplicationPage } from "@/pages/PractitionerApplicationPage";
 import { PractitionerReviewPage } from "@/pages/PractitionerReviewPage";
 import { GordWidget } from "@workspace/gord-widget";
@@ -208,6 +209,9 @@ export default function App() {
             <AppShell><LandPlanPage /></AppShell>
           </OnboardingGuard>
         </Route>
+
+        {/* ── Vision Board — standalone, no onboarding gate ── */}
+        <Route path="/vision-board" component={VisionBoardPage} />
 
         <Route><Redirect to="/" /></Route>
       </Switch>
