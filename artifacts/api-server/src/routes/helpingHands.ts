@@ -19,6 +19,14 @@ import {
 import { and, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { requireAuth, loadBookkeeperUser } from "../lib/bookkeeperAuth";
 import { requireFounderOnlyAuth } from "../lib/kitAuth";
+import {
+  bandUsesXrplEscrow,
+  escrowWalletAddress,
+  submitEscrowCreate,
+  submitEscrowFinish,
+  submitEscrowCancel,
+} from "../lib/xrplEscrow";
+import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 
@@ -265,6 +273,7 @@ router.get("/band", requireAuth(), async (_req: Request, res: Response) => {
     reliabilityBonusThreshold: band.reliabilityBonusThreshold,
     reliabilityBonusAmount: band.reliabilityBonusAmount,
     reliabilityBonusCurrency: band.reliabilityBonusCurrency,
+    xrplEscrowEnabled: band.xrplEscrowEnabled,
   });
 });
 
@@ -426,9 +435,9 @@ router.post("/tasks", requireAuth(), async (req: Request, res: Response) => {
     return;
   }
 
-  // V1: XRPL escrow is simulated. A real implementation would submit
-  // EscrowCreate via xrpl.js and store the ledger sequence + tx hash.
-  const simulatedSequence = Math.floor(Date.now() / 1000);
+  // escrowSequence and escrowTxHash are set at claim time (when the worker is
+  // known), not at post time. XRPL escrow Destination must be the recipient
+  // (the eventual claimer), which is unknown here.
 
   const inserted = await db
     .insert(hhTasksTable)
@@ -441,7 +450,6 @@ router.post("/tasks", requireAuth(), async (req: Request, res: Response) => {
       payAmount: parsed.data.payAmount,
       payCurrency: parsed.data.payCurrency,
       status: "available",
-      escrowSequence: simulatedSequence,
       availableDate: parsed.data.availableDate,
     })
     .returning();
@@ -478,18 +486,63 @@ router.post("/tasks/:id/claim", requireAuth(), async (req: Request, res: Respons
   }
 
   // Atomic claim — only succeeds if still "available"
-  const updated = await db
+  const claimed = await db
     .update(hhTasksTable)
     .set({ status: "claimed", claimedByMemberId: ctx.member.id, claimedAt: new Date(), updatedAt: new Date() })
     .where(and(eq(hhTasksTable.id, taskId), eq(hhTasksTable.status, "available")))
     .returning();
 
-  if (!updated[0]) {
+  if (!claimed[0]) {
     res.status(409).json({ error: "Task was claimed by someone else — refresh and try again" });
     return;
   }
 
-  const serialized = await enrichTasksWithNames(updated);
+  const claimedTask = claimed[0];
+
+  // ── XRPL EscrowCreate (testnet) ───────────────────────────────────────────
+  // Now that we know the worker (this member), create the on-chain escrow with
+  // the worker's XRPL address as the Destination so EscrowFinish at confirm
+  // releases funds directly to them.
+  //
+  // Conditions for real escrow:
+  //   • band.xrplEscrowEnabled = true AND XRPL_ESCROW_SEED is set
+  //   • payCurrency = "xrp" (XRPL native escrow supports XRP only)
+  //   • worker has an xrplAddress (required as Destination)
+  //
+  // On failure: log and leave escrow fields null — the confirm path will detect
+  // the null and fall back to DB simulation for this task.
+  if (
+    bandUsesXrplEscrow(ctx.band) &&
+    claimedTask.payCurrency === "xrp" &&
+    ctx.member.xrplAddress
+  ) {
+    try {
+      const escrowResult = await submitEscrowCreate({
+        destinationAddress: ctx.member.xrplAddress,
+        payAmountXrp: claimedTask.payAmount,
+        taskAvailableDate: claimedTask.availableDate,
+      });
+      // Backfill escrow metadata onto the task row
+      await db
+        .update(hhTasksTable)
+        .set({
+          escrowSequence: escrowResult.sequence,
+          escrowTxHash: escrowResult.txHash,
+          updatedAt: new Date(),
+        })
+        .where(eq(hhTasksTable.id, taskId));
+      logger.info(
+        { taskId, escrowSequence: escrowResult.sequence, escrowTxHash: escrowResult.txHash, bandId: ctx.band.id },
+        "helpingHands/claim: EscrowCreate succeeded",
+      );
+    } catch (err) {
+      logger.error({ err, taskId }, "helpingHands/claim: EscrowCreate failed — escrow fields left null, confirm will simulate");
+    }
+  }
+
+  // Re-fetch so the response always reflects the latest escrow fields
+  const final = await db.select().from(hhTasksTable).where(eq(hhTasksTable.id, taskId)).limit(1);
+  const serialized = await enrichTasksWithNames(final);
   res.json(serialized[0]);
 });
 
@@ -559,16 +612,50 @@ router.post("/tasks/:id/confirm", requireAuth(), async (req: Request, res: Respo
     return;
   }
 
-  // V1: XRPL escrow finish is simulated. A real implementation would submit
-  // EscrowFinish via xrpl.js, wait for ledger validation, then write earnings.
-  const mockTxHash = `SIM_${Date.now().toString(16).toUpperCase()}`;
+  // ── XRPL EscrowFinish or DB simulation ───────────────────────────────────
+  // Submit EscrowFinish on-chain when:
+  //   • band has xrplEscrowEnabled + XRPL_ESCROW_SEED set
+  //   • task was created with a real escrow (escrowTxHash is not a SIM_ prefix)
+  //   • payCurrency is "xrp"
+  // Falls back to mock hash for token tasks or simulation-mode tasks.
+  const taskForEscrow = existing[0];
+  const isRealEscrow =
+    bandUsesXrplEscrow(band) &&
+    taskForEscrow.payCurrency === "xrp" &&
+    !!taskForEscrow.escrowSequence &&
+    !!taskForEscrow.escrowTxHash &&
+    !taskForEscrow.escrowTxHash.startsWith("SIM_");
+
+  let settleTxHash: string;
+  if (isRealEscrow) {
+    try {
+      const ownerAddr = escrowWalletAddress();
+      const finishResult = await submitEscrowFinish({
+        ownerAddress: ownerAddr,
+        escrowSequence: taskForEscrow.escrowSequence!,
+      });
+      settleTxHash = finishResult.txHash;
+      logger.info(
+        { txHash: settleTxHash, taskId, bandId: band.id },
+        "helpingHands/confirm: EscrowFinish succeeded",
+      );
+    } catch (err) {
+      logger.error({ err, taskId }, "helpingHands/confirm: EscrowFinish failed — using simulation hash");
+      settleTxHash = `SIM_ERR_${Date.now().toString(16).toUpperCase()}`;
+    }
+  } else {
+    settleTxHash = `SIM_${Date.now().toString(16).toUpperCase()}`;
+  }
 
   // Atomic conditional transition: only update if current status is "completed".
   // This prevents duplicate earnings from concurrent confirm requests — only one
   // request can win the status transition from completed → confirmed.
+  // NOTE: escrowTxHash is intentionally NOT updated here — it holds the
+  // EscrowCreate hash written at claim time and must not be overwritten.
+  // The EscrowFinish hash is written only to hh_earnings.xrpl_tx_hash below.
   const updated = await db
     .update(hhTasksTable)
-    .set({ status: "confirmed", confirmedAt: new Date(), escrowTxHash: mockTxHash, updatedAt: new Date() })
+    .set({ status: "confirmed", confirmedAt: new Date(), updatedAt: new Date() })
     .where(
       and(
         eq(hhTasksTable.id, taskId),
@@ -603,7 +690,7 @@ router.post("/tasks/:id/confirm", requireAuth(), async (req: Request, res: Respo
     taskId: task.id,
     amount: task.payAmount,
     currency: task.payCurrency,
-    xrplTxHash: mockTxHash,
+    xrplTxHash: settleTxHash,
   }).onConflictDoNothing();
 
   // Atomically increment completedShiftCount and update the correct total.
@@ -831,6 +918,30 @@ router.post("/tasks/:id/expire", requireAuth(), async (req: Request, res: Respon
     return;
   }
 
+  // ── XRPL EscrowCancel (best-effort) ─────────────────────────────────────
+  // Cancel the on-chain escrow if this band uses real XRPL and the task had
+  // a real escrow sequence. EscrowCancel can only succeed after CancelAfter
+  // has passed on the ledger. If it's too early, we log a warning and skip —
+  // the cancel can be retried manually once CancelAfter passes.
+  if (
+    bandUsesXrplEscrow(band) &&
+    task.payCurrency === "xrp" &&
+    task.escrowSequence &&
+    task.escrowTxHash &&
+    !task.escrowTxHash.startsWith("SIM_")
+  ) {
+    try {
+      const ownerAddr = escrowWalletAddress();
+      await submitEscrowCancel({ ownerAddress: ownerAddr, escrowSequence: task.escrowSequence });
+      logger.info({ taskId, escrowSequence: task.escrowSequence }, "helpingHands/expire: EscrowCancel succeeded");
+    } catch (err) {
+      logger.warn(
+        { err, taskId, escrowSequence: task.escrowSequence },
+        "helpingHands/expire: EscrowCancel skipped (CancelAfter may not have passed yet)",
+      );
+    }
+  }
+
   // Only penalise full_time members — use atomic SQL increment to
   // avoid read-then-write races with the daily scheduler.
   if (task.claimedByMemberId) {
@@ -910,6 +1021,28 @@ router.post("/tasks/:id/release", requireAuth(), async (req: Request, res: Respo
   if (!updated[0]) {
     res.status(409).json({ error: "Task state changed concurrently — retry" });
     return;
+  }
+
+  // ── XRPL EscrowCancel (best-effort) ─────────────────────────────────────
+  // For early release (same-day no-show), CancelAfter likely hasn't passed on
+  // the ledger so EscrowCancel may fail — we log the warning and continue.
+  if (
+    bandUsesXrplEscrow(band) &&
+    task.payCurrency === "xrp" &&
+    task.escrowSequence &&
+    task.escrowTxHash &&
+    !task.escrowTxHash.startsWith("SIM_")
+  ) {
+    try {
+      const ownerAddr = escrowWalletAddress();
+      await submitEscrowCancel({ ownerAddress: ownerAddr, escrowSequence: task.escrowSequence });
+      logger.info({ taskId, escrowSequence: task.escrowSequence }, "helpingHands/release: EscrowCancel succeeded");
+    } catch (err) {
+      logger.warn(
+        { err, taskId, escrowSequence: task.escrowSequence },
+        "helpingHands/release: EscrowCancel skipped (CancelAfter may not have passed yet — retry after expiry window)",
+      );
+    }
   }
 
   // Increment no-show count on the former claimer (all tiers, not just full_time)
@@ -1014,6 +1147,36 @@ export async function runExpireOverdue(): Promise<{ expired: number; flagged: nu
 
   if (transitioned.length === 0) {
     return { expired: 0, flagged: 0, message: "No overdue tasks found" };
+  }
+
+  // ── XRPL EscrowCancel (best-effort, batch) ───────────────────────────────
+  // For each transitioned task that has a real on-chain escrow, attempt
+  // EscrowCancel. Errors are logged as warnings and do not abort the loop —
+  // CancelAfter may not have passed yet for recently expired tasks; those
+  // can be retried after the window opens.
+  if (bandUsesXrplEscrow(band)) {
+    const ownerAddr = escrowWalletAddress();
+    for (const task of transitioned) {
+      if (
+        task.payCurrency === "xrp" &&
+        task.escrowSequence &&
+        task.escrowTxHash &&
+        !task.escrowTxHash.startsWith("SIM_")
+      ) {
+        try {
+          await submitEscrowCancel({ ownerAddress: ownerAddr, escrowSequence: task.escrowSequence });
+          logger.info(
+            { taskId: task.id, escrowSequence: task.escrowSequence },
+            "runExpireOverdue: EscrowCancel succeeded",
+          );
+        } catch (err) {
+          logger.warn(
+            { err, taskId: task.id, escrowSequence: task.escrowSequence },
+            "runExpireOverdue: EscrowCancel skipped (CancelAfter may not have passed yet)",
+          );
+        }
+      }
+    }
   }
 
   // Aggregate missed shifts per member using only actually-transitioned rows

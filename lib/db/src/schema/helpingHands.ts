@@ -26,6 +26,10 @@ export const hhBandsTable = pgTable("hh_bands", {
   reliabilityBonusThreshold: integer("reliability_bonus_threshold").notNull().default(10),
   reliabilityBonusAmount: numeric("reliability_bonus_amount", { precision: 18, scale: 6 }).notNull().default("5"),
   reliabilityBonusCurrency: text("reliability_bonus_currency").notNull().default("token"),
+  // Feature flag: when true AND XRPL_ESCROW_SEED env var is set, XRP-denominated task
+  // payments are settled via real XRPL testnet escrow instead of DB simulation.
+  // Defaults to false so existing bands remain on the DB-simulation path.
+  xrplEscrowEnabled: boolean("xrpl_escrow_enabled").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
