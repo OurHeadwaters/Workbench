@@ -80,6 +80,7 @@ import OCAPartnershipBrief from "@/pages/OCAPartnershipBrief";
 import OCAOutreachPacket from "@/pages/OCAOutreachPacket";
 import CdpGrantNarrative from "@/pages/CdpGrantNarrative";
 import CdpGrantNarrativeOnePager from "@/pages/CdpGrantNarrativeOnePager";
+import FamilyIncomeOnePager from "@/pages/FamilyIncomeOnePager";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
 import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
@@ -164,6 +165,7 @@ function Router() {
       <Route path="/oca-outreach-packet" component={OCAOutreachPacket} />
       <Route path="/cdp-grant-narrative" component={CdpGrantNarrative} />
       <Route path="/cdp-grant-narrative/one-pager" component={CdpGrantNarrativeOnePager} />
+      <Route path="/family-income" component={FamilyIncomeOnePager} />
       <Route component={NotFound} />
     </Switch>
   );
