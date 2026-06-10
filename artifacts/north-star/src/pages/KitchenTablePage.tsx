@@ -852,11 +852,14 @@ async function persistSeatsToServer(
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export function KitchenTablePage() {
+  const seatLocalHadDataRef = useRef(false);
+
   const [seats, setSeats] = useState<Seat[]>(() => {
     try {
       const stored = localStorage.getItem("kitchen-table-seat-config");
       if (stored) {
         const parsed = JSON.parse(stored) as Record<string, Partial<Seat>>;
+        seatLocalHadDataRef.current = true;
         return applyStoredConfig(DEFAULT_SEATS, parsed);
       }
     } catch {
@@ -865,25 +868,43 @@ export function KitchenTablePage() {
     return DEFAULT_SEATS;
   });
 
+  const [seatLoadStatus, setSeatLoadStatus] = useState<"server" | "local" | "defaults" | null>(null);
+
   useEffect(() => {
     const token = getOwnerToken();
-    if (!token) return;
+    if (!token) {
+      setSeatLoadStatus(seatLocalHadDataRef.current ? "local" : "defaults");
+      const t = setTimeout(() => setSeatLoadStatus(null), 3000);
+      return () => clearTimeout(t);
+    }
     let cancelled = false;
     fetch("/api/settings/seat-config", {
       headers: { "x-library-owner-token": token },
     })
       .then((r) => (r.ok ? r.json() : null))
       .then((j: { seats: Record<string, Partial<Seat>> | null } | null) => {
-        if (cancelled || !j?.seats) return;
-        setSeats((prev) => applyStoredConfig(prev, j.seats!));
-        try {
-          localStorage.setItem(
-            "kitchen-table-seat-config",
-            JSON.stringify(j.seats)
-          );
-        } catch { }
+        if (cancelled) return;
+        if (j?.seats) {
+          setSeats((prev) => applyStoredConfig(prev, j.seats!));
+          try {
+            localStorage.setItem(
+              "kitchen-table-seat-config",
+              JSON.stringify(j.seats)
+            );
+          } catch { }
+          setSeatLoadStatus("server");
+        } else {
+          setSeatLoadStatus(seatLocalHadDataRef.current ? "local" : "defaults");
+        }
+        const t = setTimeout(() => setSeatLoadStatus(null), 3000);
+        return () => clearTimeout(t);
       })
-      .catch(() => { });
+      .catch(() => {
+        if (!cancelled) {
+          setSeatLoadStatus(seatLocalHadDataRef.current ? "local" : "defaults");
+          setTimeout(() => setSeatLoadStatus(null), 3000);
+        }
+      });
     return () => { cancelled = true; };
   }, []);
   const [activeSeatId, setActiveSeatId] = useState("grok");
@@ -901,6 +922,7 @@ export function KitchenTablePage() {
   const [placeCardEditing, setPlaceCardEditing] = useState<string | null>(null);
   const [placeCardDraft, setPlaceCardDraft] = useState({ name: "", description: "" });
   const [savedSeatId, setSavedSeatId] = useState<string | null>(null);
+  const [configSaved, setConfigSaved] = useState(false);
 
   const activeTemplate = TEMPLATES.find((t) => t.id === activeTemplateId) ?? TEMPLATES[0]!;
   const agendaItems = activeTemplate.agendaItems;
@@ -1052,7 +1074,11 @@ export function KitchenTablePage() {
       }
       return next;
     });
-    setConfigSeatId(null);
+    setConfigSaved(true);
+    setTimeout(() => {
+      setConfigSaved(false);
+      setConfigSeatId(null);
+    }, 900);
     persistSeatsToServer(nextSeats).catch(() => { });
   };
 
@@ -1174,6 +1200,19 @@ export function KitchenTablePage() {
                 setInput(deliberationBrief);
               }}
             />
+
+            {/* Seat hydration status note */}
+            {seatLoadStatus && (
+              <div className="px-6 pt-3 pb-0">
+                <p className="text-[10px] tracking-[0.12em] text-[#4A3D30]">
+                  {seatLoadStatus === "server"
+                    ? "✓ seats loaded from server"
+                    : seatLoadStatus === "local"
+                    ? "· using saved local config"
+                    : "· using local defaults"}
+                </p>
+              </div>
+            )}
 
             {/* Open seat place cards */}
             <div className="px-6 pt-5 pb-1 flex gap-3">
@@ -1646,7 +1685,7 @@ export function KitchenTablePage() {
                 onClick={saveConfig}
                 className="flex-1 py-4 text-[13px] uppercase tracking-wide font-bold text-[#13110E] bg-[#8C7B6D] hover:bg-[#A39485] rounded-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-colors"
               >
-                Set seat
+                {configSaved ? "saved ✓" : "Set seat"}
               </button>
             </div>
           </div>
