@@ -154,6 +154,8 @@ const ZONES: Array<{
       { href: "/rack-card-indigenous", title: "Rack Card — Indigenous & Community Orgs", label: "Headwaters", desc: "4×9 rack card for band offices, friendship centres, and cork boards." },
       { href: "/going-digital", title: "Going Digital — Online Courses", label: "Headwaters", desc: "A5/letter flyer for the five Headwaters online courses." },
       { href: "/nan-outreach-packet", title: "NAN Outreach Packet (4-page PDF)", label: "Aboriginal Outreach", desc: "One click — full four-page packet: intro → funding brief → one-pager → proposal." },
+      { href: "/nan-treaty9-packet", title: "Treaty 9 / NAN Outreach Packet (4-page PDF)", label: "Aboriginal Outreach · Treaty 9", desc: "For communities not yet reached: intro → funding brief → one-pager → Treaty 9 context brief (NAN geography, Standby supply model)." },
+      { href: "/nan-treaty9-context-brief", title: "Treaty 9 Context Brief", label: "Aboriginal Outreach · Treaty 9", desc: "NAN territory overview, remote food infrastructure realities, and the Standby supply model — standalone reference or packet insert." },
     ],
   },
   {

@@ -44,6 +44,8 @@ import CodetryPilotProposalDeerLake from "@/pages/CodetryPilotProposalDeerLake";
 import CodetryFundingBriefDeerLake from "@/pages/CodetryFundingBriefDeerLake";
 import DeerLakeWhyNow from "@/pages/DeerLakeWhyNow";
 import NANOutreachPacket from "@/pages/NANOutreachPacket";
+import NANTreaty9Packet from "@/pages/NANTreaty9Packet";
+import NANTreaty9ContextBrief from "@/pages/NANTreaty9ContextBrief";
 import CodetryPacketSandyLake from "@/pages/CodetryPacketSandyLake";
 import CodetryPacketDeerLake from "@/pages/CodetryPacketDeerLake";
 import CodetryPacketFoodSystems from "@/pages/CodetryPacketFoodSystems";
@@ -130,6 +132,8 @@ function Router() {
       <Route path="/deer-lake-first-engine" component={DeerLakeFirstEngine} />
       <Route path="/deer-lake-youth-odyssey" component={DeerLakeYouthOdyssey} />
       <Route path="/nan-outreach-packet" component={NANOutreachPacket} />
+      <Route path="/nan-treaty9-packet" component={NANTreaty9Packet} />
+      <Route path="/nan-treaty9-context-brief" component={NANTreaty9ContextBrief} />
       <Route path="/codetry-packet-sandy-lake" component={CodetryPacketSandyLake} />
       <Route path="/codetry-packet-deer-lake" component={CodetryPacketDeerLake} />
       <Route path="/codetry-packet-food-systems" component={CodetryPacketFoodSystems} />
