@@ -296,6 +296,70 @@ describe("classifyTask — AMBER fallback", () => {
   });
 });
 
+// ── greenSignalsIgnored field ─────────────────────────────────────────────────
+
+describe("classifyTask — greenSignalsIgnored", () => {
+  it("populates greenSignalsIgnored when fix + payment overlap", () => {
+    const result = classifyTask(task("Fix the payment confirmation screen"));
+    expect(result.tier).toBe("RED");
+    expect(result.hardGuardrail).toBe(true);
+    expect(Array.isArray(result.greenSignalsIgnored)).toBe(true);
+    expect(result.greenSignalsIgnored!.length).toBeGreaterThan(0);
+    // The "fix" GREEN signal should be represented
+    expect(result.greenSignalsIgnored!.some((s) => s.includes("fix") || s.includes("\\bfix\\b"))).toBe(true);
+  });
+
+  it("populates greenSignalsIgnored when bug + pricing overlap", () => {
+    const result = classifyTask(task("Fix pricing crash after discount applied"));
+    expect(result.tier).toBe("RED");
+    expect(Array.isArray(result.greenSignalsIgnored)).toBe(true);
+    expect(result.greenSignalsIgnored!.length).toBeGreaterThan(0);
+  });
+
+  it("populates greenSignalsIgnored when refactor + billing overlap", () => {
+    const result = classifyTask(task("Refactor billing module for clarity"));
+    expect(result.tier).toBe("RED");
+    expect(result.greenSignalsIgnored).toBeDefined();
+    expect(result.greenSignalsIgnored!.some((s) => s.includes("refactor"))).toBe(true);
+  });
+
+  it("populates greenSignalsIgnored when fix + token overlap (Rule 2)", () => {
+    const result = classifyTask(task("Fix the token refresh bug"));
+    expect(result.tier).toBe("RED");
+    expect(result.greenSignalsIgnored).toBeDefined();
+    expect(result.greenSignalsIgnored!.length).toBeGreaterThan(0);
+  });
+
+  it("greenSignalsIgnored is absent (or empty) when RED fires with no GREEN overlap", () => {
+    // "Delete old user records" — no GREEN signal words
+    const result = classifyTask(task("Delete old user records from the database"));
+    expect(result.tier).toBe("RED");
+    // Either undefined or an empty array — no false positives
+    const ignored = result.greenSignalsIgnored;
+    expect(!ignored || ignored.length === 0).toBe(true);
+  });
+
+  it("pure GREEN task has no greenSignalsIgnored field", () => {
+    const result = classifyTask(task("Fix the broken navigation link on the library page"));
+    expect(result.tier).toBe("GREEN");
+    expect(result.greenSignalsIgnored).toBeUndefined();
+  });
+
+  it("pure AMBER task has no greenSignalsIgnored field", () => {
+    const result = classifyTask(task("Update the welcome copy on the homepage"));
+    expect(result.tier).toBe("AMBER");
+    expect(result.greenSignalsIgnored).toBeUndefined();
+  });
+
+  it("cover + billing (financial) overlap populates greenSignalsIgnored", () => {
+    // "cover.*flow" is a GREEN signal; "billing" triggers financial RED guardrail
+    const result = classifyTask(task("Cover the billing flow with automated tests"));
+    expect(result.tier).toBe("RED");
+    expect(result.greenSignalsIgnored).toBeDefined();
+    expect(result.greenSignalsIgnored!.length).toBeGreaterThan(0);
+  });
+});
+
 // ── Idempotent approval tests (via HTTP) ──────────────────────────────────────
 //
 // These tests spin up the real Express router with the stateful in-memory

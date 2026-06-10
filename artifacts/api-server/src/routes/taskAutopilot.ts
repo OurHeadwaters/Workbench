@@ -200,6 +200,7 @@ interface TaskClassification {
   councilSeat?: CouncilSeat;
   themeCluster?: string;
   hardGuardrail?: boolean;
+  greenSignalsIgnored?: string[];
 }
 
 // Hard-RED guardrail — always forces RED regardless of other signals.
@@ -287,6 +288,12 @@ export function classifyTask(
   // ── Step 2: hard-RED guardrails ───────────────────────────────────────────
   for (const { pattern, rule } of HARD_RED_PATTERNS) {
     if (pattern.test(text)) {
+      // Collect any GREEN signal patterns that also matched — these are the
+      // phrases a human might read as "safe" but that the guardrail overrides.
+      const greenSignalsIgnored = GREEN_SIGNALS
+        .filter((p) => p.test(text))
+        .map((p) => p.source);
+
       return {
         ...task,
         tier: "RED",
@@ -294,6 +301,7 @@ export function classifyTask(
         reasoning: `Hard guardrail triggered on "${task.title}". ${rule}. Requires founder voice.`,
         councilSeat: pickRedSeat(text),
         hardGuardrail: true,
+        ...(greenSignalsIgnored.length > 0 ? { greenSignalsIgnored } : {}),
       };
     }
   }
