@@ -12,7 +12,12 @@ import { Router, type IRouter, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { appSettingsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { isOwnerRequest, OWNER_TOKEN } from "../lib/ownerAuth";
+import {
+  isOwnerRequest,
+  OWNER_TOKEN,
+  extractOwnerToken,
+  getCuratorFromToken,
+} from "../lib/ownerAuth";
 
 const router: IRouter = Router();
 
@@ -24,6 +29,20 @@ function requireOwner(req: Request, res: Response): boolean {
     return false;
   }
   return true;
+}
+
+async function requireSeatConfigOwner(
+  req: Request,
+  res: Response,
+): Promise<boolean> {
+  if (OWNER_TOKEN && isOwnerRequest(req)) return true;
+  const token = extractOwnerToken(req);
+  if (token) {
+    const curator = await getCuratorFromToken(token);
+    if (curator?.isOwner) return true;
+  }
+  res.status(401).json({ error: "Unauthorized" });
+  return false;
 }
 
 router.get("/notify-email", async (req: Request, res: Response) => {
@@ -72,7 +91,7 @@ router.put("/notify-email", async (req: Request, res: Response) => {
 const SEAT_CONFIG_KEY = "kitchen_table_seat_config";
 
 router.get("/seat-config", async (req: Request, res: Response) => {
-  if (!requireOwner(req, res)) return;
+  if (!(await requireSeatConfigOwner(req, res))) return;
   try {
     const rows = await db
       .select()
@@ -95,7 +114,7 @@ router.get("/seat-config", async (req: Request, res: Response) => {
 });
 
 router.put("/seat-config", async (req: Request, res: Response) => {
-  if (!requireOwner(req, res)) return;
+  if (!(await requireSeatConfigOwner(req, res))) return;
   const { seats } = req.body as { seats?: unknown };
   if (!seats || typeof seats !== "object") {
     res.status(400).json({ error: "seats object required" });
