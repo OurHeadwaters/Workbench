@@ -8,6 +8,7 @@ import fs from "fs";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { scheduleNightlyBriefing } from "./lib/riverSmithScheduler";
+import { scheduleWeeklyArchive } from "./lib/taskAutopilotScheduler";
 import {
   CLERK_PROXY_PATH,
   clerkProxyMiddleware,
@@ -89,5 +90,6 @@ const mediaManagerHtml = new URL("../src/media-manager.html", import.meta.url).p
 app.get(["/media", "/media/"], (_req, res) => res.sendFile(mediaManagerHtml));
 
 scheduleNightlyBriefing();
+scheduleWeeklyArchive();
 
 export default app;

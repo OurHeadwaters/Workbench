@@ -738,16 +738,16 @@ const ArchiveSchema = z.object({
   olderThanDays: z.number().int().min(0).max(3650).default(30),
 });
 
-router.post("/archive", (req: Request, res: Response) => {
-  if (!requireOwner(req)) { res.status(401).json({ error: "Owner token required" }); return; }
-
-  const parsed = ArchiveSchema.safeParse(req.body ?? {});
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
-    return;
-  }
-
-  const { olderThanDays } = parsed.data;
+/**
+ * Core archive logic — extracted so the weekly scheduler can call it directly
+ * without going through the HTTP layer.
+ *
+ * Moves CLEARED tasks whose updatedAt is older than `olderThanDays` days out
+ * of the live store and appends them to the archive file.
+ *
+ * Returns the number of tasks archived and the cutoff timestamp used.
+ */
+export function archiveClearedTasks(olderThanDays: number): { archived: number; cutoff: string } {
   const cutoff = new Date(Date.now() - olderThanDays * 24 * 60 * 60 * 1000);
 
   const all = readTasks();
@@ -764,14 +764,30 @@ router.post("/archive", (req: Request, res: Response) => {
 
   if (toArchive.length > 0) {
     appendToArchive(toArchive);
-    // Write only the kept tasks — bypass writeTasks() auto-prune since we
-    // already handled the eviction explicitly above.
     ensureDataDir();
     fs.writeFileSync(TASKS_FILE, keep.map((t) => JSON.stringify(t)).join("\n") + (keep.length ? "\n" : ""), "utf8");
-    logger.info({ archived: toArchive.length, olderThanDays }, "task-autopilot: manual archive run complete");
   }
 
-  res.json({ ok: true, archived: toArchive.length, olderThanDays, cutoff: cutoff.toISOString() });
+  return { archived: toArchive.length, cutoff: cutoff.toISOString() };
+}
+
+router.post("/archive", (req: Request, res: Response) => {
+  if (!requireOwner(req)) { res.status(401).json({ error: "Owner token required" }); return; }
+
+  const parsed = ArchiveSchema.safeParse(req.body ?? {});
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+
+  const { olderThanDays } = parsed.data;
+  const result = archiveClearedTasks(olderThanDays);
+
+  if (result.archived > 0) {
+    logger.info({ archived: result.archived, olderThanDays }, "task-autopilot: manual archive run complete");
+  }
+
+  res.json({ ok: true, archived: result.archived, olderThanDays, cutoff: result.cutoff });
 });
 
 export default router;
