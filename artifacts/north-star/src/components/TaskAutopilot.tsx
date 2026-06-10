@@ -43,8 +43,9 @@ interface ConstellationSection {
   triaged: TriageResult | null;
   loading: boolean;
   error: string | null;
+  offline: boolean;
   pendingIds: Set<string>;
-  pulledAt?: number;
+  pulledAt?: number | null;
 }
 
 // Council seat display metadata
@@ -84,6 +85,22 @@ const AQUIFER_DEFAULTS: ConstellationProject[] = [
   { id: "hw-print",         label: "Headwaters Print Marketing Suite",       baseUrl: "https://ourheadwaters.ca/print-marketing",     token: "" },
   { id: "hw-handbook",      label: "Headwaters Handbook",                    baseUrl: "https://ourheadwaters.ca/codetry-handbook",    token: "" },
 ];
+
+// ── Reachability check ────────────────────────────────────────────────────────
+// Sends a HEAD request with a 2-second timeout. Uses no-cors so CORS headers
+// won't cause a false negative — we only care whether the server responds at all.
+async function checkReachability(url: string): Promise<boolean> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 2000);
+  try {
+    await fetch(url, { method: "HEAD", signal: controller.signal, mode: "no-cors" });
+    return true;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 // ── Green signal humaniser ────────────────────────────────────────────────────
 
@@ -445,10 +462,30 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
         triaged: null,
         loading: true,
         error: null,
+        offline: false,
         pendingIds: new Set(),
       });
       return next;
     });
+
+    // ── Reachability check (≤ 2 s) ────────────────────────────────────────────
+    const reachable = await checkReachability(project.baseUrl);
+    if (!reachable) {
+      setConstellationSections((prev) => {
+        const next = new Map(prev);
+        next.set(project.id, {
+          project,
+          tasks: [],
+          triaged: null,
+          loading: false,
+          error: null,
+          offline: true,
+          pendingIds: new Set(),
+        });
+        return next;
+      });
+      return;
+    }
 
     try {
       const headers: Record<string, string> = {};
@@ -463,7 +500,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
       if (!remoteTasks.length) {
         setConstellationSections((prev) => {
           const next = new Map(prev);
-          next.set(project.id, { project, tasks: [], triaged: null, loading: false, error: `No proposed tasks in ${project.label}`, pendingIds: new Set() });
+          next.set(project.id, { project, tasks: [], triaged: null, loading: false, error: `No proposed tasks in ${project.label}`, offline: false, pendingIds: new Set() });
           return next;
         });
         return;
@@ -480,13 +517,13 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
 
       setConstellationSections((prev) => {
         const next = new Map(prev);
-        next.set(project.id, { project, tasks: remoteTasks, triaged, loading: false, error: null, pendingIds: new Set(), pulledAt: Date.now() });
+        next.set(project.id, { project, tasks: remoteTasks, triaged, loading: false, error: null, offline: false, pendingIds: new Set(), pulledAt: Date.now() });
         return next;
       });
     } catch (e) {
       setConstellationSections((prev) => {
         const next = new Map(prev);
-        next.set(project.id, { project, tasks: [], triaged: null, loading: false, error: e instanceof Error ? e.message : "Fetch failed", pendingIds: new Set() });
+        next.set(project.id, { project, tasks: [], triaged: null, loading: false, error: e instanceof Error ? e.message : "Fetch failed", offline: false, pendingIds: new Set() });
         return next;
       });
     }
@@ -589,8 +626,9 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
   const sweepVisible = sweepSections.length > 0;
   const sweepLoadingCount = sweepSections.filter((s) => s.loading).length;
   const sweepDoneCount = sweepSections.filter((s) => !s.loading).length;
-  const sweepReachedCount = sweepSections.filter((s) => !s.loading && !s.error).length;
+  const sweepReachedCount = sweepSections.filter((s) => !s.loading && !s.error && !s.offline).length;
   const sweepErrorCount = sweepSections.filter((s) => !s.loading && !!s.error).length;
+  const sweepOfflineCount = sweepSections.filter((s) => !s.loading && s.offline).length;
   const sweepTotalTasks = sweepSections.reduce((n, s) => n + (s.tasks?.length ?? 0), 0);
   const sweepTotalGreen = sweepSections.reduce((n, s) => n + (s.triaged?.summary.green ?? 0), 0);
   const sweepTotalAmber = sweepSections.reduce((n, s) => n + (s.triaged?.summary.amber ?? 0), 0);
@@ -880,6 +918,12 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
                       <span className="text-[#FCD34D]">{sweepTotalAmber}A</span>
                       <span className="text-[#2A4A38]">·</span>
                       <span className="text-[#FCA5A5]">{sweepTotalRed}R</span>
+                    </>
+                  )}
+                  {sweepOfflineCount > 0 && (
+                    <>
+                      <span className="text-[#2A4A38]">·</span>
+                      <span className="text-[#F59E0B]">{sweepOfflineCount} offline</span>
                     </>
                   )}
                   {sweepErrorCount > 0 && (
@@ -1177,7 +1221,7 @@ function ConstellationProjectSection({
     setAdding(false);
   };
 
-  const { project, triaged, loading, error, pendingIds, pulledAt } = section;
+  const { project, triaged, loading, error, offline, pendingIds, pulledAt } = section;
   const c = TIER_COLOR.AMBER;
 
   const pulledAtLabel = pulledAt
@@ -1217,11 +1261,18 @@ ${seatName}, this task from ${project.label} needs your voice before it can move
       <div className="flex items-center gap-3 px-4 py-3 bg-[#13110E] border-b border-[#2A231E]">
         <span className="text-[10px]">✦</span>
         <span className="text-[12px] font-bold text-[#A39485] flex-1 uppercase tracking-wider">{project.label}</span>
+        {offline && (
+          <span className="flex items-center gap-1 px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-[#3D2800] text-[#F59E0B] border border-[#5C3A00] flex-shrink-0">
+            <span>◌</span>
+            <span>Offline</span>
+          </span>
+        )}
         {pulledAtLabel && (
           <span className="text-[10px] text-[#3D3228] flex-shrink-0" title={`Last pulled at ${pulledAtLabel}`}>
             {pulledAtLabel}
           </span>
         )}
+        <span className="text-[11px] text-[#5C5046] truncate max-w-[160px]">{project.baseUrl}</span>
         <button
           onClick={onRefresh}
           disabled={loading}
@@ -1237,11 +1288,21 @@ ${seatName}, this task from ${project.label} needs your voice before it can move
         {loading && (
           <div className="flex items-center gap-3 py-4 text-[#5C5046]">
             <div className="w-3 h-3 border-2 border-[#5C5046] border-t-transparent rounded-full animate-spin" />
-            <span className="text-[12px]">Fetching {project.label}…</span>
+            <span className="text-[12px]">Checking {project.label}…</span>
           </div>
         )}
 
-        {error && (
+        {offline && (
+          <div className="flex items-center gap-3 py-4 text-[#F59E0B]">
+            <span className="text-[14px]">◌</span>
+            <div>
+              <p className="text-[12px] font-medium">{project.label} is offline</p>
+              <p className="text-[10px] text-[#8C7B6D] mt-0.5">Did not respond within 2 s — refresh to retry when the project is back up.</p>
+            </div>
+          </div>
+        )}
+
+        {error && !offline && (
           <div className="py-3 text-[12px] text-[#FCA5A5]">{error}</div>
         )}
 
@@ -1268,6 +1329,7 @@ ${seatName}, this task from ${project.label} needs your voice before it can move
                 allPending={greenTasks.every((t) => pendingIds.has(t.id))}
                 onOverride={() => { }}
                 onOpenDeliberation={null}
+                isOwner={false}
               />
             )}
 
@@ -1286,6 +1348,7 @@ ${seatName}, this task from ${project.label} needs your voice before it can move
                 allPending={tasks.every((t) => pendingIds.has(t.id))}
                 onOverride={() => { }}
                 onOpenDeliberation={null}
+                isOwner={false}
               />
             ))}
 
@@ -1295,6 +1358,7 @@ ${seatName}, this task from ${project.label} needs your voice before it can move
                 pendingIds={pendingIds}
                 onOverride={() => { }}
                 onOpenDeliberation={onOpenDeliberation ? (t) => openConstellationDeliberation(t) : null}
+                isOwner={false}
               />
             )}
           </div>
