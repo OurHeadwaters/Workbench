@@ -305,8 +305,8 @@ describe("classifyTask — greenSignalsIgnored", () => {
     expect(result.hardGuardrail).toBe(true);
     expect(Array.isArray(result.greenSignalsIgnored)).toBe(true);
     expect(result.greenSignalsIgnored!.length).toBeGreaterThan(0);
-    // The "fix" GREEN signal should be represented
-    expect(result.greenSignalsIgnored!.some((s) => s.includes("fix") || s.includes("\\bfix\\b"))).toBe(true);
+    // The "fix" GREEN signal should be represented as a plain label
+    expect(result.greenSignalsIgnored!.some((s) => s.includes("fix"))).toBe(true);
   });
 
   it("populates greenSignalsIgnored when bug + pricing overlap", () => {

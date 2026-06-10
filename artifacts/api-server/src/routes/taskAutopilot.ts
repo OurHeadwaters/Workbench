@@ -307,13 +307,25 @@ const THEME_CLUSTERS: { label: string; patterns: RegExp[] }[] = [
   { label: "framing/deck", patterns: [/\bdeck\b/i, /\bpresentation\b/i, /\bscenario\b/i, /\bcompar(e|ison)\b/i] },
 ];
 
-const GREEN_SIGNALS = [
-  /\bfix\b/i, /\bbug\b/i, /\bcrash\b/i, /\berror\b/i, /\brefactor\b/i,
-  /\bclean.?up\b/i, /\bformat\b/i, /\brename\b/i, /\bresize\b/i,
-  /\bupdate.*(lib|package|dependency|version)\b/i,
-  /\bcatch.*stale\b/i, /\bcover.*flow\b/i, /\bautomat(e|ic).*(test)\b/i,
-  /\bvisually.?(re.?check|inspect)\b/i, /\bcross.?link\b/i,
-  /\becho.*ethos\b/i, /\bmatch.*timeline\b/i, /\bsame.*export\b/i,
+const GREEN_SIGNALS: { pattern: RegExp; label: string }[] = [
+  { pattern: /\bfix\b/i,                               label: "fix" },
+  { pattern: /\bbug\b/i,                               label: "bug" },
+  { pattern: /\bcrash\b/i,                             label: "crash" },
+  { pattern: /\berror\b/i,                             label: "error" },
+  { pattern: /\brefactor\b/i,                          label: "refactor" },
+  { pattern: /\bclean.?up\b/i,                         label: "clean up" },
+  { pattern: /\bformat\b/i,                            label: "format" },
+  { pattern: /\brename\b/i,                            label: "rename" },
+  { pattern: /\bresize\b/i,                            label: "resize" },
+  { pattern: /\bupdate.*(lib|package|dependency|version)\b/i, label: "update dependency / package" },
+  { pattern: /\bcatch.*stale\b/i,                      label: "catch stale" },
+  { pattern: /\bcover.*flow\b/i,                       label: "cover … flow" },
+  { pattern: /\bautomat(e|ic).*(test)\b/i,             label: "automate tests" },
+  { pattern: /\bvisually.?(re.?check|inspect)\b/i,     label: "visually re-check" },
+  { pattern: /\bcross.?link\b/i,                       label: "cross-link" },
+  { pattern: /\becho.*ethos\b/i,                       label: "echo ethos" },
+  { pattern: /\bmatch.*timeline\b/i,                   label: "match timeline" },
+  { pattern: /\bsame.*export\b/i,                      label: "same export" },
 ];
 
 export function classifyTask(
@@ -356,8 +368,8 @@ export function classifyTask(
       // Collect any GREEN signal patterns that also matched — these are the
       // phrases a human might read as "safe" but that the guardrail overrides.
       const greenSignalsIgnored = GREEN_SIGNALS
-        .filter((p) => p.test(text))
-        .map((p) => p.source);
+        .filter(({ pattern }) => pattern.test(text))
+        .map(({ label }) => label);
 
       return {
         ...task,
@@ -372,7 +384,7 @@ export function classifyTask(
   }
 
   // ── Step 3: GREEN signals ─────────────────────────────────────────────────
-  if (GREEN_SIGNALS.some((p) => p.test(text))) {
+  if (GREEN_SIGNALS.some(({ pattern }) => pattern.test(text))) {
     return {
       ...task,
       tier: "GREEN",
