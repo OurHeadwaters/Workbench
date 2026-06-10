@@ -539,6 +539,19 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
   const allGreenPending = greenTasks.length > 0 && greenTasks.every((t) => pendingIds.has(t.id));
   const summary = triaged?.summary;
 
+  // ── Aquifer sweep summary ──────────────────────────────────────────────────
+  const sweepSections = Array.from(constellationSections.values());
+  const sweepVisible = sweepSections.length > 0;
+  const sweepLoadingCount = sweepSections.filter((s) => s.loading).length;
+  const sweepDoneCount = sweepSections.filter((s) => !s.loading).length;
+  const sweepReachedCount = sweepSections.filter((s) => !s.loading && !s.error).length;
+  const sweepErrorCount = sweepSections.filter((s) => !s.loading && !!s.error).length;
+  const sweepTotalTasks = sweepSections.reduce((n, s) => n + (s.tasks?.length ?? 0), 0);
+  const sweepTotalGreen = sweepSections.reduce((n, s) => n + (s.triaged?.summary.green ?? 0), 0);
+  const sweepTotalAmber = sweepSections.reduce((n, s) => n + (s.triaged?.summary.amber ?? 0), 0);
+  const sweepTotalRed   = sweepSections.reduce((n, s) => n + (s.triaged?.summary.red   ?? 0), 0);
+  const sweepInFlight = sweepLoadingCount > 0;
+
   return (
     <div className="border-b border-[#251E18]">
       {/* ── Header toggle ── */}
@@ -779,6 +792,45 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
                     Seed project backlog
                   </button>
                 </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Aquifer sweep summary bar ── */}
+          {sweepVisible && (
+            <div className="mb-3 flex items-center gap-3 px-4 py-2.5 rounded-sm border border-[#1A3028] bg-[#0A1A12] text-[11px]">
+              {sweepInFlight ? (
+                <>
+                  <div className="w-3 h-3 border-2 border-[#4ADE80]/40 border-t-[#4ADE80] rounded-full animate-spin flex-shrink-0" />
+                  <span className="text-[#4ADE80] font-medium tracking-wide">
+                    {sweepDoneCount} / {sweepSections.length} project{sweepSections.length !== 1 ? "s" : ""} fetched…
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="text-[#059669]">◎</span>
+                  <span className="text-[#4ADE80] font-medium">
+                    {sweepReachedCount} project{sweepReachedCount !== 1 ? "s" : ""}
+                  </span>
+                  <span className="text-[#2A4A38]">·</span>
+                  <span className="text-[#86EFAC]">{sweepTotalTasks} task{sweepTotalTasks !== 1 ? "s" : ""}</span>
+                  {(sweepTotalGreen > 0 || sweepTotalAmber > 0 || sweepTotalRed > 0) && (
+                    <>
+                      <span className="text-[#2A4A38]">·</span>
+                      <span className="text-[#4ADE80]">{sweepTotalGreen}G</span>
+                      <span className="text-[#2A4A38]">·</span>
+                      <span className="text-[#FCD34D]">{sweepTotalAmber}A</span>
+                      <span className="text-[#2A4A38]">·</span>
+                      <span className="text-[#FCA5A5]">{sweepTotalRed}R</span>
+                    </>
+                  )}
+                  {sweepErrorCount > 0 && (
+                    <>
+                      <span className="text-[#2A4A38]">·</span>
+                      <span className="text-[#EF4444]">{sweepErrorCount} error{sweepErrorCount !== 1 ? "s" : ""}</span>
+                    </>
+                  )}
+                </>
               )}
             </div>
           )}
