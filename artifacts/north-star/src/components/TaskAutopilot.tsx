@@ -136,6 +136,153 @@ function humaniseGreenSignal(source: string): string {
     .trim();
 }
 
+// ── Pre-seeded RED deliberation briefs ────────────────────────────────────────
+// These 22 strategic items require the founder's voice and are surfaced
+// immediately — no triage API call needed. Each carries a focused question
+// and is routed to the correct council seat.
+
+interface RedBrief {
+  taskRef: string;
+  title: string;
+  question: string;
+  councilSeat: CouncilSeat;
+}
+
+const RED_BRIEFS: RedBrief[] = [
+  {
+    taskRef: "#112",
+    title: "Export the signed payback memo as a PDF the boards can file",
+    question: "What format does the board actually need to file this — single page, letterhead, or their own template?",
+    councilSeat: "smith",
+  },
+  {
+    taskRef: "#113",
+    title: "Add a one-time addendum form so new Trigger B revenue lines can be added without rewriting the memo",
+    question: "What's the trigger: who initiates a new Trigger B line, and does it need co-signature?",
+    councilSeat: "systems",
+  },
+  {
+    taskRef: "#119",
+    title: "Send the founder a weekly nudge to finish reviewing remaining costs",
+    question: "What day and channel should the nudge arrive, and what's the cut-off that marks it done?",
+    councilSeat: "systems",
+  },
+  {
+    taskRef: "#141",
+    title: "Show each People bucket's ~target % right inside cost review so edits stay anchored",
+    question: "What are the confirmed target percentages for each People bucket?",
+    councilSeat: "systems",
+  },
+  {
+    taskRef: "#146",
+    title: "Resize the four reinvestment destinations to fit the ~$10.5k/mo that's actually free",
+    question: "How should the $10.5k be split across the four destinations — equal, weighted, or founder-set?",
+    councilSeat: "smith",
+  },
+  {
+    taskRef: "#156",
+    title: "Echo the Headwaters ethos into the Deer Lake deck (band council voice)",
+    question: "Which specific Headwaters phrases or principles must carry into the band council voice?",
+    councilSeat: "saltbox",
+  },
+  {
+    taskRef: "#159",
+    title: "Lock Version A or Version B of the eagle prologue with the author",
+    question: "Which version — A or B — did the author land on?",
+    councilSeat: "saltbox",
+  },
+  {
+    taskRef: "#160",
+    title: "Show the eagle prologue once, then let returning visitors move straight to the content",
+    question: "Confirm #159 is locked, then: should the skip happen after one full read, or after the first visit regardless?",
+    councilSeat: "smith",
+  },
+  {
+    taskRef: "#163",
+    title: "Match the Brightside timeline to the active scenario",
+    question: "Which scenario is currently active — and is Brightside's timeline confirmed against it?",
+    councilSeat: "systems",
+  },
+  {
+    taskRef: "#169",
+    title: "Side-by-side V2 vs V3 comparison view so the founder can show the trade-off live",
+    question: "What's the primary trade-off the founder needs to show live — cash position, reserve split, or monthly burn?",
+    councilSeat: "smith",
+  },
+  {
+    taskRef: "#170",
+    title: "Lock a full Phase-3 month-by-month cash schedule for V3 so the $6k reconciliation gap stops being a gut-feel rounding line",
+    question: "What are the confirmed month-by-month figures for Phase 3 — or who holds the authoritative spreadsheet?",
+    councilSeat: "systems",
+  },
+  {
+    taskRef: "#171",
+    title: "Lock the headline numbers in the Deer Lake store deck",
+    question: "Which numbers in the deck are confirmed vs. still TBD, and who signs off on the TBDs?",
+    councilSeat: "systems",
+  },
+  {
+    taskRef: "#172",
+    title: "Replace the TBD operating-system fee with a real Headwaters number",
+    question: "What is the real Headwaters operating-system fee to plug in?",
+    councilSeat: "systems",
+  },
+  {
+    taskRef: "#200",
+    title: "Auto-push iOS builds to TestFlight",
+    question: "Is there an active Apple developer account and provisioning profile ready, or does that need to be set up first?",
+    councilSeat: "codetry",
+  },
+  {
+    taskRef: "#201",
+    title: "Serve handbook content from API",
+    question: "Should handbook content be author-editable from a CMS, or managed as structured data files the agent updates?",
+    councilSeat: "codetry",
+  },
+  {
+    taskRef: "#203",
+    title: "APK expiry heads-up",
+    question: "Who should receive the expiry alert — just the founder, or the full Codetry crew?",
+    councilSeat: "codetry",
+  },
+  {
+    taskRef: "#204",
+    title: "Install page on QR scan",
+    question: "What should the QR install page say and show — app store links, a web fallback, or a guided install flow?",
+    councilSeat: "smith",
+  },
+  {
+    taskRef: "#217",
+    title: "Lock $201k / $420k reserve pricing",
+    question: "Are these numbers confirmed and ready to hard-code, or still subject to board review?",
+    councilSeat: "systems",
+  },
+  {
+    taskRef: "#222",
+    title: "Reserves swap in own travel numbers",
+    question: "Which reserves are in scope, and what's the source of truth for their drive-in and winter-road rates?",
+    councilSeat: "community",
+  },
+  {
+    taskRef: "#223",
+    title: "Six people — individual role pages",
+    question: "What goes on each person's page — bio, responsibilities, contact, or something else?",
+    councilSeat: "saltbox",
+  },
+  {
+    taskRef: "#263",
+    title: "Cross-artifact vocabulary glossary",
+    question: "Who owns the glossary going forward, and what's the right format — markdown, a live page, or both?",
+    councilSeat: "systems",
+  },
+  {
+    taskRef: "#337",
+    title: "Gloss 'Quiet trial run' and the $22k",
+    question: "What is the $22k referring to, and how should the 'Quiet trial run' label be explained to readers?",
+    councilSeat: "saltbox",
+  },
+];
+
 // ── Sample backlog — seeded via import (enters real state machine) ─────────────
 const SAMPLE_TASK_LINES = `Export the signed payback memo as a PDF the boards can file
 Add a one-time addendum form so new Trigger B revenue lines can be added without rewriting the memo
@@ -193,6 +340,19 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
   const [triaged, setTriaged] = useState<TriageResult | null>(null);
   const [overrides, setOverrides] = useState<Record<string, Tier>>({});
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
+  // Titles of tasks that have been accepted (PENDING or CLEARED). Persisted to
+  // localStorage so cleared tasks — which leave the /pending endpoint — still
+  // suppress their seed brief across sessions. Never replaced wholesale; only
+  // grows on approve and shrinks on unapprove.
+  const [acceptedTitles, setAcceptedTitles] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem("task-autopilot-accepted-titles");
+      return raw ? new Set(JSON.parse(raw) as string[]) : new Set();
+    } catch { return new Set(); }
+  });
+  // id → title reverse map for pending tasks; used in handleUnapprove to find
+  // titles to remove from acceptedTitles without re-fetching the server.
+  const pendingIdToTitle = useRef<Map<string, string>>(new Map());
 
   const [loadingProposed, setLoadingProposed] = useState(false);
   const [loadingTriage, setLoadingTriage] = useState(false);
@@ -248,6 +408,11 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
 
   // Tracks whether the auto-seed has been attempted this session (prevents re-seeding on panel re-opens)
   const autoSeededRef = useRef(false);
+
+  // Persist accepted titles so cleared tasks continue to suppress their seed brief
+  useEffect(() => {
+    try { localStorage.setItem("task-autopilot-accepted-titles", JSON.stringify(Array.from(acceptedTitles))); } catch { /**/ }
+  }, [acceptedTitles]);
 
   useEffect(() => {
     try { localStorage.setItem("task-autopilot-constellation", JSON.stringify(constellation)); } catch { /**/ }
@@ -346,7 +511,18 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
       setProposed(tasks);
       if (pendingRes.ok) {
         const pendingJson = await pendingRes.json() as { tasks: StoredTask[] };
-        setPendingIds(new Set((pendingJson.tasks ?? []).map((t) => t.id)));
+        const pendingTaskList = pendingJson.tasks ?? [];
+        setPendingIds(new Set(pendingTaskList.map((t) => t.id)));
+        // Populate the id→title reverse map for unapprove lookups
+        const idToTitle = new Map(pendingTaskList.map((t) => [t.id, t.title]));
+        pendingIdToTitle.current = idToTitle;
+        // Merge server pending titles into acceptedTitles (additive — cleared titles
+        // that are no longer in /pending are already in localStorage)
+        setAcceptedTitles((prev) => {
+          const next = new Set(prev);
+          pendingTaskList.forEach((t) => next.add(t.title));
+          return next;
+        });
       }
       // Auto-seed the real backlog on first open if the queue is empty — owner only
       const hasToken = !!getOwnerToken();
@@ -382,7 +558,13 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
         throw new Error(j.error ?? `Approve failed: ${res.status}`);
       }
       const idSet = new Set(taskIds);
+      // Capture titles before removing from proposed (they leave proposed on approval)
+      const approvedTasks = proposed.filter((t) => idSet.has(t.id));
+      const approvedTitles = approvedTasks.map((t) => t.title);
       setPendingIds((prev) => { const next = new Set(prev); taskIds.forEach((id) => next.add(id)); return next; });
+      // Update reverse map and accepted titles
+      approvedTasks.forEach((t) => pendingIdToTitle.current.set(t.id, t.title));
+      setAcceptedTitles((prev) => { const next = new Set(prev); approvedTitles.forEach((title) => next.add(title)); return next; });
       setProposed((prev) => prev.filter((t) => !idSet.has(t.id)));
     } catch (e) {
       setAuthBlocked(false);
@@ -398,7 +580,18 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
       body: JSON.stringify({ taskIds }),
     });
     if (res.ok) {
+      // Look up titles before removing from reverse map (needed for acceptedTitles removal)
+      const unapprovedTitles = taskIds
+        .map((id) => pendingIdToTitle.current.get(id))
+        .filter((t): t is string => t !== undefined);
+      taskIds.forEach((id) => pendingIdToTitle.current.delete(id));
       setPendingIds((prev) => { const next = new Set(prev); taskIds.forEach((id) => next.delete(id)); return next; });
+      // Remove unapproved titles so their seed briefs reappear
+      setAcceptedTitles((prev) => {
+        const next = new Set(prev);
+        unapprovedTitles.forEach((title) => next.delete(title));
+        return next;
+      });
       // Fetch fresh proposed list — clear triaged so user can re-triage with reverted tasks visible
       const proposedRes = await fetch(`${BASE_API}/tasks/proposed`);
       if (proposedRes.ok) {
@@ -607,9 +800,45 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
 
   const isOwner = !!getOwnerToken();
 
-  const greenTasks  = (triaged?.tasks ?? []).filter((t) => effectiveTier(t) === "GREEN");
-  const amberTasks  = (triaged?.tasks ?? []).filter((t) => effectiveTier(t) === "AMBER");
+  // Active seed briefs: a brief is dismissed when its title is in acceptedTitles
+  // (covers PENDING, CLEARED, and cross-session state via localStorage).
+  const activeRedBriefs = RED_BRIEFS.filter((brief) => !acceptedTitles.has(brief.title));
+
+  // Set of seeded titles currently active — used to force seeded tasks into RED
+  // regardless of what the triage engine classifies them as.
+  const seededActiveTitles = new Set(activeRedBriefs.map((b) => b.title));
+
+  // Filter GREEN and AMBER: seeded tasks must NOT appear there — they belong in RED.
+  const greenTasks  = (triaged?.tasks ?? []).filter(
+    (t) => effectiveTier(t) === "GREEN" && !seededActiveTitles.has(t.title)
+  );
+  const amberTasks  = (triaged?.tasks ?? []).filter(
+    (t) => effectiveTier(t) === "AMBER" && !seededActiveTitles.has(t.title)
+  );
+  // Triage-classified RED tasks
   const redTasks    = (triaged?.tasks ?? []).filter((t) => effectiveTier(t) === "RED");
+  // Seeded tasks that triage put in GREEN/AMBER — pulled into RED per spec
+  const seededFromOtherTiers = (triaged?.tasks ?? []).filter(
+    (t) => effectiveTier(t) !== "RED" && seededActiveTitles.has(t.title)
+  );
+
+  // Index seed briefs by title so triage-classified RED tasks can pick up the seed's
+  // question and councilSeat (seed wins on overlap per spec).
+  const seedBriefByTitle = new Map(activeRedBriefs.map((b) => [b.title, b]));
+
+  // Combined RED tasks (triage RED + seeded-from-other-tiers), with seed overrides applied.
+  const redTasksWithSeedOverrides: ClassifiedTask[] = [
+    ...redTasks,
+    ...seededFromOtherTiers,
+  ].map((t) => {
+    const seed = seedBriefByTitle.get(t.title);
+    if (!seed) return t;
+    return { ...t, councilSeat: seed.councilSeat };
+  });
+
+  // Seed briefs that are NOT already covered by ANY triage task (avoid double-render)
+  const triagedTaskTitles = new Set((triaged?.tasks ?? []).map((t) => t.title));
+  const seedOnlyBriefs = activeRedBriefs.filter((b) => !triagedTaskTitles.has(b.title));
 
   const computedAmberGroups = amberTasks.reduce<Record<string, ClassifiedTask[]>>((acc, t) => {
     const cluster = t.themeCluster ?? "general";
@@ -843,15 +1072,32 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
               })}
 
               {/* RED — with optional deliberation brief routing */}
-              {redTasks.length > 0 && (
+              {(redTasksWithSeedOverrides.length > 0 || seedOnlyBriefs.length > 0) && (
                 <RedSection
-                  tasks={redTasks}
+                  tasks={redTasksWithSeedOverrides}
+                  seedBriefs={seedOnlyBriefs}
+                  seedBriefByTitle={seedBriefByTitle}
                   pendingIds={pendingIds}
                   onOverride={(t, toTier) => handleOverride(t.id, effectiveTier(t), toTier, t.title)}
                   onOpenDeliberation={onOpenDeliberation ? (t) => openDeliberation(t) : null}
                   isOwner={isOwner}
                 />
               )}
+            </div>
+          )}
+
+          {/* ── Pre-triage RED briefs — always visible, triage-independent ── */}
+          {!triaged && !loadingTriage && activeRedBriefs.length > 0 && (
+            <div className="mb-4">
+              <RedSection
+                tasks={[]}
+                seedBriefs={activeRedBriefs}
+                seedBriefByTitle={seedBriefByTitle}
+                pendingIds={pendingIds}
+                onOverride={() => { }}
+                onOpenDeliberation={onOpenDeliberation ? (t) => openDeliberation(t) : null}
+                isOwner={isOwner}
+              />
             </div>
           )}
 
@@ -1104,9 +1350,11 @@ function TierSection({
 // ── RedSection ────────────────────────────────────────────────────────────────
 
 function RedSection({
-  tasks, pendingIds, onOverride, onOpenDeliberation, isOwner,
+  tasks, seedBriefs = [], seedBriefByTitle = new Map(), pendingIds, onOverride, onOpenDeliberation, isOwner,
 }: {
   tasks: ClassifiedTask[];
+  seedBriefs?: RedBrief[];
+  seedBriefByTitle?: Map<string, RedBrief>;
   pendingIds: Set<string>;
   onOverride: (t: ClassifiedTask, toTier: Tier) => void;
   onOpenDeliberation: ((t: ClassifiedTask) => void) | null;
@@ -1114,13 +1362,33 @@ function RedSection({
 }) {
   const [expanded, setExpanded] = useState(true);
   const c = TIER_COLOR.RED;
+  const totalCount = tasks.length + seedBriefs.length;
+
+  const openSeedDeliberation = (brief: RedBrief) => {
+    if (!onOpenDeliberation) return;
+    const seat = SEAT_META[brief.councilSeat];
+    const seatId = SEAT_ID_MAP[brief.councilSeat];
+    const fakeTask: ClassifiedTask = {
+      id: brief.taskRef,
+      title: brief.title,
+      status: "proposed",
+      tier: "RED",
+      rule: "Pre-classified RED — founder's voice required",
+      reasoning: brief.question,
+      councilSeat: brief.councilSeat,
+    };
+    // Invoke the callback with a synthetic task so the seat routing works
+    void seatId;
+    void seat;
+    onOpenDeliberation(fakeTask);
+  };
 
   return (
     <div className="rounded-sm border overflow-hidden" style={{ borderColor: c.border, background: c.bg }}>
       <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: `1px solid ${c.border}` }}>
         <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: c.dot }} />
         <span className="text-[11px] uppercase tracking-[0.15em] font-bold flex-1" style={{ color: c.text }}>
-          RED — {tasks.length} require your voice
+          RED — {totalCount} require your voice
         </span>
         <span className="text-[10px] text-[#5C5046]">no auto-approve</span>
         <button onClick={() => setExpanded((o) => !o)} className="text-[10px] text-[#5C5046] hover:text-[#8C7B6D] ml-2 transition-colors">
@@ -1130,15 +1398,23 @@ function RedSection({
 
       {expanded && (
         <div className="divide-y" style={{ borderColor: c.border }}>
+          {/* ── Triage-classified RED tasks (with seed question/seat override where applicable) ── */}
           {tasks.map((t) => {
             const seat = t.councilSeat ? SEAT_META[t.councilSeat] : null;
             const isPending = pendingIds.has(t.id);
+            const seedOverride = seedBriefByTitle.get(t.title);
             return (
               <div key={t.id} className={cn("px-4 py-3", isPending && "opacity-40")}>
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] text-[#EAE4DB] leading-snug mb-1">{t.title}</p>
+                    {seedOverride ? (
+                      <p className="text-[11px] italic leading-relaxed" style={{ color: TIER_COLOR.RED.text, opacity: 0.65 }}>
+                        {seedOverride.question}
+                      </p>
+                    ) : (
                     <p className="text-[11px] text-[#8C7B6D] leading-relaxed">{t.rule}</p>
+                    )}
                     {t.hardGuardrail && (
                       <span className="inline-block mt-1 text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-sm font-bold" style={{ background: c.border, color: c.text }}>
                         hard guardrail
@@ -1184,6 +1460,43 @@ function RedSection({
                     </button>
                   </div>
                 )}
+              </div>
+            );
+          })}
+
+          {/* ── Pre-seeded RED briefs ── */}
+          {seedBriefs.map((brief) => {
+            const seat = SEAT_META[brief.councilSeat];
+            return (
+              <div key={brief.taskRef} className="px-4 py-3">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-mono text-[9px] text-[#5C5046] flex-shrink-0">{brief.taskRef}</span>
+                      <p className="text-[13px] text-[#EAE4DB] leading-snug">{brief.title}</p>
+                    </div>
+                    <p className="text-[11px] italic leading-relaxed" style={{ color: c.text, opacity: 0.65 }}>
+                      {brief.question}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => {
+                        const seatId = SEAT_ID_MAP[brief.councilSeat];
+                        if (onOpenDeliberation) {
+                          openSeedDeliberation(brief);
+                        } else {
+                          document.getElementById(`seat-${seatId}`)?.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                      className="text-[11px] px-2 py-0.5 rounded-sm font-medium transition-opacity hover:opacity-80"
+                      style={{ background: `${seat.color}22`, color: seat.color }}
+                      title={`Route to ${seat.name} seat`}
+                    >
+                      {seat.icon} {seat.name}
+                    </button>
+                  </div>
+                </div>
               </div>
             );
           })}
