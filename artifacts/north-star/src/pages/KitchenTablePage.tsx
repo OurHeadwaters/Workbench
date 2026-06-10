@@ -804,6 +804,52 @@ function RefDocContent({ raw }: { raw: string }) {
   return <div className="pb-8">{elements}</div>;
 }
 
+// ── Seat-config persistence helpers ──────────────────────────────────────────
+function getOwnerToken(): string | null {
+  try {
+    return (
+      window.localStorage.getItem("library.ownerToken") ||
+      window.localStorage.getItem("ownerToken") ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
+function seatsToStore(seatList: Seat[]): Record<string, Partial<Seat>> {
+  const out: Record<string, Partial<Seat>> = {};
+  seatList.filter((s) => s.configurable).forEach((s) => {
+    out[s.id] = { name: s.name, description: s.description, systemPrompt: s.systemPrompt };
+  });
+  return out;
+}
+
+function applyStoredConfig(
+  base: Seat[],
+  stored: Record<string, Partial<Seat>>
+): Seat[] {
+  return base.map((s) =>
+    s.configurable && stored[s.id] ? { ...s, ...stored[s.id] } : s
+  );
+}
+
+async function persistSeatsToServer(
+  seatList: Seat[]
+): Promise<void> {
+  const token = getOwnerToken();
+  if (!token) return;
+  const seats = seatsToStore(seatList);
+  await fetch("/api/settings/seat-config", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "x-library-owner-token": token,
+    },
+    body: JSON.stringify({ seats }),
+  });
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 export function KitchenTablePage() {
   const [seats, setSeats] = useState<Seat[]>(() => {
@@ -811,15 +857,35 @@ export function KitchenTablePage() {
       const stored = localStorage.getItem("kitchen-table-seat-config");
       if (stored) {
         const parsed = JSON.parse(stored) as Record<string, Partial<Seat>>;
-        return DEFAULT_SEATS.map((s) =>
-          s.configurable && parsed[s.id] ? { ...s, ...parsed[s.id] } : s
-        );
+        return applyStoredConfig(DEFAULT_SEATS, parsed);
       }
     } catch {
       // ignore
     }
     return DEFAULT_SEATS;
   });
+
+  useEffect(() => {
+    const token = getOwnerToken();
+    if (!token) return;
+    let cancelled = false;
+    fetch("/api/settings/seat-config", {
+      headers: { "x-library-owner-token": token },
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j: { seats: Record<string, Partial<Seat>> | null } | null) => {
+        if (cancelled || !j?.seats) return;
+        setSeats((prev) => applyStoredConfig(prev, j.seats!));
+        try {
+          localStorage.setItem(
+            "kitchen-table-seat-config",
+            JSON.stringify(j.seats)
+          );
+        } catch { }
+      })
+      .catch(() => { });
+    return () => { cancelled = true; };
+  }, []);
   const [activeSeatId, setActiveSeatId] = useState("grok");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -834,6 +900,7 @@ export function KitchenTablePage() {
   const [configDraft, setConfigDraft] = useState({ name: "", description: "", systemPrompt: "" });
   const [placeCardEditing, setPlaceCardEditing] = useState<string | null>(null);
   const [placeCardDraft, setPlaceCardDraft] = useState({ name: "", description: "" });
+  const [savedSeatId, setSavedSeatId] = useState<string | null>(null);
 
   const activeTemplate = TEMPLATES.find((t) => t.id === activeTemplateId) ?? TEMPLATES[0]!;
   const agendaItems = activeTemplate.agendaItems;
@@ -947,37 +1014,38 @@ export function KitchenTablePage() {
   };
 
   const savePlaceCard = (seatId: string, name: string, description: string) => {
+    let nextSeats: Seat[] = [];
     setSeats((prev) => {
       const next = prev.map((s) =>
         s.id === seatId
           ? { ...s, name: name.trim() || s.name, description: description.trim() || s.description }
           : s
       );
+      nextSeats = next;
       try {
-        const toStore: Record<string, Partial<Seat>> = {};
-        next.filter((s) => s.configurable).forEach((s) => {
-          toStore[s.id] = { name: s.name, description: s.description, systemPrompt: s.systemPrompt };
-        });
+        const toStore = seatsToStore(next);
         localStorage.setItem("kitchen-table-seat-config", JSON.stringify(toStore));
       } catch { }
       return next;
     });
     setPlaceCardEditing(null);
+    setSavedSeatId(seatId);
+    setTimeout(() => setSavedSeatId(null), 2000);
+    persistSeatsToServer(nextSeats).catch(() => { });
   };
 
   const saveConfig = () => {
     if (!configSeatId) return;
+    let nextSeats: Seat[] = [];
     setSeats((prev) => {
       const next = prev.map((s) =>
         s.id === configSeatId
           ? { ...s, name: configDraft.name, description: configDraft.description, systemPrompt: configDraft.systemPrompt }
           : s
       );
+      nextSeats = next;
       try {
-        const toStore: Record<string, Partial<Seat>> = {};
-        next.filter((s) => s.configurable).forEach((s) => {
-          toStore[s.id] = { name: s.name, description: s.description, systemPrompt: s.systemPrompt };
-        });
+        const toStore = seatsToStore(next);
         localStorage.setItem("kitchen-table-seat-config", JSON.stringify(toStore));
       } catch {
         // ignore
@@ -985,6 +1053,7 @@ export function KitchenTablePage() {
       return next;
     });
     setConfigSeatId(null);
+    persistSeatsToServer(nextSeats).catch(() => { });
   };
 
   const [soundBites, setSoundBites] = useState<SoundBite[]>(() => {
@@ -1141,8 +1210,8 @@ export function KitchenTablePage() {
                         <div className="flex gap-3 mt-1 items-center">
                           <button
                             onClick={() => savePlaceCard(seat.id, placeCardDraft.name, placeCardDraft.description)}
-                            className="text-[11px] text-[#13110E] bg-[#8C7B6D] px-3 py-1 rounded-sm tracking-wide font-medium"
-                          >Set seat</button>
+                            className="text-[11px] text-[#13110E] bg-[#8C7B6D] px-3 py-1 rounded-sm tracking-wide font-medium transition-opacity"
+                          >{savedSeatId === seat.id ? "saved ✓" : "Set seat"}</button>
                           <button
                             onClick={() => setPlaceCardEditing(null)}
                             className="text-[11px] text-[#5C5046] hover:text-[#8C7B6D] tracking-wide transition-colors"

@@ -3,6 +3,9 @@
  *
  * GET  /api/settings/notify-email  — return current River Smith notify email
  * PUT  /api/settings/notify-email  — set/update River Smith notify email
+ *
+ * GET  /api/settings/seat-config   — return saved Kitchen Table open-seat config
+ * PUT  /api/settings/seat-config   — save Kitchen Table open-seat config
  */
 
 import { Router, type IRouter, type Request, type Response } from "express";
@@ -63,6 +66,53 @@ router.put("/notify-email", async (req: Request, res: Response) => {
     }
   } catch (err) {
     res.status(500).json({ error: "Failed to save setting" });
+  }
+});
+
+const SEAT_CONFIG_KEY = "kitchen_table_seat_config";
+
+router.get("/seat-config", async (req: Request, res: Response) => {
+  if (!requireOwner(req, res)) return;
+  try {
+    const rows = await db
+      .select()
+      .from(appSettingsTable)
+      .where(eq(appSettingsTable.key, SEAT_CONFIG_KEY))
+      .limit(1);
+    const row = rows[0];
+    if (!row) {
+      res.json({ seats: null });
+      return;
+    }
+    try {
+      res.json({ seats: JSON.parse(row.value) });
+    } catch {
+      res.json({ seats: null });
+    }
+  } catch {
+    res.status(500).json({ error: "Failed to read seat config" });
+  }
+});
+
+router.put("/seat-config", async (req: Request, res: Response) => {
+  if (!requireOwner(req, res)) return;
+  const { seats } = req.body as { seats?: unknown };
+  if (!seats || typeof seats !== "object") {
+    res.status(400).json({ error: "seats object required" });
+    return;
+  }
+  try {
+    const value = JSON.stringify(seats);
+    await db
+      .insert(appSettingsTable)
+      .values({ key: SEAT_CONFIG_KEY, value })
+      .onConflictDoUpdate({
+        target: appSettingsTable.key,
+        set: { value, updatedAt: new Date() },
+      });
+    res.json({ ok: true });
+  } catch {
+    res.status(500).json({ error: "Failed to save seat config" });
   }
 });
 
