@@ -250,7 +250,7 @@ const GREEN_SIGNALS = [
   /\becho.*ethos\b/i, /\bmatch.*timeline\b/i, /\bsame.*export\b/i,
 ];
 
-function classifyTask(
+export function classifyTask(
   task: { id: string; title: string; description?: string },
   overrideIndex?: Map<string, TierVotes>,
 ): TaskClassification {
