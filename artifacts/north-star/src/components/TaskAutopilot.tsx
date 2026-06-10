@@ -75,6 +75,16 @@ const TIER_COLOR: Record<Tier, { bg: string; border: string; badge: string; text
 
 const BASE_API = "/api";
 
+const AQUIFER_DEFAULTS: ConstellationProject[] = [
+  { id: "hw-north-star",    label: "North Star",                             baseUrl: "https://ourheadwaters.ca/north-star",          token: "" },
+  { id: "hw-codetry-ship",  label: "Codetry Ship — Crew Manifest",           baseUrl: "https://ourheadwaters.ca",                     token: "" },
+  { id: "hw-books",         label: "Headwaters Books",                       baseUrl: "https://ourheadwaters.ca/headwaters-books",    token: "" },
+  { id: "hw-library",       label: "Northern Food Systems Research Library",  baseUrl: "https://ourheadwaters.ca/library",             token: "" },
+  { id: "hw-learning",      label: "Headwaters Learning",                    baseUrl: "https://ourheadwaters.ca/headwaters-learning", token: "" },
+  { id: "hw-print",         label: "Headwaters Print Marketing Suite",       baseUrl: "https://ourheadwaters.ca/print-marketing",     token: "" },
+  { id: "hw-handbook",      label: "Headwaters Handbook",                    baseUrl: "https://ourheadwaters.ca/codetry-handbook",    token: "" },
+];
+
 // ── Green signal humaniser ────────────────────────────────────────────────────
 
 const GREEN_SIGNAL_LABELS: Record<string, string> = {
@@ -211,17 +221,8 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
         }
       }
       // True first launch (key absent): pre-seed with all known Headwaters project URLs
-      const seeded: ConstellationProject[] = [
-        { id: "hw-north-star",    label: "North Star",                            baseUrl: "https://ourheadwaters.ca/north-star",          token: "" },
-        { id: "hw-codetry-ship",  label: "Codetry Ship — Crew Manifest",          baseUrl: "https://ourheadwaters.ca",                     token: "" },
-        { id: "hw-books",         label: "Headwaters Books",                      baseUrl: "https://ourheadwaters.ca/headwaters-books",    token: "" },
-        { id: "hw-library",       label: "Northern Food Systems Research Library", baseUrl: "https://ourheadwaters.ca/library",             token: "" },
-        { id: "hw-learning",      label: "Headwaters Learning",                   baseUrl: "https://ourheadwaters.ca/headwaters-learning", token: "" },
-        { id: "hw-print",         label: "Headwaters Print Marketing Suite",      baseUrl: "https://ourheadwaters.ca/print-marketing",     token: "" },
-        { id: "hw-handbook",      label: "Headwaters Handbook",                   baseUrl: "https://ourheadwaters.ca/codetry-handbook",    token: "" },
-      ];
-      localStorage.setItem("headwaters-aquifer-projects", JSON.stringify(seeded));
-      return seeded;
+      localStorage.setItem("headwaters-aquifer-projects", JSON.stringify(AQUIFER_DEFAULTS));
+      return AQUIFER_DEFAULTS;
     } catch { return []; }
   });
   const [aquiferSettingsOpen, setAquiferSettingsOpen] = useState(false);
@@ -720,6 +721,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
               onAdd={(p) => setAquifer((prev) => [...prev, p])}
               onRemove={(id) => setAquifer((prev) => prev.filter((p) => p.id !== id))}
               onUpdate={(updated) => setAquifer((prev) => prev.map((p) => p.id === updated.id ? updated : p))}
+              onReset={() => setAquifer(AQUIFER_DEFAULTS)}
               onPull={(p) => pullConstellation(p)}
               onPullAll={pullAquifer}
               draft={aquiferDraft}
@@ -1459,12 +1461,13 @@ function AquiferProjectRow({
 }
 
 function AquiferSettingsPanel({
-  projects, onAdd, onRemove, onUpdate, onPull, onPullAll, draft, setDraft, pulling, onClose,
+  projects, onAdd, onRemove, onUpdate, onReset, onPull, onPullAll, draft, setDraft, pulling, onClose,
 }: {
   projects: ConstellationProject[];
   onAdd: (p: ConstellationProject) => void;
   onRemove: (id: string) => void;
   onUpdate: (updated: ConstellationProject) => void;
+  onReset: () => void;
   onPull: (p: ConstellationProject) => void;
   onPullAll: () => void;
   draft: { label: string; baseUrl: string; token: string };
@@ -1555,6 +1558,16 @@ function AquiferSettingsPanel({
               + Add
             </button>
           </div>
+        </div>
+
+        {/* Reset to defaults */}
+        <div className="mt-3 pt-3 border-t border-[#1A3028] flex justify-end">
+          <button
+            onClick={onReset}
+            className="text-[10px] uppercase tracking-wider text-[#3A6A4A] hover:text-[#86EFAC] transition-colors"
+          >
+            ↺ Reset to defaults
+          </button>
         </div>
       </div>
     </div>
