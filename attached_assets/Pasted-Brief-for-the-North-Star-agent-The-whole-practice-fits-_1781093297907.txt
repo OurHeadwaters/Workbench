@@ -1,0 +1,32 @@
+Brief for the North Star agent — "The whole practice fits on one table"
+Core move (from Bobbie): Open the app into the kitchen table, first-person, as if you've just sat down in your own chair. The work lives in drawers built into the table; you pull a drawer to go through that pile. The table is home — everything else is somewhere you get up and walk to. The point is to make a complex multi-stakeholder practice feel like sitting down at a familiar table, not navigating tabs.
+
+1. The Table = Today (the front door)
+First-person POV of the table surface: warm wood, morning light, your near-black/amber palette.
+The day's win ("Today, the win is…") and morning/evening debrief are slips of paper resting on the table — a note you jot, not a form. Morning = a fresh slip; evening = you flip it over to debrief.
+Hours logged vs. planned shows as a small ledger or mug-ring gauge on the surface, glanceable.
+2. Drawers = the zones (Z1–Z4)
+A row of drawers along the table's front edge, one per zone, each in its zone color: Z1 personal income, Z2 active contracts, Z3 methodology/public, Z4 community/legacy.
+Tap a drawer → it slides open, constellations rise as file tabs you flick through. One drawer open at a time (ADHD-calm: opening one closes the last).
+Picking up to 3 for today = pulling files out and setting them on the table. Your 3 picks stay sitting in front of you all day — focus never scrolls away.
+The Pick guardrail (warn when grabbing Z3/Z4 while a Z2 anchor still owes hours) shows as a file that won't quite leave the drawer with a quiet note — keep the rule, soften the moment.
+Empty zone = "nothing filed here yet" inside the open drawer.
+3. End-of-day = the ledger
+Log hours by zone with a small number pad / ledger you pull over at day's end — the files on the table are what you log against, so logging is just "account for what I set out."
+4. Reviews = the calendar drawer
+Weekly & seasonal reviews live in their own drawer (or a calendar/almanac on the table). Same prompts (what shipped, what stalled, zone-hour distribution) — but framed as sitting down to go through the books, with the seasonal review surfacing as a card on the table when it's due (you already do this — keep it, style it as a pinned note).
+5. Get up and walk to: Cockpit, Model, Window
+The table is always home. Cockpit, Model, and Window are places you stand up and go to — reinforce with a calm transition, not a flat tab swap.
+Cockpit = a side cabinet / desk: client roster, proposal & replication templates, Money Machine (revenue, cost reviews, rates), hiring tools (subcontractors, reference scripts, candidates). It's the "ops drawers," distinct from the table's "today drawers."
+Model = the numbers hanging on the wall — keep the dark, focused, plain-math framing (trial vs. full engagement). It's a thing you look up at, not paperwork you shuffle.
+Window = the actual window in the room — the controlled public leak (three tests, flat-fee trial). Looking out vs. looking down at your own table makes "public vs. private" spatially obvious.
+6. The deep drawer = Archive mining
+The Gmail archive search/tag/export (Markdown/CSV) is the deep file box — the drawer you dig in to pull old threads forward into teaching material. Frame it as "going through the old files," not "search an inbox."
+7. First sit-down = onboarding
+Keep the rule that you lock in your North Star statement before using the app — but stage it as the very first time you sit at the table: the statement is carved/pinned where you'll always see it from your chair. Every later open returns you to the table with that statement in view.
+8. Quiet, physical, ADHD-aware throughout
+One drawer open at a time; the 3 picks always visible; slow settle/slide animations, no bounce or hype; local-first backup nudge can be a small "tidy the table / file a copy" gesture.
+A couple of notes so this lands cleanly:
+
+Your screenshots show zones Z0–Z5, but this description says Z1–Z4 — worth telling the agent which is current so the drawer count is right.
+Since North Star lives in a separate Repl, you'll hand this to its agent — I can't reach or edit it from here.
