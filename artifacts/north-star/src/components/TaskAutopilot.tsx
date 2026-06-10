@@ -350,6 +350,16 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
       return raw ? new Set(JSON.parse(raw) as string[]) : new Set();
     } catch { return new Set(); }
   });
+
+  // taskRefs of seed briefs the founder has dismissed ("not now"). Local-only —
+  // the underlying task stays untouched.
+  const [dismissedBriefRefs, setDismissedBriefRefs] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem("task-autopilot-dismissed-briefs");
+      return raw ? new Set(JSON.parse(raw) as string[]) : new Set();
+    } catch { return new Set(); }
+  });
+  const [showDismissed, setShowDismissed] = useState(false);
   // id → title reverse map for pending tasks; used in handleUnapprove to find
   // titles to remove from acceptedTitles without re-fetching the server.
   const pendingIdToTitle = useRef<Map<string, string>>(new Map());
@@ -413,6 +423,19 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
   useEffect(() => {
     try { localStorage.setItem("task-autopilot-accepted-titles", JSON.stringify(Array.from(acceptedTitles))); } catch { /**/ }
   }, [acceptedTitles]);
+
+  // Persist dismissed brief refs
+  useEffect(() => {
+    try { localStorage.setItem("task-autopilot-dismissed-briefs", JSON.stringify(Array.from(dismissedBriefRefs))); } catch { /**/ }
+  }, [dismissedBriefRefs]);
+
+  const handleDismissBrief = (taskRef: string) => {
+    setDismissedBriefRefs((prev) => { const next = new Set(prev); next.add(taskRef); return next; });
+  };
+
+  const handleUndismissBrief = (taskRef: string) => {
+    setDismissedBriefRefs((prev) => { const next = new Set(prev); next.delete(taskRef); return next; });
+  };
 
   useEffect(() => {
     try { localStorage.setItem("task-autopilot-constellation", JSON.stringify(constellation)); } catch { /**/ }
@@ -800,9 +823,18 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
 
   const isOwner = !!getOwnerToken();
 
-  // Active seed briefs: a brief is dismissed when its title is in acceptedTitles
-  // (covers PENDING, CLEARED, and cross-session state via localStorage).
-  const activeRedBriefs = RED_BRIEFS.filter((brief) => !acceptedTitles.has(brief.title));
+  // Full set of seed briefs that haven't been approved/cleared. Dismissed briefs
+  // are NOT filtered out here — RedSection receives this full set and owns the
+  // dismissed/active split internally. This ensures the "show dismissed" toggle
+  // is always computable inside RedSection even when showDismissed is false.
+  const allNonAcceptedBriefs = RED_BRIEFS.filter((brief) => !acceptedTitles.has(brief.title));
+
+  // Active (non-dismissed) seed briefs — used only for triage-tier forcing logic.
+  // A dismissed brief is freed from the force-RED override so triage can classify
+  // its corresponding task normally (if it exists in the queue).
+  const activeRedBriefs = allNonAcceptedBriefs.filter(
+    (brief) => !dismissedBriefRefs.has(brief.taskRef)
+  );
 
   // Set of seeded titles currently active — used to force seeded tasks into RED
   // regardless of what the triage engine classifies them as.
@@ -823,8 +855,15 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
   );
 
   // Index seed briefs by title so triage-classified RED tasks can pick up the seed's
-  // question and councilSeat (seed wins on overlap per spec).
+  // question and councilSeat (seed wins on overlap per spec). Only active (non-dismissed)
+  // briefs participate in this override.
   const seedBriefByTitle = new Map(activeRedBriefs.map((b) => [b.title, b]));
+
+  // Full title→brief index across ALL non-accepted briefs (including dismissed).
+  // Used by RedSection exclusively for dismissal detection — so a dismissed brief
+  // whose task is still in the triage result can still be found and rendered as
+  // dismissed, with a Restore button.
+  const allBriefsByTitle = new Map(allNonAcceptedBriefs.map((b) => [b.title, b]));
 
   // Combined RED tasks (triage RED + seeded-from-other-tiers), with seed overrides applied.
   const redTasksWithSeedOverrides: ClassifiedTask[] = [
@@ -836,9 +875,11 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
     return { ...t, councilSeat: seed.councilSeat };
   });
 
-  // Seed briefs that are NOT already covered by ANY triage task (avoid double-render)
+  // All seed-only briefs (full non-accepted set, including dismissed) that are not
+  // already represented by a triage task. Passed to RedSection so it can compute
+  // dismissed count and show the toggle even when showDismissed is false.
   const triagedTaskTitles = new Set((triaged?.tasks ?? []).map((t) => t.title));
-  const seedOnlyBriefs = activeRedBriefs.filter((b) => !triagedTaskTitles.has(b.title));
+  const allSeedOnlyBriefs = allNonAcceptedBriefs.filter((b) => !triagedTaskTitles.has(b.title));
 
   const computedAmberGroups = amberTasks.reduce<Record<string, ClassifiedTask[]>>((acc, t) => {
     const cluster = t.themeCluster ?? "general";
@@ -1084,31 +1125,43 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
               })}
 
               {/* RED — with optional deliberation brief routing */}
-              {(redTasksWithSeedOverrides.length > 0 || seedOnlyBriefs.length > 0) && (
+              {(redTasksWithSeedOverrides.length > 0 || allSeedOnlyBriefs.length > 0) && (
                 <RedSection
                   tasks={redTasksWithSeedOverrides}
-                  seedBriefs={seedOnlyBriefs}
+                  seedBriefs={allSeedOnlyBriefs}
                   seedBriefByTitle={seedBriefByTitle}
+                  allBriefsByTitle={allBriefsByTitle}
                   pendingIds={pendingIds}
                   onOverride={(t, toTier) => handleOverride(t.id, effectiveTier(t), toTier, t.title)}
                   onOpenDeliberation={onOpenDeliberation ? (t) => openDeliberation(t) : null}
                   isOwner={isOwner}
+                  dismissedBriefRefs={dismissedBriefRefs}
+                  showDismissed={showDismissed}
+                  onDismiss={handleDismissBrief}
+                  onUndismiss={handleUndismissBrief}
+                  onToggleShowDismissed={() => setShowDismissed((v) => !v)}
                 />
               )}
             </div>
           )}
 
           {/* ── Pre-triage RED briefs — always visible, triage-independent ── */}
-          {!triaged && !loadingTriage && activeRedBriefs.length > 0 && (
+          {!triaged && !loadingTriage && allNonAcceptedBriefs.length > 0 && (
             <div className="mb-4">
               <RedSection
                 tasks={[]}
-                seedBriefs={activeRedBriefs}
+                seedBriefs={allNonAcceptedBriefs}
                 seedBriefByTitle={seedBriefByTitle}
+                allBriefsByTitle={allBriefsByTitle}
                 pendingIds={pendingIds}
                 onOverride={() => { }}
                 onOpenDeliberation={onOpenDeliberation ? (t) => openDeliberation(t) : null}
                 isOwner={isOwner}
+                dismissedBriefRefs={dismissedBriefRefs}
+                showDismissed={showDismissed}
+                onDismiss={handleDismissBrief}
+                onUndismiss={handleUndismissBrief}
+                onToggleShowDismissed={() => setShowDismissed((v) => !v)}
               />
             </div>
           )}
@@ -1362,19 +1415,53 @@ function TierSection({
 // ── RedSection ────────────────────────────────────────────────────────────────
 
 function RedSection({
-  tasks, seedBriefs = [], seedBriefByTitle = new Map(), pendingIds, onOverride, onOpenDeliberation, isOwner,
+  tasks, seedBriefs = [], seedBriefByTitle = new Map(), allBriefsByTitle, pendingIds, onOverride,
+  onOpenDeliberation, isOwner,
+  dismissedBriefRefs = new Set(), showDismissed = false, onDismiss, onUndismiss, onToggleShowDismissed,
 }: {
   tasks: ClassifiedTask[];
   seedBriefs?: RedBrief[];
   seedBriefByTitle?: Map<string, RedBrief>;
+  /** Full title→brief index including dismissed briefs — used for dismissal detection only. */
+  allBriefsByTitle?: Map<string, RedBrief>;
   pendingIds: Set<string>;
   onOverride: (t: ClassifiedTask, toTier: Tier) => void;
   onOpenDeliberation: ((t: ClassifiedTask) => void) | null;
   isOwner: boolean;
+  dismissedBriefRefs?: Set<string>;
+  showDismissed?: boolean;
+  onDismiss?: (taskRef: string) => void;
+  onUndismiss?: (taskRef: string) => void;
+  onToggleShowDismissed?: () => void;
 }) {
   const [expanded, setExpanded] = useState(true);
   const c = TIER_COLOR.RED;
-  const totalCount = tasks.length + seedBriefs.length;
+
+  // Full brief index for dismissal detection — falls back to seedBriefByTitle if not provided.
+  // allBriefsByTitle includes dismissed briefs; seedBriefByTitle only has active ones.
+  const briefLookup = allBriefsByTitle ?? seedBriefByTitle;
+
+  // Helper: is a triage task's seed brief dismissed?
+  const isTaskBriefDismissed = (t: ClassifiedTask) => {
+    const seed = briefLookup.get(t.title);
+    return !!seed && dismissedBriefRefs.has(seed.taskRef);
+  };
+
+  // Dismissed count: seeded brief cards + triage tasks that have a dismissed seedOverride
+  const dismissedCount =
+    seedBriefs.reduce((n, b) => n + (dismissedBriefRefs.has(b.taskRef) ? 1 : 0), 0) +
+    tasks.reduce((n, t) => n + (isTaskBriefDismissed(t) ? 1 : 0), 0);
+
+  // Active (non-dismissed) seed briefs shown in the normal list
+  const activeSeedBriefs = seedBriefs.filter((b) => !dismissedBriefRefs.has(b.taskRef));
+  // Dismissed seed briefs shown only when showDismissed is true
+  const dismissedSeedBriefs = showDismissed ? seedBriefs.filter((b) => dismissedBriefRefs.has(b.taskRef)) : [];
+
+  // Active triage tasks (non-dismissed, or dismissed-but-showDismissed)
+  const activeTriageTasks = tasks.filter((t) => !isTaskBriefDismissed(t));
+  const dismissedTriageTasks = showDismissed ? tasks.filter((t) => isTaskBriefDismissed(t)) : [];
+
+  const totalCount = activeTriageTasks.length + activeSeedBriefs.length + (showDismissed ? dismissedCount : 0);
 
   // Per-brief answer state — persisted to localStorage keyed by taskRef
   const [briefAnswers, setBriefAnswers] = useState<Record<string, string>>(() => {
@@ -1440,6 +1527,19 @@ function RedSection({
         <span className="text-[11px] uppercase tracking-[0.15em] font-bold flex-1" style={{ color: c.text }}>
           RED — {totalCount} require your voice
         </span>
+        {dismissedCount > 0 && onToggleShowDismissed && (
+          <button
+            onClick={onToggleShowDismissed}
+            className="text-[10px] px-2 py-0.5 rounded-sm border transition-colors"
+            style={{
+              borderColor: showDismissed ? c.text : c.border,
+              color: showDismissed ? c.text : "#5C5046",
+            }}
+            title={showDismissed ? "Hide dismissed briefs" : "Show dismissed briefs"}
+          >
+            {showDismissed ? `hide dismissed (${dismissedCount})` : `show dismissed (${dismissedCount})`}
+          </button>
+        )}
         <span className="text-[10px] text-[#5C5046]">no auto-approve</span>
         <button onClick={() => setExpanded((o) => !o)} className="text-[10px] text-[#5C5046] hover:text-[#8C7B6D] ml-2 transition-colors">
           {expanded ? "▲" : "▼"}
@@ -1448,8 +1548,8 @@ function RedSection({
 
       {expanded && (
         <div className="divide-y" style={{ borderColor: c.border }}>
-          {/* ── Triage-classified RED tasks (with seed question/seat override where applicable) ── */}
-          {tasks.map((t) => {
+          {/* ── Triage-classified RED tasks (active — not dismissed) ── */}
+          {activeTriageTasks.map((t) => {
             const seat = t.councilSeat ? SEAT_META[t.councilSeat] : null;
             const isPending = pendingIds.has(t.id);
             const seedOverride = seedBriefByTitle.get(t.title);
@@ -1478,6 +1578,16 @@ function RedSection({
                       </span>
                     )}
                     {isOwner && <OverrideMenu task={t} onOverride={(toTier) => onOverride(t, toTier)} />}
+                    {seedOverride && onDismiss && (
+                      <button
+                        onClick={() => onDismiss(seedOverride.taskRef)}
+                        className="text-[10px] px-2 py-0.5 rounded-sm border transition-colors hover:text-[#8C7B6D]"
+                        style={{ borderColor: c.border, color: "#5C5046" }}
+                        title="Dismiss this brief for now — the task stays unchanged"
+                      >
+                        Not now
+                      </button>
+                    )}
                   </div>
                 </div>
                 <details className="mt-2">
@@ -1514,8 +1624,41 @@ function RedSection({
             );
           })}
 
-          {/* ── Pre-seeded RED briefs ── */}
-          {seedBriefs.map((brief) => {
+          {/* ── Dismissed triage tasks (shown only when "show dismissed" is on) ── */}
+          {dismissedTriageTasks.map((t) => {
+            const seed = briefLookup.get(t.title)!;
+            const seat = t.councilSeat ? SEAT_META[t.councilSeat] : null;
+            return (
+              <div key={t.id} className="px-4 py-3 opacity-40">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] text-[#EAE4DB] leading-snug mb-1 line-through">{t.title}</p>
+                    <p className="text-[10px] text-[#5C5046]">dismissed — not now</p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {seat && (
+                      <span className="text-[11px] px-2 py-0.5 rounded-sm font-medium" style={{ background: `${seat.color}22`, color: seat.color }}>
+                        {seat.icon} {seat.name}
+                      </span>
+                    )}
+                    {onUndismiss && (
+                      <button
+                        onClick={() => onUndismiss(seed.taskRef)}
+                        className="text-[10px] px-2 py-0.5 rounded-sm border transition-colors hover:text-[#8C7B6D]"
+                        style={{ borderColor: c.border, color: "#5C5046" }}
+                        title="Restore this brief to the active list"
+                      >
+                        Restore
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* ── Pre-seeded RED briefs (active) ── */}
+          {activeSeedBriefs.map((brief) => {
             const seat = SEAT_META[brief.councilSeat];
             const answered = !!briefAnswers[brief.taskRef];
             const isAnswerOpen = !!answerOpen[brief.taskRef];
@@ -1565,6 +1708,52 @@ function RedSection({
                     >
                       {seat.icon} {seat.name}
                     </button>
+                    {onDismiss && (
+                      <button
+                        onClick={() => onDismiss(brief.taskRef)}
+                        className="text-[10px] px-2 py-0.5 rounded-sm border transition-colors hover:text-[#8C7B6D]"
+                        style={{ borderColor: c.border, color: "#5C5046" }}
+                        title="Dismiss this brief for now — the task stays unchanged"
+                      >
+                        Not now
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* ── Dismissed seed briefs (shown only when "show dismissed" is on) ── */}
+          {dismissedSeedBriefs.map((brief) => {
+            const seat = SEAT_META[brief.councilSeat];
+            return (
+              <div key={brief.taskRef} className="px-4 py-3 opacity-40">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-mono text-[9px] text-[#5C5046] flex-shrink-0">{brief.taskRef}</span>
+                      <p className="text-[13px] text-[#EAE4DB] leading-snug line-through">{brief.title}</p>
+                    </div>
+                    <p className="text-[10px] text-[#5C5046]">dismissed — not now</p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span
+                      className="text-[11px] px-2 py-0.5 rounded-sm font-medium"
+                      style={{ background: `${seat.color}22`, color: seat.color }}
+                    >
+                      {seat.icon} {seat.name}
+                    </span>
+                    {onUndismiss && (
+                      <button
+                        onClick={() => onUndismiss(brief.taskRef)}
+                        className="text-[10px] px-2 py-0.5 rounded-sm border transition-colors hover:text-[#8C7B6D]"
+                        style={{ borderColor: c.border, color: "#5C5046" }}
+                        title="Restore this brief to the active list"
+                      >
+                        Restore
+                      </button>
+                    )}
                   </div>
                 </div>
 
