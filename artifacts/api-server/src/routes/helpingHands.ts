@@ -25,6 +25,7 @@ import {
   submitEscrowCreate,
   submitEscrowFinish,
   submitEscrowCancel,
+  getWalletBalance,
 } from "../lib/xrplEscrow";
 import { logger } from "../lib/logger";
 
@@ -275,6 +276,35 @@ router.get("/band", requireAuth(), async (_req: Request, res: Response) => {
     reliabilityBonusCurrency: band.reliabilityBonusCurrency,
     xrplEscrowEnabled: band.xrplEscrowEnabled,
   });
+});
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/band/escrow-wallet
+// Returns the escrow hot-wallet address, live XRP balance, a low-balance
+// flag, and a QR-code data URL so the admin can fund it via Xaman or any
+// XRPL wallet.  Only available when xrplEscrowEnabled=true on the band.
+// ──────────────────────────────────────────────
+router.get("/band/escrow-wallet", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+
+  const band = await getOrCreateDefaultBand();
+
+  if (!bandUsesXrplEscrow(band)) {
+    res.status(404).json({ error: "XRPL escrow is not enabled for this band" });
+    return;
+  }
+
+  try {
+    const info = await getWalletBalance();
+    res.json(info);
+  } catch (err) {
+    logger.error({ err }, "helpingHands/band/escrow-wallet: getWalletBalance failed");
+    res.status(502).json({ error: "Could not fetch wallet balance from XRPL network" });
+  }
 });
 
 // ──────────────────────────────────────────────
@@ -1300,6 +1330,16 @@ router.get("/dashboard", requireAuth(), async (req: Request, res: Response) => {
   const band = await getOrCreateDefaultBand();
   const todayStr = today();
 
+  // Fetch escrow wallet balance concurrently with DB queries when enabled.
+  // Errors are caught and suppressed so a network hiccup doesn't break the
+  // whole dashboard — the warning simply won't appear.
+  const escrowBalancePromise = bandUsesXrplEscrow(band)
+    ? getWalletBalance().catch((err) => {
+        logger.warn({ err }, "helpingHands/dashboard: escrow balance check failed");
+        return null;
+      })
+    : Promise.resolve(null);
+
   const [available, claimed, pendingConf, flagged, totalMembers, recent, topContributors] = await Promise.all([
     db
       .select({ count: sql<number>`count(*)::int` })
@@ -1361,7 +1401,22 @@ router.get("/dashboard", requireAuth(), async (req: Request, res: Response) => {
       .limit(5),
   ]);
 
-  const recentSerialized = await enrichTasksWithNames(recent);
+  const [recentSerialized, escrowWallet] = await Promise.all([
+    enrichTasksWithNames(recent),
+    escrowBalancePromise,
+  ]);
+
+  // Build the escrow alert object only when xrplEscrowEnabled and balance data
+  // is available.  null means either the feature is off or the check failed.
+  const escrowAlert =
+    escrowWallet && escrowWallet.isLowBalance
+      ? {
+          address: escrowWallet.address,
+          balanceXrp: escrowWallet.balanceXrp,
+          lowBalanceThresholdXrp: escrowWallet.lowBalanceThresholdXrp,
+          message: `Escrow wallet balance (${escrowWallet.balanceXrp} XRP) is below the ${escrowWallet.lowBalanceThresholdXrp} XRP threshold. Top up the wallet to continue issuing on-chain escrows.`,
+        }
+      : null;
 
   res.json({
     todayAvailable: available[0]?.count ?? 0,
@@ -1379,6 +1434,15 @@ router.get("/dashboard", requireAuth(), async (req: Request, res: Response) => {
       totalEarnedToken: m.totalEarnedToken ?? "0",
       totalEarnedXrp: m.totalEarnedXrp ?? "0",
     })),
+    escrowWallet: escrowWallet
+      ? {
+          address: escrowWallet.address,
+          balanceXrp: escrowWallet.balanceXrp,
+          lowBalanceThresholdXrp: escrowWallet.lowBalanceThresholdXrp,
+          isLowBalance: escrowWallet.isLowBalance,
+        }
+      : null,
+    escrowAlert,
   });
 });
 

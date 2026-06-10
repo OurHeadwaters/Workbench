@@ -32,6 +32,7 @@
  */
 
 import * as xrpl from "xrpl";
+import QRCode from "qrcode";
 import { logger } from "./logger";
 
 // ── Network configuration ────────────────────────────────────────────────────
@@ -258,4 +259,60 @@ export async function submitEscrowCancel(opts: EscrowCancelOpts): Promise<Escrow
   } finally {
     await client.disconnect();
   }
+}
+
+// ── Wallet balance ────────────────────────────────────────────────────────────
+
+export interface WalletBalanceResult {
+  /** Classic XRPL address of the escrow hot wallet. */
+  address: string;
+  /** Current XRP balance as a decimal string (e.g. "24.5"). */
+  balanceXrp: string;
+  /** Low-balance threshold in XRP (from XRPL_LOW_BALANCE_THRESHOLD_XRP, default 10). */
+  lowBalanceThresholdXrp: string;
+  /** True when balanceXrp < lowBalanceThresholdXrp. */
+  isLowBalance: boolean;
+  /** Base64-encoded PNG data URL of a QR code encoding the wallet address. */
+  qrCodeDataUrl: string;
+}
+
+/**
+ * Fetch the current XRP balance of the escrow wallet and return a funding
+ * summary including a QR code so admins can top up via Xaman or any XRPL
+ * wallet without copying the address manually.
+ *
+ * Env vars:
+ *   XRPL_ESCROW_SEED               — required (throws if absent)
+ *   XRPL_LOW_BALANCE_THRESHOLD_XRP — alert threshold in XRP (default: 10)
+ */
+export async function getWalletBalance(): Promise<WalletBalanceResult> {
+  const seed = process.env.XRPL_ESCROW_SEED;
+  if (!seed) throw new Error("XRPL_ESCROW_SEED is not set");
+
+  const wallet = xrpl.Wallet.fromSeed(seed);
+  const address = wallet.address;
+
+  const thresholdXrp = process.env.XRPL_LOW_BALANCE_THRESHOLD_XRP ?? "10";
+
+  const client = await openClient();
+  let balanceXrp: string;
+  try {
+    const raw = await client.getXrpBalance(address);
+    balanceXrp = String(raw);
+  } finally {
+    await client.disconnect();
+  }
+
+  const isLowBalance = parseFloat(balanceXrp) < parseFloat(thresholdXrp);
+
+  // QR code encodes the plain address — universally scannable by Xaman,
+  // XUMM, and any XRPL-aware wallet for manual top-up.
+  const qrCodeDataUrl = await QRCode.toDataURL(address, { width: 256 });
+
+  logger.info(
+    { address, balanceXrp, thresholdXrp, isLowBalance },
+    "xrplEscrow: getWalletBalance",
+  );
+
+  return { address, balanceXrp, lowBalanceThresholdXrp: thresholdXrp, isLowBalance, qrCodeDataUrl };
 }
