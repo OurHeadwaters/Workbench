@@ -539,8 +539,11 @@ router.post("/tasks/:id/claim", requireAuth(), async (req: Request, res: Respons
   //   • payCurrency = "xrp" (XRPL native escrow supports XRP only)
   //   • worker has an xrplAddress (required as Destination)
   //
-  // On failure: log and leave escrow fields null — the confirm path will detect
-  // the null and fall back to DB simulation for this task.
+  // On failure: log, mark the task row escrow_simulated=true so admins can
+  // filter it, and surface xrplWarning in the response so callers are never
+  // silently left thinking they have on-chain escrow when they do not.
+  let xrplWarning: string | null = null;
+
   if (
     bandUsesXrplEscrow(ctx.band) &&
     claimedTask.payCurrency === "xrp" &&
@@ -566,14 +569,32 @@ router.post("/tasks/:id/claim", requireAuth(), async (req: Request, res: Respons
         "helpingHands/claim: EscrowCreate succeeded",
       );
     } catch (err) {
-      logger.error({ err, taskId }, "helpingHands/claim: EscrowCreate failed — escrow fields left null, confirm will simulate");
+      const errMsg = err instanceof Error ? err.message : String(err);
+      xrplWarning =
+        `EscrowCreate failed (${errMsg}). This task has fallen back to DB simulation — ` +
+        `the escrow wallet may need to be topped up with XRP. Payment will still be recorded ` +
+        `in the database but will not be settled on-chain until the escrow wallet is funded ` +
+        `and the task is re-escrowed.`;
+      logger.error(
+        { err, taskId, bandId: ctx.band.id },
+        "helpingHands/claim: EscrowCreate failed — task marked escrow_simulated=true, confirm will simulate",
+      );
+      // Mark the task row so admins can filter tasks that are simulated despite
+      // the band being in escrow mode (e.g. for dashboard alerts or re-escrow tooling).
+      await db
+        .update(hhTasksTable)
+        .set({ escrowSimulated: true, updatedAt: new Date() })
+        .where(eq(hhTasksTable.id, taskId));
     }
   }
 
   // Re-fetch so the response always reflects the latest escrow fields
   const final = await db.select().from(hhTasksTable).where(eq(hhTasksTable.id, taskId)).limit(1);
   const serialized = await enrichTasksWithNames(final);
-  res.json(serialized[0]);
+  const responseBody = xrplWarning
+    ? { ...serialized[0], xrplWarning }
+    : serialized[0];
+  res.json(responseBody);
 });
 
 // ──────────────────────────────────────────────

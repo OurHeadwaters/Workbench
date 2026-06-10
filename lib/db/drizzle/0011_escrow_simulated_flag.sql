@@ -1,0 +1,12 @@
+-- Add escrow_simulated flag to hh_tasks
+-- When a band has xrplEscrowEnabled=true but EscrowCreate fails at claim time
+-- (e.g. insufficient XRP balance in the escrow wallet), the task falls back to
+-- DB simulation. This column records that fallback so operators can filter for
+-- tasks that are in escrow mode on paper but are actually DB-simulated, and
+-- investigate / top up the escrow wallet before the next confirm cycle.
+--
+-- Backfill: existing tasks that have no escrow_tx_hash or a SIM_-prefixed hash
+-- while the band has xrplEscrowEnabled=true are already simulated, but we leave
+-- them as false=unknown rather than retroactively marking them — the flag is
+-- meaningful only for tasks created after this migration.
+ALTER TABLE "hh_tasks" ADD COLUMN "escrow_simulated" boolean NOT NULL DEFAULT false;

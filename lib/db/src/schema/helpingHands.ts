@@ -122,6 +122,7 @@ export const hhTasksTable = pgTable(
     status: text("status").notNull().default("available"),
     escrowSequence: integer("escrow_sequence"),
     escrowTxHash: text("escrow_tx_hash"),
+    escrowSimulated: boolean("escrow_simulated").notNull().default(false),
     claimedAt: timestamp("claimed_at", { withTimezone: true }),
     completedAt: timestamp("completed_at", { withTimezone: true }),
     confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
