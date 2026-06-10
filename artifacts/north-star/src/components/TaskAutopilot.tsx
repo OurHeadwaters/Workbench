@@ -21,6 +21,7 @@ interface ClassifiedTask extends StoredTask {
   themeCluster?: string;
   hardGuardrail?: boolean;
   overrideTier?: Tier;
+  greenSignalsIgnored?: string[];
 }
 
 interface TriageResult {
@@ -72,6 +73,40 @@ const TIER_COLOR: Record<Tier, { bg: string; border: string; badge: string; text
 };
 
 const BASE_API = "/api";
+
+// ── Green signal humaniser ────────────────────────────────────────────────────
+
+const GREEN_SIGNAL_LABELS: Record<string, string> = {
+  "\\bfix\\b":                                          "fix",
+  "\\bbug\\b":                                          "bug",
+  "\\bcrash\\b":                                        "crash",
+  "\\berror\\b":                                        "error",
+  "\\brefactor\\b":                                     "refactor",
+  "\\bclean.?up\\b":                                    "clean up",
+  "\\bformat\\b":                                       "format",
+  "\\brename\\b":                                       "rename",
+  "\\bresize\\b":                                       "resize",
+  "\\bupdate.*(lib|package|dependency|version)\\b":     "update lib / package / dependency / version",
+  "\\bcatch.*stale\\b":                                 "catch stale",
+  "\\bcover.*flow\\b":                                  "cover flow",
+  "\\bautomat(e|ic).*(test)\\b":                        "automate / automatic test",
+  "\\bvisually.?(re.?check|inspect)\\b":                "visually re-check / inspect",
+  "\\bcross.?link\\b":                                  "cross-link",
+  "\\becho.*ethos\\b":                                  "echo ethos",
+  "\\bmatch.*timeline\\b":                              "match timeline",
+  "\\bsame.*export\\b":                                 "same export",
+};
+
+function humaniseGreenSignal(source: string): string {
+  if (GREEN_SIGNAL_LABELS[source]) return GREEN_SIGNAL_LABELS[source];
+  return source
+    .replace(/\\b/g, "")
+    .replace(/\.\*/g, " … ")
+    .replace(/\.\?/g, "")
+    .replace(/[\\()?|]/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
 
 // ── Sample backlog — seeded via import (enters real state machine) ─────────────
 const SAMPLE_TASK_LINES = `Export the signed payback memo as a PDF the boards can file
@@ -876,6 +911,20 @@ function RedSection({
                   <summary className="text-[10px] text-[#5C5046] cursor-pointer hover:text-[#8C7B6D] select-none">why RED?</summary>
                   <p className="mt-1 text-[11px] text-[#8C7B6D] leading-relaxed pl-3 border-l-2" style={{ borderColor: c.border }}>{t.reasoning}</p>
                 </details>
+                {t.greenSignalsIgnored && t.greenSignalsIgnored.length > 0 && (
+                  <div className="mt-2 flex items-start gap-2 px-2.5 py-2 rounded-sm" style={{ background: "#0D2010", border: "1px solid #1A4020" }}>
+                    <span className="text-[11px] flex-shrink-0" style={{ color: "#4ADE80" }}>⚠</span>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: "#4ADE80" }}>
+                        Looks green but blocked by guardrail
+                      </p>
+                      <p className="text-[10px] leading-relaxed" style={{ color: "#86EFAC" }}>
+                        Matched green phrase{t.greenSignalsIgnored.length !== 1 ? "s" : ""}:{" "}
+                        {t.greenSignalsIgnored.map((s) => humaniseGreenSignal(s)).join(", ")}
+                      </p>
+                    </div>
+                  </div>
+                )}
                 {onOpenDeliberation && (
                   <div className="mt-2.5">
                     <button
