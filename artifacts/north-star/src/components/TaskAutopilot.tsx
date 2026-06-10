@@ -188,11 +188,9 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
   // ── Aquifer: pre-curated list of all known projects, sweepable in one click ──
   const [aquifer, setAquifer] = useState<ConstellationProject[]>(() => {
     try {
-      const stored = localStorage.getItem("headwaters-aquifer-projects");
-      if (stored) {
-        const parsed = JSON.parse(stored) as ConstellationProject[];
-        if (parsed.length > 0) return parsed;
-      }
+      const raw = localStorage.getItem("headwaters-aquifer-projects");
+      // Key exists — honour whatever Bobbie has saved (including intentional empty list)
+      if (raw !== null) return JSON.parse(raw) as ConstellationProject[];
       // Migration: seed aquifer from legacy constellation config on first load
       const legacy = localStorage.getItem("task-autopilot-constellation");
       if (legacy) {
@@ -202,7 +200,18 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
           return legacyProjects;
         }
       }
-      return [];
+      // True first launch (key absent): pre-seed with all known Headwaters project URLs
+      const seeded: ConstellationProject[] = [
+        { id: "hw-north-star",    label: "North Star",                            baseUrl: "https://ourheadwaters.ca/north-star",          token: "" },
+        { id: "hw-codetry-ship",  label: "Codetry Ship — Crew Manifest",          baseUrl: "https://ourheadwaters.ca",                     token: "" },
+        { id: "hw-books",         label: "Headwaters Books",                      baseUrl: "https://ourheadwaters.ca/headwaters-books",    token: "" },
+        { id: "hw-library",       label: "Northern Food Systems Research Library", baseUrl: "https://ourheadwaters.ca/library",             token: "" },
+        { id: "hw-learning",      label: "Headwaters Learning",                   baseUrl: "https://ourheadwaters.ca/headwaters-learning", token: "" },
+        { id: "hw-print",         label: "Headwaters Print Marketing Suite",      baseUrl: "https://ourheadwaters.ca/print-marketing",     token: "" },
+        { id: "hw-handbook",      label: "Headwaters Handbook",                   baseUrl: "https://ourheadwaters.ca/codetry-handbook",    token: "" },
+      ];
+      localStorage.setItem("headwaters-aquifer-projects", JSON.stringify(seeded));
+      return seeded;
     } catch { return []; }
   });
   const [aquiferSettingsOpen, setAquiferSettingsOpen] = useState(false);
