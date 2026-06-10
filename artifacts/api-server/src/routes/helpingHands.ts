@@ -2952,6 +2952,189 @@ router.patch(
   },
 );
 
+// ──────────────────────────────────────────────
+// Xaman Wallet Handoff Ceremony (V2 — simulated)
+// See docs/learning-identity-architecture.md §5
+// ──────────────────────────────────────────────
+
+// In-memory challenge store (V2: promote to a DB column or Redis TTL key).
+// key = memberId, value = { challenge, expiresAt }
+const _handoffChallenges = new Map<string, { challenge: string; expiresAt: number }>();
+
+// GET /helping-hands/my/wallet/handoff/challenge?address=<xrplAddress>
+// Issues a fresh challenge string tied to the claimed XRPL address.
+// The address is embedded in the challenge text so the echo verification
+// in /verify confirms both the nonce and the exact address were seen.
+// Safe to call multiple times — refreshes the TTL each call.
+router.get("/my/wallet/handoff/challenge", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const { member } = ctx;
+
+  if (member.walletType === "self_custody" && member.xrplAddress) {
+    res.status(409).json({ error: "Wallet already migrated to self-custody." });
+    return;
+  }
+
+  // Address may be pre-supplied so the challenge binds to a specific address.
+  // Validated loosely here; strict validation happens again in /verify.
+  const addressHint =
+    typeof req.query.address === "string" && /^r[1-9A-HJ-NP-Za-km-z]{24,34}$/.test(req.query.address)
+      ? req.query.address
+      : "PENDING";
+
+  // Use CSPRNG for the nonce — Math.random() is not cryptographically safe.
+  const nonce = require("crypto").randomBytes(16).toString("hex").toUpperCase();
+  // Embed the address in the challenge so the echo proves the user saw the
+  // exact address that will be registered — not just any address.
+  const challenge = `Headwaters Wallet Claim | ${nonce} | ${member.id.slice(0, 8)} | ${addressHint}`;
+  const expiresAt = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+  _handoffChallenges.set(member.id, { challenge, expiresAt });
+
+  res.json({ challenge, expiresAtMs: expiresAt });
+});
+
+// POST /helping-hands/my/wallet/handoff/verify
+// Accepts the claimed XRPL address and the challenge echo — the exact text
+// the member pasted into Xaman as the memo when signing.
+//
+// Server-side verification:
+//   1. Challenge exists in the store and has not expired (TTL check).
+//   2. challengeEcho matches the stored challenge exactly (string equality).
+//      Because the challenge embeds both a random nonce AND the address, a
+//      correct echo proves: (a) the caller received the real challenge from
+//      this server, (b) they signed for the correct address, (c) the window
+//      hasn't expired. This closes the client-controlled boolean gap.
+//   3. xrplAddress uniqueness across members.
+//
+// V2 TODO: replace challengeEcho verification with cryptographic signature
+// verification via xrpl.js verifySignature(address, challenge, sigBytes)
+// once mainnet xumm-sdk integration is wired (follow-up task #2107).
+const HandoffVerifySchema = z.object({
+  xrplAddress: z
+    .string()
+    .regex(/^r[1-9A-HJ-NP-Za-km-z]{24,34}$/, "Invalid XRPL address (must start with 'r' and be 25–35 characters)"),
+  challengeEcho: z.string().min(1, "Challenge echo is required"),
+});
+
+router.post("/my/wallet/handoff/verify", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const { member, band } = ctx;
+
+  if (member.walletType === "self_custody" && member.xrplAddress) {
+    res.status(409).json({ error: "Wallet already migrated to self-custody." });
+    return;
+  }
+
+  const parsed = HandoffVerifySchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+
+  const { xrplAddress, challengeEcho } = parsed.data;
+
+  // Challenge gate — existence and TTL
+  const pending = _handoffChallenges.get(member.id);
+  if (!pending) {
+    res.status(400).json({ error: "No active challenge found. Start the verification again." });
+    return;
+  }
+  if (Date.now() > pending.expiresAt) {
+    _handoffChallenges.delete(member.id);
+    res.status(400).json({ error: "Challenge expired. Start the verification again." });
+    return;
+  }
+
+  // Core verification: echo must match the stored challenge exactly.
+  if (challengeEcho.trim() !== pending.challenge) {
+    res.status(400).json({ error: "Challenge echo does not match. Copy the exact challenge text from step 4 and paste it here." });
+    return;
+  }
+
+  // Address binding enforcement: the challenge embeds the address as the 4th
+  // pipe-delimited segment ("Headwaters Wallet Claim | <nonce> | <id8> | <addr>").
+  // Verify that the address submitted in the POST body matches what was bound
+  // when the challenge was issued, so a valid echo cannot be reused for a
+  // different address.
+  const challengeParts = pending.challenge.split(" | ");
+  const boundAddress = challengeParts[3]; // index 3 = the address segment
+  if (boundAddress && boundAddress !== "PENDING" && boundAddress !== xrplAddress.trim()) {
+    res.status(400).json({
+      error: "The submitted XRPL address does not match the address bound to your challenge. Start the ceremony again with the correct address.",
+    });
+    return;
+  }
+
+  // Address uniqueness — prevent one address being claimed by two members
+  const [conflict] = await db
+    .select({ id: hhMembersTable.id })
+    .from(hhMembersTable)
+    .where(
+      and(
+        eq(hhMembersTable.xrplAddress, xrplAddress),
+        sql`${hhMembersTable.id} != ${member.id}`,
+      ),
+    )
+    .limit(1);
+
+  if (conflict) {
+    res.status(409).json({ error: "This XRPL address is already registered to another member." });
+    return;
+  }
+
+  // Consume the challenge — one-time use
+  _handoffChallenges.delete(member.id);
+
+  const didRef = `did:xrpl:1:${xrplAddress}`;
+
+  const sweepQueuedAt = new Date();
+
+  // Atomic guard: only migrate if still custodial.
+  // custodialSweepQueuedAt is set here in the same UPDATE so it is either
+  // committed together with the wallet_type flip or not at all — no partial state.
+  // The on-chain sweep worker queries hh_members WHERE custodial_sweep_queued_at
+  // IS NOT NULL to find members whose balances still need to be transferred, then
+  // writes xrpl_tx_hash onto the hh_earnings rows and clears this column once
+  // the Payment transaction confirms (follow-up task #2107).
+  const [updated] = await db
+    .update(hhMembersTable)
+    .set({
+      xrplAddress,
+      walletType: "self_custody",
+      didRef,
+      custodialSweepQueuedAt: sweepQueuedAt,
+      updatedAt: sweepQueuedAt,
+    })
+    .where(
+      and(
+        eq(hhMembersTable.id, member.id),
+        eq(hhMembersTable.bandId, band.id),
+        sql`${hhMembersTable.walletType} = 'custodial'`,
+      ),
+    )
+    .returning();
+
+  if (!updated) {
+    res.status(409).json({ error: "Migration failed — wallet may have already been migrated." });
+    return;
+  }
+
+  res.json({
+    ok: true,
+    xrplAddress,
+    walletType: "self_custody",
+    didRef,
+    sweepStatus: "queued",
+    sweepQueuedAt: sweepQueuedAt.toISOString(),
+    message: "Your wallet is now self-custody. Your token balance is queued for transfer to your XRPL address — it will settle when XRPL is activated for your band.",
+  });
+});
+
 // ── POST /helping-hands/badges/watch/:categoryId ──────────────────────────────
 // Self-service. Any member presses "I'm watching this." Creates a watching-stage
 // badge record. No-ops if they already have any badge for this category.

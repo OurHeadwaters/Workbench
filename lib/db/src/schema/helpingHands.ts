@@ -83,6 +83,12 @@ export const hhMembersTable = pgTable(
     // seen the ceremony" (walletRevealSeenAt). Server-tracked so the reveal
     // fires exactly once per member regardless of device or browser.
     walletRevealSeenAt: timestamp("wallet_reveal_seen_at", { withTimezone: true }),
+    // custodialSweepQueuedAt: set atomically when the member completes the Xaman
+    // handoff ceremony and their custodial balance is queued for on-chain sweep.
+    // Null until then. The on-chain sweep worker reads this to identify members
+    // whose balances still need to be transferred; clears by writing xrpl_tx_hash
+    // onto hh_earnings rows once the Payment transaction confirms on XRPL.
+    custodialSweepQueuedAt: timestamp("custodial_sweep_queued_at", { withTimezone: true }),
     // referralCode: unique short code the member can share.
     // Auto-generated on member creation.
     referralCode: text("referral_code").unique(),

@@ -1,11 +1,27 @@
 import { useGetMyHhEarnings, useGetHhBand } from "@workspace/api-client-react";
-import { Loader2, Coins, ExternalLink, HelpCircle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { customFetch } from "@workspace/api-client-react";
+import { Loader2, Coins, ExternalLink, HelpCircle, Key, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import { format } from "date-fns";
+
+interface WalletData {
+  walletType: string;
+  xrplAddress?: string | null;
+  tokenBalance: string;
+  walletRevealed: boolean;
+}
 
 export default function HHEarnings() {
   const { data: band } = useGetHhBand();
   const { data, isLoading } = useGetMyHhEarnings();
+  const { data: wallet } = useQuery<WalletData>({
+    queryKey: ["hh-wallet-reveal"],
+    queryFn: () => customFetch<WalletData>("/helping-hands/my/wallet", {}),
+    staleTime: 60_000,
+  });
   const tokenCode = band?.communityTokenCode ?? "HWBAND";
 
   if (isLoading) {
@@ -17,6 +33,7 @@ export default function HHEarnings() {
   }
 
   const d = data!;
+  const isCustodial = !wallet || wallet.walletType === "custodial";
 
   return (
     <div className="space-y-6">
@@ -24,6 +41,26 @@ export default function HHEarnings() {
         <h1 className="text-3xl font-serif font-bold text-foreground">My earnings</h1>
         <p className="text-muted-foreground mt-1">Every payment you've received, recorded on XRPL and owned by you.</p>
       </div>
+
+      {isCustodial && wallet?.walletRevealed && (
+        <div className="flex items-center justify-between gap-4 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+          <div className="flex items-start gap-2.5">
+            <Key className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-amber-900">Your wallet is custodial</p>
+              <p className="text-xs text-amber-700 mt-0.5">
+                Headwaters holds your keys. Move to self-custody to own your funds directly.
+              </p>
+            </div>
+          </div>
+          <Link href="/helping-hands/wallet/claim" className="shrink-0">
+            <Button size="sm" variant="outline" className="border-amber-300 text-amber-800 hover:bg-amber-100 whitespace-nowrap">
+              Claim wallet
+              <ArrowRight className="w-3 h-3 ml-1" />
+            </Button>
+          </Link>
+        </div>
+      )}
 
       {/* Inline "What is this?" explainer — always visible */}
       <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm">

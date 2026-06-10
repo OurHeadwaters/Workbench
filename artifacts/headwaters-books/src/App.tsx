@@ -40,6 +40,7 @@ import HHBadges from "@/pages/HHBadges";
 import HHMyBadges from "@/pages/HHMyBadges";
 import HHPartnershipPortal from "@/pages/HHPartnershipPortal";
 import HHEnvelopeHistory from "@/pages/HHEnvelopeHistory";
+import HHWalletHandoff from "@/pages/HHWalletHandoff";
 import Layout from "@/components/Layout";
 import EmbedOpenRecords from "@/embed/OpenRecords";
 import EmbedDailyClose from "@/embed/DailyClose";
@@ -203,6 +204,7 @@ function Router() {
       <ProtectedRoute path="/helping-hands/partnership" component={HHPartnershipPortal} />
       <ProtectedRoute path="/helping-hands/badges" component={HHBadges} />
       <ProtectedRoute path="/helping-hands/my-badges" component={HHMyBadges} />
+      <ProtectedRoute path="/helping-hands/wallet/claim" component={HHWalletHandoff} />
       <Route component={NotFound} />
     </Switch>
   );

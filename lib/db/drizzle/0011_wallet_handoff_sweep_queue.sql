@@ -1,0 +1,14 @@
+-- Add custodial_sweep_queued_at to hh_members
+-- Records the exact moment a member completed the Xaman handoff ceremony and
+-- their custodial balance was queued for on-chain sweep to their XRPL address.
+-- Null for custodial members who haven't migrated yet.
+-- Null for members who were self-custody from the start (future).
+--
+-- This is the persistent transactional record that the on-chain worker will
+-- use to identify members whose balances still need to be swept. The worker
+-- clears the queue by writing xrpl_tx_hash onto the relevant hh_earnings rows
+-- and zeroing total_earned_token once the Payment transaction confirms.
+--
+-- Backfill: NOT backfilling. Only members who complete the handoff ceremony
+-- after this migration will have this column set.
+ALTER TABLE "hh_members" ADD COLUMN "custodial_sweep_queued_at" timestamp with time zone;
