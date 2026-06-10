@@ -35,6 +35,30 @@
  *   GET  /api/tasks/audit-log
  *   POST /api/tasks/audit-log
  *     Read / append the audit log (overrides + state transitions).
+ *
+ *   POST /api/tasks/archive  [owner-only]
+ *     Body: { olderThanDays?: number }  (default: 30)
+ *     Moves CLEARED tasks whose updatedAt is older than olderThanDays days out
+ *     of the live store and appends them to task-autopilot-archive.jsonl.
+ *     Returns: { ok: true, archived: number }
+ *
+ * ── Retention policy ──────────────────────────────────────────────────────────
+ *   Live store  (task-autopilot-tasks.jsonl)
+ *     • PROPOSED / PENDING tasks are never auto-removed; they must be explicitly
+ *       transitioned or archived by the owner.
+ *     • CLEARED tasks are auto-pruned on every write if their count exceeds
+ *       MAX_CLEARED_RETAINED (200). The oldest entries (by updatedAt) are moved
+ *       to the archive file silently, keeping the live store bounded.
+ *     • Call POST /api/tasks/archive periodically (e.g. weekly cron) to move
+ *       older CLEARED tasks explicitly and keep the live file small.
+ *
+ *   Archive file  (task-autopilot-archive.jsonl)
+ *     • Append-only. Never read at runtime — exists only for audit/recovery.
+ *     • Grows without a hard bound; prune or rotate manually if disk space
+ *       becomes a concern (safe to delete lines older than desired retention).
+ *
+ *   Audit log  (task-autopilot-audit.jsonl)
+ *     • Already sliced to the last 500 entries on every read.
  */
 
 import { Router, type IRouter, type Request, type Response } from "express";
@@ -54,6 +78,12 @@ const router: IRouter = Router();
 const DATA_DIR = path.resolve(process.cwd(), "data");
 const TASKS_FILE = path.join(DATA_DIR, "task-autopilot-tasks.jsonl");
 const AUDIT_FILE = path.join(DATA_DIR, "task-autopilot-audit.jsonl");
+const ARCHIVE_FILE = path.join(DATA_DIR, "task-autopilot-archive.jsonl");
+
+// Maximum number of CLEARED tasks kept in the live store.
+// On every writeTasks() call, surplus CLEARED entries (oldest first) are
+// silently appended to ARCHIVE_FILE so the live file stays bounded.
+const MAX_CLEARED_RETAINED = 200;
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -83,9 +113,44 @@ function readTasks(): StoredTask[] {
     .filter((x): x is StoredTask => x !== null);
 }
 
+/**
+ * Append tasks to the archive file (append-only, never read at runtime).
+ * Creates the file if it doesn't exist.
+ */
+function appendToArchive(tasks: StoredTask[]) {
+  if (!tasks.length) return;
+  ensureDataDir();
+  fs.appendFileSync(ARCHIVE_FILE, tasks.map((t) => JSON.stringify(t)).join("\n") + "\n", "utf8");
+}
+
+/**
+ * Write the task list to disk.
+ *
+ * Auto-pruning: if the number of CLEARED tasks exceeds MAX_CLEARED_RETAINED,
+ * the oldest CLEARED entries (sorted by updatedAt ascending) are moved to the
+ * archive file before writing, keeping the live store bounded without any
+ * manual intervention.
+ */
 function writeTasks(tasks: StoredTask[]) {
   ensureDataDir();
-  fs.writeFileSync(TASKS_FILE, tasks.map((t) => JSON.stringify(t)).join("\n") + (tasks.length ? "\n" : ""), "utf8");
+
+  const cleared = tasks.filter((t) => t.status === "cleared");
+  const nonCleared = tasks.filter((t) => t.status !== "cleared");
+
+  let keptCleared = cleared;
+  if (cleared.length > MAX_CLEARED_RETAINED) {
+    // Sort oldest-first so we evict the stale entries
+    const sorted = cleared.slice().sort(
+      (a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+    );
+    const evict = sorted.slice(0, cleared.length - MAX_CLEARED_RETAINED);
+    keptCleared = sorted.slice(cleared.length - MAX_CLEARED_RETAINED);
+    appendToArchive(evict);
+    logger.info({ evicted: evict.length }, "task-autopilot: auto-pruned oldest CLEARED tasks to archive");
+  }
+
+  const final = [...nonCleared, ...keptCleared];
+  fs.writeFileSync(TASKS_FILE, final.map((t) => JSON.stringify(t)).join("\n") + (final.length ? "\n" : ""), "utf8");
 }
 
 // ── Audit log helpers ─────────────────────────────────────────────────────────
@@ -655,6 +720,58 @@ router.post("/audit-log/constellation", (req: Request, res: Response) => {
   }
   logger.info({ count: tasks.length, projectId, projectLabel }, "task-autopilot: constellation tasks recorded in audit log");
   res.json({ ok: true, recorded: tasks.length });
+});
+
+// POST /tasks/archive  [owner-only]
+//
+// Retention policy: moves CLEARED tasks whose updatedAt is older than
+// `olderThanDays` days (default 30) out of the live store and into the
+// append-only archive file (task-autopilot-archive.jsonl).
+//
+// The live store is also protected by the auto-prune logic inside writeTasks()
+// (MAX_CLEARED_RETAINED = 200), so calling this endpoint is optional but
+// recommended for routine housekeeping (e.g. a weekly cron job:
+//   POST /api/tasks/archive  { "olderThanDays": 30 }).
+//
+// PROPOSED / PENDING tasks are never touched by this endpoint.
+const ArchiveSchema = z.object({
+  olderThanDays: z.number().int().min(0).max(3650).default(30),
+});
+
+router.post("/archive", (req: Request, res: Response) => {
+  if (!requireOwner(req)) { res.status(401).json({ error: "Owner token required" }); return; }
+
+  const parsed = ArchiveSchema.safeParse(req.body ?? {});
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+
+  const { olderThanDays } = parsed.data;
+  const cutoff = new Date(Date.now() - olderThanDays * 24 * 60 * 60 * 1000);
+
+  const all = readTasks();
+  const toArchive: StoredTask[] = [];
+  const keep: StoredTask[] = [];
+
+  for (const task of all) {
+    if (task.status === "cleared" && new Date(task.updatedAt) < cutoff) {
+      toArchive.push(task);
+    } else {
+      keep.push(task);
+    }
+  }
+
+  if (toArchive.length > 0) {
+    appendToArchive(toArchive);
+    // Write only the kept tasks — bypass writeTasks() auto-prune since we
+    // already handled the eviction explicitly above.
+    ensureDataDir();
+    fs.writeFileSync(TASKS_FILE, keep.map((t) => JSON.stringify(t)).join("\n") + (keep.length ? "\n" : ""), "utf8");
+    logger.info({ archived: toArchive.length, olderThanDays }, "task-autopilot: manual archive run complete");
+  }
+
+  res.json({ ok: true, archived: toArchive.length, olderThanDays, cutoff: cutoff.toISOString() });
 });
 
 export default router;
