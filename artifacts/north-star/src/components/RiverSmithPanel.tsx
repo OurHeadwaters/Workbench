@@ -182,9 +182,10 @@ function EmailBadge({ status }: { status: "sent" | "failed" | "skipped" | null }
 
 interface RiverSmithPanelProps {
   defaultOpen?: boolean;
+  embedded?: boolean;
 }
 
-export function RiverSmithPanel({ defaultOpen = false }: RiverSmithPanelProps) {
+export function RiverSmithPanel({ defaultOpen = false, embedded = false }: RiverSmithPanelProps) {
   const token = getOwnerToken();
   const isOwner = !!token;
 
@@ -324,30 +325,32 @@ export function RiverSmithPanel({ defaultOpen = false }: RiverSmithPanelProps) {
 
   return (
     <div className="flex-shrink-0 z-10 border-b border-[#251E18]">
-      {/* ── Collapsed header ── */}
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center gap-3 px-5 py-3 bg-[#13110E] hover:bg-[#181512] transition-colors text-left"
-      >
-        <span className="text-[16px]">🌊</span>
-        <div className="flex-1 min-w-0">
-          <span className="text-[11px] uppercase tracking-[0.15em] text-[#4A8A7C] font-bold">
-            River Smith
-          </span>
-          {briefing && !open && (
-            <span className="ml-2 text-[10px] text-[#5C5046]">
-              — {formatDate(briefing.generatedAt)}
+      {/* ── Collapsed header — hidden when embedded inside a drawer ── */}
+      {!embedded && (
+        <button
+          onClick={() => setOpen((o) => !o)}
+          className="w-full flex items-center gap-3 px-5 py-3 bg-[#13110E] hover:bg-[#181512] transition-colors text-left"
+        >
+          <span className="text-[16px]">🌊</span>
+          <div className="flex-1 min-w-0">
+            <span className="text-[11px] uppercase tracking-[0.15em] text-[#4A8A7C] font-bold">
+              River Smith
             </span>
+            {briefing && !open && (
+              <span className="ml-2 text-[10px] text-[#5C5046]">
+                — {formatDate(briefing.generatedAt)}
+              </span>
+            )}
+          </div>
+          {!briefing && !open && (
+            <span className="text-[10px] text-[#5C5046] tracking-wide">nightly briefing</span>
           )}
-        </div>
-        {!briefing && !open && (
-          <span className="text-[10px] text-[#5C5046] tracking-wide">nightly briefing</span>
-        )}
-        <span className="text-[10px] text-[#4A3D33] flex-shrink-0">{open ? "▲" : "▼"}</span>
-      </button>
+          <span className="text-[10px] text-[#4A3D33] flex-shrink-0">{open ? "▲" : "▼"}</span>
+        </button>
+      )}
 
       {/* ── Expanded panel ── */}
-      {open && (
+      {(open || embedded) && (
         <div className="bg-[#111009] border-t border-[#1E1A14]">
           {/* Controls row */}
           <div className="flex items-center gap-3 px-5 py-3 border-b border-[#1E1A14]">

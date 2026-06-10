@@ -1398,7 +1398,7 @@ export function KitchenTablePage() {
             >×</button>
           </div>
           <div className="flex-1 overflow-y-auto bg-[#111009] border-l border-[#251E18]">
-            <RiverSmithPanel defaultOpen />
+            <RiverSmithPanel defaultOpen embedded />
           </div>
         </div>
       )}
