@@ -14,9 +14,11 @@ import {
   hhReferralsTable,
   hhBadgeCategoriesTable,
   hhMemberBadgesTable,
+  practitionerApplicationsTable,
 } from "@workspace/db";
 import { and, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { requireAuth, loadBookkeeperUser } from "../lib/bookkeeperAuth";
+import { requireFounderOnlyAuth } from "../lib/kitAuth";
 
 const router: IRouter = Router();
 
@@ -2769,6 +2771,7 @@ router.get(
         categoryId: hhMemberBadgesTable.categoryId,
         stage: hhMemberBadgesTable.stage,
         notes: hhMemberBadgesTable.notes,
+        credentialSource: hhMemberBadgesTable.credentialSource,
         createdAt: hhMemberBadgesTable.createdAt,
         updatedAt: hhMemberBadgesTable.updatedAt,
         categoryName: hhBadgeCategoriesTable.name,
@@ -2810,6 +2813,7 @@ router.get(
         categoryId: hhMemberBadgesTable.categoryId,
         stage: hhMemberBadgesTable.stage,
         notes: hhMemberBadgesTable.notes,
+        credentialSource: hhMemberBadgesTable.credentialSource,
         createdAt: hhMemberBadgesTable.createdAt,
         updatedAt: hhMemberBadgesTable.updatedAt,
         categoryName: hhBadgeCategoriesTable.name,
@@ -2834,6 +2838,7 @@ router.get(
 const issueBadgeSchema = z.object({
   stage: z.enum(["watching", "learning", "practicing", "teaching"]),
   notes: z.string().default(""),
+  credentialSource: z.enum(["hh_task_history", "peer_validation", "earth_kit"]).default("peer_validation"),
 });
 
 router.post(
@@ -2870,7 +2875,7 @@ router.post(
     const parsed = issueBadgeSchema.safeParse(req.body);
     if (!parsed.success) { res.status(400).json({ error: parsed.error.flatten() }); return; }
 
-    const { stage, notes } = parsed.data;
+    const { stage, notes, credentialSource } = parsed.data;
 
     const existing = await db.query.hhMemberBadgesTable.findFirst({
       where: and(eq(hhMemberBadgesTable.memberId, memberId), eq(hhMemberBadgesTable.categoryId, categoryId)),
@@ -2882,7 +2887,7 @@ router.post(
       }
       const [updated] = await db
         .update(hhMemberBadgesTable)
-        .set({ stage, notes, issuedByMemberId: issuer.id, updatedAt: new Date() })
+        .set({ stage, notes, credentialSource, issuedByMemberId: issuer.id, updatedAt: new Date() })
         .where(eq(hhMemberBadgesTable.id, existing.id))
         .returning();
       res.json(updated); return;
@@ -2895,6 +2900,7 @@ router.post(
         memberId,
         categoryId,
         stage,
+        credentialSource,
         issuedByMemberId: issuer.id,
         notes,
         updatedAt: new Date(),
@@ -2902,6 +2908,143 @@ router.post(
       .returning();
 
     res.status(201).json(row);
+  },
+);
+
+// ── GET /helping-hands/my/earth-kit-status ────────────────────────────────────
+// Returns whether the calling member holds an approved Earth Kit practitioner
+// credential (matched by email against practitioner_applications). Used by the
+// HHMyBadges UI to surface the "Practitioner Verified" indicator and the
+// HH → Earth Kit upgrade pathway call-to-action.
+router.get(
+  "/helping-hands/my/earth-kit-status",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; id: string; email: string } }).bookkeeperUser;
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const member = await db.query.hhMembersTable.findFirst({
+      where: and(eq(hhMembersTable.bandId, band.id), eq(hhMembersTable.clerkUserId, user.id)),
+    });
+    if (!member) { res.json({ isPractitioner: false }); return; }
+
+    const [app] = await db
+      .select({ id: practitionerApplicationsTable.id, status: practitionerApplicationsTable.status })
+      .from(practitionerApplicationsTable)
+      .where(
+        and(
+          eq(practitionerApplicationsTable.contactEmail, member.email),
+          eq(practitionerApplicationsTable.status, "approved"),
+        ),
+      )
+      .limit(1);
+
+    res.json({ isPractitioner: !!app });
+  },
+);
+
+// ── GET /helping-hands/members/:memberId/teaching-badges ──────────────────────
+// Returns only the Teaching-stage badges for a given member, filtered to the
+// Earth Kit bridgeable domains (food, land, governance, care). Used by the
+// Goodbye Kit practitioner directory to enrich a practitioner's profile.
+// Admin only.
+router.get(
+  "/helping-hands/members/:memberId/teaching-badges",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; role: string } }).bookkeeperUser;
+    if (user.role !== "owner" && user.role !== "ops_manager") {
+      res.status(403).json({ error: "Admin only" }); return;
+    }
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const memberId = param(req.params.memberId);
+
+    const rows = await db
+      .select({
+        id: hhMemberBadgesTable.id,
+        stage: hhMemberBadgesTable.stage,
+        credentialSource: hhMemberBadgesTable.credentialSource,
+        categoryName: hhBadgeCategoriesTable.name,
+        categoryDomain: hhBadgeCategoriesTable.domain,
+      })
+      .from(hhMemberBadgesTable)
+      .innerJoin(hhBadgeCategoriesTable, eq(hhMemberBadgesTable.categoryId, hhBadgeCategoriesTable.id))
+      .where(
+        and(
+          eq(hhMemberBadgesTable.memberId, memberId),
+          eq(hhMemberBadgesTable.bandId, band.id),
+          eq(hhMemberBadgesTable.stage, "teaching"),
+          inArray(hhBadgeCategoriesTable.domain, ["food", "land", "governance", "care"]),
+        ),
+      )
+      .orderBy(hhBadgeCategoriesTable.domain, hhBadgeCategoriesTable.name);
+
+    res.json(rows);
+  },
+);
+
+// ── GET /helping-hands/practitioner-teaching-badges ──────────────────────────
+// Bulk endpoint: given a list of emails (comma-separated ?emails=), returns a
+// map of email → Teaching badges for the Goodbye Kit practitioner directory.
+// Requires founder-level access (library owner token or Clerk bookkeeper owner).
+router.get(
+  "/helping-hands/practitioner-teaching-badges",
+  requireFounderOnlyAuth,
+  async (req: Request, res: Response) => {
+    const band = await getOrCreateDefaultBand();
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const emailParam = typeof req.query.emails === "string" ? req.query.emails : "";
+    const emails = emailParam.split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+    if (emails.length === 0) { res.json({}); return; }
+
+    const members = await db
+      .select({ id: hhMembersTable.id, email: hhMembersTable.email })
+      .from(hhMembersTable)
+      .where(and(eq(hhMembersTable.bandId, band.id), inArray(hhMembersTable.email, emails)));
+
+    if (members.length === 0) { res.json({}); return; }
+
+    const memberIds = members.map((m) => m.id);
+    const emailById = new Map(members.map((m) => [m.id, m.email]));
+
+    const rows = await db
+      .select({
+        memberId: hhMemberBadgesTable.memberId,
+        stage: hhMemberBadgesTable.stage,
+        credentialSource: hhMemberBadgesTable.credentialSource,
+        categoryName: hhBadgeCategoriesTable.name,
+        categoryDomain: hhBadgeCategoriesTable.domain,
+      })
+      .from(hhMemberBadgesTable)
+      .innerJoin(hhBadgeCategoriesTable, eq(hhMemberBadgesTable.categoryId, hhBadgeCategoriesTable.id))
+      .where(
+        and(
+          inArray(hhMemberBadgesTable.memberId, memberIds),
+          eq(hhMemberBadgesTable.bandId, band.id),
+          eq(hhMemberBadgesTable.stage, "teaching"),
+          inArray(hhBadgeCategoriesTable.domain, ["food", "land", "governance", "care"]),
+        ),
+      );
+
+    const result: Record<string, { categoryName: string; categoryDomain: string; credentialSource: string }[]> = {};
+    for (const row of rows) {
+      const email = emailById.get(row.memberId);
+      if (!email) continue;
+      if (!result[email]) result[email] = [];
+      result[email].push({
+        categoryName: row.categoryName,
+        categoryDomain: row.categoryDomain,
+        credentialSource: row.credentialSource,
+      });
+    }
+
+    res.json(result);
   },
 );
 

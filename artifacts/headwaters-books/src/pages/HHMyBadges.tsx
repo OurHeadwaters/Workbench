@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useGetMyHhBadges,
@@ -23,6 +23,8 @@ import {
   ChevronUp,
   Zap,
   ShieldCheck,
+  Award,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -71,7 +73,14 @@ const STAGE_META: Record<
 
 const STAGE_ORDER: BadgeStage[] = ["watching", "learning", "practicing", "teaching"];
 
-function stagePill(stage: string) {
+const EARTH_KIT_BRIDGE_DOMAINS = ["food", "land", "governance", "care"] as const;
+type BridgeDomain = (typeof EARTH_KIT_BRIDGE_DOMAINS)[number];
+
+function isBridgeDomain(domain: string): domain is BridgeDomain {
+  return (EARTH_KIT_BRIDGE_DOMAINS as readonly string[]).includes(domain);
+}
+
+function stagePill(stage: string, credentialSource?: string) {
   const s = STAGE_META[stage as BadgeStage];
   if (!s) return null;
   const Icon = s.icon;
@@ -81,6 +90,9 @@ function stagePill(stage: string) {
     >
       <Icon className="w-3 h-3" />
       {s.label}
+      {credentialSource === "earth_kit" && (
+        <span className="ml-1 text-xs text-stone-500 font-normal">· EK</span>
+      )}
     </span>
   );
 }
@@ -98,6 +110,23 @@ function nextStage(current: string, stageModel: string): BadgeStage | null {
   return stages[idx + 1];
 }
 
+function useEarthKitStatus(apiBase: string) {
+  const [isPractitioner, setIsPractitioner] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    fetch(`${apiBase}/helping-hands/my/earth-kit-status`, { credentials: "include" })
+      .then((r) => r.ok ? r.json() : { isPractitioner: false })
+      .then((data: { isPractitioner?: boolean }) => {
+        setIsPractitioner(!!data.isPractitioner);
+        setChecked(true);
+      })
+      .catch(() => setChecked(true));
+  }, [apiBase]);
+
+  return { isPractitioner, checked };
+}
+
 export default function HHMyBadges() {
   const qc = useQueryClient();
   const { data: me } = useGetBookkeeperMe();
@@ -108,6 +137,9 @@ export default function HHMyBadges() {
   const { data: members } = useGetHhMembers();
   const watchBadge = useWatchHhBadge();
   const issueBadge = useIssueHhBadge();
+
+  const apiBase = import.meta.env.BASE_URL?.replace(/\/$/, "") + "/api";
+  const { isPractitioner } = useEarthKitStatus(apiBase);
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [issueTarget, setIssueTarget] = useState<{ badge: HhMemberBadgeWithCategory; memberId: string } | null>(null);
@@ -159,6 +191,10 @@ export default function HHMyBadges() {
     (c) => !myBadgeMap.has(c.id) && stagesFor(c.stageModel).includes("watching"),
   );
 
+  const teachingBadgesInBridgeDomains = (myBadges ?? []).filter(
+    (b) => b.stage === "teaching" && isBridgeDomain(b.categoryDomain),
+  );
+
   const isLoading = loadingBadges || loadingCats;
 
   if (isLoading) {
@@ -186,6 +222,16 @@ export default function HHMyBadges() {
         </div>
       </div>
 
+      {/* Earth Kit Practitioner banner */}
+      {isPractitioner && (
+        <div className="flex items-start gap-3 bg-stone-50 border border-stone-300 rounded-lg p-4 text-sm">
+          <Award className="w-5 h-5 text-stone-600 shrink-0 mt-0.5" />
+          <div className="text-stone-800">
+            <span className="font-medium">Earth Kit Practitioner.</span> Your practitioner standing is recognised here. Badges in Food, Land, Governance, and Care domains show a <span className="font-medium">Practitioner Verified</span> indicator — reflecting the cross-validated credential.
+          </div>
+        </div>
+      )}
+
       {/* Active badges */}
       {(myBadges ?? []).length === 0 ? (
         <div className="text-center py-10 text-muted-foreground bg-card border border-border rounded-lg">
@@ -202,6 +248,11 @@ export default function HHMyBadges() {
             const isExpanded = expandedId === badge.id;
             const stages = stagesFor(badge.categoryStageModel);
             const next = nextStage(badge.stage, badge.categoryStageModel);
+            const credSource = (badge as HhMemberBadgeWithCategory & { credentialSource?: string }).credentialSource;
+            const isPractitionerVerified =
+              isPractitioner &&
+              isBridgeDomain(badge.categoryDomain) &&
+              (badge.stage === "practicing" || badge.stage === "teaching");
 
             return (
               <div key={badge.id} className="bg-card border border-border rounded-lg overflow-hidden">
@@ -215,7 +266,13 @@ export default function HHMyBadges() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-medium text-foreground">{badge.categoryName}</span>
-                      {stagePill(badge.stage)}
+                      {stagePill(badge.stage, credSource)}
+                      {isPractitionerVerified && (
+                        <span className="inline-flex items-center gap-1 text-xs text-stone-600 bg-stone-100 border border-stone-300 rounded-full px-2 py-0.5 font-medium">
+                          <Award className="w-3 h-3" />
+                          Practitioner Verified
+                        </span>
+                      )}
                       {badge.categoryRateModifierEnabled && badge.stage !== "watching" && (
                         <span className="inline-flex items-center gap-1 text-xs text-amber-700">
                           <Zap className="w-3 h-3" /> Rate uplift
@@ -230,6 +287,14 @@ export default function HHMyBadges() {
                 {isExpanded && (
                   <div className="border-t border-border p-4 space-y-4 bg-muted/10">
                     <p className="text-sm text-foreground">{meta?.description}</p>
+
+                    {/* Practitioner Verified detail */}
+                    {isPractitionerVerified && (
+                      <div className="flex items-start gap-2 text-xs text-stone-600 bg-stone-50 border border-stone-200 rounded-md px-3 py-2">
+                        <Award className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                        <span>This badge carries Earth Kit practitioner standing — validated across both credentialing systems.</span>
+                      </div>
+                    )}
 
                     {/* Stage path */}
                     <div className="flex items-center gap-1.5 flex-wrap">
@@ -367,6 +432,35 @@ export default function HHMyBadges() {
                 </Button>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* What's next — HH → Earth Kit upgrade pathway */}
+      {!isPractitioner && teachingBadgesInBridgeDomains.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-5 space-y-3">
+          <div className="flex items-start gap-3">
+            <Award className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+            <div>
+              <h2 className="text-sm font-semibold text-amber-900">What's next — Earth Kit pathway</h2>
+              <p className="text-xs text-amber-800 mt-1">
+                You've reached Teaching level in{" "}
+                {teachingBadgesInBridgeDomains.map((b) => b.categoryDomain.replace("_", " ")).join(", ")}.
+                That may qualify you for <span className="font-medium">Earth Kit Licensed</span> standing — a formal practitioner credential recognised beyond the community.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 pl-8">
+            <a
+              href="/north-star/apply-practitioner"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-700 border border-amber-300 bg-white rounded-md px-3 py-1.5 hover:bg-amber-50 transition-colors"
+            >
+              Apply for Earth Kit Licensed
+              <ArrowRight className="w-3 h-3" />
+            </a>
+            <span className="text-xs text-amber-700">
+              — mention your Helping Hands Teaching badges as supporting evidence.
+            </span>
           </div>
         </div>
       )}

@@ -364,6 +364,11 @@ export const hhMemberBadgesTable = pgTable(
     // issuedByMemberId: who advanced this badge (null for self-initiated watching)
     issuedByMemberId: uuid("issued_by_member_id").references(() => hhMembersTable.id),
     notes: text("notes").notNull().default(""),
+    // credentialSource: how the badge was earned.
+    //   hh_task_history — earned by completing HH tasks in the domain (default)
+    //   peer_validation  — advanced by a Knowledge Keeper or peer consensus
+    //   earth_kit        — granted on the basis of Earth Kit practitioner standing
+    credentialSource: text("credential_source").notNull().default("hh_task_history"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

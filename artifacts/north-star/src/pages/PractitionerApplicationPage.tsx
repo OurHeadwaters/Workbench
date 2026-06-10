@@ -53,6 +53,14 @@ export function PractitionerApplicationPage() {
           what you're building.
         </p>
 
+        {/* HH → Earth Kit pathway note */}
+        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-8 text-sm text-amber-800">
+          <p className="font-medium mb-1">Already active in Helping Hands?</p>
+          <p className="text-amber-700 text-xs leading-relaxed">
+            If you hold <span className="font-medium">Teaching-level</span> badges in Food &amp; Harvest, Land &amp; Water, Governance, or Care in the Helping Hands credential system, mention those in your doctrine summary — they are recognised as supporting evidence for Earth Kit Licensed standing and will be reflected in your practitioner profile once approved.
+          </p>
+        </div>
+
         {result ? (
           <div
             className={`rounded-2xl p-6 text-sm ${

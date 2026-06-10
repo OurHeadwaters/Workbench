@@ -12,6 +12,19 @@ interface Application {
   createdAt: string;
 }
 
+interface HhTeachingBadge {
+  categoryName: string;
+  categoryDomain: string;
+  credentialSource: string;
+}
+
+const DOMAIN_LABELS: Record<string, string> = {
+  food: "Food & Harvest",
+  land: "Land & Water",
+  governance: "Governance",
+  care: "Care & Wellbeing",
+};
+
 function getOwnerToken(): string | null {
   try {
     return (
@@ -24,6 +37,14 @@ function getOwnerToken(): string | null {
   }
 }
 
+function getApiBase(): string {
+  const base =
+    (window as Window & { __BASE_URL__?: string }).__BASE_URL__ ??
+    (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ??
+    "/";
+  return base.replace(/\/$/, "") + "/api";
+}
+
 export function PractitionerReviewPage() {
   const [apps, setApps] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +52,8 @@ export function PractitionerReviewPage() {
   const [reviewingId, setReviewingId] = useState<string | null>(null);
   const [reviewNote, setReviewNote] = useState<Record<string, string>>({});
   const [actionMsg, setActionMsg] = useState<Record<string, string>>({});
+  const [hhBadges, setHhBadges] = useState<Record<string, HhTeachingBadge[]>>({});
+  const [hhBadgesLoading, setHhBadgesLoading] = useState(false);
 
   const isOwner = !!getOwnerToken();
 
@@ -50,11 +73,38 @@ export function PractitionerReviewPage() {
       }
       if (!res.ok) throw new Error("Failed to load applications");
       const data = (await res.json()) as { applications: Application[] };
-      setApps(data.applications ?? []);
+      const fetched = data.applications ?? [];
+      setApps(fetched);
+
+      const approvedEmails = fetched
+        .filter((a) => a.status === "approved")
+        .map((a) => a.contactEmail)
+        .filter(Boolean);
+
+      if (approvedEmails.length > 0) {
+        void fetchHhBadgesForEmails(approvedEmails);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchHhBadgesForEmails(emails: string[]) {
+    setHhBadgesLoading(true);
+    try {
+      const apiBase = getApiBase();
+      const query = emails.map(encodeURIComponent).join(",");
+      const res = await fetch(`${apiBase}/helping-hands/practitioner-teaching-badges?emails=${query}`, {
+        headers: ownerHeaders(),
+      });
+      if (!res.ok) return;
+      const data = (await res.json()) as Record<string, HhTeachingBadge[]>;
+      setHhBadges(data);
+    } catch {
+    } finally {
+      setHhBadgesLoading(false);
     }
   }
 
@@ -185,35 +235,63 @@ export function PractitionerReviewPage() {
           <section>
             <h2 className="text-base font-semibold text-stone-500 mb-4">Reviewed</h2>
             <div className="flex flex-col gap-3">
-              {reviewed.map((app) => (
-                <div
-                  key={app.id}
-                  className={`bg-white border rounded-2xl p-4 shadow-sm ${
-                    app.status === "approved"
-                      ? "border-emerald-200"
-                      : "border-stone-200 opacity-70"
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div>
-                      <span className="font-medium text-stone-800 text-sm">{app.name}</span>
-                      <span className="text-stone-400 text-xs ml-2">— {app.community}</span>
+              {reviewed.map((app) => {
+                const badges = hhBadges[app.contactEmail] ?? [];
+                return (
+                  <div
+                    key={app.id}
+                    className={`bg-white border rounded-2xl p-4 shadow-sm ${
+                      app.status === "approved"
+                        ? "border-emerald-200"
+                        : "border-stone-200 opacity-70"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div>
+                        <span className="font-medium text-stone-800 text-sm">{app.name}</span>
+                        <span className="text-stone-400 text-xs ml-2">— {app.community}</span>
+                      </div>
+                      <span
+                        className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                          app.status === "approved"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-stone-100 text-stone-500"
+                        }`}
+                      >
+                        {app.status === "approved" ? "Approved" : "Declined"}
+                      </span>
                     </div>
-                    <span
-                      className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                        app.status === "approved"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-stone-100 text-stone-500"
-                      }`}
-                    >
-                      {app.status === "approved" ? "Approved" : "Declined"}
-                    </span>
+                    {app.reviewNote && (
+                      <p className="text-stone-400 text-xs mt-1">{app.reviewNote}</p>
+                    )}
+
+                    {/* HH Teaching badges — only shown for approved practitioners */}
+                    {app.status === "approved" && !hhBadgesLoading && badges.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-stone-100">
+                        <p className="text-xs text-stone-400 font-medium mb-2">Helping Hands — Teaching badges</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {badges.map((b, i) => (
+                            <span
+                              key={i}
+                              className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border bg-amber-50 border-amber-200 text-amber-700 font-medium"
+                            >
+                              {b.categoryName}
+                              <span className="text-amber-500 font-normal">· {DOMAIN_LABELS[b.categoryDomain] ?? b.categoryDomain}</span>
+                              {b.credentialSource === "earth_kit" && (
+                                <span className="text-stone-400 font-normal">· EK</span>
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {app.status === "approved" && hhBadgesLoading && (
+                      <div className="mt-2 text-xs text-stone-400">Loading HH badges…</div>
+                    )}
                   </div>
-                  {app.reviewNote && (
-                    <p className="text-stone-400 text-xs mt-1">{app.reviewNote}</p>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
