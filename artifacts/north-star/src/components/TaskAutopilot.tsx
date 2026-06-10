@@ -44,6 +44,7 @@ interface ConstellationSection {
   loading: boolean;
   error: string | null;
   pendingIds: Set<string>;
+  pulledAt?: number;
 }
 
 // Council seat display metadata
@@ -175,7 +176,15 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
   const [dryRunResult, setDryRunResult] = useState<{ taskIds: string[]; wouldApprove: number } | null>(null);
 
   // Constellation sections (per external project, never merged into local store)
-  const [constellationSections, setConstellationSections] = useState<Map<string, ConstellationSection>>(new Map());
+  // Seeded from sessionStorage so data survives panel close/reopen within the same page load
+  const [constellationSections, setConstellationSections] = useState<Map<string, ConstellationSection>>(() => {
+    try {
+      const raw = sessionStorage.getItem("headwaters-aquifer-cache");
+      if (!raw) return new Map();
+      const entries = JSON.parse(raw) as Array<[string, Omit<ConstellationSection, "pendingIds"> & { pendingIds: string[] }]>;
+      return new Map(entries.map(([id, s]) => [id, { ...s, pendingIds: new Set(s.pendingIds) }]));
+    } catch { return new Map(); }
+  });
 
   const [constellation, setConstellation] = useState<ConstellationProject[]>(() => {
     try {
@@ -228,6 +237,17 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
   useEffect(() => {
     try { localStorage.setItem("headwaters-aquifer-projects", JSON.stringify(aquifer)); } catch { /**/ }
   }, [aquifer]);
+
+  // Persist aquifer pull results to sessionStorage so they survive panel close/reopen
+  useEffect(() => {
+    try {
+      const entries = Array.from(constellationSections.entries()).map(([id, s]) => [
+        id,
+        { ...s, pendingIds: Array.from(s.pendingIds) },
+      ]);
+      sessionStorage.setItem("headwaters-aquifer-cache", JSON.stringify(entries));
+    } catch { /**/ }
+  }, [constellationSections]);
 
   // ── Triage ──
 
@@ -448,7 +468,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
 
       setConstellationSections((prev) => {
         const next = new Map(prev);
-        next.set(project.id, { project, tasks: remoteTasks, triaged, loading: false, error: null, pendingIds: new Set() });
+        next.set(project.id, { project, tasks: remoteTasks, triaged, loading: false, error: null, pendingIds: new Set(), pulledAt: Date.now() });
         return next;
       });
     } catch (e) {
@@ -1124,8 +1144,12 @@ function ConstellationProjectSection({
     setAdding(false);
   };
 
-  const { project, triaged, loading, error, pendingIds } = section;
+  const { project, triaged, loading, error, pendingIds, pulledAt } = section;
   const c = TIER_COLOR.AMBER;
+
+  const pulledAtLabel = pulledAt
+    ? new Date(pulledAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : null;
 
   const effectiveTier = (t: ClassifiedTask): Tier => t.tier;
   const greenTasks = (triaged?.tasks ?? []).filter((t) => effectiveTier(t) === "GREEN");
@@ -1160,8 +1184,20 @@ ${seatName}, this task from ${project.label} needs your voice before it can move
       <div className="flex items-center gap-3 px-4 py-3 bg-[#13110E] border-b border-[#2A231E]">
         <span className="text-[10px]">✦</span>
         <span className="text-[12px] font-bold text-[#A39485] flex-1 uppercase tracking-wider">{project.label}</span>
-        <span className="text-[11px] text-[#5C5046] truncate max-w-[160px]">{project.baseUrl}</span>
-        <button onClick={onClose} className="text-[#5C5046] hover:text-[#A39485] text-[16px] leading-none ml-2 flex-shrink-0">×</button>
+        {pulledAtLabel && (
+          <span className="text-[10px] text-[#3D3228] flex-shrink-0" title={`Last pulled at ${pulledAtLabel}`}>
+            {pulledAtLabel}
+          </span>
+        )}
+        <button
+          onClick={onRefresh}
+          disabled={loading}
+          className="text-[#5C5046] hover:text-[#4ADE80] text-[13px] leading-none flex-shrink-0 disabled:opacity-30 transition-colors"
+          title="Refresh from project"
+        >
+          ↻
+        </button>
+        <button onClick={onClose} className="text-[#5C5046] hover:text-[#A39485] text-[16px] leading-none ml-1 flex-shrink-0">×</button>
       </div>
 
       <div className="px-4 py-3 bg-[#0F0D0B]">
