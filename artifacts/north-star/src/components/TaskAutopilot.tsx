@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -184,36 +184,12 @@ export function TaskAutopilot({ onOpenDeliberation }: TaskAutopilotProps) {
   });
   const [constellationDraft, setConstellationDraft] = useState({ label: "", baseUrl: "", token: "" });
 
+  // Tracks whether the auto-seed has been attempted this session (prevents re-seeding on panel re-opens)
+  const autoSeededRef = useRef(false);
+
   useEffect(() => {
     try { localStorage.setItem("task-autopilot-constellation", JSON.stringify(constellation)); } catch { /**/ }
   }, [constellation]);
-
-  // ── Load proposed + pending ──
-
-  const loadProposed = useCallback(async () => {
-    setLoadingProposed(true);
-    setError(null);
-    try {
-      const [proposedRes, pendingRes] = await Promise.all([
-        fetch(`${BASE_API}/tasks/proposed`),
-        fetch(`${BASE_API}/tasks/pending`),
-      ]);
-      if (!proposedRes.ok) throw new Error(`Could not load tasks (${proposedRes.status})`);
-      const proposedJson = await proposedRes.json() as { tasks: StoredTask[] };
-      setProposed(proposedJson.tasks ?? []);
-      if (pendingRes.ok) {
-        const pendingJson = await pendingRes.json() as { tasks: StoredTask[] };
-        setPendingIds(new Set((pendingJson.tasks ?? []).map((t) => t.id)));
-      }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load tasks");
-    }
-    setLoadingProposed(false);
-  }, []);
-
-  useEffect(() => {
-    if (open) loadProposed();
-  }, [open, loadProposed]);
 
   // ── Triage ──
 
@@ -269,6 +245,39 @@ export function TaskAutopilot({ onOpenDeliberation }: TaskAutopilotProps) {
     }
     setImporting(false);
   }, [runTriage]);
+
+  // ── Load proposed + pending ──
+
+  const loadProposed = useCallback(async () => {
+    setLoadingProposed(true);
+    setError(null);
+    try {
+      const [proposedRes, pendingRes] = await Promise.all([
+        fetch(`${BASE_API}/tasks/proposed`),
+        fetch(`${BASE_API}/tasks/pending`),
+      ]);
+      if (!proposedRes.ok) throw new Error(`Could not load tasks (${proposedRes.status})`);
+      const proposedJson = await proposedRes.json() as { tasks: StoredTask[] };
+      const tasks = proposedJson.tasks ?? [];
+      setProposed(tasks);
+      if (pendingRes.ok) {
+        const pendingJson = await pendingRes.json() as { tasks: StoredTask[] };
+        setPendingIds(new Set((pendingJson.tasks ?? []).map((t) => t.id)));
+      }
+      // Auto-seed the real backlog on first open if the queue is empty
+      if (tasks.length === 0 && !autoSeededRef.current) {
+        autoSeededRef.current = true;
+        await importAndTriage(SAMPLE_TASK_LINES);
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to load tasks");
+    }
+    setLoadingProposed(false);
+  }, [importAndTriage]);
+
+  useEffect(() => {
+    if (open) loadProposed();
+  }, [open, loadProposed]);
 
   // ── Approve / Unapprove (local queue) ──
 
