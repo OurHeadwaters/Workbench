@@ -850,6 +850,12 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
   const allGreenPending = greenTasks.length > 0 && greenTasks.every((t) => pendingIds.has(t.id));
   const summary = triaged?.summary;
 
+  // Badge R count: triage RED + seed-only briefs (not covered by triage) when triage has run,
+  // or just the active seed brief count when triage hasn't run yet.
+  const badgeRedCount = summary
+    ? summary.red + seedOnlyBriefs.length
+    : activeRedBriefs.length;
+
   // ── Aquifer sweep summary ──────────────────────────────────────────────────
   const sweepSections = Array.from(constellationSections.values());
   const sweepVisible = sweepSections.length > 0;
@@ -880,11 +886,17 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
               {" · "}
               <span className="text-[#FCD34D]">{summary.amber}A</span>
               {" · "}
-              <span className="text-[#FCA5A5]">{summary.red}R</span>
+              <span className="text-[#FCA5A5]">{badgeRedCount}R</span>
             </span>
           )}
           {!triaged && proposed.length > 0 && (
             <span className="ml-3 text-[11px] text-[#5C5046]">{proposed.length} proposed</span>
+          )}
+          {!triaged && badgeRedCount > 0 && (
+            <span className="ml-2 text-[11px] text-[#5C5046]">
+              {"· "}
+              <span className="text-[#FCA5A5]">{badgeRedCount}R</span>
+            </span>
           )}
         </div>
         <span className="text-[10px] text-[#3D3228] group-hover:text-[#5C5046] transition-colors">
