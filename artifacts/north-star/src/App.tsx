@@ -19,6 +19,7 @@ import { TriageLandingPage } from "@/pages/TriageLandingPage";
 import { ArchiveMiningPage } from "@/pages/ArchiveMiningPage";
 import { ZoneDiagramPage } from "@/pages/ZoneDiagramPage";
 import { KitchenTablePage } from "@/pages/KitchenTablePage";
+import { TablePage } from "@/pages/TablePage";
 import { MeetingKitPage } from "@/pages/MeetingKitPage";
 import { MoneyMachinePage } from "@/pages/MoneyMachinePage";
 import { CockpitPage } from "@/pages/CockpitPage";
@@ -82,8 +83,15 @@ export default function App() {
       <Switch>
         <Route path="/onboarding" component={OnboardingPage} />
 
-        {/* ── Today — the front door ── */}
+        {/* ── Kitchen Table — the front door ── */}
         <Route path="/">
+          <OnboardingGuard>
+            <AppShell><TablePage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
+        {/* ── Today — preserved at /today ── */}
+        <Route path="/today">
           <OnboardingGuard>
             <AppShell><TodayPage /></AppShell>
           </OnboardingGuard>
@@ -197,9 +205,8 @@ export default function App() {
             <AppShell><MeetingKitPage /></AppShell>
           </OnboardingGuard>
         </Route>
-        <Route path="/council">
-          <AppShell><KitchenTablePage /></AppShell>
-        </Route>
+        {/* /council merged into table surface — deep links redirect home */}
+        <Route path="/council"><Redirect to="/" /></Route>
         <Route path="/money-machine">
           <AppShell><MoneyMachinePage /></AppShell>
         </Route>

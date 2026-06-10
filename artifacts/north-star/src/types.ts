@@ -69,6 +69,7 @@ export interface DailyPick {
   constellationIds: string[];
   pickedAt: string;
   reflection?: string;
+  eveningNote?: string;
   hoursByZone?: Partial<Record<ZoneId, number>>;
   acknowledgedGuardrails?: string[];
 }

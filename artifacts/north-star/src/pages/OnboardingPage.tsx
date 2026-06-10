@@ -34,13 +34,16 @@ function ChoiceScreen({ onTakeOnboarding, onSkip }: { onTakeOnboarding: () => vo
       </div>
       <div>
         <h1
-          className="text-4xl mb-3 leading-tight"
+          className="text-4xl mb-2 leading-tight"
           style={{ fontFamily: "Fraunces, serif", fontWeight: 800, color: "#ede8d5" }}
         >
           North Star
         </h1>
+        <p className="text-sm leading-relaxed max-w-xs mb-1" style={{ color: "rgba(237,232,213,0.50)" }}>
+          Kitchen Table
+        </p>
         <p className="text-base leading-relaxed max-w-xs" style={{ color: "rgba(237,232,213,0.60)" }}>
-          Take a quick tour to set things up, or jump straight in.
+          First time at this table? Let's carve your north star into the wood.
         </p>
       </div>
 
@@ -61,7 +64,7 @@ function ChoiceScreen({ onTakeOnboarding, onSkip }: { onTakeOnboarding: () => vo
             boxShadow: "0 0 24px rgba(245,162,35,0.25)",
           }}
         >
-          Take the onboarding <ArrowRight size={18} />
+          Take a seat <ArrowRight size={18} />
         </button>
         <button
           onClick={onSkip}
@@ -72,11 +75,11 @@ function ChoiceScreen({ onTakeOnboarding, onSkip }: { onTakeOnboarding: () => vo
             border: "1px solid rgba(237,232,213,0.14)",
           }}
         >
-          Skip to North Star
+          Sit down, skip the setup
         </button>
       </div>
       <p className="text-xs max-w-xs" style={{ color: "rgba(237,232,213,0.28)" }}>
-        The 5-step setup walks through constellations, contracts, and your north star statement. You can skip and start now.
+        The 5-step setup pins your constellations, contracts, and north star statement to the table. You can skip and pin them later.
       </p>
     </div>
   );
@@ -89,25 +92,26 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
         <Star size={28} className="text-[#FEF3C7]" fill="#FEF3C7" />
       </div>
       <div>
-        <h1 className="text-3xl mb-3">North Star</h1>
+        <h1 className="text-3xl mb-1">North Star</h1>
+        <p className="text-sm text-[#78716C] mb-2">Kitchen Table</p>
         <p className="text-[#44403C] text-base leading-relaxed max-w-xs">
-          A personal operating system for multi-project work — built around the Codetry zone model.
+          This is your table. Every morning you sit down, pull your files from the drawers, and start.
         </p>
       </div>
       <div
         className="text-left rounded-2xl border border-[#D6D0C7] shadow-sm p-4 w-full max-w-sm space-y-2"
         style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
       >
-        <p className="text-sm font-medium">Start with what you're already building.</p>
+        <p className="text-sm font-medium">Let's carve your north star into the wood.</p>
         <p className="text-sm text-[#44403C]">
-          Your projects are pre-loaded. We'll walk through them together, then set your north star statement.
+          We'll walk through your constellations, any paid contracts, and the statement that anchors every decision you make here.
         </p>
       </div>
       <button
         onClick={onNext}
         className="flex items-center gap-2 bg-[#1C1917] text-white px-6 py-3 rounded-xl text-sm font-medium min-h-[44px] hover:bg-[#2C2520] transition-colors"
       >
-        Let's go <ArrowRight size={16} />
+        Pull up a chair <ArrowRight size={16} />
       </button>
     </div>
   );
@@ -464,9 +468,9 @@ function WhyStep({ onFinish }: { onFinish: () => void }) {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h2 className="text-2xl mb-1">Why & no-fly</h2>
+        <h2 className="text-2xl mb-1">Pin it to the table</h2>
         <p className="text-sm text-[#78716C]">
-          Complete your north star statement. These anchor you when deciding what to say yes or no to.
+          The last cut. Your north star statement stays pinned in front of you every time you sit down — so you always see it from your chair.
         </p>
       </div>
       <div

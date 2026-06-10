@@ -5,16 +5,16 @@ import { cn } from "@/lib/utils";
 import { useActiveZone, ZONE_SOLID } from "@/lib/zone";
 
 const PRIMARY = [
-  { path: "/",        icon: Star,      label: "Today",   match: (p: string) => p === "/" },
+  { path: "/",        icon: Coffee,    label: "Table",   match: (p: string) => p === "/" },
   { path: "/cockpit", icon: Briefcase, label: "Cockpit", match: (p: string) => p.startsWith("/cockpit") || p.startsWith("/debrief") },
   { path: "/model",   icon: BarChart2, label: "Model",   match: (p: string) => p.startsWith("/model") },
   { path: "/zones",   icon: Grid3x3,   label: "Zones",   match: (p: string) => p.startsWith("/zones") },
 ];
 
 const MORE_ITEMS = [
+  { path: "/today",   icon: Star,      label: "Today" },
   { path: "/guide",   icon: BookOpen,  label: "Guide" },
   { path: "/weekly",  icon: Calendar,  label: "Review" },
-  { path: "/council", icon: Coffee,    label: "Table" },
   { path: "/land",    icon: Trees,     label: "Land" },
   { path: "/window",  icon: Globe,     label: "Window" },
   { path: "/settings",icon: Settings,  label: "Settings" },
