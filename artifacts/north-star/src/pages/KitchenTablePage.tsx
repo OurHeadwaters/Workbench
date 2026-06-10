@@ -986,6 +986,7 @@ export function KitchenTablePage() {
   const deleteBite = (id: string) => setSoundBites((prev) => prev.filter((b) => b.id !== id));
 
   const inSession = messages.length > 0;
+  const [riverSmithOpen, setRiverSmithOpen] = useState(false);
 
   return (
     <div className="flex flex-col bg-[#13110E] text-[#D8D0C5] font-sans antialiased relative selection:bg-[#B75C34]/40" style={{ height: "calc(100dvh - 90px)" }}>
@@ -1002,12 +1003,12 @@ export function KitchenTablePage() {
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#C8732A] opacity-[0.07] blur-[90px] pointer-events-none rounded-full" />
       {/* Warm rim light — far edge */}
       <div className="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[1100px] h-[600px] bg-[#7A4B1A] opacity-[0.12] blur-[140px] pointer-events-none rounded-full" />
-      
+
       {/* ── Header ── */}
       <div className="flex-shrink-0 z-10 bg-[#13110E]/80 backdrop-blur-xl border-b border-[#2C241D] px-5 pt-safe-top shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
-        <div className="flex items-center gap-3 py-4">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[#8C7B6D] font-medium">Z2</span>
-          <span className="w-1 h-1 rounded-full bg-[#3D3228]" />
+        <div className="flex items-center gap-3 py-3.5">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-[#8C7B6D] font-medium hidden sm:inline">Z2</span>
+          <span className="w-1 h-1 rounded-full bg-[#3D3228] hidden sm:inline-block" />
           {editingSession ? (
             <input
               autoFocus
@@ -1020,31 +1021,36 @@ export function KitchenTablePage() {
           ) : (
             <button
               onClick={() => setEditingSession(true)}
-              className="flex-1 text-left text-[16px] font-serif tracking-wide text-[#EAE4DB]"
+              className="flex-1 text-left text-[15px] font-serif tracking-wide text-[#EAE4DB] hover:text-white transition-colors"
             >
               {sessionName}
             </button>
           )}
-          {inSession && (
-            <div
-              className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-[12px] font-medium text-[#13110E] shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
-              style={{ background: activeSeat.color }}
-            >
-              <span className="opacity-90">{activeSeat.icon}</span>
-              <span className="tracking-wide">{activeSeat.name}</span>
-            </div>
-          )}
+          {/* River Smith trigger */}
+          <button
+            onClick={() => setRiverSmithOpen((o) => !o)}
+            className={cn(
+              "flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border text-[11px] tracking-wide transition-colors",
+              riverSmithOpen
+                ? "border-[#2A4A43] bg-[#1E332E] text-[#4A8A7C]"
+                : "border-[#2C241D] bg-[#1C1814] text-[#5C5046] hover:text-[#8C7B6D] hover:border-[#3D3228]"
+            )}
+            title="River Smith briefing"
+          >
+            <span className="text-[12px]">🌊</span>
+            <span className="hidden sm:inline">River Smith</span>
+          </button>
           <button
             onClick={() => setRefOpen(true)}
-            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#2C241D] bg-[#1C1814] text-[#8C7B6D] text-[11px] tracking-wide hover:text-[#D8D0C5] hover:border-[#3D3228] transition-colors"
+            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#2C241D] bg-[#1C1814] text-[#5C5046] text-[11px] tracking-wide hover:text-[#8C7B6D] hover:border-[#3D3228] transition-colors"
             title="Reference Docs"
           >
             <span className="text-[12px]">📖</span>
-            <span>Docs</span>
+            <span className="hidden sm:inline">Docs</span>
           </button>
           <button
             onClick={() => setBitesOpen(true)}
-            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#2C241D] bg-[#1C1814] text-[#8C7B6D] text-[11px] tracking-wide hover:text-[#D8D0C5] hover:border-[#3D3228] transition-colors"
+            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#2C241D] bg-[#1C1814] text-[#5C5046] text-[11px] tracking-wide hover:text-[#8C7B6D] hover:border-[#3D3228] transition-colors"
           >
             <span className="text-[13px]">✦</span>
             <span>{soundBites.length}</span>
@@ -1052,376 +1058,282 @@ export function KitchenTablePage() {
         </div>
       </div>
 
-      {/* ── River Smith Briefing Panel ── */}
-      <RiverSmithPanel />
-
-      {/* ── Task Autopilot ── */}
-      <div className="flex-shrink-0 z-10">
-        <TaskAutopilot
-          onOpenDeliberation={(seatId, brief) => {
-            setActiveSeatId(seatId);
-            setInput(brief);
-          }}
-        />
-      </div>
-
       {/* ══════════════════════════════════════════════════════════════
-          MODE A — TABLE IS SET (no messages yet)
-          Seat tiles grid + agenda visible
+          MAIN SCROLL AREA — table surface
       ══════════════════════════════════════════════════════════════ */}
-      {!inSession && (
-        <div className="flex-1 overflow-y-auto relative z-10 pb-12">
+      <div className="flex-1 overflow-y-auto relative z-10 min-h-0">
 
-          {/* ── First-person seat arc ── */}
-          <div className="px-4 pt-8 pb-2">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#3D3228] font-medium mb-6 text-center">
-              around the table
-            </p>
+        {/* ── TABLE SET (no messages) — backlog triage is the table surface ── */}
+        {!inSession && (
+          <>
+            {/* Task Autopilot — leading element, default open */}
+            <TaskAutopilot
+              defaultOpen
+              onOpenDeliberation={(seatId, deliberationBrief) => {
+                setActiveSeatId(seatId);
+                setInput(deliberationBrief);
+              }}
+            />
 
-            {/* Arc of seats curving away from the viewer */}
-            <div className="flex items-end justify-center gap-1 overflow-x-auto scrollbar-hide pb-1">
-              {seats.map((seat, i) => {
-                const isActive = seat.id === activeSeatId;
-                const total = seats.length;
-                const centerIdx = (total - 1) / 2;
-                const dist = Math.abs(i - centerIdx);
-                const yPx = dist * 11;
-                const scale = 1 - dist * 0.038;
-                const opacity = 1 - dist * 0.065;
-                return (
-                  <button
-                    key={seat.id}
-                    onClick={() => setActiveSeatId(seat.id)}
-                    onDoubleClick={() => seat.configurable && openConfig(seat)}
-                    style={{
-                      transform: `translateY(-${yPx}px) scale(${scale})`,
-                      opacity,
-                      transformOrigin: "bottom center",
-                    }}
-                    className={cn(
-                      "relative flex-shrink-0 flex flex-col items-center gap-2 w-[64px] pt-4 pb-3 px-1 rounded-sm transition-all duration-300",
-                      isActive
-                        ? "bg-[#1C1814] shadow-[0_4px_20px_rgba(0,0,0,0.6)]"
-                        : "bg-[#181512] hover:bg-[#1A1714]"
-                    )}
-                  >
-                    {isActive && (
-                      <div
-                        className="absolute inset-0 rounded-sm pointer-events-none"
-                        style={{ boxShadow: `inset 0 0 0 1px ${seat.color}45, 0 0 24px ${seat.color}10` }}
-                      />
-                    )}
-                    {seat.configurable && (
-                      <span className="absolute top-1.5 right-1.5 text-[8px] text-[#4A3D30] uppercase tracking-wide">
-                        open
-                      </span>
-                    )}
-                    <span
+            {/* Agenda — below the triage surface */}
+            <div className="px-6 pt-8 pb-16">
+              {/* Template switcher */}
+              <div className="flex flex-wrap items-center gap-3 mb-5 px-1">
+                <p className="text-[11px] uppercase tracking-[0.15em] text-[#4A3D30] font-medium flex-1">
+                  {activeTemplate.id === "weekly" ? "Weekend check-in · 30 min"
+                    : activeTemplate.id === "monthly" ? "Month-end review · 60 min"
+                    : activeTemplate.id === "kit-pricing" ? "Kit pricing deliberation · 5 lenses"
+                    : "Today's agenda · 30 min"}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {TEMPLATES.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => loadTemplate(t)}
                       className={cn(
-                        "text-[26px] leading-none transition-all duration-300",
-                        !isActive && "opacity-40 grayscale-[0.6]"
+                        "px-2.5 py-1.5 rounded-sm text-[10px] font-medium tracking-wide transition-all",
+                        activeTemplateId === t.id
+                          ? "bg-[#2C241D] text-[#EAE4DB] shadow-inner"
+                          : "bg-[#181512] text-[#5C5046] border border-[#251E18] hover:text-[#A39485]"
                       )}
                     >
-                      {seat.icon}
-                    </span>
-                    <span
-                      className="text-[10px] font-serif tracking-wide text-center leading-tight"
-                      style={{ color: isActive ? seat.color : "#5C5046" }}
-                    >
-                      {seat.name}
-                    </span>
-                    {isActive && (
-                      <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: seat.color }} />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Table edge — the horizon line between them and you */}
-            <div className="flex items-center gap-3 px-2 mt-3 mb-1">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22] to-transparent" />
-              <span className="text-[8px] text-[#2A221A] uppercase tracking-[0.35em] font-medium flex-shrink-0">you</span>
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22] to-transparent" />
-            </div>
-
-            {/* Active seat name card */}
-            <div
-              className="mx-1 mt-4 px-4 py-3 rounded-sm border transition-all duration-300"
-              style={{ borderColor: `${activeSeat.color}30`, background: `${activeSeat.color}08` }}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[15px]">{activeSeat.icon}</span>
-                <span className="text-[13px] font-serif tracking-wide text-[#EAE4DB]">{activeSeat.name}</span>
-                {activeSeat.configurable && (
-                  <button
-                    onClick={() => openConfig(activeSeat)}
-                    className="ml-auto text-[9px] text-[#5C5046] uppercase tracking-wider hover:text-[#8C7B6D] transition-colors"
-                  >
-                    configure
-                  </button>
-                )}
-              </div>
-              <p className="text-[12px] leading-relaxed" style={{ color: `${activeSeat.color}CC` }}>
-                {activeSeat.description}
-              </p>
-            </div>
-          </div>
-
-          {/* Agenda */}
-          <div className="px-8 pt-6 pb-12">
-            {/* Template switcher */}
-            <div className="flex items-center gap-3 mb-4 px-1">
-              <p className="text-[11px] uppercase tracking-[0.15em] text-[#7A6A5C] font-medium flex-1">
-                {activeTemplate.id === "weekly" ? "Weekend check-in · 30 min"
-                  : activeTemplate.id === "monthly" ? "Month-end review · 60 min"
-                  : activeTemplate.id === "kit-pricing" ? "Kit pricing deliberation · 5 lenses"
-                  : "Today's agenda · 30 min"}
-              </p>
-              <div className="flex gap-1.5">
-                {TEMPLATES.map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => loadTemplate(t)}
-                    className={cn(
-                      "px-2.5 py-1.5 rounded-sm text-[10px] font-medium tracking-wide transition-all",
-                      activeTemplateId === t.id
-                        ? "bg-[#2C241D] text-[#EAE4DB] shadow-inner"
-                        : "bg-[#181512] text-[#7A6A5C] border border-[#251E18] hover:text-[#A39485]"
-                    )}
-                  >
-                    {t.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            
-            <div className="bg-[#181512] rounded-sm border border-[#251E18] shadow-[0_4px_12px_rgba(0,0,0,0.5)] overflow-hidden">
-              {agendaItems.map((item, i) => {
-                const leadSeat = seats.find((s) => s.id === item.leadId);
-                return (
-                  <button
-                    key={item.q}
-                    onClick={() => {
-                      setActiveSeatId(item.leadId);
-                      setInput(item.question);
-                    }}
-                    className={cn(
-                      "w-full flex items-start gap-4 px-5 py-5 text-left transition-colors hover:bg-[#1C1814] active:bg-[#251E18]",
-                      i < agendaItems.length - 1 ? "border-b border-[#251E18]" : ""
-                    )}
-                  >
-                    <span
-                      className="flex-shrink-0 w-6 h-6 rounded-sm flex items-center justify-center text-[11px] font-bold text-[#13110E] mt-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
-                      style={{ background: "#8C7B6D" }}
-                    >
-                      {i + 1}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[15px] font-medium text-[#D8D0C5] leading-relaxed">{item.question}</p>
-                      <p className="text-[12px] text-[#8C7B6D] mt-2 font-medium tracking-wide flex items-center gap-2">
-                        <span style={{ color: leadSeat?.color ?? "#5C5046" }} className="opacity-90 text-[14px]">{leadSeat?.icon}</span>
-                        {item.lead} leads
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-            <p className="text-[12px] text-[#5C5046] text-center mt-6 font-medium tracking-wide">
-              Tap an agenda item to sit down and begin
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* ══════════════════════════════════════════════════════════════
-          MODE B — IN SESSION (messages exist)
-          Compact seat switcher + agenda toggle + chat
-      ══════════════════════════════════════════════════════════════ */}
-      {inSession && (
-        <>
-          {/* Compact first-person arc — in session */}
-          <div className="flex-shrink-0 z-10 bg-[#13110E]/95 backdrop-blur-sm border-b border-[#251E18] shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
-            <div className="flex items-end justify-center gap-1 px-3 pt-3 pb-0 overflow-x-auto scrollbar-hide">
-              {seats.map((seat, i) => {
-                const isActive = seat.id === activeSeatId;
-                const total = seats.length;
-                const centerIdx = (total - 1) / 2;
-                const dist = Math.abs(i - centerIdx);
-                const yPx = dist * 7;
-                const scale = 1 - dist * 0.04;
-                return (
-                  <button
-                    key={seat.id}
-                    onClick={() => setActiveSeatId(seat.id)}
-                    onDoubleClick={() => seat.configurable && openConfig(seat)}
-                    style={{
-                      transform: `translateY(-${yPx}px) scale(${scale})`,
-                      transformOrigin: "bottom center",
-                      opacity: isActive ? 1 : 0.38,
-                    }}
-                    className="flex-shrink-0 flex flex-col items-center gap-1 w-[50px] pb-2 transition-all duration-200 hover:opacity-75"
-                  >
-                    <div
-                      className="w-9 h-9 rounded-sm flex items-center justify-center text-[18px] transition-all duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                      style={
-                        isActive
-                          ? { background: seat.color, color: "#13110E" }
-                          : { background: "#1C1814" }
-                      }
-                    >
-                      {seat.icon}
-                    </div>
-                    <span
-                      className="text-[9px] font-medium tracking-wide text-center leading-tight"
-                      style={{ color: isActive ? seat.color : "#5C5046" }}
-                    >
-                      {seat.name}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            {/* Table edge */}
-            <div className="flex items-center gap-3 px-6 py-2">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22]/60 to-transparent" />
-              <span className="text-[7px] text-[#2A221A] uppercase tracking-[0.3em] font-medium">you</span>
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22]/60 to-transparent" />
-            </div>
-          </div>
-
-          <KitchenTableSourcesPanel />
-
-          {/* Agenda toggle */}
-          <div className="flex-shrink-0 z-10 border-b border-[#251E18] bg-[#1A1714]">
-            <button
-              onClick={() => { setBriefOpen((o) => !o); setEditingBrief(false); }}
-              className="flex items-center gap-3 w-full px-5 py-3.5 text-left transition-colors hover:bg-[#1C1814]"
-            >
-              <span className="text-[12px] opacity-60">📋</span>
-              <span className="text-[11px] uppercase tracking-[0.15em] text-[#8C7B6D] font-bold">Agenda</span>
-              <span className="text-[11px] text-[#5C5046] ml-2 tracking-wide">— {agendaItems.length} items</span>
-              <span className="ml-auto text-[10px] text-[#5C5046]">{briefOpen ? "▲" : "▼"}</span>
-            </button>
-
-            {briefOpen && (
-              <div className="px-5 pb-5 bg-[#1A1714]">
-                {/* Compact agenda list */}
-                <div className="bg-[#181512] rounded-sm border border-[#251E18] overflow-hidden mb-4 shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
-                  {agendaItems.map((item, i) => {
-                    const leadSeat = seats.find((s) => s.id === item.leadId);
-                    return (
-                      <button
-                        key={item.q}
-                        onClick={() => {
-                          setActiveSeatId(item.leadId);
-                          setInput(item.question);
-                          setBriefOpen(false);
-                        }}
-                        className={cn(
-                          "w-full flex items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-[#1C1814] active:bg-[#251E18]",
-                          i < agendaItems.length - 1 ? "border-b border-[#251E18]" : ""
-                        )}
-                      >
-                        <span
-                          className="flex-shrink-0 w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold text-[#13110E] mt-0.5"
-                          style={{ background: "#8C7B6D" }}
-                        >
-                          {i + 1}
-                        </span>
-                        <p className="text-[13px] text-[#D8D0C5] font-medium leading-relaxed pt-0.5">{item.question}</p>
-                      </button>
-                    );
-                  })}
+                      {t.label}
+                    </button>
+                  ))}
                 </div>
-                {/* Brief edit */}
-                <button
-                  onClick={() => setEditingBrief((b) => !b)}
-                  className="text-[11px] text-[#8C7B6D] hover:text-[#A39485] tracking-wide px-1 font-medium transition-colors"
-                >
-                  {editingBrief ? "Cancel edit" : "Edit session brief"}
-                </button>
-                {editingBrief && (
-                  <div className="mt-4">
-                    <textarea
-                      autoFocus
-                      value={brief}
-                      onChange={(e) => setBrief(e.target.value)}
-                      rows={8}
-                      className="w-full text-[13px] font-mono leading-relaxed text-[#A39485] bg-[#13110E] border border-[#2A231E] rounded-sm p-4 resize-y outline-none focus:border-[#5C5046] transition-colors"
-                    />
-                    <div className="flex gap-3 mt-3 justify-end">
-                      <button
-                        onClick={() => setBrief(getTodayBrief())}
-                        className="text-[12px] tracking-wide text-[#8C7B6D] hover:text-[#D8D0C5] border border-[#2A231E] bg-[#1C1814] rounded-sm px-4 py-2 transition-colors"
-                      >Reset</button>
-                      <button
-                        onClick={() => setEditingBrief(false)}
-                        className="text-[12px] tracking-wide text-[#13110E] bg-[#8C7B6D] hover:bg-[#A39485] rounded-sm px-5 py-2 font-medium shadow-sm transition-colors"
-                      >Done</button>
-                    </div>
-                  </div>
-                )}
               </div>
-            )}
-          </div>
 
-          {/* Chat messages */}
-          <div className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-6 min-h-0 relative z-0">
-            {messages.map((msg) => {
-              const isUser = msg.role === "user";
-              const isStreaming = streaming && msg.id === streamingIdRef.current;
-              return (
-                <div
-                  key={msg.id}
-                  className={cn("flex gap-4 items-end", isUser ? "flex-row-reverse" : "flex-row")}
-                >
-                  {!isUser && (
-                    <div
-                      className="w-10 h-10 rounded-sm flex-shrink-0 flex items-center justify-center text-xl text-[#13110E] mb-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.5)]"
-                      style={{ background: msg.seatColor }}
+              <div className="bg-[#181512] rounded-sm border border-[#251E18] shadow-[0_4px_16px_rgba(0,0,0,0.4)] overflow-hidden">
+                {agendaItems.map((item, i) => {
+                  const leadSeat = seats.find((s) => s.id === item.leadId);
+                  return (
+                    <button
+                      key={item.q}
+                      onClick={() => {
+                        setActiveSeatId(item.leadId);
+                        setInput(item.question);
+                      }}
+                      className={cn(
+                        "w-full flex items-start gap-4 px-6 py-5 text-left transition-colors hover:bg-[#1C1814] active:bg-[#251E18]",
+                        i < agendaItems.length - 1 ? "border-b border-[#1E1A16]" : ""
+                      )}
                     >
-                      {seats.find((s) => s.id === msg.seatId)?.icon ?? "◈"}
+                      <span
+                        className="flex-shrink-0 w-6 h-6 rounded-sm flex items-center justify-center text-[11px] font-bold text-[#13110E] mt-0.5"
+                        style={{ background: "#6B5A4E" }}
+                      >
+                        {i + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[14px] font-medium text-[#C5B6A5] leading-relaxed">{item.question}</p>
+                        <p className="text-[11px] text-[#5C5046] mt-1.5 flex items-center gap-1.5">
+                          <span style={{ color: leadSeat?.color ?? "#5C5046" }}>{leadSeat?.icon}</span>
+                          <span>{item.lead}</span>
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-[11px] text-[#3D3228] text-center mt-5 tracking-wide">
+                Tap an agenda item · type below · or triage the backlog above
+              </p>
+            </div>
+          </>
+        )}
+
+        {/* ── IN SESSION (messages exist) — sources, agenda toggle, chat ── */}
+        {inSession && (
+          <>
+            <KitchenTableSourcesPanel />
+
+            {/* Agenda toggle */}
+            <div className="border-b border-[#251E18] bg-[#181512]">
+              <button
+                onClick={() => { setBriefOpen((o) => !o); setEditingBrief(false); }}
+                className="flex items-center gap-3 w-full px-5 py-3 text-left transition-colors hover:bg-[#1C1814]"
+              >
+                <span className="text-[11px] opacity-50">📋</span>
+                <span className="text-[11px] uppercase tracking-[0.15em] text-[#5C5046] font-bold">Agenda</span>
+                <span className="text-[11px] text-[#3D3228] ml-2">— {agendaItems.length} items</span>
+                <span className="ml-auto text-[10px] text-[#3D3228]">{briefOpen ? "▲" : "▼"}</span>
+              </button>
+
+              {briefOpen && (
+                <div className="px-5 pb-5">
+                  <div className="bg-[#13110E] rounded-sm border border-[#251E18] overflow-hidden mb-4">
+                    {agendaItems.map((item, i) => {
+                      const leadSeat = seats.find((s) => s.id === item.leadId);
+                      return (
+                        <button
+                          key={item.q}
+                          onClick={() => {
+                            setActiveSeatId(item.leadId);
+                            setInput(item.question);
+                            setBriefOpen(false);
+                          }}
+                          className={cn(
+                            "w-full flex items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-[#181512] active:bg-[#251E18]",
+                            i < agendaItems.length - 1 ? "border-b border-[#1E1A16]" : ""
+                          )}
+                        >
+                          <span
+                            className="flex-shrink-0 w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold text-[#13110E] mt-0.5"
+                            style={{ background: "#6B5A4E" }}
+                          >
+                            {i + 1}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[13px] text-[#C5B6A5] leading-relaxed pt-0.5">{item.question}</p>
+                            <p className="text-[10px] text-[#4A3D30] mt-0.5 flex items-center gap-1">
+                              <span style={{ color: leadSeat?.color ?? "#4A3D30" }}>{leadSeat?.icon}</span>
+                              <span>{item.lead}</span>
+                            </p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <button
+                    onClick={() => setEditingBrief((b) => !b)}
+                    className="text-[11px] text-[#5C5046] hover:text-[#8C7B6D] tracking-wide px-1 font-medium transition-colors"
+                  >
+                    {editingBrief ? "Cancel edit" : "Edit session brief"}
+                  </button>
+                  {editingBrief && (
+                    <div className="mt-4">
+                      <textarea
+                        autoFocus
+                        value={brief}
+                        onChange={(e) => setBrief(e.target.value)}
+                        rows={8}
+                        className="w-full text-[13px] font-mono leading-relaxed text-[#A39485] bg-[#13110E] border border-[#2A231E] rounded-sm p-4 resize-y outline-none focus:border-[#5C5046] transition-colors"
+                      />
+                      <div className="flex gap-3 mt-3 justify-end">
+                        <button
+                          onClick={() => setBrief(getTodayBrief())}
+                          className="text-[12px] tracking-wide text-[#8C7B6D] hover:text-[#D8D0C5] border border-[#2A231E] bg-[#1C1814] rounded-sm px-4 py-2 transition-colors"
+                        >Reset</button>
+                        <button
+                          onClick={() => setEditingBrief(false)}
+                          className="text-[12px] tracking-wide text-[#13110E] bg-[#8C7B6D] hover:bg-[#A39485] rounded-sm px-5 py-2 font-medium shadow-sm transition-colors"
+                        >Done</button>
+                      </div>
                     </div>
                   )}
+                </div>
+              )}
+            </div>
+
+            {/* Chat messages */}
+            <div className="px-5 py-6 flex flex-col gap-6">
+              {messages.map((msg) => {
+                const isUser = msg.role === "user";
+                const isStreaming = streaming && msg.id === streamingIdRef.current;
+                return (
                   <div
-                    className={cn(
-                      "max-w-[85%] px-5 py-4 text-[15px] leading-relaxed rounded-sm",
-                      isUser
-                        ? "bg-[#21241C] text-[#EAE4DB] shadow-[0_2px_10px_rgba(0,0,0,0.3)] border border-[#2D3327]"
-                        : "bg-[#181512] text-[#D8D0C5] border border-[#251E18] shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
-                    )}
-                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                    key={msg.id}
+                    className={cn("flex gap-4 items-end", isUser ? "flex-row-reverse" : "flex-row")}
                   >
                     {!isUser && (
-                      <p
-                        className="text-[11px] uppercase tracking-[0.15em] font-medium mb-2 opacity-80"
-                        style={{ color: msg.seatColor }}
+                      <div
+                        className="w-10 h-10 rounded-sm flex-shrink-0 flex items-center justify-center text-xl text-[#13110E] mb-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.5)]"
+                        style={{ background: msg.seatColor }}
                       >
-                        {msg.seatName}
-                      </p>
+                        {seats.find((s) => s.id === msg.seatId)?.icon ?? "◈"}
+                      </div>
                     )}
-                    {msg.content || (isStreaming ? <span className="opacity-40" style={{ color: msg.seatColor }}>▍</span> : null)}
-                    {isStreaming && msg.content && <span className="opacity-40" style={{ color: msg.seatColor }}>▍</span>}
-                    {!isUser && msg.content && !isStreaming && (
-                      <button
-                        onClick={() => addBite(msg.content, msg.seatName, msg.seatColor)}
-                        className="mt-3 flex items-center gap-1.5 text-[10px] tracking-wider text-[#5C5046] hover:text-[#8C7B6D] transition-colors"
-                        title="Capture as sound bite"
-                      >
-                        <span>✦</span>
-                        <span>capture</span>
-                      </button>
-                    )}
+                    <div
+                      className={cn(
+                        "max-w-[88%] px-5 py-4 text-[15px] leading-relaxed rounded-sm",
+                        isUser
+                          ? "bg-[#21241C] text-[#EAE4DB] shadow-[0_2px_10px_rgba(0,0,0,0.3)] border border-[#2D3327]"
+                          : "bg-[#181512] text-[#D8D0C5] border border-[#251E18] shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
+                      )}
+                      style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                    >
+                      {!isUser && (
+                        <p
+                          className="text-[11px] uppercase tracking-[0.15em] font-medium mb-2 opacity-80"
+                          style={{ color: msg.seatColor }}
+                        >
+                          {msg.seatName}
+                        </p>
+                      )}
+                      {msg.content || (isStreaming ? <span className="opacity-40" style={{ color: msg.seatColor }}>▍</span> : null)}
+                      {isStreaming && msg.content && <span className="opacity-40" style={{ color: msg.seatColor }}>▍</span>}
+                      {!isUser && msg.content && !isStreaming && (
+                        <button
+                          onClick={() => addBite(msg.content, msg.seatName, msg.seatColor)}
+                          className="mt-3 flex items-center gap-1.5 text-[10px] tracking-wider text-[#5C5046] hover:text-[#8C7B6D] transition-colors"
+                          title="Capture as sound bite"
+                        >
+                          <span>✦</span>
+                          <span>capture</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
+                );
+              })}
+              <div ref={chatEndRef} className="h-4" />
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* ── Seat strip — compact ring at the table edge, always visible ── */}
+      <div className="flex-shrink-0 z-10 bg-[#13110E]/95 backdrop-blur-sm border-t border-[#251E18]">
+        <div className="flex items-end justify-center gap-1 px-3 pt-3 pb-0 overflow-x-auto scrollbar-hide">
+          {seats.map((seat, i) => {
+            const isActive = seat.id === activeSeatId;
+            const total = seats.length;
+            const centerIdx = (total - 1) / 2;
+            const dist = Math.abs(i - centerIdx);
+            const yPx = dist * 7;
+            const scale = 1 - dist * 0.04;
+            return (
+              <button
+                key={seat.id}
+                onClick={() => setActiveSeatId(seat.id)}
+                onDoubleClick={() => seat.configurable && openConfig(seat)}
+                style={{
+                  transform: `translateY(-${yPx}px) scale(${scale})`,
+                  transformOrigin: "bottom center",
+                  opacity: isActive ? 1 : 0.35,
+                }}
+                className="flex-shrink-0 flex flex-col items-center gap-1 w-[52px] pb-2 transition-all duration-200 hover:opacity-80"
+                title={seat.description}
+              >
+                <div
+                  className="w-9 h-9 rounded-sm flex items-center justify-center text-[19px] transition-all duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                  style={
+                    isActive
+                      ? { background: seat.color, color: "#13110E" }
+                      : { background: "#1C1814" }
+                  }
+                >
+                  {seat.icon}
                 </div>
-              );
-            })}
-            <div ref={chatEndRef} className="h-4" />
-          </div>
-        </>
-      )}
+                <span
+                  className="text-[9px] font-medium tracking-wide text-center leading-tight"
+                  style={{ color: isActive ? seat.color : "#4A3D30" }}
+                >
+                  {seat.name}
+                </span>
+                {seat.configurable && (
+                  <span className="text-[7px] text-[#3A2F22] uppercase tracking-wide leading-none">open</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex items-center gap-3 px-6 py-2">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22]/50 to-transparent" />
+          <span className="text-[7px] text-[#2A221A] uppercase tracking-[0.35em] font-medium">you</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#3A2F22]/50 to-transparent" />
+        </div>
+      </div>
 
       {/* ── Input row (always visible) ── */}
       <div className="flex-shrink-0 relative z-20 border-t border-[#2C241D] bg-[#181512]/95 backdrop-blur-md px-5 py-5 pb-safe-bottom shadow-[0_-16px_48px_rgba(0,0,0,0.6)]">
@@ -1473,6 +1385,23 @@ export function KitchenTablePage() {
           </button>
         </div>
       </div>
+
+      {/* ── River Smith drawer — slides in from the right ── */}
+      {riverSmithOpen && (
+        <div className="absolute inset-y-0 right-0 z-30 flex flex-col w-full sm:w-[400px] shadow-[-20px_0_60px_rgba(0,0,0,0.6)]">
+          <div className="flex-shrink-0 flex items-center gap-3 px-5 py-3 bg-[#111009] border-b border-[#1E1A14] border-l border-l-[#251E18]">
+            <span className="text-[16px]">🌊</span>
+            <span className="text-[12px] uppercase tracking-[0.18em] text-[#4A8A7C] font-bold flex-1">River Smith</span>
+            <button
+              onClick={() => setRiverSmithOpen(false)}
+              className="text-[#5C5046] hover:text-[#8C7B6D] text-xl leading-none transition-colors"
+            >×</button>
+          </div>
+          <div className="flex-1 overflow-y-auto bg-[#111009] border-l border-[#251E18]">
+            <RiverSmithPanel defaultOpen />
+          </div>
+        </div>
+      )}
 
       {/* ── Config modal ── */}
       {configSeatId && (

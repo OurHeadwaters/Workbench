@@ -152,10 +152,11 @@ function ownerHeaders(): Record<string, string> {
 
 interface TaskAutopilotProps {
   onOpenDeliberation?: (seatId: string, brief: string) => void;
+  defaultOpen?: boolean;
 }
 
-export function TaskAutopilot({ onOpenDeliberation }: TaskAutopilotProps) {
-  const [open, setOpen] = useState(false);
+export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskAutopilotProps) {
+  const [open, setOpen] = useState(defaultOpen);
   const [configOpen, setConfigOpen] = useState(false);
   const [pasteOpen, setPasteOpen] = useState(false);
 

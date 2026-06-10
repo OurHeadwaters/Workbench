@@ -180,11 +180,15 @@ function EmailBadge({ status }: { status: "sent" | "failed" | "skipped" | null }
 
 // ── Panel ─────────────────────────────────────────────────────────────────────
 
-export function RiverSmithPanel() {
+interface RiverSmithPanelProps {
+  defaultOpen?: boolean;
+}
+
+export function RiverSmithPanel({ defaultOpen = false }: RiverSmithPanelProps) {
   const token = getOwnerToken();
   const isOwner = !!token;
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [briefing, setBriefing] = useState<Briefing | null>(null);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
