@@ -1376,6 +1376,44 @@ function RedSection({
   const c = TIER_COLOR.RED;
   const totalCount = tasks.length + seedBriefs.length;
 
+  // Per-brief answer state — persisted to localStorage keyed by taskRef
+  const [briefAnswers, setBriefAnswers] = useState<Record<string, string>>(() => {
+    try {
+      const stored = localStorage.getItem("red-brief-answers");
+      return stored ? (JSON.parse(stored) as Record<string, string>) : {};
+    } catch { return {}; }
+  });
+  // Which briefs have their answer area open
+  const [answerOpen, setAnswerOpen] = useState<Record<string, boolean>>({});
+  // Draft text while the founder is typing (before saving)
+  const [answerDraft, setAnswerDraft] = useState<Record<string, string>>({});
+
+  const toggleAnswer = (taskRef: string) => {
+    setAnswerOpen((prev) => ({ ...prev, [taskRef]: !prev[taskRef] }));
+    // Pre-fill draft with any saved answer
+    setAnswerDraft((prev) => ({
+      ...prev,
+      [taskRef]: prev[taskRef] ?? briefAnswers[taskRef] ?? "",
+    }));
+  };
+
+  const recordAnswer = (taskRef: string) => {
+    const text = (answerDraft[taskRef] ?? "").trim();
+    if (!text) return;
+    const next = { ...briefAnswers, [taskRef]: text };
+    setBriefAnswers(next);
+    try { localStorage.setItem("red-brief-answers", JSON.stringify(next)); } catch { /**/ }
+    setAnswerOpen((prev) => ({ ...prev, [taskRef]: false }));
+  };
+
+  const clearAnswer = (taskRef: string) => {
+    const next = { ...briefAnswers };
+    delete next[taskRef];
+    setBriefAnswers(next);
+    try { localStorage.setItem("red-brief-answers", JSON.stringify(next)); } catch { /**/ }
+    setAnswerDraft((prev) => ({ ...prev, [taskRef]: "" }));
+  };
+
   const openSeedDeliberation = (brief: RedBrief) => {
     if (!onOpenDeliberation) return;
     const seat = SEAT_META[brief.councilSeat];
@@ -1479,17 +1517,37 @@ function RedSection({
           {/* ── Pre-seeded RED briefs ── */}
           {seedBriefs.map((brief) => {
             const seat = SEAT_META[brief.councilSeat];
+            const answered = !!briefAnswers[brief.taskRef];
+            const isAnswerOpen = !!answerOpen[brief.taskRef];
             return (
-              <div key={brief.taskRef} className="px-4 py-3">
+              <div
+                key={brief.taskRef}
+                className="px-4 py-3"
+                style={answered ? { opacity: 0.55 } : undefined}
+              >
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-mono text-[9px] text-[#5C5046] flex-shrink-0">{brief.taskRef}</span>
                       <p className="text-[13px] text-[#EAE4DB] leading-snug">{brief.title}</p>
+                      {answered && (
+                        <span
+                          className="ml-1 flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded-sm"
+                          style={{ background: "#16A34A22", color: "#4ADE80" }}
+                          title="Answer recorded"
+                        >
+                          ✓ answered
+                        </span>
+                      )}
                     </div>
                     <p className="text-[11px] italic leading-relaxed" style={{ color: c.text, opacity: 0.65 }}>
                       {brief.question}
                     </p>
+                    {answered && !isAnswerOpen && (
+                      <p className="mt-1 text-[11px] leading-relaxed text-[#8C7B6D] line-clamp-2">
+                        {briefAnswers[brief.taskRef]}
+                      </p>
+                    )}
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <button
@@ -1509,6 +1567,60 @@ function RedSection({
                     </button>
                   </div>
                 </div>
+
+                {/* Answer toggle */}
+                <div className="mt-2 flex items-center gap-3">
+                  <button
+                    onClick={() => toggleAnswer(brief.taskRef)}
+                    className="text-[10px] uppercase tracking-wider transition-colors"
+                    style={{ color: isAnswerOpen ? c.text : "#5C5046" }}
+                  >
+                    {isAnswerOpen ? "▲ close" : answered ? "▼ edit answer" : "▼ answer"}
+                  </button>
+                  {answered && !isAnswerOpen && (
+                    <button
+                      onClick={() => clearAnswer(brief.taskRef)}
+                      className="text-[10px] text-[#5C5046] hover:text-[#8C7B6D] transition-colors"
+                    >
+                      × clear
+                    </button>
+                  )}
+                </div>
+
+                {isAnswerOpen && (
+                  <div className="mt-2 flex flex-col gap-2">
+                    <textarea
+                      rows={3}
+                      value={answerDraft[brief.taskRef] ?? ""}
+                      onChange={(e) =>
+                        setAnswerDraft((prev) => ({ ...prev, [brief.taskRef]: e.target.value }))
+                      }
+                      placeholder="Type your answer…"
+                      className="w-full text-[12px] rounded-sm px-2.5 py-2 resize-none focus:outline-none"
+                      style={{
+                        background: "#2A1010",
+                        border: `1px solid ${c.border}`,
+                        color: "#EAE4DB",
+                      }}
+                    />
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => recordAnswer(brief.taskRef)}
+                        disabled={!(answerDraft[brief.taskRef] ?? "").trim()}
+                        className="text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-sm font-bold transition-opacity disabled:opacity-30"
+                        style={{ background: "#16A34A", color: "#fff" }}
+                      >
+                        Record answer
+                      </button>
+                      <button
+                        onClick={() => setAnswerOpen((prev) => ({ ...prev, [brief.taskRef]: false }))}
+                        className="text-[10px] text-[#5C5046] hover:text-[#8C7B6D] transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}
