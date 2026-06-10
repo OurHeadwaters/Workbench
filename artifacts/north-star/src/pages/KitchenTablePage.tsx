@@ -1206,31 +1206,45 @@ export function KitchenTablePage() {
                 {agendaItems.map((item, i) => {
                   const leadSeat = seats.find((s) => s.id === item.leadId);
                   return (
-                    <button
+                    <div
                       key={item.q}
-                      onClick={() => {
-                        setActiveSeatId(item.leadId);
-                        setInput(item.question);
-                      }}
                       className={cn(
-                        "w-full flex items-start gap-4 px-6 py-5 text-left transition-colors hover:bg-[#1C1814] active:bg-[#251E18]",
+                        "w-full flex items-start gap-4 px-6 py-5 transition-colors hover:bg-[#1C1814]",
                         i < agendaItems.length - 1 ? "border-b border-[#1E1A16]" : ""
                       )}
                     >
-                      <span
-                        className="flex-shrink-0 w-6 h-6 rounded-sm flex items-center justify-center text-[11px] font-bold text-[#13110E] mt-0.5"
-                        style={{ background: "#6B5A4E" }}
+                      <button
+                        className="flex items-start gap-4 flex-1 min-w-0 text-left"
+                        onClick={() => {
+                          setActiveSeatId(item.leadId);
+                          setInput(item.question);
+                        }}
                       >
-                        {i + 1}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[14px] font-medium text-[#C5B6A5] leading-relaxed">{item.question}</p>
-                        <p className="text-[11px] text-[#5C5046] mt-1.5 flex items-center gap-1.5">
-                          <span style={{ color: leadSeat?.color ?? "#5C5046" }}>{leadSeat?.icon}</span>
-                          <span>{item.lead}</span>
-                        </p>
-                      </div>
-                    </button>
+                        <span
+                          className="flex-shrink-0 w-6 h-6 rounded-sm flex items-center justify-center text-[11px] font-bold text-[#13110E] mt-0.5"
+                          style={{ background: "#6B5A4E" }}
+                        >
+                          {i + 1}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[14px] font-medium text-[#C5B6A5] leading-relaxed">{item.question}</p>
+                          <p className="text-[11px] text-[#5C5046] mt-1.5 flex items-center gap-1.5">
+                            <span style={{ color: leadSeat?.color ?? "#5C5046" }}>{leadSeat?.icon}</span>
+                            <span>{item.lead}</span>
+                          </p>
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setActiveSeatId("ishmael");
+                          setInput(`Ishmael — run the seven-generation test on: ${item.question}. What does this proposal leave for the person who inherits it in seven generations?`);
+                        }}
+                        className="flex-shrink-0 mt-1 px-2 py-1 rounded-sm text-[11px] font-medium text-[#4A6B5A] border border-[#2A3D30] hover:border-[#3D6B50] hover:text-[#6B9A80] hover:bg-[#1A2820] transition-all tracking-wide"
+                        title="Run Ishmael's seven-generation test on this item"
+                      >
+                        🐋 7-gen
+                      </button>
+                    </div>
                   );
                 })}
               </div>
@@ -1264,32 +1278,47 @@ export function KitchenTablePage() {
                     {agendaItems.map((item, i) => {
                       const leadSeat = seats.find((s) => s.id === item.leadId);
                       return (
-                        <button
+                        <div
                           key={item.q}
-                          onClick={() => {
-                            setActiveSeatId(item.leadId);
-                            setInput(item.question);
-                            setBriefOpen(false);
-                          }}
                           className={cn(
-                            "w-full flex items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-[#181512] active:bg-[#251E18]",
+                            "w-full flex items-start gap-3 px-4 py-3 transition-colors hover:bg-[#181512]",
                             i < agendaItems.length - 1 ? "border-b border-[#1E1A16]" : ""
                           )}
                         >
-                          <span
-                            className="flex-shrink-0 w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold text-[#13110E] mt-0.5"
-                            style={{ background: "#6B5A4E" }}
+                          <button
+                            className="flex items-start gap-3 flex-1 min-w-0 text-left"
+                            onClick={() => {
+                              setActiveSeatId(item.leadId);
+                              setInput(item.question);
+                              setBriefOpen(false);
+                            }}
                           >
-                            {i + 1}
-                          </span>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[13px] text-[#C5B6A5] leading-relaxed pt-0.5">{item.question}</p>
-                            <p className="text-[10px] text-[#4A3D30] mt-0.5 flex items-center gap-1">
-                              <span style={{ color: leadSeat?.color ?? "#4A3D30" }}>{leadSeat?.icon}</span>
-                              <span>{item.lead}</span>
-                            </p>
-                          </div>
-                        </button>
+                            <span
+                              className="flex-shrink-0 w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold text-[#13110E] mt-0.5"
+                              style={{ background: "#6B5A4E" }}
+                            >
+                              {i + 1}
+                            </span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[13px] text-[#C5B6A5] leading-relaxed pt-0.5">{item.question}</p>
+                              <p className="text-[10px] text-[#4A3D30] mt-0.5 flex items-center gap-1">
+                                <span style={{ color: leadSeat?.color ?? "#4A3D30" }}>{leadSeat?.icon}</span>
+                                <span>{item.lead}</span>
+                              </p>
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setActiveSeatId("ishmael");
+                              setInput(`Ishmael — run the seven-generation test on: ${item.question}. What does this proposal leave for the person who inherits it in seven generations?`);
+                              setBriefOpen(false);
+                            }}
+                            className="flex-shrink-0 mt-0.5 px-1.5 py-0.5 rounded-sm text-[10px] font-medium text-[#4A6B5A] border border-[#2A3D30] hover:border-[#3D6B50] hover:text-[#6B9A80] hover:bg-[#1A2820] transition-all tracking-wide"
+                            title="Run Ishmael's seven-generation test on this item"
+                          >
+                            🐋 7-gen
+                          </button>
+                        </div>
                       );
                     })}
                   </div>
