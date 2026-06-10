@@ -953,53 +953,120 @@ export default function InternalDocs() {
           padding: "1.1rem 1.4rem",
           marginBottom: "1rem",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
+          flexDirection: "column",
           gap: "0.75rem",
         }}>
-          <div>
-            <p style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.65rem",
-              fontWeight: 700,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: "#2e5a3f",
-              marginBottom: "0.3rem",
-            }}>
-              Zone 3 · OCA Partnership Packet
-            </p>
-            <p style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.82rem",
-              color: "var(--muted)",
-              lineHeight: 1.5,
-              margin: 0,
-            }}>
-              One click — three pages bundled as a single PDF ready to attach to an email.
-            </p>
+          {/* Top row: label + download button */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "0.75rem",
+          }}>
+            <div>
+              <p style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.65rem",
+                fontWeight: 700,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "#2e5a3f",
+                marginBottom: "0.3rem",
+              }}>
+                Zone 3 · OCA Partnership Packet
+              </p>
+              <p style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.82rem",
+                color: "var(--muted)",
+                lineHeight: 1.5,
+                margin: 0,
+              }}>
+                One click — three pages bundled as a single PDF ready to attach to an email.
+              </p>
+            </div>
+            <button
+              onClick={handleOcaPacketDownload}
+              disabled={ocaPacketLoading}
+              style={{
+                background: ocaPacketLoading ? "rgba(31,61,46,0.5)" : "#1f3d2e",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                padding: "0.5rem 1.1rem",
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                cursor: ocaPacketLoading ? "default" : "pointer",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+                transition: "background 0.15s",
+              }}
+            >
+              {ocaPacketLoading ? "⏳ Generating…" : "⬇ Download packet (3 pages)"}
+            </button>
           </div>
-          <button
-            onClick={handleOcaPacketDownload}
-            disabled={ocaPacketLoading}
-            style={{
-              background: ocaPacketLoading ? "rgba(31,61,46,0.5)" : "#1f3d2e",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              padding: "0.5rem 1.1rem",
+          {/* Secondary row: personalized OCA Brief link */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            background: "rgba(31,61,46,0.06)",
+            border: "1px solid rgba(31,61,46,0.12)",
+            borderRadius: "4px",
+            padding: "0.5rem 0.75rem",
+            flexWrap: "wrap",
+          }}>
+            <span style={{
               fontFamily: "var(--font-sans)",
-              fontSize: "0.8rem",
+              fontSize: "0.72rem",
               fontWeight: 600,
-              cursor: ocaPacketLoading ? "default" : "pointer",
-              whiteSpace: "nowrap",
+              color: "var(--evergreen)",
               flexShrink: 0,
-              transition: "background 0.15s",
-            }}
-          >
-            {ocaPacketLoading ? "⏳ Generating…" : "⬇ Download packet (3 pages)"}
-          </button>
+              minWidth: "5rem",
+            }}>
+              OCA Brief
+            </span>
+            <input
+              type="text"
+              value={community}
+              onChange={(e) => setCommunity(e.target.value)}
+              placeholder="e.g. Moose Cree First Nation"
+              style={{
+                flex: 1,
+                minWidth: "11rem",
+                background: "#f0e8d8",
+                border: "1.5px solid rgba(31,61,46,0.22)",
+                borderRadius: "4px",
+                padding: "0.3rem 0.6rem",
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.8rem",
+                color: "var(--ink)",
+                outline: "none",
+              }}
+            />
+            <button
+              onClick={() => trimmed && handleCopy("oca-partnership-brief")}
+              disabled={!trimmed}
+              style={{
+                flexShrink: 0,
+                background: copied === "oca-partnership-brief" ? "var(--evergreen)" : (trimmed ? "#b85a3e" : "rgba(31,61,46,0.15)"),
+                color: trimmed ? "var(--cream)" : "var(--muted)",
+                border: "none",
+                borderRadius: "4px",
+                padding: "0.3rem 0.65rem",
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.72rem",
+                fontWeight: 600,
+                cursor: trimmed ? "pointer" : "default",
+                transition: "background 0.15s",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {copied === "oca-partnership-brief" ? "✓ Copied" : copied === "error:oca-partnership-brief" ? "Copy failed" : "Copy personalized link"}
+            </button>
+          </div>
         </div>
 
         {/* Personalized link generator */}
