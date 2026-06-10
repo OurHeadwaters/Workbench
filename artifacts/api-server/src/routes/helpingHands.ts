@@ -3262,14 +3262,128 @@ router.get(
   },
 );
 
+// ── VC construction helpers ────────────────────────────────────────────────────
+// Architecture reference: docs/learning-identity-architecture.md §4.1 + §4.3
+//
+// Signing follows a two-step flow mirroring the Xaman wallet ceremony:
+//
+//   Step 1 — badge advancement endpoint:
+//     Advances the badge stage in the DB and constructs the UNSIGNED VC body
+//     (the payload that Xaman will prompt the issuer to sign). vc_json is left
+//     null — the credential is pending signature. The response includes a
+//     signingRequest block so the calling UI can open the Xaman sign flow.
+//
+//   Step 2 — sign-complete endpoint (POST /helping-hands/badges/:badgeId/sign):
+//     Receives the proofValue returned by Xaman after the issuer approves,
+//     finalizes the VC, and writes it to vc_json.
+//
+// When xumm-sdk is wired in V2 (docs/learning-identity-architecture.md §7 step 5)
+// Step 1 will call the Xaman payload API directly and Step 2 becomes the
+// Xaman webhook handler.
+
+function resolveDidUri(member: {
+  didRef: string | null;
+  xrplAddress: string | null;
+  id: string;
+}): string {
+  if (member.didRef) return member.didRef;
+  if (member.xrplAddress) return `did:xrpl:1:${member.xrplAddress}`;
+  return `urn:uuid:${member.id}`;
+}
+
+function buildUnsignedVcBody(params: {
+  badgeId: string;
+  memberXrplAddress: string | null;
+  memberDidRef: string | null;
+  memberId: string;
+  issuerXrplAddress: string | null;
+  issuerDidRef: string | null;
+  issuerId: string;
+  categoryName: string;
+  categoryDomain: string;
+  stage: "practicing" | "teaching";
+  issuanceDate: Date;
+  bandId: string;
+  bandName: string;
+}): { vcBody: object; issuerDid: string; verificationMethod: string } {
+  const memberDid = resolveDidUri({
+    didRef: params.memberDidRef,
+    xrplAddress: params.memberXrplAddress,
+    id: params.memberId,
+  });
+  const issuerDid = resolveDidUri({
+    didRef: params.issuerDidRef,
+    xrplAddress: params.issuerXrplAddress,
+    id: params.issuerId,
+  });
+
+  const credentialId = params.memberXrplAddress
+    ? `https://ourheadwaters.ca/api/did/${params.memberXrplAddress}/credentials/${params.badgeId}`
+    : `urn:uuid:${params.badgeId}`;
+
+  const vcBody = {
+    "@context": [
+      "https://www.w3.org/2018/credentials/v1",
+      "https://ourheadwaters.ca/context/helping-hands/v1",
+    ],
+    id: credentialId,
+    type: ["VerifiableCredential", "HelpingHandsBadge"],
+    issuer: issuerDid,
+    issuanceDate: params.issuanceDate.toISOString(),
+    credentialSubject: {
+      id: memberDid,
+      badgeCategory: params.categoryName,
+      domain: params.categoryDomain,
+      stage: params.stage,
+      bandId: params.bandId,
+      bandName: params.bandName,
+    },
+  };
+
+  return { vcBody, issuerDid, verificationMethod: `${issuerDid}#keys-1` };
+}
+
+function attachProof(vcBody: object, proof: {
+  created: string;
+  verificationMethod: string;
+  proofValue: string;
+}): object {
+  return {
+    ...vcBody,
+    proof: {
+      type: "Ed25519Signature2020",
+      created: proof.created,
+      verificationMethod: proof.verificationMethod,
+      proofPurpose: "assertionMethod",
+      proofValue: proof.proofValue,
+    },
+  };
+}
+
 // ── POST /helping-hands/members/:memberId/badges/:categoryId ──────────────────
 // Admin/Knowledge Keeper issues or advances a badge. The stage can only move
-// forward (watching → learning → practicing → teaching). Teaching can only be
-// assigned to someone already at practicing.
+// forward (watching → learning → practicing → teaching).
+//
+// For "practicing": admin/Knowledge Keeper is the VC issuer.
+// For "teaching":   peer-to-peer ceremony — peerValidatorMemberId is REQUIRED.
+//   The peer must currently hold "teaching" in this category. Their DID becomes
+//   the VC issuer (docs/learning-identity-architecture.md §4.3). Advancement
+//   is rejected if peerValidatorMemberId is absent or the peer does not qualify.
+//
+// For practicing and teaching: the response includes a signingRequest block
+// containing the unsigned VC body. The calling UI passes this to the issuer's
+// Xaman wallet. After the issuer approves the sign request in Xaman, call
+// POST /helping-hands/badges/:badgeId/sign with the returned proofValue to
+// finalise the credential (writes vc_json).
+//
+// Watching and learning advancements are immediate (no VC, no signing step).
 const issueBadgeSchema = z.object({
   stage: z.enum(["watching", "learning", "practicing", "teaching"]),
   notes: z.string().default(""),
   credentialSource: z.enum(["hh_task_history", "peer_validation", "earth_kit"]).default("peer_validation"),
+  // Required when stage === "teaching". UUID of a member who currently holds
+  // "teaching" in this category — they sign the VC as the peer issuer.
+  peerValidatorMemberId: z.string().uuid().optional(),
 });
 
 router.post(
@@ -3284,10 +3398,10 @@ router.post(
     const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
     if (!band) { res.status(404).json({ error: "Band not found" }); return; }
 
-    const issuer = await db.query.hhMembersTable.findFirst({
+    const adminMember = await db.query.hhMembersTable.findFirst({
       where: and(eq(hhMembersTable.bandId, band.id), eq(hhMembersTable.clerkUserId, user.id)),
     });
-    if (!issuer) { res.status(404).json({ error: "Issuer member record not found" }); return; }
+    if (!adminMember) { res.status(404).json({ error: "Issuer member record not found" }); return; }
 
     const memberId = param(req.params.memberId);
     const categoryId = param(req.params.categoryId);
@@ -3306,7 +3420,48 @@ router.post(
     const parsed = issueBadgeSchema.safeParse(req.body);
     if (!parsed.success) { res.status(400).json({ error: parsed.error.flatten() }); return; }
 
-    const { stage, notes, credentialSource } = parsed.data;
+    const { stage, notes, credentialSource, peerValidatorMemberId } = parsed.data;
+
+    // Enforce teaching peer-to-peer requirement:
+    // teaching credentials MUST be signed by a peer who holds teaching in the
+    // same category. Admin-only issuance is not permitted for teaching stage.
+    if (stage === "teaching" && !peerValidatorMemberId) {
+      res.status(422).json({
+        error: "Teaching credentials require peerValidatorMemberId — a peer who currently holds 'teaching' in this category must sign the credential (docs/learning-identity-architecture.md §4.3)",
+      });
+      return;
+    }
+
+    // Resolve the VC issuer:
+    // practicing: admin/Knowledge Keeper is issuer
+    // teaching:   peer validator is issuer — validated above to hold teaching
+    let issuer = adminMember;
+
+    if (stage === "teaching" && peerValidatorMemberId) {
+      const [peerMember, peerBadge] = await Promise.all([
+        db.query.hhMembersTable.findFirst({
+          where: and(eq(hhMembersTable.id, peerValidatorMemberId), eq(hhMembersTable.bandId, band.id)),
+        }),
+        db.query.hhMemberBadgesTable.findFirst({
+          where: and(
+            eq(hhMemberBadgesTable.memberId, peerValidatorMemberId),
+            eq(hhMemberBadgesTable.categoryId, categoryId),
+          ),
+        }),
+      ]);
+
+      if (!peerMember) {
+        res.status(404).json({ error: "Peer validator member not found" }); return;
+      }
+      if (!peerBadge || peerBadge.stage !== "teaching") {
+        res.status(422).json({
+          error: "Peer validator must hold 'teaching' stage in this category to issue a teaching credential",
+        });
+        return;
+      }
+
+      issuer = peerMember;
+    }
 
     const existing = await db.query.hhMemberBadgesTable.findFirst({
       where: and(eq(hhMemberBadgesTable.memberId, memberId), eq(hhMemberBadgesTable.categoryId, categoryId)),
@@ -3316,13 +3471,57 @@ router.post(
       if (stageIndex(stage) <= stageIndex(existing.stage)) {
         res.status(400).json({ error: `Cannot move badge backwards. Current stage: ${existing.stage}` }); return;
       }
+
+      const advancementTime = new Date();
+
+      // For watching/learning: immediate completion — no VC, no signing step.
+      if (stage !== "practicing" && stage !== "teaching") {
+        const [updated] = await db
+          .update(hhMemberBadgesTable)
+          .set({ stage, notes, issuedByMemberId: issuer.id, vcJson: null, updatedAt: advancementTime })
+          .where(eq(hhMemberBadgesTable.id, existing.id))
+          .returning();
+        res.json({ badge: updated }); return;
+      }
+
+      // For practicing/teaching: advance stage, leave vc_json null (pending Xaman
+      // signature), return unsigned VC body so the UI can open the sign request.
       const [updated] = await db
         .update(hhMemberBadgesTable)
-        .set({ stage, notes, credentialSource, issuedByMemberId: issuer.id, updatedAt: new Date() })
+        .set({ stage, notes, credentialSource, issuedByMemberId: issuer.id, vcJson: null, updatedAt: advancementTime })
         .where(eq(hhMemberBadgesTable.id, existing.id))
         .returning();
-      res.json(updated); return;
+
+      const { vcBody, verificationMethod } = buildUnsignedVcBody({
+        badgeId: existing.id,
+        memberXrplAddress: target.xrplAddress ?? null,
+        memberDidRef: target.didRef ?? null,
+        memberId: target.id,
+        issuerXrplAddress: issuer.xrplAddress ?? null,
+        issuerDidRef: issuer.didRef ?? null,
+        issuerId: issuer.id,
+        categoryName: category.name,
+        categoryDomain: category.domain,
+        stage,
+        issuanceDate: advancementTime,
+        bandId: band.id,
+        bandName: band.name,
+      });
+
+      res.json({
+        badge: updated,
+        signingRequest: {
+          vcBody,
+          verificationMethod,
+          callbackEndpoint: `POST /api/helping-hands/badges/${existing.id}/sign`,
+          badgeId: existing.id,
+        },
+      });
+      return;
     }
+
+    // ── Insert new badge record ────────────────────────────────────────────────
+    const advancementTime = new Date();
 
     const [row] = await db
       .insert(hhMemberBadgesTable)
@@ -3334,11 +3533,144 @@ router.post(
         credentialSource,
         issuedByMemberId: issuer.id,
         notes,
-        updatedAt: new Date(),
+        vcJson: null,
+        updatedAt: advancementTime,
       })
       .returning();
 
-    res.status(201).json(row);
+    if (!row) { res.status(500).json({ error: "Failed to create badge record" }); return; }
+
+    if (stage !== "practicing" && stage !== "teaching") {
+      res.status(201).json({ badge: row }); return;
+    }
+
+    // Return signing request so UI can prompt the issuer's Xaman wallet.
+    const { vcBody, verificationMethod } = buildUnsignedVcBody({
+      badgeId: row.id,
+      memberXrplAddress: target.xrplAddress ?? null,
+      memberDidRef: target.didRef ?? null,
+      memberId: target.id,
+      issuerXrplAddress: issuer.xrplAddress ?? null,
+      issuerDidRef: issuer.didRef ?? null,
+      issuerId: issuer.id,
+      categoryName: category.name,
+      categoryDomain: category.domain,
+      stage,
+      issuanceDate: advancementTime,
+      bandId: band.id,
+      bandName: band.name,
+    });
+
+    res.status(201).json({
+      badge: row,
+      signingRequest: {
+        vcBody,
+        verificationMethod,
+        callbackEndpoint: `POST /api/helping-hands/badges/${row.id}/sign`,
+        badgeId: row.id,
+      },
+    });
+  },
+);
+
+// ── POST /helping-hands/badges/:badgeId/sign ──────────────────────────────────
+// Step 2 of the VC signing ceremony — receives the proofValue returned by the
+// issuer's Xaman wallet after they approve the sign request, finalises the
+// W3C Verifiable Credential, and writes it to vc_json.
+//
+// In V2 (xumm-sdk wired): this endpoint becomes the Xaman webhook handler
+// (docs/learning-identity-architecture.md §4.3 step 5, §7 step 5).
+// In the current build: callers submit a proofValue directly (pass a SIM_
+// value in development; provide a real Ed25519 base58btc signature in production).
+//
+// Only accepts badges at "practicing" or "teaching" stage where vc_json is still
+// null (pending signature). Idempotent if vc_json is already populated.
+const signBadgeSchema = z.object({
+  // Ed25519 signature in base58btc encoding returned by Xaman after the issuer
+  // approves the sign request. In simulation, any non-empty string is accepted.
+  proofValue: z.string().min(1),
+});
+
+router.post(
+  "/badges/:badgeId/sign",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; id: string; role: string } }).bookkeeperUser;
+    if (user.role !== "owner" && user.role !== "ops_manager") {
+      res.status(403).json({ error: "Admin only" }); return;
+    }
+
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const badgeId = param(req.params.badgeId);
+    const parsed = signBadgeSchema.safeParse(req.body);
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.flatten() }); return; }
+
+    const badge = await db.query.hhMemberBadgesTable.findFirst({
+      where: and(
+        eq(hhMemberBadgesTable.id, badgeId),
+        eq(hhMemberBadgesTable.bandId, band.id),
+      ),
+    });
+    if (!badge) { res.status(404).json({ error: "Badge not found" }); return; }
+
+    if (badge.stage !== "practicing" && badge.stage !== "teaching") {
+      res.status(422).json({ error: "Only practicing and teaching badges generate credentials" }); return;
+    }
+
+    // Idempotent: if already signed, return the existing credential
+    if (badge.vcJson) {
+      res.json({ badge, alreadySigned: true }); return;
+    }
+
+    if (!badge.issuedByMemberId) {
+      res.status(422).json({ error: "Badge has no issuer — cannot construct VC" }); return;
+    }
+
+    // Load all context needed to reconstruct the unsigned VC body
+    const [target, issuerMember, category] = await Promise.all([
+      db.query.hhMembersTable.findFirst({ where: eq(hhMembersTable.id, badge.memberId) }),
+      db.query.hhMembersTable.findFirst({ where: eq(hhMembersTable.id, badge.issuedByMemberId) }),
+      db.query.hhBadgeCategoriesTable.findFirst({ where: eq(hhBadgeCategoriesTable.id, badge.categoryId) }),
+    ]);
+
+    if (!target || !issuerMember || !category) {
+      res.status(422).json({ error: "Cannot resolve badge context (member, issuer, or category missing)" }); return;
+    }
+
+    const issuanceDate = badge.updatedAt instanceof Date ? badge.updatedAt : new Date(badge.updatedAt);
+
+    const { vcBody, verificationMethod } = buildUnsignedVcBody({
+      badgeId: badge.id,
+      memberXrplAddress: target.xrplAddress ?? null,
+      memberDidRef: target.didRef ?? null,
+      memberId: target.id,
+      issuerXrplAddress: issuerMember.xrplAddress ?? null,
+      issuerDidRef: issuerMember.didRef ?? null,
+      issuerId: issuerMember.id,
+      categoryName: category.name,
+      categoryDomain: category.domain,
+      stage: badge.stage as "practicing" | "teaching",
+      issuanceDate,
+      bandId: band.id,
+      bandName: band.name,
+    });
+
+    const signedVc = attachProof(vcBody, {
+      created: new Date().toISOString(),
+      verificationMethod,
+      proofValue: parsed.data.proofValue,
+    });
+
+    const [patched] = await db
+      .update(hhMemberBadgesTable)
+      .set({ vcJson: JSON.stringify(signedVc) })
+      .where(eq(hhMemberBadgesTable.id, badge.id))
+      .returning();
+
+    res.json({ badge: patched });
   },
 );
 

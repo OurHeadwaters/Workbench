@@ -1,0 +1,16 @@
+-- Add vc_json column to hh_member_badges
+-- Stores the signed W3C Verifiable Credential JSON for badges at
+-- "practicing" and "teaching" stages. Null for watching/learning.
+--
+-- Architecture reference: docs/learning-identity-architecture.md §4
+--
+-- For "practicing" badges: VC is signed by the admin/Knowledge Keeper's DID.
+-- For "teaching" badges:   VC is signed by a peer who already holds
+--                          "teaching" in the same category (peer-to-peer
+--                          validation ceremony, §4.3).
+--
+-- In the current build (pre-Xaman wiring) the proofValue is a SIM_ placeholder
+-- — the same pattern used for escrow_tx_hash on hh_tasks. When xumm-sdk is
+-- wired in V2, the SIM_ value is replaced with a real Ed25519 signature from
+-- the issuer's Xaman wallet.
+ALTER TABLE "hh_member_badges" ADD COLUMN "vc_json" text;

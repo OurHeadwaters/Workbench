@@ -360,9 +360,10 @@ export const hhBadgeCategoriesTable = pgTable(
 //                         For "teaching" stage: must be a peer who holds teaching in same category
 //                         (peer-to-peer validation ceremony); for "practicing": admin/Knowledge Keeper.
 //   updated_at          → VC "issuanceDate" — timestamp of the most recent stage advancement
-// V1 [LIVE]: all badge records are DB-only. No VCs generated or signed.
-// V2 [BUILD TARGET]: add vc_json column (text, nullable) to store the signed VC payload;
-//                    wire Xaman sign-request into badge advancement for practicing/teaching.
+//   vc_json             → Signed W3C Verifiable Credential JSON (text). Null for watching/learning.
+//                         Populated on advancement to "practicing" or "teaching". In V2 (XRPL live)
+//                         the proofValue is a real Ed25519 signature from the issuer's Xaman wallet;
+//                         in the current build, proofValue is a SIM_ placeholder pending Xaman wiring.
 export const hhMemberBadgesTable = pgTable(
   "hh_member_badges",
   {
@@ -380,6 +381,10 @@ export const hhMemberBadgesTable = pgTable(
     //   peer_validation  — advanced by a Knowledge Keeper or peer consensus
     //   earth_kit        — granted on the basis of Earth Kit practitioner standing
     credentialSource: text("credential_source").notNull().default("hh_task_history"),
+    // vcJson: signed W3C Verifiable Credential. Null for watching/learning stages.
+    // For practicing: signed by admin/Knowledge Keeper DID.
+    // For teaching: signed by a peer who already holds teaching in this category.
+    vcJson: text("vc_json"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

@@ -35,6 +35,7 @@ import kitsRouter from "./kits";
 import practitionerApplicationsRouter from "./practitionerApplications";
 import stompingGroundsRouter from "./stompingGrounds";
 import taskAutopilotRouter from "./taskAutopilot";
+import didRouter from "./did";
 
 const router: IRouter = Router();
 
@@ -77,5 +78,6 @@ router.use("/kits", kitsRouter);
 router.use("/practitioner-applications", practitionerApplicationsRouter);
 router.use("/stomping-grounds", stompingGroundsRouter);
 router.use("/tasks", taskAutopilotRouter);
+router.use("/did", didRouter);
 
 export default router;
