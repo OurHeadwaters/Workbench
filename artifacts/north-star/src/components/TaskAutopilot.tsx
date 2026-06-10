@@ -172,6 +172,7 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
   const [approving, setApproving] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [authBlocked, setAuthBlocked] = useState(false);
   const [pasteText, setPasteText] = useState("");
   const [dryRunResult, setDryRunResult] = useState<{ taskIds: string[]; wouldApprove: number } | null>(null);
 
@@ -255,6 +256,7 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
     if (!tasks.length) return;
     setLoadingTriage(true);
     setError(null);
+    setAuthBlocked(false);
     setTriaged(null);
     setOverrides({});
     setDryRunResult(null);
@@ -277,6 +279,7 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
   const importAndTriage = useCallback(async (lines: string) => {
     setImporting(true);
     setError(null);
+    setAuthBlocked(false);
     try {
       const res = await fetch(`${BASE_API}/tasks/import`, {
         method: "POST",
@@ -284,6 +287,11 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
         body: JSON.stringify({ lines }),
       });
       if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          setAuthBlocked(true);
+          setImporting(false);
+          return;
+        }
         const j = await res.json().catch(() => ({})) as { error?: string };
         throw new Error(j.error ?? `Import failed: ${res.status}`);
       }
@@ -322,12 +330,14 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
         const pendingJson = await pendingRes.json() as { tasks: StoredTask[] };
         setPendingIds(new Set((pendingJson.tasks ?? []).map((t) => t.id)));
       }
-      // Auto-seed the real backlog on first open if the queue is empty
-      if (tasks.length === 0 && !autoSeededRef.current) {
+      // Auto-seed the real backlog on first open if the queue is empty — owner only
+      const hasToken = !!getOwnerToken();
+      if (tasks.length === 0 && !autoSeededRef.current && hasToken) {
         autoSeededRef.current = true;
         await importAndTriage(SAMPLE_TASK_LINES);
       }
     } catch (e) {
+      setAuthBlocked(false);
       setError(e instanceof Error ? e.message : "Failed to load tasks");
     }
     setLoadingProposed(false);
@@ -357,6 +367,7 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
       setPendingIds((prev) => { const next = new Set(prev); taskIds.forEach((id) => next.add(id)); return next; });
       setProposed((prev) => prev.filter((t) => !idSet.has(t.id)));
     } catch (e) {
+      setAuthBlocked(false);
       setError(e instanceof Error ? e.message : "Approve failed");
     }
     setApproving(null);
@@ -516,6 +527,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
         }),
       }).catch(() => { /* best-effort */ });
     } catch (e) {
+      setAuthBlocked(false);
       setError(e instanceof Error ? e.message : `Approve on ${section.project.label} failed`);
     }
   };
@@ -538,6 +550,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
       }
       return true;
     } catch (e) {
+      setAuthBlocked(false);
       setError(e instanceof Error ? e.message : `Could not add task to ${section.project.label}`);
       return false;
     }
@@ -553,6 +566,8 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
   };
 
   // ── Computed ──
+
+  const isOwner = !!getOwnerToken();
 
   const greenTasks  = (triaged?.tasks ?? []).filter((t) => effectiveTier(t) === "GREEN");
   const amberTasks  = (triaged?.tasks ?? []).filter((t) => effectiveTier(t) === "AMBER");
@@ -614,7 +629,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
 
           {/* ── Toolbar ── */}
           <div className="flex flex-wrap items-center gap-2 py-3 border-b border-[#1A1612] mb-4">
-            {proposed.length === 0 && !loadingProposed && (
+            {isOwner && proposed.length === 0 && !loadingProposed && (
               <button
                 onClick={() => importAndTriage(SAMPLE_TASK_LINES)}
                 disabled={importing}
@@ -641,12 +656,14 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
                 Re-triage
               </button>
             )}
-            <button
-              onClick={() => setPasteOpen(true)}
-              className="px-3 py-1.5 text-[11px] uppercase tracking-wider font-medium rounded-sm border border-[#2A231E] text-[#A39485] hover:text-[#EAE4DB] hover:border-[#3D3228] transition-colors"
-            >
-              Paste task list
-            </button>
+            {isOwner && (
+              <button
+                onClick={() => setPasteOpen(true)}
+                className="px-3 py-1.5 text-[11px] uppercase tracking-wider font-medium rounded-sm border border-[#2A231E] text-[#A39485] hover:text-[#EAE4DB] hover:border-[#3D3228] transition-colors"
+              >
+                Paste task list
+              </button>
+            )}
             <button
               onClick={loadProposed}
               disabled={loadingProposed}
@@ -712,7 +729,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
             />
           )}
 
-          {error && (
+          {error && !authBlocked && (
             <div className="mb-4 px-4 py-3 rounded-sm border border-[#5C1A1A] bg-[#1E0A0A] text-[12px] text-[#FCA5A5] flex items-start gap-3">
               <span className="flex-1">{error}</span>
               <button onClick={() => setError(null)} className="text-[#5C5046] hover:text-[#FCA5A5] flex-shrink-0">×</button>
@@ -759,6 +776,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
                 allPending={allGreenPending}
                 onOverride={(t, toTier) => handleOverride(t.id, effectiveTier(t), toTier, t.title)}
                 onOpenDeliberation={null}
+                isOwner={isOwner}
               />
 
               {Object.entries(computedAmberGroups).map(([cluster, clusterTasks]) => {
@@ -779,6 +797,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
                     allPending={allPending}
                     onOverride={(t, toTier) => handleOverride(t.id, effectiveTier(t), toTier, t.title)}
                     onOpenDeliberation={null}
+                    isOwner={isOwner}
                   />
                 );
               })}
@@ -790,6 +809,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
                   pendingIds={pendingIds}
                   onOverride={(t, toTier) => handleOverride(t.id, effectiveTier(t), toTier, t.title)}
                   onOpenDeliberation={onOpenDeliberation ? (t) => openDeliberation(t) : null}
+                  isOwner={isOwner}
                 />
               )}
             </div>
@@ -807,6 +827,13 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
                   >
                     Triage now
                   </button>
+                </div>
+              ) : !isOwner ? (
+                <div>
+                  <p className="text-[22px] mb-2 opacity-30">⚡</p>
+                  <p className="text-[13px] text-[#4A3D30] leading-relaxed max-w-xs mx-auto">
+                    The backlog lives here — sign in as owner to triage tasks.
+                  </p>
                 </div>
               ) : (
                 <div>
@@ -935,7 +962,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
 
 function TierSection({
   tier, tasks, pendingIds, approving, label, rationale,
-  onDryRun, onApprove, onUnapprove, allPending, onOverride, onOpenDeliberation,
+  onDryRun, onApprove, onUnapprove, allPending, onOverride, onOpenDeliberation, isOwner,
 }: {
   tier: Tier;
   tasks: ClassifiedTask[];
@@ -949,6 +976,7 @@ function TierSection({
   allPending: boolean;
   onOverride: (t: ClassifiedTask, toTier: Tier) => void;
   onOpenDeliberation: ((t: ClassifiedTask) => void) | null;
+  isOwner: boolean;
 }) {
   const [expanded, setExpanded] = useState(tier !== "GREEN");
   const c = TIER_COLOR[tier];
@@ -991,36 +1019,38 @@ function TierSection({
                     <p className="mt-0.5 text-[10px] leading-relaxed pl-2 border-l" style={{ borderColor: c.border, color: c.text, opacity: 0.6 }}>{t.rule}</p>
                   </details>
                 </div>
-                <OverrideMenu task={t} onOverride={(toTier) => onOverride(t, toTier)} />
+                {isOwner && <OverrideMenu task={t} onOverride={(toTier) => onOverride(t, toTier)} />}
               </div>
             );
           })}
         </div>
       )}
 
-      <div className="flex gap-2 px-4 py-3">
-        {!allPending && (
-          <>
-            <button onClick={onDryRun} className="px-3 py-1.5 text-[11px] uppercase tracking-wider font-medium rounded-sm border transition-colors" style={{ borderColor: c.border, color: c.text, opacity: 0.7 }}>
-              Preview
+      {isOwner && (
+        <div className="flex gap-2 px-4 py-3">
+          {!allPending && (
+            <>
+              <button onClick={onDryRun} className="px-3 py-1.5 text-[11px] uppercase tracking-wider font-medium rounded-sm border transition-colors" style={{ borderColor: c.border, color: c.text, opacity: 0.7 }}>
+                Preview
+              </button>
+              <button
+                onClick={onApprove}
+                disabled={isApproving || notPendingCount === 0}
+                className="flex items-center gap-2 px-4 py-1.5 text-[11px] uppercase tracking-wider font-bold rounded-sm transition-all disabled:opacity-40"
+                style={{ background: c.badge, color: "#13110E" }}
+              >
+                {isApproving && <div className="w-3 h-3 border-2 border-current/40 border-t-current rounded-full animate-spin" />}
+                {tier === "GREEN" ? `Run ${notPendingCount} task${notPendingCount !== 1 ? "s" : ""}` : `Approve ${notPendingCount}`}
+              </button>
+            </>
+          )}
+          {pendingCount > 0 && (
+            <button onClick={onUnapprove} className="ml-auto px-3 py-1.5 text-[10px] uppercase tracking-wider rounded-sm border transition-colors" style={{ borderColor: c.border, color: c.text, opacity: 0.5 }}>
+              Undo
             </button>
-            <button
-              onClick={onApprove}
-              disabled={isApproving || notPendingCount === 0}
-              className="flex items-center gap-2 px-4 py-1.5 text-[11px] uppercase tracking-wider font-bold rounded-sm transition-all disabled:opacity-40"
-              style={{ background: c.badge, color: "#13110E" }}
-            >
-              {isApproving && <div className="w-3 h-3 border-2 border-current/40 border-t-current rounded-full animate-spin" />}
-              {tier === "GREEN" ? `Run ${notPendingCount} task${notPendingCount !== 1 ? "s" : ""}` : `Approve ${notPendingCount}`}
-            </button>
-          </>
-        )}
-        {pendingCount > 0 && (
-          <button onClick={onUnapprove} className="ml-auto px-3 py-1.5 text-[10px] uppercase tracking-wider rounded-sm border transition-colors" style={{ borderColor: c.border, color: c.text, opacity: 0.5 }}>
-            Undo
-          </button>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -1028,12 +1058,13 @@ function TierSection({
 // ── RedSection ────────────────────────────────────────────────────────────────
 
 function RedSection({
-  tasks, pendingIds, onOverride, onOpenDeliberation,
+  tasks, pendingIds, onOverride, onOpenDeliberation, isOwner,
 }: {
   tasks: ClassifiedTask[];
   pendingIds: Set<string>;
   onOverride: (t: ClassifiedTask, toTier: Tier) => void;
   onOpenDeliberation: ((t: ClassifiedTask) => void) | null;
+  isOwner: boolean;
 }) {
   const [expanded, setExpanded] = useState(true);
   const c = TIER_COLOR.RED;
@@ -1074,7 +1105,7 @@ function RedSection({
                         {seat.icon} {seat.name}
                       </span>
                     )}
-                    <OverrideMenu task={t} onOverride={(toTier) => onOverride(t, toTier)} />
+                    {isOwner && <OverrideMenu task={t} onOverride={(toTier) => onOverride(t, toTier)} />}
                   </div>
                 </div>
                 <details className="mt-2">
@@ -1095,7 +1126,7 @@ function RedSection({
                     </div>
                   </div>
                 )}
-                {onOpenDeliberation && (
+                {isOwner && onOpenDeliberation && (
                   <div className="mt-2.5">
                     <button
                       onClick={() => onOpenDeliberation(t)}
