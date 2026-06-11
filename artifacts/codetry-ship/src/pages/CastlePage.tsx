@@ -25,8 +25,8 @@ const WINGS: Wing[] = [
     name: "The Crypts",
     subtitle: "The archive runs deep.",
     body:
-      "Every episode, every field note, every founding story is stored here. The Survival Podcast archive. The oral tradition of the Headwaters Kitchen Table. The Crypts hold what the trail has already taught — so you don't start from scratch.",
-    href: "/listen",
+      "Every founding story, field note, and practitioner log is stored here. The oral tradition of the Headwaters watershed — kept in writing, kept alive. The Crypts hold what the trail has already taught so you don't start from scratch.",
+    href: "/founding-stories",
     actionLabel: "Descend into The Crypts →",
   },
   {
@@ -34,8 +34,8 @@ const WINGS: Wing[] = [
     name: "The Armory",
     subtitle: "Tools ready to deploy.",
     body:
-      "The Headwaters Kit is the weapons cache. Pre-built community tools, handoff-ready, no lock-in. The Armory stocks the shelf — community store playbooks, platform kits, governance templates, and practitioner guides. Take what fits your community.",
-    href: "/headwaters/products",
+      "The community economy layer — wallets, tips, mutual aid, and the XRPL infrastructure underneath. The Armory is where value moves. Not a payment processor. A watershed economy running on community-owned rails.",
+    href: "/economy",
     actionLabel: "Open The Armory →",
   },
   {

@@ -358,11 +358,6 @@ export function ListenPage() {
           807 Food Co-op is a member-owned food co-operative in Dryden, Ontario — incorporated under the Co-operative Corporations Act, operated by 14+ member businesses, $147,000 moved through a community-owned channel in 27 months.
         </p>
 
-        {/* ---- Start Here — permaculture zone quiz ---- */}
-        <div className="mt-8 print:hidden">
-          <TspZoneQuiz />
-        </div>
-
         {/* ---- 807 outcomes block ---- */}
         <section className="mt-8 print:hidden" data-testid="section-outcomes">
           <p
@@ -506,6 +501,11 @@ export function ListenPage() {
             </div>
           </div>
         </section>
+
+        {/* ---- Start Here — permaculture zone quiz ---- */}
+        <div className="mt-8 print:hidden">
+          <TspZoneQuiz />
+        </div>
 
         {/* ---- primary CTA — Odyssey as next step ---- */}
         <section className="mt-8 print:hidden" data-testid="section-odyssey-cta">
