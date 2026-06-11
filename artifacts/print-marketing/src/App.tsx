@@ -82,6 +82,7 @@ import CdpGrantNarrative from "@/pages/CdpGrantNarrative";
 import CdpGrantNarrativeOnePager from "@/pages/CdpGrantNarrativeOnePager";
 import FamilyIncomeOnePager from "@/pages/FamilyIncomeOnePager";
 import AlternaGrantProposal from "@/pages/AlternaGrantProposal";
+import AlternaGrantProposalSubmit from "@/pages/AlternaGrantProposalSubmit";
 import NotFound from "@/pages/not-found";
 import { GordWidget } from "@workspace/gord-widget";
 import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
@@ -168,6 +169,7 @@ function Router() {
       <Route path="/cdp-grant-narrative/one-pager" component={CdpGrantNarrativeOnePager} />
       <Route path="/family-income" component={FamilyIncomeOnePager} />
       <Route path="/alterna-grant-proposal" component={AlternaGrantProposal} />
+      <Route path="/alterna-grant-proposal/submit" component={AlternaGrantProposalSubmit} />
       <Route component={NotFound} />
     </Switch>
   );

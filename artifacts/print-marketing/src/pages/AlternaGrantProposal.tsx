@@ -42,13 +42,17 @@ export default function AlternaGrantProposal() {
       <div className="no-print mb-6 flex items-center justify-between gap-4 flex-wrap">
         <div>
           <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">Alterna Financial Inclusion Grant — Full Proposal</span>
+            <span className="font-medium text-foreground">Alterna Financial Inclusion Grant — Full Internal Reference</span>
             {" "}· Due June 26, 2026 · $20,000 requested
           </p>
           <p className="text-xs text-muted-foreground mt-0.5">
             Submit to{" "}
             <a href="mailto:community.grants@alterna.ca" className="underline hover:text-primary">
               community.grants@alterna.ca
+            </a>
+            {" "}·{" "}
+            <a href="/print-marketing/alterna-grant-proposal/submit" className="underline hover:text-primary font-medium">
+              View 3-page submission draft →
             </a>
           </p>
         </div>
@@ -70,7 +74,7 @@ export default function AlternaGrantProposal() {
               <p className="text-sm text-muted-foreground">Dryden, Ontario · 807foodcoop.ca</p>
             </div>
             <div className="text-right text-sm text-muted-foreground letterhead-row">
-              <p>[Date]</p>
+              <p>June 10, 2026</p>
               <p>community.grants@alterna.ca</p>
             </div>
           </div>
@@ -98,12 +102,12 @@ export default function AlternaGrantProposal() {
         <section className="section-gap mb-3">
           <h2 className="font-serif text-lg font-bold text-foreground mb-1.5">Executive Summary</h2>
           <p className="text-sm leading-relaxed">
-            The 807 Food Co-operative &amp; Hub requests $20,000 from Alterna Savings' Financial Inclusion Granting Program to build and pilot a plain-language <strong>codetry</strong> decision-support tool — an interactive digital experience that translates co-op membership economics into everyday language for rural producers and member-owners in Northwestern Ontario. The 807 region spans ~475,000 km² with limited banking infrastructure and a population where English is frequently a second language; many members engage with the co-op without understanding member equity, patronage returns, or collective purchasing. The codetry approach pairs a practitioner directly with members to build plain-language explanations from lived language, then integrates them into tools members already use. Alterna's $20,000 funds the full project; co-op staff time and volunteer hours add $3,000 in-kind ($23,000 total). The finished tool will be released open-source for any Ontario food co-op to adopt.
+            The 807 Food Co-operative &amp; Hub requests $20,000 from Alterna Savings' Financial Inclusion Granting Program to build and pilot a literate code map that supports co-op members by ensuring that local economic development opportunities are delivered in the everyday language of rural producers and member-owners in Northwestern Ontario. This project will be the first to underpin the cutting edge blockchain development software (codetry), rooted in financial inclusion. The 807 region spans ~475,000 km² with limited business opportunities and a population where jargon is not understood or accepted; many members engage with the co-op without understanding terminology used in the banking and grant sector, limited their opportunity for necessary support programs. The codetry approach pairs a practitioner directly with members to build plain-language explanations from lived language, then integrates them into tools members already use. Alterna's $20,000 funds the full project; co-op staff time and volunteer hours add $3,000 in-kind ($23,000 total). The finished tool will be released open-source for any Ontario food co-op to adopt.
           </p>
 
           <h3 className="font-semibold text-sm text-foreground mt-2 mb-1">Measurable Outcomes</h3>
           <ul className="text-sm text-muted-foreground list-disc pl-5">
-            <li>≥ 50 members complete the codetry module during the Jan–Feb 2027 pilot</li>
+            <li>≥ 50 regional businesses complete the codetry module during the Jan–Feb 2027 pilot</li>
             <li>≥ 10-point average increase in self-assessed financial confidence (pre/post survey, 0–100 scale)</li>
             <li>≥ 3 Ontario co-ops or food hubs adopt the open-source release within 12 months of launch</li>
             <li>≥ 10 qualified Alterna Savings referrals generated through the post-module member prompt</li>
@@ -126,92 +130,84 @@ export default function AlternaGrantProposal() {
               </thead>
               <tbody>
                 <tr className="bg-primary/5">
-                  <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={4}>
+                  <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={5}>
                     1. Plain-Language Content Development
                   </td>
-                  <td className="px-2 py-1 border border-border/50">Plain-language practitioner — 30 hrs × $90/hr (drafts, plain-language audit, accessibility review)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$2,700</td>
+                  <td className="px-2 py-1 border border-border/50">Sarah (practitioner) — In-person business sessions, 5 businesses × 3 hrs (session + travel/docs): 15 hrs × $135</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$2,025</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Co-op financial educator — 10 hrs × $75/hr (accuracy review, member-facing framing)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$750</td>
+                  <td className="px-2 py-1 border border-border/50">Sarah (practitioner) — Board mapping research, post-session documentation (3 sessions): 8 hrs × $135</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$1,080</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Translation &amp; cultural adaptation — Ojibwe &amp; French, 15 hrs × $90/hr</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$1,350</td>
+                  <td className="px-2 py-1 border border-border/50">Sarah (practitioner) — Online personality mapping, 40 businesses: 8 hrs × $135</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$1,080</td>
+                </tr>
+                <tr>
+                  <td className="px-2 py-1 border border-border/50">Outreach coordinator — Find and onboard 40 businesses: 18 hrs × $70</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$1,260</td>
                 </tr>
                 <tr className="bg-muted/30 font-medium">
                   <td className="px-2 py-1 border border-border/50">Line 1 subtotal</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$4,800</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$5,445</td>
                 </tr>
                 <tr className="bg-primary/5">
-                  <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={5}>
+                  <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={3}>
                     2. Technical Build &amp; Integration
                   </td>
-                  <td className="px-2 py-1 border border-border/50">Developer — interactive module build, 60 hrs × $95/hr (UI, quiz logic, progress tracking)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$5,700</td>
+                  <td className="px-2 py-1 border border-border/50">Sarah (developer) — Interactive module, automated onboarding tool, platform integration, open-source packaging: 30 hrs × $135</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$4,050</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Platform integration &amp; accessibility testing — 15 hrs × $80/hr (WCAG 2.1 AA, mobile-first)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$1,200</td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-1 border border-border/50">Open-source packaging &amp; documentation — 10 hrs × $75/hr (README, install guide)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$750</td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-1 border border-border/50">Pilot-period hosting &amp; testing infrastructure (cloud, staging environment)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$750</td>
+                  <td className="px-2 py-1 border border-border/50">Pilot-period hosting &amp; testing infrastructure</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$65</td>
                 </tr>
                 <tr className="bg-muted/30 font-medium">
                   <td className="px-2 py-1 border border-border/50">Line 2 subtotal</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$8,400</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$4,115</td>
                 </tr>
                 <tr className="bg-primary/5">
                   <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={6}>
                     3. Pilot Program &amp; Evaluation
                   </td>
-                  <td className="px-2 py-1 border border-border/50">Session facilitator — 3 in-person sessions, 12 hrs × $70/hr (facilitation + debrief)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$840</td>
+                  <td className="px-2 py-1 border border-border/50">Sarah (facilitator) — 3 in-person sessions, facilitation + debrief: 12 hrs × $135</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$1,620</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Survey design &amp; analysis — 20 hrs × $65/hr (pre/post assessment, outcome measurement)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$1,300</td>
+                  <td className="px-2 py-1 border border-border/50">Sarah — Survey design &amp; analysis (automated reporting reduces scope): 8 hrs × $135</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$1,080</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Participant honoraria — 50 members × $15 (incentive for completing pre/post surveys)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$750</td>
+                  <td className="px-2 py-1 border border-border/50">Participant honoraria — 50 businesses × $50</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$2,500</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Printed materials (plain-language handouts, word bank cards)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$500</td>
+                  <td className="px-2 py-1 border border-border/50">Printed materials (plain-language cards, stickers, financial support materials)</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$1,000</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Facilitator travel to remote pilot sites (mileage, accommodation)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$410</td>
+                  <td className="px-2 py-1 border border-border/50">Facilitator travel to remote pilot sites (~50 km per producer)</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$1,000</td>
                 </tr>
                 <tr className="bg-muted/30 font-medium">
                   <td className="px-2 py-1 border border-border/50">Line 3 subtotal</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$3,800</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$7,200</td>
                 </tr>
                 <tr className="bg-primary/5">
-                  <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={4}>
+                  <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={3}>
                     4. Reporting &amp; Dissemination
                   </td>
-                  <td className="px-2 py-1 border border-border/50">Final impact report — 20 hrs × $65/hr (narrative, metrics, lessons-learned)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$1,300</td>
+                  <td className="px-2 py-1 border border-border/50">Sarah — Final impact report (automated processes reduce manual hours): 8 hrs × $135</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$1,080</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Open-source launch &amp; sector outreach (conference presentation, co-op network comms)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$800</td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-1 border border-border/50">Contingency — 4.5% of project total (unforeseen translation needs, accessibility fixes)</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$900</td>
+                  <td className="px-2 py-1 border border-border/50">Sarah — Open-source launch &amp; sector outreach, co-op network communications: 16 hrs × $135</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$2,160</td>
                 </tr>
                 <tr className="bg-muted/30 font-medium">
                   <td className="px-2 py-1 border border-border/50">Line 4 subtotal</td>
-                  <td className="px-2 py-1 text-right border border-border/50">$3,000</td>
+                  <td className="px-2 py-1 text-right border border-border/50">$3,240</td>
                 </tr>
                 <tr className="bg-primary/20">
                   <td className="px-2 py-1 font-bold border border-border/50" colSpan={2}>Total Grant Request (Alterna Savings)</td>
@@ -232,7 +228,7 @@ export default function AlternaGrantProposal() {
           </div>
 
           <p className="text-xs text-muted-foreground mt-1">
-            All rates are consistent with Northwestern Ontario non-profit contractor norms. Contingency (4.5%) is drawn only with documented justification in the final report. <span className="font-medium">Application line correspondence:</span> Line 1 = "1:1 codetry tooling sessions" ($5,250 app); Line 2 = "Design, Development &amp; integration" ($7,000); Line 3 = "Member testing &amp; survey sessions" ($1,750 + expanded pilot scope); Line 4 = "Impact reporting, Maintenance &amp; Board Handover" ($3,500). Total $20,000 unchanged.
+            All rates reflect Northwestern Ontario non-profit contractor norms. Sarah Lovenuk (lead practitioner and developer) bills at $135/hr across all labour lines.
           </p>
         </section>
 
@@ -319,7 +315,7 @@ export default function AlternaGrantProposal() {
           <h2 className="font-serif text-lg font-bold text-foreground mb-1.5">3. Replication and Regional Impact</h2>
           <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-0.5">
             <li><span className="font-medium text-foreground">Open-source release (MIT, within 30 days of pilot conclusion).</span> Full tool — content modules, word bank, quiz framework, translation templates, platform integration code — published on GitHub with a zero-to-running guide for non-technical co-op administrators.</li>
-            <li><span className="font-medium text-foreground">Ontario rural food co-op template.</span> Early conversations underway with co-ops in Georgian Bay, Guelph, and Ottawa Valley. An implementation guide will map modules to common member onboarding milestones so any co-op can customize without rebuilding.</li>
+            <li><span className="font-medium text-foreground">Ontario rural food co-op template.</span> Active partnerships with the Ontario Co-operatives Association, The Co-operators, NOHFC, Innovation Centre, and PACE will support implementation and regional adoption. An implementation guide will map modules to common member onboarding milestones so any co-op can customize without rebuilding.</li>
             <li><span className="font-medium text-foreground">Phase 2 via FedNor CEDD.</span> We intend to apply to FedNor's next intake to fund Oji-Cree video modules, three additional Northern Ontario food hub partnerships, and regional train-the-facilitator sessions. Alterna's early investment strengthens that application.</li>
           </ul>
         </section>
@@ -352,6 +348,10 @@ export default function AlternaGrantProposal() {
                   <td className="px-2 py-1 border border-border/50 font-medium whitespace-nowrap">Co-Branded Sector Visibility</td>
                   <td className="px-2 py-1 border border-border/50">Alterna logo on tool interface, pilot handouts, GitHub README, and media coverage. Joint pitch to Co-operatives and Mutuals Canada and Ontario Co-operative Association.</td>
                 </tr>
+                <tr>
+                  <td className="px-2 py-1 border border-border/50 font-medium whitespace-nowrap">Member Financial Tools Integration</td>
+                  <td className="px-2 py-1 border border-border/50">As the codetry platform matures, Headwaters is developing complementary plain-language budgeting tools designed for rural families and member-owners. We see Alterna as a natural payment and financial services partner for these tools — connecting members directly to credit union products at the moment they're making household financial decisions. This grant lays the groundwork for that deeper integration.</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -361,7 +361,7 @@ export default function AlternaGrantProposal() {
         <section className="section-gap mb-3">
           <h2 className="font-serif text-lg font-bold text-foreground mb-1.5">5. Additional Context</h2>
           <p className="text-sm leading-relaxed">
-            807 Co-op serves ~475,000 km² of Northwestern Ontario including dozens of remote First Nations communities. The codetry tool is built mobile-first with offline modules — a basic access requirement, not a design preference. ~30% of active members speak Ojibwe, Oji-Cree, or French as a primary language; the tool targets Grade 6–8 reading level with full translation modules. It integrates directly into the existing 807foodcoop.ca member platform, eliminating separate account creation and dramatically reducing adoption risk. The platform continues after the grant period ends; Alterna's $20,000 funds content, piloting, and open-source release — not infrastructure that disappears. We cannot proceed without the full amount: the 807 Co-op has no surplus for contractor fees. This grant is the sole enabler, and the tool is highly replicable once built.
+            807 Co-op serves ~475,000 km² of Northwestern Ontario including dozens of remote First Nations communities. The codetry tool is built mobile-first with offline modules — a basic access requirement, not a design preference. It integrates directly into the existing 807foodcoop.ca member platform, eliminating separate account creation and dramatically reducing adoption risk. The platform continues after the grant period ends; Alterna's $20,000 funds content, piloting, and open-source release — not infrastructure that disappears. We cannot proceed without the full amount: the 807 Co-op has no surplus for contractor fees. This grant is the sole enabler, and the tool is highly replicable once built.
           </p>
         </section>
 
