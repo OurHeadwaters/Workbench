@@ -1,0 +1,433 @@
+import { Printer } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export default function AlternaFinancialInclusionProposal() {
+  return (
+    <>
+      <style>{`
+        @media print {
+          /* Hide all app chrome — sidebar, top bar, drop button, chat widget */
+          aside,
+          header,
+          [data-deadhead-drop],
+          [data-gord-widget],
+          .no-print {
+            display: none !important;
+          }
+          /* Let the main content fill the page */
+          body, html { background: white !important; margin: 0 !important; }
+          main { padding: 0 !important; overflow: visible !important; }
+          .flex.flex-col.md\\:flex-row { display: block !important; }
+          .proposal-wrap {
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+          }
+          @page { size: letter portrait; margin: 1in; }
+          h1 { font-size: 16pt !important; }
+          h2 { font-size: 12pt !important; margin-top: 16pt !important; }
+          h3 { font-size: 10.5pt !important; }
+          p, li, td, th { font-size: 9.5pt !important; line-height: 1.5 !important; }
+          table { font-size: 9pt !important; }
+          .page-break-before { page-break-before: always !important; }
+        }
+      `}</style>
+
+      {/* Print button — hidden when printing */}
+      <div className="no-print mb-6 flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">Alterna Financial Inclusion Grant — Full Proposal</span>
+            {" "}· Due June 26, 2026 · $20,000 requested
+          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Submit to{" "}
+            <a href="mailto:community.grants@alterna.ca" className="underline hover:text-primary">
+              community.grants@alterna.ca
+            </a>
+          </p>
+        </div>
+        <Button onClick={() => window.print()} variant="outline" size="sm" className="gap-2 shrink-0">
+          <Printer className="h-4 w-4" />
+          Print / Export PDF
+        </Button>
+      </div>
+
+      {/* Proposal document */}
+      <div className="proposal-wrap max-w-4xl mx-auto bg-white dark:bg-card text-foreground rounded-xl shadow-md border border-border/60 p-8 sm:p-12">
+
+        {/* Letterhead */}
+        <div className="border-b-2 border-primary pb-5 mb-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="font-serif text-2xl font-bold text-foreground leading-tight">
+                807 Food Co-operative &amp; Hub
+              </h1>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Dryden, Ontario · 807foodcoop.ca
+              </p>
+            </div>
+            <div className="text-right text-sm text-muted-foreground">
+              <p>June 11, 2026</p>
+              <p className="mt-0.5">community.grants@alterna.ca</p>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-1">Submitted to</p>
+            <p className="font-medium text-foreground">Alterna Savings — Financial Inclusion Granting Program</p>
+          </div>
+
+          <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Project</p>
+              <p className="font-semibold">Co-op Financial Literacy Tool</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Amount Requested</p>
+              <p className="font-semibold">$20,000</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Lead Contact</p>
+              <p className="font-semibold">Sarah Lovenuk</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Executive Summary */}
+        <section className="mb-6">
+          <h2 className="font-serif text-lg font-bold text-foreground mb-2">Executive Summary</h2>
+          <p className="text-sm leading-relaxed">
+            The 807 Food Co-operative &amp; Hub is requesting $20,000 from Alterna Savings' Financial Inclusion Granting Program to build and pilot a plain-language co-operative financial literacy tool — a short interactive digital experience that translates co-op membership economics into terms that resonate with everyday members and producer-owners in rural Northwestern Ontario.
+          </p>
+          <p className="text-sm leading-relaxed mt-2">
+            The 807 region spans a vast geography with limited banking infrastructure, persistent digital-access barriers, and a population where English is frequently a second language. Many of our members — including Indigenous community members, newcomers, and remote-area residents — engage with the co-op without a clear understanding of how member equity, patronage returns, or collective purchasing power works. This tool addresses that gap directly, inside the platform our members already use weekly.
+          </p>
+          <p className="text-sm leading-relaxed mt-2">
+            The project will be built in-house, piloted with 807 members over eight weeks, and released as open-source infrastructure that any Ontario food co-op or food hub can adopt. Alterna's $20,000 grant funds the full project budget; co-op staff time, server infrastructure, and member outreach are contributed as in-kind, valued at $3,000 — bringing total project value to $23,000.
+          </p>
+        </section>
+
+        {/* Section 1: Detailed Budget */}
+        <section className="mb-6">
+          <h2 className="font-serif text-lg font-bold text-foreground mb-3">
+            1. Detailed Budget
+          </h2>
+          <p className="text-sm text-muted-foreground mb-3">
+            The $20,000 Alterna grant request covers a four-line project structure. The table below expands each line into its component costs with rationale. A separate co-op in-kind contribution of $3,000 is shown below for completeness.
+          </p>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="bg-muted/60">
+                  <th className="text-left px-3 py-2 font-semibold border border-border/50">Line Item</th>
+                  <th className="text-left px-3 py-2 font-semibold border border-border/50">Sub-Item / Rationale</th>
+                  <th className="text-right px-3 py-2 font-semibold border border-border/50 whitespace-nowrap">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Line 1 */}
+                <tr className="bg-primary/5">
+                  <td className="px-3 py-2 font-semibold border border-border/50 align-top" rowSpan={4}>
+                    1. Plain-Language Content Development
+                  </td>
+                  <td className="px-3 py-2 border border-border/50">Plain-language practitioner — 30 hrs × $90/hr (drafts, plain-language audit, accessibility review)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$2,700</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Co-op financial educator — 10 hrs × $75/hr (accuracy review, member-facing framing)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$750</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Translation &amp; cultural adaptation — Ojibwe &amp; French, 15 hrs × $90/hr</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$1,350</td>
+                </tr>
+                <tr className="bg-muted/30 font-medium">
+                  <td className="px-3 py-2 border border-border/50">Line 1 subtotal</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$4,800</td>
+                </tr>
+
+                {/* Line 2 */}
+                <tr className="bg-primary/5">
+                  <td className="px-3 py-2 font-semibold border border-border/50 align-top" rowSpan={5}>
+                    2. Technical Build &amp; Integration
+                  </td>
+                  <td className="px-3 py-2 border border-border/50">Developer — interactive module build, 60 hrs × $95/hr (UI, quiz logic, progress tracking)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$5,700</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Platform integration &amp; accessibility testing — 15 hrs × $80/hr (WCAG 2.1 AA, mobile-first)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$1,200</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Open-source packaging &amp; documentation — 10 hrs × $75/hr (README, install guide, demo data)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$750</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Pilot-period hosting &amp; testing infrastructure (cloud, staging environment)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$750</td>
+                </tr>
+                <tr className="bg-muted/30 font-medium">
+                  <td className="px-3 py-2 border border-border/50">Line 2 subtotal</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$8,400</td>
+                </tr>
+
+                {/* Line 3 */}
+                <tr className="bg-primary/5">
+                  <td className="px-3 py-2 font-semibold border border-border/50 align-top" rowSpan={6}>
+                    3. Pilot Program &amp; Evaluation
+                  </td>
+                  <td className="px-3 py-2 border border-border/50">Session facilitator — 3 in-person pilot sessions, 12 hrs × $70/hr (facilitation + debrief)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$840</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Survey design &amp; analysis — 20 hrs × $65/hr (pre/post assessment, outcome measurement)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$1,300</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Participant honoraria — 50 members × $15 (incentive for completing pre/post surveys)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$750</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Printed materials (plain-language handouts, word bank cards)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$500</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Facilitator travel to remote pilot sites (mileage, accommodation)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$410</td>
+                </tr>
+                <tr className="bg-muted/30 font-medium">
+                  <td className="px-3 py-2 border border-border/50">Line 3 subtotal</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$3,800</td>
+                </tr>
+
+                {/* Line 4 */}
+                <tr className="bg-primary/5">
+                  <td className="px-3 py-2 font-semibold border border-border/50 align-top" rowSpan={4}>
+                    4. Reporting &amp; Dissemination
+                  </td>
+                  <td className="px-3 py-2 border border-border/50">Final impact report — 20 hrs × $65/hr (narrative, metrics, lessons-learned document)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$1,300</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Open-source launch &amp; sector outreach (conference presentation, co-op network communications)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$800</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border border-border/50">Contingency (4.5% of project total — unforeseen translation needs, accessibility fixes)</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$900</td>
+                </tr>
+                <tr className="bg-muted/30 font-medium">
+                  <td className="px-3 py-2 border border-border/50">Line 4 subtotal</td>
+                  <td className="px-3 py-2 text-right border border-border/50">$3,000</td>
+                </tr>
+
+                {/* Total requested */}
+                <tr className="bg-primary/20">
+                  <td className="px-3 py-2 font-bold border border-border/50" colSpan={2}>
+                    Total Grant Request (Alterna Savings)
+                  </td>
+                  <td className="px-3 py-2 text-right font-bold border border-border/50">$20,000</td>
+                </tr>
+
+                {/* In-kind */}
+                <tr className="bg-muted/40 text-muted-foreground">
+                  <td className="px-3 py-2 text-xs border border-border/50" colSpan={2}>
+                    Co-op in-kind contribution (staff coordination, server infrastructure, board volunteer hours) — not requested from Alterna
+                  </td>
+                  <td className="px-3 py-2 text-right text-xs border border-border/50">$3,000</td>
+                </tr>
+                <tr className="bg-muted/20">
+                  <td className="px-3 py-2 font-semibold text-sm border border-border/50" colSpan={2}>Total Project Value</td>
+                  <td className="px-3 py-2 text-right font-semibold text-sm border border-border/50">$23,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p className="text-xs text-muted-foreground mt-2">
+            All rates are consistent with Northwestern Ontario non-profit contractor norms. Contingency is held at 4.5% and will only be drawn down with documented justification in the final report.
+          </p>
+        </section>
+
+        {/* Section 2: Alterna Employee Participation */}
+        <section className="mb-6 page-break-before">
+          <h2 className="font-serif text-lg font-bold text-foreground mb-2">
+            2. Alterna Employee Participation Opportunities
+          </h2>
+          <p className="text-sm leading-relaxed mb-3">
+            We see genuine value in Alterna staff being present at the ground level of this work — not as funders observing from a distance, but as contributors who help shape the product. We are proposing three concrete participation opportunities:
+          </p>
+
+          <div className="space-y-4">
+            <div className="border border-border/60 rounded-lg p-4">
+              <h3 className="font-semibold text-sm text-foreground mb-1">
+                Language Workshop — Word Bank Co-Design Session
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                A half-day workshop (virtual or in-person, 3–4 hours) where Alterna frontline staff share which financial terms most often confuse clients. These terms — "dividend," "patronage return," "member equity," "retained earnings" — directly feed the tool's "word bank": a plain-language glossary that sits alongside every interactive module. Alterna staff bring lived insight from thousands of client conversations that no content writer can replicate. We would target this session in Month 2, before content enters final draft. Alterna's participation would be credited in the tool's interface and the final impact report.
+              </p>
+            </div>
+
+            <div className="border border-border/60 rounded-lg p-4">
+              <h3 className="font-semibold text-sm text-foreground mb-1">
+                Harvest Market — Volunteer Table
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The 807 Co-op hosts a harvest market in Dryden each fall (typically September–October). We invite Alterna staff to share a volunteer table at the market — an opportunity to speak with co-op members, answer savings and banking questions in an informal setting, and distribute co-branded materials about financial inclusion resources. This creates meaningful member touchpoints for Alterna in a geography where branch access is limited.
+              </p>
+            </div>
+
+            <div className="border border-border/60 rounded-lg p-4">
+              <h3 className="font-semibold text-sm text-foreground mb-1">
+                Annual General Meeting — Observer Seat &amp; Presentation Slot
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                We will reserve an observer seat and a short presentation slot (5–7 minutes) at the 807 Co-op's Annual General Meeting for an Alterna representative. The AGM is where member-owners engage most directly with co-op financials — it is the ideal setting to introduce the literacy tool and connect it to Alterna's broader mission. Alterna could optionally share a brief message about the financial inclusion initiative and its partnership with the co-op.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 3: Replication and Regional Impact */}
+        <section className="mb-6">
+          <h2 className="font-serif text-lg font-bold text-foreground mb-2">
+            3. Replication and Regional Impact
+          </h2>
+          <p className="text-sm leading-relaxed mb-3">
+            The co-operative sector in Ontario has no shared plain-language financial literacy infrastructure. Every co-op currently educating its members is doing so ad-hoc — PDFs, board presentations, informal conversations. This project changes that by building something reusable.
+          </p>
+
+          <div className="space-y-3">
+            <div>
+              <h3 className="font-semibold text-sm text-foreground mb-1">Open-Source Release</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Within 30 days of the pilot's conclusion, the full tool — content modules, word bank, quiz framework, translation templates, and platform integration code — will be released publicly on GitHub under an MIT licence. Any Ontario food co-op or food hub will be able to deploy it without licensing costs. We will publish a zero-to-running installation guide targeting non-technical co-op administrators.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-sm text-foreground mb-1">Template for Ontario's Rural Food Co-op Network</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                We are already in early contact with co-operatives in Georgian Bay, Guelph, and the Ottawa Valley who face similar member education challenges. The open-source release will be accompanied by a co-op-facing implementation guide that maps the tool's modules to common member onboarding milestones — allowing any co-op to customize language and examples to their own region without rebuilding from scratch.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-sm text-foreground mb-1">FedNor as a Parallel Funder for Scale</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                FedNor's Community Economic Development and Diversification (CEDD) program has previously funded digital capacity-building tools in Northwestern Ontario communities. We intend to apply to FedNor in the next intake round to fund a Phase 2 expansion — adding video modules in Oji-Cree, partnering with three additional Northern Ontario food hubs, and hosting regional train-the-facilitator sessions. Alterna's early investment strengthens that application by demonstrating provincial-level validation.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 4: Partnership Longevity */}
+        <section className="mb-6 page-break-before">
+          <h2 className="font-serif text-lg font-bold text-foreground mb-2">
+            4. Partnership Longevity Opportunities
+          </h2>
+          <p className="text-sm leading-relaxed mb-3">
+            We want this to be a lasting relationship, not a single grant cycle. We are proposing four structures that carry the partnership forward after the project wraps.
+          </p>
+
+          <div className="space-y-3">
+            <div className="border-l-4 border-primary/40 pl-4">
+              <h3 className="font-semibold text-sm text-foreground mb-0.5">Annual Financial Literacy Month Event</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Each November, the co-op will host a co-branded Financial Literacy Month event with Alterna — a hybrid session (in-person in Dryden, livestreamed for remote members) featuring a refreshed run of the literacy tool, a short presentation by an Alterna representative, and an open Q&amp;A on savings, credit unions, and co-operative finance. This becomes an annual touchpoint that keeps the content current and the partnership visible.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-primary/40 pl-4">
+              <h3 className="font-semibold text-sm text-foreground mb-0.5">Member Newsletter Feature &amp; Onboarding Integration</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                We will feature Alterna Savings in the co-op's quarterly member newsletter, with a standing column on financial inclusion resources available to members in our region. Alterna will also be introduced in the new-member onboarding flow as a recommended financial services partner — a direct, opt-in referral pathway reaching every new member-owner as they join.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-primary/40 pl-4">
+              <h3 className="font-semibold text-sm text-foreground mb-0.5">Member Referral Pathway to Alterna Savings Accounts</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Co-op members who complete the literacy tool will receive a prompt about Alterna Savings membership — specifically the alignment between credit union values and co-operative ownership principles. This is not advertising; it is a natural extension of the financial education journey. Members who want to open an account will be given direct contact information and any available co-op partnership codes.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-primary/40 pl-4">
+              <h3 className="font-semibold text-sm text-foreground mb-0.5">Co-Branded Materials &amp; Sector Visibility</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Alterna's logo and a brief partnership acknowledgement will appear on all printed and digital materials produced under this grant — the tool interface, pilot handouts, the open-source repository README, and any media coverage of the launch. We will jointly pitch the project to Co-operatives and Mutuals Canada and Ontario Co-operative Association communications channels, giving Alterna visibility in the national co-op sector press.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 5: Supporting Context */}
+        <section className="mb-6">
+          <h2 className="font-serif text-lg font-bold text-foreground mb-2">
+            5. Supporting Context
+          </h2>
+
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold text-sm text-foreground mb-1">The 807 Region: Geography, Isolation, and the Digital Divide</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The 807 Food Co-operative serves members across the 807 area code — a region spanning roughly 475,000 km² of Northwestern Ontario, including Dryden, Sioux Lookout, Fort Frances, Kenora, and dozens of remote First Nations communities accessible only by seasonal road or air. The population is approximately 230,000 people, with First Nations communities representing a significant and growing share of the co-op's membership.
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                Internet connectivity in this region ranges from unreliable to absent. Many members access the co-op platform via mobile data with bandwidth constraints. Our literacy tool is being built mobile-first, with offline-capable modules, explicitly to reach members who cannot stream video or load data-heavy content. This is not a design choice — it is a basic access requirement.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-sm text-foreground mb-1">Co-op Member Profile</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The typical 807 Co-op member is a small-scale producer or household consumer living on a mixed farm or in a remote community. Average farm operations in our membership are under 500 acres; most producer-members run diversified operations (mixed vegetables, livestock, forestry, wild harvest) rather than single-commodity farms. Household income across our member base skews below the provincial median, and many members have limited prior experience with formal financial products.
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                English is not the first language for approximately 30% of our active members. Ojibwe, Oji-Cree, and French are the primary languages spoken in households across our service area. The plain-language tool is being designed for a Grade 6–8 reading level in English with translation modules available — not as a concession to member capacity, but as a recognition that financial concepts are genuinely complex and deserve clear communication for everyone.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-sm text-foreground mb-1">Existing Platform Infrastructure: A Reduced-Risk Investment</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The 807 Co-op operates a live membership platform — 807foodcoop.ca — that members use weekly for market participation, producer sales tracking, event registration, and benefit management. The literacy tool will be integrated directly into this platform as a new module in the member portal, not deployed as a standalone website requiring separate user accounts or sign-ins.
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                This dramatically reduces both the technical risk and the adoption risk. Members will encounter the tool during normal platform use — when renewing their membership, reviewing their producer dashboard, or checking upcoming events. Alterna's grant funds content creation, piloting, and open-source release; it does not fund infrastructure that will disappear when the grant period ends. The platform will continue operating and the module will remain embedded in it.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-sm text-foreground mb-1">Co-op Founding Story</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The 807 Food Co-operative was founded by a small group of producers and community members in Dryden who recognized that the economic isolation of Northwestern Ontario was not a fixed condition — it was a coordination problem. Producers were selling at a loss to distant distributors because they lacked collective market access. Consumers were driving hours for food they could source locally if the infrastructure existed. The co-op was built to bridge that gap.
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                Five years in, the co-op has grown its membership steadily and expanded its producer network across the region. The next challenge is not growth — it is depth. Members who understand how the co-op model works financially are more likely to reinvest their patronage returns, advocate for the co-op in their communities, and weather difficult seasons as committed owners rather than casual customers. This grant funds that understanding.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Closing */}
+        <div className="border-t border-border/60 pt-5 mt-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            We are grateful to Alterna Savings for the opportunity to advance to the full proposal stage, and for the Financial Inclusion Granting Program's commitment to reaching communities that mainstream financial institutions often do not. We welcome any questions about this proposal and can provide additional supporting materials — member surveys, platform usage data, or references from partner organizations — on request.
+          </p>
+          <div className="mt-4 text-sm">
+            <p className="font-semibold text-foreground">Sarah Lovenuk</p>
+            <p className="text-muted-foreground">807 Food Co-operative &amp; Hub</p>
+            <p className="text-muted-foreground">Dryden, Ontario</p>
+          </div>
+        </div>
+
+      </div>
+    </>
+  );
+}
