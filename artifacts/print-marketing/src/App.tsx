@@ -182,8 +182,8 @@ export default function App() {
       <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
         <Router />
       </WouterRouter>
-      <KitchenTableButton />
-      <GordWidget />
+      <div className="print:hidden"><KitchenTableButton /></div>
+      <div className="print:hidden"><GordWidget /></div>
       <PrintEcosystemFooter />
     </PreviewProvider>
     </ZoneStoreProvider>
