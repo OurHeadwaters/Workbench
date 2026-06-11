@@ -38,7 +38,7 @@ export const ZONES: ZoneData[] = [
     name: "Saltbox",
     slug: "saltbox",
     terrain: "The Hearth · Home Center",
-    flowsTo: "Kitchen Table",
+    flowsTo: "The Table",
     metaphor: "Where families keep what they need before winter comes.",
     goodTimesDesc:
       "Household sorted. Kit checked. Roles assigned. Everything in its place — quiet competence on the shelf.",
@@ -83,18 +83,18 @@ export const ZONES: ZoneData[] = [
   },
   {
     number: 1,
-    name: "Kitchen Table",
-    slug: "kitchen-table",
+    name: "The Table",
+    slug: "the-table",
     terrain: "The Spring · Daily Tools",
     flowsTo: "Workbench",
     metaphor: "Where names are held and trust is recognized — the root system that connects everything above ground.",
     goodTimesDesc:
-      "Credentials quiet, identities stable. The Kitchen Table is the unseen foundation — names on record, passphrase in hand.",
+      "Credentials quiet, identities stable. The Table is the unseen foundation — names on record, passphrase in hand.",
     standbyDesc:
-      "Identity active. The passphrase is the key. The Kitchen Table proves who you are to any zone that asks.",
+      "Identity active. The passphrase is the key. The Table proves who you are to any zone that asks.",
     gateName: "The Passphrase Gate",
     gateDesc:
-      "A scrypt-derived passphrase that lives only on your device. No server holds your identity — the Kitchen Table is local.",
+      "A scrypt-derived passphrase that lives only on your device. No server holds your identity — The Table is local.",
     rootLabel: "Rooted",
     fruitLabel: "Recognized",
     color: "#1f3d2e",
