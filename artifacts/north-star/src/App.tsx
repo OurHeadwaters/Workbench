@@ -32,6 +32,7 @@ import { VisionBoardPage } from "@/pages/VisionBoardPage";
 import { PractitionerApplicationPage } from "@/pages/PractitionerApplicationPage";
 import { PractitionerReviewPage } from "@/pages/PractitionerReviewPage";
 import { GordWidget } from "@workspace/gord-widget";
+import { PasswordGate } from "@/components/PasswordGate";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -78,6 +79,7 @@ export default function App() {
   const isOwner = useIsOwner();
 
   return (
+    <PasswordGate>
     <ZoneStoreProvider>
     <WouterRouter base={BASE}>
       <Switch>
@@ -226,5 +228,6 @@ export default function App() {
     <KitchenTableButton />
     <GordWidget founderMode={isOwner} />
     </ZoneStoreProvider>
+    </PasswordGate>
   );
 }
