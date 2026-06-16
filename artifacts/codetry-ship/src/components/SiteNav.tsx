@@ -365,33 +365,44 @@ export function SiteNav() {
                   >
                     Explore
                   </p>
-                  {EXPLORE_LINKS.map(({ icon, name, href }, i) => (
+                  {EXPLORE_LINKS.map(({ icon, name, href }, i) => {
+                    const active = isActive(href, location);
+                    return (
                     <a
                       key={name}
                       ref={(el) => { toolItemRefs.current[TOOLS.length + i] = el; }}
                       href={`${base}${href}`}
                       className="flex items-center gap-3 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all"
                       style={{
-                        color: dark ? "rgba(244,237,224,0.82)" : "hsl(var(--foreground))",
-                        borderLeft: "2px solid transparent",
+                        color: active
+                          ? (dark ? "#d4a017" : "hsl(var(--foreground))")
+                          : (dark ? "rgba(244,237,224,0.82)" : "hsl(var(--foreground))"),
+                        borderLeft: `2px solid ${active ? "#d4a017" : "transparent"}`,
+                        background: active ? (dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))") : "transparent",
                       }}
                       role="menuitem"
                       tabIndex={-1}
+                      aria-current={active ? "page" : undefined}
                       onMouseEnter={(e) => {
                         (e.currentTarget as HTMLElement).style.borderLeftColor = "#d4a017";
                         (e.currentTarget as HTMLElement).style.color = dark ? "#f4ede0" : "hsl(var(--foreground))";
                         (e.currentTarget as HTMLElement).style.background = dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))";
                       }}
                       onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.borderLeftColor = "transparent";
-                        (e.currentTarget as HTMLElement).style.background = "transparent";
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderLeftColor = active ? "#d4a017" : "transparent";
+                        el.style.background = active ? (dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))") : "transparent";
+                        el.style.color = active
+                          ? (dark ? "#d4a017" : "hsl(var(--foreground))")
+                          : (dark ? "rgba(244,237,224,0.82)" : "hsl(var(--foreground))");
                       }}
                       data-testid={`nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                     >
                       <span className="text-base leading-none shrink-0">{icon}</span>
                       <span className="flex-1">{name}</span>
                     </a>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -578,22 +589,29 @@ export function SiteNav() {
                 >
                   Explore
                 </p>
-                {EXPLORE_LINKS.map(({ icon, name, href }) => (
+                {EXPLORE_LINKS.map(({ icon, name, href }) => {
+                  const active = isActive(href, location);
+                  return (
                   <a
                     key={name}
                     href={`${base}${href}`}
                     className="flex items-center gap-3 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors border-l-2"
                     style={{
-                      color: dark ? "rgba(244,237,224,0.75)" : "hsl(var(--foreground))",
-                      borderLeftColor: "transparent",
+                      color: active
+                        ? (dark ? "#d4a017" : "hsl(var(--foreground))")
+                        : (dark ? "rgba(244,237,224,0.75)" : "hsl(var(--foreground))"),
+                      borderLeftColor: active ? "#d4a017" : "transparent",
+                      background: active ? (dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))") : "transparent",
                     }}
                     role="menuitem"
+                    aria-current={active ? "page" : undefined}
                     data-testid={`mobile-nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                   >
                     <span className="text-base leading-none shrink-0">{icon}</span>
                     <span className="flex-1">{name}</span>
                   </a>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
