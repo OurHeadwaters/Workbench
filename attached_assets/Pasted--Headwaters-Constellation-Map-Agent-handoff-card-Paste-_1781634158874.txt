@@ -1,0 +1,126 @@
+# Headwaters — Constellation Map
+
+*Agent handoff card. Paste into replit.md or prepend to your agent prompt.
+For interop protocol (CORS, auth bridge, webhooks) see `docs/ecosystem-map.md` in the main repo.*
+
+Production root: **https://ourheadwaters.ca**
+Stack: pnpm monorepo · Node 24 · Express 5 · PostgreSQL + Drizzle · React + Vite + Tailwind
+
+---
+
+## Zone 0 — Saltbox · The Hearth
+*Live, raise family, homeschool, household sovereignty.*
+Target domain: saltboxhomes.ca
+
+| Tool | Where | What it does |
+|------|-------|-------------|
+| Goodbye Kit | ourheadwaters.ca/goodbye/ (in-repo) | Family lifecycle instrument — estate + end-of-life record |
+| Saltbox / Homeschool | salt-box.replit.app | Zone 0 hub — homeschool tools, North Star planner, Story Forge |
+| Hearth | creative-hub-xbucketsapp.replit.app | Creative household frontend |
+| Mama Support Brigade | mom-support-hub.replit.app | Support network for mothers |
+| Bright Side | health-support-hub.replit.app | Health support layer |
+| The Gate | legacy-gatekeeper.replit.app | Foundational membrane / access control doctrine tool |
+
+---
+
+## Zone 1 — Kitchen Table · The Spring
+*Budget every hat; plan income and lifestyle.*
+Target domain: parrsjars.com
+
+| Tool | Where | What it does |
+|------|-------|-------------|
+| The Arc (money tools) | ourheadwaters.ca/arc/ (in-repo) | Community Money Machines, monthly bucket flows, Eave Flows, Kitchen Table reports |
+| Headwaters Books | parrsjars.ca/headwaters-books/ | Bookkeeping layer |
+| North Star | salt-box.replit.app/north-star/ | Income + lifestyle planning |
+| The Eave | salt-box.replit.app/eave/ | Eave flow tracker |
+| Channel Every Drop | x-buckets-vision.replit.app/xbuckets-video/ | Budgeting video content |
+
+---
+
+## Zone 2 — Workbench · The Worn Path
+*Work in exchange for money — contracts and production.*
+Target domain: parrsjars.ca
+
+| Tool | Where | What it does |
+|------|-------|-------------|
+| Parr's Jars | parrsjars.com | Food production business + contracts |
+| Bobbie Parr Studio | parrsjars.com/studio/ | Design and studio work |
+| Meeting Companion | parrsjars.com/meeting-companion/ | Client meeting tool |
+| Thomas Hauling | summer-camper-rental.replit.app/thomas-hauling/ | Hauling services white-label |
+| 807 Food Coop | front-and-back-of-house.replit.app/807-shop/ | Co-op storefront |
+| Dryden Web | front-and-back-of-house.replit.app/dryden-web/ | Local web services |
+| Hinterland & Co. | front-and-back-of-house.replit.app/hinterland/ | Northern goods |
+
+---
+
+## Zone 3 — Greenhouse · The Member Circle
+*Belong, pool, mutual aid, funding access.*
+Target domain: ourcommunitybenefits.com
+
+| Tool | Where | What it does |
+|------|-------|-------------|
+| 807 Community Benefits | community-knowledge-hub.replit.app | White-label org layer + member plans + Helping Hands |
+| Grants Finder | community-knowledge-hub.replit.app/grants/ | Grant discovery for members |
+| Market Mosaic | community-knowledge-hub.replit.app/market/ | Community market layer |
+| Standby Supplies | community-knowledge-hub.replit.app/standby/ | Emergency supply coordination |
+| 807 Garden | community-knowledge-hub.replit.app/807-garden/ | Community garden tool |
+
+---
+
+## Zone 4 — The Clearing · The Market Square
+*Exchange, self-develop, discuss, broadcast.*
+Target domain: thestompingpaths.com
+
+| Tool | Where | What it does |
+|------|-------|-------------|
+| The Clearing (public landing) | ourheadwaters.ca/ (in-repo) | Public front door — zone map, division finder, origin story |
+| The Stomping Paths | thestompingpaths.com | Zone 4 hub — market access, podcast, practitioner intake |
+| Survival Podcast | thestompingpaths.com/episodes | Audio broadcast |
+| Practitioner Intake | thestompingpaths.com/practitioners | Onboarding for new practitioners |
+| Headwaters Kits | our-headwaters.replit.app/kits/ | Purchasable doctrine kits |
+| Headwaters Card Deck | our-headwaters.replit.app/cards/ | Card deck tool |
+| Headwaters Learning | parrsjars.ca/headwaters-learning/ | Learning hub |
+| Research Library | parrsjars.ca/library/ | Reference library |
+
+---
+
+## Zone 5 — The Edge · Studio & Long View
+*Create new things — design, blockchain, fringe builds, the long view.*
+Target domain: codetry.ca
+
+| Tool | Where | What it does |
+|------|-------|-------------|
+| Codetry | codetry.ca | Zone 5 hub — Forge, Discover, Blueprints |
+| XRPL Studio | xrpl-p-2-p.replit.app/xrpl-studio | XRPL testnet tooling |
+| Dam Days | xrpl-p-2-p.replit.app/dam-days | Edge studio project |
+| Slim Evey | xrpl-p-2-p.replit.app/slim-evey | Edge studio project |
+| Black Hole Studio | black-hole-studio.replit.app | Kids / homeschool creative layer |
+| Story Forge | salt-box.replit.app/story-forge/ | Long-view story creation |
+
+---
+
+## The Aquifer · The Water Table (substrate — no zone number)
+*Runs itself, stores, moves, orients. Hidden infrastructure everything depends on.*
+Home domain: ourheadwaters.ca
+
+| Tool | Where | What it does |
+|------|-------|-------------|
+| API Server | ourheadwaters.ca/api (in-repo `artifacts/api-server`) | Express 5 backend — auth, machines, eave flows, kits, helping hands |
+| The Arc | ourheadwaters.ca/arc/ (in-repo `artifacts/arc`) | Private steward portal (money tools → Z1; living map → Aquifer) |
+| The Compass | ourheadwaters.ca/compass/ (in-repo `artifacts/compass`) | Orientation — zone vocabulary and doctrine cards |
+| The Logic | ourheadwaters.ca/logic/ (in-repo `artifacts/the-logic`) | Foundational reference document |
+| Print Suite | ourheadwaters.ca/suite/ (in-repo `artifacts/print-suite`) | Cross-zone print production utility |
+
+---
+
+## In-repo artifact index
+
+| Preview path | Artifact dir | Zone home |
+|---|---|---|
+| `/` | `artifacts/headwaters` | Z4 Clearing (public front door) |
+| `/arc/` | `artifacts/arc` | Aquifer / Z1 money tools |
+| `/api` | `artifacts/api-server` | Aquifer (backend) |
+| `/compass/` | `artifacts/compass` | Aquifer |
+| `/logic/` | `artifacts/the-logic` | Aquifer |
+| `/suite/` | `artifacts/print-suite` | Aquifer |
+| `/goodbye/` | `artifacts/goodbye-kit` | Z0 (kit) / Z4 (market face) |
