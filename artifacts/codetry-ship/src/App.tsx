@@ -41,6 +41,8 @@ import { HeadwatersProductsPage } from "@/pages/HeadwatersProductsPage";
 import HeadwatersPackagePage from "@/pages/HeadwatersPackagePage";
 import { ParrsJarsKitPage } from "@/pages/ParrsJarsKitPage";
 import { ParrsJarsHubPage } from "@/pages/ParrsJarsHubPage";
+import { KitAccessPage } from "@/pages/KitAccessPage";
+import { KitResendPage } from "@/pages/KitResendPage";
 import { GordWidget } from "@workspace/gord-widget";
 import { StompingGroundsPage } from "@/pages/StompingGroundsPage";
 import { CastlePage } from "@/pages/CastlePage";
@@ -145,6 +147,10 @@ function Router() {
       <Route path="/parrsjars/kit" component={ParrsJarsKitPage} />
       <Route path="/parrsjars/hub" component={ParrsJarsHubPage} />
 
+      {/* ── Kit access (magic link landing) & re-send flow ── */}
+      <Route path="/kits/access/:token" component={KitAccessPage} />
+      <Route path="/kits/resend" component={KitResendPage} />
+
       {/* ── Crypto Castle ── */}
       <Route path="/castle" component={CastlePage} />
       <Route path="/stomping-grounds" component={StompingGroundsPage} />
@@ -154,7 +160,7 @@ function Router() {
   );
 }
 
-const STANDALONE_ROUTES = ["/", "/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub"];
+const STANDALONE_ROUTES = ["/", "/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub", "/kits/resend"];
 
 function NavShell() {
   const [location] = useLocation();

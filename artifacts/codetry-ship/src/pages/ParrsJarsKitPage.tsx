@@ -4,6 +4,8 @@ import waterbathImg from "@assets/IMG-1948_1780775540402.PNG";
 import cookingImg from "@assets/IMG_3081_1780775510405.PNG";
 import localGotosImg from "@assets/IMG_3104_1780775510407.PNG";
 import getStartedImg from "@assets/IMG_1184_1780775510410.PNG";
+import { type StoredKitToken } from "@/lib/kitTokens";
+import { useKitAccess } from "@/lib/useKitAccess";
 
 const INK = "#2c2c2c";
 const CREAM = "#f4ede0";
@@ -14,6 +16,8 @@ const GOLD = "#c89a2e";
 const BLACK = "#141414";
 
 const PJ_KIT_BUY_URL = "https://stomping-path-documentation.replit.app/headwaters/products";
+
+const PJ_SOLUTIONS_KIT_ID = "pj-solutions-kit";
 
 const KIT_MODULES = [
   {
@@ -58,9 +62,61 @@ const TESTIMONIAL = {
   name: "Workshop participant, Dryden ON",
 };
 
+function BuyerBanner({ buyerToken }: { buyerToken: StoredKitToken }) {
+  const expiryDate = new Date(buyerToken.expiresAt).toLocaleDateString("en-CA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  return (
+    <div
+      style={{
+        background: "#1a2e22",
+        borderBottom: `2px solid ${FOREST}`,
+        padding: "0.85rem 1.5rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: "0.75rem",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+        <span style={{ color: "#5a9e6e", fontSize: "1rem" }}>✓</span>
+        <span style={{ fontSize: "0.82rem", color: "#b8d4bf" }}>
+          You own this kit, {buyerToken.buyerName}. Active until {expiryDate}.
+        </span>
+      </div>
+      <a
+        href={`/kits/access/${buyerToken.token}`}
+        style={{
+          display: "inline-block",
+          background: FOREST,
+          color: "white",
+          fontSize: "0.78rem",
+          fontWeight: 700,
+          letterSpacing: "0.04em",
+          padding: "0.4rem 0.9rem",
+          borderRadius: 5,
+          textDecoration: "none",
+          flexShrink: 0,
+        }}
+      >
+        Access your kit →
+      </a>
+    </div>
+  );
+}
+
 export function ParrsJarsKitPage() {
+  const { status, storedToken: buyerToken } = useKitAccess(PJ_SOLUTIONS_KIT_ID);
+
   return (
     <div style={{ minHeight: "100vh", background: BLACK, fontFamily: "var(--font-sans, Inter, sans-serif)", color: "white" }}>
+
+      {/* Buyer banner */}
+      {buyerToken && <BuyerBanner buyerToken={buyerToken} />}
 
       {/* Hero */}
       <div
@@ -135,29 +191,59 @@ export function ParrsJarsKitPage() {
           One kit. No guesswork. No overwhelm.
         </p>
 
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
-          <a
-            href={PJ_KIT_BUY_URL}
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              display: "inline-block",
-              background: RUST,
-              color: "white",
-              fontWeight: 800,
-              fontSize: "1.05rem",
-              letterSpacing: "0.04em",
-              padding: "0.9rem 2.5rem",
-              borderRadius: 6,
-              textDecoration: "none",
-            }}
-          >
-            Get the Kit — $97 CAD →
-          </a>
-          <p style={{ fontSize: "0.72rem", color: "#666", margin: 0 }}>
-            Digital download · Instant access · Yours to keep
-          </p>
-        </div>
+        {buyerToken ? (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+            <a
+              href={`/kits/access/${buyerToken.token}`}
+              style={{
+                display: "inline-block",
+                background: FOREST,
+                color: "white",
+                fontWeight: 800,
+                fontSize: "1.05rem",
+                letterSpacing: "0.04em",
+                padding: "0.9rem 2.5rem",
+                borderRadius: 6,
+                textDecoration: "none",
+              }}
+            >
+              Open your kit →
+            </a>
+            <p style={{ fontSize: "0.72rem", color: "#666", margin: 0 }}>
+              You already own this kit
+            </p>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+            <a
+              href={PJ_KIT_BUY_URL}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: "inline-block",
+                background: RUST,
+                color: "white",
+                fontWeight: 800,
+                fontSize: "1.05rem",
+                letterSpacing: "0.04em",
+                padding: "0.9rem 2.5rem",
+                borderRadius: 6,
+                textDecoration: "none",
+              }}
+            >
+              Get the Kit — $97 CAD →
+            </a>
+            <p style={{ fontSize: "0.72rem", color: "#666", margin: 0 }}>
+              Digital download · Instant access · Yours to keep
+            </p>
+            <a
+              href="/kits/resend"
+              style={{ fontSize: "0.72rem", color: MUTED, textDecoration: "none" }}
+            >
+              Already purchased? Re-send your access link →
+            </a>
+          </div>
+        )}
       </div>
 
       {/* What is this */}
@@ -205,76 +291,155 @@ export function ParrsJarsKitPage() {
         </h2>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-          {KIT_MODULES.map((mod, i) => (
-            <div
-              key={mod.title}
-              style={{
-                background: "#1e1e1e",
-                borderRadius: 8,
-                overflow: "hidden",
-                border: `1px solid #2a2a2a`,
-                borderLeft: `4px solid ${mod.color}`,
-                display: "flex",
-                gap: 0,
-                flexWrap: "wrap",
-              }}
-            >
-              <div style={{ flex: "1 1 300px", padding: "1.5rem" }}>
-                <p
+          {KIT_MODULES.map((mod, i) => {
+            const isPreview = i === 0;
+            const showFull = isPreview || !!buyerToken;
+
+            if (showFull) {
+              return (
+                <div
+                  key={mod.title}
                   style={{
-                    fontSize: "0.6rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: mod.color,
-                    fontWeight: 700,
-                    marginBottom: "0.35rem",
+                    background: "#1e1e1e",
+                    borderRadius: 8,
+                    overflow: "hidden",
+                    border: `1px solid #2a2a2a`,
+                    borderLeft: `4px solid ${mod.color}`,
+                    display: "flex",
+                    gap: 0,
+                    flexWrap: "wrap",
                   }}
                 >
-                  Module {i + 1}
-                </p>
-                <h3
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
-                    fontWeight: 800,
-                    color: "white",
-                    marginBottom: "0.6rem",
-                  }}
-                >
-                  {mod.title}
-                </h3>
-                <p style={{ color: "#999", fontSize: "0.82rem", lineHeight: 1.65, marginBottom: "0.85rem" }}>
-                  {mod.desc}
-                </p>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                  {mod.items.map((item) => (
-                    <li key={item} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.78rem", color: "#bbb" }}>
-                      <span style={{ color: mod.color, flexShrink: 0 }}>→</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                  <div style={{ flex: "1 1 300px", padding: "1.5rem" }}>
+                    <p
+                      style={{
+                        fontSize: "0.6rem",
+                        letterSpacing: "0.15em",
+                        textTransform: "uppercase",
+                        color: mod.color,
+                        fontWeight: 700,
+                        marginBottom: "0.35rem",
+                      }}
+                    >
+                      Module {i + 1}{isPreview ? " · Preview" : ""}
+                    </p>
+                    <h3
+                      style={{
+                        fontFamily: "var(--font-serif)",
+                        fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+                        fontWeight: 800,
+                        color: "white",
+                        marginBottom: "0.6rem",
+                      }}
+                    >
+                      {mod.title}
+                    </h3>
+                    <p style={{ color: "#999", fontSize: "0.82rem", lineHeight: 1.65, marginBottom: "0.85rem" }}>
+                      {mod.desc}
+                    </p>
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                      {mod.items.map((item) => (
+                        <li key={item} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.78rem", color: "#bbb" }}>
+                          <span style={{ color: mod.color, flexShrink: 0 }}>→</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div
+                    style={{
+                      flex: "0 0 140px",
+                      minHeight: 140,
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "#111",
+                    }}
+                  >
+                    <img
+                      src={mod.img}
+                      alt={mod.title}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.7 }}
+                    />
+                  </div>
+                </div>
+              );
+            }
+
+            return (
               <div
+                key={mod.title}
                 style={{
-                  flex: "0 0 140px",
-                  minHeight: 140,
-                  overflow: "hidden",
+                  background: "#1a1a1a",
+                  borderRadius: 8,
+                  border: `1px solid #222`,
+                  borderLeft: `4px solid #333`,
+                  padding: "1.1rem 1.5rem",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
-                  background: "#111",
+                  justifyContent: "space-between",
+                  gap: "1rem",
+                  flexWrap: "wrap",
                 }}
               >
-                <img
-                  src={mod.img}
-                  alt={mod.title}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.7 }}
-                />
+                <div>
+                  <p style={{ fontSize: "0.58rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", fontWeight: 700, marginBottom: "0.25rem" }}>
+                    Module {i + 1}
+                  </p>
+                  <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "0.95rem", fontWeight: 800, color: "#666", margin: 0 }}>
+                    {mod.title}
+                  </h3>
+                </div>
+                <span style={{ fontSize: "0.72rem", color: "#444", display: "flex", alignItems: "center", gap: "0.35rem", flexShrink: 0 }}>
+                  <svg width="11" height="13" viewBox="0 0 11 13" fill="none" style={{ opacity: 0.5 }}>
+                    <rect x="1" y="5" width="9" height="7" rx="1.5" fill="#888"/>
+                    <path d="M3 5V3.5a2.5 2.5 0 0 1 5 0V5" stroke="#888" strokeWidth="1.5" fill="none"/>
+                  </svg>
+                  Buyers only
+                </span>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
+        {/* Lock gate for non-buyers */}
+        {!buyerToken && (
+          <div
+            style={{
+              marginTop: "1.5rem",
+              padding: "1.25rem 1.5rem",
+              background: "#1a1a1a",
+              borderRadius: 8,
+              border: "1px solid #2a2a2a",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "0.75rem",
+              textAlign: "center",
+            }}
+          >
+            <p style={{ fontSize: "0.83rem", color: "#777", lineHeight: 1.6, margin: 0 }}>
+              Modules 2–5 and all 20+ handouts unlock when you purchase the kit.
+            </p>
+            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", justifyContent: "center" }}>
+              <a
+                href={PJ_KIT_BUY_URL}
+                target="_blank"
+                rel="noreferrer"
+                style={{ display: "inline-block", background: RUST, color: "white", fontWeight: 700, fontSize: "0.83rem", padding: "0.55rem 1.25rem", borderRadius: 5, textDecoration: "none" }}
+              >
+                Get the kit — $97 →
+              </a>
+              <a
+                href="/kits/resend"
+                style={{ display: "inline-block", border: "1px solid #333", color: "#666", fontSize: "0.83rem", padding: "0.55rem 1.25rem", borderRadius: 5, textDecoration: "none" }}
+              >
+                Already purchased?
+              </a>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Also includes */}

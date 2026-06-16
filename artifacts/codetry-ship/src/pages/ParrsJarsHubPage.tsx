@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+import { useKitAccess } from "@/lib/useKitAccess";
 import getStartedImg from "@assets/IMG_1184_1780775510410.PNG";
 import foodAuditImg from "@assets/IMG_1130_1780775510411.PNG";
 import inPersonChecklistImg from "@assets/IMG_1187_1780775510410.PNG";
@@ -177,10 +179,144 @@ function HandoutCard({ handout }: { handout: HandoutItem }) {
   );
 }
 
-import React, { useState } from "react";
+const PJ_SOLUTIONS_KIT_ID = "pj-solutions-kit";
+
+function LockedWall({ reason }: { reason?: "expired" } = {}) {
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#141414",
+        fontFamily: "var(--font-sans, Inter, sans-serif)",
+        color: "white",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2rem 1.5rem",
+        textAlign: "center",
+      }}
+    >
+      <div style={{ maxWidth: 520 }}>
+        <div
+          style={{
+            display: "inline-flex",
+            border: "2px solid #333",
+            borderRadius: "50%",
+            width: 72,
+            height: 72,
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "1.5rem",
+            flexDirection: "column",
+          }}
+        >
+          <span style={{ fontFamily: "var(--font-serif, Georgia, serif)", fontSize: "0.8rem", fontWeight: 700, color: "white", lineHeight: 1.1 }}>parr's</span>
+          <span style={{ fontFamily: "var(--font-serif, Georgia, serif)", fontSize: "0.8rem", fontWeight: 700, color: "white", lineHeight: 1.1 }}>jars</span>
+        </div>
+        <p
+          style={{
+            fontSize: "0.62rem",
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: GOLD,
+            fontWeight: 700,
+            marginBottom: "1rem",
+          }}
+        >
+          PJ Solutions Kit · Buyers Only
+        </p>
+        <h1
+          style={{
+            fontFamily: "var(--font-serif, 'Playfair Display', Georgia, serif)",
+            fontSize: "clamp(1.6rem, 5vw, 2.2rem)",
+            fontWeight: 900,
+            lineHeight: 1.1,
+            color: "white",
+            marginBottom: "0.75rem",
+          }}
+        >
+          Your resource hub is one purchase away.
+        </h1>
+        <p
+          style={{
+            color: "#aaa",
+            lineHeight: 1.7,
+            fontSize: "0.9rem",
+            marginBottom: "2rem",
+            maxWidth: 420,
+            margin: "0 auto 2rem",
+          }}
+        >
+          The Principles to Preservation hub — all 5 modules and 20+ handouts — is available to PJ Solutions Kit buyers. Purchase the kit to get instant access.
+        </p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "0.85rem",
+          }}
+        >
+          <a
+            href="/parrsjars/kit"
+            style={{
+              display: "inline-block",
+              background: RUST,
+              color: "white",
+              fontWeight: 800,
+              fontSize: "1rem",
+              letterSpacing: "0.04em",
+              padding: "0.85rem 2rem",
+              borderRadius: 6,
+              textDecoration: "none",
+            }}
+          >
+            Get the PJ Solutions Kit — $97 CAD →
+          </a>
+          <a
+            href="/kits/resend"
+            style={{ fontSize: "0.8rem", color: MUTED, textDecoration: "none" }}
+          >
+            Already purchased? Re-send your access link →
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function ParrsJarsHubPage() {
+  const { status } = useKitAccess(PJ_SOLUTIONS_KIT_ID);
   const [activeModule, setActiveModule] = useState<string>("foundation");
+
+  if (status === "loading") {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#141414",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#555",
+          fontSize: "0.9rem",
+          fontFamily: "var(--font-sans, Inter, sans-serif)",
+        }}
+      >
+        Checking access…
+      </div>
+    );
+  }
+
+  if (status === "expired") {
+    return <LockedWall reason="expired" />;
+  }
+
+  if (status !== "valid") {
+    return <LockedWall />;
+  }
+
   const current = MODULES.find((m) => m.id === activeModule) ?? MODULES[0];
 
   return (

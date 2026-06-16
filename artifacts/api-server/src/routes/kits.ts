@@ -181,7 +181,7 @@ function accessUrl(token: string): string {
     (process.env.REPLIT_DEV_DOMAIN
       ? `https://${process.env.REPLIT_DEV_DOMAIN}`
       : "http://localhost:8081");
-  return `${base}/api/kits/access/${token}`;
+  return `${base}/kits/access/${token}`;
 }
 
 // ── Webhook secret guard ──────────────────────────────────────────────────────
@@ -448,6 +448,69 @@ router.post("/zaprite-webhook", async (req: Request, res: Response) => {
     expires_at: result.expiresAt.toISOString(),
     mail_status: result.mailStatus,
   });
+});
+
+// ── POST /kits/resend ─────────────────────────────────────────────────────────
+//
+// Looks up any non-expired token for the given email address and re-sends the
+// delivery email. Always returns 200 so we don't leak whether the email is in
+// the system. The caller can use the `sent` field to show appropriate UI.
+
+const ResendSchema = z.object({
+  email: z.string().email(),
+});
+
+router.post("/resend", async (req: Request, res: Response) => {
+  const parsed = ResendSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+
+  const { email } = parsed.data;
+  const store = readTokenStore();
+  const now = new Date();
+
+  const active = Object.values(store).filter(
+    (r) =>
+      r.buyer_email.toLowerCase() === email.toLowerCase() &&
+      new Date(r.expires_at) > now,
+  );
+
+  if (active.length === 0) {
+    res.json({ ok: true, sent: false });
+    return;
+  }
+
+  // Use the most recently created active token
+  active.sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  );
+  const record = active[0]!;
+  const kit = getKit(record.kit_id);
+
+  if (!kit) {
+    res.json({ ok: true, sent: false });
+    return;
+  }
+
+  const url = accessUrl(record.token);
+  const expiresAt = new Date(record.expires_at);
+
+  const mailResult = await sendKitDeliveryEmail({
+    to: record.buyer_email,
+    buyerName: record.buyer_name,
+    kit,
+    accessUrl: url,
+    expiresAt,
+  });
+
+  logger.info(
+    { email, kit_id: record.kit_id, mailStatus: mailResult.status },
+    "[kits/resend] resend requested",
+  );
+
+  res.json({ ok: true, sent: true, mailStatus: mailResult.status });
 });
 
 // ── GET /kits/access/:token ───────────────────────────────────────────────────
