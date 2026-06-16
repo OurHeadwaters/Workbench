@@ -425,15 +425,23 @@ router.post("/zaprite-webhook", async (req: Request, res: Response) => {
 //
 // Rate-limited per IP: 5 requests per 15 minutes to prevent email enumeration.
 
+const resendRateLimitStore = new MemoryStore();
+
 const resendRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 5,
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: { error: "Too many resend requests — please try again later." },
+  store: resendRateLimitStore,
   // req.ip is resolved by Express using the trust-proxy setting (one hop),
   // which prevents X-Forwarded-For spoofing. No custom keyGenerator needed.
 });
+
+/** Reset the resend rate-limit store — for use in tests only. */
+export function __clearResendRateLimiter(): void {
+  void resendRateLimitStore.resetAll();
+}
 
 const ResendSchema = z.object({
   email: z.string().email(),

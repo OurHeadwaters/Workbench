@@ -89,7 +89,7 @@ vi.mock("stripe", () => ({
 }));
 
 import express from "express";
-import kitsRouter, { __clearAccessRateLimiter } from "./kits";
+import kitsRouter, { __clearAccessRateLimiter, __clearResendRateLimiter } from "./kits";
 
 // ── harness ───────────────────────────────────────────────────────────────────
 //
@@ -126,6 +126,7 @@ function getAccess(base: string, ip: string): Promise<Response> {
 
 beforeEach(() => {
   __clearAccessRateLimiter();
+  __clearResendRateLimiter();
 });
 
 // ── tests ─────────────────────────────────────────────────────────────────────
@@ -184,6 +185,80 @@ describe("GET /kits/access/:token — rate limiter", () => {
       expect(ipAStatus).toBe(429);
 
       const ipBStatus = (await getAccess(h.base, "10.0.0.2")).status;
+      expect(ipBStatus).not.toBe(429);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── POST /kits/resend — rate limiter ──────────────────────────────────────────
+
+function postResend(base: string, ip: string): Promise<Response> {
+  return fetch(`${base}/kits/resend`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-forwarded-for": ip,
+    },
+    body: JSON.stringify({ email: "test@example.com" }),
+  });
+}
+
+describe("POST /kits/resend — rate limiter", () => {
+  it("allows the first 5 requests from the same IP", async () => {
+    const h = await startHarness();
+    try {
+      const statuses: number[] = [];
+      for (let i = 0; i < 5; i++) {
+        const r = await postResend(h.base, "10.0.1.1");
+        statuses.push(r.status);
+      }
+      expect(statuses.every((s) => s !== 429)).toBe(true);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 429 on the 6th request from the same IP", async () => {
+    const h = await startHarness();
+    try {
+      for (let i = 0; i < 5; i++) {
+        await postResend(h.base, "10.0.1.1");
+      }
+      const r = await postResend(h.base, "10.0.1.1");
+      expect(r.status).toBe(429);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("includes the expected error message in the 429 body", async () => {
+    const h = await startHarness();
+    try {
+      for (let i = 0; i < 5; i++) {
+        await postResend(h.base, "10.0.1.1");
+      }
+      const r = await postResend(h.base, "10.0.1.1");
+      const body = (await r.json()) as { error?: string };
+      expect(body.error).toBe(
+        "Too many resend requests — please try again later.",
+      );
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does not rate-limit a separate IP when another IP has exhausted its quota", async () => {
+    const h = await startHarness();
+    try {
+      for (let i = 0; i < 6; i++) {
+        await postResend(h.base, "10.0.1.1");
+      }
+      const ipAStatus = (await postResend(h.base, "10.0.1.1")).status;
+      expect(ipAStatus).toBe(429);
+
+      const ipBStatus = (await postResend(h.base, "10.0.1.2")).status;
       expect(ipBStatus).not.toBe(429);
     } finally {
       await h.close();
