@@ -26,6 +26,11 @@ declare global {
 
 const app: Express = express();
 
+// Trust exactly one proxy hop (Replit's edge proxy) so req.ip is the real
+// client IP. This is required for IP-based rate limiting to be reliable and
+// not spoofable via a forged X-Forwarded-For header.
+app.set("trust proxy", 1);
+
 if (process.env.NODE_ENV === "production" && !process.env.NURSERY_COOKIE_SECRET) {
   throw new Error("NURSERY_COOKIE_SECRET must be set in production");
 }

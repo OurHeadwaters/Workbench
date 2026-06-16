@@ -29,6 +29,7 @@
  */
 
 import { Router, type IRouter, type Request, type Response } from "express";
+import rateLimit from "express-rate-limit";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
@@ -455,12 +456,24 @@ router.post("/zaprite-webhook", async (req: Request, res: Response) => {
 // Looks up any non-expired token for the given email address and re-sends the
 // delivery email. Always returns 200 so we don't leak whether the email is in
 // the system. The caller can use the `sent` field to show appropriate UI.
+//
+// Rate-limited per IP: 5 requests per 15 minutes to prevent email enumeration.
+
+const resendRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Too many resend requests — please try again later." },
+  // req.ip is resolved by Express using the trust-proxy setting (one hop),
+  // which prevents X-Forwarded-For spoofing. No custom keyGenerator needed.
+});
 
 const ResendSchema = z.object({
   email: z.string().email(),
 });
 
-router.post("/resend", async (req: Request, res: Response) => {
+router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
   const parsed = ResendSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
