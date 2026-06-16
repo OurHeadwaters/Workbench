@@ -493,8 +493,18 @@ router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
 });
 
 // ── GET /kits/access/:token ───────────────────────────────────────────────────
+//
+// Rate-limited per IP: 20 requests per 15 minutes to prevent token enumeration.
 
-router.get("/access/:token", async (req: Request, res: Response) => {
+const accessRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Too many access attempts — please try again later." },
+});
+
+router.get("/access/:token", accessRateLimit, async (req: Request, res: Response) => {
   const raw = req.params["token"];
   const token = Array.isArray(raw) ? (raw[0] ?? "") : (raw ?? "");
   if (!token || token.length > 128) {
