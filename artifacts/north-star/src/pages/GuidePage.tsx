@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, Bookmark, BookmarkCheck, ExternalLink } from "l
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 import { MoneyMachineDiagram } from "@/components/MoneyMachineDiagram";
+import { StompingPathCTA } from "@/components/StompingPathCTA";
 
 interface FoundationalDoc {
   id: string;
@@ -547,6 +548,14 @@ export function GuidePage() {
                 <div key={doc.id} className="space-y-2">
                   <FoundationalDocCard doc={doc} />
                   {doc.id === "money-machine" && <MoneyMachineDiagramToggle />}
+                  {doc.id === "stomping-path" && (
+                    <div className="space-y-1">
+                      <p className="text-xs text-[#78716C] px-1 pt-1">
+                        Know which stage you're at? Tell us — there's a next step waiting.
+                      </p>
+                      <StompingPathCTA />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

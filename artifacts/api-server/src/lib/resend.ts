@@ -559,6 +559,46 @@ export async function sendRefundInvocationToHeadwaters(
   });
 }
 
+// ─── Codetry assessment inquiry notification ───────────────────────────────
+
+export interface CodetryInquiryEmailPayload {
+  name: string;
+  email: string;
+  community: string;
+  whatTheyWorkingOn: string;
+  stage: number;
+  stageLabel: string;
+}
+
+export async function sendCodetryInquiryNotification(
+  payload: CodetryInquiryEmailPayload,
+): Promise<SendResult> {
+  const operator = process.env.RESEND_OPERATOR_EMAIL ?? OPERATOR_DEFAULT;
+  const subject = `New Codetry inquiry (Stage ${payload.stage}): ${payload.name}`;
+  const body = [
+    `A practitioner has submitted an inquiry after identifying at Stage ${payload.stage} — ${payload.stageLabel}.`,
+    "",
+    `Name: ${payload.name}`,
+    `Email: ${payload.email}`,
+    `Community / org: ${payload.community}`,
+    `Stage: ${payload.stage} — ${payload.stageLabel}`,
+    "",
+    "What they're working on:",
+    payload.whatTheyWorkingOn,
+    "",
+    "Reply-to this email to respond directly.",
+    "",
+    "—Headwaters",
+  ].join("\n");
+
+  return sendEmail({
+    to: operator,
+    subject,
+    text: body,
+    replyTo: payload.email,
+  });
+}
+
 /**
  * Send a timestamped copy of the §7 invocation letter to the contractor
  * so they have an independent record in their own inbox.
