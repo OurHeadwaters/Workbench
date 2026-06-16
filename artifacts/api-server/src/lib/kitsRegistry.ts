@@ -115,6 +115,14 @@ export const KITS: Record<string, Kit> = {
     contentNote:
       "Your kit includes all 13 redesigned workshop handouts — blanching cheat sheets, dehydrating and freezing flows, station setup worksheets, process documentation sheets, and the Jarista lead magnet. Print-ready, no filler.",
   },
+  "goodbye-kit": {
+    id: "goodbye-kit",
+    name: "Goodbye Kit",
+    tagline: "The household transition guide — closing one chapter, opening the next with intention.",
+    arcNote: null,
+    contentNote:
+      "Your kit includes the Zone 0 Household Transition Framework, the Family Lifecycle Inventory (what to keep, what to move, what to let go), the Passing It Forward guide for handing off food systems and homestead knowledge to the next generation, and a seasonal closing checklist built for northern households. Everything is delivered as print-ready PDFs in this email.",
+  },
 };
 
 export function getKit(id: string): Kit | null {

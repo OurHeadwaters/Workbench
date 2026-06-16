@@ -8,11 +8,12 @@ const FOREST = "#4a6741";
 
 const START_URL = "/headwaters/start";
 
-const STRIPE_ZONE0       = "https://buy.stripe.com/cNi3cxe8R6llgoA6fNbwk04";
-const STRIPE_PREP_PACK   = "https://buy.stripe.com/bJe28t1m56llfkwaw3bwk05";
-const STRIPE_JARS_SCARS  = "https://buy.stripe.com/REPLACE_JARS_SCARS_LINK";
-const STRIPE_BUNDLE      = "https://buy.stripe.com/3cI6oJc0J9xx8W88nVbwk06";
-const STRIPE_COURSE1     = "https://buy.stripe.com/aFacN7aWFdNNfkwfQnbwk07";
+const STRIPE_ZONE0        = "https://buy.stripe.com/cNi3cxe8R6llgoA6fNbwk04";
+const STRIPE_PREP_PACK    = "https://buy.stripe.com/bJe28t1m56llfkwaw3bwk05";
+const STRIPE_JARS_SCARS   = "https://buy.stripe.com/REPLACE_JARS_SCARS_LINK";
+const STRIPE_BUNDLE       = "https://buy.stripe.com/3cI6oJc0J9xx8W88nVbwk06";
+const STRIPE_COURSE1      = "https://buy.stripe.com/aFacN7aWFdNNfkwfQnbwk07";
+const STRIPE_GOODBYE_KIT  = "https://buy.stripe.com/28E7sNd4N399egs6fNbwk08";
 
 const STRIPE_MISSING = [
   { key: "REPLACE_ZONE0_LINK",      label: "Zone 0 Starter Kit",  url: STRIPE_ZONE0 },
@@ -89,6 +90,23 @@ const DIGITAL_PRODUCTS = [
       "Power-outage protocol — what to cook first, in what order, to minimize loss",
       "Northern Ontario road-closure checklist — specific to being hours from the nearest distribution centre",
       /* BOBBIE: add any additional items that are actually in the pack */
+    ],
+  },
+  {
+    id: "goodbye-kit",
+    label: "Digital Kit · $27 CAD",
+    name: "Goodbye Kit",
+    price: "$27",
+    origin: "Not every Headwaters resource is about building up. Sometimes the work is knowing how to close something well — a household, a season, a chapter. The Goodbye Kit is for that.",
+    href: STRIPE_GOODBYE_KIT,
+    cta: "Get the Goodbye Kit",
+    accent: EVERGREEN,
+    bullets: [
+      "Zone 0 Household Transition Framework — how to move a food system, not just boxes",
+      "Family Lifecycle Inventory — what to keep, what to pass on, what to let go",
+      "Passing It Forward guide — transferring homestead knowledge and food systems to the next generation",
+      "Seasonal closing checklist built for northern households — nothing assumed about climate or distance",
+      "All materials delivered as print-ready PDFs in your confirmation email",
     ],
   },
   {
