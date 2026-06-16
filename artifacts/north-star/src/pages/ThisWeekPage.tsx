@@ -1,0 +1,240 @@
+import { useState, useEffect, useRef } from "react";
+import { Plus, Check, Trash2, X } from "lucide-react";
+
+interface WeekItem {
+  id: string;
+  text: string;
+  done: boolean;
+  createdAt: string;
+}
+
+const LS_KEY = "north-star-this-week";
+
+const BG     = "#0B0905";
+const SURF   = "#141210";
+const SURF2  = "#1A1714";
+const BORDER = "rgba(237,232,213,0.08)";
+const TEXT   = "#EDE8D5";
+const TEXT2  = "rgba(237,232,213,0.55)";
+const AMBER  = "#C8923A";
+const GREEN  = "#4ADE80";
+
+function loadItems(): WeekItem[] {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? (JSON.parse(raw) as WeekItem[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveItems(items: WeekItem[]) {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(items));
+  } catch { /* ignore */ }
+}
+
+export function ThisWeekPage() {
+  const [items, setItems] = useState<WeekItem[]>(loadItems);
+  const [draft, setDraft] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    saveItems(items);
+  }, [items]);
+
+  function addItem() {
+    const text = draft.trim();
+    if (!text) return;
+    const next: WeekItem[] = [
+      ...items,
+      { id: crypto.randomUUID(), text, done: false, createdAt: new Date().toISOString() },
+    ];
+    setItems(next);
+    setDraft("");
+    inputRef.current?.focus();
+  }
+
+  function toggle(id: string) {
+    setItems((prev) => prev.map((it) => it.id === id ? { ...it, done: !it.done } : it));
+  }
+
+  function remove(id: string) {
+    setItems((prev) => prev.filter((it) => it.id !== id));
+  }
+
+  function clearDone() {
+    setItems((prev) => prev.filter((it) => !it.done));
+  }
+
+  const open = items.filter((it) => !it.done);
+  const done = items.filter((it) => it.done);
+
+  return (
+    <div className="min-h-dvh pb-24" style={{ backgroundColor: BG }}>
+      {/* Header */}
+      <div
+        className="sticky top-0 z-10 px-5 pt-8 pb-4"
+        style={{ backgroundColor: BG, borderBottom: `1px solid ${BORDER}` }}
+      >
+        <div className="max-w-xl mx-auto">
+          <h1
+            className="text-2xl font-bold tracking-tight"
+            style={{ color: TEXT, fontFamily: "Fraunces, serif" }}
+          >
+            This Week
+          </h1>
+          <p className="text-sm mt-0.5" style={{ color: TEXT2 }}>
+            {open.length === 0
+              ? done.length > 0 ? "Everything done" : "Nothing yet — add your first item"
+              : `${open.length} remaining${done.length > 0 ? `, ${done.length} done` : ""}`}
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-xl mx-auto px-4 pt-5 space-y-4">
+        {/* Add input */}
+        <div
+          className="flex gap-2 items-center rounded-xl px-4 py-3"
+          style={{ backgroundColor: SURF, border: `1px solid rgba(237,232,213,0.12)` }}
+        >
+          <Plus size={18} style={{ color: AMBER, flexShrink: 0 }} />
+          <input
+            ref={inputRef}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") addItem();
+              if (e.key === "Escape") setDraft("");
+            }}
+            placeholder="Add an item for this week…"
+            className="flex-1 bg-transparent text-base focus:outline-none placeholder:opacity-40"
+            style={{ color: TEXT, fontSize: 15 }}
+            autoComplete="off"
+          />
+          {draft && (
+            <button
+              onClick={addItem}
+              className="shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium"
+              style={{ backgroundColor: "rgba(200,146,58,0.15)", color: AMBER }}
+            >
+              Add
+            </button>
+          )}
+        </div>
+
+        {/* Open items */}
+        {open.length > 0 && (
+          <div
+            className="rounded-xl overflow-hidden"
+            style={{ backgroundColor: SURF, border: `1px solid ${BORDER}` }}
+          >
+            {open.map((item, i) => (
+              <div
+                key={item.id}
+                className="flex items-center gap-3 px-4 py-4 group"
+                style={{
+                  borderBottom: i < open.length - 1 ? `1px solid ${BORDER}` : "none",
+                }}
+              >
+                <button
+                  onClick={() => toggle(item.id)}
+                  className="shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors min-h-[36px] min-w-[36px]"
+                  style={{
+                    borderColor: "rgba(237,232,213,0.2)",
+                    backgroundColor: "transparent",
+                  }}
+                  title="Mark done"
+                />
+                <span
+                  className="flex-1 text-[15px] leading-snug"
+                  style={{ color: TEXT }}
+                >
+                  {item.text}
+                </span>
+                <button
+                  onClick={() => remove(item.id)}
+                  className="shrink-0 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity min-h-[36px] min-w-[36px] flex items-center justify-center"
+                  style={{ color: TEXT2 }}
+                  title="Remove"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Done items */}
+        {done.length > 0 && (
+          <div>
+            <div className="flex items-center justify-between mb-2 px-1">
+              <p className="text-xs uppercase tracking-widest" style={{ color: TEXT2 }}>
+                Done ({done.length})
+              </p>
+              <button
+                onClick={clearDone}
+                className="text-xs px-2.5 py-1 rounded-lg"
+                style={{ color: TEXT2, backgroundColor: SURF2 }}
+              >
+                Clear all
+              </button>
+            </div>
+            <div
+              className="rounded-xl overflow-hidden"
+              style={{ backgroundColor: SURF, border: `1px solid ${BORDER}`, opacity: 0.65 }}
+            >
+              {done.map((item, i) => (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-3 px-4 py-3 group"
+                  style={{ borderBottom: i < done.length - 1 ? `1px solid ${BORDER}` : "none" }}
+                >
+                  <button
+                    onClick={() => toggle(item.id)}
+                    className="shrink-0 w-6 h-6 rounded-md flex items-center justify-center min-h-[36px] min-w-[36px]"
+                    style={{ backgroundColor: "rgba(74,222,128,0.15)", border: "1.5px solid rgba(74,222,128,0.3)" }}
+                    title="Uncheck"
+                  >
+                    <Check size={13} style={{ color: GREEN }} />
+                  </button>
+                  <span
+                    className="flex-1 text-[15px] line-through leading-snug"
+                    style={{ color: TEXT2 }}
+                  >
+                    {item.text}
+                  </span>
+                  <button
+                    onClick={() => remove(item.id)}
+                    className="shrink-0 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity min-h-[36px] min-w-[36px] flex items-center justify-center"
+                    style={{ color: TEXT2 }}
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {items.length === 0 && (
+          <div
+            className="rounded-xl px-5 py-10 text-center"
+            style={{ backgroundColor: SURF, border: `1px dashed ${BORDER}` }}
+          >
+            <p
+              className="text-lg font-medium mb-1"
+              style={{ color: TEXT, fontFamily: "Fraunces, serif" }}
+            >
+              This week is wide open
+            </p>
+            <p className="text-sm" style={{ color: TEXT2 }}>
+              Add what you want to finish this week. Items stay here until you clear them.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

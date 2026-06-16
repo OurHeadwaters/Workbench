@@ -328,9 +328,11 @@ function ownerHeaders(): Record<string, string> {
 interface TaskAutopilotProps {
   onOpenDeliberation?: (seatId: string, brief: string) => void;
   defaultOpen?: boolean;
+  /** Table-room mode: auto-triages on load, auto-approves GREEN, shows AMBER binary card, RED queued at top */
+  tableMode?: boolean;
 }
 
-export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskAutopilotProps) {
+export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false, tableMode = false }: TaskAutopilotProps) {
   const [open, setOpen] = useState(defaultOpen);
   const [configOpen, setConfigOpen] = useState(false);
   const [pasteOpen, setPasteOpen] = useState(false);
@@ -418,6 +420,12 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
 
   // Tracks whether the auto-seed has been attempted this session (prevents re-seeding on panel re-opens)
   const autoSeededRef = useRef(false);
+
+  // Table-mode: session clear counter and fingerprint for GREEN auto-approve (prevents double-fire)
+  const [sessionCleared, setSessionCleared] = useState(0);
+  const autoApprovedFingerprintRef = useRef("");
+  // Table-mode: AMBER clusters the founder wants to decide herself ("I'll decide")
+  const [deferredAmberClusters, setDeferredAmberClusters] = useState<Set<string>>(new Set());
 
   // Persist accepted titles so cleared tasks continue to suppress their seed brief
   useEffect(() => {
@@ -552,17 +560,57 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false }: TaskA
       if (tasks.length === 0 && !autoSeededRef.current && hasToken) {
         autoSeededRef.current = true;
         await importAndTriage(SAMPLE_TASK_LINES);
+      } else if (tableMode && tasks.length > 0) {
+        // Table mode: auto-triage without waiting for a manual click
+        await runTriage(tasks);
       }
     } catch (e) {
       setAuthBlocked(false);
       setError(e instanceof Error ? e.message : "Failed to load tasks");
     }
     setLoadingProposed(false);
-  }, [importAndTriage]);
+  }, [importAndTriage, runTriage, tableMode]);
 
   useEffect(() => {
-    if (open) loadProposed();
-  }, [open, loadProposed]);
+    if (!open) return;
+    loadProposed();
+    // Table mode: auto-pull aquifer projects on first open so cross-project PROPOSED
+    // tasks surface immediately without a manual button click.
+    if (tableMode && aquifer.length > 0) {
+      pullAquifer();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, loadProposed]); // tableMode and aquifer are stable on mount
+
+  // Table mode: auto-approve GREEN tasks after triage without founder interaction.
+  // The council handles these — no click needed. Fingerprint prevents double-fire per triage run.
+  useEffect(() => {
+    if (!tableMode || !triaged) return;
+    const toApprove = triaged.tasks
+      .filter((t) => (overrides[t.id] ?? t.tier) === "GREEN" && !pendingIds.has(t.id))
+      .map((t) => t.id);
+    if (!toApprove.length) return;
+    const fp = [...toApprove].sort().join(",");
+    if (autoApprovedFingerprintRef.current === fp) return;
+    autoApprovedFingerprintRef.current = fp;
+    const approvedList = triaged.tasks.filter((t) => toApprove.includes(t.id));
+    (async () => {
+      try {
+        const res = await fetch(`${BASE_API}/tasks/approve`, {
+          method: "POST",
+          headers: ownerHeaders(),
+          body: JSON.stringify({ taskIds: toApprove, tier: "green" }),
+        });
+        if (res.ok) {
+          setPendingIds((prev) => { const next = new Set(prev); toApprove.forEach((id) => next.add(id)); return next; });
+          setAcceptedTitles((prev) => { const next = new Set(prev); approvedList.forEach((t) => next.add(t.title)); return next; });
+          setProposed((prev) => prev.filter((t) => !toApprove.includes(t.id)));
+          setSessionCleared((prev) => prev + toApprove.length);
+        }
+      } catch { /* best effort */ }
+    })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [triaged, tableMode]);
 
   // ── Approve / Unapprove (local queue) ──
 
@@ -894,7 +942,7 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
   // Badge R count: triage RED + seed-only briefs (not covered by triage) when triage has run,
   // or just the active seed brief count when triage hasn't run yet.
   const badgeRedCount = summary
-    ? summary.red + seedOnlyBriefs.length
+    ? summary.red + allSeedOnlyBriefs.length
     : activeRedBriefs.length;
 
   // ── Aquifer sweep summary ──────────────────────────────────────────────────
@@ -1075,8 +1123,16 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
             </div>
           )}
 
-          {/* ── Pending count ── */}
-          {pendingIds.size > 0 && (
+          {/* ── Session cleared banner (table mode) ── */}
+          {tableMode && sessionCleared > 0 && (
+            <div className="mb-3 px-4 py-2.5 rounded-sm border border-[#1A4020] bg-[#0D2010] text-[11px] text-[#4ADE80] flex items-center gap-2">
+              <span>⚡</span>
+              <span>Council cleared <strong>{sessionCleared}</strong> task{sessionCleared !== 1 ? "s" : ""} this session</span>
+            </div>
+          )}
+
+          {/* ── Pending count (non-table mode only; table mode shows the session cleared banner instead) ── */}
+          {!tableMode && pendingIds.size > 0 && (
             <div className="mb-4 px-4 py-2.5 rounded-sm border border-[#1A4020] bg-[#0D2010] text-[11px] text-[#4ADE80]">
               {pendingIds.size} task{pendingIds.size !== 1 ? "s" : ""} moved to PENDING in this session
             </div>
@@ -1085,25 +1141,46 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
           {/* ── LOCAL project triage ── */}
           {triaged && !loadingTriage && (
             <div className="space-y-4">
-              <TierSection
-                tier="GREEN"
-                tasks={greenTasks}
-                pendingIds={pendingIds}
-                approving={approving}
-                label={`${greenTasks.length} task${greenTasks.length !== 1 ? "s" : ""} · batch approve`}
-                rationale="These pass all 5 Watershed Compact rules and all 3 Tests. Technical/infrastructure work — no ownership transfer, no new leak, no strategic commitment."
-                onDryRun={() => handleDryRun(greenTasks.filter((t) => !pendingIds.has(t.id)).map((t) => t.id), "green")}
-                onApprove={() => handleApprove(greenTasks.filter((t) => !pendingIds.has(t.id)).map((t) => t.id), "green", "green")}
-                onUnapprove={() => handleUnapprove(greenTasks.filter((t) => pendingIds.has(t.id)).map((t) => t.id))}
-                allPending={allGreenPending}
-                onOverride={(t, toTier) => handleOverride(t.id, effectiveTier(t), toTier, t.title)}
-                onOpenDeliberation={null}
-                isOwner={isOwner}
-              />
 
+              {/* In table mode: RED first ("Your call"), then AMBER binary, then GREEN auto-cleared */}
+
+              {/* RED — always at the top in table mode */}
+              {tableMode && (redTasksWithSeedOverrides.length > 0 || allSeedOnlyBriefs.length > 0) && (
+                <RedSection
+                  tasks={redTasksWithSeedOverrides}
+                  seedBriefs={allSeedOnlyBriefs}
+                  seedBriefByTitle={seedBriefByTitle}
+                  allBriefsByTitle={allBriefsByTitle}
+                  pendingIds={pendingIds}
+                  onOverride={(t, toTier) => handleOverride(t.id, effectiveTier(t), toTier, t.title)}
+                  onOpenDeliberation={onOpenDeliberation ? (t) => openDeliberation(t) : null}
+                  isOwner={isOwner}
+                  dismissedBriefRefs={dismissedBriefRefs}
+                  showDismissed={showDismissed}
+                  onDismiss={handleDismissBrief}
+                  onUndismiss={handleUndismissBrief}
+                  onToggleShowDismissed={() => setShowDismissed((v) => !v)}
+                  tableMode={tableMode}
+                />
+              )}
+
+              {/* AMBER — binary card in table mode, grouped TierSection otherwise */}
               {Object.entries(computedAmberGroups).map(([cluster, clusterTasks]) => {
-                const notPending = clusterTasks.filter((t) => !pendingIds.has(t.id)).map((t) => t.id);
+                const notPendingIds = clusterTasks.filter((t) => !pendingIds.has(t.id)).map((t) => t.id);
                 const allPending = clusterTasks.length > 0 && clusterTasks.every((t) => pendingIds.has(t.id));
+                if (tableMode && !deferredAmberClusters.has(cluster) && !allPending) {
+                  return (
+                    <AmberBinaryCard
+                      key={cluster}
+                      clusterName={cluster}
+                      tasks={clusterTasks}
+                      pendingIds={pendingIds}
+                      approving={approving}
+                      onApprove={() => handleApprove(notPendingIds, "amber", `amber-${cluster}`)}
+                      onDecide={() => setDeferredAmberClusters((prev) => { const next = new Set(prev); next.add(cluster); return next; })}
+                    />
+                  );
+                }
                 return (
                   <TierSection
                     key={cluster}
@@ -1113,8 +1190,8 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
                     approving={approving}
                     label={`${clusterTasks.length} ${cluster} task${clusterTasks.length !== 1 ? "s" : ""}`}
                     rationale={`Directionally correct. Review this "${cluster}" group as a batch before approving. Compact Rule 4: the numbers are the numbers.`}
-                    onDryRun={() => handleDryRun(notPending, "amber")}
-                    onApprove={() => handleApprove(notPending, "amber", `amber-${cluster}`)}
+                    onDryRun={() => handleDryRun(notPendingIds, "amber")}
+                    onApprove={() => handleApprove(notPendingIds, "amber", `amber-${cluster}`)}
                     onUnapprove={() => handleUnapprove(clusterTasks.filter((t) => pendingIds.has(t.id)).map((t) => t.id))}
                     allPending={allPending}
                     onOverride={(t, toTier) => handleOverride(t.id, effectiveTier(t), toTier, t.title)}
@@ -1124,8 +1201,33 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
                 );
               })}
 
-              {/* RED — with optional deliberation brief routing */}
-              {(redTasksWithSeedOverrides.length > 0 || allSeedOnlyBriefs.length > 0) && (
+              {/* GREEN — in table mode just show the count (auto-approved); full section otherwise */}
+              {tableMode ? (
+                greenTasks.length > 0 && (
+                  <div className="px-4 py-3 rounded-sm border border-[#1A4020] bg-[#0D2010] text-[12px] text-[#4ADE80]">
+                    ✓ {greenTasks.length} GREEN task{greenTasks.length !== 1 ? "s" : ""} — council auto-approved
+                  </div>
+                )
+              ) : (
+                <TierSection
+                  tier="GREEN"
+                  tasks={greenTasks}
+                  pendingIds={pendingIds}
+                  approving={approving}
+                  label={`${greenTasks.length} task${greenTasks.length !== 1 ? "s" : ""} · batch approve`}
+                  rationale="These pass all 5 Watershed Compact rules and all 3 Tests. Technical/infrastructure work — no ownership transfer, no new leak, no strategic commitment."
+                  onDryRun={() => handleDryRun(greenTasks.filter((t) => !pendingIds.has(t.id)).map((t) => t.id), "green")}
+                  onApprove={() => handleApprove(greenTasks.filter((t) => !pendingIds.has(t.id)).map((t) => t.id), "green", "green")}
+                  onUnapprove={() => handleUnapprove(greenTasks.filter((t) => pendingIds.has(t.id)).map((t) => t.id))}
+                  allPending={allGreenPending}
+                  onOverride={(t, toTier) => handleOverride(t.id, effectiveTier(t), toTier, t.title)}
+                  onOpenDeliberation={null}
+                  isOwner={isOwner}
+                />
+              )}
+
+              {/* RED — standard position in non-table mode */}
+              {!tableMode && (redTasksWithSeedOverrides.length > 0 || allSeedOnlyBriefs.length > 0) && (
                 <RedSection
                   tasks={redTasksWithSeedOverrides}
                   seedBriefs={allSeedOnlyBriefs}
@@ -1315,6 +1417,61 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
   );
 }
 
+// ── AmberBinaryCard ───────────────────────────────────────────────────────────
+// Table-mode only: one-tap binary decision per AMBER cluster.
+
+function AmberBinaryCard({
+  clusterName, tasks, pendingIds, approving, onApprove, onDecide,
+}: {
+  clusterName: string;
+  tasks: ClassifiedTask[];
+  pendingIds: Set<string>;
+  approving: string | null;
+  onApprove: () => void;
+  onDecide: () => void;
+}) {
+  const notPending = tasks.filter((t) => !pendingIds.has(t.id));
+  const c = TIER_COLOR.AMBER;
+  const isApproving = approving?.startsWith("amber");
+  if (!notPending.length) return null;
+  return (
+    <div className="rounded-sm border p-4" style={{ borderColor: c.border, background: c.bg }}>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: c.dot }} />
+        <span className="text-[11px] uppercase tracking-[0.15em] font-bold flex-1" style={{ color: c.text }}>
+          AMBER — {clusterName} · {notPending.length} task{notPending.length !== 1 ? "s" : ""}
+        </span>
+      </div>
+      <div className="space-y-1 mb-4">
+        {notPending.slice(0, 5).map((t) => (
+          <p key={t.id} className="text-[12px] text-[#D8D0C5] leading-snug">· {t.title}</p>
+        ))}
+        {notPending.length > 5 && (
+          <p className="text-[11px]" style={{ color: c.text, opacity: 0.5 }}>+{notPending.length - 5} more</p>
+        )}
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={onApprove}
+          disabled={!!isApproving}
+          className="flex-1 py-2.5 text-[12px] uppercase tracking-wider font-bold rounded-sm transition-all disabled:opacity-40 flex items-center justify-center gap-2"
+          style={{ background: c.badge, color: "#13110E" }}
+        >
+          {isApproving && <div className="w-3 h-3 border-2 border-current/40 border-t-current rounded-full animate-spin" />}
+          Council approves
+        </button>
+        <button
+          onClick={onDecide}
+          className="flex-1 py-2.5 text-[12px] uppercase tracking-wider rounded-sm border transition-colors"
+          style={{ borderColor: c.border, color: c.text }}
+        >
+          I'll decide
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── TierSection ───────────────────────────────────────────────────────────────
 
 function TierSection({
@@ -1416,7 +1573,7 @@ function TierSection({
 
 function RedSection({
   tasks, seedBriefs = [], seedBriefByTitle = new Map(), allBriefsByTitle, pendingIds, onOverride,
-  onOpenDeliberation, isOwner,
+  onOpenDeliberation, isOwner, tableMode = false,
   dismissedBriefRefs = new Set(), showDismissed = false, onDismiss, onUndismiss, onToggleShowDismissed,
 }: {
   tasks: ClassifiedTask[];
@@ -1428,6 +1585,8 @@ function RedSection({
   onOverride: (t: ClassifiedTask, toTier: Tier) => void;
   onOpenDeliberation: ((t: ClassifiedTask) => void) | null;
   isOwner: boolean;
+  /** Table-room mode: header says "Your call" to distinguish from auto-approved tiers */
+  tableMode?: boolean;
   dismissedBriefRefs?: Set<string>;
   showDismissed?: boolean;
   onDismiss?: (taskRef: string) => void;
@@ -1525,7 +1684,7 @@ function RedSection({
       <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: `1px solid ${c.border}` }}>
         <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: c.dot }} />
         <span className="text-[11px] uppercase tracking-[0.15em] font-bold flex-1" style={{ color: c.text }}>
-          RED — {totalCount} require your voice
+          {tableMode ? `Your call — ${totalCount} item${totalCount !== 1 ? "s" : ""}` : `RED — ${totalCount} require your voice`}
         </span>
         {dismissedCount > 0 && onToggleShowDismissed && (
           <button

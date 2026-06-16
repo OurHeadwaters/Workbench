@@ -31,6 +31,9 @@ import { KitsPage } from "@/pages/KitsPage";
 import { VisionBoardPage } from "@/pages/VisionBoardPage";
 import { PractitionerApplicationPage } from "@/pages/PractitionerApplicationPage";
 import { PractitionerReviewPage } from "@/pages/PractitionerReviewPage";
+import { InboxPage } from "@/pages/InboxPage";
+import { ThisWeekPage } from "@/pages/ThisWeekPage";
+import { TableRoomPage } from "@/pages/TableRoomPage";
 import { GordWidget } from "@workspace/gord-widget";
 import { PasswordGate } from "@/components/PasswordGate";
 
@@ -67,7 +70,7 @@ function OnboardingGuard({ children }: { children: React.ReactNode }) {
 
 function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8]">
+    <div className="min-h-dvh" style={{ backgroundColor: "#0B0905" }}>
       {children}
       <CaptureFab />
       <NavBar />
@@ -85,27 +88,37 @@ export default function App() {
       <Switch>
         <Route path="/onboarding" component={OnboardingPage} />
 
-        {/* ── Kitchen Table — the front door ── */}
+        {/* ── Three rooms — main nav ── */}
         <Route path="/">
           <OnboardingGuard>
-            <AppShell><TablePage /></AppShell>
+            <AppShell><InboxPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
-        {/* ── Today — preserved at /today ── */}
+        <Route path="/this-week">
+          <OnboardingGuard>
+            <AppShell><ThisWeekPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
+        <Route path="/table">
+          <OnboardingGuard>
+            <AppShell><TableRoomPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
+        {/* ── Preserved pages (not in main nav) ── */}
         <Route path="/today">
           <OnboardingGuard>
             <AppShell><TodayPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
-        {/* ── Cockpit — all ops tools ── */}
         <Route path="/cockpit">
           <OnboardingGuard>
             <AppShell><CockpitPage /></AppShell>
           </OnboardingGuard>
         </Route>
-        {/* Debrief lives under cockpit in nav, standalone routes */}
         <Route path="/debrief/evening">
           <OnboardingGuard>
             <AppShell><DebriefPage /></AppShell>
@@ -117,33 +130,28 @@ export default function App() {
           </OnboardingGuard>
         </Route>
 
-        {/* ── Model ── */}
         <Route path="/model">
           <OnboardingGuard>
             <AppShell><ModelPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
-        {/* ── Window — public Eave Flow portal (no onboarding gate) ── */}
         <Route path="/window">
           <AppShell><WindowPage /></AppShell>
         </Route>
 
-        {/* ── Zones ── */}
         <Route path="/zones">
           <OnboardingGuard>
             <AppShell><ZonesPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
-        {/* ── Guide ── */}
         <Route path="/guide">
           <OnboardingGuard>
             <AppShell><GuidePage /></AppShell>
           </OnboardingGuard>
         </Route>
 
-        {/* ── Reviews ── */}
         <Route path="/weekly">
           <OnboardingGuard>
             <AppShell><WeeklyPage /></AppShell>
@@ -155,29 +163,24 @@ export default function App() {
           </OnboardingGuard>
         </Route>
 
-        {/* ── Settings ── */}
         <Route path="/settings">
           <OnboardingGuard>
             <AppShell><SettingsPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
-        {/* ── Kits — kit listing + owner drafts ── */}
         <Route path="/kits">
           <AppShell><KitsPage /></AppShell>
         </Route>
 
-        {/* ── Practitioners — application form (public) ── */}
         <Route path="/apply-practitioner">
           <PractitionerApplicationPage />
         </Route>
 
-        {/* ── Arc / Practitioners — owner review screen ── */}
         <Route path="/arc/practitioners">
           <AppShell><PractitionerReviewPage /></AppShell>
         </Route>
 
-        {/* ── Other preserved routes ── */}
         <Route path="/inbox-setup">
           <OnboardingGuard>
             <AppShell><InboxSetupPage /></AppShell>
@@ -207,10 +210,19 @@ export default function App() {
             <AppShell><MeetingKitPage /></AppShell>
           </OnboardingGuard>
         </Route>
-        {/* /council merged into table surface — deep links redirect home */}
-        <Route path="/council"><Redirect to="/" /></Route>
+        <Route path="/council"><Redirect to="/table" /></Route>
         <Route path="/money-machine">
           <AppShell><MoneyMachinePage /></AppShell>
+        </Route>
+        <Route path="/kitchen-table">
+          <OnboardingGuard>
+            <AppShell><KitchenTablePage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+        <Route path="/old-table">
+          <OnboardingGuard>
+            <AppShell><TablePage /></AppShell>
+          </OnboardingGuard>
         </Route>
 
         <Route path="/land">
@@ -219,7 +231,6 @@ export default function App() {
           </OnboardingGuard>
         </Route>
 
-        {/* ── Vision Board — standalone, no onboarding gate ── */}
         <Route path="/vision-board" component={VisionBoardPage} />
 
         <Route><Redirect to="/" /></Route>

@@ -30,7 +30,7 @@ const BADGE_COLORS: Record<string, string> = {
   default:               "bg-[#F5F5F0] text-[#44403C]",
 };
 
-export function MorningTriage() {
+export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boolean } = {}) {
   const inbox = useStore((s) => s.inbox);
   const gmailAccounts = useStore((s) => s.gmailAccounts);
   const pendingReplies = useStore((s) => s.pendingReplies);
@@ -108,11 +108,8 @@ export function MorningTriage() {
 
   return (
     <div className="rounded-xl border border-[#E7E5E4] bg-white overflow-hidden mb-4">
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-4 py-3 min-h-[44px]"
-      >
-        <div className="flex items-center gap-2">
+      {alwaysExpanded ? (
+        <div className="flex items-center gap-2 px-4 py-3">
           <Inbox size={16} className="text-[#78716C]" />
           <span className="text-sm font-medium">Morning triage</span>
           {active.length > 0 && (
@@ -126,10 +123,30 @@ export function MorningTriage() {
             </span>
           )}
         </div>
-        {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-      </button>
+      ) : (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="w-full flex items-center justify-between px-4 py-3 min-h-[44px]"
+        >
+          <div className="flex items-center gap-2">
+            <Inbox size={16} className="text-[#78716C]" />
+            <span className="text-sm font-medium">Morning triage</span>
+            {active.length > 0 && (
+              <span className="text-xs bg-[#F5F5F0] text-[#44403C] rounded-full px-2 py-0.5">
+                {active.length}
+              </span>
+            )}
+            {failedCount > 0 && (
+              <span className="text-xs bg-[#FEF3C7] text-[#92400E] rounded-full px-2 py-0.5">
+                {failedCount} needs auth
+              </span>
+            )}
+          </div>
+          {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </button>
+      )}
 
-      {expanded && (
+      {(alwaysExpanded || expanded) && (
         <div className="border-t border-[#E7E5E4] divide-y divide-[#E7E5E4]">
           {loading && (
             <div className="px-4 py-3 text-sm text-[#78716C]">Loading…</div>
