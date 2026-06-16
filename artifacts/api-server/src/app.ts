@@ -1,4 +1,4 @@
-import express, { type Express } from "express";
+import express, { type Express, type Request } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import { clerkMiddleware } from "@clerk/express";
@@ -14,6 +14,15 @@ import {
   CLERK_PROXY_PATH,
   clerkProxyMiddleware,
 } from "./middlewares/clerkProxyMiddleware";
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Express {
+    interface Request {
+      rawBody?: Buffer;
+    }
+  }
+}
 
 const app: Express = express();
 
@@ -53,7 +62,13 @@ app.use(cookieParser(NURSERY_COOKIE_SECRET));
 // The route itself applies express.raw({ type: 'application/json' }).
 app.use("/api/stripe", stripeWebhookRouter);
 
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (_req: Request, _res, buf) => {
+      (_req as Request).rawBody = buf;
+    },
+  }),
+);
 app.use(express.urlencoded({ extended: true }));
 
 app.use(clerkMiddleware());

@@ -197,6 +197,71 @@ function webhookSecretOk(req: Request): boolean {
   return crypto.timingSafeEqual(Buffer.from(provided), Buffer.from(secret));
 }
 
+// ── Shared kit fulfillment helper ─────────────────────────────────────────────
+//
+// Used by both purchase-webhook (Stripe/TSP) and zaprite-webhook (Bitcoin).
+// Generates a token, persists it to the token store, and sends the delivery
+// email. Returns the token record and mail result so callers can respond.
+
+interface FulfillKitPurchaseResult {
+  token: string;
+  accessUrl: string;
+  expiresAt: Date;
+  mailStatus: string;
+}
+
+async function fulfillKitPurchase(opts: {
+  kit_id: string;
+  buyer_email: string;
+  buyer_name: string;
+  purchase_id: string;
+  logTag: string;
+}): Promise<FulfillKitPurchaseResult | { error: string; status: number }> {
+  const { kit_id, buyer_email, buyer_name, purchase_id, logTag } = opts;
+
+  const kit = getKit(kit_id);
+  if (!kit) return { error: `Unknown kit_id: ${kit_id}`, status: 422 };
+
+  const token = generateToken();
+  const createdAt = new Date();
+  const expiresAt = new Date(createdAt.getTime() + TOKEN_TTL_MS);
+
+  const record: TokenRecord = {
+    token,
+    kit_id,
+    buyer_email,
+    buyer_name,
+    purchase_id,
+    created_at: createdAt.toISOString(),
+    expires_at: expiresAt.toISOString(),
+  };
+
+  try {
+    const store = readTokenStore();
+    store[token] = record;
+    writeTokenStore(store);
+  } catch (err) {
+    logger.error({ err, kit_id, purchase_id }, `${logTag} failed to persist token`);
+    return { error: "Failed to record purchase. Contact support.", status: 500 };
+  }
+
+  const url = accessUrl(token);
+  const mailResult = await sendKitDeliveryEmail({
+    to: buyer_email,
+    buyerName: buyer_name,
+    kit,
+    accessUrl: url,
+    expiresAt,
+  });
+
+  logger.info(
+    { kit_id, purchase_id, buyer_email, mailStatus: mailResult.status },
+    `${logTag} purchase processed`,
+  );
+
+  return { token, accessUrl: url, expiresAt, mailStatus: mailResult.status };
+}
+
 // ── POST /kits/purchase-webhook ───────────────────────────────────────────────
 
 const PurchaseWebhookSchema = z.object({
@@ -220,56 +285,168 @@ router.post("/purchase-webhook", async (req: Request, res: Response) => {
 
   const { kit_id, buyer_email, buyer_name, purchase_id } = parsed.data;
 
-  const kit = getKit(kit_id);
-  if (!kit) {
-    res.status(422).json({ error: `Unknown kit_id: ${kit_id}` });
-    return;
-  }
-
-  const token = generateToken();
-  const createdAt = new Date();
-  const expiresAt = new Date(createdAt.getTime() + TOKEN_TTL_MS);
-
-  const record: TokenRecord = {
-    token,
-    kit_id,
-    buyer_email,
-    buyer_name,
-    purchase_id,
-    created_at: createdAt.toISOString(),
-    expires_at: expiresAt.toISOString(),
-  };
-
-  try {
-    const store = readTokenStore();
-    store[token] = record;
-    writeTokenStore(store);
-  } catch (err) {
-    logger.error({ err, kit_id, purchase_id }, "[kits] failed to persist token");
-    res.status(500).json({ error: "Failed to record purchase. Contact support." });
-    return;
-  }
-
-  const url = accessUrl(token);
-  const mailResult = await sendKitDeliveryEmail({
-    to: buyer_email,
-    buyerName: buyer_name,
-    kit,
-    accessUrl: url,
-    expiresAt,
+  const result = await fulfillKitPurchase({
+    kit_id, buyer_email, buyer_name, purchase_id, logTag: "[kits]",
   });
 
-  logger.info(
-    { kit_id, purchase_id, buyer_email, mailStatus: mailResult.status },
-    "[kits] purchase processed",
-  );
+  if ("error" in result) {
+    res.status(result.status).json({ error: result.error });
+    return;
+  }
 
   res.status(201).json({
     ok: true,
-    token,
-    access_url: url,
-    expires_at: expiresAt.toISOString(),
-    mail_status: mailResult.status,
+    token: result.token,
+    access_url: result.accessUrl,
+    expires_at: result.expiresAt.toISOString(),
+    mail_status: result.mailStatus,
+  });
+});
+
+// ── POST /kits/zaprite-webhook ────────────────────────────────────────────────
+//
+// Handles Zaprite Bitcoin payment completions for kit purchases.
+//
+// Zaprite sends a POST with:
+//   Header  x-zaprite-signature: sha256=<hex_hmac_sha256_of_raw_body>
+//   Body    { "type": "payment.completed", "data": { ... } }
+//
+// The kit seller should set the following in the Zaprite order metadata:
+//   kit_id     — the kit registry ID (e.g. "economy-kit")
+//   buyer_name — the buyer's display name
+//
+// buyer_email is read from data.customer.email or data.metadata.buyer_email.
+//
+// Environment variable required: ZAPRITE_WEBHOOK_SECRET
+
+function validateZapriteSignature(req: Request): boolean {
+  const secret = process.env.ZAPRITE_WEBHOOK_SECRET;
+  if (!secret) {
+    logger.warn("[kits] ZAPRITE_WEBHOOK_SECRET not set — Zaprite webhook disabled");
+    return false;
+  }
+
+  const sigHeader = req.headers["x-zaprite-signature"];
+  const sig = typeof sigHeader === "string" ? sigHeader : (sigHeader?.[0] ?? "");
+
+  // Accept "sha256=<hex>" or bare "<hex>"
+  const provided = sig.startsWith("sha256=") ? sig.slice(7) : sig;
+  if (!provided) return false;
+
+  const rawBody = req.rawBody;
+  if (!rawBody) {
+    logger.warn("[kits] rawBody missing — cannot verify Zaprite signature");
+    return false;
+  }
+
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(rawBody)
+    .digest("hex");
+
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(provided, "hex"),
+      Buffer.from(expected, "hex"),
+    );
+  } catch {
+    return false;
+  }
+}
+
+// Extract the fields we need from Zaprite's payment.completed payload.
+// Zaprite's payload shape (as of their v1 webhook API):
+//   { type: "payment.completed", data: { customer: { email, name }, metadata: { kit_id, buyer_name, buyer_email } } }
+interface ZapriteWebhookPayload {
+  type?: string;
+  event?: string;
+  data?: {
+    id?: string;
+    orderId?: string;
+    customer?: { email?: string; name?: string };
+    metadata?: Record<string, string | undefined>;
+  };
+  // Some versions nest under "object" instead of "data"
+  object?: {
+    id?: string;
+    customer?: { email?: string; name?: string };
+    metadata?: Record<string, string | undefined>;
+  };
+}
+
+function extractZapriteFields(body: ZapriteWebhookPayload): {
+  eventType: string;
+  purchaseId: string;
+  kitId: string | null;
+  buyerEmail: string | null;
+  buyerName: string;
+} {
+  const eventType = body.type ?? body.event ?? "";
+  const dataBlock = body.data ?? body.object ?? {};
+  const meta = dataBlock.metadata ?? {};
+  const customer = dataBlock.customer ?? {};
+
+  const purchaseId =
+    dataBlock.id ?? (body.data as { orderId?: string } | undefined)?.orderId ?? "zaprite-unknown";
+  const kitId = meta["kit_id"] ?? null;
+  const buyerEmail = customer.email ?? meta["buyer_email"] ?? null;
+  const buyerName =
+    meta["buyer_name"] ?? customer.name ?? "Valued Buyer";
+
+  return { eventType, purchaseId, kitId, buyerEmail, buyerName };
+}
+
+// Exact allowlist of Zaprite event types that should trigger fulfillment.
+const ZAPRITE_COMPLETION_EVENTS = new Set(["payment.completed", "order.paid", "invoice.paid"]);
+
+router.post("/zaprite-webhook", async (req: Request, res: Response) => {
+  if (!validateZapriteSignature(req)) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const payload = req.body as ZapriteWebhookPayload;
+  const { eventType, purchaseId, kitId, buyerEmail, buyerName } =
+    extractZapriteFields(payload);
+
+  // Only act on known payment completion events (exact allowlist)
+  if (!ZAPRITE_COMPLETION_EVENTS.has(eventType)) {
+    logger.info({ eventType, purchaseId }, "[kits/zaprite] ignoring non-completion event");
+    res.json({ ok: true, ignored: true, eventType });
+    return;
+  }
+
+  if (!kitId) {
+    logger.warn({ purchaseId, payload }, "[kits/zaprite] missing kit_id in metadata");
+    res.status(422).json({ error: "Missing kit_id in Zaprite order metadata" });
+    return;
+  }
+
+  if (!buyerEmail) {
+    logger.warn({ purchaseId, kitId }, "[kits/zaprite] missing buyer email in payload");
+    res.status(422).json({ error: "Missing buyer email in Zaprite payload" });
+    return;
+  }
+
+  const result = await fulfillKitPurchase({
+    kit_id: kitId,
+    buyer_email: buyerEmail,
+    buyer_name: buyerName,
+    purchase_id: purchaseId,
+    logTag: "[kits/zaprite]",
+  });
+
+  if ("error" in result) {
+    res.status(result.status).json({ error: result.error });
+    return;
+  }
+
+  res.status(201).json({
+    ok: true,
+    token: result.token,
+    access_url: result.accessUrl,
+    expires_at: result.expiresAt.toISOString(),
+    mail_status: result.mailStatus,
   });
 });
 
