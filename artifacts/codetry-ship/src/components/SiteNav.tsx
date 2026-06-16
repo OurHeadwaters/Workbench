@@ -38,6 +38,7 @@ const EXPLORE_LINKS: { icon: string; name: string; href: string }[] = [
   { icon: "🧭", name: "Odyssey",        href: "/odyssey" },
   { icon: "🗺️", name: "Map",            href: "/map" },
   { icon: "🔭", name: "The Legend",     href: "/legend" },
+  { icon: "🌌", name: "Constellation",  href: "/constellation" },
 ];
 
 function isActive(path: string, location: string): boolean {
