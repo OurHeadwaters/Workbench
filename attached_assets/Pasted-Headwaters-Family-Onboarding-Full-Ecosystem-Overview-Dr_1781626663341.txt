@@ -1,0 +1,135 @@
+Headwaters Family Onboarding — Full Ecosystem Overview
+Drafted June 16, 2026 — for business manager review and refinement
+
+What "full on" means
+The Headwaters ecosystem is a stack of interconnected household apps organized around a water-cycle metaphor: Zone 0 is the hearth (your kitchen table), Zone 1 is the immediate support circle (the people who show up), and Zones 2–5 move progressively outward toward community, trade, and the open commons. Going "full on" means your household is actively running all Zone 0–1 tools and is present in the community layer.
+
+This document maps what that looks like for a real family — who logs in to what, in what order, and what they actually do there day to day.
+
+The Household (Zone 0)
+Zone 0 is the hearth. All Zone 0 apps share a single household identity: a name + passphrase, no email required. The Kitchen is the front door.
+
+1. The Kitchen (/kitchen/)
+Who: Every adult in the household. What it is: The lobby. One login unlocks door-cards that link to every other Zone 0–1 app. It also holds The Shelf — a curated set of parenting challenge cards (what the behaviour looks like, what it really is underneath, phrases to say in the moment, and when to reach for it).
+
+Onboarding step: This is the very first thing you set up. Create a household name and a passphrase. That passphrase is the key to everything else in Zone 0.
+
+Friction to expect: Low. It is a single shared household login — no individual accounts, no email verification. The only thing to decide up front is the household name and passphrase, which you will use for years.
+
+2. Saltbox — Homeschool Day Companion (/gather/)
+Who: Parent(s) daily; children as subjects of tracking and occasional active participants. What it is: The homeschool operating system. Entirely local — no account, no server, no cloud sync. All data lives on the device (IndexedDB + localStorage).
+
+Feature surface for a fully-onboarded family:
+
+Today — daily rhythm board, what is planned vs. done
+Library + Units — curriculum PDFs and lesson planning
+Responsibilities — personality-aware coaching for each child
+Portfolio + Moments — learning captures, brave moments, key memories
+Interests & Mentor Moments — what each child is drawn to, who is investing in them
+Pathways — roadmaps and interactive lesson modules
+Reports — exportable summaries of progress
+Family Recap — grandparent-friendly export with three levels of what to share; optional live follow-along link (off by default, enabled intentionally)
+Meals + kitchen timers — daily practical layer
+Day photo dump — end-of-day capture
+Onboarding step: After The Kitchen, spend one session importing your curriculum PDFs and entering each child's name and current interests. The app is usable from day one — it does not need to be fully configured before it is useful.
+
+Friction to expect: Moderate setup time. The feature surface is large, and a family with multiple children doing serious homeschool will spend real time in the initial setup — curriculum import, pathway planning, responsibility cards for each child. Plan a 2–3 hour onboarding session with a parent. After that, daily use is light.
+
+Privacy note: The live follow-along link is the only feature that ever leaves the device. It is off by default. Grandparents get what you explicitly export.
+
+3. Family Buckets (/family-buckets/)
+Who: Parents manage it; children use it actively; one or more children can be promoted to Helper. What it is: Household chores, savings goals, and memory-keeping.
+
+Feature surface:
+
+Chores — assigned per child, tracked daily or weekly
+Savings Goals — visual buckets (e.g. bike, camp, something they want)
+Courage Bucket — a running record of brave moments with optional photos
+Helper role — a promoted child (Big Brother / Co-Captain) gets default chores, a badge set, and a printable promotion packet
+Onboarding step: After The Kitchen login is set up, create a member for each child and assign their first chore set. The Helper promotion can wait until the chore rhythms are established.
+
+Friction to expect: Low. The simplest Zone 0 app to start using day one.
+
+4. North Star (/north-star/)
+Who: Primarily the founder / head of household. Personal tool, not shared. What it is: A calm operating hub for an ADHD-inattentive entrepreneur — weekly and seasonal review structure, Codetry zone orientation, and a morning triage card that surfaces Gmail threads.
+
+Feature surface:
+
+Today — morning triage card
+Guide — Codetry zone model + handbook link
+Zones — map of where your attention is living
+Weekly + Seasonal review — structured reflection cadence
+Inbox setup — Gmail integration for morning triage
+Tester kit — diagnostics and dev tools
+Onboarding step: This is a personal tool — set it up when you are ready to use it seriously. The Gmail integration requires a one-time connection step (Google OAuth).
+
+Friction to expect: Low for basic use. The Gmail integration adds one setup step that requires following an OAuth flow. The weekly review rhythm takes a few weeks to feel natural.
+
+The Support Circle (Zone 1)
+Zone 1 is the Eave — the people you call in a pinch. Apps here use individual accounts (Clerk), not the shared household passphrase, because the circle members are outside your household.
+
+5. The Eave (/eave/ + /eave-mobile/)
+Who: The organizer (you or a trusted neighbour) plus 3–12 circle members — the families who are inside your Zone 1. What it is: A structured support rotation so nobody bears the whole weight alone. When a family is going through a hard season (new baby, illness, crisis), a circle is created around them. Circle members claim slots — a meal, an errand, a school pickup — and the organizer coordinates without naeding to text ten people individually.
+
+Feature surface:
+
+Circles — one per family being supported at a given time
+Meal trains — date-by-date claiming
+Errand boards — one-off practical tasks
+Encouragement projects — card collections, memory notes
+Calendar blocks — availability syncing
+Mobile app — push notifications and quick slot claiming from the phone
+Onboarding step: Each circle member signs up individually (Clerk auth — email or Google). The organizer creates the first circle and invites members. Each member accepts and claims their first slot.
+
+Friction to expect: Moderate. Each circle member needs their own account — this is the first place in the ecosystem where individual sign-up is required. For a tight-knit group of 8 families, the one-time setup is worth it. The mobile app requires an Expo install.
+
+6. Sandbox — The Village Bulletin (/sandbox/)
+Who: Your household as one participant among ~60 homeschool families in your area. What it is: A calm weekly bulletin board. Posts reset every Sunday. Sections: park days, field trips, asks, meetups, homestead notes, just-saying, events. A Sunday digest email goes out to opted-in households.
+
+Onboarding step: You receive an invite token from whoever runs your local Sandbox instance. You set a household name and passphrase (can be the same as The Kitchen, or different — it is a separate credential). That is your household identity on the board.
+
+Friction to expect: You need an invite token. If you are running the Sandbox for your local community, you issue invite tokens to other families. If you are joining an existing one, you receive a token. Either way it is a one-time step.
+
+The Outer Zones (Zone 3+)
+These are present in the codebase but not part of a typical family's daily workflow at launch:
+
+The Pique (/forge/) — Zone 3 community news layer
+Story Forge (/story-forge/) — Zone 3 storytelling and creative publishing
+These become relevant when your household is ready to participate publicly — sharing stories, contributing to the community knowledge layer, or tying in an XRPL wallet for Zone 5 participation.
+
+Full Onboarding Sequence
+Step	App	Who	Time
+1	The Kitchen	Both parents	15 min — create household, explore The Shelf
+2	Saltbox / Gather	Lead homeschool parent	2–3 hrs — import curriculum, enter children, set rhythms
+3	Family Buckets	Both parents	30–45 min — enter children, assign first chores, set goals
+4	North Star	Founder	30 min — personal setup, Gmail OAuth
+5	Sandbox	Both parents	15 min — accept invite token, create household identity
+6	The Eave	Organizer + each circle member	1 hr across the group — individual accounts, first circle
+Total calendar time: 1–2 weeks if done in natural stages. Avoid doing it all in one sitting.
+
+What the family actually touches, daily
+Person	Daily touchpoints
+Homeschool parent	Saltbox Today board + Kitchen lobby
+Entrepreneur parent	North Star morning triage + Kitchen lobby
+Kids (school-age)	Family Buckets (chore check-off)
+Kids (promoted Helper)	Family Buckets with expanded responsibilities
+Whole household	Sandbox on Sunday morning (read the weekly digest)
+Support circle	Eave mobile app (claim slots, leave notes)
+Honest friction points
+1. The ecosystem is large. There are six distinct apps before you even reach Zone 3. The onboarding sequence above stages them deliberately — starting with the two lowest-friction tools (Kitchen + Family Buckets) and building toward the more involved ones.
+
+2. Zone 1 breaks the shared passphrase pattern. The Eave requires individual Clerk accounts for each circle member. This is by design (circle members are outside your household), but it is a visible gear-shift for people used to the simple passphrase model.
+
+3. Saltbox setup time is real. A family doing serious structured homeschool will spend genuine time in Saltbox setup. This is investment, not friction — but it should be named honestly.
+
+4. The live follow-along link in Saltbox is intentionally gated. Grandparents cannot "just check in" — they see what you export. Some families will find this a feature; some will find it a friction point.
+
+5. Sandbox depends on community adoption. A bulletin board for 60 families only works if enough families are on it. If you are the first one in your community, you are doing community onboarding, not just personal onboarding.
+
+Questions for the business manager to help refine
+Is the Kitchen → Saltbox handoff clear enough, or does the Kitchen need a guided "first time" flow that walks a new household through the setup sequence?
+Should the Eave onboarding have a printable one-page explainer for circle members who are not technically inclined?
+Is the Sandbox invite-token model the right gate for community onboarding, or does it create a bottleneck when the community is just forming?
+Which app should be demo-able in under 5 minutes for a skeptical co-parent? (Current answer: Family Buckets. Is that right?)
+Is there a version of this onboarding sequence that works if only one parent is bought in at the start?
+This document is a working draft. It describes the ecosystem as currently built and the onboarding experience as it currently stands — no new features are implied.
