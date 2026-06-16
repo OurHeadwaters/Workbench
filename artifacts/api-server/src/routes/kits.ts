@@ -29,7 +29,7 @@
  */
 
 import { Router, type IRouter, type Request, type Response } from "express";
-import rateLimit from "express-rate-limit";
+import rateLimit, { MemoryStore } from "express-rate-limit";
 import crypto from "crypto";
 import { z } from "zod";
 import Stripe from "stripe";
@@ -496,13 +496,21 @@ router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
 //
 // Rate-limited per IP: 20 requests per 15 minutes to prevent token enumeration.
 
+const accessRateLimitStore = new MemoryStore();
+
 const accessRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 20,
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: { error: "Too many access attempts — please try again later." },
+  store: accessRateLimitStore,
 });
+
+/** Reset the access rate-limit store — for use in tests only. */
+export function __clearAccessRateLimiter(): void {
+  void accessRateLimitStore.resetAll();
+}
 
 router.get("/access/:token", accessRateLimit, async (req: Request, res: Response) => {
   const raw = req.params["token"];
