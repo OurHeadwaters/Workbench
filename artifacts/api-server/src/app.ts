@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import fs from "fs";
 import router from "./routes";
+import stripeWebhookRouter from "./routes/stripeWebhook";
 import { logger } from "./lib/logger";
 import { scheduleNightlyBriefing } from "./lib/riverSmithScheduler";
 import { scheduleWeeklyArchive } from "./lib/taskAutopilotScheduler";
@@ -46,6 +47,12 @@ app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 
 app.use(cors({ credentials: true, origin: true }));
 app.use(cookieParser(NURSERY_COOKIE_SECRET));
+
+// Stripe webhook must be registered BEFORE express.json() so the raw Buffer
+// is available for stripe.webhooks.constructEvent signature verification.
+// The route itself applies express.raw({ type: 'application/json' }).
+app.use("/api/stripe", stripeWebhookRouter);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
