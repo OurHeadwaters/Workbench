@@ -31,8 +31,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
 import crypto from "crypto";
-import fs from "fs";
-import path from "path";
 import { z } from "zod";
 import Stripe from "stripe";
 import { logger } from "../lib/logger";
@@ -40,8 +38,8 @@ import { getKit, KITS } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail } from "../lib/kitsMailer";
 import { runCodetryFilter } from "../lib/codetryFilter";
 import { requireKitOwnerAuth, FOUNDER_OWNER_ID } from "../lib/kitAuth";
-import { db, kitsTable, practitionerApplicationsTable } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import { db, kitsTable, practitionerApplicationsTable, kitTokensTable } from "@workspace/db";
+import { eq, and, gt, desc } from "drizzle-orm";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { clerkClient } from "@clerk/express";
 
@@ -140,37 +138,9 @@ function getStripe(): Stripe | null {
   return new Stripe(key);
 }
 
-// ── Token store (legacy purchase webhook) ─────────────────────────────────────
+// ── Token store (legacy purchase webhook, now DB-backed) ──────────────────────
 
-const DATA_DIR = path.resolve(process.cwd(), "data");
-const TOKENS_FILE = path.join(DATA_DIR, "kit-tokens.json");
 const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
-
-interface TokenRecord {
-  token: string;
-  kit_id: string;
-  buyer_email: string;
-  buyer_name: string;
-  purchase_id: string;
-  created_at: string;
-  expires_at: string;
-}
-
-type TokenStore = Record<string, TokenRecord>;
-
-function readTokenStore(): TokenStore {
-  try {
-    if (!fs.existsSync(TOKENS_FILE)) return {};
-    return JSON.parse(fs.readFileSync(TOKENS_FILE, "utf-8")) as TokenStore;
-  } catch {
-    return {};
-  }
-}
-
-function writeTokenStore(store: TokenStore): void {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFileSync(TOKENS_FILE, JSON.stringify(store, null, 2), "utf-8");
-}
 
 function generateToken(): string {
   return crypto.randomBytes(32).toString("hex");
@@ -227,20 +197,16 @@ async function fulfillKitPurchase(opts: {
   const createdAt = new Date();
   const expiresAt = new Date(createdAt.getTime() + TOKEN_TTL_MS);
 
-  const record: TokenRecord = {
-    token,
-    kit_id,
-    buyer_email,
-    buyer_name,
-    purchase_id,
-    created_at: createdAt.toISOString(),
-    expires_at: expiresAt.toISOString(),
-  };
-
   try {
-    const store = readTokenStore();
-    store[token] = record;
-    writeTokenStore(store);
+    await db.insert(kitTokensTable).values({
+      token,
+      kitId: kit_id,
+      buyerEmail: buyer_email.toLowerCase(),
+      buyerName: buyer_name,
+      purchaseId: purchase_id,
+      createdAt,
+      expiresAt,
+    });
   } catch (err) {
     logger.error({ err, kit_id, purchase_id }, `${logTag} failed to persist token`);
     return { error: "Failed to record purchase. Contact support.", status: 500 };
@@ -481,26 +447,27 @@ router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
   }
 
   const { email } = parsed.data;
-  const store = readTokenStore();
   const now = new Date();
 
-  const active = Object.values(store).filter(
-    (r) =>
-      r.buyer_email.toLowerCase() === email.toLowerCase() &&
-      new Date(r.expires_at) > now,
-  );
+  const active = await db
+    .select()
+    .from(kitTokensTable)
+    .where(
+      and(
+        eq(kitTokensTable.buyerEmail, email.toLowerCase()),
+        gt(kitTokensTable.expiresAt, now),
+      ),
+    )
+    .orderBy(desc(kitTokensTable.createdAt))
+    .limit(1);
 
   if (active.length === 0) {
     res.json({ ok: true, sent: false });
     return;
   }
 
-  // Use the most recently created active token
-  active.sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-  );
   const record = active[0]!;
-  const kit = getKit(record.kit_id);
+  const kit = getKit(record.kitId);
 
   if (!kit) {
     res.json({ ok: true, sent: false });
@@ -508,18 +475,17 @@ router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
   }
 
   const url = accessUrl(record.token);
-  const expiresAt = new Date(record.expires_at);
 
   const mailResult = await sendKitDeliveryEmail({
-    to: record.buyer_email,
-    buyerName: record.buyer_name,
+    to: record.buyerEmail,
+    buyerName: record.buyerName,
     kit,
     accessUrl: url,
-    expiresAt,
+    expiresAt: record.expiresAt,
   });
 
   logger.info(
-    { email, kit_id: record.kit_id, mailStatus: mailResult.status },
+    { email, kit_id: record.kitId, mailStatus: mailResult.status },
     "[kits/resend] resend requested",
   );
 
@@ -528,7 +494,7 @@ router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
 
 // ── GET /kits/access/:token ───────────────────────────────────────────────────
 
-router.get("/access/:token", (req: Request, res: Response) => {
+router.get("/access/:token", async (req: Request, res: Response) => {
   const raw = req.params["token"];
   const token = Array.isArray(raw) ? (raw[0] ?? "") : (raw ?? "");
   if (!token || token.length > 128) {
@@ -536,18 +502,22 @@ router.get("/access/:token", (req: Request, res: Response) => {
     return;
   }
 
-  const store = readTokenStore();
-  const record = store[token];
+  const [record] = await db
+    .select()
+    .from(kitTokensTable)
+    .where(eq(kitTokensTable.token, token))
+    .limit(1);
+
   if (!record) {
     res.status(404).json({ error: "Token not found" });
     return;
   }
-  if (new Date() > new Date(record.expires_at)) {
-    res.status(410).json({ error: "Token expired", expired_at: record.expires_at });
+  if (new Date() > record.expiresAt) {
+    res.status(410).json({ error: "Token expired", expired_at: record.expiresAt.toISOString() });
     return;
   }
 
-  const kit = getKit(record.kit_id);
+  const kit = getKit(record.kitId);
   if (!kit) {
     res.status(500).json({ error: "Kit record inconsistency — contact support" });
     return;
@@ -556,9 +526,9 @@ router.get("/access/:token", (req: Request, res: Response) => {
   res.json({
     ok: true,
     kit,
-    buyer_name: record.buyer_name,
-    purchase_id: record.purchase_id,
-    expires_at: record.expires_at,
+    buyer_name: record.buyerName,
+    purchase_id: record.purchaseId,
+    expires_at: record.expiresAt.toISOString(),
   });
 });
 

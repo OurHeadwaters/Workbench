@@ -67,7 +67,29 @@ export const practitionerApplicationsTable = pgTable(
   }),
 );
 
+export const kitTokensTable = pgTable(
+  "kit_tokens",
+  {
+    token: text("token").primaryKey(),
+    kitId: text("kit_id").notNull(),
+    buyerEmail: text("buyer_email").notNull(),
+    buyerName: text("buyer_name").notNull(),
+    purchaseId: text("purchase_id").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  },
+  (t) => ({
+    buyerEmailIdx: index("kit_tokens_buyer_email_idx").on(t.buyerEmail),
+    expiresAtIdx: index("kit_tokens_expires_at_idx").on(t.expiresAt),
+    kitIdIdx: index("kit_tokens_kit_id_idx").on(t.kitId),
+  }),
+);
+
 export type KitRow = typeof kitsTable.$inferSelect;
 export type KitInsert = typeof kitsTable.$inferInsert;
 export type PractitionerApplicationRow = typeof practitionerApplicationsTable.$inferSelect;
 export type PractitionerApplicationInsert = typeof practitionerApplicationsTable.$inferInsert;
+export type KitTokenRow = typeof kitTokensTable.$inferSelect;
+export type KitTokenInsert = typeof kitTokensTable.$inferInsert;
