@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 
 const STORAGE_KEY = "north-star:unlocked";
-const CORRECT = import.meta.env.VITE_KITCHEN_TABLE_PASSWORD as string;
+const CORRECT = (import.meta.env.VITE_KITCHEN_TABLE_PASSWORD as string) || "";
+const GATE_ENABLED = CORRECT.length > 0;
 
 function isUnlocked(): boolean {
+  if (!GATE_ENABLED) return true;
   try {
     return localStorage.getItem(STORAGE_KEY) === "1";
   } catch {
