@@ -281,7 +281,7 @@ function ToolPill({
       >
         {tool.tagline}
       </p>
-      {!tool.inThisProject && tool.url !== "#" && (
+      {!tool.inRepo && tool.url !== "#" && (
         <span
           style={{
             display: "inline-block",

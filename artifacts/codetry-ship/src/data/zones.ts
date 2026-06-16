@@ -2,8 +2,9 @@ export interface ZoneTool {
   name: string;
   tagline: string;
   url: string;
-  inThisProject: boolean;
+  inRepo: boolean;
   zoneAddress?: string;
+  status?: "live" | "planned";
 }
 
 export interface ZoneCorner {
@@ -19,6 +20,7 @@ export interface ZoneData {
   name: string;
   slug: string;
   terrain: string;
+  targetDomain: string;
   flowsTo: string | null;
   metaphor: string;
   goodTimesDesc: string;
@@ -32,13 +34,23 @@ export interface ZoneData {
   corner?: ZoneCorner;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// ZONES
+// Tool lists match .local/constellation-map.md exactly.
+// To add a new tool: drop it into the right zone's `tools` array here and it
+// surfaces automatically on /constellation and the zone map.
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const ZONES: ZoneData[] = [
+  // ── Zone 0 — Saltbox · The Hearth ──────────────────────────────────────────
+  // "Live, raise family, homeschool, household sovereignty."
   {
     number: 0,
     name: "Saltbox",
     slug: "saltbox",
     terrain: "The Hearth · Home Center",
-    flowsTo: "The Table",
+    targetDomain: "saltboxhomes.ca",
+    flowsTo: "Kitchen Table",
     metaphor: "Where families keep what they need before winter comes.",
     goodTimesDesc:
       "Household sorted. Kit checked. Roles assigned. Everything in its place — quiet competence on the shelf.",
@@ -51,47 +63,72 @@ export const ZONES: ZoneData[] = [
     fruitLabel: "Ready",
     color: "#7A4E2D",
     tools: [
+      // Z0–A is referenced by MapPage quiz (household:normal highlight)
       {
-        name: "Saltbox",
-        tagline: "Household readiness — roles, kit, and standby status",
-        url: "/gather/",
-        inThisProject: true,
-        zoneAddress: "Z0–A",
-      },
-      {
-        name: "The Handbook",
-        tagline: "How a community runs its own economy — offline-first reader",
-        url: "/codetry-handbook/",
-        inThisProject: true,
-        zoneAddress: "Z0–B",
-      },
-      {
-        name: "xbuckets (XRPL)",
-        tagline: "Non-custodial community wallet and trust layer",
-        url: "https://xbucketsapp.replit.app",
-        inThisProject: false,
-        zoneAddress: "Z0–C",
-      },
-      {
-        name: "Saltbox (External)",
-        tagline: "Household readiness — external deployment at salt-box.replit.app",
+        name: "Saltbox / Homeschool",
+        tagline: "Zone 0 hub — homeschool tools, North Star planner, Story Forge",
         url: "https://salt-box.replit.app",
-        inThisProject: false,
+        inRepo: false,
+        zoneAddress: "Z0–A",
+        status: "live",
+      },
+      {
+        name: "Goodbye Kit",
+        tagline: "Family lifecycle instrument — estate and end-of-life record",
+        url: "https://ourheadwaters.ca/goodbye/",
+        inRepo: true,
+        zoneAddress: "Z0–B",
+        status: "planned",
+      },
+      {
+        name: "Hearth",
+        tagline: "Creative household frontend",
+        url: "https://creative-hub-xbucketsapp.replit.app",
+        inRepo: false,
+        zoneAddress: "Z0–C",
+        status: "live",
+      },
+      {
+        name: "Mama Support Brigade",
+        tagline: "Support network for mothers",
+        url: "https://mom-support-hub.replit.app",
+        inRepo: false,
         zoneAddress: "Z0–D",
+        status: "live",
+      },
+      {
+        name: "Bright Side",
+        tagline: "Health support layer",
+        url: "https://health-support-hub.replit.app",
+        inRepo: false,
+        zoneAddress: "Z0–E",
+        status: "live",
+      },
+      {
+        name: "The Gate",
+        tagline: "Foundational membrane / access control doctrine tool",
+        url: "https://legacy-gatekeeper.replit.app",
+        inRepo: false,
+        zoneAddress: "Z0–F",
+        status: "live",
       },
     ],
   },
+
+  // ── Zone 1 — Kitchen Table · The Spring ──────────────────────────────────
+  // "Budget every hat; plan income and lifestyle."
   {
     number: 1,
-    name: "The Table",
-    slug: "the-table",
+    name: "Kitchen Table",
+    slug: "kitchen-table",
     terrain: "The Spring · Daily Tools",
+    targetDomain: "parrsjars.com",
     flowsTo: "Workbench",
     metaphor: "Where names are held and trust is recognized — the root system that connects everything above ground.",
     goodTimesDesc:
-      "Credentials quiet, identities stable. The Table is the unseen foundation — names on record, passphrase in hand.",
+      "Money tools running. Bucket flows visible. The income plan is open and the household knows where it stands.",
     standbyDesc:
-      "Identity active. The passphrase is the key. The Table proves who you are to any zone that asks.",
+      "Income active. Eave flows are moving. The kitchen table is the operating centre of the household economy.",
     gateName: "The Passphrase Gate",
     gateDesc:
       "A scrypt-derived passphrase that lives only on your device. No server holds your identity — The Table is local.",
@@ -100,47 +137,56 @@ export const ZONES: ZoneData[] = [
     color: "#1f3d2e",
     tools: [
       {
-        name: "Village Board Sandbox",
-        tagline: "60-family local community sandbox — pull-only, no algorithm",
-        url: "/sandbox/",
-        inThisProject: true,
+        name: "The Arc",
+        tagline: "Community Money Machines, monthly bucket flows, Eave Flows, Kitchen Table reports",
+        url: "https://ourheadwaters.ca/arc/",
+        inRepo: true,
         zoneAddress: "Z1–A",
+        status: "planned",
       },
       {
-        name: "The Aquifer",
-        tagline: "XRPL-anchored identity infrastructure — SHA-256 hash witnessing, DID records, lifecycle crossings",
-        url: "/aquifer/",
-        inThisProject: true,
-        zoneAddress: "Z1–A1",
-      },
-      {
-        name: "XRPL Design Hub",
-        tagline: "Trust layer design — XRPL wallet UX, passphrase architecture, identity patterns",
-        url: "https://xrpl-design-hub.replit.app",
-        inThisProject: false,
+        name: "Headwaters Books",
+        tagline: "Bookkeeping layer",
+        url: "https://parrsjars.ca/headwaters-books/",
+        inRepo: true,
         zoneAddress: "Z1–B",
+        status: "live",
       },
       {
-        name: "XRPL Design Hub — Codetry",
-        tagline: "Codetry zone vocabulary, capital gate model, and naming canon",
-        url: "https://xrpl-design-hub.replit.app/codetry/",
-        inThisProject: false,
-        zoneAddress: "Z1–B1",
+        name: "North Star",
+        tagline: "Income and lifestyle planning",
+        url: "https://salt-box.replit.app/north-star/",
+        inRepo: true,
+        zoneAddress: "Z1–C",
+        status: "live",
       },
       {
-        name: "XRPL Design Hub — Privacy Guide",
-        tagline: "Zone-keyed privacy architecture — what lives where and why",
-        url: "https://xrpl-design-hub.replit.app/privacy-guide/",
-        inThisProject: false,
-        zoneAddress: "Z1–B2",
+        name: "The Eave",
+        tagline: "Eave flow tracker",
+        url: "https://salt-box.replit.app/eave/",
+        inRepo: false,
+        zoneAddress: "Z1–D",
+        status: "live",
+      },
+      {
+        name: "Channel Every Drop",
+        tagline: "Budgeting video content",
+        url: "https://x-buckets-vision.replit.app/xbuckets-video/",
+        inRepo: false,
+        zoneAddress: "Z1–E",
+        status: "live",
       },
     ],
   },
+
+  // ── Zone 2 — Workbench · The Worn Path ───────────────────────────────────
+  // "Work in exchange for money — contracts and production."
   {
     number: 2,
     name: "Workbench",
     slug: "workbench",
     terrain: "The Worn Path · Trail",
+    targetDomain: "parrsjars.ca",
     flowsTo: "Greenhouse",
     metaphor: "Where practitioners work. Every tool a practitioner reaches for is in this zone.",
     goodTimesDesc:
@@ -155,61 +201,72 @@ export const ZONES: ZoneData[] = [
     color: "#1A5FA8",
     tools: [
       {
-        name: "North Star",
-        tagline: "Daily household planning — zones, guide, weekly rhythm",
-        url: "/north-star/",
-        inThisProject: true,
+        name: "Parr's Jars",
+        tagline: "Food production business and contracts",
+        url: "https://parrsjars.com",
+        inRepo: false,
         zoneAddress: "Z2–A",
+        status: "live",
       },
       {
-        name: "Field Guide Finance",
-        tagline: "Premium practitioner finance course",
-        url: "/field-guide-finance/",
-        inThisProject: true,
+        name: "Bobbie Parr Studio",
+        tagline: "Design and studio work",
+        url: "https://parrsjars.com/studio/",
+        inRepo: false,
         zoneAddress: "Z2–B",
+        status: "live",
       },
       {
-        name: "Practitioner's Guide",
-        tagline: "Financial cockpit — money, contracts, scenarios, debt attack",
-        url: "/practitioners-guide-v2/",
-        inThisProject: true,
+        name: "Meeting Companion",
+        tagline: "Client meeting tool",
+        url: "https://parrsjars.com/meeting-companion/",
+        inRepo: false,
         zoneAddress: "Z2–C",
+        status: "live",
       },
       {
-        name: "The Operating Plan",
-        tagline: "Daily workbench — morning debrief, week plan, year overview",
-        url: "/practitioner-operating-plan/",
-        inThisProject: true,
+        name: "Thomas Hauling",
+        tagline: "Hauling services white-label",
+        url: "https://summer-camper-rental.replit.app/thomas-hauling/",
+        inRepo: false,
         zoneAddress: "Z2–D",
+        status: "live",
       },
       {
-        name: "Print Marketing Suite",
-        tagline: "Posters, flyers, one-pagers — print-ready community assets",
-        url: "/print-marketing/",
-        inThisProject: true,
+        name: "807 Food Coop",
+        tagline: "Co-op storefront",
+        url: "https://front-and-back-of-house.replit.app/807-shop/",
+        inRepo: false,
         zoneAddress: "Z2–E",
+        status: "live",
       },
       {
-        name: "Headwaters Books",
-        tagline: "Agency ledger — daily books, community labour, reconciliation",
-        url: "/headwaters-books/",
-        inThisProject: true,
+        name: "Dryden Web",
+        tagline: "Local web services",
+        url: "https://front-and-back-of-house.replit.app/dryden-web/",
+        inRepo: false,
         zoneAddress: "Z2–F",
+        status: "live",
       },
       {
-        name: "Research Library",
-        tagline: "Northern food systems research — evidence for grants and supply chain arguments",
-        url: "/library/",
-        inThisProject: true,
-        zoneAddress: "Z2/Z4",
+        name: "Hinterland & Co.",
+        tagline: "Northern goods",
+        url: "https://front-and-back-of-house.replit.app/hinterland/",
+        inRepo: false,
+        zoneAddress: "Z2–G",
+        status: "live",
       },
     ],
   },
+
+  // ── Zone 3 — Greenhouse · The Member Circle ───────────────────────────────
+  // "Belong, pool, mutual aid, funding access."
   {
     number: 3,
     name: "Greenhouse",
     slug: "greenhouse",
-    terrain: "The Greenhouse · Circle",
+    terrain: "The Member Circle · Greenhouse",
+    targetDomain: "ourcommunitybenefits.com",
     flowsTo: "The Clearing",
     metaphor: "Where the network goes when something is moving — advisory, watching the horizon.",
     goodTimesDesc:
@@ -224,20 +281,56 @@ export const ZONES: ZoneData[] = [
     color: "#3D4A5C",
     tools: [
       {
-        name: "The Standby Dashboard",
-        tagline: "Z3 pilot dashboard — status ladder and call composer (inside Headwaters Books)",
-        url: "/headwaters-books/standby",
-        inThisProject: true,
+        name: "807 Community Benefits",
+        tagline: "White-label org layer — member plans and Helping Hands",
+        url: "https://community-knowledge-hub.replit.app",
+        inRepo: false,
         zoneAddress: "Z3–A",
+        status: "live",
+      },
+      {
+        name: "Grants Finder",
+        tagline: "Grant discovery for members",
+        url: "https://community-knowledge-hub.replit.app/grants/",
+        inRepo: false,
+        zoneAddress: "Z3–B",
+        status: "live",
+      },
+      {
+        name: "Market Mosaic",
+        tagline: "Community market layer",
+        url: "https://community-knowledge-hub.replit.app/market/",
+        inRepo: false,
+        zoneAddress: "Z3–C",
+        status: "live",
+      },
+      {
+        name: "Standby Supplies",
+        tagline: "Emergency supply coordination",
+        url: "https://community-knowledge-hub.replit.app/standby/",
+        inRepo: false,
+        zoneAddress: "Z3–D",
+        status: "live",
+      },
+      {
+        name: "807 Garden",
+        tagline: "Community garden tool",
+        url: "https://community-knowledge-hub.replit.app/807-garden/",
+        inRepo: false,
+        zoneAddress: "Z3–E",
+        status: "live",
       },
     ],
   },
+
+  // ── Zone 4 — The Clearing · The Market Square ─────────────────────────────
+  // "Exchange, self-develop, discuss, broadcast."
   {
-    // Z4 = The Clearing (zone). Stomping Paths is a platform within The Clearing, not the zone name.
     number: 4,
     name: "The Clearing",
     slug: "clearing",
-    terrain: "The Clearing · Public Gathering",
+    terrain: "The Market Square · Public Gathering",
+    targetDomain: "thestompingpaths.com",
     flowsTo: "Edge",
     metaphor: "Where the community decides together — the hall is always set before the vote.",
     goodTimesDesc:
@@ -250,49 +343,83 @@ export const ZONES: ZoneData[] = [
     rootLabel: "Deliberating",
     fruitLabel: "Deciding",
     color: "#0F766E",
-    corner: {
-      id: "village-corner",
-      name: "Village Corner",
-      tagline: "The co-op layer — Village Board & community formation",
-      url: "/sandbox/",
-      note: "Community formation and governance. The Village Board is seated here.",
-    },
     tools: [
       {
-        name: "Research Library",
-        tagline: "Northern food systems evidence — backs every governance argument",
-        url: "/library/",
-        inThisProject: true,
-        zoneAddress: "Z2/Z4",
-      },
-      {
-        name: "NWO Regional Abattoir (CCM)",
-        tagline: "Clearing pilot — single-animal traceability",
-        url: "#",
-        inThisProject: false,
+        name: "The Clearing (public landing)",
+        tagline: "Public front door — zone map, division finder, origin story",
+        url: "https://ourheadwaters.ca/",
+        inRepo: true,
         zoneAddress: "Z4–A",
+        status: "planned",
       },
       {
-        name: "Village Corner — Village Board",
-        tagline: "Co-op governance layer — 60-family pull-only community board",
-        url: "/sandbox/",
-        inThisProject: true,
-        zoneAddress: "Z4–VC",
-      },
-      {
-        name: "Community Knowledge Hub",
-        tagline: "Shared knowledge base — community research, policy, and decision records",
-        url: "https://community-knowledge-hub.replit.app",
-        inThisProject: false,
+        name: "The Stomping Paths",
+        tagline: "Zone 4 hub — market access, podcast, practitioner intake",
+        url: "https://thestompingpaths.com",
+        inRepo: false,
         zoneAddress: "Z4–B",
+        status: "live",
+      },
+      {
+        name: "Survival Podcast",
+        tagline: "Audio broadcast",
+        url: "https://thestompingpaths.com/episodes",
+        inRepo: false,
+        zoneAddress: "Z4–C",
+        status: "live",
+      },
+      {
+        name: "Practitioner Intake",
+        tagline: "Onboarding for new practitioners",
+        url: "https://thestompingpaths.com/practitioners",
+        inRepo: false,
+        zoneAddress: "Z4–D",
+        status: "live",
+      },
+      {
+        name: "Headwaters Kits",
+        tagline: "Purchasable doctrine kits",
+        url: "https://our-headwaters.replit.app/kits/",
+        inRepo: false,
+        zoneAddress: "Z4–E",
+        status: "live",
+      },
+      {
+        name: "Headwaters Card Deck",
+        tagline: "Card deck tool",
+        url: "https://our-headwaters.replit.app/cards/",
+        inRepo: false,
+        zoneAddress: "Z4–F",
+        status: "live",
+      },
+      {
+        name: "Headwaters Learning",
+        tagline: "Learning hub",
+        url: "https://parrsjars.ca/headwaters-learning/",
+        inRepo: true,
+        zoneAddress: "Z4–G",
+        status: "live",
+      },
+      // Z2/Z4 referenced by MapPage quiz (community:normal highlight)
+      {
+        name: "Research Library",
+        tagline: "Northern food systems research — evidence for grants and governance",
+        url: "https://parrsjars.ca/library/",
+        inRepo: true,
+        zoneAddress: "Z2/Z4",
+        status: "live",
       },
     ],
   },
+
+  // ── Zone 5 — The Edge · Studio & Long View ────────────────────────────────
+  // "Create new things — design, blockchain, fringe builds, the long view."
   {
     number: 5,
     name: "Edge",
     slug: "edge",
-    terrain: "The Ridge · Long View",
+    terrain: "The Edge · Studio & Long View",
+    targetDomain: "codetry.ca",
     flowsTo: null,
     metaphor: "Where the community's work meets the world — public, open, and moving.",
     goodTimesDesc:
@@ -305,41 +432,152 @@ export const ZONES: ZoneData[] = [
     rootLabel: "Horizon",
     fruitLabel: "Public",
     color: "#5B3E8C",
-    corner: {
-      id: "crypto-corner",
-      name: "Crypto Corner",
-      tagline: "The Headwaters ship is docked here — XRPL gateway",
-      url: "/crypto-castle/",
-      note: "The ship is docked. This is where the Headwaters XRPL layer meets the community.",
-    },
     tools: [
       {
-        name: "Codetry Ship",
-        tagline: "The public window — services, bio, case studies, economy",
-        url: "/",
-        inThisProject: true,
+        name: "Codetry",
+        tagline: "Zone 5 hub — Forge, Discover, Blueprints",
+        url: "https://codetry.ca",
+        inRepo: true,
         zoneAddress: "Z5–A",
+        status: "live",
+      },
+      {
+        name: "XRPL Studio",
+        tagline: "XRPL testnet tooling",
+        url: "https://xrpl-p-2-p.replit.app/xrpl-studio",
+        inRepo: false,
+        zoneAddress: "Z5–B",
+        status: "live",
       },
       {
         name: "Dam Days",
         tagline: "Community-facing public channel — no algorithm, flag-to-hide only",
-        url: "#",
-        inThisProject: false,
-        zoneAddress: "Z5–B",
+        url: "https://xrpl-p-2-p.replit.app/dam-days",
+        inRepo: false,
+        zoneAddress: "Z5–C",
+        status: "live",
       },
       {
-        name: "Crypto Corner — Crypto Castle",
-        tagline: "The docking point for the Headwaters ship — XRPL layer",
-        url: "/crypto-castle/",
-        inThisProject: true,
-        zoneAddress: "Z5–CC",
+        name: "Slim Evey",
+        tagline: "Edge studio project",
+        url: "https://xrpl-p-2-p.replit.app/slim-evey",
+        inRepo: false,
+        zoneAddress: "Z5–D",
+        status: "live",
+      },
+      {
+        name: "Black Hole Studio",
+        tagline: "Kids / homeschool creative layer",
+        url: "https://black-hole-studio.replit.app",
+        inRepo: false,
+        zoneAddress: "Z5–E",
+        status: "live",
+      },
+      {
+        name: "Story Forge",
+        tagline: "Long-view story creation",
+        url: "https://salt-box.replit.app/story-forge/",
+        inRepo: false,
+        zoneAddress: "Z5–F",
+        status: "live",
       },
     ],
   },
 ];
 
+// ── The Aquifer · The Water Table ─────────────────────────────────────────────
+// "Runs itself, stores, moves, orients. Hidden infrastructure everything depends on."
+// number: 6 is a sentinel value — Aquifer is not a numbered user-facing zone.
+export const AQUIFER_ZONE: ZoneData = {
+  number: 6,
+  name: "The Aquifer",
+  slug: "aquifer",
+  terrain: "The Water Table · Hidden Infrastructure",
+  targetDomain: "ourheadwaters.ca",
+  flowsTo: null,
+  metaphor: "Runs itself, stores, moves, orients. Hidden infrastructure everything depends on.",
+  goodTimesDesc:
+    "Silent infrastructure. Auth is stable, machines are running, eave flows moving without a hand on the wheel.",
+  standbyDesc:
+    "All systems active. The Aquifer routes everything the standby network needs — no manual intervention required.",
+  gateName: "The Root",
+  gateDesc:
+    "The Aquifer is not a zone you enter — it's what makes every other zone possible. It surfaces through the tools.",
+  rootLabel: "Running",
+  fruitLabel: "Flowing",
+  color: "#2D5A7B",
+  tools: [
+    {
+      name: "API Server",
+      tagline: "Express 5 backend — auth, machines, eave flows, kits, helping hands",
+      url: "https://ourheadwaters.ca/api",
+      inRepo: true,
+      zoneAddress: "AQ–A",
+      status: "live",
+    },
+    {
+      name: "The Arc",
+      tagline: "Private steward portal — money tools (Z1) and living map (Aquifer)",
+      url: "https://ourheadwaters.ca/arc/",
+      inRepo: true,
+      zoneAddress: "AQ–B",
+      status: "planned",
+    },
+    {
+      name: "The Compass",
+      tagline: "Orientation — zone vocabulary and doctrine cards",
+      url: "https://ourheadwaters.ca/compass/",
+      inRepo: true,
+      zoneAddress: "AQ–C",
+      status: "planned",
+    },
+    {
+      name: "The Logic",
+      tagline: "Foundational reference document",
+      url: "https://ourheadwaters.ca/logic/",
+      inRepo: true,
+      zoneAddress: "AQ–D",
+      status: "planned",
+    },
+    {
+      name: "Print Suite",
+      tagline: "Cross-zone print production utility",
+      url: "https://ourheadwaters.ca/suite/",
+      inRepo: true,
+      zoneAddress: "AQ–E",
+      status: "planned",
+    },
+  ],
+};
+
+// ── In-repo artifact index ────────────────────────────────────────────────────
+// Canonical list of every in-repo artifact, matched to .local/constellation-map.md
+// "In-repo artifact index" section. This is the single source of truth for the
+// /constellation page's artifact table — do not duplicate it elsewhere.
+export const IN_REPO_ARTIFACT_INDEX: Array<{
+  previewPath: string;
+  artifactDir: string;
+  zoneHome: string;
+  status: "live" | "planned";
+}> = [
+  { previewPath: "/",                     artifactDir: "artifacts/headwaters",         zoneHome: "Z4 Clearing (public front door)", status: "planned" },
+  { previewPath: "/arc/",                 artifactDir: "artifacts/arc",                zoneHome: "Aquifer / Z1 money tools",        status: "planned" },
+  { previewPath: "/api",                  artifactDir: "artifacts/api-server",         zoneHome: "Aquifer (backend)",               status: "live"    },
+  { previewPath: "/compass/",             artifactDir: "artifacts/compass",            zoneHome: "Aquifer",                         status: "planned" },
+  { previewPath: "/logic/",              artifactDir: "artifacts/the-logic",           zoneHome: "Aquifer",                         status: "planned" },
+  { previewPath: "/suite/",              artifactDir: "artifacts/print-suite",         zoneHome: "Aquifer",                         status: "planned" },
+  { previewPath: "/goodbye/",            artifactDir: "artifacts/goodbye-kit",         zoneHome: "Z0 (kit) / Z4 (market face)",     status: "planned" },
+  { previewPath: "/north-star/",         artifactDir: "artifacts/north-star",          zoneHome: "Z1 (planning) / Z2 (workbench)",  status: "live"    },
+  { previewPath: "/headwaters-books/",   artifactDir: "artifacts/headwaters-books",    zoneHome: "Z1",                              status: "live"    },
+  { previewPath: "/print-marketing/",    artifactDir: "artifacts/print-marketing",     zoneHome: "Z2",                              status: "live"    },
+  { previewPath: "/library/",            artifactDir: "artifacts/library",             zoneHome: "Z2 / Z4",                         status: "live"    },
+  { previewPath: "/headwaters-learning/",artifactDir: "artifacts/field-guide-finance", zoneHome: "Z4",                              status: "live"    },
+  { previewPath: "/codetry-handbook/",   artifactDir: "artifacts/codetry-handbook",    zoneHome: "Z0",                              status: "live"    },
+];
+
 export const MAP_URL = "/map";
 export const LEGEND_URL = "/legend";
+export const CONSTELLATION_URL = "/constellation";
 
 export interface CrossingGate {
   key: string;

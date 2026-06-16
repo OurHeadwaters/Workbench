@@ -951,7 +951,7 @@ function RegistryView() {
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {visibleTools.map((tool) => {
                   const isComingSoon = tool.url === "#";
-                  const isExternal = !tool.inThisProject;
+                  const isExternal = !tool.inRepo;
                   return (
                     <div
                       key={`${zone.number}-${tool.name}`}

@@ -31,6 +31,7 @@ import { TipPage } from "@/pages/TipPage";
 import { WhatIsCodetryPage } from "@/pages/WhatIsCodetryPage";
 import { MapPage } from "@/pages/MapPage";
 import { CompassPage } from "@/pages/CompassPage";
+import { ConstellationPage } from "@/pages/ConstellationPage";
 import { AquiferPage } from "@/pages/AquiferPage";
 import { HeadwatersPage, HeadwatersRedirect } from "@/pages/HeadwatersPage";
 import { CapCeremonyPage } from "@/pages/CapCeremonyPage";
@@ -107,6 +108,9 @@ function Router() {
 
       {/* ── Neighbourhood Map ── */}
       <Route path="/map" component={MapPage} />
+
+      {/* ── Constellation Map — full ecosystem reference ── */}
+      <Route path="/constellation" component={ConstellationPage} />
 
       {/* ── The Legend (zone grid) — /compass redirects here ── */}
       <Route path="/legend" component={CompassPage} />

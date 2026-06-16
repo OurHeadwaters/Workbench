@@ -35,6 +35,9 @@ interface ConstellationProject {
   label: string;
   baseUrl: string;
   token: string;
+  zoneNumber?: number;
+  zoneName?: string;
+  targetDomain?: string;
 }
 
 interface ConstellationSection {
@@ -77,13 +80,13 @@ const TIER_COLOR: Record<Tier, { bg: string; border: string; badge: string; text
 const BASE_API = "/api";
 
 const AQUIFER_DEFAULTS: ConstellationProject[] = [
-  { id: "hw-north-star",    label: "North Star",                             baseUrl: "https://ourheadwaters.ca/north-star",          token: "" },
-  { id: "hw-codetry-ship",  label: "Codetry Ship — Crew Manifest",           baseUrl: "https://ourheadwaters.ca",                     token: "" },
-  { id: "hw-books",         label: "Headwaters Books",                       baseUrl: "https://ourheadwaters.ca/headwaters-books",    token: "" },
-  { id: "hw-library",       label: "Northern Food Systems Research Library",  baseUrl: "https://ourheadwaters.ca/library",             token: "" },
-  { id: "hw-learning",      label: "Headwaters Learning",                    baseUrl: "https://ourheadwaters.ca/headwaters-learning", token: "" },
-  { id: "hw-print",         label: "Headwaters Print Marketing Suite",       baseUrl: "https://ourheadwaters.ca/print-marketing",     token: "" },
-  { id: "hw-handbook",      label: "Headwaters Handbook",                    baseUrl: "https://ourheadwaters.ca/codetry-handbook",    token: "" },
+  { id: "hw-north-star",    label: "North Star",                             baseUrl: "https://ourheadwaters.ca/north-star",          token: "", zoneNumber: 1, zoneName: "Kitchen Table", targetDomain: "parrsjars.com"           },
+  { id: "hw-codetry-ship",  label: "Codetry Ship — Crew Manifest",           baseUrl: "https://ourheadwaters.ca",                     token: "", zoneNumber: 5, zoneName: "Edge",          targetDomain: "codetry.ca"              },
+  { id: "hw-books",         label: "Headwaters Books",                       baseUrl: "https://ourheadwaters.ca/headwaters-books",    token: "", zoneNumber: 1, zoneName: "Kitchen Table", targetDomain: "parrsjars.com"           },
+  { id: "hw-library",       label: "Northern Food Systems Research Library",  baseUrl: "https://ourheadwaters.ca/library",             token: "", zoneNumber: 4, zoneName: "The Clearing",  targetDomain: "thestompingpaths.com"    },
+  { id: "hw-learning",      label: "Headwaters Learning",                    baseUrl: "https://ourheadwaters.ca/headwaters-learning", token: "", zoneNumber: 4, zoneName: "The Clearing",  targetDomain: "thestompingpaths.com"    },
+  { id: "hw-print",         label: "Headwaters Print Marketing Suite",       baseUrl: "https://ourheadwaters.ca/print-marketing",     token: "", zoneNumber: 2, zoneName: "Workbench",     targetDomain: "parrsjars.ca"            },
+  { id: "hw-handbook",      label: "Headwaters Handbook",                    baseUrl: "https://ourheadwaters.ca/codetry-handbook",    token: "", zoneNumber: 0, zoneName: "Saltbox",        targetDomain: "saltboxhomes.ca"         },
 ];
 
 // ── Reachability check ────────────────────────────────────────────────────────
@@ -2046,6 +2049,18 @@ ${seatName}, this task from ${project.label} needs your voice before it can move
       <div className="flex items-center gap-3 px-4 py-3 bg-[#13110E] border-b border-[#2A231E]">
         <span className="text-[10px]">✦</span>
         <span className="text-[12px] font-bold text-[#A39485] flex-1 uppercase tracking-wider">{project.label}</span>
+        {project.zoneNumber !== undefined && project.zoneName && (
+          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-sm border border-[#2A231E] bg-[#1A1410] flex-shrink-0">
+            <span className="text-[9px] font-black text-[#6B5C4E] tracking-wider">Z{project.zoneNumber}</span>
+            <span className="text-[9px] font-bold text-[#7A6A5A] tracking-wide">{project.zoneName}</span>
+            {project.targetDomain && (
+              <>
+                <span className="text-[9px] text-[#4A3C30]">·</span>
+                <span className="text-[9px] font-mono text-[#5C4E40] tracking-wide">{project.targetDomain}</span>
+              </>
+            )}
+          </span>
+        )}
         {offline && (
           <span className="flex items-center gap-1 px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-[#3D2800] text-[#F59E0B] border border-[#5C3A00] flex-shrink-0">
             <span>◌</span>
