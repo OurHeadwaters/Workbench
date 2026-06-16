@@ -36,12 +36,12 @@ function resolveHighlightedZones(quiz: QuizState): number[] {
 /* Zone addresses of tools to highlight for each answer combination.
    Keys are "who:situation". Values are zone-address strings. */
 const TOOL_HIGHLIGHT_MAP: Record<string, string[]> = {
-  "household:normal": ["Z0–A"],
-  "household:standby": ["Z0–A", "Z3–A"],
+  "household:normal": ["Z0–A", "Z1–C", "Z1–B"],
+  "household:standby": ["Z0–A", "Z1–D", "Z3–A", "Z3–D"],
   "practitioner:normal": ["Z2–C", "Z2–D"],
   "practitioner:standby": ["Z2–C", "Z2–D", "Z3–A"],
-  "community:normal": ["Z2/Z4"],
-  "community:standby": ["Z2/Z4", "Z3–A"],
+  "community:normal": ["Z2/Z4", "Z3–B", "Z3–C"],
+  "community:standby": ["Z2/Z4", "Z3–A", "Z3–D"],
 };
 
 function resolveHighlightedTools(quiz: QuizState): string[] {
