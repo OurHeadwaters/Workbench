@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ZONES } from "@/data/zones";
+import { ZONES, TOOL_HIGHLIGHT_MAP } from "@/data/zones";
 import type { ZoneData, ZoneTool } from "@/data/zones";
 import WatershedMap from "@/components/WatershedMap";
 
@@ -32,26 +32,6 @@ function resolveHighlightedZones(quiz: QuizState): number[] {
   if (quiz.situation === "standby") zones.push(3);
   return zones;
 }
-
-/* Zone addresses of tools to highlight for each answer combination.
-   Keys are "who:situation". Values are zone-address strings that must match
-   the zoneAddress fields in zones.ts exactly. When adding a new tool to
-   zones.ts, add its address here if it should surface in quiz results.
-   See the TOOL_HIGHLIGHT_MAP comment block in zones.ts for the full list. */
-const TOOL_HIGHLIGHT_MAP: Record<string, string[]> = {
-  // Z0–A  Saltbox/Homeschool  Z1–B  Headwaters Books  Z1–C  North Star (income planning)
-  "household:normal": ["Z0–A", "Z1–B", "Z1–C"],
-  // + Z1–D  The Eave  Z3–A  807 Community Benefits  Z3–D  Standby Supplies
-  "household:standby": ["Z0–A", "Z1–C", "Z1–D", "Z3–A", "Z3–D"],
-  // Z1–B  Headwaters Books (bookkeeping)  Z2–C  Meeting Companion  Z2–D  Thomas Hauling
-  "practitioner:normal": ["Z1–B", "Z2–C", "Z2–D"],
-  // + Z3–A  807 Community Benefits  Z3–B  Grants Finder
-  "practitioner:standby": ["Z1–B", "Z2–C", "Z2–D", "Z3–A", "Z3–B"],
-  // Z2/Z4  Research Library  Z3–B  Grants Finder  Z3–C  Market Mosaic
-  "community:normal": ["Z2/Z4", "Z3–B", "Z3–C"],
-  // + Z3–A  807 Community Benefits  Z3–D  Standby Supplies
-  "community:standby": ["Z2/Z4", "Z3–A", "Z3–B", "Z3–C", "Z3–D"],
-};
 
 function resolveHighlightedTools(quiz: QuizState): string[] {
   if (quiz.skipped || quiz.who === null || quiz.situation === null) return [];

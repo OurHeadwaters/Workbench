@@ -626,3 +626,64 @@ export const CROSSING_GATES: Record<string, CrossingGate> = {
     desc: "Moving from social/experiential capital (Z1) into operational/contracted work (Z2). Conversion to financial capital beyond this point must pass a conscious gate decision.",
   },
 };
+
+// ── Quiz tool-highlight map ───────────────────────────────────────────────────
+// Keys are "who:situation". Values are zone-address strings that must match the
+// zoneAddress fields in ZONES / AQUIFER_ZONE exactly. When you rename or remove
+// a tool in zones.ts, update this map to match — getMismatchedHighlightAddresses()
+// will catch any drift at test time and in the dev console.
+export const TOOL_HIGHLIGHT_MAP: Record<string, string[]> = {
+  // Z0–A  Saltbox/Homeschool  Z1–B  Headwaters Books  Z1–C  North Star (income planning)
+  "household:normal": ["Z0–A", "Z1–B", "Z1–C"],
+  // + Z1–D  The Eave  Z3–A  807 Community Benefits  Z3–D  Standby Supplies
+  "household:standby": ["Z0–A", "Z1–C", "Z1–D", "Z3–A", "Z3–D"],
+  // Z1–B  Headwaters Books (bookkeeping)  Z2–C  Meeting Companion  Z2–D  Thomas Hauling
+  "practitioner:normal": ["Z1–B", "Z2–C", "Z2–D"],
+  // + Z3–A  807 Community Benefits  Z3–B  Grants Finder
+  "practitioner:standby": ["Z1–B", "Z2–C", "Z2–D", "Z3–A", "Z3–B"],
+  // Z2/Z4  Research Library  Z3–B  Grants Finder  Z3–C  Market Mosaic
+  "community:normal": ["Z2/Z4", "Z3–B", "Z3–C"],
+  // + Z3–A  807 Community Benefits  Z3–D  Standby Supplies
+  "community:standby": ["Z2/Z4", "Z3–A", "Z3–B", "Z3–C", "Z3–D"],
+};
+
+/**
+ * Returns every zone-address in TOOL_HIGHLIGHT_MAP that has no matching
+ * zoneAddress in ZONES or AQUIFER_ZONE.  An empty array means everything is
+ * in sync.  Used by the Vitest test and the dev-console guard below.
+ */
+export function getMismatchedHighlightAddresses(): Array<{
+  key: string;
+  address: string;
+}> {
+  const knownAddresses = new Set<string>(
+    [...ZONES, AQUIFER_ZONE]
+      .flatMap((z) => z.tools)
+      .map((t) => t.zoneAddress)
+      .filter((a): a is string => a !== undefined)
+  );
+
+  const mismatches: Array<{ key: string; address: string }> = [];
+  for (const [key, addresses] of Object.entries(TOOL_HIGHLIGHT_MAP)) {
+    for (const address of addresses) {
+      if (!knownAddresses.has(address)) {
+        mismatches.push({ key, address });
+      }
+    }
+  }
+  return mismatches;
+}
+
+// Dev-time guard — fires once when this module is first imported in development.
+if (import.meta.env?.DEV) {
+  const mismatches = getMismatchedHighlightAddresses();
+  if (mismatches.length > 0) {
+    for (const { key, address } of mismatches) {
+      console.warn(
+        `[zones] TOOL_HIGHLIGHT_MAP["${key}"] references "${address}" ` +
+          `which does not match any zoneAddress in ZONES or AQUIFER_ZONE. ` +
+          `Update TOOL_HIGHLIGHT_MAP or restore the tool's zoneAddress.`
+      );
+    }
+  }
+}
