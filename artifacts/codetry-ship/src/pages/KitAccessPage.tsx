@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "wouter";
 import { fetchKitAccess, setKitToken, type KitAccessResult } from "@/lib/kitTokens";
+import { KIT_MODULES, KIT_HANDOUTS } from "@/data/pjSolutionsKit";
 
 const EVERGREEN = "#1f3d2e";
 const RUST = "#b85a3e";
@@ -367,6 +368,147 @@ function KitContentView({ data }: { data: KitAccessResult }) {
             </p>
           )}
         </div>
+
+        {/* Full kit contents — modules + handouts (PJ Solutions Kit only) */}
+        {isPjSolutionsKit && (
+          <>
+            <div style={{ marginBottom: "2rem" }}>
+              <p
+                style={{
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: GOLD,
+                  fontWeight: 700,
+                  marginBottom: "1.25rem",
+                }}
+              >
+                5 Modules · 20+ Handouts
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                {KIT_MODULES.map((mod, i) => (
+                  <div
+                    key={mod.title}
+                    style={{
+                      background: "#1e1e1e",
+                      borderRadius: 8,
+                      border: "1px solid #2a2a2a",
+                      borderLeft: `4px solid ${mod.color}`,
+                      overflow: "hidden",
+                      display: "flex",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div style={{ flex: "1 1 240px", padding: "1.25rem 1.5rem" }}>
+                      <p
+                        style={{
+                          fontSize: "0.58rem",
+                          letterSpacing: "0.15em",
+                          textTransform: "uppercase",
+                          color: mod.color,
+                          fontWeight: 700,
+                          marginBottom: "0.3rem",
+                        }}
+                      >
+                        Module {i + 1}
+                      </p>
+                      <h3
+                        style={{
+                          fontFamily: "var(--font-serif, Georgia, serif)",
+                          fontSize: "1rem",
+                          fontWeight: 800,
+                          color: "white",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
+                        {mod.title}
+                      </h3>
+                      <p style={{ color: "#999", fontSize: "0.8rem", lineHeight: 1.65, marginBottom: "0.75rem" }}>
+                        {mod.desc}
+                      </p>
+                      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                        {mod.items.map((item) => (
+                          <li key={item} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.76rem", color: "#bbb" }}>
+                            <span style={{ color: mod.color, flexShrink: 0 }}>→</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div
+                      style={{
+                        flex: "0 0 110px",
+                        minHeight: 110,
+                        overflow: "hidden",
+                        background: "#111",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <img
+                        src={mod.img}
+                        alt={mod.title}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.65 }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Handouts list */}
+            <div
+              style={{
+                background: "#111",
+                borderRadius: 8,
+                border: "1px solid #222",
+                padding: "1.25rem 1.5rem",
+                marginBottom: "2rem",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: MUTED,
+                  fontWeight: 700,
+                  marginBottom: "0.85rem",
+                }}
+              >
+                Also included
+              </p>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+                  gap: "0.6rem",
+                }}
+              >
+                {KIT_HANDOUTS.map((item) => (
+                  <div
+                    key={item}
+                    style={{
+                      background: "#1a1a1a",
+                      border: "1px solid #2a2a2a",
+                      borderRadius: 6,
+                      padding: "0.55rem 0.8rem",
+                      fontSize: "0.76rem",
+                      color: "#bbb",
+                      display: "flex",
+                      gap: "0.45rem",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <span style={{ color: GOLD, flexShrink: 0 }}>✓</span>
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Arc note if present */}
         {data.kit.arcNote && (
