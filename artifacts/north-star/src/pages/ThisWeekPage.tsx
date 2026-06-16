@@ -8,7 +8,8 @@ interface WeekItem {
   createdAt: string;
 }
 
-const LS_KEY = "north-star-this-week";
+const LS_KEY      = "north-star-this-week";
+const LS_WEEK_KEY = "north-star-this-week-iso";
 
 const BG     = "#0B0905";
 const SURF   = "#141210";
@@ -18,6 +19,17 @@ const TEXT   = "#EDE8D5";
 const TEXT2  = "rgba(237,232,213,0.55)";
 const AMBER  = "#C8923A";
 const GREEN  = "#4ADE80";
+
+function isoWeek(date: Date): string {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const day = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - day);
+  const year = d.getUTCFullYear();
+  const week = Math.ceil(
+    ((d.getTime() - Date.UTC(year, 0, 1)) / 86400000 + 1) / 7
+  );
+  return `${year}-W${String(week).padStart(2, "0")}`;
+}
 
 function loadItems(): WeekItem[] {
   try {
@@ -34,10 +46,39 @@ function saveItems(items: WeekItem[]) {
   } catch { /* ignore */ }
 }
 
+function runWeeklyReset(): { items: WeekItem[]; cleared: number } {
+  const items = loadItems();
+  try {
+    const currentWeek = isoWeek(new Date());
+    const lastWeek    = localStorage.getItem(LS_WEEK_KEY) ?? "";
+
+    if (lastWeek === currentWeek) {
+      return { items, cleared: 0 };
+    }
+
+    const carried = items.filter((it) => !it.done);
+    const cleared = items.length - carried.length;
+
+    saveItems(carried);
+    localStorage.setItem(LS_WEEK_KEY, currentWeek);
+
+    return { items: carried, cleared };
+  } catch {
+    return { items, cleared: 0 };
+  }
+}
+
 export function ThisWeekPage() {
-  const [items, setItems] = useState<WeekItem[]>(loadItems);
-  const [draft, setDraft] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [items, setItems]     = useState<WeekItem[]>([]);
+  const [cleared, setCleared] = useState(0);
+  const [draft, setDraft]     = useState("");
+  const inputRef              = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const { items: initial, cleared: n } = runWeeklyReset();
+    setItems(initial);
+    if (n > 0) setCleared(n);
+  }, []);
 
   useEffect(() => {
     saveItems(items);
@@ -93,6 +134,30 @@ export function ThisWeekPage() {
       </div>
 
       <div className="max-w-xl mx-auto px-4 pt-5 space-y-4">
+
+        {/* Weekly-reset notice */}
+        {cleared > 0 && (
+          <div
+            className="flex items-center justify-between gap-3 rounded-xl px-4 py-3"
+            style={{
+              backgroundColor: "rgba(200,146,58,0.08)",
+              border: `1px solid rgba(200,146,58,0.2)`,
+            }}
+          >
+            <p className="text-sm" style={{ color: AMBER }}>
+              {cleared} completed {cleared === 1 ? "item" : "items"} cleared from last week
+            </p>
+            <button
+              onClick={() => setCleared(0)}
+              className="shrink-0 p-1 rounded-md"
+              style={{ color: AMBER }}
+              title="Dismiss"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
+
         {/* Add input */}
         <div
           className="flex gap-2 items-center rounded-xl px-4 py-3"
