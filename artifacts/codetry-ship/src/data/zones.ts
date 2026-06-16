@@ -40,6 +40,29 @@ export interface ZoneData {
 // To add a new tool: drop it into the right zone's `tools` array here and it
 // surfaces automatically on /constellation and the zone map.
 // ─────────────────────────────────────────────────────────────────────────────
+//
+// ── ZONE-ADDRESS CONVENTION ──────────────────────────────────────────────────
+// Every tool has a `zoneAddress` field. The format is:
+//   Z{zone#}–{letter}    e.g. "Z2–C" = Zone 2, third tool
+//   AQ–{letter}          for Aquifer tools (zone number 6, hidden infrastructure)
+//   Z{a}/Z{b}            for tools that span two zones (e.g. "Z2/Z4")
+//
+// Letters are assigned in order of entry (A, B, C …). Do NOT reuse or skip
+// letters within a zone — the letter is positional, not semantic.
+//
+// ── TOOL_HIGHLIGHT_MAP (MapPage.tsx) ─────────────────────────────────────────
+// MapPage.tsx uses a TOOL_HIGHLIGHT_MAP keyed by "who:situation" to surface
+// relevant tools after the quiz. When you add a tool here that should appear in
+// quiz results, ALSO add its zoneAddress to the matching key(s) there.
+//
+// Currently referenced addresses (keep this in sync when you add/change tools):
+//   household:normal    → Z0–A, Z1–B, Z1–C
+//   household:standby   → Z0–A, Z1–C, Z1–D, Z3–A, Z3–D
+//   practitioner:normal → Z1–B, Z2–C, Z2–D
+//   practitioner:standby→ Z1–B, Z2–C, Z2–D, Z3–A, Z3–B
+//   community:normal    → Z2/Z4, Z3–B, Z3–C
+//   community:standby   → Z2/Z4, Z3–A, Z3–B, Z3–C, Z3–D
+// ─────────────────────────────────────────────────────────────────────────────
 
 export const ZONES: ZoneData[] = [
   // ── Zone 0 — Saltbox · The Hearth ──────────────────────────────────────────
