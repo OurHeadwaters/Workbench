@@ -67,7 +67,8 @@ vi.mock("../lib/kitsRegistry", () => ({
 }));
 
 vi.mock("../lib/kitsMailer", () => ({
-  sendKitDeliveryEmail: vi.fn().mockResolvedValue({ status: "ok" }),
+  sendKitDeliveryEmail: vi.fn().mockResolvedValue({ status: "sent" }),
+  sendKitDeliveryFailureAlert: vi.fn().mockResolvedValue(undefined),
 }));
 
 // ── imports (after mocks) ─────────────────────────────────────────────────────
@@ -86,6 +87,8 @@ const tables = dbModule as unknown as {
 const getKitMock = kitsRegistryModule.getKit as ReturnType<typeof vi.fn>;
 const sendKitDeliveryEmailMock =
   kitsMailerModule.sendKitDeliveryEmail as ReturnType<typeof vi.fn>;
+const sendKitDeliveryFailureAlertMock =
+  kitsMailerModule.sendKitDeliveryFailureAlert as ReturnType<typeof vi.fn>;
 
 // ── Stripe signing helpers ────────────────────────────────────────────────────
 //
@@ -136,7 +139,8 @@ beforeEach(() => {
   getKitMock.mockClear();
   getKitMock.mockReturnValue(null);
   sendKitDeliveryEmailMock.mockClear();
-  sendKitDeliveryEmailMock.mockResolvedValue({ status: "ok" });
+  sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent" });
+  sendKitDeliveryFailureAlertMock.mockClear();
 });
 
 afterEach(() => {
@@ -423,6 +427,51 @@ describe("POST /stripe/webhook — checkout.session.completed", () => {
       expect(body.received).toBe(true);
       expect(body.skipped).toMatch(/kit_id/);
       expect(tables.kitTokensTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("calls sendKitDeliveryFailureAlert with buyer/kit/purchase details when delivery email fails", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({
+      status: "failed",
+      error: "gmail 500: upstream error",
+    });
+    const payload = makeCheckoutPayload({ id: "evt_mailfail_001" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      expect(sendKitDeliveryFailureAlertMock).toHaveBeenCalledTimes(1);
+      expect(sendKitDeliveryFailureAlertMock).toHaveBeenCalledWith({
+        buyerEmail: "buyer@example.com",
+        kitId: "economy-kit",
+        purchaseId: "pi_test_001",
+        deliveryError: "gmail 500: upstream error",
+      });
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does not call sendKitDeliveryFailureAlert when delivery email succeeds", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent", messageId: "msg_abc" });
+    const payload = makeCheckoutPayload({ id: "evt_mailok_001" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      expect(sendKitDeliveryFailureAlertMock).not.toHaveBeenCalled();
     } finally {
       await h.close();
     }

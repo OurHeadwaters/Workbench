@@ -90,6 +90,92 @@ function buildBody(opts: {
   return lines.join("\n");
 }
 
+async function resolveAlertRecipient(): Promise<string | null> {
+  if (process.env.KIT_DELIVERY_ALERT_EMAIL) {
+    return process.env.KIT_DELIVERY_ALERT_EMAIL;
+  }
+  try {
+    const connectors = new ReplitConnectors();
+    const resp = await connectors.proxy(
+      "google-mail",
+      "/gmail/v1/users/me/profile",
+      { method: "GET" },
+    );
+    if (resp.ok) {
+      const data = (await resp.json().catch(() => ({}))) as { emailAddress?: string };
+      return data.emailAddress ?? null;
+    }
+  } catch {
+    // fall through
+  }
+  return null;
+}
+
+export async function sendKitDeliveryFailureAlert(opts: {
+  buyerEmail: string;
+  kitId: string;
+  purchaseId: string;
+  deliveryError?: string;
+}): Promise<void> {
+  const { buyerEmail, kitId, purchaseId, deliveryError } = opts;
+
+  const alertTo = await resolveAlertRecipient();
+  if (!alertTo) {
+    logger.error(
+      { kitId, purchaseId },
+      "[kits-mailer] delivery failed and no alert recipient configured — set KIT_DELIVERY_ALERT_EMAIL",
+    );
+    return;
+  }
+
+  const subject = `[ACTION REQUIRED] Kit delivery failed — ${kitId}`;
+  const body = [
+    "A kit purchase was completed but the delivery email could not be sent.",
+    "",
+    `  Buyer email : ${buyerEmail}`,
+    `  Kit ID      : ${kitId}`,
+    `  Purchase ID : ${purchaseId}`,
+    deliveryError ? `  Error       : ${deliveryError}` : "",
+    "",
+    "Resend the kit manually:",
+    "",
+    `  POST /api/kits/resend`,
+    `  Body: { "purchaseId": "${purchaseId}" }`,
+    "",
+    "— Headwaters server alert",
+  ]
+    .filter((line) => line !== undefined)
+    .join("\n");
+
+  try {
+    const connectors = new ReplitConnectors();
+    const encoded = encodeRfc2822(alertTo, subject, body);
+
+    const response = await connectors.proxy(
+      "google-mail",
+      "/gmail/v1/users/me/messages/send",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ raw: encoded }),
+      },
+    );
+
+    if (!response.ok) {
+      const errText = await response.text().catch(() => "upstream error");
+      logger.error(
+        { alertTo, kitId, purchaseId, status: response.status, err: errText.slice(0, 300) },
+        "[kits-mailer] failed to send delivery-failure alert",
+      );
+    } else {
+      logger.info({ alertTo, kitId, purchaseId }, "[kits-mailer] delivery-failure alert sent");
+    }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    logger.error({ alertTo, kitId, purchaseId, err: msg }, "[kits-mailer] unexpected error sending delivery-failure alert");
+  }
+}
+
 export async function sendKitDeliveryEmail(opts: {
   to: string;
   buyerName: string;

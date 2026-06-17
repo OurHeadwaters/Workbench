@@ -41,7 +41,7 @@ import Stripe from "stripe";
 import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { getKit } from "../lib/kitsRegistry";
-import { sendKitDeliveryEmail } from "../lib/kitsMailer";
+import { sendKitDeliveryEmail, sendKitDeliveryFailureAlert } from "../lib/kitsMailer";
 import { db, kitTokensTable, stripeProcessedEventsTable } from "@workspace/db";
 
 const router: IRouter = Router();
@@ -200,6 +200,15 @@ router.post(
         { kitId, purchaseId, buyerEmail, sessionId: session.id, mailStatus: mailResult.status },
         "[stripe-webhook] kit delivered",
       );
+
+      if (mailResult.status === "failed") {
+        await sendKitDeliveryFailureAlert({
+          buyerEmail,
+          kitId,
+          purchaseId,
+          deliveryError: mailResult.error,
+        });
+      }
 
       // Mark processed only after successful token persistence + email attempt,
       // so a hard crash before this point will let Stripe retry and re-deliver.
