@@ -7,6 +7,13 @@ import { getEffectivePassword } from "@/components/PasswordGate";
 const CUSTOM_PW_KEY = "north-star:custom-password";
 const UNLOCK_KEY = "north-star:unlocked";
 
+const KITCHEN_TABLE_KEY = "north-star:unlocked";
+
+function lockKitchenTable() {
+  try { localStorage.removeItem(KITCHEN_TABLE_KEY); } catch {}
+  window.location.reload();
+}
+
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 const API = import.meta.env.VITE_API_URL ?? "";
 
@@ -59,6 +66,9 @@ export function SettingsPage() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const isOwner = !!getOwnerToken();
+  const isKitchenTableUnlocked = (() => {
+    try { return localStorage.getItem(KITCHEN_TABLE_KEY) === "1"; } catch { return false; }
+  })();
 
   const [notifyEmail, setNotifyEmail] = useState("");
   const [notifyEmailSource, setNotifyEmailSource] = useState<"db" | "env" | "unset" | null>(null);
@@ -427,11 +437,20 @@ export function SettingsPage() {
           </Link>
           <Link
             href="/inbox-setup"
-            className="flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-[#F5F0E8]/50 rounded-b-2xl transition-colors"
+            className={`flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-[#F5F0E8]/50 transition-colors${isKitchenTableUnlocked ? "" : " rounded-b-2xl"}`}
           >
             <span className="text-sm">Gmail inbox setup</span>
             <ExternalLink size={16} className="text-[#78716C]" />
           </Link>
+          {isKitchenTableUnlocked && (
+            <button
+              onClick={lockKitchenTable}
+              className="w-full flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-[#F5F0E8]/50 rounded-b-2xl transition-colors text-left"
+            >
+              <span className="text-sm text-[#78716C]">Lock Kitchen Table</span>
+              <Lock size={16} className="text-[#78716C]" />
+            </button>
+          )}
         </div>
 
         <div className="rounded-2xl border border-[#C8923A]/40 shadow-sm p-4 space-y-4" style={{ background: "#FEF9EE" }}>
