@@ -868,7 +868,7 @@ export function KitchenTablePage() {
     return DEFAULT_SEATS;
   });
 
-  const [seatLoadStatus, setSeatLoadStatus] = useState<"server" | "local" | "defaults" | null>(null);
+  const [seatLoadStatus, setSeatLoadStatus] = useState<"server" | "local" | "defaults" | "auth-expired" | null>(null);
 
   useEffect(() => {
     const token = getOwnerToken();
@@ -881,7 +881,10 @@ export function KitchenTablePage() {
     fetch("/api/settings/seat-config", {
       headers: { "x-library-owner-token": token },
     })
-      .then((r) => (r.ok ? r.json() : null))
+      .then((r) => {
+        if (r.status === 401) throw Object.assign(new Error("401"), { is401: true });
+        return r.ok ? r.json() : null;
+      })
       .then((j: { seats: Record<string, Partial<Seat>> | null } | null) => {
         if (cancelled) return;
         if (j?.seats) {
@@ -899,9 +902,13 @@ export function KitchenTablePage() {
         const t = setTimeout(() => setSeatLoadStatus(null), 3000);
         return () => clearTimeout(t);
       })
-      .catch(() => {
+      .catch((err: unknown) => {
         if (!cancelled) {
-          setSeatLoadStatus(seatLocalHadDataRef.current ? "local" : "defaults");
+          if (err instanceof Error && (err as Error & { is401?: boolean }).is401) {
+            setSeatLoadStatus("auth-expired");
+          } else {
+            setSeatLoadStatus(seatLocalHadDataRef.current ? "local" : "defaults");
+          }
           setTimeout(() => setSeatLoadStatus(null), 3000);
         }
       });
@@ -1278,6 +1285,8 @@ export function KitchenTablePage() {
                 <p className="text-[10px] tracking-[0.12em] text-[#4A3D30]">
                   {seatLoadStatus === "server"
                     ? "✓ seats loaded from server"
+                    : seatLoadStatus === "auth-expired"
+                    ? "· server auth expired — using local config"
                     : seatLoadStatus === "local"
                     ? "· using saved local config"
                     : "· using local defaults"}
