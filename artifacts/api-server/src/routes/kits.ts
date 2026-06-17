@@ -29,7 +29,8 @@
  */
 
 import { Router, type IRouter, type Request, type Response } from "express";
-import rateLimit, { MemoryStore } from "express-rate-limit";
+import rateLimit from "express-rate-limit";
+import { PgExpressRateLimitStore } from "../lib/rateLimit";
 import crypto from "crypto";
 import { z } from "zod";
 import Stripe from "stripe";
@@ -425,7 +426,7 @@ router.post("/zaprite-webhook", async (req: Request, res: Response) => {
 //
 // Rate-limited per IP: 5 requests per 15 minutes to prevent email enumeration.
 
-const resendRateLimitStore = new MemoryStore();
+const resendRateLimitStore = new PgExpressRateLimitStore(15 * 60 * 1000, "kits:resend");
 
 const resendRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -504,7 +505,7 @@ router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
 //
 // Rate-limited per IP: 20 requests per 15 minutes to prevent token enumeration.
 
-const accessRateLimitStore = new MemoryStore();
+const accessRateLimitStore = new PgExpressRateLimitStore(15 * 60 * 1000, "kits:access");
 
 const accessRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000,

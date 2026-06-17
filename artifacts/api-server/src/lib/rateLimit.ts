@@ -29,6 +29,12 @@
  * outage never blocks all traffic.
  */
 
+import {
+  MemoryStore as ExpressMemoryStore,
+  type Store as ExpressStore,
+  type ClientRateLimitInfo,
+} from "express-rate-limit";
+
 /**
  * Minimal structural type for the pg Pool — avoids a direct `import type`
  * from the 'pg' package so this module has no new dependency declarations.
@@ -359,4 +365,128 @@ export async function __resetRateLimitForTests(): Promise<void> {
   shadowCache.clear();
   _store = _memoryStore;
   pgPool = null;
+}
+
+// ── PgExpressRateLimitStore — express-rate-limit Store backed by Postgres ─────
+//
+// Implements the express-rate-limit Store interface using the same `rate_limits`
+// table and pgPool that checkRateLimit uses, so /kits/resend (and other
+// express-rate-limit-gated routes) survive server restarts.
+//
+// Falls back to an in-process MemoryStore when pgPool is not yet set (local dev
+// without a DATABASE_URL, or during unit tests).  The fallback is seeded lazily
+// by express-rate-limit itself via init(), so it is always ready before
+// increment() is first called.
+//
+// Usage in kits.ts:
+//   import { PgExpressRateLimitStore } from "../lib/rateLimit";
+//   const store = new PgExpressRateLimitStore(15 * 60 * 1000); // windowMs
+//   const limiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, store });
+
+export class PgExpressRateLimitStore implements ExpressStore {
+  private readonly windowMs: number;
+  private readonly _prefix: string;
+  private readonly fallback: ExpressMemoryStore;
+
+  /**
+   * @param windowMs  Window length in milliseconds (must match the rateLimit() windowMs).
+   * @param scope     Unique string that namespaces this limiter's DB rows so multiple
+   *                  PgExpressRateLimitStore instances sharing the same table don't
+   *                  cross-contaminate each other's counters.  Example: "kits:resend".
+   */
+  constructor(windowMs: number, scope: string) {
+    this.windowMs = windowMs;
+    this._prefix = scope;
+    this.fallback = new ExpressMemoryStore();
+    // Pre-initialise the fallback so it is ready before rateLimit() calls init().
+    // cast needed because Options has many fields we don't care about here.
+    this.fallback.init({ windowMs } as Parameters<ExpressStore["init"] & NonNullable<unknown>>[0]);
+  }
+
+  /** Prepend the scope so each store's rows are isolated in the DB. */
+  private dbKey(key: string): string {
+    return `${this._prefix}:${key}`;
+  }
+
+  async increment(key: string): Promise<ClientRateLimitInfo> {
+    if (!pgPool) {
+      return this.fallback.increment(key);
+    }
+
+    const now = Date.now();
+    const newResetAt = now + this.windowMs;
+
+    try {
+      const { rows } = await pgPool.query<{ count: number; reset_at: string }>(
+        `INSERT INTO rate_limits (key, count, reset_at)
+         VALUES ($1, 1, $2)
+         ON CONFLICT (key) DO UPDATE SET
+           count = CASE
+             WHEN rate_limits.reset_at <= $3 THEN 1
+             ELSE rate_limits.count + 1
+           END,
+           reset_at = CASE
+             WHEN rate_limits.reset_at <= $3 THEN $2
+             ELSE rate_limits.reset_at
+           END
+         RETURNING count, reset_at`,
+        [this.dbKey(key), newResetAt, now],
+      );
+
+      const row = rows[0]!;
+      return {
+        totalHits: Number(row.count),
+        resetTime: new Date(Number(row.reset_at)),
+      };
+    } catch (err) {
+      console.error(
+        "[rateLimit] PgExpressRateLimitStore.increment failed — falling back to in-memory:",
+        err,
+      );
+      return this.fallback.increment(key);
+    }
+  }
+
+  async decrement(key: string): Promise<void> {
+    if (!pgPool) {
+      return this.fallback.decrement(key);
+    }
+
+    try {
+      await pgPool.query(
+        `UPDATE rate_limits SET count = GREATEST(count - 1, 0) WHERE key = $1`,
+        [this.dbKey(key)],
+      );
+    } catch (err) {
+      console.error("[rateLimit] PgExpressRateLimitStore.decrement failed:", err);
+    }
+  }
+
+  async resetKey(key: string): Promise<void> {
+    if (!pgPool) {
+      return this.fallback.resetKey(key);
+    }
+
+    try {
+      await pgPool.query(`DELETE FROM rate_limits WHERE key = $1`, [this.dbKey(key)]);
+    } catch (err) {
+      console.error("[rateLimit] PgExpressRateLimitStore.resetKey failed:", err);
+    }
+  }
+
+  /**
+   * Clears all rows.  Only called by tests (via __clearResendRateLimiter etc.).
+   * In tests pgPool is null so this delegates to the in-memory fallback.
+   */
+  async resetAll(): Promise<void> {
+    if (!pgPool) {
+      return this.fallback.resetAll?.();
+    }
+
+    try {
+      await pgPool.query(`DELETE FROM rate_limits`, []);
+    } catch (err) {
+      console.error("[rateLimit] PgExpressRateLimitStore.resetAll failed:", err);
+    }
+  }
 }
