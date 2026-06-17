@@ -1,8 +1,17 @@
 import { useState, useEffect } from "react";
 
 const STORAGE_KEY = "north-star:unlocked";
-const CORRECT = (import.meta.env.VITE_KITCHEN_TABLE_PASSWORD as string) || "";
-const GATE_ENABLED = CORRECT.length > 0;
+const CUSTOM_PW_KEY = "north-star:custom-password";
+const ENV_PW = (import.meta.env.VITE_KITCHEN_TABLE_PASSWORD as string) || "";
+const GATE_ENABLED = ENV_PW.length > 0;
+
+export function getEffectivePassword(): string {
+  try {
+    const custom = localStorage.getItem(CUSTOM_PW_KEY);
+    if (custom && custom.length > 0) return custom;
+  } catch {}
+  return ENV_PW;
+}
 
 function isUnlocked(): boolean {
   if (!GATE_ENABLED) return true;
@@ -31,7 +40,8 @@ export function PasswordGate({ children }: { children: React.ReactNode }) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (CORRECT && value === CORRECT) {
+    const correct = getEffectivePassword();
+    if (correct && value === correct) {
       setError(false);
       setUnlocked(true);
     } else {

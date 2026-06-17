@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { Download, Upload, RotateCcw, ExternalLink, Mail } from "lucide-react";
+import { Download, Upload, RotateCcw, ExternalLink, Mail, Lock } from "lucide-react";
 import { useStore } from "@/store";
 import { Link } from "wouter";
+import { getEffectivePassword } from "@/components/PasswordGate";
+
+const CUSTOM_PW_KEY = "north-star:custom-password";
+const UNLOCK_KEY = "north-star:unlocked";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 const API = import.meta.env.VITE_API_URL ?? "";
@@ -43,6 +47,14 @@ export function SettingsPage() {
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
   const [showReset, setShowReset] = useState(false);
+
+  const [pwCurrent, setPwCurrent] = useState("");
+  const [pwNew, setPwNew] = useState("");
+  const [pwConfirm, setPwConfirm] = useState("");
+  const [pwError, setPwError] = useState<string | null>(null);
+  const [pwSaved, setPwSaved] = useState(false);
+
+  const ENV_PW_SET = (import.meta.env.VITE_KITCHEN_TABLE_PASSWORD as string || "").length > 0;
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -141,6 +153,39 @@ export function SettingsPage() {
     resetAll();
     setShowReset(false);
     window.location.replace(`${BASE}/onboarding`);
+  }
+
+  function handleChangePassword() {
+    setPwError(null);
+    if (!pwCurrent || !pwNew || !pwConfirm) {
+      setPwError("Please fill in all three fields.");
+      return;
+    }
+    const effective = getEffectivePassword();
+    if (pwCurrent !== effective) {
+      setPwError("Current password is incorrect.");
+      return;
+    }
+    if (pwNew.length < 4) {
+      setPwError("New password must be at least 4 characters.");
+      return;
+    }
+    if (pwNew !== pwConfirm) {
+      setPwError("New passwords don't match.");
+      return;
+    }
+    try {
+      localStorage.setItem(CUSTOM_PW_KEY, pwNew);
+      localStorage.setItem(UNLOCK_KEY, "1");
+    } catch {
+      setPwError("Could not save — localStorage may be blocked.");
+      return;
+    }
+    setPwCurrent("");
+    setPwNew("");
+    setPwConfirm("");
+    setPwSaved(true);
+    setTimeout(() => setPwSaved(false), 3000);
   }
 
   return (
@@ -306,6 +351,68 @@ export function SettingsPage() {
               className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px] disabled:opacity-60"
             >
               {notifyEmailSaved ? "Saved ✓" : notifyEmailSaving ? "Saving…" : "Save briefing email"}
+            </button>
+          </div>
+        )}
+
+        {ENV_PW_SET && (
+          <div
+            className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-4"
+            style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+          >
+            <div className="flex items-center gap-2">
+              <Lock size={15} className="text-[#78716C]" />
+              <h2 className="text-base font-medium text-[#1C1917]">Change password</h2>
+            </div>
+
+            <p className="text-xs text-[#78716C]">
+              Update the Kitchen Table password. The new password is saved on this device and will be required on your next sign-in.
+            </p>
+
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <label className="text-xs text-[#78716C] uppercase tracking-wider">Current password</label>
+                <input
+                  type="password"
+                  value={pwCurrent}
+                  onChange={(e) => { setPwCurrent(e.target.value); setPwError(null); }}
+                  placeholder="Your current password"
+                  autoComplete="current-password"
+                  className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-[#78716C] uppercase tracking-wider">New password</label>
+                <input
+                  type="password"
+                  value={pwNew}
+                  onChange={(e) => { setPwNew(e.target.value); setPwError(null); }}
+                  placeholder="At least 4 characters"
+                  autoComplete="new-password"
+                  className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-[#78716C] uppercase tracking-wider">Confirm new password</label>
+                <input
+                  type="password"
+                  value={pwConfirm}
+                  onChange={(e) => { setPwConfirm(e.target.value); setPwError(null); }}
+                  placeholder="Repeat new password"
+                  autoComplete="new-password"
+                  className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+                />
+              </div>
+            </div>
+
+            {pwError && <p className="text-sm text-[#B45309]">{pwError}</p>}
+            {pwSaved && <p className="text-sm text-[#4F6E5C]">Password updated — use the new one next time you sign in.</p>}
+
+            <button
+              onClick={handleChangePassword}
+              className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px]"
+            >
+              Update password
             </button>
           </div>
         )}
