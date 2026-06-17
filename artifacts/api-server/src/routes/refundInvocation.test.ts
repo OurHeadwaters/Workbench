@@ -70,8 +70,8 @@ function postRefund(base: string, ip: string): Promise<Response> {
   });
 }
 
-beforeEach(() => {
-  __resetRateLimitForTests();
+beforeEach(async () => {
+  await __resetRateLimitForTests();
 });
 
 // ── per-minute limiter (max 3) ────────────────────────────────────────────────

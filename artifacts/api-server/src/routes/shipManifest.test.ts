@@ -92,9 +92,9 @@ function ownerHeaders(): Record<string, string> {
   return { "x-library-owner-token": OWNER_TOKEN };
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   shipManifestTable.__store.length = 0;
-  __resetRateLimitForTests();
+  await __resetRateLimitForTests();
 });
 
 // ----------------------- tests -----------------------

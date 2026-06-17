@@ -1,12 +1,13 @@
 /**
- * Token-bucket-ish rate limiter keyed by (ip, scope).
+ * Async token-bucket-ish rate limiter.  Keyed by (ip, scope).
  *
- * Two backends are supported:
- *
- *   In-memory (default)
- *     Used automatically during tests and any time the Postgres backend has
- *     not been configured.  Resets on restart.  Call __resetRateLimitForTests
- *     between test cases to clear state.
+ * Store selection (auto-detected at startup):
+ * ───────────────────────────────────────────
+ * • Postgres (setRateLimitBackend called): atomic UPSERT; survives restarts
+ *   and works correctly across multiple instances sharing the same DB.
+ * • Replit KV (REPLIT_DB_URL set): HTTP KV; survives restarts and is visible
+ *   to every process in the same Replit project.
+ * • In-memory (fallback): resets on restart; suitable for dev and tests.
  *
  *   Postgres
  *     Enabled at server startup by calling setRateLimitBackend(pool).  State
@@ -21,6 +22,11 @@
  *     already-blocked IPs stay blocked and partially-consumed windows are
  *     preserved.  Without this, an attacker who noticed a DB outage would
  *     receive a fresh window on every request.
+ *
+ * Failure behaviour
+ * ─────────────────
+ * Errors in any backend cause fail-open (allow the request) so a transient
+ * outage never blocks all traffic.
  */
 
 /**
@@ -35,7 +41,12 @@ interface QueryablePool {
   ): Promise<{ rows: R[] }>;
 }
 
-// ── Shared types ─────────────────────────────────────────────────────────────
+// ── Domain types ───────────────────────────────────────────────────────────────
+
+interface Hit {
+  count: number;
+  resetAt: number;
+}
 
 export interface RateLimitOptions {
   /** Number of requests allowed per window. */
@@ -50,41 +61,34 @@ export interface RateLimitResult {
   retryAfterSec: number;
 }
 
-// ── In-memory backend ─────────────────────────────────────────────────────────
+// ── Store interface ────────────────────────────────────────────────────────────
 
-interface Hit {
-  count: number;
-  resetAt: number;
+export interface RateLimitStore {
+  get(key: string): Promise<Hit | undefined>;
+  set(key: string, hit: Hit): Promise<void>;
+  /** Remove all entries.  Used only by tests. */
+  clear(): Promise<void>;
 }
 
-const store = new Map<string, Hit>();
+// ── In-memory store (dev / tests) ─────────────────────────────────────────────
 
-function checkInMemory(key: string, opts: RateLimitOptions): RateLimitResult {
-  const now = Date.now();
-  const existing = store.get(key);
+export class MemoryRateLimitStore implements RateLimitStore {
+  private readonly map = new Map<string, Hit>();
 
-  if (!existing || existing.resetAt <= now) {
-    store.set(key, { count: 1, resetAt: now + opts.windowMs });
-    return { ok: true, remaining: opts.max - 1, retryAfterSec: 0 };
+  async get(key: string): Promise<Hit | undefined> {
+    return this.map.get(key);
   }
 
-  if (existing.count >= opts.max) {
-    return {
-      ok: false,
-      remaining: 0,
-      retryAfterSec: Math.max(1, Math.ceil((existing.resetAt - now) / 1000)),
-    };
+  async set(key: string, hit: Hit): Promise<void> {
+    this.map.set(key, hit);
   }
 
-  existing.count += 1;
-  return {
-    ok: true,
-    remaining: opts.max - existing.count,
-    retryAfterSec: 0,
-  };
+  async clear(): Promise<void> {
+    this.map.clear();
+  }
 }
 
-// ── Shadow cache ──────────────────────────────────────────────────────────────
+// ── Shadow cache ───────────────────────────────────────────────────────────────
 
 /** How long a shadow-cache entry is considered valid after it was written. */
 const SHADOW_TTL_MS = 60_000;
@@ -112,7 +116,7 @@ function shadowWrite(key: string, count: number, resetAt: number): void {
  * in-memory store from it so the fallback path continues from the last-known
  * DB state rather than starting a brand-new window.
  */
-function seedFromShadow(key: string): void {
+async function seedFromShadow(key: string): Promise<void> {
   const entry = shadowCache.get(key);
   if (!entry) return;
 
@@ -129,20 +133,85 @@ function seedFromShadow(key: string): void {
   if (entry.resetAt > now) {
     // Use whichever count is higher — store may already have increments from
     // earlier in-memory fallback calls during this outage.
-    const existing = store.get(key);
+    const existing = await _memoryStore.get(key);
     if (!existing || existing.resetAt <= now || existing.count < entry.count) {
-      store.set(key, { count: entry.count, resetAt: entry.resetAt });
+      await _memoryStore.set(key, { count: entry.count, resetAt: entry.resetAt });
     }
   }
 }
 
-// ── Postgres backend ──────────────────────────────────────────────────────────
+// ── Replit KV store (Replit-hosted production) ────────────────────────────────
+
+const KV_PREFIX = "rl:";
+
+export class ReplitKvRateLimitStore implements RateLimitStore {
+  constructor(private readonly dbUrl: string) {}
+
+  async get(key: string): Promise<Hit | undefined> {
+    const res = await fetch(
+      `${this.dbUrl}/${encodeURIComponent(KV_PREFIX + key)}`,
+    );
+    if (res.status === 404) return undefined;
+    if (!res.ok) throw new Error(`KV GET failed: ${res.status}`);
+    const text = await res.text();
+    if (!text) return undefined;
+    try {
+      return JSON.parse(text) as Hit;
+    } catch {
+      return undefined;
+    }
+  }
+
+  async set(key: string, hit: Hit): Promise<void> {
+    const body = new URLSearchParams();
+    body.set(KV_PREFIX + key, JSON.stringify(hit));
+    const res = await fetch(this.dbUrl, { method: "POST", body });
+    if (!res.ok) throw new Error(`KV SET failed: ${res.status}`);
+  }
+
+  async clear(): Promise<void> {
+    const listRes = await fetch(
+      `${this.dbUrl}?prefix=${encodeURIComponent(KV_PREFIX)}&encode=true`,
+    );
+    if (!listRes.ok) return;
+    const text = await listRes.text();
+    if (!text) return;
+    const keys = text
+      .split("\n")
+      .map((k) => k.trim())
+      .filter(Boolean)
+      .map((k) => decodeURIComponent(k));
+    await Promise.all(
+      keys.map((k) =>
+        fetch(`${this.dbUrl}/${encodeURIComponent(k)}`, { method: "DELETE" }),
+      ),
+    );
+  }
+}
+
+// ── Module-level store (KV or in-memory) ──────────────────────────────────────
+
+const _memoryStore = new MemoryRateLimitStore();
+
+function makeDefaultStore(): RateLimitStore {
+  const dbUrl = process.env.REPLIT_DB_URL;
+  if (dbUrl) return new ReplitKvRateLimitStore(dbUrl);
+  return _memoryStore;
+}
+
+let _store: RateLimitStore = makeDefaultStore();
+
+// ── Postgres backend (self-hosted / multi-instance via shared DB) ──────────────
 
 let pgPool: QueryablePool | null = null;
 
 /**
  * Switch to the Postgres backend.  Call once at server startup, passing the
  * shared pg Pool from @workspace/db.  Tests should never call this.
+ *
+ * When set, Postgres takes priority over the KV / in-memory store because it
+ * uses a single atomic UPSERT that eliminates read-modify-write races across
+ * concurrent instances.
  */
 export function setRateLimitBackend(pool: QueryablePool): void {
   pgPool = pool;
@@ -194,12 +263,13 @@ async function checkPostgres(
   };
 }
 
-// ── Public interface ──────────────────────────────────────────────────────────
+// ── Public API ─────────────────────────────────────────────────────────────────
 
 export async function checkRateLimit(
   key: string,
   opts: RateLimitOptions,
 ): Promise<RateLimitResult> {
+  // Postgres path: single atomic UPSERT — no read-modify-write races.
   if (pgPool) {
     try {
       return await checkPostgres(key, opts);
@@ -210,10 +280,42 @@ export async function checkRateLimit(
       );
       // Seed the in-memory store from the last-known DB state so the fallback
       // does not hand out a fresh window.
-      seedFromShadow(key);
+      await seedFromShadow(key);
     }
   }
-  return checkInMemory(key, opts);
+
+  // KV / in-memory path.
+  const now = Date.now();
+  let existing: Hit | undefined;
+
+  try {
+    existing = await _store.get(key);
+  } catch {
+    // Store unavailable — fail open rather than blocking legitimate traffic.
+    return { ok: true, remaining: opts.max - 1, retryAfterSec: 0 };
+  }
+
+  if (!existing || existing.resetAt <= now) {
+    const hit: Hit = { count: 1, resetAt: now + opts.windowMs };
+    await _store.set(key, hit).catch(() => {});
+    return { ok: true, remaining: opts.max - 1, retryAfterSec: 0 };
+  }
+
+  if (existing.count >= opts.max) {
+    return {
+      ok: false,
+      remaining: 0,
+      retryAfterSec: Math.max(1, Math.ceil((existing.resetAt - now) / 1000)),
+    };
+  }
+
+  existing.count += 1;
+  await _store.set(key, existing).catch(() => {});
+  return {
+    ok: true,
+    remaining: opts.max - existing.count,
+    retryAfterSec: 0,
+  };
 }
 
 /**
@@ -240,9 +342,21 @@ export async function pruneExpiredRateLimits(): Promise<number | null> {
   return Number(result.rows[0]?.count ?? 0);
 }
 
-/** Test-only.  Production code should never call this. */
-export function __resetRateLimitForTests(): void {
-  store.clear();
+/**
+ * Override the active KV/memory store.  Test-only — production code must
+ * never call this.  Passing `undefined` resets to the environment-selected
+ * default.
+ */
+export function __setRateLimitStoreForTests(
+  store: RateLimitStore | undefined,
+): void {
+  _store = store ?? makeDefaultStore();
+}
+
+/** Test-only.  Clear all stores, reset to in-memory, and clear pgPool. */
+export async function __resetRateLimitForTests(): Promise<void> {
+  await _memoryStore.clear();
   shadowCache.clear();
+  _store = _memoryStore;
   pgPool = null;
 }

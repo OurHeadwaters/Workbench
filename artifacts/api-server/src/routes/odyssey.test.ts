@@ -111,8 +111,8 @@ function postSponsorIntake(base: string, ip: string): Promise<Response> {
   });
 }
 
-beforeEach(() => {
-  __resetRateLimitForTests();
+beforeEach(async () => {
+  await __resetRateLimitForTests();
 });
 
 // ── tests ─────────────────────────────────────────────────────────────────────
