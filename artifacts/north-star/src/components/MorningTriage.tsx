@@ -104,8 +104,40 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
 
   useEffect(() => {
     if (!inbox.enabled || enabledAccounts.length === 0) return;
-    const id = setInterval(() => loadThreads(false), POLL_INTERVAL_MS);
-    return () => clearInterval(id);
+
+    let timerId: ReturnType<typeof setInterval> | null = null;
+
+    const startPolling = () => {
+      if (timerId !== null) clearInterval(timerId);
+      timerId = setInterval(() => loadThreads(false), POLL_INTERVAL_MS);
+    };
+
+    const stopPolling = () => {
+      if (timerId !== null) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopPolling();
+      } else {
+        loadThreads(false);
+        startPolling();
+      }
+    };
+
+    if (!document.hidden) {
+      startPolling();
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      stopPolling();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [inbox.enabled, enabledAccounts.length, loadThreads]);
 
   if (!inbox.enabled) return null;
