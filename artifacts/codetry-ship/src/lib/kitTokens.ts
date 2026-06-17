@@ -73,6 +73,38 @@ export function markModuleVisited(token: string, moduleTitle: string): void {
   }
 }
 
+// ── Per-token visited-handout tracking ────────────────────────────────────────
+
+const KIT_VISITED_HANDOUTS_PREFIX = "headwaters:kit-visited-handouts:";
+
+/**
+ * Returns the set of visited handout keys for a given token.
+ * Keys are formatted as "<moduleId>:<handoutTitle>".
+ */
+export function getVisitedHandouts(token: string): Set<string> {
+  try {
+    const raw = localStorage.getItem(`${KIT_VISITED_HANDOUTS_PREFIX}${token}`);
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw) as string[];
+    return new Set(parsed);
+  } catch {
+    return new Set();
+  }
+}
+
+export function markHandoutVisited(token: string, handoutKey: string): void {
+  try {
+    const visited = getVisitedHandouts(token);
+    visited.add(handoutKey);
+    localStorage.setItem(
+      `${KIT_VISITED_HANDOUTS_PREFIX}${token}`,
+      JSON.stringify(Array.from(visited))
+    );
+  } catch {
+    // localStorage unavailable
+  }
+}
+
 // ── API fetch helpers ──────────────────────────────────────────────────────────
 
 export interface KitAccessResult {

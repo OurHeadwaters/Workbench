@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useKitAccess } from "@/lib/useKitAccess";
+import { getVisitedHandouts, markHandoutVisited } from "@/lib/kitTokens";
 import getStartedImg from "@assets/IMG_1184_1780775510410.PNG";
 import foodAuditImg from "@assets/IMG_1130_1780775510411.PNG";
 import inPersonChecklistImg from "@assets/IMG_1187_1780775510410.PNG";
@@ -126,8 +127,23 @@ const MODULES: Module[] = [
   },
 ];
 
-function HandoutCard({ handout }: { handout: HandoutItem }) {
+function HandoutCard({
+  handout,
+  visited,
+  onVisit,
+  accentColor,
+}: {
+  handout: HandoutItem;
+  visited: boolean;
+  onVisit: () => void;
+  accentColor: string;
+}) {
   const [open, setOpen] = React.useState(false);
+
+  function handleClick() {
+    setOpen(!open);
+    if (!visited) onVisit();
+  }
 
   return (
     <div
@@ -135,12 +151,40 @@ function HandoutCard({ handout }: { handout: HandoutItem }) {
         background: "white",
         borderRadius: 8,
         overflow: "hidden",
-        boxShadow: "0 1px 3px rgba(31,61,46,0.08)",
+        boxShadow: visited
+          ? `0 0 0 2px ${accentColor}33, 0 1px 3px rgba(31,61,46,0.08)`
+          : "0 1px 3px rgba(31,61,46,0.08)",
         cursor: "pointer",
         transition: "box-shadow 0.15s",
+        position: "relative",
       }}
-      onClick={() => setOpen(!open)}
+      onClick={handleClick}
     >
+      {/* Visited badge */}
+      {visited && (
+        <div
+          style={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            background: accentColor,
+            color: "white",
+            borderRadius: "50%",
+            width: 24,
+            height: 24,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "0.75rem",
+            fontWeight: 700,
+            zIndex: 1,
+            boxShadow: "0 1px 4px rgba(0,0,0,0.18)",
+          }}
+          title="Reviewed"
+        >
+          ✓
+        </div>
+      )}
       <div style={{ position: "relative", paddingBottom: "70%", overflow: "hidden", background: CREAM }}>
         <img
           src={handout.img}
@@ -159,7 +203,7 @@ function HandoutCard({ handout }: { handout: HandoutItem }) {
             fontFamily: "var(--font-serif, 'Playfair Display', Georgia, serif)",
             fontSize: "0.92rem",
             fontWeight: 800,
-            color: INK,
+            color: visited ? accentColor : INK,
             marginBottom: open ? "0.5rem" : 0,
             lineHeight: 1.3,
           }}
@@ -171,8 +215,8 @@ function HandoutCard({ handout }: { handout: HandoutItem }) {
             {handout.desc}
           </p>
         )}
-        <p style={{ fontSize: "0.65rem", color: "#bbb", margin: open ? "0.5rem 0 0" : "0.2rem 0 0", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-          {open ? "Tap to collapse" : "Tap to read more"}
+        <p style={{ fontSize: "0.65rem", color: visited ? accentColor : "#bbb", margin: open ? "0.5rem 0 0" : "0.2rem 0 0", textTransform: "uppercase", letterSpacing: "0.08em", opacity: visited ? 0.75 : 1 }}>
+          {visited ? (open ? "Reviewed · Tap to collapse" : "Reviewed · Tap to read more") : (open ? "Tap to collapse" : "Tap to read more")}
         </p>
       </div>
     </div>
@@ -287,8 +331,25 @@ function LockedWall({ reason }: { reason?: "expired" } = {}) {
 }
 
 export function ParrsJarsHubPage() {
-  const { status } = useKitAccess(PJ_SOLUTIONS_KIT_ID);
+  const { status, storedToken } = useKitAccess(PJ_SOLUTIONS_KIT_ID);
   const [activeModule, setActiveModule] = useState<string>("foundation");
+  const [visitedHandouts, setVisitedHandouts] = useState<Set<string>>(new Set());
+
+  // Load visited handouts from localStorage once the token is known
+  React.useEffect(() => {
+    if (storedToken) {
+      setVisitedHandouts(getVisitedHandouts(storedToken.token));
+    }
+  }, [storedToken]);
+
+  const handleVisit = useCallback(
+    (handoutKey: string) => {
+      if (!storedToken) return;
+      markHandoutVisited(storedToken.token, handoutKey);
+      setVisitedHandouts((prev) => new Set([...prev, handoutKey]));
+    },
+    [storedToken]
+  );
 
   if (status === "loading") {
     return (
@@ -376,31 +437,50 @@ export function ParrsJarsHubPage() {
           gap: 0,
         }}
       >
-        {MODULES.map((mod) => (
-          <button
-            key={mod.id}
-            onClick={() => setActiveModule(mod.id)}
-            style={{
-              flexShrink: 0,
-              padding: "0.85rem 1.25rem",
-              background: "none",
-              border: "none",
-              borderBottom: activeModule === mod.id ? `3px solid ${mod.color}` : "3px solid transparent",
-              cursor: "pointer",
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.75rem",
-              fontWeight: activeModule === mod.id ? 700 : 500,
-              color: activeModule === mod.id ? mod.color : MUTED,
-              whiteSpace: "nowrap",
-              transition: "color 0.15s, border-color 0.15s",
-            }}
-          >
-            <span style={{ display: "block", fontSize: "0.55rem", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.15rem", opacity: 0.7 }}>
-              {mod.label}
-            </span>
-            {mod.title}
-          </button>
-        ))}
+        {MODULES.map((mod) => {
+          const total = mod.handouts.length;
+          const done = mod.handouts.filter((h) =>
+            visitedHandouts.has(`${mod.id}:${h.title}`)
+          ).length;
+          const allDone = done === total;
+          return (
+            <button
+              key={mod.id}
+              onClick={() => setActiveModule(mod.id)}
+              style={{
+                flexShrink: 0,
+                padding: "0.85rem 1.25rem",
+                background: "none",
+                border: "none",
+                borderBottom: activeModule === mod.id ? `3px solid ${mod.color}` : "3px solid transparent",
+                cursor: "pointer",
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.75rem",
+                fontWeight: activeModule === mod.id ? 700 : 500,
+                color: activeModule === mod.id ? mod.color : MUTED,
+                whiteSpace: "nowrap",
+                transition: "color 0.15s, border-color 0.15s",
+              }}
+            >
+              <span style={{ display: "block", fontSize: "0.55rem", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.15rem", opacity: 0.7 }}>
+                {mod.label}
+              </span>
+              {mod.title}
+              <span
+                style={{
+                  display: "block",
+                  fontSize: "0.58rem",
+                  marginTop: "0.2rem",
+                  color: allDone ? mod.color : "#bbb",
+                  fontWeight: allDone ? 700 : 400,
+                  letterSpacing: "0.04em",
+                }}
+              >
+                {done} / {total} reviewed{allDone ? " ✓" : ""}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Module content */}
@@ -441,9 +521,18 @@ export function ParrsJarsHubPage() {
             gap: "1rem",
           }}
         >
-          {current.handouts.map((h) => (
-            <HandoutCard key={h.title} handout={h} />
-          ))}
+          {current.handouts.map((h) => {
+            const key = `${current.id}:${h.title}`;
+            return (
+              <HandoutCard
+                key={h.title}
+                handout={h}
+                visited={visitedHandouts.has(key)}
+                onVisit={() => handleVisit(key)}
+                accentColor={current.color}
+              />
+            );
+          })}
         </div>
       </div>
 
