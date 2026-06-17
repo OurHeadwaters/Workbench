@@ -1,0 +1,58 @@
+[
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a01",
+    "position": 1,
+    "filepath": "src/pages/slides/Cover.tsx",
+    "title": "Cover",
+    "description": "Title slide for the Deer Lake Community General Store operational plan.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a02",
+    "position": 2,
+    "filepath": "src/pages/slides/ProblemOpportunity.tsx",
+    "title": "The problem and the opportunity",
+    "description": "Why a community-owned store now: incumbent reality, leakage estimate, subsidy pass-through, and the community-owned alternative.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a03",
+    "position": 3,
+    "filepath": "src/pages/slides/SupplyChain.tsx",
+    "title": "Supply chain and distribution",
+    "description": "Three-lane supply model (807 producer lane, ice-road truck, air freight) and the curated shelf mix.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a04",
+    "position": 4,
+    "filepath": "src/pages/slides/StaffingModel.tsx",
+    "title": "The Outback staffing model",
+    "description": "Rotational fly-in staffing with band-provided housing, paired with a 12-month local-hire wind-down.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a05",
+    "position": 5,
+    "filepath": "src/pages/slides/PosOps.tsx",
+    "title": "Day-1 POS and operations",
+    "description": "Square for Retail configuration, offline mode, subsidy pass-through automation, and the companion canvas mockup.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a06",
+    "position": 6,
+    "filepath": "src/pages/slides/FinancialsRole.tsx",
+    "title": "Financials, timeline, and role",
+    "description": "Planning-grade financial sketch including the Headwaters operating system fee, 6 to 9 month launch gantt, and the recommended 807 Store Launch Lead role with alternative.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a07",
+    "position": 7,
+    "filepath": "src/pages/slides/RisksAsk.tsx",
+    "title": "Risks and the ask",
+    "description": "Top six operational risks with mitigations, and the closing ask mirroring the existing 807 partnership pitch tone.",
+    "speakerNotes": ""
+  }
+]

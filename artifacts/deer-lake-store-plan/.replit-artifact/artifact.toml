@@ -1,0 +1,31 @@
+kind = "slides"
+previewPath = "/deer-lake-store-plan/"
+title = "Deer Lake Store — Operating Plan"
+version = "1.0.0"
+id = "artifacts/deer-lake-store-plan"
+router = "path"
+
+[[integratedSkills]]
+name = "slides"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/deer-lake-store-plan/" ]
+localPort = 20509
+
+[services.development]
+run = "PORT=20509 BASE_PATH=/deer-lake-store-plan/ pnpm --filter @workspace/deer-lake-store-plan run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/deer-lake-store-plan", "run", "build" ]
+publicDir = "artifacts/deer-lake-store-plan/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20509"
+BASE_PATH = "/deer-lake-store-plan/"

@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-display: var(--font-display-family);
+  --font-body: var(--font-body-family);
+  --font-mono: var(--font-mono-family);
+
+  --color-primary: var(--slide-primary);
+  --color-accent: var(--slide-accent);
+  --color-bg: var(--slide-bg);
+  --color-paper: var(--slide-paper);
+  --color-text: var(--slide-text);
+  --color-muted: var(--slide-muted);
+  --color-rule: var(--slide-rule);
+}
+
+:root,
+:host {
+  --slide-primary: #1f3d2e;
+  --slide-accent: #b85a3e;
+  --slide-bg: #f4ede0;
+  --slide-paper: #ebe2d0;
+  --slide-text: #18201b;
+  --slide-muted: #6b7665;
+  --slide-rule: #c8bfa7;
+  --font-display-family: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-mono-family: "IBM Plex Mono", "Menlo", monospace;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+}
+
+.bg-bg { background-color: var(--slide-bg); }
+.bg-paper { background-color: var(--slide-paper); }
+.bg-muted { background-color: var(--slide-muted); }
+.bg-rule { background-color: var(--slide-rule); }
+.text-text { color: var(--slide-text); }
+.text-primary { color: var(--slide-primary); }
+.text-accent { color: var(--slide-accent); }
+.text-muted { color: var(--slide-muted); }
+.font-display { font-family: var(--font-display-family); }
+.font-body { font-family: var(--font-body-family); }
+.font-mono { font-family: var(--font-mono-family); }
