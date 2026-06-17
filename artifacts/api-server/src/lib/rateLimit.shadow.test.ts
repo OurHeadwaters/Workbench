@@ -12,6 +12,7 @@ import {
   checkRateLimit,
   setRateLimitBackend,
   __resetRateLimitForTests,
+  PG_QUERY_TIMEOUT_MS,
 } from "./rateLimit";
 
 // ── Fake Postgres pool helpers ────────────────────────────────────────────────
@@ -67,6 +68,18 @@ function makeFailingPool() {
   return {
     async query(): Promise<never> {
       throw new Error("DB connection refused");
+    },
+  };
+}
+
+/**
+ * A pool whose query() hangs forever — simulates a slow/degraded DB that
+ * never returns, so the timeout mechanism must fire the fallback.
+ */
+function makeHangingPool() {
+  return {
+    query(): Promise<never> {
+      return new Promise(() => {});
     },
   };
 }
@@ -133,6 +146,37 @@ describe("shadow cache during DB outages", () => {
     expect(r.ok).toBe(false);
     expect(r.remaining).toBe(0);
     expect(r.retryAfterSec).toBeGreaterThanOrEqual(1);
+  });
+
+  it("fires the shadow-cache fallback when the DB query hangs past the deadline", async () => {
+    vi.useFakeTimers();
+
+    // ── Phase 1: build shadow-cache state via a working pool ──────────────────
+    const goodPool = makeFakePool(table);
+    setRateLimitBackend(goodPool);
+
+    // Make 3 real requests so the shadow cache records count=3.
+    for (let i = 0; i < 3; i++) {
+      await checkRateLimit(KEY, OPTS);
+    }
+
+    // ── Phase 2: switch to a pool that hangs forever ───────────────────────────
+    setRateLimitBackend(makeHangingPool());
+
+    // Start the check — it will be stuck waiting for the DB query.
+    const resultPromise = checkRateLimit(KEY, OPTS);
+
+    // Advance fake timers past the query timeout so the Promise.race fires.
+    await vi.advanceTimersByTimeAsync(PG_QUERY_TIMEOUT_MS + 10);
+
+    const result = await resultPromise;
+
+    // The timeout caused the error path → shadow cache seeded in-memory with
+    // count=3.  This 4th request increments to 4, leaving 1 slot remaining.
+    expect(result.ok).toBe(true);
+    expect(result.remaining).toBe(OPTS.max - 4);
+
+    vi.useRealTimers();
   });
 
   it("ignores shadow-cache entries older than 60 s and allows a fresh window", async () => {

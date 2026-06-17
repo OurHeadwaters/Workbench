@@ -209,6 +209,32 @@ let _store: RateLimitStore = makeDefaultStore();
 
 // ── Postgres backend (self-hosted / multi-instance via shared DB) ──────────────
 
+/**
+ * Maximum milliseconds to wait for a Postgres query in checkPostgres before
+ * giving up and activating the shadow-cache fallback.  Overridable via the
+ * RATE_LIMIT_PG_TIMEOUT_MS environment variable (e.g. for tests).
+ */
+export const PG_QUERY_TIMEOUT_MS = Number(
+  process.env.RATE_LIMIT_PG_TIMEOUT_MS ?? 300,
+);
+
+/**
+ * Race a promise against a deadline.  Rejects with a timeout error when the
+ * deadline fires first, leaving the original promise to resolve/reject later
+ * (its result is discarded).
+ */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(
+        () => reject(new Error(`Postgres query timed out after ${ms} ms`)),
+        ms,
+      ),
+    ),
+  ]);
+}
+
 let pgPool: QueryablePool | null = null;
 
 /**
@@ -231,20 +257,23 @@ async function checkPostgres(
   const newResetAt = now + opts.windowMs;
   const capAt = opts.max + 1;
 
-  const { rows } = await pgPool!.query<{ count: number; reset_at: string }>(
-    `INSERT INTO rate_limits (key, count, reset_at)
-     VALUES ($1, 1, $2)
-     ON CONFLICT (key) DO UPDATE SET
-       count = CASE
-         WHEN rate_limits.reset_at <= $3 THEN 1
-         ELSE LEAST(rate_limits.count + 1, $4)
-       END,
-       reset_at = CASE
-         WHEN rate_limits.reset_at <= $3 THEN $2
-         ELSE rate_limits.reset_at
-       END
-     RETURNING count, reset_at`,
-    [key, newResetAt, now, capAt],
+  const { rows } = await withTimeout(
+    pgPool!.query<{ count: number; reset_at: string }>(
+      `INSERT INTO rate_limits (key, count, reset_at)
+       VALUES ($1, 1, $2)
+       ON CONFLICT (key) DO UPDATE SET
+         count = CASE
+           WHEN rate_limits.reset_at <= $3 THEN 1
+           ELSE LEAST(rate_limits.count + 1, $4)
+         END,
+         reset_at = CASE
+           WHEN rate_limits.reset_at <= $3 THEN $2
+           ELSE rate_limits.reset_at
+         END
+       RETURNING count, reset_at`,
+      [key, newResetAt, now, capAt],
+    ),
+    PG_QUERY_TIMEOUT_MS,
   );
 
   const row = rows[0]!;
