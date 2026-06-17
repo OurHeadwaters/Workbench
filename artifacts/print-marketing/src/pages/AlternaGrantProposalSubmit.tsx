@@ -10,7 +10,8 @@ export default function AlternaGrantProposalSubmit() {
           header,
           [data-deadhead-drop],
           [data-gord-widget],
-          .no-print {
+          .no-print,
+          .print-ecosystem-footer {
             display: none !important;
           }
           body, html { background: white !important; margin: 0 !important; }
@@ -24,18 +25,19 @@ export default function AlternaGrantProposalSubmit() {
             border: none !important;
             border-radius: 0 !important;
           }
-          @page { size: letter portrait; margin: 0.65in; }
-          h1 { font-size: 13pt !important; margin-bottom: 1pt !important; line-height: 1.2 !important; }
-          h2 { font-size: 10pt !important; margin-top: 6pt !important; margin-bottom: 2pt !important; border-bottom: 0.5pt solid #ccc; padding-bottom: 1pt !important; }
-          h3 { font-size: 9pt !important; margin-bottom: 1pt !important; margin-top: 3pt !important; }
-          p, li, td, th { font-size: 8pt !important; line-height: 1.3 !important; }
-          table { font-size: 7.5pt !important; }
-          .section-gap { margin-bottom: 4pt !important; }
-          ul { margin: 1pt 0 2pt 0 !important; padding-left: 12pt !important; }
-          li { margin-bottom: 0.5pt !important; }
-          .letterhead-row { font-size: 7.5pt !important; }
-          td, th { padding: 1pt 3pt !important; }
-          .pb-letterhead { padding-bottom: 3pt !important; margin-bottom: 3pt !important; }
+          @page { size: letter portrait; margin: 0.8in; }
+          h1 { font-size: 16pt !important; margin-bottom: 3pt !important; line-height: 1.3 !important; }
+          h2 { font-size: 12pt !important; margin-top: 12pt !important; margin-bottom: 4pt !important; border-bottom: 0.5pt solid #ccc; padding-bottom: 2pt !important; }
+          h3 { font-size: 10.5pt !important; margin-bottom: 3pt !important; margin-top: 8pt !important; }
+          p, li { font-size: 9.5pt !important; line-height: 1.55 !important; }
+          td, th { font-size: 9pt !important; line-height: 1.45 !important; }
+          table { font-size: 9pt !important; }
+          .section-gap { margin-bottom: 10pt !important; }
+          ul { margin: 4pt 0 6pt 0 !important; padding-left: 14pt !important; }
+          li { margin-bottom: 3pt !important; }
+          .letterhead-row { font-size: 9pt !important; }
+          td, th { padding: 4pt 6pt !important; }
+          .pb-letterhead { padding-bottom: 8pt !important; margin-bottom: 8pt !important; }
         }
       `}</style>
 
