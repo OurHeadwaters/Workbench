@@ -840,7 +840,7 @@ async function persistSeatsToServer(
   const token = getOwnerToken();
   if (!token) return;
   const seats = seatsToStore(seatList);
-  await fetch("/api/settings/seat-config", {
+  const res = await fetch("/api/settings/seat-config", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -848,6 +848,7 @@ async function persistSeatsToServer(
     },
     body: JSON.stringify({ seats }),
   });
+  if (!res.ok) throw new Error(`seat-config sync failed: ${res.status}`);
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -868,7 +869,24 @@ export function KitchenTablePage() {
     return DEFAULT_SEATS;
   });
 
+<<<<<<< HEAD
   const [seatLoadStatus, setSeatLoadStatus] = useState<"server" | "local" | "defaults" | "auth-expired" | null>(null);
+=======
+  const [seatLoadStatus, setSeatLoadStatus] = useState<"server" | "local" | "defaults" | null>(null);
+  const [seatSyncFailed, setSeatSyncFailed] = useState(false);
+  const seatSyncFailedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const notifySyncFailed = useCallback(() => {
+    setSeatSyncFailed(true);
+    if (seatSyncFailedTimerRef.current) clearTimeout(seatSyncFailedTimerRef.current);
+    seatSyncFailedTimerRef.current = setTimeout(() => setSeatSyncFailed(false), 4000);
+  }, []);
+>>>>>>> be7cdfe9 (Show a gentle warning when seat config couldn't be saved to the server)
+
+  useEffect(() => {
+    const ref = seatSyncFailedTimerRef;
+    return () => { if (ref.current) clearTimeout(ref.current); };
+  }, []);
 
   useEffect(() => {
     const token = getOwnerToken();
@@ -1131,7 +1149,7 @@ export function KitchenTablePage() {
     setPlaceCardEditing(null);
     setSavedSeatId(seatId);
     setTimeout(() => setSavedSeatId(null), 2000);
-    persistSeatsToServer(nextSeats).catch(() => { });
+    persistSeatsToServer(nextSeats).catch(() => { notifySyncFailed(); });
   };
 
   const saveConfig = () => {
@@ -1157,7 +1175,7 @@ export function KitchenTablePage() {
       setConfigSaved(false);
       setConfigSeatId(null);
     }, 900);
-    persistSeatsToServer(nextSeats).catch(() => { });
+    persistSeatsToServer(nextSeats).catch(() => { notifySyncFailed(); });
   };
 
   const [soundBites, setSoundBites] = useState<SoundBite[]>(() => {
@@ -1290,6 +1308,15 @@ export function KitchenTablePage() {
                     : seatLoadStatus === "local"
                     ? "· using saved local config"
                     : "· using local defaults"}
+                </p>
+              </div>
+            )}
+
+            {/* Server sync failure whisper */}
+            {seatSyncFailed && (
+              <div className="px-6 pt-2 pb-0">
+                <p className="text-[10px] tracking-[0.12em] text-[#6B4F30]">
+                  ⚠ config saved locally — server sync failed
                 </p>
               </div>
             )}
