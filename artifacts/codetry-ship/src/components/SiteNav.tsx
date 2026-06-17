@@ -46,6 +46,16 @@ function isActive(path: string, location: string): boolean {
   return location.startsWith(path);
 }
 
+function isExploreActive(href: string, location: string): boolean {
+  const hasChildEntry = EXPLORE_LINKS.some(
+    (l) => l.href !== href && l.href.startsWith(href + "/")
+  );
+  if (hasChildEntry) {
+    return location === href || location === href + "/";
+  }
+  return location.startsWith(href);
+}
+
 export function SiteNav() {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
@@ -366,7 +376,7 @@ export function SiteNav() {
                     Explore
                   </p>
                   {EXPLORE_LINKS.map(({ icon, name, href }, i) => {
-                    const active = isActive(href, location);
+                    const active = isExploreActive(href, location);
                     return (
                     <a
                       key={name}
@@ -590,7 +600,7 @@ export function SiteNav() {
                   Explore
                 </p>
                 {EXPLORE_LINKS.map(({ icon, name, href }) => {
-                  const active = isActive(href, location);
+                  const active = isExploreActive(href, location);
                   return (
                   <a
                     key={name}
