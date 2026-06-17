@@ -924,6 +924,9 @@ export function KitchenTablePage() {
   const [savedSeatId, setSavedSeatId] = useState<string | null>(null);
   const [configSaved, setConfigSaved] = useState(false);
 
+  type SevenGenPanel = { status: "loading" | "done" | "error"; content: string; open: boolean };
+  const [sevenGenPanels, setSevenGenPanels] = useState<Record<string, SevenGenPanel>>({});
+
   const activeTemplate = TEMPLATES.find((t) => t.id === activeTemplateId) ?? TEMPLATES[0]!;
   const agendaItems = activeTemplate.agendaItems;
 
@@ -1029,6 +1032,74 @@ export function KitchenTablePage() {
     setStreaming(false);
     streamingIdRef.current = null;
   }, [input, streaming, activeSeat, messages, brief]);
+
+  const sevenGenLoadingRef = useRef<Set<string>>(new Set());
+
+  const fireSevenGen = useCallback(async (itemQ: string, question: string) => {
+    if (sevenGenLoadingRef.current.has(itemQ)) return;
+    sevenGenLoadingRef.current.add(itemQ);
+    setSevenGenPanels((prev) => ({ ...prev, [itemQ]: { status: "loading", content: "", open: true } }));
+
+    const ishmaelSeat = seats.find((s) => s.id === "ishmael");
+    if (!ishmaelSeat) {
+      sevenGenLoadingRef.current.delete(itemQ);
+      setSevenGenPanels((prev) => ({ ...prev, [itemQ]: { status: "error", content: "Ishmael seat not configured.", open: true } }));
+      return;
+    }
+
+    const prompt = `Ishmael — run the seven-generation test on: ${question}. What does this proposal leave for the person who inherits it in seven generations?`;
+    const systemPrompt = ishmaelSeat.systemPrompt + (brief.trim() ? `\n\n---\n\nProject brief on the table:\n${brief}` : "");
+
+    try {
+      const res = await fetch("/api/council/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: prompt, history: [], systemPrompt, model: ishmaelSeat.model }),
+      });
+
+      if (!res.ok || !res.body) {
+        setSevenGenPanels((prev) => ({ ...prev, [itemQ]: { status: "error", content: "⚠ Could not reach Ishmael.", open: true } }));
+        sevenGenLoadingRef.current.delete(itemQ);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split("\n");
+        buf = lines.pop() ?? "";
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const raw = line.slice(6).trim();
+          try {
+            const chunk = JSON.parse(raw) as { content?: string; done?: boolean; error?: string };
+            if (chunk.error) {
+              setSevenGenPanels((prev) => ({
+                ...prev,
+                [itemQ]: { ...(prev[itemQ] ?? { open: true }), status: "error", content: (prev[itemQ]?.content ?? "") + `\n\n⚠ ${chunk.error}` },
+              }));
+            } else if (chunk.content) {
+              setSevenGenPanels((prev) => {
+                const cur = prev[itemQ];
+                return { ...prev, [itemQ]: { ...(cur ?? { status: "loading", open: true }), content: (cur?.content ?? "") + chunk.content } };
+              });
+            }
+          } catch { /* skip */ }
+        }
+      }
+
+      setSevenGenPanels((prev) => ({ ...prev, [itemQ]: { ...(prev[itemQ] ?? { content: "", open: true }), status: "done" } }));
+    } catch {
+      setSevenGenPanels((prev) => ({ ...prev, [itemQ]: { status: "error", content: "⚠ Network error.", open: true } }));
+    }
+
+    sevenGenLoadingRef.current.delete(itemQ);
+  }, [seats, brief]);
 
   const openConfig = (seat: Seat) => {
     setConfigSeatId(seat.id);
@@ -1313,45 +1384,77 @@ export function KitchenTablePage() {
               <div className="bg-[#181512] rounded-sm border border-[#251E18] shadow-[0_4px_16px_rgba(0,0,0,0.4)] overflow-hidden">
                 {agendaItems.map((item, i) => {
                   const leadSeat = seats.find((s) => s.id === item.leadId);
+                  const panel = sevenGenPanels[item.q];
                   return (
                     <div
                       key={item.q}
                       className={cn(
-                        "w-full flex items-start gap-4 px-6 py-5 transition-colors hover:bg-[#1C1814]",
+                        "flex flex-col",
                         i < agendaItems.length - 1 ? "border-b border-[#1E1A16]" : ""
                       )}
                     >
-                      <button
-                        className="flex items-start gap-4 flex-1 min-w-0 text-left"
-                        onClick={() => {
-                          setActiveSeatId(item.leadId);
-                          setInput(item.question);
-                        }}
-                      >
-                        <span
-                          className="flex-shrink-0 w-6 h-6 rounded-sm flex items-center justify-center text-[11px] font-bold text-[#13110E] mt-0.5"
-                          style={{ background: "#6B5A4E" }}
+                      <div className="flex items-start gap-4 px-6 py-5 transition-colors hover:bg-[#1C1814]">
+                        <button
+                          className="flex items-start gap-4 flex-1 min-w-0 text-left"
+                          onClick={() => {
+                            setActiveSeatId(item.leadId);
+                            setInput(item.question);
+                          }}
                         >
-                          {i + 1}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[14px] font-medium text-[#C5B6A5] leading-relaxed">{item.question}</p>
-                          <p className="text-[11px] text-[#5C5046] mt-1.5 flex items-center gap-1.5">
-                            <span style={{ color: leadSeat?.color ?? "#5C5046" }}>{leadSeat?.icon}</span>
-                            <span>{item.lead}</span>
-                          </p>
+                          <span
+                            className="flex-shrink-0 w-6 h-6 rounded-sm flex items-center justify-center text-[11px] font-bold text-[#13110E] mt-0.5"
+                            style={{ background: "#6B5A4E" }}
+                          >
+                            {i + 1}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[14px] font-medium text-[#C5B6A5] leading-relaxed">{item.question}</p>
+                            <p className="text-[11px] text-[#5C5046] mt-1.5 flex items-center gap-1.5">
+                              <span style={{ color: leadSeat?.color ?? "#5C5046" }}>{leadSeat?.icon}</span>
+                              <span>{item.lead}</span>
+                            </p>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (panel?.open) {
+                              setSevenGenPanels((prev) => ({ ...prev, [item.q]: { ...(prev[item.q]!), open: false } }));
+                            } else {
+                              fireSevenGen(item.q, item.question);
+                            }
+                          }}
+                          className={cn(
+                            "flex-shrink-0 mt-1 px-2 py-1 rounded-sm text-[11px] font-medium border transition-all tracking-wide",
+                            panel?.open
+                              ? "text-[#6B9A80] border-[#3D6B50] bg-[#1A2820]"
+                              : "text-[#4A6B5A] border-[#2A3D30] hover:border-[#3D6B50] hover:text-[#6B9A80] hover:bg-[#1A2820]"
+                          )}
+                          title="Run Ishmael's seven-generation test on this item"
+                        >
+                          🐋 7-gen
+                        </button>
+                      </div>
+                      {panel?.open && (
+                        <div className="mx-6 mb-4 rounded-sm border border-[#2A3D30] bg-[#111A14] overflow-hidden">
+                          <div className="flex items-center justify-between px-4 py-2 border-b border-[#1E2A20]">
+                            <span className="text-[10px] uppercase tracking-[0.15em] text-[#4A6B5A] font-medium">🐋 Ishmael — seven-generation lens</span>
+                            <button
+                              onClick={() => setSevenGenPanels((prev) => ({ ...prev, [item.q]: { ...(prev[item.q]!), open: false } }))}
+                              className="text-[10px] text-[#3D5A45] hover:text-[#6B9A80] transition-colors px-1"
+                            >dismiss ✕</button>
+                          </div>
+                          <div className="px-4 py-3 max-h-56 overflow-y-auto">
+                            {panel.status === "loading" && panel.content === "" ? (
+                              <p className="text-[12px] text-[#4A6B5A] animate-pulse">Ishmael is reading the question…</p>
+                            ) : (
+                              <p className="text-[13px] text-[#A8BFB0] leading-relaxed whitespace-pre-wrap">{panel.content}</p>
+                            )}
+                            {panel.status === "loading" && panel.content !== "" && (
+                              <span className="inline-block w-1.5 h-3.5 bg-[#4A6B5A] ml-0.5 animate-pulse rounded-sm" />
+                            )}
+                          </div>
                         </div>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setActiveSeatId("ishmael");
-                          setInput(`Ishmael — run the seven-generation test on: ${item.question}. What does this proposal leave for the person who inherits it in seven generations?`);
-                        }}
-                        className="flex-shrink-0 mt-1 px-2 py-1 rounded-sm text-[11px] font-medium text-[#4A6B5A] border border-[#2A3D30] hover:border-[#3D6B50] hover:text-[#6B9A80] hover:bg-[#1A2820] transition-all tracking-wide"
-                        title="Run Ishmael's seven-generation test on this item"
-                      >
-                        🐋 7-gen
-                      </button>
+                      )}
                     </div>
                   );
                 })}
@@ -1385,47 +1488,78 @@ export function KitchenTablePage() {
                   <div className="bg-[#13110E] rounded-sm border border-[#251E18] overflow-hidden mb-4">
                     {agendaItems.map((item, i) => {
                       const leadSeat = seats.find((s) => s.id === item.leadId);
+                      const panel = sevenGenPanels[item.q];
                       return (
                         <div
                           key={item.q}
                           className={cn(
-                            "w-full flex items-start gap-3 px-4 py-3 transition-colors hover:bg-[#181512]",
+                            "flex flex-col",
                             i < agendaItems.length - 1 ? "border-b border-[#1E1A16]" : ""
                           )}
                         >
-                          <button
-                            className="flex items-start gap-3 flex-1 min-w-0 text-left"
-                            onClick={() => {
-                              setActiveSeatId(item.leadId);
-                              setInput(item.question);
-                              setBriefOpen(false);
-                            }}
-                          >
-                            <span
-                              className="flex-shrink-0 w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold text-[#13110E] mt-0.5"
-                              style={{ background: "#6B5A4E" }}
+                          <div className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-[#181512]">
+                            <button
+                              className="flex items-start gap-3 flex-1 min-w-0 text-left"
+                              onClick={() => {
+                                setActiveSeatId(item.leadId);
+                                setInput(item.question);
+                                setBriefOpen(false);
+                              }}
                             >
-                              {i + 1}
-                            </span>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[13px] text-[#C5B6A5] leading-relaxed pt-0.5">{item.question}</p>
-                              <p className="text-[10px] text-[#4A3D30] mt-0.5 flex items-center gap-1">
-                                <span style={{ color: leadSeat?.color ?? "#4A3D30" }}>{leadSeat?.icon}</span>
-                                <span>{item.lead}</span>
-                              </p>
+                              <span
+                                className="flex-shrink-0 w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold text-[#13110E] mt-0.5"
+                                style={{ background: "#6B5A4E" }}
+                              >
+                                {i + 1}
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[13px] text-[#C5B6A5] leading-relaxed pt-0.5">{item.question}</p>
+                                <p className="text-[10px] text-[#4A3D30] mt-0.5 flex items-center gap-1">
+                                  <span style={{ color: leadSeat?.color ?? "#4A3D30" }}>{leadSeat?.icon}</span>
+                                  <span>{item.lead}</span>
+                                </p>
+                              </div>
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (panel?.open) {
+                                  setSevenGenPanels((prev) => ({ ...prev, [item.q]: { ...(prev[item.q]!), open: false } }));
+                                } else {
+                                  fireSevenGen(item.q, item.question);
+                                }
+                              }}
+                              className={cn(
+                                "flex-shrink-0 mt-0.5 px-1.5 py-0.5 rounded-sm text-[10px] font-medium border transition-all tracking-wide",
+                                panel?.open
+                                  ? "text-[#6B9A80] border-[#3D6B50] bg-[#1A2820]"
+                                  : "text-[#4A6B5A] border-[#2A3D30] hover:border-[#3D6B50] hover:text-[#6B9A80] hover:bg-[#1A2820]"
+                              )}
+                              title="Run Ishmael's seven-generation test on this item"
+                            >
+                              🐋 7-gen
+                            </button>
+                          </div>
+                          {panel?.open && (
+                            <div className="mx-4 mb-3 rounded-sm border border-[#2A3D30] bg-[#111A14] overflow-hidden">
+                              <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#1E2A20]">
+                                <span className="text-[9px] uppercase tracking-[0.15em] text-[#4A6B5A] font-medium">🐋 Ishmael — seven-generation lens</span>
+                                <button
+                                  onClick={() => setSevenGenPanels((prev) => ({ ...prev, [item.q]: { ...(prev[item.q]!), open: false } }))}
+                                  className="text-[9px] text-[#3D5A45] hover:text-[#6B9A80] transition-colors px-1"
+                                >dismiss ✕</button>
+                              </div>
+                              <div className="px-3 py-2.5 max-h-48 overflow-y-auto">
+                                {panel.status === "loading" && panel.content === "" ? (
+                                  <p className="text-[11px] text-[#4A6B5A] animate-pulse">Ishmael is reading the question…</p>
+                                ) : (
+                                  <p className="text-[12px] text-[#A8BFB0] leading-relaxed whitespace-pre-wrap">{panel.content}</p>
+                                )}
+                                {panel.status === "loading" && panel.content !== "" && (
+                                  <span className="inline-block w-1 h-3 bg-[#4A6B5A] ml-0.5 animate-pulse rounded-sm" />
+                                )}
+                              </div>
                             </div>
-                          </button>
-                          <button
-                            onClick={() => {
-                              setActiveSeatId("ishmael");
-                              setInput(`Ishmael — run the seven-generation test on: ${item.question}. What does this proposal leave for the person who inherits it in seven generations?`);
-                              setBriefOpen(false);
-                            }}
-                            className="flex-shrink-0 mt-0.5 px-1.5 py-0.5 rounded-sm text-[10px] font-medium text-[#4A6B5A] border border-[#2A3D30] hover:border-[#3D6B50] hover:text-[#6B9A80] hover:bg-[#1A2820] transition-all tracking-wide"
-                            title="Run Ishmael's seven-generation test on this item"
-                          >
-                            🐋 7-gen
-                          </button>
+                          )}
                         </div>
                       );
                     })}
