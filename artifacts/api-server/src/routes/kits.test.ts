@@ -90,6 +90,12 @@ vi.mock("stripe", () => ({
 
 import express from "express";
 import kitsRouter, { __clearAccessRateLimiter, __clearResendRateLimiter } from "./kits";
+import * as dbModule from "@workspace/db";
+import type { FakeTable } from "../test/fakeDb";
+import * as kitsRegistryModule from "../lib/kitsRegistry";
+
+const tables = dbModule as unknown as { kitTokensTable: FakeTable };
+const getKitMock = kitsRegistryModule.getKit as ReturnType<typeof vi.fn>;
 
 // ── harness ───────────────────────────────────────────────────────────────────
 //
@@ -127,6 +133,8 @@ function getAccess(base: string, ip: string): Promise<Response> {
 beforeEach(() => {
   __clearAccessRateLimiter();
   __clearResendRateLimiter();
+  tables.kitTokensTable.__store.length = 0;
+  getKitMock.mockReturnValue(null);
 });
 
 // ── tests ─────────────────────────────────────────────────────────────────────
@@ -260,6 +268,98 @@ describe("POST /kits/resend — rate limiter", () => {
 
       const ipBStatus = (await postResend(h.base, "10.0.1.2")).status;
       expect(ipBStatus).not.toBe(429);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── GET /kits/access/:token — token validation ────────────────────────────────
+
+const FAKE_KIT = {
+  id: "economy-kit",
+  title: "Economy Kit",
+  description: "A test kit",
+  handouts: {},
+};
+
+const VALID_TOKEN = "a".repeat(64);
+const EXPIRED_TOKEN = "b".repeat(64);
+const UNKNOWN_TOKEN = "c".repeat(64);
+
+function accessToken(base: string, token: string): Promise<Response> {
+  return fetch(`${base}/kits/access/${token}`, {
+    headers: { "x-forwarded-for": "10.1.0.1" },
+  });
+}
+
+describe("GET /kits/access/:token — token validation", () => {
+  it("returns 200 with kit data for a valid, unexpired token", async () => {
+    const now = new Date();
+    const future = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+    tables.kitTokensTable.__store.push({
+      token: VALID_TOKEN,
+      kitId: FAKE_KIT.id,
+      buyerEmail: "buyer@example.com",
+      buyerName: "Test Buyer",
+      purchaseId: "purchase-001",
+      createdAt: now,
+      expiresAt: future,
+    });
+    getKitMock.mockReturnValue(FAKE_KIT);
+
+    const h = await startHarness();
+    try {
+      const r = await accessToken(h.base, VALID_TOKEN);
+      expect(r.status).toBe(200);
+      const body = (await r.json()) as {
+        ok?: boolean;
+        kit?: { id: string };
+        buyer_name?: string;
+        purchase_id?: string;
+        expires_at?: string;
+      };
+      expect(body.ok).toBe(true);
+      expect(body.kit).toMatchObject({ id: FAKE_KIT.id });
+      expect(body.buyer_name).toBe("Test Buyer");
+      expect(body.purchase_id).toBe("purchase-001");
+      expect(typeof body.expires_at).toBe("string");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 410 for a token whose expires_at is in the past", async () => {
+    const past = new Date(Date.now() - 1000);
+    tables.kitTokensTable.__store.push({
+      token: EXPIRED_TOKEN,
+      kitId: FAKE_KIT.id,
+      buyerEmail: "buyer@example.com",
+      buyerName: "Test Buyer",
+      purchaseId: "purchase-002",
+      createdAt: new Date(Date.now() - 60_000),
+      expiresAt: past,
+    });
+
+    const h = await startHarness();
+    try {
+      const r = await accessToken(h.base, EXPIRED_TOKEN);
+      expect(r.status).toBe(410);
+      const body = (await r.json()) as { error?: string; expired_at?: string };
+      expect(body.error).toBe("Token expired");
+      expect(typeof body.expired_at).toBe("string");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 404 for a token that does not exist in the store", async () => {
+    const h = await startHarness();
+    try {
+      const r = await accessToken(h.base, UNKNOWN_TOKEN);
+      expect(r.status).toBe(404);
+      const body = (await r.json()) as { error?: string };
+      expect(body.error).toBe("Token not found");
     } finally {
       await h.close();
     }
