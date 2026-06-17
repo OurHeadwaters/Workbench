@@ -960,6 +960,7 @@ export function KitchenTablePage() {
     setBrief(t.brief);
     setMessages([]);
     setInput("");
+    setSevenGenPanels({});
   };
 
   const chatEndRef = useRef<HTMLDivElement>(null);
