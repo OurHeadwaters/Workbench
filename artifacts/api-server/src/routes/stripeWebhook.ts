@@ -42,6 +42,7 @@ import Stripe from "stripe";
 import { logger } from "../lib/logger";
 import { getKit } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail } from "../lib/kitsMailer";
+import { db, kitTokensTable } from "@workspace/db";
 
 const router: IRouter = Router();
 
@@ -233,14 +234,30 @@ router.post(
         expires_at: expiresAt.toISOString(),
       };
 
+      // Persist to DB (primary — read by GET /kits/access/:token)
+      try {
+        await db.insert(kitTokensTable).values({
+          token,
+          kitId,
+          buyerEmail: buyerEmail.toLowerCase(),
+          buyerName: buyerName ?? "there",
+          purchaseId,
+          createdAt,
+          expiresAt,
+        });
+      } catch (err) {
+        logger.error({ err, kitId, sessionId: session.id }, "[stripe-webhook] failed to persist token to DB");
+        res.status(500).json({ error: "Failed to record purchase" });
+        return;
+      }
+
+      // Also write to filesystem as a belt-and-suspenders backup
       try {
         const store = readTokenStore();
         store[token] = record;
         writeTokenStore(store);
       } catch (err) {
-        logger.error({ err, kitId, sessionId: session.id }, "[stripe-webhook] failed to persist token");
-        res.status(500).json({ error: "Failed to record purchase" });
-        return;
+        logger.warn({ err, kitId }, "[stripe-webhook] filesystem token backup failed (non-fatal)");
       }
 
       const url = accessUrl(token);
