@@ -12,8 +12,15 @@
  *     Enabled at server startup by calling setRateLimitBackend(pool).  State
  *     is persisted in the `rate_limits` table so restarts and deployments do
  *     not clear blocked IPs.  A single atomic UPSERT eliminates read-modify-
- *     write races.  Falls back to in-memory if the DB query fails so a
- *     transient DB outage does not block all traffic.
+ *     write races.  Falls back to the shadow cache (then in-memory) if the DB
+ *     query fails, so a transient DB outage does not reset rate-limit windows.
+ *
+ *   Shadow cache
+ *     An in-process mirror of the last-known DB state per key, with a ~60 s
+ *     TTL.  On a DB error the cache seeds the in-memory fallback so that
+ *     already-blocked IPs stay blocked and partially-consumed windows are
+ *     preserved.  Without this, an attacker who noticed a DB outage would
+ *     receive a fresh window on every request.
  */
 
 /**
@@ -77,6 +84,58 @@ function checkInMemory(key: string, opts: RateLimitOptions): RateLimitResult {
   };
 }
 
+// ── Shadow cache ──────────────────────────────────────────────────────────────
+
+/** How long a shadow-cache entry is considered valid after it was written. */
+const SHADOW_TTL_MS = 60_000;
+
+interface ShadowEntry {
+  /** Last count value returned by Postgres for this key. */
+  count: number;
+  /** Window reset timestamp (ms) returned by Postgres. */
+  resetAt: number;
+  /** Wall-clock time at which this entry was written. */
+  storedAt: number;
+}
+
+const shadowCache = new Map<string, ShadowEntry>();
+
+/**
+ * Record the latest DB state for a key so we can replay it during outages.
+ */
+function shadowWrite(key: string, count: number, resetAt: number): void {
+  shadowCache.set(key, { count, resetAt, storedAt: Date.now() });
+}
+
+/**
+ * If the shadow cache has a fresh, non-expired entry for this key, seed the
+ * in-memory store from it so the fallback path continues from the last-known
+ * DB state rather than starting a brand-new window.
+ */
+function seedFromShadow(key: string): void {
+  const entry = shadowCache.get(key);
+  if (!entry) return;
+
+  const now = Date.now();
+
+  // Drop the entry if it is older than SHADOW_TTL_MS.
+  if (now - entry.storedAt > SHADOW_TTL_MS) {
+    shadowCache.delete(key);
+    return;
+  }
+
+  // Only seed if the DB window is still active; otherwise the in-memory
+  // backend will naturally start a fresh window on its own.
+  if (entry.resetAt > now) {
+    // Use whichever count is higher — store may already have increments from
+    // earlier in-memory fallback calls during this outage.
+    const existing = store.get(key);
+    if (!existing || existing.resetAt <= now || existing.count < entry.count) {
+      store.set(key, { count: entry.count, resetAt: entry.resetAt });
+    }
+  }
+}
+
 // ── Postgres backend ──────────────────────────────────────────────────────────
 
 let pgPool: QueryablePool | null = null;
@@ -117,6 +176,9 @@ async function checkPostgres(
   const count = Number(row.count);
   const resetAt = Number(row.reset_at);
 
+  // Mirror the DB state into the shadow cache for use during future outages.
+  shadowWrite(key, count, resetAt);
+
   if (count > opts.max) {
     return {
       ok: false,
@@ -143,9 +205,12 @@ export async function checkRateLimit(
       return await checkPostgres(key, opts);
     } catch (err) {
       console.error(
-        "[rateLimit] Postgres backend error — falling back to in-memory:",
+        "[rateLimit] Postgres backend error — falling back to shadow cache + in-memory:",
         err,
       );
+      // Seed the in-memory store from the last-known DB state so the fallback
+      // does not hand out a fresh window.
+      seedFromShadow(key);
     }
   }
   return checkInMemory(key, opts);
@@ -178,5 +243,6 @@ export async function pruneExpiredRateLimits(): Promise<number | null> {
 /** Test-only.  Production code should never call this. */
 export function __resetRateLimitForTests(): void {
   store.clear();
+  shadowCache.clear();
   pgPool = null;
 }
