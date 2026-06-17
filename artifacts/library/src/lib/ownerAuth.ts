@@ -22,6 +22,13 @@ export function setOwnerToken(token: string | null): void {
     // ignore — private mode etc.
   }
   for (const fn of listeners) fn();
+  if (token) {
+    try {
+      window.dispatchEvent(new CustomEvent("owner-token-updated"));
+    } catch {
+      // ignore
+    }
+  }
 }
 
 export function subscribeOwnerToken(fn: Listener): () => void {

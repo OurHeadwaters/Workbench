@@ -887,7 +887,7 @@ export function KitchenTablePage() {
     return () => { if (ref.current) clearTimeout(ref.current); };
   }, []);
 
-  useEffect(() => {
+  const fetchSeatConfig = useCallback(() => {
     const token = getOwnerToken();
     if (!token) {
       setSeatLoadStatus(seatLocalHadDataRef.current ? "local" : "defaults");
@@ -916,8 +916,7 @@ export function KitchenTablePage() {
         } else {
           setSeatLoadStatus(seatLocalHadDataRef.current ? "local" : "defaults");
         }
-        const t = setTimeout(() => setSeatLoadStatus(null), 3000);
-        return () => clearTimeout(t);
+        setTimeout(() => setSeatLoadStatus(null), 3000);
       })
       .catch((err: unknown) => {
         if (!cancelled) {
@@ -931,6 +930,28 @@ export function KitchenTablePage() {
       });
     return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => {
+    const cleanup = fetchSeatConfig();
+    return cleanup;
+  }, [fetchSeatConfig]);
+
+  useEffect(() => {
+    function handleTokenUpdated() {
+      fetchSeatConfig();
+    }
+    function handleStorage(e: StorageEvent) {
+      if (e.key === "library.ownerToken" || e.key === "ownerToken") {
+        if (e.newValue) fetchSeatConfig();
+      }
+    }
+    window.addEventListener("owner-token-updated", handleTokenUpdated);
+    window.addEventListener("storage", handleStorage);
+    return () => {
+      window.removeEventListener("owner-token-updated", handleTokenUpdated);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, [fetchSeatConfig]);
   const [activeSeatId, setActiveSeatId] = useState("grok");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
