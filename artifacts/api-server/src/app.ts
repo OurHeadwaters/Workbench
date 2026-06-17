@@ -10,6 +10,7 @@ import stripeWebhookRouter from "./routes/stripeWebhook";
 import { logger } from "./lib/logger";
 import { scheduleNightlyBriefing } from "./lib/riverSmithScheduler";
 import { scheduleWeeklyArchive } from "./lib/taskAutopilotScheduler";
+import { scheduleKitTokensCleanup } from "./lib/kitTokensCleanup";
 import {
   CLERK_PROXY_PATH,
   clerkProxyMiddleware,
@@ -118,5 +119,6 @@ app.get(["/media", "/media/"], (_req, res) => res.sendFile(mediaManagerHtml));
 
 scheduleNightlyBriefing();
 scheduleWeeklyArchive();
+scheduleKitTokensCleanup();
 
 export default app;
