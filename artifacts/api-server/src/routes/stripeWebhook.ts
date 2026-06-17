@@ -50,36 +50,9 @@ const router: IRouter = Router();
 
 const DATA_DIR = path.resolve(process.cwd(), "data");
 
-// ── Token store (shared data dir with kits.ts) ────────────────────────────────
+// ── Token helpers ─────────────────────────────────────────────────────────────
 
-const TOKENS_FILE = path.join(DATA_DIR, "kit-tokens.json");
 const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
-
-interface TokenRecord {
-  token: string;
-  kit_id: string;
-  buyer_email: string;
-  buyer_name: string;
-  purchase_id: string;
-  created_at: string;
-  expires_at: string;
-}
-
-type TokenStore = Record<string, TokenRecord>;
-
-function readTokenStore(): TokenStore {
-  try {
-    if (!fs.existsSync(TOKENS_FILE)) return {};
-    return JSON.parse(fs.readFileSync(TOKENS_FILE, "utf-8")) as TokenStore;
-  } catch {
-    return {};
-  }
-}
-
-function writeTokenStore(store: TokenStore): void {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFileSync(TOKENS_FILE, JSON.stringify(store, null, 2), "utf-8");
-}
 
 function generateToken(): string {
   return crypto.randomBytes(32).toString("hex");
@@ -224,17 +197,6 @@ router.post(
       const createdAt = new Date();
       const expiresAt = new Date(createdAt.getTime() + TOKEN_TTL_MS);
 
-      const record: TokenRecord = {
-        token,
-        kit_id: kitId,
-        buyer_email: buyerEmail,
-        buyer_name: buyerName,
-        purchase_id: purchaseId,
-        created_at: createdAt.toISOString(),
-        expires_at: expiresAt.toISOString(),
-      };
-
-      // Persist to DB (primary — read by GET /kits/access/:token)
       try {
         await db.insert(kitTokensTable).values({
           token,
@@ -246,18 +208,9 @@ router.post(
           expiresAt,
         });
       } catch (err) {
-        logger.error({ err, kitId, sessionId: session.id }, "[stripe-webhook] failed to persist token to DB");
+        logger.error({ err, kitId, sessionId: session.id }, "[stripe-webhook] failed to persist token");
         res.status(500).json({ error: "Failed to record purchase" });
         return;
-      }
-
-      // Also write to filesystem as a belt-and-suspenders backup
-      try {
-        const store = readTokenStore();
-        store[token] = record;
-        writeTokenStore(store);
-      } catch (err) {
-        logger.warn({ err, kitId }, "[stripe-webhook] filesystem token backup failed (non-fatal)");
       }
 
       const url = accessUrl(token);
