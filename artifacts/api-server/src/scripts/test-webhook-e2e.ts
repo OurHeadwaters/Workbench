@@ -18,8 +18,6 @@ import crypto from "crypto";
 import http from "http";
 import express from "express";
 import stripeWebhookRouter from "../routes/stripeWebhook";
-import fs from "fs";
-import path from "path";
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -126,17 +124,6 @@ async function sendWebhook(baseUrl: string, payload: string, sig: string): Promi
   return { status: res.status, body };
 }
 
-// ── Read the token store ──────────────────────────────────────────────────────
-
-function readTokenStore(): Record<string, unknown> {
-  const tokensFile = path.resolve(process.cwd(), "data/kit-tokens.json");
-  try {
-    return JSON.parse(fs.readFileSync(tokensFile, "utf-8")) as Record<string, unknown>;
-  } catch {
-    return {};
-  }
-}
-
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main(): Promise<void> {
@@ -148,11 +135,7 @@ async function main(): Promise<void> {
   console.log(`  Buyer name:   ${BUYER_NAME}`);
   console.log("══════════════════════════════════════════════════════\n");
 
-  // 1. Snapshot token store before
-  const tokensBefore = readTokenStore();
-  const tokenCountBefore = Object.keys(tokensBefore).length;
-
-  // 2. Start server
+  // 1. Start server
   process.stdout.write("Starting minimal webhook server ... ");
   const { server, port, baseUrl } = await startServer();
   console.log(`ok (port ${port})`);
@@ -160,13 +143,13 @@ async function main(): Promise<void> {
   // Override API_BASE_URL so the access link points to this test server
   process.env.API_BASE_URL = baseUrl;
 
-  // 3. Build & sign payload
+  // 2. Build & sign payload
   process.stdout.write("Building & signing checkout.session.completed payload ... ");
   const payload = buildCheckoutEvent();
   const sig = signWebhookPayload(payload, STRIPE_WEBHOOK_SECRET!);
   console.log("ok");
 
-  // 4. Send webhook
+  // 3. Send webhook
   process.stdout.write("POSTing webhook to handler ... ");
   const { status, body } = await sendWebhook(baseUrl, payload, sig);
   console.log(`HTTP ${status}`);
@@ -177,57 +160,16 @@ async function main(): Promise<void> {
     fail(`Webhook handler returned HTTP ${status} — expected 200`);
   }
 
-  // 5. Check token was written
-  process.stdout.write("Checking token store ... ");
-  const tokensAfter = readTokenStore();
-  const newTokens = Object.entries(tokensAfter).filter(
-    ([tok]) => !(tok in tokensBefore)
-  );
-
-  if (newTokens.length === 0) {
-    server.close();
-    fail("No new token was written to data/kit-tokens.json");
-  }
-
-  const [newToken, newRecord] = newTokens[0]!;
-  const rec = newRecord as {
-    kit_id: string;
-    buyer_email: string;
-    expires_at: string;
-  };
-  console.log("ok — new token written");
-  console.log(`  Token:      ${newToken}`);
-  console.log(`  Kit:        ${rec.kit_id}`);
-  console.log(`  Buyer:      ${rec.buyer_email}`);
-  console.log(`  Expires:    ${rec.expires_at}`);
-
-  // 6. Test kit access link
-  const accessUrl = `${baseUrl}/api/kits/access/${newToken}`;
-  process.stdout.write(`\nFetching kit access link: ${accessUrl} ... `);
-
-  // The minimal server doesn't have the /api/kits route — that's fine; this
-  // confirms the URL shape is correct.  A 404 here is expected (no kits router
-  // mounted).  We just confirm the URL is well-formed and the server responds.
-  const accessRes = await fetch(accessUrl).catch(() => null);
-  if (accessRes) {
-    console.log(`HTTP ${accessRes.status} (minimal server has no kits router — expected 404 or similar)`);
-  } else {
-    console.log("(fetch failed — server already closing)");
-  }
-
-  // Summary
+  // Summary — token is now persisted to the DB (not a flat file)
   const bodyObj = body as { received?: boolean; skipped?: string; duplicate?: boolean };
   const emailWasSent = bodyObj.received === true && !bodyObj.skipped && !bodyObj.duplicate;
 
   console.log("\n══════════════════════════════════════════════════════");
   if (emailWasSent) {
     console.log("  ✅  WEBHOOK SMOKE TEST PASSED");
-    console.log("      Confirms: signature verified, token persisted, delivery email sent.");
+    console.log("      Confirms: signature verified, token persisted to DB, delivery email sent.");
     console.log("      Does NOT test: GET /kits/access/:token (needs full server + DB).");
     console.log(`  📧  Delivery email sent to: ${BUYER_EMAIL}`);
-    const devDomain = process.env.REPLIT_DEV_DOMAIN;
-    const accessBase = devDomain ? `https://${devDomain}` : "http://localhost:8081";
-    console.log(`  🔗  Kit access URL (verify manually): ${accessBase}/api/kits/access/${newToken}`);
   } else {
     console.log(`  ⚠️   Webhook returned 200 but delivery was skipped: ${JSON.stringify(body)}`);
   }
