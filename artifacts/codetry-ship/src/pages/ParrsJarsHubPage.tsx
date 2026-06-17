@@ -362,6 +362,20 @@ export function ParrsJarsHubPage() {
     [storedToken]
   );
 
+  // Mark the initial active module as visited on first load (handleModuleSwitch
+  // is not called on mount, only on tab clicks)
+  useEffect(() => {
+    if (status !== "valid" || !storedToken) return;
+    const mod = MODULES.find((m) => m.id === activeModule);
+    if (!mod) return;
+    markModuleVisited(storedToken.token, mod.title);
+    setVisitedTitles((prev) => {
+      if (prev.has(mod.title)) return prev;
+      return new Set([...prev, mod.title]);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, storedToken]); // intentionally only on mount/token-ready, not every switch
+
   const handleVisit = useCallback(
     (handoutKey: string) => {
       if (!storedToken) return;
@@ -530,6 +544,8 @@ export function ParrsJarsHubPage() {
             visitedHandouts.has(`${mod.id}:${h.title}`)
           ).length;
           const allDone = done === total;
+          const moduleVisited = visitedTitles.has(mod.title);
+          const isActive = activeModule === mod.id;
           return (
             <button
               key={mod.id}
@@ -537,20 +553,42 @@ export function ParrsJarsHubPage() {
               style={{
                 flexShrink: 0,
                 padding: "0.85rem 1.25rem",
-                background: "none",
+                background: moduleVisited && !isActive ? `${mod.color}08` : "none",
                 border: "none",
-                borderBottom: activeModule === mod.id ? `3px solid ${mod.color}` : "3px solid transparent",
+                borderBottom: isActive ? `3px solid ${mod.color}` : "3px solid transparent",
                 cursor: "pointer",
                 fontFamily: "var(--font-sans)",
                 fontSize: "0.75rem",
-                fontWeight: activeModule === mod.id ? 700 : 500,
-                color: activeModule === mod.id ? mod.color : MUTED,
+                fontWeight: isActive ? 700 : 500,
+                color: isActive ? mod.color : moduleVisited ? `${mod.color}cc` : MUTED,
                 whiteSpace: "nowrap",
-                transition: "color 0.15s, border-color 0.15s",
+                transition: "color 0.15s, border-color 0.15s, background 0.15s",
+                position: "relative",
               }}
             >
-              <span style={{ display: "block", fontSize: "0.55rem", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.15rem", opacity: 0.7 }}>
+              <span style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.55rem", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.15rem", opacity: 0.7 }}>
                 {mod.label}
+                {moduleVisited && (
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 12,
+                      height: 12,
+                      borderRadius: "50%",
+                      background: mod.color,
+                      color: "white",
+                      fontSize: "0.45rem",
+                      fontWeight: 900,
+                      flexShrink: 0,
+                      opacity: 0.85,
+                    }}
+                    title="Visited"
+                  >
+                    ✓
+                  </span>
+                )}
               </span>
               {mod.title}
               <span
