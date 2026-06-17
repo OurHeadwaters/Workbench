@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useKitAccess } from "@/lib/useKitAccess";
-import { getVisitedHandouts, markHandoutVisited } from "@/lib/kitTokens";
+import { getVisitedHandouts, markHandoutVisited, getVisitedModules } from "@/lib/kitTokens";
 import getStartedImg from "@assets/IMG_1184_1780775510410.PNG";
 import foodAuditImg from "@assets/IMG_1130_1780775510411.PNG";
 import inPersonChecklistImg from "@assets/IMG_1187_1780775510410.PNG";
@@ -334,13 +334,21 @@ export function ParrsJarsHubPage() {
   const { status, storedToken } = useKitAccess(PJ_SOLUTIONS_KIT_ID);
   const [activeModule, setActiveModule] = useState<string>("foundation");
   const [visitedHandouts, setVisitedHandouts] = useState<Set<string>>(new Set());
+  const [visitedTitles, setVisitedTitles] = useState<Set<string>>(new Set());
 
   // Load visited handouts from localStorage once the token is known
-  React.useEffect(() => {
+  useEffect(() => {
     if (storedToken) {
       setVisitedHandouts(getVisitedHandouts(storedToken.token));
     }
   }, [storedToken]);
+
+  // Load visited module titles for the "Jump back in" banner
+  useEffect(() => {
+    if (status === "valid" && storedToken) {
+      setVisitedTitles(getVisitedModules(storedToken.token));
+    }
+  }, [status, storedToken]);
 
   const handleVisit = useCallback(
     (handoutKey: string) => {
@@ -379,6 +387,12 @@ export function ParrsJarsHubPage() {
   }
 
   const current = MODULES.find((m) => m.id === activeModule) ?? MODULES[0];
+
+  const anyVisited = visitedTitles.size > 0;
+  const allVisited = anyVisited && MODULES.every((m) => visitedTitles.has(m.title));
+  const nextUnvisited = allVisited
+    ? null
+    : MODULES.find((m) => !visitedTitles.has(m.title)) ?? null;
 
   return (
     <div style={{ minHeight: "100vh", background: CREAM, fontFamily: "var(--font-sans, Inter, sans-serif)" }}>
@@ -426,6 +440,67 @@ export function ParrsJarsHubPage() {
           All your workshop handouts organized by module. Tap any card to read more about what's on it.
         </p>
       </div>
+
+      {/* Jump back in banner */}
+      {anyVisited && (
+        <div
+          style={{
+            background: allVisited ? FOREST : "#fff8ee",
+            borderBottom: allVisited ? "none" : `1px solid #e8d8b8`,
+            padding: "0.75rem 1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <span style={{ fontSize: "0.95rem" }}>{allVisited ? "✓" : "↩"}</span>
+            <span
+              style={{
+                fontSize: "0.82rem",
+                fontWeight: 600,
+                color: allVisited ? "#c4d9c8" : MUTED,
+              }}
+            >
+              {allVisited
+                ? "You've been through all 5 modules"
+                : `Jump back in — continue with:`}
+            </span>
+            {!allVisited && nextUnvisited && (
+              <span
+                style={{
+                  fontSize: "0.82rem",
+                  fontWeight: 800,
+                  color: nextUnvisited.color,
+                }}
+              >
+                {nextUnvisited.title}
+              </span>
+            )}
+          </div>
+          {!allVisited && nextUnvisited && (
+            <button
+              onClick={() => setActiveModule(nextUnvisited.id)}
+              style={{
+                flexShrink: 0,
+                background: nextUnvisited.color,
+                color: "white",
+                border: "none",
+                borderRadius: 5,
+                padding: "0.4rem 1rem",
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                letterSpacing: "0.03em",
+              }}
+            >
+              Go →
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Module nav */}
       <div
