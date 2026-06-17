@@ -133,15 +133,15 @@ export default function AlternaGrantProposal() {
                   <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={5}>
                     1. Plain-Language Content Development
                   </td>
-                  <td className="px-2 py-1 border border-border/50">Sarah (practitioner) — In-person business sessions, 5 businesses × 3 hrs (session + travel/docs): 15 hrs × $135</td>
+                  <td className="px-2 py-1 border border-border/50">Headwaters (practitioner) — In-person business sessions, 5 businesses × 3 hrs (session + travel/docs): 15 hrs × $135</td>
                   <td className="px-2 py-1 text-right border border-border/50">$2,025</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Sarah (practitioner) — Board mapping research, post-session documentation (3 sessions): 8 hrs × $135</td>
+                  <td className="px-2 py-1 border border-border/50">Headwaters (practitioner) — Board mapping research, post-session documentation (3 sessions): 8 hrs × $135</td>
                   <td className="px-2 py-1 text-right border border-border/50">$1,080</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Sarah (practitioner) — Online personality mapping, 40 businesses: 8 hrs × $135</td>
+                  <td className="px-2 py-1 border border-border/50">Headwaters (practitioner) — Online personality mapping, 40 businesses: 8 hrs × $135</td>
                   <td className="px-2 py-1 text-right border border-border/50">$1,080</td>
                 </tr>
                 <tr>
@@ -156,7 +156,7 @@ export default function AlternaGrantProposal() {
                   <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={3}>
                     2. Technical Build &amp; Integration
                   </td>
-                  <td className="px-2 py-1 border border-border/50">Sarah (developer) — Interactive module, automated onboarding tool, platform integration, open-source packaging: 30 hrs × $135</td>
+                  <td className="px-2 py-1 border border-border/50">Headwaters (developer) — Interactive module, automated onboarding tool, platform integration, open-source packaging: 30 hrs × $135</td>
                   <td className="px-2 py-1 text-right border border-border/50">$4,050</td>
                 </tr>
                 <tr>
@@ -171,11 +171,11 @@ export default function AlternaGrantProposal() {
                   <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={6}>
                     3. Pilot Program &amp; Evaluation
                   </td>
-                  <td className="px-2 py-1 border border-border/50">Sarah (facilitator) — 3 in-person sessions, facilitation + debrief: 12 hrs × $135</td>
+                  <td className="px-2 py-1 border border-border/50">Headwaters (facilitator) — 3 in-person sessions, facilitation + debrief: 12 hrs × $135</td>
                   <td className="px-2 py-1 text-right border border-border/50">$1,620</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Sarah — Survey design &amp; analysis (automated reporting reduces scope): 8 hrs × $135</td>
+                  <td className="px-2 py-1 border border-border/50">Headwaters — Survey design &amp; analysis (automated reporting reduces scope): 8 hrs × $135</td>
                   <td className="px-2 py-1 text-right border border-border/50">$1,080</td>
                 </tr>
                 <tr>
@@ -198,11 +198,11 @@ export default function AlternaGrantProposal() {
                   <td className="px-2 py-1 font-semibold border border-border/50 align-top" rowSpan={3}>
                     4. Reporting &amp; Dissemination
                   </td>
-                  <td className="px-2 py-1 border border-border/50">Sarah — Final impact report (automated processes reduce manual hours): 8 hrs × $135</td>
+                  <td className="px-2 py-1 border border-border/50">Headwaters — Final impact report (automated processes reduce manual hours): 8 hrs × $135</td>
                   <td className="px-2 py-1 text-right border border-border/50">$1,080</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 border border-border/50">Sarah — Open-source launch &amp; sector outreach, co-op network communications: 16 hrs × $135</td>
+                  <td className="px-2 py-1 border border-border/50">Headwaters — Open-source launch &amp; sector outreach, co-op network communications: 16 hrs × $135</td>
                   <td className="px-2 py-1 text-right border border-border/50">$2,160</td>
                 </tr>
                 <tr className="bg-muted/30 font-medium">
@@ -228,7 +228,7 @@ export default function AlternaGrantProposal() {
           </div>
 
           <p className="text-xs text-muted-foreground mt-1">
-            All rates reflect Northwestern Ontario non-profit contractor norms. Sarah Lovenuk (lead practitioner and developer) bills at $135/hr across all labour lines.
+            All rates reflect Northwestern Ontario non-profit contractor norms. Headwaters bills at $135/hr across all labour lines.
           </p>
         </section>
 

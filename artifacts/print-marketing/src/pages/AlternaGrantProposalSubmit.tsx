@@ -129,12 +129,12 @@ export default function AlternaGrantProposalSubmit() {
               <tbody>
                 <tr>
                   <td className="px-2 py-1 border border-border/50 font-medium">1</td>
-                  <td className="px-2 py-1 border border-border/50">Plain-Language Content Development — in-person business sessions, board mapping research, online personality mapping (Sarah, practitioner, 31 hrs × $135), outreach coordinator (18 hrs × $70)</td>
+                  <td className="px-2 py-1 border border-border/50">Plain-Language Content Development — in-person business sessions, board mapping research, online personality mapping (Headwaters, practitioner, 31 hrs × $135), outreach coordinator (18 hrs × $70)</td>
                   <td className="px-2 py-1 text-right border border-border/50 font-medium">$5,445</td>
                 </tr>
                 <tr className="bg-muted/20">
                   <td className="px-2 py-1 border border-border/50 font-medium">2</td>
-                  <td className="px-2 py-1 border border-border/50">Technical Build &amp; Integration — interactive module, automated onboarding tool, platform integration, open-source packaging (Sarah, developer, 30 hrs × $135); hosting &amp; testing infrastructure ($65)</td>
+                  <td className="px-2 py-1 border border-border/50">Technical Build &amp; Integration — interactive module, automated onboarding tool, platform integration, open-source packaging (Headwaters, developer, 30 hrs × $135); hosting &amp; testing infrastructure ($65)</td>
                   <td className="px-2 py-1 text-right border border-border/50 font-medium">$4,115</td>
                 </tr>
                 <tr>
@@ -163,7 +163,7 @@ export default function AlternaGrantProposalSubmit() {
             </table>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            All rates reflect Northwestern Ontario non-profit contractor norms. Sarah Lovenuk (lead practitioner and developer) bills at $135/hr across all labour lines. Full itemized breakdown available on request.
+            All rates reflect Northwestern Ontario non-profit contractor norms. Headwaters bills at $135/hr across all labour lines. Full itemized breakdown available on request.
           </p>
         </section>
 
