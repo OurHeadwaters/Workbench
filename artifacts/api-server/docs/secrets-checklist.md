@@ -14,6 +14,22 @@
 
 ---
 
+## Smoke testing
+
+Run the smoke test at any time to verify the full delivery loop without a real purchase:
+
+```bash
+node artifacts/api-server/scripts/smoke-test-webhook.mjs
+```
+
+This signs a synthetic `checkout.session.completed` event with `STRIPE_WEBHOOK_SECRET`, fires it at the local API server, and confirms:
+1. Signature verification passes → HTTP 200
+2. Token written to `kit_tokens` Postgres table
+3. Idempotency record written to `stripe_processed_events` DB table
+4. `GET /api/kits/access/:token` returns kit content and buyer name
+
+---
+
 ## ⚡ Action required — two manual steps to go live
 
 ### Step B — Register the webhook endpoint in Stripe Dashboard
@@ -66,8 +82,8 @@
 1. Buyer completes purchase via the Stripe Payment Link.
 2. Stripe fires `checkout.session.completed` to `https://ourheadwaters.ca/api/stripe/webhook`.
 3. Server verifies the signature using `STRIPE_WEBHOOK_SECRET`, extracts `kit_id` from session metadata and buyer email from `customer_details.email`.
-4. A 30-day access token is generated and written to the `kit_tokens` database table.
-5. Event ID is written to `data/stripe-processed-events.json` (idempotency guard — prevents duplicate emails on Stripe retries).
+4. A 90-day access token is generated and written to the `kit_tokens` database table.
+5. Event ID is written to `stripe_processed_events` DB table (idempotency guard — prevents duplicate emails on Stripe retries, safe across multiple service instances).
 6. Magic-link delivery email is sent via the Google Mail connector.
 7. Buyer clicks the link → `GET /api/kits/access/:token` → kit content.
 
@@ -78,4 +94,4 @@
 | Webhook shows 400 in Stripe Dashboard | Wrong `STRIPE_WEBHOOK_SECRET` | Replace with the live signing secret from the registered endpoint |
 | Webhook shows 200 but no email sent | Google Mail connector not authorized, or `kit_id` missing from metadata | Check connector status; confirm Payment Link metadata has `kit_id = goodbye-kit` |
 | No webhook events appear at all | Endpoint not registered, or wrong URL | Re-check Step B — confirm URL is exactly `https://ourheadwaters.ca/api/stripe/webhook` |
-| Duplicate delivery emails | Idempotency file missing write access | Ensure `data/` directory is writable by the server process |
+| Duplicate delivery emails | Idempotency DB insert failed | Check `stripe_processed_events` table; ensure DB is reachable |

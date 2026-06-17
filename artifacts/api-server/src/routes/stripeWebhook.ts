@@ -22,7 +22,7 @@
  *   1. Stripe fires checkout.session.completed when a payment succeeds.
  *   2. We extract kit_id from session.metadata and customer email from
  *      session.customer_details.email (falling back to session.customer_email).
- *   3. We generate a 90-day access token, persist it to kit-tokens.json,
+ *   3. We generate a 90-day access token, persist it to the kit_tokens DB table,
  *      and send the magic-link delivery email via Google Mail.
  *
  * Idempotency:
