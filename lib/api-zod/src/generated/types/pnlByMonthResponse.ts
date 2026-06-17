@@ -5,10 +5,12 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { PnlBreakdownCostCentre } from "./pnlBreakdownCostCentre";
 import type { PnlByMonthMonth } from "./pnlByMonthMonth";
 
 export interface PnlByMonthResponse {
   from?: string | null;
   to?: string | null;
   months: PnlByMonthMonth[];
+  breakdown?: PnlBreakdownCostCentre[];
 }

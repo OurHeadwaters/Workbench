@@ -3033,6 +3033,19 @@ export const GetPnlByMonthResponse = zod.object({
       net: zod.number(),
     }),
   ),
+  breakdown: zod
+    .array(
+      zod.object({
+        code: zod.string().describe("Cost-centre code or '__UNASSIGNED__'"),
+        name: zod.string(),
+        monthlyRevenue: zod.record(zod.string(), zod.number()),
+        monthlyCosts: zod.record(zod.string(), zod.number()),
+        totalRevenue: zod.number(),
+        totalCosts: zod.number(),
+        totalNet: zod.number(),
+      }),
+    )
+    .optional(),
 });
 
 /**
@@ -3234,6 +3247,15 @@ export const GetHhBandResponse = zod.object({
     .string()
     .describe("Bonus payment amount (as string numeric)"),
   reliabilityBonusCurrency: zod.enum(["token", "xrp"]),
+  xrplEscrowEnabled: zod.boolean().optional(),
+  xrplNetwork: zod
+    .string()
+    .optional()
+    .describe("XRPL network in use (mainnet or testnet)"),
+  xrplLive: zod
+    .boolean()
+    .optional()
+    .describe("Whether the XRPL connection is live"),
 });
 
 /**
@@ -3486,6 +3508,76 @@ export const ConfirmHhTaskResponse = zod.object({
 });
 
 /**
+ * @summary Admin releases a claimed task back to available (no-show / early release)
+ */
+export const ReleaseHhTaskParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const ReleaseHhTaskResponse = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  postedByMemberId: zod.string().uuid(),
+  postedByName: zod.string().optional(),
+  claimedByMemberId: zod.string().uuid().nullish(),
+  claimedByName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string(),
+  estimatedMinutes: zod.number(),
+  payAmount: zod.string(),
+  payCurrency: zod.enum(["token", "xrp"]),
+  status: zod.enum([
+    "available",
+    "claimed",
+    "completed",
+    "confirmed",
+    "missed",
+  ]),
+  escrowSequence: zod.number().nullish(),
+  escrowTxHash: zod.string().nullish(),
+  claimedAt: zod.coerce.date().nullish(),
+  completedAt: zod.coerce.date().nullish(),
+  confirmedAt: zod.coerce.date().nullish(),
+  availableDate: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Admin reopens a missed task back to available so it can be claimed again
+ */
+export const RepostHhTaskParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const RepostHhTaskResponse = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  postedByMemberId: zod.string().uuid(),
+  postedByName: zod.string().optional(),
+  claimedByMemberId: zod.string().uuid().nullish(),
+  claimedByName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string(),
+  estimatedMinutes: zod.number(),
+  payAmount: zod.string(),
+  payCurrency: zod.enum(["token", "xrp"]),
+  status: zod.enum([
+    "available",
+    "claimed",
+    "completed",
+    "confirmed",
+    "missed",
+  ]),
+  escrowSequence: zod.number().nullish(),
+  escrowTxHash: zod.string().nullish(),
+  claimedAt: zod.coerce.date().nullish(),
+  completedAt: zod.coerce.date().nullish(),
+  confirmedAt: zod.coerce.date().nullish(),
+  availableDate: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
  * @summary Admin expires a single overdue claimed task — increments the member's missed-shift count and sets flaggedForDemotion if the threshold is crossed.
 
  */
@@ -3653,4 +3745,1062 @@ export const GetHhDashboardResponse = zod.object({
       }),
     )
     .optional(),
+});
+
+/**
+ * @summary List active participating merchants for the band
+ */
+export const GetHhMerchantsResponseItem = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  name: zod.string(),
+  description: zod.string(),
+  category: zod.enum(["grocery", "fuel", "pharmacy", "school", "general"]),
+  merchantWallet: zod.string(),
+  isActive: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+export const GetHhMerchantsResponse = zod.array(GetHhMerchantsResponseItem);
+
+/**
+ * @summary Register a new reserve store as a participating merchant (admin)
+ */
+
+export const CreateHhMerchantBody = zod.object({
+  name: zod.string().min(1),
+  description: zod.string().optional(),
+  category: zod
+    .enum(["grocery", "fuel", "pharmacy", "school", "general"])
+    .optional(),
+  merchantWallet: zod.string().min(1),
+});
+
+/**
+ * @summary Update a merchant's details or active status (admin)
+ */
+export const UpdateHhMerchantParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const UpdateHhMerchantBody = zod.object({
+  name: zod.string().min(1).optional(),
+  description: zod.string().optional(),
+  category: zod
+    .enum(["grocery", "fuel", "pharmacy", "school", "general"])
+    .optional(),
+  merchantWallet: zod.string().min(1).optional(),
+  isActive: zod.boolean().optional(),
+});
+
+export const UpdateHhMerchantResponse = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  name: zod.string(),
+  description: zod.string(),
+  category: zod.enum(["grocery", "fuel", "pharmacy", "school", "general"]),
+  merchantWallet: zod.string(),
+  isActive: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List the signed-in member's budget envelopes
+ */
+export const GetMyHhEnvelopesResponseItem = zod.object({
+  id: zod.string().uuid(),
+  memberId: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  label: zod.string(),
+  icon: zod.string(),
+  currency: zod.enum(["token", "xrp"]),
+  monthlyBudget: zod.string(),
+  spentThisMonth: zod.string(),
+  createdAt: zod.coerce.date(),
+});
+export const GetMyHhEnvelopesResponse = zod.array(GetMyHhEnvelopesResponseItem);
+
+/**
+ * @summary Create a new budget envelope
+ */
+
+export const CreateMyHhEnvelopeBody = zod.object({
+  label: zod.string().min(1),
+  icon: zod.string().optional(),
+  currency: zod.enum(["token", "xrp"]).optional(),
+  monthlyBudget: zod.string(),
+});
+
+/**
+ * @summary Update an envelope's label, icon, or monthly budget
+ */
+export const UpdateMyHhEnvelopeParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const UpdateMyHhEnvelopeBody = zod.object({
+  label: zod.string().min(1).optional(),
+  icon: zod.string().optional(),
+  monthlyBudget: zod.string().optional(),
+});
+
+export const UpdateMyHhEnvelopeResponse = zod.object({
+  id: zod.string().uuid(),
+  memberId: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  label: zod.string(),
+  icon: zod.string(),
+  currency: zod.enum(["token", "xrp"]),
+  monthlyBudget: zod.string(),
+  spentThisMonth: zod.string(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete an envelope
+ */
+export const DeleteMyHhEnvelopeParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const DeleteMyHhEnvelopeResponse = zod.object({
+  ok: zod.boolean().optional(),
+});
+
+/**
+ * @summary Spend from an envelope at a participating merchant (XRPL payment)
+ */
+export const SpendFromHhEnvelopeParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const SpendFromHhEnvelopeBody = zod.object({
+  merchantId: zod.string().uuid(),
+  amount: zod.string(),
+  note: zod.string().optional(),
+});
+
+/**
+ * @summary List transactions for an envelope
+ */
+export const GetHhEnvelopeTransactionsParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const GetHhEnvelopeTransactionsResponseItem = zod.object({
+  id: zod.string().uuid(),
+  envelopeId: zod.string().uuid(),
+  merchantId: zod.string().uuid(),
+  merchantName: zod.string(),
+  amount: zod.string(),
+  currency: zod.string(),
+  note: zod.string().optional(),
+  xrplTxHash: zod.string().nullish(),
+  spentAt: zod.coerce.date(),
+});
+export const GetHhEnvelopeTransactionsResponse = zod.array(
+  GetHhEnvelopeTransactionsResponseItem,
+);
+
+/**
+ * @summary Financial health score for the signed-in member
+ */
+export const GetMyHhHealthResponse = zod.object({
+  score: zod.number(),
+  tier: zod.enum(["strong", "steady", "building", "early"]),
+  message: zod.string(),
+  envelopeCount: zod.number(),
+  totalBudget: zod.string(),
+  totalSpent: zod.string(),
+  savingsRate: zod.string(),
+  discipline: zod.string(),
+});
+
+/**
+ * @summary Anonymised aggregate savings and reliability data for partner organisations (admin)
+ */
+export const GetHhPartnershipPortalResponse = zod.object({
+  bandName: zod.string(),
+  month: zod.string(),
+  activeMembers: zod.number(),
+  membersWithSavingsEnvelope: zod.number(),
+  savingsAdoptionPct: zod.number(),
+  avgMonthlyTokenSavingsBudget: zod.string(),
+  envelopeDisciplinePct: zod.number(),
+  note: zod.string(),
+});
+
+/**
+ * @summary List badge categories for the band (default status=active)
+ */
+export const GetHhBadgeCategoriesQueryParams = zod.object({
+  status: zod.enum(["active", "proposed", "archived", "all"]).optional(),
+});
+
+export const GetHhBadgeCategoriesResponseItem = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  name: zod.string(),
+  description: zod.string(),
+  domain: zod.enum([
+    "food",
+    "land",
+    "care",
+    "craft",
+    "governance",
+    "knowledge",
+  ]),
+  stageModel: zod.enum(["binary", "three_stage", "four_stage"]),
+  rateModifierEnabled: zod.boolean(),
+  proposedByMemberId: zod.string().uuid().nullish(),
+  status: zod.enum(["proposed", "active", "archived"]),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const GetHhBadgeCategoriesResponse = zod.array(
+  GetHhBadgeCategoriesResponseItem,
+);
+
+/**
+ * @summary Propose or create a badge category
+ */
+export const createHhBadgeCategoryBodyNameMax = 120;
+
+export const CreateHhBadgeCategoryBody = zod.object({
+  name: zod.string().min(1).max(createHhBadgeCategoryBodyNameMax),
+  description: zod.string().optional(),
+  domain: zod
+    .enum(["food", "land", "care", "craft", "governance", "knowledge"])
+    .optional(),
+  stageModel: zod.enum(["binary", "three_stage", "four_stage"]).optional(),
+  rateModifierEnabled: zod.boolean().optional(),
+  status: zod.enum(["proposed", "active"]).optional(),
+});
+
+/**
+ * @summary Admin activates, archives, or updates a badge category
+ */
+export const UpdateHhBadgeCategoryParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const UpdateHhBadgeCategoryBody = zod.object({
+  status: zod.enum(["proposed", "active", "archived"]).optional(),
+  rateModifierEnabled: zod.boolean().optional(),
+  description: zod.string().optional(),
+});
+
+export const UpdateHhBadgeCategoryResponse = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  name: zod.string(),
+  description: zod.string(),
+  domain: zod.enum([
+    "food",
+    "land",
+    "care",
+    "craft",
+    "governance",
+    "knowledge",
+  ]),
+  stageModel: zod.enum(["binary", "three_stage", "four_stage"]),
+  rateModifierEnabled: zod.boolean(),
+  proposedByMemberId: zod.string().uuid().nullish(),
+  status: zod.enum(["proposed", "active", "archived"]),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Member registers interest in a badge category (watching stage)
+ */
+export const WatchHhBadgeParams = zod.object({
+  categoryId: zod.coerce.string().uuid(),
+});
+
+/**
+ * @summary Get the signed-in member's badges with category details
+ */
+export const GetMyHhBadgesResponseItem = zod.object({
+  id: zod.string().uuid(),
+  memberId: zod.string().uuid(),
+  categoryId: zod.string().uuid(),
+  stage: zod.enum(["watching", "learning", "practicing", "teaching"]),
+  notes: zod.string().nullish(),
+  credentialSource: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+  categoryName: zod.string(),
+  categoryDescription: zod.string().optional(),
+  categoryDomain: zod.enum([
+    "food",
+    "land",
+    "care",
+    "craft",
+    "governance",
+    "knowledge",
+  ]),
+  categoryStageModel: zod.enum(["binary", "three_stage", "four_stage"]),
+  categoryRateModifierEnabled: zod.boolean(),
+});
+export const GetMyHhBadgesResponse = zod.array(GetMyHhBadgesResponseItem);
+
+/**
+ * @summary Get a member's badges with category details (admin or self)
+ */
+export const GetMemberHhBadgesParams = zod.object({
+  memberId: zod.coerce.string().uuid(),
+});
+
+export const GetMemberHhBadgesResponseItem = zod.object({
+  id: zod.string().uuid(),
+  memberId: zod.string().uuid(),
+  categoryId: zod.string().uuid(),
+  stage: zod.enum(["watching", "learning", "practicing", "teaching"]),
+  notes: zod.string().nullish(),
+  credentialSource: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+  categoryName: zod.string(),
+  categoryDescription: zod.string().optional(),
+  categoryDomain: zod.enum([
+    "food",
+    "land",
+    "care",
+    "craft",
+    "governance",
+    "knowledge",
+  ]),
+  categoryStageModel: zod.enum(["binary", "three_stage", "four_stage"]),
+  categoryRateModifierEnabled: zod.boolean(),
+});
+export const GetMemberHhBadgesResponse = zod.array(
+  GetMemberHhBadgesResponseItem,
+);
+
+/**
+ * @summary Admin issues or advances a badge (watching→learning→practicing→teaching)
+ */
+export const IssueHhBadgeParams = zod.object({
+  memberId: zod.coerce.string().uuid(),
+  categoryId: zod.coerce.string().uuid(),
+});
+
+export const IssueHhBadgeBody = zod.object({
+  stage: zod.enum(["watching", "learning", "practicing", "teaching"]),
+  notes: zod.string().optional(),
+  credentialSource: zod
+    .enum(["hh_task_history", "peer_validation", "earth_kit"])
+    .optional(),
+  peerValidatorMemberId: zod.string().uuid().optional(),
+});
+
+export const IssueHhBadgeResponse = zod.object({
+  id: zod.string().uuid(),
+  memberId: zod.string().uuid(),
+  categoryId: zod.string().uuid(),
+  stage: zod.enum(["watching", "learning", "practicing", "teaching"]),
+  notes: zod.string().nullish(),
+  credentialSource: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+  categoryName: zod.string(),
+  categoryDescription: zod.string().optional(),
+  categoryDomain: zod.enum([
+    "food",
+    "land",
+    "care",
+    "craft",
+    "governance",
+    "knowledge",
+  ]),
+  categoryStageModel: zod.enum(["binary", "three_stage", "four_stage"]),
+  categoryRateModifierEnabled: zod.boolean(),
+});
+
+/**
+ * @summary Create a new household (invite-only; bootstrap exemption for first household)
+ */
+export const sandboxCreateHouseholdBodyNameMax = 80;
+
+export const sandboxCreateHouseholdBodyPassphraseMin = 4;
+
+export const SandboxCreateHouseholdBody = zod.object({
+  name: zod.string().max(sandboxCreateHouseholdBodyNameMax),
+  passphrase: zod.string().min(sandboxCreateHouseholdBodyPassphraseMin),
+  inviteCode: zod
+    .string()
+    .optional()
+    .describe("Required for all households after the first"),
+});
+
+/**
+ * @summary List all households (organizer only)
+ */
+export const SandboxListHouseholdsResponseItem = zod.object({
+  id: zod.string().uuid(),
+  name: zod.string(),
+  isOrganizer: zod.boolean(),
+  gatherRoundParticipated: zod.string().nullable(),
+  createdAt: zod.coerce.date(),
+});
+export const SandboxListHouseholdsResponse = zod.array(
+  SandboxListHouseholdsResponseItem,
+);
+
+/**
+ * @summary Sign in as an existing household
+ */
+export const SandboxLoginBody = zod.object({
+  name: zod.string(),
+  passphrase: zod.string(),
+});
+
+export const SandboxLoginResponse = zod.object({
+  token: zod.string(),
+  household: zod.object({
+    id: zod.string().uuid(),
+    name: zod.string(),
+    isOrganizer: zod.boolean(),
+    gatherRoundParticipated: zod.string().nullable(),
+    createdAt: zod.coerce.date(),
+  }),
+});
+
+/**
+ * @summary Return the currently authenticated household
+ */
+export const SandboxGetMeResponse = zod.object({
+  id: zod.string().uuid(),
+  name: zod.string(),
+  isOrganizer: zod.boolean(),
+  gatherRoundParticipated: zod.string().nullable(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List all invite codes (organizer only)
+ */
+export const SandboxListInvitesResponseItem = zod.object({
+  id: zod.string().uuid(),
+  code: zod.string(),
+  note: zod.string(),
+  createdAt: zod.coerce.date(),
+  usedAt: zod.coerce.date().nullable(),
+  usedByHouseholdName: zod.string().nullable(),
+});
+export const SandboxListInvitesResponse = zod.array(
+  SandboxListInvitesResponseItem,
+);
+
+/**
+ * @summary Generate a new one-time invite code (organizer only)
+ */
+export const sandboxCreateInviteBodyNoteMax = 100;
+
+export const SandboxCreateInviteBody = zod.object({
+  note: zod
+    .string()
+    .max(sandboxCreateInviteBodyNoteMax)
+    .optional()
+    .describe('Optional label e.g. \"For the Walsh family\"'),
+});
+
+/**
+ * @summary Revoke an unused invite code (organizer only)
+ */
+export const SandboxRevokeInviteParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+/**
+ * @summary List all post buckets
+ */
+export const SandboxListBucketsResponseItem = zod.object({
+  id: zod.string().uuid(),
+  slug: zod.string(),
+  label: zod.string(),
+  isBuiltIn: zod.boolean(),
+  isHeadsUp: zod.boolean(),
+  isGatherRound: zod.boolean(),
+  sortOrder: zod.string(),
+  promptText: zod
+    .string()
+    .nullable()
+    .describe("Monthly prompt text for the gather_round bucket"),
+});
+export const SandboxListBucketsResponse = zod.array(
+  SandboxListBucketsResponseItem,
+);
+
+/**
+ * @summary Create a custom post bucket (organizer only)
+ */
+export const sandboxCreateBucketBodyLabelMax = 50;
+
+export const SandboxCreateBucketBody = zod.object({
+  label: zod.string().max(sandboxCreateBucketBodyLabelMax),
+});
+
+/**
+ * @summary Update a bucket label or Gather Round prompt text (organizer only)
+ */
+export const SandboxUpdateBucketParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const sandboxUpdateBucketBodyLabelMax = 50;
+
+export const sandboxUpdateBucketBodyPromptTextMax = 1000;
+
+export const SandboxUpdateBucketBody = zod.object({
+  label: zod.string().max(sandboxUpdateBucketBodyLabelMax).optional(),
+  promptText: zod
+    .string()
+    .max(sandboxUpdateBucketBodyPromptTextMax)
+    .nullish()
+    .describe("Monthly prompt for the gather_round bucket"),
+});
+
+export const SandboxUpdateBucketResponse = zod.object({
+  id: zod.string().uuid(),
+  slug: zod.string(),
+  label: zod.string(),
+  isBuiltIn: zod.boolean(),
+  isHeadsUp: zod.boolean(),
+  isGatherRound: zod.boolean(),
+  sortOrder: zod.string(),
+  promptText: zod
+    .string()
+    .nullable()
+    .describe("Monthly prompt text for the gather_round bucket"),
+});
+
+/**
+ * @summary List posts (optionally filtered by bucketId); expired Heads Up posts are purged on read
+ */
+export const SandboxListPostsQueryParams = zod.object({
+  bucketId: zod.coerce.string().uuid().optional(),
+});
+
+export const SandboxListPostsResponseItem = zod.object({
+  id: zod.string().uuid(),
+  householdId: zod.string().uuid(),
+  householdName: zod.string(),
+  bucketId: zod.string().uuid(),
+  bucketSlug: zod.string(),
+  body: zod.string(),
+  expiresAt: zod.coerce.date().nullable(),
+  createdAt: zod.coerce.date(),
+});
+export const SandboxListPostsResponse = zod.array(SandboxListPostsResponseItem);
+
+/**
+ * @summary Create a post; Heads Up posts auto-expire after 72 h
+ */
+export const sandboxCreatePostBodyBodyMax = 2000;
+
+export const SandboxCreatePostBody = zod.object({
+  bucketId: zod.string().uuid(),
+  body: zod.string().max(sandboxCreatePostBodyBodyMax),
+});
+
+/**
+ * @summary Delete a post (own post or organizer)
+ */
+export const SandboxDeletePostParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+/**
+ * @summary List community standby roles.
+Organizers see all. Members see public roles (with full household identity for the standby reference card)
+and their own private assignments. Other households' private roles are hidden.
+
+ */
+export const SandboxListRolesResponseItem = zod.object({
+  id: zod.string().uuid(),
+  roleName: zod.string(),
+  description: zod.string(),
+  householdId: zod.string().uuid().nullable(),
+  householdName: zod
+    .string()
+    .nullable()
+    .describe(
+      "Shown for public roles and to the assigned household; null otherwise",
+    ),
+  isPublic: zod.boolean(),
+  assignedByOrganizer: zod.boolean(),
+});
+export const SandboxListRolesResponse = zod.array(SandboxListRolesResponseItem);
+
+/**
+ * @summary Create a community role (organizer only)
+ */
+export const sandboxCreateRoleBodyRoleNameMax = 100;
+
+export const sandboxCreateRoleBodyDescriptionMax = 500;
+
+export const SandboxCreateRoleBody = zod.object({
+  roleName: zod.string().max(sandboxCreateRoleBodyRoleNameMax),
+  description: zod.string().max(sandboxCreateRoleBodyDescriptionMax).optional(),
+});
+
+/**
+ * @summary Update a role — assign household, toggle public visibility (organizer only)
+ */
+export const SandboxUpdateRoleParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const sandboxUpdateRoleBodyRoleNameMax = 100;
+
+export const sandboxUpdateRoleBodyDescriptionMax = 500;
+
+export const SandboxUpdateRoleBody = zod.object({
+  roleName: zod.string().max(sandboxUpdateRoleBodyRoleNameMax).optional(),
+  description: zod.string().max(sandboxUpdateRoleBodyDescriptionMax).optional(),
+  householdId: zod.string().uuid().nullish(),
+  isPublic: zod.boolean().optional(),
+});
+
+export const SandboxUpdateRoleResponse = zod.object({
+  id: zod.string().uuid(),
+  roleName: zod.string(),
+  description: zod.string(),
+  householdId: zod.string().uuid().nullable(),
+  householdName: zod
+    .string()
+    .nullable()
+    .describe(
+      "Shown for public roles and to the assigned household; null otherwise",
+    ),
+  isPublic: zod.boolean(),
+  assignedByOrganizer: zod.boolean(),
+});
+
+/**
+ * @summary Delete a community role (organizer only)
+ */
+export const SandboxDeleteRoleParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+/**
+ * @summary Return the current active standby event, or null
+ */
+export const SandboxGetActiveStandbyResponse = zod.union([
+  zod.object({
+    id: zod.string().uuid(),
+    name: zod.string(),
+    declaredByHouseholdId: zod.string().uuid(),
+    declaredByName: zod.string(),
+    isActive: zod.boolean(),
+    declaredAt: zod.coerce.date(),
+    endedAt: zod.coerce.date().nullable(),
+  }),
+  zod.null(),
+]);
+
+/**
+ * @summary Declare a neighbourhood standby event (organizer only)
+ */
+export const sandboxDeclareStandbyBodyNameMax = 200;
+
+export const SandboxDeclareStandbyBody = zod.object({
+  name: zod.string().max(sandboxDeclareStandbyBodyNameMax),
+});
+
+/**
+ * @summary End an active standby event (organizer only)
+ */
+export const SandboxEndStandbyParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const SandboxEndStandbyResponse = zod.object({
+  id: zod.string().uuid().optional(),
+  isActive: zod.boolean().optional(),
+});
+
+/**
+ * @summary Checkin summary for the active standby event.
+All members see counts and who checked in.
+Organizer additionally receives the list of household IDs that have NOT yet checked in.
+
+ */
+export const SandboxGetCheckinsResponse = zod.union([
+  zod.object({
+    eventId: zod.string().uuid(),
+    total: zod.number(),
+    checkedIn: zod.number(),
+    myCheckedIn: zod.boolean(),
+    remaining: zod
+      .array(
+        zod.object({
+          id: zod.string().uuid(),
+          name: zod.string(),
+        }),
+      )
+      .describe(
+        "Households that have not yet checked in (organizer-only; empty array for non-organizers)",
+      ),
+    checkins: zod.array(
+      zod.object({
+        householdId: zod.string().uuid(),
+        householdName: zod.string(),
+        checkedInAt: zod.coerce.date(),
+      }),
+    ),
+  }),
+  zod.null(),
+]);
+
+/**
+ * @summary Mark the authenticated household as safe/present
+ */
+export const SandboxCheckinResponse = zod.object({
+  ok: zod.boolean().optional(),
+});
+
+/**
+ * @summary Join the nursery (invite-only; bootstrap exemption for first producer)
+ */
+export const nurseryJoinBodyNameMax = 80;
+
+export const nurseryJoinBodyPassphraseMin = 4;
+
+export const NurseryJoinBody = zod.object({
+  name: zod.string().max(nurseryJoinBodyNameMax),
+  passphrase: zod.string().min(nurseryJoinBodyPassphraseMin),
+  inviteCode: zod
+    .string()
+    .optional()
+    .describe("Required for all producers after the first"),
+});
+
+/**
+ * @summary Sign in as an existing producer
+ */
+export const NurseryLoginBody = zod.object({
+  name: zod.string(),
+  passphrase: zod.string(),
+});
+
+export const NurseryLoginResponse = zod.object({
+  producer: zod.object({
+    id: zod.string().uuid(),
+    name: zod.string(),
+    isSteward: zod.boolean(),
+    createdAt: zod.coerce.date(),
+  }),
+});
+
+/**
+ * @summary Return the currently authenticated producer
+ */
+export const NurseryGetMeResponse = zod.object({
+  id: zod.string().uuid(),
+  name: zod.string(),
+  isSteward: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List all invite codes (steward only)
+ */
+export const NurseryListInvitesResponseItem = zod.object({
+  id: zod.string().uuid(),
+  code: zod.string(),
+  note: zod.string(),
+  isStewardInvite: zod.boolean(),
+  createdAt: zod.coerce.date(),
+  usedAt: zod.coerce.date().nullable(),
+  usedByProducerName: zod.string().nullable(),
+});
+export const NurseryListInvitesResponse = zod.array(
+  NurseryListInvitesResponseItem,
+);
+
+/**
+ * @summary Generate a new one-time invite code (steward only)
+ */
+export const nurseryCreateInviteBodyNoteMax = 100;
+
+export const NurseryCreateInviteBody = zod.object({
+  note: zod.string().max(nurseryCreateInviteBodyNoteMax).optional(),
+  isStewardInvite: zod
+    .boolean()
+    .optional()
+    .describe("Whether the invited producer will join as a steward"),
+});
+
+/**
+ * @summary Revoke an unused invite code (steward only)
+ */
+export const NurseryRevokeInviteParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+/**
+ * @summary List all ideas visible to the current producer
+ */
+export const NurseryListIdeasResponseItem = zod.object({
+  id: zod.string().uuid(),
+  title: zod.string(),
+  vernacularName: zod
+    .string()
+    .describe("What the producer community calls this"),
+  massityName: zod
+    .string()
+    .describe("What the mainstream\/massity sector calls this"),
+  problemStatement: zod.string(),
+  stage: zod.enum(["nursery", "fodder", "fallow", "graduated"]),
+  stageHistory: zod.array(
+    zod.object({
+      stage: zod.enum(["nursery", "fodder", "fallow", "graduated"]),
+      movedAt: zod.coerce.date(),
+      movedBy: zod.string(),
+      note: zod.string(),
+    }),
+  ),
+  stewardNotes: zod.string(),
+  isDraft: zod.boolean(),
+  graduationReason: zod.string().nullable(),
+  createdByProducerId: zod.string().uuid(),
+  createdByProducerName: zod.string(),
+  updatedAt: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+export const NurseryListIdeasResponse = zod.array(NurseryListIdeasResponseItem);
+
+/**
+ * @summary Create a new idea (stewards publish directly; producers create drafts)
+ */
+export const nurseryCreateIdeaBodyTitleMax = 200;
+
+export const nurseryCreateIdeaBodyVernacularNameMax = 200;
+
+export const nurseryCreateIdeaBodyMassityNameMax = 200;
+
+export const nurseryCreateIdeaBodyProblemStatementMax = 5000;
+
+export const nurseryCreateIdeaBodyStewardNotesMax = 5000;
+
+export const NurseryCreateIdeaBody = zod.object({
+  title: zod.string().min(1).max(nurseryCreateIdeaBodyTitleMax),
+  vernacularName: zod
+    .string()
+    .max(nurseryCreateIdeaBodyVernacularNameMax)
+    .optional(),
+  massityName: zod.string().max(nurseryCreateIdeaBodyMassityNameMax).optional(),
+  problemStatement: zod
+    .string()
+    .max(nurseryCreateIdeaBodyProblemStatementMax)
+    .optional(),
+  stewardNotes: zod
+    .string()
+    .max(nurseryCreateIdeaBodyStewardNotesMax)
+    .optional(),
+  isDraft: zod.boolean().optional(),
+});
+
+/**
+ * @summary Get a single idea with its comments and stage history
+ */
+export const NurseryGetIdeaParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const NurseryGetIdeaResponse = zod
+  .object({
+    id: zod.string().uuid(),
+    title: zod.string(),
+    vernacularName: zod
+      .string()
+      .describe("What the producer community calls this"),
+    massityName: zod
+      .string()
+      .describe("What the mainstream\/massity sector calls this"),
+    problemStatement: zod.string(),
+    stage: zod.enum(["nursery", "fodder", "fallow", "graduated"]),
+    stageHistory: zod.array(
+      zod.object({
+        stage: zod.enum(["nursery", "fodder", "fallow", "graduated"]),
+        movedAt: zod.coerce.date(),
+        movedBy: zod.string(),
+        note: zod.string(),
+      }),
+    ),
+    stewardNotes: zod.string(),
+    isDraft: zod.boolean(),
+    graduationReason: zod.string().nullable(),
+    createdByProducerId: zod.string().uuid(),
+    createdByProducerName: zod.string(),
+    updatedAt: zod.coerce.date(),
+    createdAt: zod.coerce.date(),
+  })
+  .and(
+    zod.object({
+      comments: zod.array(
+        zod.object({
+          id: zod.string().uuid(),
+          ideaId: zod.string().uuid(),
+          producerId: zod.string().uuid(),
+          producerName: zod.string(),
+          body: zod.string(),
+          createdAt: zod.coerce.date(),
+        }),
+      ),
+    }),
+  );
+
+/**
+ * @summary Update idea fields (steward only)
+ */
+export const NurseryUpdateIdeaParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const nurseryUpdateIdeaBodyTitleMax = 200;
+
+export const nurseryUpdateIdeaBodyVernacularNameMax = 200;
+
+export const nurseryUpdateIdeaBodyMassityNameMax = 200;
+
+export const nurseryUpdateIdeaBodyProblemStatementMax = 5000;
+
+export const nurseryUpdateIdeaBodyStewardNotesMax = 5000;
+
+export const NurseryUpdateIdeaBody = zod.object({
+  title: zod.string().min(1).max(nurseryUpdateIdeaBodyTitleMax).optional(),
+  vernacularName: zod
+    .string()
+    .max(nurseryUpdateIdeaBodyVernacularNameMax)
+    .optional(),
+  massityName: zod.string().max(nurseryUpdateIdeaBodyMassityNameMax).optional(),
+  problemStatement: zod
+    .string()
+    .max(nurseryUpdateIdeaBodyProblemStatementMax)
+    .optional(),
+  stewardNotes: zod
+    .string()
+    .max(nurseryUpdateIdeaBodyStewardNotesMax)
+    .optional(),
+  isDraft: zod.boolean().optional(),
+});
+
+export const NurseryUpdateIdeaResponse = zod.object({
+  id: zod.string().uuid(),
+  title: zod.string(),
+  vernacularName: zod
+    .string()
+    .describe("What the producer community calls this"),
+  massityName: zod
+    .string()
+    .describe("What the mainstream\/massity sector calls this"),
+  problemStatement: zod.string(),
+  stage: zod.enum(["nursery", "fodder", "fallow", "graduated"]),
+  stageHistory: zod.array(
+    zod.object({
+      stage: zod.enum(["nursery", "fodder", "fallow", "graduated"]),
+      movedAt: zod.coerce.date(),
+      movedBy: zod.string(),
+      note: zod.string(),
+    }),
+  ),
+  stewardNotes: zod.string(),
+  isDraft: zod.boolean(),
+  graduationReason: zod.string().nullable(),
+  createdByProducerId: zod.string().uuid(),
+  createdByProducerName: zod.string(),
+  updatedAt: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete an idea (steward only)
+ */
+export const NurseryDeleteIdeaParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+/**
+ * @summary Move an idea to a new lifecycle stage (steward only)
+ */
+export const NurseryMoveStageParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const nurseryMoveStageBodyNoteMax = 500;
+
+export const nurseryMoveStageBodyGraduationReasonMax = 2000;
+
+export const NurseryMoveStageBody = zod.object({
+  stage: zod.enum(["nursery", "fodder", "fallow", "graduated"]),
+  note: zod.string().max(nurseryMoveStageBodyNoteMax).optional(),
+  graduationReason: zod
+    .string()
+    .max(nurseryMoveStageBodyGraduationReasonMax)
+    .optional()
+    .describe("Required when stage is graduated"),
+});
+
+export const NurseryMoveStageResponse = zod.object({
+  id: zod.string().uuid(),
+  title: zod.string(),
+  vernacularName: zod
+    .string()
+    .describe("What the producer community calls this"),
+  massityName: zod
+    .string()
+    .describe("What the mainstream\/massity sector calls this"),
+  problemStatement: zod.string(),
+  stage: zod.enum(["nursery", "fodder", "fallow", "graduated"]),
+  stageHistory: zod.array(
+    zod.object({
+      stage: zod.enum(["nursery", "fodder", "fallow", "graduated"]),
+      movedAt: zod.coerce.date(),
+      movedBy: zod.string(),
+      note: zod.string(),
+    }),
+  ),
+  stewardNotes: zod.string(),
+  isDraft: zod.boolean(),
+  graduationReason: zod.string().nullable(),
+  createdByProducerId: zod.string().uuid(),
+  createdByProducerName: zod.string(),
+  updatedAt: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List comments for an idea
+ */
+export const NurseryListCommentsParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const NurseryListCommentsResponseItem = zod.object({
+  id: zod.string().uuid(),
+  ideaId: zod.string().uuid(),
+  producerId: zod.string().uuid(),
+  producerName: zod.string(),
+  body: zod.string(),
+  createdAt: zod.coerce.date(),
+});
+export const NurseryListCommentsResponse = zod.array(
+  NurseryListCommentsResponseItem,
+);
+
+/**
+ * @summary Add a comment to an idea
+ */
+export const NurseryAddCommentParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const nurseryAddCommentBodyBodyMax = 2000;
+
+export const NurseryAddCommentBody = zod.object({
+  body: zod.string().min(1).max(nurseryAddCommentBodyBodyMax),
 });

@@ -67,7 +67,7 @@ export default function HHBadges() {
     rateModifierEnabled: false,
   });
 
-  const { data: categories, isLoading } = useGetHhBadgeCategories(statusView);
+  const { data: categories, isLoading } = useGetHhBadgeCategories({ status: statusView });
   const { data: myBadges } = useGetMyHhBadges();
   const createCategory = useCreateHhBadgeCategory();
   const updateCategory = useUpdateHhBadgeCategory();
@@ -76,7 +76,7 @@ export default function HHBadges() {
   const myBadgeMap = new Map((myBadges ?? []).map((b) => [b.categoryId, b]));
 
   function invalidate() {
-    qc.invalidateQueries({ queryKey: getGetHhBadgeCategoriesQueryKey(statusView) });
+    qc.invalidateQueries({ queryKey: getGetHhBadgeCategoriesQueryKey({ status: statusView }) });
     qc.invalidateQueries({ queryKey: getGetMyHhBadgesQueryKey() });
   }
 

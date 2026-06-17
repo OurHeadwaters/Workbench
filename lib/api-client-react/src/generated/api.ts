@@ -32,7 +32,10 @@ import type {
   CreateContributorRequest,
   CreateCostCentreRequest,
   CreateEntryFromUrlRequest,
+  CreateHhBadgeCategoryRequest,
+  CreateHhEnvelopeRequest,
   CreateHhMemberRequest,
+  CreateHhMerchantRequest,
   CreateHhTaskRequest,
   CreateLibraryEntryRequest,
   CreateProducerRequest,
@@ -41,9 +44,11 @@ import type {
   CreateTransactionRequest,
   CreateWordpilePileRequest,
   CreateWordpileWordRequest,
+  DeleteMyHhEnvelope200,
   ErrorEnvelope,
   ExpireOverdueResponse,
   GetBookkeeperPnlParams,
+  GetHhBadgeCategoriesParams,
   GetHhTasksParams,
   GetPnlByMonthParams,
   GetRecentActivityParams,
@@ -53,13 +58,23 @@ import type {
   GetUnclearedReceiptsParams,
   HandlerActivity,
   HealthStatus,
+  HhBadgeCategory,
   HhBand,
   HhBonus,
   HhConfirmResponse,
   HhDashboard,
   HhEarningsResponse,
+  HhEnvelope,
+  HhEnvelopeSpendRequest,
+  HhEnvelopeTransaction,
+  HhHealthScore,
   HhMember,
+  HhMemberBadge,
+  HhMemberBadgeWithCategory,
+  HhMerchant,
+  HhPartnershipPortal,
   HhTask,
+  IssueHhBadgeRequest,
   LibraryEntry,
   LibraryEntryPage,
   LibraryEntryUpsertResult,
@@ -71,6 +86,19 @@ import type {
   ListSubmissionsParams,
   ListTransactionsParams,
   NudgeHandlerRequest,
+  NurseryAddCommentBody,
+  NurseryAuthResult,
+  NurseryComment,
+  NurseryCreateIdeaRequest,
+  NurseryCreateInviteBody,
+  NurseryIdea,
+  NurseryIdeaDetail,
+  NurseryInvite,
+  NurseryJoinBody,
+  NurseryLoginBody,
+  NurseryMoveStageBody,
+  NurseryProducer,
+  NurseryUpdateIdeaRequest,
   OkResponse,
   PnlByMonthResponse,
   Producer,
@@ -79,6 +107,26 @@ import type {
   PublicShareLink,
   ReconciliationSummaryResponse,
   RejectSubmissionRequest,
+  SandboxAuthResult,
+  SandboxBucket,
+  SandboxCheckin200,
+  SandboxCheckinSummary,
+  SandboxCreateBucketBody,
+  SandboxCreateHouseholdBody,
+  SandboxCreateInviteBody,
+  SandboxCreatePostBody,
+  SandboxCreateRoleBody,
+  SandboxDeclareStandbyBody,
+  SandboxEndStandby200,
+  SandboxHousehold,
+  SandboxInvite,
+  SandboxListPostsParams,
+  SandboxLoginBody,
+  SandboxPost,
+  SandboxRole,
+  SandboxStandbyEvent,
+  SandboxUpdateBucketBody,
+  SandboxUpdateRoleBody,
   SetTransactionClearedRequest,
   ShareLink,
   ShareLinkSummary,
@@ -92,7 +140,10 @@ import type {
   UpdateAccountRequest,
   UpdateBookkeeperUserRequest,
   UpdateCostCentreRequest,
+  UpdateHhBadgeCategoryRequest,
+  UpdateHhEnvelopeRequest,
   UpdateHhMemberRequest,
+  UpdateHhMerchantRequest,
   UpdateLibraryEntryRequest,
   UpdateWordpilePileRequest,
   UpdateWordpileWordRequest,
@@ -6450,6 +6501,174 @@ export const useConfirmHhTask = <
 };
 
 /**
+ * @summary Admin releases a claimed task back to available (no-show / early release)
+ */
+export const getReleaseHhTaskUrl = (id: string) => {
+  return `/api/helping-hands/tasks/${id}/release`;
+};
+
+export const releaseHhTask = async (
+  id: string,
+  options?: RequestInit,
+): Promise<HhTask> => {
+  return customFetch<HhTask>(getReleaseHhTaskUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getReleaseHhTaskMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof releaseHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof releaseHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["releaseHhTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof releaseHhTask>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return releaseHhTask(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ReleaseHhTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof releaseHhTask>>
+>;
+
+export type ReleaseHhTaskMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Admin releases a claimed task back to available (no-show / early release)
+ */
+export const useReleaseHhTask = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof releaseHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof releaseHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getReleaseHhTaskMutationOptions(options));
+};
+
+/**
+ * @summary Admin reopens a missed task back to available so it can be claimed again
+ */
+export const getRepostHhTaskUrl = (id: string) => {
+  return `/api/helping-hands/tasks/${id}/repost`;
+};
+
+export const repostHhTask = async (
+  id: string,
+  options?: RequestInit,
+): Promise<HhTask> => {
+  return customFetch<HhTask>(getRepostHhTaskUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getRepostHhTaskMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof repostHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof repostHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["repostHhTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof repostHhTask>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return repostHhTask(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RepostHhTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof repostHhTask>>
+>;
+
+export type RepostHhTaskMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Admin reopens a missed task back to available so it can be claimed again
+ */
+export const useRepostHhTask = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof repostHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof repostHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getRepostHhTaskMutationOptions(options));
+};
+
+/**
  * @summary Admin expires a single overdue claimed task — increments the member's missed-shift count and sets flaggedForDemotion if the threshold is crossed.
 
  */
@@ -6533,164 +6752,6 @@ export const useExpireHhTask = <
   TContext
 > => {
   return useMutation(getExpireHhTaskMutationOptions(options));
-};
-
-/**
- * @summary Admin — release a claimed task back to available (no-show)
- */
-export const getReleaseHhTaskUrl = (id: string) => {
-  return `/api/helping-hands/tasks/${id}/release`;
-};
-
-export const releaseHhTask = async (
-  id: string,
-  options?: RequestInit,
-): Promise<HhTask> => {
-  return customFetch<HhTask>(getReleaseHhTaskUrl(id), {
-    ...options,
-    method: "POST",
-  });
-};
-
-export const getReleaseHhTaskMutationOptions = <
-  TError = ErrorType<ErrorEnvelope>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof releaseHhTask>>,
-    TError,
-    { id: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof releaseHhTask>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationKey = ["releaseHhTask"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof releaseHhTask>>,
-    { id: string }
-  > = (props) => {
-    const { id } = props ?? {};
-    return releaseHhTask(id, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type ReleaseHhTaskMutationResult = NonNullable<
-  Awaited<ReturnType<typeof releaseHhTask>>
->;
-export type ReleaseHhTaskMutationError = ErrorType<ErrorEnvelope>;
-
-export const useReleaseHhTask = <
-  TError = ErrorType<ErrorEnvelope>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof releaseHhTask>>,
-    TError,
-    { id: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof releaseHhTask>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  return useMutation(getReleaseHhTaskMutationOptions(options));
-};
-
-/**
- * @summary Admin — repost a missed task back to available
- */
-export const getRepostHhTaskUrl = (id: string) => {
-  return `/api/helping-hands/tasks/${id}/repost`;
-};
-
-export const repostHhTask = async (
-  id: string,
-  options?: RequestInit,
-): Promise<HhTask> => {
-  return customFetch<HhTask>(getRepostHhTaskUrl(id), {
-    ...options,
-    method: "POST",
-  });
-};
-
-export const getRepostHhTaskMutationOptions = <
-  TError = ErrorType<ErrorEnvelope>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof repostHhTask>>,
-    TError,
-    { id: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof repostHhTask>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationKey = ["repostHhTask"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof repostHhTask>>,
-    { id: string }
-  > = (props) => {
-    const { id } = props ?? {};
-    return repostHhTask(id, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type RepostHhTaskMutationResult = NonNullable<
-  Awaited<ReturnType<typeof repostHhTask>>
->;
-export type RepostHhTaskMutationError = ErrorType<ErrorEnvelope>;
-
-export const useRepostHhTask = <
-  TError = ErrorType<ErrorEnvelope>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof repostHhTask>>,
-    TError,
-    { id: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof repostHhTask>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  return useMutation(getRepostHhTaskMutationOptions(options));
 };
 
 /**
@@ -7076,95 +7137,980 @@ export function useGetHhDashboard<
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// BADGE / CREDENTIAL SYSTEM
-// Manually maintained — follows orval patterns exactly.
-// ══════════════════════════════════════════════════════════════════════════════
+/**
+ * @summary List active participating merchants for the band
+ */
+export const getGetHhMerchantsUrl = () => {
+  return `/api/helping-hands/merchants`;
+};
 
-export interface HhBadgeCategory {
-  id: string;
-  bandId: string;
-  name: string;
-  description: string;
-  domain: string;
-  stageModel: string;
-  rateModifierEnabled: boolean;
-  proposedByMemberId: string | null;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface HhMemberBadgeWithCategory {
-  id: string;
-  memberId: string;
-  categoryId: string;
-  stage: string;
-  notes: string;
-  createdAt: string;
-  updatedAt: string;
-  categoryName: string;
-  categoryDescription: string;
-  categoryDomain: string;
-  categoryStageModel: string;
-  categoryRateModifierEnabled: boolean;
-}
-
-export interface CreateHhBadgeCategoryRequest {
-  name: string;
-  description?: string;
-  domain?: "food" | "land" | "care" | "craft" | "governance" | "knowledge";
-  stageModel?: "binary" | "three_stage" | "four_stage";
-  rateModifierEnabled?: boolean;
-  status?: "proposed" | "active";
-}
-
-export interface UpdateHhBadgeCategoryRequest {
-  status?: "proposed" | "active" | "archived";
-  rateModifierEnabled?: boolean;
-  description?: string;
-}
-
-export interface IssueHhBadgeRequest {
-  stage: "watching" | "learning" | "practicing" | "teaching";
-  notes?: string;
-}
-
-// ── GET /helping-hands/badges/categories ─────────────────────────────────────
-
-export const getGetHhBadgeCategoriesUrl = (status?: string) =>
-  `/helping-hands/badges/categories${status ? `?status=${status}` : ""}`;
-
-export const getHhBadgeCategories = async (
-  status?: string,
-  options?: SecondParameter<typeof customFetch>,
-): Promise<HhBadgeCategory[]> => {
-  return customFetch<HhBadgeCategory[]>(getGetHhBadgeCategoriesUrl(status), {
-    method: "GET",
+export const getHhMerchants = async (
+  options?: RequestInit,
+): Promise<HhMerchant[]> => {
+  return customFetch<HhMerchant[]>(getGetHhMerchantsUrl(), {
     ...options,
+    method: "GET",
   });
 };
 
-export const getGetHhBadgeCategoriesQueryKey = (status?: string) =>
-  [`/helping-hands/badges/categories`, status] as const;
+export const getGetHhMerchantsQueryKey = () => {
+  return [`/api/helping-hands/merchants`] as const;
+};
+
+export const getGetHhMerchantsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHhMerchants>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHhMerchants>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetHhMerchantsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getHhMerchants>>> = ({
+    signal,
+  }) => getHhMerchants({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHhMerchants>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHhMerchantsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHhMerchants>>
+>;
+export type GetHhMerchantsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List active participating merchants for the band
+ */
+
+export function useGetHhMerchants<
+  TData = Awaited<ReturnType<typeof getHhMerchants>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHhMerchants>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHhMerchantsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Register a new reserve store as a participating merchant (admin)
+ */
+export const getCreateHhMerchantUrl = () => {
+  return `/api/helping-hands/merchants`;
+};
+
+export const createHhMerchant = async (
+  createHhMerchantRequest: CreateHhMerchantRequest,
+  options?: RequestInit,
+): Promise<HhMerchant> => {
+  return customFetch<HhMerchant>(getCreateHhMerchantUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createHhMerchantRequest),
+  });
+};
+
+export const getCreateHhMerchantMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createHhMerchant>>,
+    TError,
+    { data: BodyType<CreateHhMerchantRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createHhMerchant>>,
+  TError,
+  { data: BodyType<CreateHhMerchantRequest> },
+  TContext
+> => {
+  const mutationKey = ["createHhMerchant"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createHhMerchant>>,
+    { data: BodyType<CreateHhMerchantRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createHhMerchant(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateHhMerchantMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createHhMerchant>>
+>;
+export type CreateHhMerchantMutationBody = BodyType<CreateHhMerchantRequest>;
+export type CreateHhMerchantMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Register a new reserve store as a participating merchant (admin)
+ */
+export const useCreateHhMerchant = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createHhMerchant>>,
+    TError,
+    { data: BodyType<CreateHhMerchantRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createHhMerchant>>,
+  TError,
+  { data: BodyType<CreateHhMerchantRequest> },
+  TContext
+> => {
+  return useMutation(getCreateHhMerchantMutationOptions(options));
+};
+
+/**
+ * @summary Update a merchant's details or active status (admin)
+ */
+export const getUpdateHhMerchantUrl = (id: string) => {
+  return `/api/helping-hands/merchants/${id}`;
+};
+
+export const updateHhMerchant = async (
+  id: string,
+  updateHhMerchantRequest: UpdateHhMerchantRequest,
+  options?: RequestInit,
+): Promise<HhMerchant> => {
+  return customFetch<HhMerchant>(getUpdateHhMerchantUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateHhMerchantRequest),
+  });
+};
+
+export const getUpdateHhMerchantMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateHhMerchant>>,
+    TError,
+    { id: string; data: BodyType<UpdateHhMerchantRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateHhMerchant>>,
+  TError,
+  { id: string; data: BodyType<UpdateHhMerchantRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateHhMerchant"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateHhMerchant>>,
+    { id: string; data: BodyType<UpdateHhMerchantRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateHhMerchant(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateHhMerchantMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateHhMerchant>>
+>;
+export type UpdateHhMerchantMutationBody = BodyType<UpdateHhMerchantRequest>;
+export type UpdateHhMerchantMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update a merchant's details or active status (admin)
+ */
+export const useUpdateHhMerchant = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateHhMerchant>>,
+    TError,
+    { id: string; data: BodyType<UpdateHhMerchantRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateHhMerchant>>,
+  TError,
+  { id: string; data: BodyType<UpdateHhMerchantRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateHhMerchantMutationOptions(options));
+};
+
+/**
+ * @summary List the signed-in member's budget envelopes
+ */
+export const getGetMyHhEnvelopesUrl = () => {
+  return `/api/helping-hands/my/envelopes`;
+};
+
+export const getMyHhEnvelopes = async (
+  options?: RequestInit,
+): Promise<HhEnvelope[]> => {
+  return customFetch<HhEnvelope[]>(getGetMyHhEnvelopesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetMyHhEnvelopesQueryKey = () => {
+  return [`/api/helping-hands/my/envelopes`] as const;
+};
+
+export const getGetMyHhEnvelopesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyHhEnvelopes>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhEnvelopes>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetMyHhEnvelopesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getMyHhEnvelopes>>
+  > = ({ signal }) => getMyHhEnvelopes({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhEnvelopes>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMyHhEnvelopesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyHhEnvelopes>>
+>;
+export type GetMyHhEnvelopesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List the signed-in member's budget envelopes
+ */
+
+export function useGetMyHhEnvelopes<
+  TData = Awaited<ReturnType<typeof getMyHhEnvelopes>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhEnvelopes>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMyHhEnvelopesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a new budget envelope
+ */
+export const getCreateMyHhEnvelopeUrl = () => {
+  return `/api/helping-hands/my/envelopes`;
+};
+
+export const createMyHhEnvelope = async (
+  createHhEnvelopeRequest: CreateHhEnvelopeRequest,
+  options?: RequestInit,
+): Promise<HhEnvelope> => {
+  return customFetch<HhEnvelope>(getCreateMyHhEnvelopeUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createHhEnvelopeRequest),
+  });
+};
+
+export const getCreateMyHhEnvelopeMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createMyHhEnvelope>>,
+    TError,
+    { data: BodyType<CreateHhEnvelopeRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createMyHhEnvelope>>,
+  TError,
+  { data: BodyType<CreateHhEnvelopeRequest> },
+  TContext
+> => {
+  const mutationKey = ["createMyHhEnvelope"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createMyHhEnvelope>>,
+    { data: BodyType<CreateHhEnvelopeRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createMyHhEnvelope(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateMyHhEnvelopeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createMyHhEnvelope>>
+>;
+export type CreateMyHhEnvelopeMutationBody = BodyType<CreateHhEnvelopeRequest>;
+export type CreateMyHhEnvelopeMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a new budget envelope
+ */
+export const useCreateMyHhEnvelope = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createMyHhEnvelope>>,
+    TError,
+    { data: BodyType<CreateHhEnvelopeRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createMyHhEnvelope>>,
+  TError,
+  { data: BodyType<CreateHhEnvelopeRequest> },
+  TContext
+> => {
+  return useMutation(getCreateMyHhEnvelopeMutationOptions(options));
+};
+
+/**
+ * @summary Update an envelope's label, icon, or monthly budget
+ */
+export const getUpdateMyHhEnvelopeUrl = (id: string) => {
+  return `/api/helping-hands/my/envelopes/${id}`;
+};
+
+export const updateMyHhEnvelope = async (
+  id: string,
+  updateHhEnvelopeRequest: UpdateHhEnvelopeRequest,
+  options?: RequestInit,
+): Promise<HhEnvelope> => {
+  return customFetch<HhEnvelope>(getUpdateMyHhEnvelopeUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateHhEnvelopeRequest),
+  });
+};
+
+export const getUpdateMyHhEnvelopeMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateMyHhEnvelope>>,
+    TError,
+    { id: string; data: BodyType<UpdateHhEnvelopeRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateMyHhEnvelope>>,
+  TError,
+  { id: string; data: BodyType<UpdateHhEnvelopeRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateMyHhEnvelope"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateMyHhEnvelope>>,
+    { id: string; data: BodyType<UpdateHhEnvelopeRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateMyHhEnvelope(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateMyHhEnvelopeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateMyHhEnvelope>>
+>;
+export type UpdateMyHhEnvelopeMutationBody = BodyType<UpdateHhEnvelopeRequest>;
+export type UpdateMyHhEnvelopeMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update an envelope's label, icon, or monthly budget
+ */
+export const useUpdateMyHhEnvelope = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateMyHhEnvelope>>,
+    TError,
+    { id: string; data: BodyType<UpdateHhEnvelopeRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateMyHhEnvelope>>,
+  TError,
+  { id: string; data: BodyType<UpdateHhEnvelopeRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateMyHhEnvelopeMutationOptions(options));
+};
+
+/**
+ * @summary Delete an envelope
+ */
+export const getDeleteMyHhEnvelopeUrl = (id: string) => {
+  return `/api/helping-hands/my/envelopes/${id}`;
+};
+
+export const deleteMyHhEnvelope = async (
+  id: string,
+  options?: RequestInit,
+): Promise<DeleteMyHhEnvelope200> => {
+  return customFetch<DeleteMyHhEnvelope200>(getDeleteMyHhEnvelopeUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteMyHhEnvelopeMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteMyHhEnvelope>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteMyHhEnvelope>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["deleteMyHhEnvelope"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteMyHhEnvelope>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteMyHhEnvelope(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteMyHhEnvelopeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteMyHhEnvelope>>
+>;
+
+export type DeleteMyHhEnvelopeMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete an envelope
+ */
+export const useDeleteMyHhEnvelope = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteMyHhEnvelope>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteMyHhEnvelope>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getDeleteMyHhEnvelopeMutationOptions(options));
+};
+
+/**
+ * @summary Spend from an envelope at a participating merchant (XRPL payment)
+ */
+export const getSpendFromHhEnvelopeUrl = (id: string) => {
+  return `/api/helping-hands/my/envelopes/${id}/spend`;
+};
+
+export const spendFromHhEnvelope = async (
+  id: string,
+  hhEnvelopeSpendRequest: HhEnvelopeSpendRequest,
+  options?: RequestInit,
+): Promise<HhEnvelopeTransaction> => {
+  return customFetch<HhEnvelopeTransaction>(getSpendFromHhEnvelopeUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(hhEnvelopeSpendRequest),
+  });
+};
+
+export const getSpendFromHhEnvelopeMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof spendFromHhEnvelope>>,
+    TError,
+    { id: string; data: BodyType<HhEnvelopeSpendRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof spendFromHhEnvelope>>,
+  TError,
+  { id: string; data: BodyType<HhEnvelopeSpendRequest> },
+  TContext
+> => {
+  const mutationKey = ["spendFromHhEnvelope"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof spendFromHhEnvelope>>,
+    { id: string; data: BodyType<HhEnvelopeSpendRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return spendFromHhEnvelope(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SpendFromHhEnvelopeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof spendFromHhEnvelope>>
+>;
+export type SpendFromHhEnvelopeMutationBody = BodyType<HhEnvelopeSpendRequest>;
+export type SpendFromHhEnvelopeMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Spend from an envelope at a participating merchant (XRPL payment)
+ */
+export const useSpendFromHhEnvelope = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof spendFromHhEnvelope>>,
+    TError,
+    { id: string; data: BodyType<HhEnvelopeSpendRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof spendFromHhEnvelope>>,
+  TError,
+  { id: string; data: BodyType<HhEnvelopeSpendRequest> },
+  TContext
+> => {
+  return useMutation(getSpendFromHhEnvelopeMutationOptions(options));
+};
+
+/**
+ * @summary List transactions for an envelope
+ */
+export const getGetHhEnvelopeTransactionsUrl = (id: string) => {
+  return `/api/helping-hands/my/envelopes/${id}/transactions`;
+};
+
+export const getHhEnvelopeTransactions = async (
+  id: string,
+  options?: RequestInit,
+): Promise<HhEnvelopeTransaction[]> => {
+  return customFetch<HhEnvelopeTransaction[]>(
+    getGetHhEnvelopeTransactionsUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetHhEnvelopeTransactionsQueryKey = (id: string) => {
+  return [`/api/helping-hands/my/envelopes/${id}/transactions`] as const;
+};
+
+export const getGetHhEnvelopeTransactionsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHhEnvelopeTransactions>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getHhEnvelopeTransactions>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetHhEnvelopeTransactionsQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getHhEnvelopeTransactions>>
+  > = ({ signal }) =>
+    getHhEnvelopeTransactions(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHhEnvelopeTransactions>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHhEnvelopeTransactionsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHhEnvelopeTransactions>>
+>;
+export type GetHhEnvelopeTransactionsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List transactions for an envelope
+ */
+
+export function useGetHhEnvelopeTransactions<
+  TData = Awaited<ReturnType<typeof getHhEnvelopeTransactions>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getHhEnvelopeTransactions>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHhEnvelopeTransactionsQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Financial health score for the signed-in member
+ */
+export const getGetMyHhHealthUrl = () => {
+  return `/api/helping-hands/my/health`;
+};
+
+export const getMyHhHealth = async (
+  options?: RequestInit,
+): Promise<HhHealthScore> => {
+  return customFetch<HhHealthScore>(getGetMyHhHealthUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetMyHhHealthQueryKey = () => {
+  return [`/api/helping-hands/my/health`] as const;
+};
+
+export const getGetMyHhHealthQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyHhHealth>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhHealth>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetMyHhHealthQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyHhHealth>>> = ({
+    signal,
+  }) => getMyHhHealth({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhHealth>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMyHhHealthQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyHhHealth>>
+>;
+export type GetMyHhHealthQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Financial health score for the signed-in member
+ */
+
+export function useGetMyHhHealth<
+  TData = Awaited<ReturnType<typeof getMyHhHealth>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhHealth>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMyHhHealthQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Anonymised aggregate savings and reliability data for partner organisations (admin)
+ */
+export const getGetHhPartnershipPortalUrl = () => {
+  return `/api/helping-hands/partnership-portal`;
+};
+
+export const getHhPartnershipPortal = async (
+  options?: RequestInit,
+): Promise<HhPartnershipPortal> => {
+  return customFetch<HhPartnershipPortal>(getGetHhPartnershipPortalUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetHhPartnershipPortalQueryKey = () => {
+  return [`/api/helping-hands/partnership-portal`] as const;
+};
+
+export const getGetHhPartnershipPortalQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHhPartnershipPortal>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHhPartnershipPortal>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetHhPartnershipPortalQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getHhPartnershipPortal>>
+  > = ({ signal }) => getHhPartnershipPortal({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHhPartnershipPortal>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHhPartnershipPortalQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHhPartnershipPortal>>
+>;
+export type GetHhPartnershipPortalQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Anonymised aggregate savings and reliability data for partner organisations (admin)
+ */
+
+export function useGetHhPartnershipPortal<
+  TData = Awaited<ReturnType<typeof getHhPartnershipPortal>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHhPartnershipPortal>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHhPartnershipPortalQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List badge categories for the band (default status=active)
+ */
+export const getGetHhBadgeCategoriesUrl = (
+  params?: GetHhBadgeCategoriesParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/helping-hands/badges/categories?${stringifiedParams}`
+    : `/api/helping-hands/badges/categories`;
+};
+
+export const getHhBadgeCategories = async (
+  params?: GetHhBadgeCategoriesParams,
+  options?: RequestInit,
+): Promise<HhBadgeCategory[]> => {
+  return customFetch<HhBadgeCategory[]>(getGetHhBadgeCategoriesUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetHhBadgeCategoriesQueryKey = (
+  params?: GetHhBadgeCategoriesParams,
+) => {
+  return [
+    `/api/helping-hands/badges/categories`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
 export const getGetHhBadgeCategoriesQueryOptions = <
   TData = Awaited<ReturnType<typeof getHhBadgeCategories>>,
   TError = ErrorType<unknown>,
 >(
-  status?: string,
+  params?: GetHhBadgeCategoriesParams,
   options?: {
-    query?: UseQueryOptions<Awaited<ReturnType<typeof getHhBadgeCategories>>, TError, TData>;
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getHhBadgeCategories>>,
+      TError,
+      TData
+    >;
     request?: SecondParameter<typeof customFetch>;
   },
-): UseQueryOptions<Awaited<ReturnType<typeof getHhBadgeCategories>>, TError, TData> & {
-  queryKey: QueryKey;
-} => {
+) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
-  const queryKey = queryOptions?.queryKey ?? getGetHhBadgeCategoriesQueryKey(status);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getHhBadgeCategories>>> = ({
-    signal,
-  }) => getHhBadgeCategories(status, { signal, ...requestOptions });
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetHhBadgeCategoriesQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getHhBadgeCategories>>
+  > = ({ signal }) =>
+    getHhBadgeCategories(params, { signal, ...requestOptions });
+
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getHhBadgeCategories>>,
     TError,
@@ -7177,36 +8123,100 @@ export type GetHhBadgeCategoriesQueryResult = NonNullable<
 >;
 export type GetHhBadgeCategoriesQueryError = ErrorType<unknown>;
 
+/**
+ * @summary List badge categories for the band (default status=active)
+ */
+
 export function useGetHhBadgeCategories<
   TData = Awaited<ReturnType<typeof getHhBadgeCategories>>,
   TError = ErrorType<unknown>,
 >(
-  status?: string,
+  params?: GetHhBadgeCategoriesParams,
   options?: {
-    query?: UseQueryOptions<Awaited<ReturnType<typeof getHhBadgeCategories>>, TError, TData>;
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getHhBadgeCategories>>,
+      TError,
+      TData
+    >;
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetHhBadgeCategoriesQueryOptions(status, options);
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const queryOptions = getGetHhBadgeCategoriesQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-// ── POST /helping-hands/badges/categories ────────────────────────────────────
-
-export const getCreateHhBadgeCategoryUrl = () => `/helping-hands/badges/categories`;
+/**
+ * @summary Propose or create a badge category
+ */
+export const getCreateHhBadgeCategoryUrl = () => {
+  return `/api/helping-hands/badges/categories`;
+};
 
 export const createHhBadgeCategory = async (
-  body: BodyType<CreateHhBadgeCategoryRequest>,
-  options?: SecondParameter<typeof customFetch>,
+  createHhBadgeCategoryRequest: CreateHhBadgeCategoryRequest,
+  options?: RequestInit,
 ): Promise<HhBadgeCategory> => {
   return customFetch<HhBadgeCategory>(getCreateHhBadgeCategoryUrl(), {
-    method: "POST",
-    body: JSON.stringify(body),
     ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createHhBadgeCategoryRequest),
   });
 };
 
+export const getCreateHhBadgeCategoryMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createHhBadgeCategory>>,
+    TError,
+    { data: BodyType<CreateHhBadgeCategoryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createHhBadgeCategory>>,
+  TError,
+  { data: BodyType<CreateHhBadgeCategoryRequest> },
+  TContext
+> => {
+  const mutationKey = ["createHhBadgeCategory"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createHhBadgeCategory>>,
+    { data: BodyType<CreateHhBadgeCategoryRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createHhBadgeCategory(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateHhBadgeCategoryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createHhBadgeCategory>>
+>;
+export type CreateHhBadgeCategoryMutationBody =
+  BodyType<CreateHhBadgeCategoryRequest>;
+export type CreateHhBadgeCategoryMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Propose or create a badge category
+ */
 export const useCreateHhBadgeCategory = <
   TError = ErrorType<unknown>,
   TContext = unknown,
@@ -7224,31 +8234,77 @@ export const useCreateHhBadgeCategory = <
   { data: BodyType<CreateHhBadgeCategoryRequest> },
   TContext
 > => {
-  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createHhBadgeCategory>>,
-    { data: BodyType<CreateHhBadgeCategoryRequest> }
-  > = ({ data }) => createHhBadgeCategory(data, requestOptions);
-  return useMutation({ mutationFn, ...mutationOptions });
+  return useMutation(getCreateHhBadgeCategoryMutationOptions(options));
 };
 
-// ── PATCH /helping-hands/badges/categories/:id ───────────────────────────────
-
-export const getUpdateHhBadgeCategoryUrl = (id: string) =>
-  `/helping-hands/badges/categories/${id}`;
+/**
+ * @summary Admin activates, archives, or updates a badge category
+ */
+export const getUpdateHhBadgeCategoryUrl = (id: string) => {
+  return `/api/helping-hands/badges/categories/${id}`;
+};
 
 export const updateHhBadgeCategory = async (
   id: string,
-  body: BodyType<UpdateHhBadgeCategoryRequest>,
-  options?: SecondParameter<typeof customFetch>,
+  updateHhBadgeCategoryRequest: UpdateHhBadgeCategoryRequest,
+  options?: RequestInit,
 ): Promise<HhBadgeCategory> => {
   return customFetch<HhBadgeCategory>(getUpdateHhBadgeCategoryUrl(id), {
-    method: "PATCH",
-    body: JSON.stringify(body),
     ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateHhBadgeCategoryRequest),
   });
 };
 
+export const getUpdateHhBadgeCategoryMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateHhBadgeCategory>>,
+    TError,
+    { id: string; data: BodyType<UpdateHhBadgeCategoryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateHhBadgeCategory>>,
+  TError,
+  { id: string; data: BodyType<UpdateHhBadgeCategoryRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateHhBadgeCategory"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateHhBadgeCategory>>,
+    { id: string; data: BodyType<UpdateHhBadgeCategoryRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateHhBadgeCategory(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateHhBadgeCategoryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateHhBadgeCategory>>
+>;
+export type UpdateHhBadgeCategoryMutationBody =
+  BodyType<UpdateHhBadgeCategoryRequest>;
+export type UpdateHhBadgeCategoryMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Admin activates, archives, or updates a badge category
+ */
 export const useUpdateHhBadgeCategory = <
   TError = ErrorType<unknown>,
   TContext = unknown,
@@ -7266,29 +8322,73 @@ export const useUpdateHhBadgeCategory = <
   { id: string; data: BodyType<UpdateHhBadgeCategoryRequest> },
   TContext
 > => {
-  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof updateHhBadgeCategory>>,
-    { id: string; data: BodyType<UpdateHhBadgeCategoryRequest> }
-  > = ({ id, data }) => updateHhBadgeCategory(id, data, requestOptions);
-  return useMutation({ mutationFn, ...mutationOptions });
+  return useMutation(getUpdateHhBadgeCategoryMutationOptions(options));
 };
 
-// ── POST /helping-hands/badges/watch/:categoryId ─────────────────────────────
-
-export const getWatchHhBadgeUrl = (categoryId: string) =>
-  `/helping-hands/badges/watch/${categoryId}`;
+/**
+ * @summary Member registers interest in a badge category (watching stage)
+ */
+export const getWatchHhBadgeUrl = (categoryId: string) => {
+  return `/api/helping-hands/badges/watch/${categoryId}`;
+};
 
 export const watchHhBadge = async (
   categoryId: string,
-  options?: SecondParameter<typeof customFetch>,
-): Promise<HhMemberBadgeWithCategory> => {
-  return customFetch<HhMemberBadgeWithCategory>(getWatchHhBadgeUrl(categoryId), {
-    method: "POST",
+  options?: RequestInit,
+): Promise<HhMemberBadge> => {
+  return customFetch<HhMemberBadge>(getWatchHhBadgeUrl(categoryId), {
     ...options,
+    method: "POST",
   });
 };
 
+export const getWatchHhBadgeMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof watchHhBadge>>,
+    TError,
+    { categoryId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof watchHhBadge>>,
+  TError,
+  { categoryId: string },
+  TContext
+> => {
+  const mutationKey = ["watchHhBadge"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof watchHhBadge>>,
+    { categoryId: string }
+  > = (props) => {
+    const { categoryId } = props ?? {};
+
+    return watchHhBadge(categoryId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type WatchHhBadgeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof watchHhBadge>>
+>;
+
+export type WatchHhBadgeMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Member registers interest in a badge category (watching stage)
+ */
 export const useWatchHhBadge = <
   TError = ErrorType<unknown>,
   TContext = unknown,
@@ -7306,42 +8406,48 @@ export const useWatchHhBadge = <
   { categoryId: string },
   TContext
 > => {
-  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof watchHhBadge>>,
-    { categoryId: string }
-  > = ({ categoryId }) => watchHhBadge(categoryId, requestOptions);
-  return useMutation({ mutationFn, ...mutationOptions });
+  return useMutation(getWatchHhBadgeMutationOptions(options));
 };
 
-// ── GET /helping-hands/my/badges ─────────────────────────────────────────────
-
-export const getGetMyHhBadgesUrl = () => `/helping-hands/my/badges`;
+/**
+ * @summary Get the signed-in member's badges with category details
+ */
+export const getGetMyHhBadgesUrl = () => {
+  return `/api/helping-hands/my/badges`;
+};
 
 export const getMyHhBadges = async (
-  options?: SecondParameter<typeof customFetch>,
+  options?: RequestInit,
 ): Promise<HhMemberBadgeWithCategory[]> => {
   return customFetch<HhMemberBadgeWithCategory[]>(getGetMyHhBadgesUrl(), {
-    method: "GET",
     ...options,
+    method: "GET",
   });
 };
 
-export const getGetMyHhBadgesQueryKey = () => [`/helping-hands/my/badges`] as const;
+export const getGetMyHhBadgesQueryKey = () => {
+  return [`/api/helping-hands/my/badges`] as const;
+};
 
 export const getGetMyHhBadgesQueryOptions = <
   TData = Awaited<ReturnType<typeof getMyHhBadges>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<Awaited<ReturnType<typeof getMyHhBadges>>, TError, TData>;
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhBadges>>,
+    TError,
+    TData
+  >;
   request?: SecondParameter<typeof customFetch>;
-}): UseQueryOptions<Awaited<ReturnType<typeof getMyHhBadges>>, TError, TData> & {
-  queryKey: QueryKey;
-} => {
+}) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
+
   const queryKey = queryOptions?.queryKey ?? getGetMyHhBadgesQueryKey();
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyHhBadges>>> = ({ signal }) =>
-    getMyHhBadges({ signal, ...requestOptions });
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyHhBadges>>> = ({
+    signal,
+  }) => getMyHhBadges({ signal, ...requestOptions });
+
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getMyHhBadges>>,
     TError,
@@ -7349,38 +8455,58 @@ export const getGetMyHhBadgesQueryOptions = <
   > & { queryKey: QueryKey };
 };
 
-export type GetMyHhBadgesQueryResult = NonNullable<Awaited<ReturnType<typeof getMyHhBadges>>>;
+export type GetMyHhBadgesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyHhBadges>>
+>;
 export type GetMyHhBadgesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get the signed-in member's badges with category details
+ */
 
 export function useGetMyHhBadges<
   TData = Awaited<ReturnType<typeof getMyHhBadges>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<Awaited<ReturnType<typeof getMyHhBadges>>, TError, TData>;
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhBadges>>,
+    TError,
+    TData
+  >;
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetMyHhBadgesQueryOptions(options);
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-// ── GET /helping-hands/members/:memberId/badges ───────────────────────────────
-
-export const getGetMemberHhBadgesUrl = (memberId: string) =>
-  `/helping-hands/members/${memberId}/badges`;
+/**
+ * @summary Get a member's badges with category details (admin or self)
+ */
+export const getGetMemberHhBadgesUrl = (memberId: string) => {
+  return `/api/helping-hands/members/${memberId}/badges`;
+};
 
 export const getMemberHhBadges = async (
   memberId: string,
-  options?: SecondParameter<typeof customFetch>,
+  options?: RequestInit,
 ): Promise<HhMemberBadgeWithCategory[]> => {
-  return customFetch<HhMemberBadgeWithCategory[]>(getGetMemberHhBadgesUrl(memberId), {
-    method: "GET",
-    ...options,
-  });
+  return customFetch<HhMemberBadgeWithCategory[]>(
+    getGetMemberHhBadgesUrl(memberId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
-export const getGetMemberHhBadgesQueryKey = (memberId: string) =>
-  [`/helping-hands/members/${memberId}/badges`] as const;
+export const getGetMemberHhBadgesQueryKey = (memberId: string) => {
+  return [`/api/helping-hands/members/${memberId}/badges`] as const;
+};
 
 export const getGetMemberHhBadgesQueryOptions = <
   TData = Awaited<ReturnType<typeof getMemberHhBadges>>,
@@ -7388,17 +8514,30 @@ export const getGetMemberHhBadgesQueryOptions = <
 >(
   memberId: string,
   options?: {
-    query?: UseQueryOptions<Awaited<ReturnType<typeof getMemberHhBadges>>, TError, TData>;
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getMemberHhBadges>>,
+      TError,
+      TData
+    >;
     request?: SecondParameter<typeof customFetch>;
   },
-): UseQueryOptions<Awaited<ReturnType<typeof getMemberHhBadges>>, TError, TData> & {
-  queryKey: QueryKey;
-} => {
+) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
-  const queryKey = queryOptions?.queryKey ?? getGetMemberHhBadgesQueryKey(memberId);
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMemberHhBadges>>> = ({ signal }) =>
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetMemberHhBadgesQueryKey(memberId);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getMemberHhBadges>>
+  > = ({ signal }) =>
     getMemberHhBadges(memberId, { signal, ...requestOptions });
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!memberId,
+    ...queryOptions,
+  } as UseQueryOptions<
     Awaited<ReturnType<typeof getMemberHhBadges>>,
     TError,
     TData
@@ -7410,39 +8549,112 @@ export type GetMemberHhBadgesQueryResult = NonNullable<
 >;
 export type GetMemberHhBadgesQueryError = ErrorType<unknown>;
 
+/**
+ * @summary Get a member's badges with category details (admin or self)
+ */
+
 export function useGetMemberHhBadges<
   TData = Awaited<ReturnType<typeof getMemberHhBadges>>,
   TError = ErrorType<unknown>,
 >(
   memberId: string,
   options?: {
-    query?: UseQueryOptions<Awaited<ReturnType<typeof getMemberHhBadges>>, TError, TData>;
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getMemberHhBadges>>,
+      TError,
+      TData
+    >;
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetMemberHhBadgesQueryOptions(memberId, options);
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-// ── POST /helping-hands/members/:memberId/badges/:categoryId ──────────────────
-
-export const getIssueHhBadgeUrl = (memberId: string, categoryId: string) =>
-  `/helping-hands/members/${memberId}/badges/${categoryId}`;
+/**
+ * @summary Admin issues or advances a badge (watching→learning→practicing→teaching)
+ */
+export const getIssueHhBadgeUrl = (memberId: string, categoryId: string) => {
+  return `/api/helping-hands/members/${memberId}/badges/${categoryId}`;
+};
 
 export const issueHhBadge = async (
   memberId: string,
   categoryId: string,
-  body: BodyType<IssueHhBadgeRequest>,
-  options?: SecondParameter<typeof customFetch>,
+  issueHhBadgeRequest: IssueHhBadgeRequest,
+  options?: RequestInit,
 ): Promise<HhMemberBadgeWithCategory> => {
-  return customFetch<HhMemberBadgeWithCategory>(getIssueHhBadgeUrl(memberId, categoryId), {
-    method: "POST",
-    body: JSON.stringify(body),
-    ...options,
-  });
+  return customFetch<HhMemberBadgeWithCategory>(
+    getIssueHhBadgeUrl(memberId, categoryId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(issueHhBadgeRequest),
+    },
+  );
 };
 
+export const getIssueHhBadgeMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof issueHhBadge>>,
+    TError,
+    {
+      memberId: string;
+      categoryId: string;
+      data: BodyType<IssueHhBadgeRequest>;
+    },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof issueHhBadge>>,
+  TError,
+  { memberId: string; categoryId: string; data: BodyType<IssueHhBadgeRequest> },
+  TContext
+> => {
+  const mutationKey = ["issueHhBadge"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof issueHhBadge>>,
+    {
+      memberId: string;
+      categoryId: string;
+      data: BodyType<IssueHhBadgeRequest>;
+    }
+  > = (props) => {
+    const { memberId, categoryId, data } = props ?? {};
+
+    return issueHhBadge(memberId, categoryId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type IssueHhBadgeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof issueHhBadge>>
+>;
+export type IssueHhBadgeMutationBody = BodyType<IssueHhBadgeRequest>;
+export type IssueHhBadgeMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Admin issues or advances a badge (watching→learning→practicing→teaching)
+ */
 export const useIssueHhBadge = <
   TError = ErrorType<unknown>,
   TContext = unknown,
@@ -7450,7 +8662,11 @@ export const useIssueHhBadge = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof issueHhBadge>>,
     TError,
-    { memberId: string; categoryId: string; data: BodyType<IssueHhBadgeRequest> },
+    {
+      memberId: string;
+      categoryId: string;
+      data: BodyType<IssueHhBadgeRequest>;
+    },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
@@ -7460,10 +8676,3089 @@ export const useIssueHhBadge = <
   { memberId: string; categoryId: string; data: BodyType<IssueHhBadgeRequest> },
   TContext
 > => {
-  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+  return useMutation(getIssueHhBadgeMutationOptions(options));
+};
+
+/**
+ * @summary Create a new household (invite-only; bootstrap exemption for first household)
+ */
+export const getSandboxCreateHouseholdUrl = () => {
+  return `/api/api/sandbox/households`;
+};
+
+export const sandboxCreateHousehold = async (
+  sandboxCreateHouseholdBody: SandboxCreateHouseholdBody,
+  options?: RequestInit,
+): Promise<SandboxAuthResult> => {
+  return customFetch<SandboxAuthResult>(getSandboxCreateHouseholdUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sandboxCreateHouseholdBody),
+  });
+};
+
+export const getSandboxCreateHouseholdMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreateHousehold>>,
+    TError,
+    { data: BodyType<SandboxCreateHouseholdBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxCreateHousehold>>,
+  TError,
+  { data: BodyType<SandboxCreateHouseholdBody> },
+  TContext
+> => {
+  const mutationKey = ["sandboxCreateHousehold"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof issueHhBadge>>,
-    { memberId: string; categoryId: string; data: BodyType<IssueHhBadgeRequest> }
-  > = ({ memberId, categoryId, data }) => issueHhBadge(memberId, categoryId, data, requestOptions);
-  return useMutation({ mutationFn, ...mutationOptions });
+    Awaited<ReturnType<typeof sandboxCreateHousehold>>,
+    { data: BodyType<SandboxCreateHouseholdBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return sandboxCreateHousehold(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxCreateHouseholdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxCreateHousehold>>
+>;
+export type SandboxCreateHouseholdMutationBody =
+  BodyType<SandboxCreateHouseholdBody>;
+export type SandboxCreateHouseholdMutationError = ErrorType<void>;
+
+/**
+ * @summary Create a new household (invite-only; bootstrap exemption for first household)
+ */
+export const useSandboxCreateHousehold = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreateHousehold>>,
+    TError,
+    { data: BodyType<SandboxCreateHouseholdBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxCreateHousehold>>,
+  TError,
+  { data: BodyType<SandboxCreateHouseholdBody> },
+  TContext
+> => {
+  return useMutation(getSandboxCreateHouseholdMutationOptions(options));
+};
+
+/**
+ * @summary List all households (organizer only)
+ */
+export const getSandboxListHouseholdsUrl = () => {
+  return `/api/api/sandbox/households`;
+};
+
+export const sandboxListHouseholds = async (
+  options?: RequestInit,
+): Promise<SandboxHousehold[]> => {
+  return customFetch<SandboxHousehold[]>(getSandboxListHouseholdsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getSandboxListHouseholdsQueryKey = () => {
+  return [`/api/api/sandbox/households`] as const;
+};
+
+export const getSandboxListHouseholdsQueryOptions = <
+  TData = Awaited<ReturnType<typeof sandboxListHouseholds>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListHouseholds>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getSandboxListHouseholdsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof sandboxListHouseholds>>
+  > = ({ signal }) => sandboxListHouseholds({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListHouseholds>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type SandboxListHouseholdsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxListHouseholds>>
+>;
+export type SandboxListHouseholdsQueryError = ErrorType<void>;
+
+/**
+ * @summary List all households (organizer only)
+ */
+
+export function useSandboxListHouseholds<
+  TData = Awaited<ReturnType<typeof sandboxListHouseholds>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListHouseholds>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getSandboxListHouseholdsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Sign in as an existing household
+ */
+export const getSandboxLoginUrl = () => {
+  return `/api/api/sandbox/sessions`;
+};
+
+export const sandboxLogin = async (
+  sandboxLoginBody: SandboxLoginBody,
+  options?: RequestInit,
+): Promise<SandboxAuthResult> => {
+  return customFetch<SandboxAuthResult>(getSandboxLoginUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sandboxLoginBody),
+  });
+};
+
+export const getSandboxLoginMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxLogin>>,
+    TError,
+    { data: BodyType<SandboxLoginBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxLogin>>,
+  TError,
+  { data: BodyType<SandboxLoginBody> },
+  TContext
+> => {
+  const mutationKey = ["sandboxLogin"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxLogin>>,
+    { data: BodyType<SandboxLoginBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return sandboxLogin(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxLoginMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxLogin>>
+>;
+export type SandboxLoginMutationBody = BodyType<SandboxLoginBody>;
+export type SandboxLoginMutationError = ErrorType<void>;
+
+/**
+ * @summary Sign in as an existing household
+ */
+export const useSandboxLogin = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxLogin>>,
+    TError,
+    { data: BodyType<SandboxLoginBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxLogin>>,
+  TError,
+  { data: BodyType<SandboxLoginBody> },
+  TContext
+> => {
+  return useMutation(getSandboxLoginMutationOptions(options));
+};
+
+/**
+ * @summary Return the currently authenticated household
+ */
+export const getSandboxGetMeUrl = () => {
+  return `/api/api/sandbox/me`;
+};
+
+export const sandboxGetMe = async (
+  options?: RequestInit,
+): Promise<SandboxHousehold> => {
+  return customFetch<SandboxHousehold>(getSandboxGetMeUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getSandboxGetMeQueryKey = () => {
+  return [`/api/api/sandbox/me`] as const;
+};
+
+export const getSandboxGetMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof sandboxGetMe>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxGetMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getSandboxGetMeQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof sandboxGetMe>>> = ({
+    signal,
+  }) => sandboxGetMe({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxGetMe>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type SandboxGetMeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxGetMe>>
+>;
+export type SandboxGetMeQueryError = ErrorType<void>;
+
+/**
+ * @summary Return the currently authenticated household
+ */
+
+export function useSandboxGetMe<
+  TData = Awaited<ReturnType<typeof sandboxGetMe>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxGetMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getSandboxGetMeQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List all invite codes (organizer only)
+ */
+export const getSandboxListInvitesUrl = () => {
+  return `/api/api/sandbox/invites`;
+};
+
+export const sandboxListInvites = async (
+  options?: RequestInit,
+): Promise<SandboxInvite[]> => {
+  return customFetch<SandboxInvite[]>(getSandboxListInvitesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getSandboxListInvitesQueryKey = () => {
+  return [`/api/api/sandbox/invites`] as const;
+};
+
+export const getSandboxListInvitesQueryOptions = <
+  TData = Awaited<ReturnType<typeof sandboxListInvites>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListInvites>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getSandboxListInvitesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof sandboxListInvites>>
+  > = ({ signal }) => sandboxListInvites({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListInvites>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type SandboxListInvitesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxListInvites>>
+>;
+export type SandboxListInvitesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all invite codes (organizer only)
+ */
+
+export function useSandboxListInvites<
+  TData = Awaited<ReturnType<typeof sandboxListInvites>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListInvites>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getSandboxListInvitesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Generate a new one-time invite code (organizer only)
+ */
+export const getSandboxCreateInviteUrl = () => {
+  return `/api/api/sandbox/invites`;
+};
+
+export const sandboxCreateInvite = async (
+  sandboxCreateInviteBody: SandboxCreateInviteBody,
+  options?: RequestInit,
+): Promise<SandboxInvite> => {
+  return customFetch<SandboxInvite>(getSandboxCreateInviteUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sandboxCreateInviteBody),
+  });
+};
+
+export const getSandboxCreateInviteMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreateInvite>>,
+    TError,
+    { data: BodyType<SandboxCreateInviteBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxCreateInvite>>,
+  TError,
+  { data: BodyType<SandboxCreateInviteBody> },
+  TContext
+> => {
+  const mutationKey = ["sandboxCreateInvite"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxCreateInvite>>,
+    { data: BodyType<SandboxCreateInviteBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return sandboxCreateInvite(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxCreateInviteMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxCreateInvite>>
+>;
+export type SandboxCreateInviteMutationBody = BodyType<SandboxCreateInviteBody>;
+export type SandboxCreateInviteMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Generate a new one-time invite code (organizer only)
+ */
+export const useSandboxCreateInvite = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreateInvite>>,
+    TError,
+    { data: BodyType<SandboxCreateInviteBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxCreateInvite>>,
+  TError,
+  { data: BodyType<SandboxCreateInviteBody> },
+  TContext
+> => {
+  return useMutation(getSandboxCreateInviteMutationOptions(options));
+};
+
+/**
+ * @summary Revoke an unused invite code (organizer only)
+ */
+export const getSandboxRevokeInviteUrl = (id: string) => {
+  return `/api/api/sandbox/invites/${id}`;
+};
+
+export const sandboxRevokeInvite = async (
+  id: string,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getSandboxRevokeInviteUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getSandboxRevokeInviteMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxRevokeInvite>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxRevokeInvite>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["sandboxRevokeInvite"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxRevokeInvite>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return sandboxRevokeInvite(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxRevokeInviteMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxRevokeInvite>>
+>;
+
+export type SandboxRevokeInviteMutationError = ErrorType<void>;
+
+/**
+ * @summary Revoke an unused invite code (organizer only)
+ */
+export const useSandboxRevokeInvite = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxRevokeInvite>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxRevokeInvite>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getSandboxRevokeInviteMutationOptions(options));
+};
+
+/**
+ * @summary List all post buckets
+ */
+export const getSandboxListBucketsUrl = () => {
+  return `/api/api/sandbox/buckets`;
+};
+
+export const sandboxListBuckets = async (
+  options?: RequestInit,
+): Promise<SandboxBucket[]> => {
+  return customFetch<SandboxBucket[]>(getSandboxListBucketsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getSandboxListBucketsQueryKey = () => {
+  return [`/api/api/sandbox/buckets`] as const;
+};
+
+export const getSandboxListBucketsQueryOptions = <
+  TData = Awaited<ReturnType<typeof sandboxListBuckets>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListBuckets>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getSandboxListBucketsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof sandboxListBuckets>>
+  > = ({ signal }) => sandboxListBuckets({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListBuckets>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type SandboxListBucketsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxListBuckets>>
+>;
+export type SandboxListBucketsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all post buckets
+ */
+
+export function useSandboxListBuckets<
+  TData = Awaited<ReturnType<typeof sandboxListBuckets>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListBuckets>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getSandboxListBucketsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a custom post bucket (organizer only)
+ */
+export const getSandboxCreateBucketUrl = () => {
+  return `/api/api/sandbox/buckets`;
+};
+
+export const sandboxCreateBucket = async (
+  sandboxCreateBucketBody: SandboxCreateBucketBody,
+  options?: RequestInit,
+): Promise<SandboxBucket> => {
+  return customFetch<SandboxBucket>(getSandboxCreateBucketUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sandboxCreateBucketBody),
+  });
+};
+
+export const getSandboxCreateBucketMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreateBucket>>,
+    TError,
+    { data: BodyType<SandboxCreateBucketBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxCreateBucket>>,
+  TError,
+  { data: BodyType<SandboxCreateBucketBody> },
+  TContext
+> => {
+  const mutationKey = ["sandboxCreateBucket"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxCreateBucket>>,
+    { data: BodyType<SandboxCreateBucketBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return sandboxCreateBucket(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxCreateBucketMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxCreateBucket>>
+>;
+export type SandboxCreateBucketMutationBody = BodyType<SandboxCreateBucketBody>;
+export type SandboxCreateBucketMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a custom post bucket (organizer only)
+ */
+export const useSandboxCreateBucket = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreateBucket>>,
+    TError,
+    { data: BodyType<SandboxCreateBucketBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxCreateBucket>>,
+  TError,
+  { data: BodyType<SandboxCreateBucketBody> },
+  TContext
+> => {
+  return useMutation(getSandboxCreateBucketMutationOptions(options));
+};
+
+/**
+ * @summary Update a bucket label or Gather Round prompt text (organizer only)
+ */
+export const getSandboxUpdateBucketUrl = (id: string) => {
+  return `/api/api/sandbox/buckets/${id}`;
+};
+
+export const sandboxUpdateBucket = async (
+  id: string,
+  sandboxUpdateBucketBody: SandboxUpdateBucketBody,
+  options?: RequestInit,
+): Promise<SandboxBucket> => {
+  return customFetch<SandboxBucket>(getSandboxUpdateBucketUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sandboxUpdateBucketBody),
+  });
+};
+
+export const getSandboxUpdateBucketMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxUpdateBucket>>,
+    TError,
+    { id: string; data: BodyType<SandboxUpdateBucketBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxUpdateBucket>>,
+  TError,
+  { id: string; data: BodyType<SandboxUpdateBucketBody> },
+  TContext
+> => {
+  const mutationKey = ["sandboxUpdateBucket"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxUpdateBucket>>,
+    { id: string; data: BodyType<SandboxUpdateBucketBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return sandboxUpdateBucket(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxUpdateBucketMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxUpdateBucket>>
+>;
+export type SandboxUpdateBucketMutationBody = BodyType<SandboxUpdateBucketBody>;
+export type SandboxUpdateBucketMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update a bucket label or Gather Round prompt text (organizer only)
+ */
+export const useSandboxUpdateBucket = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxUpdateBucket>>,
+    TError,
+    { id: string; data: BodyType<SandboxUpdateBucketBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxUpdateBucket>>,
+  TError,
+  { id: string; data: BodyType<SandboxUpdateBucketBody> },
+  TContext
+> => {
+  return useMutation(getSandboxUpdateBucketMutationOptions(options));
+};
+
+/**
+ * @summary List posts (optionally filtered by bucketId); expired Heads Up posts are purged on read
+ */
+export const getSandboxListPostsUrl = (params?: SandboxListPostsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/api/sandbox/posts?${stringifiedParams}`
+    : `/api/api/sandbox/posts`;
+};
+
+export const sandboxListPosts = async (
+  params?: SandboxListPostsParams,
+  options?: RequestInit,
+): Promise<SandboxPost[]> => {
+  return customFetch<SandboxPost[]>(getSandboxListPostsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getSandboxListPostsQueryKey = (
+  params?: SandboxListPostsParams,
+) => {
+  return [`/api/api/sandbox/posts`, ...(params ? [params] : [])] as const;
+};
+
+export const getSandboxListPostsQueryOptions = <
+  TData = Awaited<ReturnType<typeof sandboxListPosts>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: SandboxListPostsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof sandboxListPosts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getSandboxListPostsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof sandboxListPosts>>
+  > = ({ signal }) => sandboxListPosts(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListPosts>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type SandboxListPostsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxListPosts>>
+>;
+export type SandboxListPostsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List posts (optionally filtered by bucketId); expired Heads Up posts are purged on read
+ */
+
+export function useSandboxListPosts<
+  TData = Awaited<ReturnType<typeof sandboxListPosts>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: SandboxListPostsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof sandboxListPosts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getSandboxListPostsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a post; Heads Up posts auto-expire after 72 h
+ */
+export const getSandboxCreatePostUrl = () => {
+  return `/api/api/sandbox/posts`;
+};
+
+export const sandboxCreatePost = async (
+  sandboxCreatePostBody: SandboxCreatePostBody,
+  options?: RequestInit,
+): Promise<SandboxPost> => {
+  return customFetch<SandboxPost>(getSandboxCreatePostUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sandboxCreatePostBody),
+  });
+};
+
+export const getSandboxCreatePostMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreatePost>>,
+    TError,
+    { data: BodyType<SandboxCreatePostBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxCreatePost>>,
+  TError,
+  { data: BodyType<SandboxCreatePostBody> },
+  TContext
+> => {
+  const mutationKey = ["sandboxCreatePost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxCreatePost>>,
+    { data: BodyType<SandboxCreatePostBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return sandboxCreatePost(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxCreatePostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxCreatePost>>
+>;
+export type SandboxCreatePostMutationBody = BodyType<SandboxCreatePostBody>;
+export type SandboxCreatePostMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a post; Heads Up posts auto-expire after 72 h
+ */
+export const useSandboxCreatePost = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreatePost>>,
+    TError,
+    { data: BodyType<SandboxCreatePostBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxCreatePost>>,
+  TError,
+  { data: BodyType<SandboxCreatePostBody> },
+  TContext
+> => {
+  return useMutation(getSandboxCreatePostMutationOptions(options));
+};
+
+/**
+ * @summary Delete a post (own post or organizer)
+ */
+export const getSandboxDeletePostUrl = (id: string) => {
+  return `/api/api/sandbox/posts/${id}`;
+};
+
+export const sandboxDeletePost = async (
+  id: string,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getSandboxDeletePostUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getSandboxDeletePostMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxDeletePost>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxDeletePost>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["sandboxDeletePost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxDeletePost>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return sandboxDeletePost(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxDeletePostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxDeletePost>>
+>;
+
+export type SandboxDeletePostMutationError = ErrorType<void>;
+
+/**
+ * @summary Delete a post (own post or organizer)
+ */
+export const useSandboxDeletePost = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxDeletePost>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxDeletePost>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getSandboxDeletePostMutationOptions(options));
+};
+
+/**
+ * @summary List community standby roles.
+Organizers see all. Members see public roles (with full household identity for the standby reference card)
+and their own private assignments. Other households' private roles are hidden.
+
+ */
+export const getSandboxListRolesUrl = () => {
+  return `/api/api/sandbox/roles`;
+};
+
+export const sandboxListRoles = async (
+  options?: RequestInit,
+): Promise<SandboxRole[]> => {
+  return customFetch<SandboxRole[]>(getSandboxListRolesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getSandboxListRolesQueryKey = () => {
+  return [`/api/api/sandbox/roles`] as const;
+};
+
+export const getSandboxListRolesQueryOptions = <
+  TData = Awaited<ReturnType<typeof sandboxListRoles>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListRoles>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getSandboxListRolesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof sandboxListRoles>>
+  > = ({ signal }) => sandboxListRoles({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListRoles>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type SandboxListRolesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxListRoles>>
+>;
+export type SandboxListRolesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List community standby roles.
+Organizers see all. Members see public roles (with full household identity for the standby reference card)
+and their own private assignments. Other households' private roles are hidden.
+
+ */
+
+export function useSandboxListRoles<
+  TData = Awaited<ReturnType<typeof sandboxListRoles>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxListRoles>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getSandboxListRolesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a community role (organizer only)
+ */
+export const getSandboxCreateRoleUrl = () => {
+  return `/api/api/sandbox/roles`;
+};
+
+export const sandboxCreateRole = async (
+  sandboxCreateRoleBody: SandboxCreateRoleBody,
+  options?: RequestInit,
+): Promise<SandboxRole> => {
+  return customFetch<SandboxRole>(getSandboxCreateRoleUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sandboxCreateRoleBody),
+  });
+};
+
+export const getSandboxCreateRoleMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreateRole>>,
+    TError,
+    { data: BodyType<SandboxCreateRoleBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxCreateRole>>,
+  TError,
+  { data: BodyType<SandboxCreateRoleBody> },
+  TContext
+> => {
+  const mutationKey = ["sandboxCreateRole"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxCreateRole>>,
+    { data: BodyType<SandboxCreateRoleBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return sandboxCreateRole(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxCreateRoleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxCreateRole>>
+>;
+export type SandboxCreateRoleMutationBody = BodyType<SandboxCreateRoleBody>;
+export type SandboxCreateRoleMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a community role (organizer only)
+ */
+export const useSandboxCreateRole = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCreateRole>>,
+    TError,
+    { data: BodyType<SandboxCreateRoleBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxCreateRole>>,
+  TError,
+  { data: BodyType<SandboxCreateRoleBody> },
+  TContext
+> => {
+  return useMutation(getSandboxCreateRoleMutationOptions(options));
+};
+
+/**
+ * @summary Update a role — assign household, toggle public visibility (organizer only)
+ */
+export const getSandboxUpdateRoleUrl = (id: string) => {
+  return `/api/api/sandbox/roles/${id}`;
+};
+
+export const sandboxUpdateRole = async (
+  id: string,
+  sandboxUpdateRoleBody: SandboxUpdateRoleBody,
+  options?: RequestInit,
+): Promise<SandboxRole> => {
+  return customFetch<SandboxRole>(getSandboxUpdateRoleUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sandboxUpdateRoleBody),
+  });
+};
+
+export const getSandboxUpdateRoleMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxUpdateRole>>,
+    TError,
+    { id: string; data: BodyType<SandboxUpdateRoleBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxUpdateRole>>,
+  TError,
+  { id: string; data: BodyType<SandboxUpdateRoleBody> },
+  TContext
+> => {
+  const mutationKey = ["sandboxUpdateRole"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxUpdateRole>>,
+    { id: string; data: BodyType<SandboxUpdateRoleBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return sandboxUpdateRole(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxUpdateRoleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxUpdateRole>>
+>;
+export type SandboxUpdateRoleMutationBody = BodyType<SandboxUpdateRoleBody>;
+export type SandboxUpdateRoleMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update a role — assign household, toggle public visibility (organizer only)
+ */
+export const useSandboxUpdateRole = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxUpdateRole>>,
+    TError,
+    { id: string; data: BodyType<SandboxUpdateRoleBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxUpdateRole>>,
+  TError,
+  { id: string; data: BodyType<SandboxUpdateRoleBody> },
+  TContext
+> => {
+  return useMutation(getSandboxUpdateRoleMutationOptions(options));
+};
+
+/**
+ * @summary Delete a community role (organizer only)
+ */
+export const getSandboxDeleteRoleUrl = (id: string) => {
+  return `/api/api/sandbox/roles/${id}`;
+};
+
+export const sandboxDeleteRole = async (
+  id: string,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getSandboxDeleteRoleUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getSandboxDeleteRoleMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxDeleteRole>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxDeleteRole>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["sandboxDeleteRole"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxDeleteRole>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return sandboxDeleteRole(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxDeleteRoleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxDeleteRole>>
+>;
+
+export type SandboxDeleteRoleMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete a community role (organizer only)
+ */
+export const useSandboxDeleteRole = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxDeleteRole>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxDeleteRole>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getSandboxDeleteRoleMutationOptions(options));
+};
+
+/**
+ * @summary Return the current active standby event, or null
+ */
+export const getSandboxGetActiveStandbyUrl = () => {
+  return `/api/api/sandbox/standby/active`;
+};
+
+export const sandboxGetActiveStandby = async (
+  options?: RequestInit,
+): Promise<SandboxStandbyEvent | null> => {
+  return customFetch<SandboxStandbyEvent | null>(
+    getSandboxGetActiveStandbyUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getSandboxGetActiveStandbyQueryKey = () => {
+  return [`/api/api/sandbox/standby/active`] as const;
+};
+
+export const getSandboxGetActiveStandbyQueryOptions = <
+  TData = Awaited<ReturnType<typeof sandboxGetActiveStandby>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxGetActiveStandby>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getSandboxGetActiveStandbyQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof sandboxGetActiveStandby>>
+  > = ({ signal }) => sandboxGetActiveStandby({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxGetActiveStandby>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type SandboxGetActiveStandbyQueryResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxGetActiveStandby>>
+>;
+export type SandboxGetActiveStandbyQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Return the current active standby event, or null
+ */
+
+export function useSandboxGetActiveStandby<
+  TData = Awaited<ReturnType<typeof sandboxGetActiveStandby>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxGetActiveStandby>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getSandboxGetActiveStandbyQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Declare a neighbourhood standby event (organizer only)
+ */
+export const getSandboxDeclareStandbyUrl = () => {
+  return `/api/api/sandbox/standby`;
+};
+
+export const sandboxDeclareStandby = async (
+  sandboxDeclareStandbyBody: SandboxDeclareStandbyBody,
+  options?: RequestInit,
+): Promise<SandboxStandbyEvent> => {
+  return customFetch<SandboxStandbyEvent>(getSandboxDeclareStandbyUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sandboxDeclareStandbyBody),
+  });
+};
+
+export const getSandboxDeclareStandbyMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxDeclareStandby>>,
+    TError,
+    { data: BodyType<SandboxDeclareStandbyBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxDeclareStandby>>,
+  TError,
+  { data: BodyType<SandboxDeclareStandbyBody> },
+  TContext
+> => {
+  const mutationKey = ["sandboxDeclareStandby"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxDeclareStandby>>,
+    { data: BodyType<SandboxDeclareStandbyBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return sandboxDeclareStandby(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxDeclareStandbyMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxDeclareStandby>>
+>;
+export type SandboxDeclareStandbyMutationBody =
+  BodyType<SandboxDeclareStandbyBody>;
+export type SandboxDeclareStandbyMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Declare a neighbourhood standby event (organizer only)
+ */
+export const useSandboxDeclareStandby = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxDeclareStandby>>,
+    TError,
+    { data: BodyType<SandboxDeclareStandbyBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxDeclareStandby>>,
+  TError,
+  { data: BodyType<SandboxDeclareStandbyBody> },
+  TContext
+> => {
+  return useMutation(getSandboxDeclareStandbyMutationOptions(options));
+};
+
+/**
+ * @summary End an active standby event (organizer only)
+ */
+export const getSandboxEndStandbyUrl = (id: string) => {
+  return `/api/api/sandbox/standby/${id}/end`;
+};
+
+export const sandboxEndStandby = async (
+  id: string,
+  options?: RequestInit,
+): Promise<SandboxEndStandby200> => {
+  return customFetch<SandboxEndStandby200>(getSandboxEndStandbyUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getSandboxEndStandbyMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxEndStandby>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxEndStandby>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["sandboxEndStandby"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxEndStandby>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return sandboxEndStandby(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxEndStandbyMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxEndStandby>>
+>;
+
+export type SandboxEndStandbyMutationError = ErrorType<unknown>;
+
+/**
+ * @summary End an active standby event (organizer only)
+ */
+export const useSandboxEndStandby = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxEndStandby>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxEndStandby>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getSandboxEndStandbyMutationOptions(options));
+};
+
+/**
+ * @summary Checkin summary for the active standby event.
+All members see counts and who checked in.
+Organizer additionally receives the list of household IDs that have NOT yet checked in.
+
+ */
+export const getSandboxGetCheckinsUrl = () => {
+  return `/api/api/sandbox/checkins`;
+};
+
+export const sandboxGetCheckins = async (
+  options?: RequestInit,
+): Promise<SandboxCheckinSummary | null> => {
+  return customFetch<SandboxCheckinSummary | null>(getSandboxGetCheckinsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getSandboxGetCheckinsQueryKey = () => {
+  return [`/api/api/sandbox/checkins`] as const;
+};
+
+export const getSandboxGetCheckinsQueryOptions = <
+  TData = Awaited<ReturnType<typeof sandboxGetCheckins>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxGetCheckins>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getSandboxGetCheckinsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof sandboxGetCheckins>>
+  > = ({ signal }) => sandboxGetCheckins({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxGetCheckins>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type SandboxGetCheckinsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxGetCheckins>>
+>;
+export type SandboxGetCheckinsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Checkin summary for the active standby event.
+All members see counts and who checked in.
+Organizer additionally receives the list of household IDs that have NOT yet checked in.
+
+ */
+
+export function useSandboxGetCheckins<
+  TData = Awaited<ReturnType<typeof sandboxGetCheckins>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof sandboxGetCheckins>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getSandboxGetCheckinsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Mark the authenticated household as safe/present
+ */
+export const getSandboxCheckinUrl = () => {
+  return `/api/api/sandbox/checkins`;
+};
+
+export const sandboxCheckin = async (
+  options?: RequestInit,
+): Promise<SandboxCheckin200> => {
+  return customFetch<SandboxCheckin200>(getSandboxCheckinUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getSandboxCheckinMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCheckin>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sandboxCheckin>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["sandboxCheckin"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sandboxCheckin>>,
+    void
+  > = () => {
+    return sandboxCheckin(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SandboxCheckinMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sandboxCheckin>>
+>;
+
+export type SandboxCheckinMutationError = ErrorType<void>;
+
+/**
+ * @summary Mark the authenticated household as safe/present
+ */
+export const useSandboxCheckin = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sandboxCheckin>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sandboxCheckin>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getSandboxCheckinMutationOptions(options));
+};
+
+/**
+ * @summary Join the nursery (invite-only; bootstrap exemption for first producer)
+ */
+export const getNurseryJoinUrl = () => {
+  return `/api/api/nursery/producers`;
+};
+
+export const nurseryJoin = async (
+  nurseryJoinBody: NurseryJoinBody,
+  options?: RequestInit,
+): Promise<NurseryAuthResult> => {
+  return customFetch<NurseryAuthResult>(getNurseryJoinUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(nurseryJoinBody),
+  });
+};
+
+export const getNurseryJoinMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryJoin>>,
+    TError,
+    { data: BodyType<NurseryJoinBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryJoin>>,
+  TError,
+  { data: BodyType<NurseryJoinBody> },
+  TContext
+> => {
+  const mutationKey = ["nurseryJoin"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryJoin>>,
+    { data: BodyType<NurseryJoinBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return nurseryJoin(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryJoinMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryJoin>>
+>;
+export type NurseryJoinMutationBody = BodyType<NurseryJoinBody>;
+export type NurseryJoinMutationError = ErrorType<void>;
+
+/**
+ * @summary Join the nursery (invite-only; bootstrap exemption for first producer)
+ */
+export const useNurseryJoin = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryJoin>>,
+    TError,
+    { data: BodyType<NurseryJoinBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryJoin>>,
+  TError,
+  { data: BodyType<NurseryJoinBody> },
+  TContext
+> => {
+  return useMutation(getNurseryJoinMutationOptions(options));
+};
+
+/**
+ * @summary Sign in as an existing producer
+ */
+export const getNurseryLoginUrl = () => {
+  return `/api/api/nursery/sessions`;
+};
+
+export const nurseryLogin = async (
+  nurseryLoginBody: NurseryLoginBody,
+  options?: RequestInit,
+): Promise<NurseryAuthResult> => {
+  return customFetch<NurseryAuthResult>(getNurseryLoginUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(nurseryLoginBody),
+  });
+};
+
+export const getNurseryLoginMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryLogin>>,
+    TError,
+    { data: BodyType<NurseryLoginBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryLogin>>,
+  TError,
+  { data: BodyType<NurseryLoginBody> },
+  TContext
+> => {
+  const mutationKey = ["nurseryLogin"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryLogin>>,
+    { data: BodyType<NurseryLoginBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return nurseryLogin(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryLoginMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryLogin>>
+>;
+export type NurseryLoginMutationBody = BodyType<NurseryLoginBody>;
+export type NurseryLoginMutationError = ErrorType<void>;
+
+/**
+ * @summary Sign in as an existing producer
+ */
+export const useNurseryLogin = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryLogin>>,
+    TError,
+    { data: BodyType<NurseryLoginBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryLogin>>,
+  TError,
+  { data: BodyType<NurseryLoginBody> },
+  TContext
+> => {
+  return useMutation(getNurseryLoginMutationOptions(options));
+};
+
+/**
+ * @summary Sign out (clears nursery_sid session cookie)
+ */
+export const getNurseryLogoutUrl = () => {
+  return `/api/api/nursery/sessions`;
+};
+
+export const nurseryLogout = async (options?: RequestInit): Promise<void> => {
+  return customFetch<void>(getNurseryLogoutUrl(), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getNurseryLogoutMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryLogout>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryLogout>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["nurseryLogout"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryLogout>>,
+    void
+  > = () => {
+    return nurseryLogout(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryLogoutMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryLogout>>
+>;
+
+export type NurseryLogoutMutationError = ErrorType<void>;
+
+/**
+ * @summary Sign out (clears nursery_sid session cookie)
+ */
+export const useNurseryLogout = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryLogout>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryLogout>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getNurseryLogoutMutationOptions(options));
+};
+
+/**
+ * @summary Return the currently authenticated producer
+ */
+export const getNurseryGetMeUrl = () => {
+  return `/api/api/nursery/me`;
+};
+
+export const nurseryGetMe = async (
+  options?: RequestInit,
+): Promise<NurseryProducer> => {
+  return customFetch<NurseryProducer>(getNurseryGetMeUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getNurseryGetMeQueryKey = () => {
+  return [`/api/api/nursery/me`] as const;
+};
+
+export const getNurseryGetMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof nurseryGetMe>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryGetMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getNurseryGetMeQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof nurseryGetMe>>> = ({
+    signal,
+  }) => nurseryGetMe({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryGetMe>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type NurseryGetMeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryGetMe>>
+>;
+export type NurseryGetMeQueryError = ErrorType<void>;
+
+/**
+ * @summary Return the currently authenticated producer
+ */
+
+export function useNurseryGetMe<
+  TData = Awaited<ReturnType<typeof nurseryGetMe>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryGetMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getNurseryGetMeQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List all invite codes (steward only)
+ */
+export const getNurseryListInvitesUrl = () => {
+  return `/api/api/nursery/invites`;
+};
+
+export const nurseryListInvites = async (
+  options?: RequestInit,
+): Promise<NurseryInvite[]> => {
+  return customFetch<NurseryInvite[]>(getNurseryListInvitesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getNurseryListInvitesQueryKey = () => {
+  return [`/api/api/nursery/invites`] as const;
+};
+
+export const getNurseryListInvitesQueryOptions = <
+  TData = Awaited<ReturnType<typeof nurseryListInvites>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryListInvites>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getNurseryListInvitesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof nurseryListInvites>>
+  > = ({ signal }) => nurseryListInvites({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryListInvites>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type NurseryListInvitesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryListInvites>>
+>;
+export type NurseryListInvitesQueryError = ErrorType<void>;
+
+/**
+ * @summary List all invite codes (steward only)
+ */
+
+export function useNurseryListInvites<
+  TData = Awaited<ReturnType<typeof nurseryListInvites>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryListInvites>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getNurseryListInvitesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Generate a new one-time invite code (steward only)
+ */
+export const getNurseryCreateInviteUrl = () => {
+  return `/api/api/nursery/invites`;
+};
+
+export const nurseryCreateInvite = async (
+  nurseryCreateInviteBody: NurseryCreateInviteBody,
+  options?: RequestInit,
+): Promise<NurseryInvite> => {
+  return customFetch<NurseryInvite>(getNurseryCreateInviteUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(nurseryCreateInviteBody),
+  });
+};
+
+export const getNurseryCreateInviteMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryCreateInvite>>,
+    TError,
+    { data: BodyType<NurseryCreateInviteBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryCreateInvite>>,
+  TError,
+  { data: BodyType<NurseryCreateInviteBody> },
+  TContext
+> => {
+  const mutationKey = ["nurseryCreateInvite"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryCreateInvite>>,
+    { data: BodyType<NurseryCreateInviteBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return nurseryCreateInvite(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryCreateInviteMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryCreateInvite>>
+>;
+export type NurseryCreateInviteMutationBody = BodyType<NurseryCreateInviteBody>;
+export type NurseryCreateInviteMutationError = ErrorType<void>;
+
+/**
+ * @summary Generate a new one-time invite code (steward only)
+ */
+export const useNurseryCreateInvite = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryCreateInvite>>,
+    TError,
+    { data: BodyType<NurseryCreateInviteBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryCreateInvite>>,
+  TError,
+  { data: BodyType<NurseryCreateInviteBody> },
+  TContext
+> => {
+  return useMutation(getNurseryCreateInviteMutationOptions(options));
+};
+
+/**
+ * @summary Revoke an unused invite code (steward only)
+ */
+export const getNurseryRevokeInviteUrl = (id: string) => {
+  return `/api/api/nursery/invites/${id}`;
+};
+
+export const nurseryRevokeInvite = async (
+  id: string,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getNurseryRevokeInviteUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getNurseryRevokeInviteMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryRevokeInvite>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryRevokeInvite>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["nurseryRevokeInvite"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryRevokeInvite>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return nurseryRevokeInvite(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryRevokeInviteMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryRevokeInvite>>
+>;
+
+export type NurseryRevokeInviteMutationError = ErrorType<void>;
+
+/**
+ * @summary Revoke an unused invite code (steward only)
+ */
+export const useNurseryRevokeInvite = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryRevokeInvite>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryRevokeInvite>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getNurseryRevokeInviteMutationOptions(options));
+};
+
+/**
+ * @summary List all ideas visible to the current producer
+ */
+export const getNurseryListIdeasUrl = () => {
+  return `/api/api/nursery/ideas`;
+};
+
+export const nurseryListIdeas = async (
+  options?: RequestInit,
+): Promise<NurseryIdea[]> => {
+  return customFetch<NurseryIdea[]>(getNurseryListIdeasUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getNurseryListIdeasQueryKey = () => {
+  return [`/api/api/nursery/ideas`] as const;
+};
+
+export const getNurseryListIdeasQueryOptions = <
+  TData = Awaited<ReturnType<typeof nurseryListIdeas>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryListIdeas>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getNurseryListIdeasQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof nurseryListIdeas>>
+  > = ({ signal }) => nurseryListIdeas({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryListIdeas>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type NurseryListIdeasQueryResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryListIdeas>>
+>;
+export type NurseryListIdeasQueryError = ErrorType<void>;
+
+/**
+ * @summary List all ideas visible to the current producer
+ */
+
+export function useNurseryListIdeas<
+  TData = Awaited<ReturnType<typeof nurseryListIdeas>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryListIdeas>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getNurseryListIdeasQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a new idea (stewards publish directly; producers create drafts)
+ */
+export const getNurseryCreateIdeaUrl = () => {
+  return `/api/api/nursery/ideas`;
+};
+
+export const nurseryCreateIdea = async (
+  nurseryCreateIdeaRequest: NurseryCreateIdeaRequest,
+  options?: RequestInit,
+): Promise<NurseryIdea> => {
+  return customFetch<NurseryIdea>(getNurseryCreateIdeaUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(nurseryCreateIdeaRequest),
+  });
+};
+
+export const getNurseryCreateIdeaMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryCreateIdea>>,
+    TError,
+    { data: BodyType<NurseryCreateIdeaRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryCreateIdea>>,
+  TError,
+  { data: BodyType<NurseryCreateIdeaRequest> },
+  TContext
+> => {
+  const mutationKey = ["nurseryCreateIdea"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryCreateIdea>>,
+    { data: BodyType<NurseryCreateIdeaRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return nurseryCreateIdea(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryCreateIdeaMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryCreateIdea>>
+>;
+export type NurseryCreateIdeaMutationBody = BodyType<NurseryCreateIdeaRequest>;
+export type NurseryCreateIdeaMutationError = ErrorType<void>;
+
+/**
+ * @summary Create a new idea (stewards publish directly; producers create drafts)
+ */
+export const useNurseryCreateIdea = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryCreateIdea>>,
+    TError,
+    { data: BodyType<NurseryCreateIdeaRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryCreateIdea>>,
+  TError,
+  { data: BodyType<NurseryCreateIdeaRequest> },
+  TContext
+> => {
+  return useMutation(getNurseryCreateIdeaMutationOptions(options));
+};
+
+/**
+ * @summary Get a single idea with its comments and stage history
+ */
+export const getNurseryGetIdeaUrl = (id: string) => {
+  return `/api/api/nursery/ideas/${id}`;
+};
+
+export const nurseryGetIdea = async (
+  id: string,
+  options?: RequestInit,
+): Promise<NurseryIdeaDetail> => {
+  return customFetch<NurseryIdeaDetail>(getNurseryGetIdeaUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getNurseryGetIdeaQueryKey = (id: string) => {
+  return [`/api/api/nursery/ideas/${id}`] as const;
+};
+
+export const getNurseryGetIdeaQueryOptions = <
+  TData = Awaited<ReturnType<typeof nurseryGetIdea>>,
+  TError = ErrorType<void>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof nurseryGetIdea>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getNurseryGetIdeaQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof nurseryGetIdea>>> = ({
+    signal,
+  }) => nurseryGetIdea(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryGetIdea>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type NurseryGetIdeaQueryResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryGetIdea>>
+>;
+export type NurseryGetIdeaQueryError = ErrorType<void>;
+
+/**
+ * @summary Get a single idea with its comments and stage history
+ */
+
+export function useNurseryGetIdea<
+  TData = Awaited<ReturnType<typeof nurseryGetIdea>>,
+  TError = ErrorType<void>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof nurseryGetIdea>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getNurseryGetIdeaQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Update idea fields (steward only)
+ */
+export const getNurseryUpdateIdeaUrl = (id: string) => {
+  return `/api/api/nursery/ideas/${id}`;
+};
+
+export const nurseryUpdateIdea = async (
+  id: string,
+  nurseryUpdateIdeaRequest: NurseryUpdateIdeaRequest,
+  options?: RequestInit,
+): Promise<NurseryIdea> => {
+  return customFetch<NurseryIdea>(getNurseryUpdateIdeaUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(nurseryUpdateIdeaRequest),
+  });
+};
+
+export const getNurseryUpdateIdeaMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryUpdateIdea>>,
+    TError,
+    { id: string; data: BodyType<NurseryUpdateIdeaRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryUpdateIdea>>,
+  TError,
+  { id: string; data: BodyType<NurseryUpdateIdeaRequest> },
+  TContext
+> => {
+  const mutationKey = ["nurseryUpdateIdea"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryUpdateIdea>>,
+    { id: string; data: BodyType<NurseryUpdateIdeaRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return nurseryUpdateIdea(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryUpdateIdeaMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryUpdateIdea>>
+>;
+export type NurseryUpdateIdeaMutationBody = BodyType<NurseryUpdateIdeaRequest>;
+export type NurseryUpdateIdeaMutationError = ErrorType<void>;
+
+/**
+ * @summary Update idea fields (steward only)
+ */
+export const useNurseryUpdateIdea = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryUpdateIdea>>,
+    TError,
+    { id: string; data: BodyType<NurseryUpdateIdeaRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryUpdateIdea>>,
+  TError,
+  { id: string; data: BodyType<NurseryUpdateIdeaRequest> },
+  TContext
+> => {
+  return useMutation(getNurseryUpdateIdeaMutationOptions(options));
+};
+
+/**
+ * @summary Delete an idea (steward only)
+ */
+export const getNurseryDeleteIdeaUrl = (id: string) => {
+  return `/api/api/nursery/ideas/${id}`;
+};
+
+export const nurseryDeleteIdea = async (
+  id: string,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getNurseryDeleteIdeaUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getNurseryDeleteIdeaMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryDeleteIdea>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryDeleteIdea>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["nurseryDeleteIdea"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryDeleteIdea>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return nurseryDeleteIdea(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryDeleteIdeaMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryDeleteIdea>>
+>;
+
+export type NurseryDeleteIdeaMutationError = ErrorType<void>;
+
+/**
+ * @summary Delete an idea (steward only)
+ */
+export const useNurseryDeleteIdea = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryDeleteIdea>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryDeleteIdea>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getNurseryDeleteIdeaMutationOptions(options));
+};
+
+/**
+ * @summary Move an idea to a new lifecycle stage (steward only)
+ */
+export const getNurseryMoveStageUrl = (id: string) => {
+  return `/api/api/nursery/ideas/${id}/stage`;
+};
+
+export const nurseryMoveStage = async (
+  id: string,
+  nurseryMoveStageBody: NurseryMoveStageBody,
+  options?: RequestInit,
+): Promise<NurseryIdea> => {
+  return customFetch<NurseryIdea>(getNurseryMoveStageUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(nurseryMoveStageBody),
+  });
+};
+
+export const getNurseryMoveStageMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryMoveStage>>,
+    TError,
+    { id: string; data: BodyType<NurseryMoveStageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryMoveStage>>,
+  TError,
+  { id: string; data: BodyType<NurseryMoveStageBody> },
+  TContext
+> => {
+  const mutationKey = ["nurseryMoveStage"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryMoveStage>>,
+    { id: string; data: BodyType<NurseryMoveStageBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return nurseryMoveStage(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryMoveStageMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryMoveStage>>
+>;
+export type NurseryMoveStageMutationBody = BodyType<NurseryMoveStageBody>;
+export type NurseryMoveStageMutationError = ErrorType<void>;
+
+/**
+ * @summary Move an idea to a new lifecycle stage (steward only)
+ */
+export const useNurseryMoveStage = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryMoveStage>>,
+    TError,
+    { id: string; data: BodyType<NurseryMoveStageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryMoveStage>>,
+  TError,
+  { id: string; data: BodyType<NurseryMoveStageBody> },
+  TContext
+> => {
+  return useMutation(getNurseryMoveStageMutationOptions(options));
+};
+
+/**
+ * @summary List comments for an idea
+ */
+export const getNurseryListCommentsUrl = (id: string) => {
+  return `/api/api/nursery/ideas/${id}/comments`;
+};
+
+export const nurseryListComments = async (
+  id: string,
+  options?: RequestInit,
+): Promise<NurseryComment[]> => {
+  return customFetch<NurseryComment[]>(getNurseryListCommentsUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getNurseryListCommentsQueryKey = (id: string) => {
+  return [`/api/api/nursery/ideas/${id}/comments`] as const;
+};
+
+export const getNurseryListCommentsQueryOptions = <
+  TData = Awaited<ReturnType<typeof nurseryListComments>>,
+  TError = ErrorType<void>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof nurseryListComments>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getNurseryListCommentsQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof nurseryListComments>>
+  > = ({ signal }) => nurseryListComments(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof nurseryListComments>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type NurseryListCommentsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryListComments>>
+>;
+export type NurseryListCommentsQueryError = ErrorType<void>;
+
+/**
+ * @summary List comments for an idea
+ */
+
+export function useNurseryListComments<
+  TData = Awaited<ReturnType<typeof nurseryListComments>>,
+  TError = ErrorType<void>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof nurseryListComments>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getNurseryListCommentsQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Add a comment to an idea
+ */
+export const getNurseryAddCommentUrl = (id: string) => {
+  return `/api/api/nursery/ideas/${id}/comments`;
+};
+
+export const nurseryAddComment = async (
+  id: string,
+  nurseryAddCommentBody: NurseryAddCommentBody,
+  options?: RequestInit,
+): Promise<NurseryComment> => {
+  return customFetch<NurseryComment>(getNurseryAddCommentUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(nurseryAddCommentBody),
+  });
+};
+
+export const getNurseryAddCommentMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryAddComment>>,
+    TError,
+    { id: string; data: BodyType<NurseryAddCommentBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nurseryAddComment>>,
+  TError,
+  { id: string; data: BodyType<NurseryAddCommentBody> },
+  TContext
+> => {
+  const mutationKey = ["nurseryAddComment"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nurseryAddComment>>,
+    { id: string; data: BodyType<NurseryAddCommentBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return nurseryAddComment(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NurseryAddCommentMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nurseryAddComment>>
+>;
+export type NurseryAddCommentMutationBody = BodyType<NurseryAddCommentBody>;
+export type NurseryAddCommentMutationError = ErrorType<void>;
+
+/**
+ * @summary Add a comment to an idea
+ */
+export const useNurseryAddComment = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nurseryAddComment>>,
+    TError,
+    { id: string; data: BodyType<NurseryAddCommentBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nurseryAddComment>>,
+  TError,
+  { id: string; data: BodyType<NurseryAddCommentBody> },
+  TContext
+> => {
+  return useMutation(getNurseryAddCommentMutationOptions(options));
 };

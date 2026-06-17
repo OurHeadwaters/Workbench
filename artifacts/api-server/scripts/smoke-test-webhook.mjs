@@ -5,18 +5,16 @@
  * signs it with STRIPE_WEBHOOK_SECRET, POSTs it to the local API server,
  * and verifies the full delivery loop:
  *   1. Webhook signature accepted → HTTP 200
- *   2. Token written to kit_tokens DB table
- *   3. Idempotency record written to stripe-processed-events.json
- *   4. GET /api/kits/access/:token resolves the kit page
+ *   2. Token written to kit_tokens Postgres table
+ *   3. Idempotency record written to stripe_processed_events Postgres table
+ *   4. Replay of same event returns {received:true, duplicate:true} — no double-send
+ *   5. GET /api/kits/access/:token resolves the kit page
  *
  * Usage:  node artifacts/api-server/scripts/smoke-test-webhook.mjs
  */
 
 import Stripe from "stripe";
-import fs from "fs";
-import path from "path";
 import { execSync } from "child_process";
-import { fileURLToPath } from "url";
 
 const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 const STRIPE_KEY = process.env.STRIPE_SECRET_KEY;
@@ -105,29 +103,10 @@ if (!responseJson.received || responseJson.skipped) {
   process.exit(1);
 }
 
-// ── Step 2: verify idempotency record ─────────────────────────────────────────
+// ── Step 2: verify kit_tokens DB row ──────────────────────────────────────────
 
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const DATA_DIR = path.resolve(__dirname, "../data");
-const EVENTS_FILE = path.join(DATA_DIR, "stripe-processed-events.json");
-
-let eventWritten = false;
-try {
-  const events = JSON.parse(fs.readFileSync(EVENTS_FILE, "utf-8"));
-  eventWritten = FAKE_EVENT_ID in events;
-} catch { /* file may not exist yet */ }
-
-console.log(`stripe-processed-events.json : ${eventWritten ? "✅" : "❌"}`);
-
-if (!eventWritten) {
-  console.error("\n❌  Idempotency record was not written — check server logs.");
-  process.exit(1);
-}
-
-// ── Step 3: verify token in DB and access endpoint ────────────────────────────
-
-// Give the DB insert a moment to commit
-await new Promise((r) => setTimeout(r, 500));
+// Give the DB writes a moment to commit
+await new Promise((r) => setTimeout(r, 600));
 
 let token;
 try {
@@ -145,9 +124,49 @@ if (!token) {
   process.exit(1);
 }
 
-console.log(`kit_tokens DB row            : ✅  (token: ${token.slice(0, 16)}…)`);
+console.log(`kit_tokens DB row                  : ✅  (token: ${token.slice(0, 16)}…)`);
 
-// ── Step 4: verify access endpoint ────────────────────────────────────────────
+// ── Step 3: verify idempotency record in stripe_processed_events ───────────────
+
+let eventWritten = false;
+try {
+  const count = execSync(
+    `psql "$DATABASE_URL" -t -c "SELECT COUNT(*) FROM stripe_processed_events WHERE event_id = '${FAKE_EVENT_ID}';"`,
+    { encoding: "utf-8", env: process.env }
+  ).trim();
+  eventWritten = parseInt(count, 10) > 0;
+} catch (e) {
+  console.error("❌  Could not query stripe_processed_events DB table:", e.message);
+  process.exit(1);
+}
+
+console.log(`stripe_processed_events DB row     : ${eventWritten ? "✅" : "❌"}`);
+
+if (!eventWritten) {
+  console.error("\n❌  Idempotency record was not written to stripe_processed_events — check server logs.");
+  process.exit(1);
+}
+
+// ── Step 4: verify idempotency — replay should return duplicate:true ───────────
+
+const replayRes = await fetch(`${API_BASE}/api/stripe/webhook`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "stripe-signature": header,
+  },
+  body,
+});
+const replayJson = await replayRes.json().catch(() => ({}));
+const isDuplicate = replayRes.status === 200 && replayJson.duplicate === true;
+console.log(`Replay duplicate guard             : ${isDuplicate ? "✅  {received:true,duplicate:true}" : "❌  unexpected: " + JSON.stringify(replayJson)}`);
+
+if (!isDuplicate) {
+  console.error("\n❌  Idempotency replay did not return duplicate:true — double-send risk is unconfirmed.");
+  process.exit(1);
+}
+
+// ── Step 5: verify access endpoint ────────────────────────────────────────────
 
 const accessRes = await fetch(`${API_BASE}/api/kits/access/${token}`);
 const accessBody = await accessRes.json();
@@ -158,7 +177,7 @@ if (accessRes.status !== 200 || !accessBody.ok) {
   process.exit(1);
 }
 
-console.log(`GET /api/kits/access/:token  : ✅  HTTP 200`);
+console.log(`GET /api/kits/access/:token        : ✅  HTTP 200`);
 console.log(`   Kit  : ${accessBody.kit?.name}`);
 console.log(`   Buyer: ${accessBody.buyer_name}`);
 
@@ -166,7 +185,7 @@ console.log(`   Buyer: ${accessBody.buyer_name}`);
 
 console.log(`
 ✅  Full smoke test passed.
-   Webhook verified → token written to DB → email sent → access link resolves.
+   Webhook verified → token written to DB → email dispatched → access link resolves.
    Delivery email was sent to ${TEST_EMAIL} via the google-mail connector.
-   Check the connected Gmail inbox (or connector logs) to confirm actual delivery.
+   Check the connected Gmail inbox (or server logs for mailStatus) to confirm delivery.
 `);

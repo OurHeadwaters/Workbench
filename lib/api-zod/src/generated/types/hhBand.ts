@@ -20,4 +20,9 @@ export interface HhBand {
   /** Bonus payment amount (as string numeric) */
   reliabilityBonusAmount: string;
   reliabilityBonusCurrency: HhBandReliabilityBonusCurrency;
+  xrplEscrowEnabled?: boolean;
+  /** XRPL network in use (mainnet or testnet) */
+  xrplNetwork?: string;
+  /** Whether the XRPL connection is live */
+  xrplLive?: boolean;
 }

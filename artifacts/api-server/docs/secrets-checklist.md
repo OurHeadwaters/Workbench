@@ -25,8 +25,11 @@ node artifacts/api-server/scripts/smoke-test-webhook.mjs
 This signs a synthetic `checkout.session.completed` event with `STRIPE_WEBHOOK_SECRET`, fires it at the local API server, and confirms:
 1. Signature verification passes → HTTP 200
 2. Token written to `kit_tokens` Postgres table
-3. Idempotency record written to `stripe_processed_events` DB table
-4. `GET /api/kits/access/:token` returns kit content and buyer name
+3. Idempotency record written to `stripe_processed_events` Postgres table
+4. Replay of the same event returns `{received:true, duplicate:true}` — no double-send
+5. `GET /api/kits/access/:token` returns kit content and buyer name
+
+Last verified: **2026-06-17** — all 5 checks passed, `mailStatus: "sent"`, Gmail messageId `19ed742a741ad5a3`.
 
 ---
 

@@ -9,6 +9,207 @@ export interface HealthStatus {
   status: string;
 }
 
+export interface SandboxHousehold {
+  id: string;
+  name: string;
+  isOrganizer: boolean;
+  gatherRoundParticipated: string | null;
+  createdAt: string;
+}
+
+export interface SandboxAuthResult {
+  token: string;
+  household: SandboxHousehold;
+}
+
+export interface SandboxInvite {
+  id: string;
+  code: string;
+  note: string;
+  createdAt: string;
+  usedAt: string | null;
+  usedByHouseholdName: string | null;
+}
+
+export interface SandboxBucket {
+  id: string;
+  slug: string;
+  label: string;
+  isBuiltIn: boolean;
+  isHeadsUp: boolean;
+  isGatherRound: boolean;
+  sortOrder: string;
+  /** Monthly prompt text for the gather_round bucket */
+  promptText: string | null;
+}
+
+export interface SandboxPost {
+  id: string;
+  householdId: string;
+  householdName: string;
+  bucketId: string;
+  bucketSlug: string;
+  body: string;
+  expiresAt: string | null;
+  createdAt: string;
+}
+
+export interface SandboxRole {
+  id: string;
+  roleName: string;
+  description: string;
+  householdId: string | null;
+  /** Shown for public roles and to the assigned household; null otherwise */
+  householdName: string | null;
+  isPublic: boolean;
+  assignedByOrganizer: boolean;
+}
+
+export interface SandboxStandbyEvent {
+  id: string;
+  name: string;
+  declaredByHouseholdId: string;
+  declaredByName: string;
+  isActive: boolean;
+  declaredAt: string;
+  endedAt: string | null;
+}
+
+export type SandboxCheckinSummaryRemainingItem = {
+  id: string;
+  name: string;
+};
+
+export type SandboxCheckinSummaryCheckinsItem = {
+  householdId: string;
+  householdName: string;
+  checkedInAt: string;
+};
+
+export interface SandboxCheckinSummary {
+  eventId: string;
+  total: number;
+  checkedIn: number;
+  myCheckedIn: boolean;
+  /** Households that have not yet checked in (organizer-only; empty array for non-organizers) */
+  remaining: SandboxCheckinSummaryRemainingItem[];
+  checkins: SandboxCheckinSummaryCheckinsItem[];
+}
+
+export interface NurseryProducer {
+  id: string;
+  name: string;
+  isSteward: boolean;
+  createdAt: string;
+}
+
+export interface NurseryAuthResult {
+  producer: NurseryProducer;
+}
+
+export interface NurseryInvite {
+  id: string;
+  code: string;
+  note: string;
+  isStewardInvite: boolean;
+  createdAt: string;
+  usedAt: string | null;
+  usedByProducerName: string | null;
+}
+
+export type NurseryStageHistoryEntryStage =
+  (typeof NurseryStageHistoryEntryStage)[keyof typeof NurseryStageHistoryEntryStage];
+
+export const NurseryStageHistoryEntryStage = {
+  nursery: "nursery",
+  fodder: "fodder",
+  fallow: "fallow",
+  graduated: "graduated",
+} as const;
+
+export interface NurseryStageHistoryEntry {
+  stage: NurseryStageHistoryEntryStage;
+  movedAt: string;
+  movedBy: string;
+  note: string;
+}
+
+export type NurseryIdeaStage =
+  (typeof NurseryIdeaStage)[keyof typeof NurseryIdeaStage];
+
+export const NurseryIdeaStage = {
+  nursery: "nursery",
+  fodder: "fodder",
+  fallow: "fallow",
+  graduated: "graduated",
+} as const;
+
+export interface NurseryIdea {
+  id: string;
+  title: string;
+  /** What the producer community calls this */
+  vernacularName: string;
+  /** What the mainstream/massity sector calls this */
+  massityName: string;
+  problemStatement: string;
+  stage: NurseryIdeaStage;
+  stageHistory: NurseryStageHistoryEntry[];
+  stewardNotes: string;
+  isDraft: boolean;
+  graduationReason: string | null;
+  createdByProducerId: string;
+  createdByProducerName: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface NurseryComment {
+  id: string;
+  ideaId: string;
+  producerId: string;
+  producerName: string;
+  body: string;
+  createdAt: string;
+}
+
+export type NurseryIdeaDetail = NurseryIdea & {
+  comments: NurseryComment[];
+};
+
+export interface NurseryCreateIdeaRequest {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  title: string;
+  /** @maxLength 200 */
+  vernacularName?: string;
+  /** @maxLength 200 */
+  massityName?: string;
+  /** @maxLength 5000 */
+  problemStatement?: string;
+  /** @maxLength 5000 */
+  stewardNotes?: string;
+  isDraft?: boolean;
+}
+
+export interface NurseryUpdateIdeaRequest {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  title?: string;
+  /** @maxLength 200 */
+  vernacularName?: string;
+  /** @maxLength 200 */
+  massityName?: string;
+  /** @maxLength 5000 */
+  problemStatement?: string;
+  /** @maxLength 5000 */
+  stewardNotes?: string;
+  isDraft?: boolean;
+}
+
 export interface ErrorEnvelope {
   error: string;
 }
@@ -850,11 +1051,16 @@ export interface PnlByMonthMonth {
   net: number;
 }
 
+export type PnlBreakdownCostCentreMonthlyRevenue = { [key: string]: number };
+
+export type PnlBreakdownCostCentreMonthlyCosts = { [key: string]: number };
+
 export interface PnlBreakdownCostCentre {
+  /** Cost-centre code or '__UNASSIGNED__' */
   code: string;
   name: string;
-  monthlyRevenue: { [key: string]: number };
-  monthlyCosts: { [key: string]: number };
+  monthlyRevenue: PnlBreakdownCostCentreMonthlyRevenue;
+  monthlyCosts: PnlBreakdownCostCentreMonthlyCosts;
   totalRevenue: number;
   totalCosts: number;
   totalNet: number;
@@ -1224,6 +1430,205 @@ export interface CreateHhTaskRequest {
   availableDate: string;
 }
 
+export type HhBadgeCategoryDomain =
+  (typeof HhBadgeCategoryDomain)[keyof typeof HhBadgeCategoryDomain];
+
+export const HhBadgeCategoryDomain = {
+  food: "food",
+  land: "land",
+  care: "care",
+  craft: "craft",
+  governance: "governance",
+  knowledge: "knowledge",
+} as const;
+
+export type HhBadgeCategoryStageModel =
+  (typeof HhBadgeCategoryStageModel)[keyof typeof HhBadgeCategoryStageModel];
+
+export const HhBadgeCategoryStageModel = {
+  binary: "binary",
+  three_stage: "three_stage",
+  four_stage: "four_stage",
+} as const;
+
+export type HhBadgeCategoryStatus =
+  (typeof HhBadgeCategoryStatus)[keyof typeof HhBadgeCategoryStatus];
+
+export const HhBadgeCategoryStatus = {
+  proposed: "proposed",
+  active: "active",
+  archived: "archived",
+} as const;
+
+export interface HhBadgeCategory {
+  id: string;
+  bandId: string;
+  name: string;
+  description: string;
+  domain: HhBadgeCategoryDomain;
+  stageModel: HhBadgeCategoryStageModel;
+  rateModifierEnabled: boolean;
+  proposedByMemberId?: string | null;
+  status: HhBadgeCategoryStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CreateHhBadgeCategoryRequestDomain =
+  (typeof CreateHhBadgeCategoryRequestDomain)[keyof typeof CreateHhBadgeCategoryRequestDomain];
+
+export const CreateHhBadgeCategoryRequestDomain = {
+  food: "food",
+  land: "land",
+  care: "care",
+  craft: "craft",
+  governance: "governance",
+  knowledge: "knowledge",
+} as const;
+
+export type CreateHhBadgeCategoryRequestStageModel =
+  (typeof CreateHhBadgeCategoryRequestStageModel)[keyof typeof CreateHhBadgeCategoryRequestStageModel];
+
+export const CreateHhBadgeCategoryRequestStageModel = {
+  binary: "binary",
+  three_stage: "three_stage",
+  four_stage: "four_stage",
+} as const;
+
+export type CreateHhBadgeCategoryRequestStatus =
+  (typeof CreateHhBadgeCategoryRequestStatus)[keyof typeof CreateHhBadgeCategoryRequestStatus];
+
+export const CreateHhBadgeCategoryRequestStatus = {
+  proposed: "proposed",
+  active: "active",
+} as const;
+
+export interface CreateHhBadgeCategoryRequest {
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  name: string;
+  description?: string;
+  domain?: CreateHhBadgeCategoryRequestDomain;
+  stageModel?: CreateHhBadgeCategoryRequestStageModel;
+  rateModifierEnabled?: boolean;
+  status?: CreateHhBadgeCategoryRequestStatus;
+}
+
+export type UpdateHhBadgeCategoryRequestStatus =
+  (typeof UpdateHhBadgeCategoryRequestStatus)[keyof typeof UpdateHhBadgeCategoryRequestStatus];
+
+export const UpdateHhBadgeCategoryRequestStatus = {
+  proposed: "proposed",
+  active: "active",
+  archived: "archived",
+} as const;
+
+export interface UpdateHhBadgeCategoryRequest {
+  status?: UpdateHhBadgeCategoryRequestStatus;
+  rateModifierEnabled?: boolean;
+  description?: string;
+}
+
+export type HhMemberBadgeStage =
+  (typeof HhMemberBadgeStage)[keyof typeof HhMemberBadgeStage];
+
+export const HhMemberBadgeStage = {
+  watching: "watching",
+  learning: "learning",
+  practicing: "practicing",
+  teaching: "teaching",
+} as const;
+
+export type HhMemberBadgeVcJson = { [key: string]: unknown } | null;
+
+export interface HhMemberBadge {
+  id: string;
+  bandId: string;
+  memberId: string;
+  categoryId: string;
+  stage: HhMemberBadgeStage;
+  notes?: string | null;
+  credentialSource?: string | null;
+  vcJson?: HhMemberBadgeVcJson;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type HhMemberBadgeWithCategoryStage =
+  (typeof HhMemberBadgeWithCategoryStage)[keyof typeof HhMemberBadgeWithCategoryStage];
+
+export const HhMemberBadgeWithCategoryStage = {
+  watching: "watching",
+  learning: "learning",
+  practicing: "practicing",
+  teaching: "teaching",
+} as const;
+
+export type HhMemberBadgeWithCategoryCategoryDomain =
+  (typeof HhMemberBadgeWithCategoryCategoryDomain)[keyof typeof HhMemberBadgeWithCategoryCategoryDomain];
+
+export const HhMemberBadgeWithCategoryCategoryDomain = {
+  food: "food",
+  land: "land",
+  care: "care",
+  craft: "craft",
+  governance: "governance",
+  knowledge: "knowledge",
+} as const;
+
+export type HhMemberBadgeWithCategoryCategoryStageModel =
+  (typeof HhMemberBadgeWithCategoryCategoryStageModel)[keyof typeof HhMemberBadgeWithCategoryCategoryStageModel];
+
+export const HhMemberBadgeWithCategoryCategoryStageModel = {
+  binary: "binary",
+  three_stage: "three_stage",
+  four_stage: "four_stage",
+} as const;
+
+export interface HhMemberBadgeWithCategory {
+  id: string;
+  memberId: string;
+  categoryId: string;
+  stage: HhMemberBadgeWithCategoryStage;
+  notes?: string | null;
+  credentialSource?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  categoryName: string;
+  categoryDescription?: string;
+  categoryDomain: HhMemberBadgeWithCategoryCategoryDomain;
+  categoryStageModel: HhMemberBadgeWithCategoryCategoryStageModel;
+  categoryRateModifierEnabled: boolean;
+}
+
+export type IssueHhBadgeRequestStage =
+  (typeof IssueHhBadgeRequestStage)[keyof typeof IssueHhBadgeRequestStage];
+
+export const IssueHhBadgeRequestStage = {
+  watching: "watching",
+  learning: "learning",
+  practicing: "practicing",
+  teaching: "teaching",
+} as const;
+
+export type IssueHhBadgeRequestCredentialSource =
+  (typeof IssueHhBadgeRequestCredentialSource)[keyof typeof IssueHhBadgeRequestCredentialSource];
+
+export const IssueHhBadgeRequestCredentialSource = {
+  hh_task_history: "hh_task_history",
+  peer_validation: "peer_validation",
+  earth_kit: "earth_kit",
+} as const;
+
+export interface IssueHhBadgeRequest {
+  stage: IssueHhBadgeRequestStage;
+  notes?: string;
+  credentialSource?: IssueHhBadgeRequestCredentialSource;
+  peerValidatorMemberId?: string;
+}
+
 export interface HhEarning {
   id: string;
   taskId: string;
@@ -1291,6 +1696,162 @@ export interface HhDashboard {
   totalMembers: number;
   recentTasks?: HhTask[];
   topContributors?: HhTopContributor[];
+}
+
+export type HhMerchantCategory =
+  (typeof HhMerchantCategory)[keyof typeof HhMerchantCategory];
+
+export const HhMerchantCategory = {
+  grocery: "grocery",
+  fuel: "fuel",
+  pharmacy: "pharmacy",
+  school: "school",
+  general: "general",
+} as const;
+
+export interface HhMerchant {
+  id: string;
+  bandId: string;
+  name: string;
+  description: string;
+  category: HhMerchantCategory;
+  merchantWallet: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type CreateHhMerchantRequestCategory =
+  (typeof CreateHhMerchantRequestCategory)[keyof typeof CreateHhMerchantRequestCategory];
+
+export const CreateHhMerchantRequestCategory = {
+  grocery: "grocery",
+  fuel: "fuel",
+  pharmacy: "pharmacy",
+  school: "school",
+  general: "general",
+} as const;
+
+export interface CreateHhMerchantRequest {
+  /** @minLength 1 */
+  name: string;
+  description?: string;
+  category?: CreateHhMerchantRequestCategory;
+  /** @minLength 1 */
+  merchantWallet: string;
+}
+
+export type UpdateHhMerchantRequestCategory =
+  (typeof UpdateHhMerchantRequestCategory)[keyof typeof UpdateHhMerchantRequestCategory];
+
+export const UpdateHhMerchantRequestCategory = {
+  grocery: "grocery",
+  fuel: "fuel",
+  pharmacy: "pharmacy",
+  school: "school",
+  general: "general",
+} as const;
+
+export interface UpdateHhMerchantRequest {
+  /** @minLength 1 */
+  name?: string;
+  description?: string;
+  category?: UpdateHhMerchantRequestCategory;
+  /** @minLength 1 */
+  merchantWallet?: string;
+  isActive?: boolean;
+}
+
+export type HhEnvelopeCurrency =
+  (typeof HhEnvelopeCurrency)[keyof typeof HhEnvelopeCurrency];
+
+export const HhEnvelopeCurrency = {
+  token: "token",
+  xrp: "xrp",
+} as const;
+
+export interface HhEnvelope {
+  id: string;
+  memberId: string;
+  bandId: string;
+  label: string;
+  icon: string;
+  currency: HhEnvelopeCurrency;
+  monthlyBudget: string;
+  spentThisMonth: string;
+  createdAt: string;
+}
+
+export type CreateHhEnvelopeRequestCurrency =
+  (typeof CreateHhEnvelopeRequestCurrency)[keyof typeof CreateHhEnvelopeRequestCurrency];
+
+export const CreateHhEnvelopeRequestCurrency = {
+  token: "token",
+  xrp: "xrp",
+} as const;
+
+export interface CreateHhEnvelopeRequest {
+  /** @minLength 1 */
+  label: string;
+  icon?: string;
+  currency?: CreateHhEnvelopeRequestCurrency;
+  monthlyBudget: string;
+}
+
+export interface UpdateHhEnvelopeRequest {
+  /** @minLength 1 */
+  label?: string;
+  icon?: string;
+  monthlyBudget?: string;
+}
+
+export interface HhEnvelopeSpendRequest {
+  merchantId: string;
+  amount: string;
+  note?: string;
+}
+
+export interface HhEnvelopeTransaction {
+  id: string;
+  envelopeId: string;
+  merchantId: string;
+  merchantName: string;
+  amount: string;
+  currency: string;
+  note?: string;
+  xrplTxHash?: string | null;
+  spentAt: string;
+}
+
+export type HhHealthScoreTier =
+  (typeof HhHealthScoreTier)[keyof typeof HhHealthScoreTier];
+
+export const HhHealthScoreTier = {
+  strong: "strong",
+  steady: "steady",
+  building: "building",
+  early: "early",
+} as const;
+
+export interface HhHealthScore {
+  score: number;
+  tier: HhHealthScoreTier;
+  message: string;
+  envelopeCount: number;
+  totalBudget: string;
+  totalSpent: string;
+  savingsRate: string;
+  discipline: string;
+}
+
+export interface HhPartnershipPortal {
+  bandName: string;
+  month: string;
+  activeMembers: number;
+  membersWithSavingsEnvelope: number;
+  savingsAdoptionPct: number;
+  avgMonthlyTokenSavingsBudget: string;
+  envelopeDisciplinePct: number;
+  note: string;
 }
 
 export type ListLibraryEntriesParams = {
@@ -1464,3 +2025,148 @@ export const GetHhTasksStatus = {
   missed: "missed",
   all: "all",
 } as const;
+
+export type DeleteMyHhEnvelope200 = {
+  ok?: boolean;
+};
+
+export type GetHhBadgeCategoriesParams = {
+  status?: GetHhBadgeCategoriesStatus;
+};
+
+export type GetHhBadgeCategoriesStatus =
+  (typeof GetHhBadgeCategoriesStatus)[keyof typeof GetHhBadgeCategoriesStatus];
+
+export const GetHhBadgeCategoriesStatus = {
+  active: "active",
+  proposed: "proposed",
+  archived: "archived",
+  all: "all",
+} as const;
+
+export type SandboxCreateHouseholdBody = {
+  /** @maxLength 80 */
+  name: string;
+  /** @minLength 4 */
+  passphrase: string;
+  /** Required for all households after the first */
+  inviteCode?: string;
+};
+
+export type SandboxLoginBody = {
+  name: string;
+  passphrase: string;
+};
+
+export type SandboxCreateInviteBody = {
+  /**
+   * Optional label e.g. "For the Walsh family"
+   * @maxLength 100
+   */
+  note?: string;
+};
+
+export type SandboxCreateBucketBody = {
+  /** @maxLength 50 */
+  label: string;
+};
+
+export type SandboxUpdateBucketBody = {
+  /** @maxLength 50 */
+  label?: string;
+  /**
+   * Monthly prompt for the gather_round bucket
+   * @maxLength 1000
+   */
+  promptText?: string | null;
+};
+
+export type SandboxListPostsParams = {
+  bucketId?: string;
+};
+
+export type SandboxCreatePostBody = {
+  bucketId: string;
+  /** @maxLength 2000 */
+  body: string;
+};
+
+export type SandboxCreateRoleBody = {
+  /** @maxLength 100 */
+  roleName: string;
+  /** @maxLength 500 */
+  description?: string;
+};
+
+export type SandboxUpdateRoleBody = {
+  /** @maxLength 100 */
+  roleName?: string;
+  /** @maxLength 500 */
+  description?: string;
+  householdId?: string | null;
+  isPublic?: boolean;
+};
+
+export type SandboxDeclareStandbyBody = {
+  /** @maxLength 200 */
+  name: string;
+};
+
+export type SandboxEndStandby200 = {
+  id?: string;
+  isActive?: boolean;
+};
+
+export type SandboxCheckin200 = {
+  ok?: boolean;
+};
+
+export type NurseryJoinBody = {
+  /** @maxLength 80 */
+  name: string;
+  /** @minLength 4 */
+  passphrase: string;
+  /** Required for all producers after the first */
+  inviteCode?: string;
+};
+
+export type NurseryLoginBody = {
+  name: string;
+  passphrase: string;
+};
+
+export type NurseryCreateInviteBody = {
+  /** @maxLength 100 */
+  note?: string;
+  /** Whether the invited producer will join as a steward */
+  isStewardInvite?: boolean;
+};
+
+export type NurseryMoveStageBodyStage =
+  (typeof NurseryMoveStageBodyStage)[keyof typeof NurseryMoveStageBodyStage];
+
+export const NurseryMoveStageBodyStage = {
+  nursery: "nursery",
+  fodder: "fodder",
+  fallow: "fallow",
+  graduated: "graduated",
+} as const;
+
+export type NurseryMoveStageBody = {
+  stage: NurseryMoveStageBodyStage;
+  /** @maxLength 500 */
+  note?: string;
+  /**
+   * Required when stage is graduated
+   * @maxLength 2000
+   */
+  graduationReason?: string;
+};
+
+export type NurseryAddCommentBody = {
+  /**
+   * @minLength 1
+   * @maxLength 2000
+   */
+  body: string;
+};

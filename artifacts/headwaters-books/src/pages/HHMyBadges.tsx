@@ -133,7 +133,7 @@ export default function HHMyBadges() {
   const isAdmin = me?.role === "owner" || me?.role === "ops_manager";
 
   const { data: myBadges, isLoading: loadingBadges } = useGetMyHhBadges();
-  const { data: allCategories, isLoading: loadingCats } = useGetHhBadgeCategories("active");
+  const { data: allCategories, isLoading: loadingCats } = useGetHhBadgeCategories({ status: "active" });
   const { data: members } = useGetHhMembers();
   const watchBadge = useWatchHhBadge();
   const issueBadge = useIssueHhBadge();
@@ -151,7 +151,7 @@ export default function HHMyBadges() {
 
   function invalidate() {
     qc.invalidateQueries({ queryKey: getGetMyHhBadgesQueryKey() });
-    qc.invalidateQueries({ queryKey: getGetHhBadgeCategoriesQueryKey("active") });
+    qc.invalidateQueries({ queryKey: getGetHhBadgeCategoriesQueryKey({ status: "active" }) });
   }
 
   function handleWatch(cat: HhBadgeCategory) {
