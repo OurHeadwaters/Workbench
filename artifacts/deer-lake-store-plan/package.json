@@ -1,0 +1,14 @@
+{
+  "name": "@workspace/deer-lake-store-plan",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "vitest": "catalog:"
+  }
+}

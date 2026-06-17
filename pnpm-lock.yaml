@@ -692,6 +692,18 @@ importers:
         specifier: 'catalog:'
         version: 3.25.76
 
+  artifacts/deer-lake-store-plan:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.3.5
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 5.1.4(vite@7.3.2(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.2))
+      vitest:
+        specifier: 'catalog:'
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@25.3.5)(jiti@2.6.1)(jsdom@29.1.1(@noble/hashes@1.8.0))(lightningcss@1.31.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.2)
+
   artifacts/field-guide-finance:
     dependencies:
       '@clerk/react':
