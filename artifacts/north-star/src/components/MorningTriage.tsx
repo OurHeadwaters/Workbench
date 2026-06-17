@@ -31,6 +31,23 @@ const BADGE_COLORS: Record<string, string> = {
   default:               "bg-[#F5F5F0] text-[#44403C]",
 };
 
+function useRelativeTime(date: Date | null): string {
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    if (!date) return;
+    const id = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(id);
+  }, [date]);
+
+  if (!date) return "";
+  const diffMs = Date.now() - date.getTime();
+  const diffMin = Math.floor(diffMs / 60_000);
+  if (diffMin < 1) return "Updated just now";
+  if (diffMin === 1) return "Updated 1 min ago";
+  return `Updated ${diffMin} min ago`;
+}
+
 export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boolean } = {}) {
   const inbox = useStore((s) => s.inbox);
   const gmailAccounts = useStore((s) => s.gmailAccounts);
@@ -42,6 +59,8 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
   const [loading, setLoading] = useState(false);
   const [globalError, setGlobalError] = useState<"unavailable" | "scope" | null>(null);
   const [expanded, setExpanded] = useState(true);
+  const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
+  const relativeTime = useRelativeTime(lastRefreshedAt);
 
   const enabledAccounts = gmailAccounts.filter((a) => a.enabled && !a.isAlias);
 
@@ -89,6 +108,7 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
         };
         setThreads(data.threads ?? []);
         setAccountStatuses(data.accountStatuses ?? {});
+        setLastRefreshedAt(new Date());
         setLoading(false);
       })
       .catch(() => {
@@ -166,30 +186,35 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
   return (
     <div className="rounded-xl border border-[#E7E5E4] bg-white overflow-hidden mb-4">
       {alwaysExpanded ? (
-        <div className="flex items-center gap-2 px-4 py-3">
-          <Inbox size={16} className="text-[#78716C]" />
-          <span className="text-sm font-medium">Morning triage</span>
-          {active.length > 0 && (
-            <span className="text-xs bg-[#F5F5F0] text-[#44403C] rounded-full px-2 py-0.5">
-              {active.length}
-            </span>
+        <div className="px-4 py-3">
+          <div className="flex items-center gap-2">
+            <Inbox size={16} className="text-[#78716C]" />
+            <span className="text-sm font-medium">Morning triage</span>
+            {active.length > 0 && (
+              <span className="text-xs bg-[#F5F5F0] text-[#44403C] rounded-full px-2 py-0.5">
+                {active.length}
+              </span>
+            )}
+            {failedCount > 0 && (
+              <span className="text-xs bg-[#FEF3C7] text-[#92400E] rounded-full px-2 py-0.5">
+                {failedCount} needs auth
+              </span>
+            )}
+            <button
+              onClick={() => loadThreads(true)}
+              disabled={loading}
+              className="ml-auto p-1.5 rounded-lg hover:bg-[#F5F5F0] disabled:opacity-40 transition-opacity"
+              title="Refresh inbox"
+            >
+              <RefreshCw
+                size={14}
+                className={cn("text-[#78716C]", loading && "animate-spin")}
+              />
+            </button>
+          </div>
+          {relativeTime && (
+            <p className="text-[11px] text-[#A8A29E] mt-0.5 ml-6">{relativeTime}</p>
           )}
-          {failedCount > 0 && (
-            <span className="text-xs bg-[#FEF3C7] text-[#92400E] rounded-full px-2 py-0.5">
-              {failedCount} needs auth
-            </span>
-          )}
-          <button
-            onClick={() => loadThreads(true)}
-            disabled={loading}
-            className="ml-auto p-1.5 rounded-lg hover:bg-[#F5F5F0] disabled:opacity-40 transition-opacity"
-            title="Refresh inbox"
-          >
-            <RefreshCw
-              size={14}
-              className={cn("text-[#78716C]", loading && "animate-spin")}
-            />
-          </button>
         </div>
       ) : (
         <button
