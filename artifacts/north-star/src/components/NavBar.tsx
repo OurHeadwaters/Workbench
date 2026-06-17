@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
-import { Inbox, CheckSquare, Zap } from "lucide-react";
+import { Inbox, CheckSquare, Zap, Lock } from "lucide-react";
+import { lockKitchenTable, isKitchenTableUnlocked } from "@/lib/lock";
 
 const TABS = [
   {
@@ -28,6 +29,7 @@ const INACTIVE = "rgba(237,232,213,0.38)";
 
 export function NavBar() {
   const [location] = useLocation();
+  const unlocked = isKitchenTableUnlocked();
 
   return (
     <nav
@@ -68,6 +70,18 @@ export function NavBar() {
             </Link>
           );
         })}
+
+        {unlocked && (
+          <button
+            onClick={lockKitchenTable}
+            aria-label="Lock"
+            className="flex flex-col items-center justify-center gap-1 min-h-[64px] px-4 text-xs transition-all duration-150"
+            style={{ color: INACTIVE }}
+          >
+            <Lock size={18} strokeWidth={1.5} />
+            <span className="text-[11px] tracking-wide">Lock</span>
+          </button>
+        )}
       </div>
     </nav>
   );
