@@ -2228,7 +2228,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 0 · the ground · where everything else in the constellation flows from.",
+          text: "Zone 0 · **the ground** · where everything else in the constellation flows from.",
         },
         {
           kind: "para",
@@ -2281,7 +2281,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 0 · the named practitioner · bright-side identity.",
+          text: "Zone 0 · **the named practitioner** · bright-side identity.",
         },
         {
           kind: "para",
@@ -2328,7 +2328,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 0 · the named space · the infrastructure of seasonal living.",
+          text: "Zone 0 · **the named space** · the infrastructure of seasonal living.",
         },
         {
           kind: "para",
@@ -2415,7 +2415,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 0 · farm to jar · bright-side sourcing in a northern food system.",
+          text: "Zone 0 · **farm to jar** · bright-side sourcing in a northern food system.",
         },
         {
           kind: "para",
@@ -2458,7 +2458,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 0 · the living pantry · seasonal rhythm made visible.",
+          text: "Zone 0 · **the living pantry** · seasonal rhythm made visible.",
         },
         {
           kind: "para",
@@ -2504,7 +2504,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 0 · the freezer system · holding seasonal abundance across the year.",
+          text: "Zone 0 · **the freezer system** · holding seasonal abundance across the year.",
         },
         {
           kind: "para",
@@ -2556,7 +2556,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 0 · the activated state · when the household Standby fills itself.",
+          text: "Zone 0 · **the activated state** · when the household Standby fills itself.",
         },
         {
           kind: "para",
@@ -2632,7 +2632,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 0 · physical infrastructure · the ground beneath the Jar Kitchen.",
+          text: "Zone 0 · **physical infrastructure** · the ground beneath the Jar Kitchen.",
         },
         {
           kind: "para",
@@ -2685,7 +2685,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Kitchen Table · the most-frequented ring of the constellation.",
+          text: "Kitchen Table · **the most-frequented ring of the constellation.**",
         },
         {
           kind: "para",
@@ -2714,7 +2714,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Capital Gates · the Gate Rule applied to zone crossings · conscious consent, not market transaction.",
+          text: "Capital Gates · **the Gate Rule applied to zone crossings** · conscious consent, not market transaction.",
         },
         {
           kind: "para",
@@ -2767,7 +2767,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 2 · the practitioner's coordination layer · intent, schedule, standing commitments.",
+          text: "Zone 2 · **the practitioner's coordination layer** · intent, schedule, standing commitments.",
         },
         {
           kind: "para",
@@ -2796,7 +2796,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 3 · community economic infrastructure · collective ownership at the constellation's third ring.",
+          text: "Zone 3 · **community economic infrastructure** · collective ownership at the constellation's third ring.",
         },
         {
           kind: "para",
@@ -2833,7 +2833,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 4 · the land · Walls Farm and Treaty 3 Territory · visited seasonally, sourced from annually.",
+          text: "Zone 4 · **the land** · Walls Farm and Treaty 3 Territory · visited seasonally, sourced from annually.",
         },
         {
           kind: "para",
@@ -2862,7 +2862,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Zone 5 · the wild edge · harvest, forage, trap, fish · a primary sourcing channel.",
+          text: "Zone 5 · **the wild edge** · harvest, forage, trap, fish · a primary sourcing channel.",
         },
         {
           kind: "para",

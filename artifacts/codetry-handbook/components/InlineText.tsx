@@ -4,7 +4,7 @@ import { StyleProp, Text, TextStyle } from "react-native";
 import { CHAPTERS } from "@/data/handbook";
 
 type Run =
-  | { kind: "text"; text: string; italic: boolean }
+  | { kind: "text"; text: string; italic: boolean; bold: boolean }
   | { kind: "ref"; text: string; chapterId: string }
   | { kind: "glossary"; text: string; term: string };
 
@@ -17,7 +17,6 @@ const NUMBER_TO_CHAPTER_ID: ReadonlyMap<string, string> = new Map(
 // back-matter refs like §DD.1, §FL.10. Bare part refs like §5 or §IV
 // are intentionally excluded — those are prose, not navigable targets.
 const REF_RE = /§([A-Za-z0-9]+)\.(\d+)/g;
-const ITALIC_RE = /\*([^*]+)\*/g;
 
 function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -44,7 +43,7 @@ function splitByGlossary(
   let m: RegExpExecArray | null;
   while ((m = re.exec(text))) {
     if (m.index > last) {
-      out.push({ kind: "text", text: text.slice(last, m.index), italic: false });
+      out.push({ kind: "text", text: text.slice(last, m.index), italic: false, bold: false });
     }
     const matched = m[0];
     const canonical = termNorm.get(matched.toLowerCase()) ?? matched;
@@ -52,7 +51,7 @@ function splitByGlossary(
     last = m.index + matched.length;
   }
   if (last < text.length) {
-    out.push({ kind: "text", text: text.slice(last), italic: false });
+    out.push({ kind: "text", text: text.slice(last), italic: false, bold: false });
   }
   return out;
 }
@@ -63,9 +62,10 @@ function pushTextWithRefs(
   withRefs: boolean,
   glossaryRe: RegExp | null,
   termNorm: Map<string, string>,
+  bold: boolean,
 ) {
   if (!withRefs && !glossaryRe) {
-    if (plain.length > 0) out.push({ kind: "text", text: plain, italic: false });
+    if (plain.length > 0) out.push({ kind: "text", text: plain, italic: false, bold });
     return;
   }
 
@@ -82,6 +82,7 @@ function pushTextWithRefs(
           kind: "text",
           text: plain.slice(last, m.index),
           italic: false,
+          bold,
         });
       }
       const number = `${m[1]}.${m[2]}`;
@@ -89,21 +90,21 @@ function pushTextWithRefs(
       if (id) {
         intermediate.push({ kind: "ref", text: m[0], chapterId: id });
       } else {
-        intermediate.push({ kind: "text", text: m[0], italic: false });
+        intermediate.push({ kind: "text", text: m[0], italic: false, bold });
       }
       last = m.index + m[0].length;
     }
     if (last < plain.length) {
-      intermediate.push({ kind: "text", text: plain.slice(last), italic: false });
+      intermediate.push({ kind: "text", text: plain.slice(last), italic: false, bold });
     }
   } else {
     if (plain.length > 0)
-      intermediate.push({ kind: "text", text: plain, italic: false });
+      intermediate.push({ kind: "text", text: plain, italic: false, bold });
   }
 
   // Now apply glossary splitting to plain text runs only.
   for (const run of intermediate) {
-    if (run.kind === "text" && !run.italic && glossaryRe) {
+    if (run.kind === "text" && !run.italic && !run.bold && glossaryRe) {
       const sub = splitByGlossary(run.text, glossaryRe, termNorm);
       for (const s of sub) out.push(s);
     } else {
@@ -118,19 +119,28 @@ function parse(
   glossaryRe: RegExp | null,
   termNorm: Map<string, string>,
 ): Run[] {
+  // Build a combined regex that matches **bold** before *italic* so that
+  // double-asterisk markers are never consumed as two single-asterisk italics.
+  const COMBINED_RE = /\*\*([^*]+)\*\*|\*([^*]+)\*/g;
   const out: Run[] = [];
   let last = 0;
   let m: RegExpExecArray | null;
-  ITALIC_RE.lastIndex = 0;
-  while ((m = ITALIC_RE.exec(text))) {
+  COMBINED_RE.lastIndex = 0;
+  while ((m = COMBINED_RE.exec(text))) {
     if (m.index > last) {
-      pushTextWithRefs(out, text.slice(last, m.index), withRefs, glossaryRe, termNorm);
+      pushTextWithRefs(out, text.slice(last, m.index), withRefs, glossaryRe, termNorm, false);
     }
-    out.push({ kind: "text", text: m[1], italic: true });
+    if (m[1] !== undefined) {
+      // **bold** match
+      out.push({ kind: "text", text: m[1], italic: false, bold: true });
+    } else {
+      // *italic* match
+      out.push({ kind: "text", text: m[2], italic: true, bold: false });
+    }
     last = m.index + m[0].length;
   }
   if (last < text.length) {
-    pushTextWithRefs(out, text.slice(last), withRefs, glossaryRe, termNorm);
+    pushTextWithRefs(out, text.slice(last), withRefs, glossaryRe, termNorm, false);
   }
   return out;
 }
@@ -139,6 +149,7 @@ export function InlineText({
   text,
   style,
   italicStyle,
+  boldStyle,
   onPressRef,
   refStyle,
   glossaryTerms,
@@ -148,6 +159,7 @@ export function InlineText({
   text: string;
   style?: StyleProp<TextStyle>;
   italicStyle?: StyleProp<TextStyle>;
+  boldStyle?: StyleProp<TextStyle>;
   onPressRef?: (chapterId: string) => void;
   refStyle?: StyleProp<TextStyle>;
   glossaryTerms?: string[];
@@ -198,6 +210,13 @@ export function InlineText({
               accessibilityLabel={`Glossary: ${r.term}`}
               suppressHighlighting
             >
+              {r.text}
+            </Text>
+          );
+        }
+        if (r.bold) {
+          return (
+            <Text key={i} style={[{ fontWeight: "600" }, boldStyle]}>
               {r.text}
             </Text>
           );

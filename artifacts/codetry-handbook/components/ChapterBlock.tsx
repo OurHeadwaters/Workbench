@@ -174,6 +174,11 @@ export function ChapterBlock({
                 textTransform: "uppercase",
               }}
               italicStyle={{ fontFamily: MONO }}
+              boldStyle={{
+                fontFamily: "JetBrainsMono_600SemiBold",
+                color: J.color.syntaxGreen,
+                textTransform: "uppercase",
+              }}
               onPressRef={onPressRef}
               refStyle={{
                 color: J.color.syntaxAmber,
