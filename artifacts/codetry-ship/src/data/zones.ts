@@ -58,8 +58,8 @@ export interface ZoneData {
 // Currently referenced addresses (keep this in sync when you add/change tools):
 //   household:normal    → Z0–A, Z1–B, Z1–C
 //   household:standby   → Z0–A, Z1–C, Z1–D, Z3–A, Z3–D
-//   practitioner:normal → Z1–B, Z2–C, Z2–D
-//   practitioner:standby→ Z1–B, Z2–C, Z2–D, Z3–A, Z3–B
+//   practitioner:normal → Z1–B, Z1–C, Z2–C, Z2–D
+//   practitioner:standby→ Z1–B, Z1–C, Z1–D, Z2–C, Z2–D, Z3–A, Z3–B
 //   community:normal    → Z2/Z4, Z3–B, Z3–C
 //   community:standby   → Z2/Z4, Z3–A, Z3–B, Z3–C, Z3–D
 // ─────────────────────────────────────────────────────────────────────────────
@@ -637,10 +637,10 @@ export const TOOL_HIGHLIGHT_MAP: Record<string, string[]> = {
   "household:normal": ["Z0–A", "Z1–B", "Z1–C"],
   // + Z1–D  The Eave  Z3–A  807 Community Benefits  Z3–D  Standby Supplies
   "household:standby": ["Z0–A", "Z1–C", "Z1–D", "Z3–A", "Z3–D"],
-  // Z1–B  Headwaters Books (bookkeeping)  Z2–C  Meeting Companion  Z2–D  Thomas Hauling
-  "practitioner:normal": ["Z1–B", "Z2–C", "Z2–D"],
-  // + Z3–A  807 Community Benefits  Z3–B  Grants Finder
-  "practitioner:standby": ["Z1–B", "Z2–C", "Z2–D", "Z3–A", "Z3–B"],
+  // Z1–B  Headwaters Books (bookkeeping)  Z1–C  North Star (income planning)  Z2–C  Meeting Companion  Z2–D  Thomas Hauling
+  "practitioner:normal": ["Z1–B", "Z1–C", "Z2–C", "Z2–D"],
+  // + Z1–D  The Eave (income flow tracker)  Z3–A  807 Community Benefits  Z3–B  Grants Finder
+  "practitioner:standby": ["Z1–B", "Z1–C", "Z1–D", "Z2–C", "Z2–D", "Z3–A", "Z3–B"],
   // Z2/Z4  Research Library  Z3–B  Grants Finder  Z3–C  Market Mosaic
   "community:normal": ["Z2/Z4", "Z3–B", "Z3–C"],
   // + Z3–A  807 Community Benefits  Z3–D  Standby Supplies
