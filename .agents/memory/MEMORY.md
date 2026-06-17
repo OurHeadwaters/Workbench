@@ -1,0 +1,1 @@
+- [Vitest fs mock limitation](vitest-fs-mock.md) — vi.mock("fs") does NOT intercept routes using `import fs from "fs"` in this project's vitest/Node config; manage real files directly instead.
