@@ -247,6 +247,10 @@ function KitContentView({ data, token }: { data: KitAccessResult; token: string 
     day: "numeric",
   });
 
+  const msLeft = new Date(data.expires_at).getTime() - Date.now();
+  const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
+  const isExpiringSoon = daysLeft > 0 && daysLeft <= 7;
+
   const isPjSolutionsKit = data.kit.id === "pj-solutions-kit";
 
   const [visitedTitles, setVisitedTitles] = useState<Set<string>>(() =>
@@ -332,6 +336,44 @@ function KitContentView({ data, token }: { data: KitAccessResult; token: string 
       </div>
 
       <main style={{ maxWidth: 680, margin: "0 auto", padding: "2.5rem 1.5rem" }}>
+
+        {/* Expiry warning banner */}
+        {isExpiringSoon && (
+          <div
+            style={{
+              background: "#4a2e00",
+              border: "1px solid #c89a2e",
+              borderLeft: `4px solid ${GOLD}`,
+              borderRadius: 8,
+              padding: "0.9rem 1.25rem",
+              marginBottom: "1.75rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "0.5rem",
+            }}
+          >
+            <span style={{ fontSize: "0.88rem", color: "#f4d98a", lineHeight: 1.5 }}>
+              <span style={{ marginRight: "0.4rem" }}>⚠</span>
+              Your access expires in{" "}
+              <strong>{daysLeft} day{daysLeft !== 1 ? "s" : ""}</strong> — on {expiryDate}.
+            </span>
+            <Link
+              href="/kits/resend"
+              style={{
+                color: GOLD,
+                fontWeight: 700,
+                fontSize: "0.82rem",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                letterSpacing: "0.03em",
+              }}
+            >
+              Re-send my link →
+            </Link>
+          </div>
+        )}
 
         {/* Welcome + primary CTA */}
         <div
