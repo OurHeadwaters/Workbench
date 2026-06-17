@@ -69,6 +69,10 @@ export function SiteNav() {
   const toolsBtnRef = useRef<HTMLButtonElement>(null);
   const toolItemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
+  const toolsRouteActive =
+    EXPLORE_LINKS.some((l) => isExploreActive(l.href, location)) ||
+    TOOLS.some((t) => t.href !== "/" && isActive(t.href, location));
+
   useEffect(() => {
     function syncAuth() {
       setAuthed(Boolean(getStoredOwnerToken()));
@@ -273,8 +277,8 @@ export function SiteNav() {
                 className="trail-nav-link flex items-center gap-1"
                 style={{
                   color: dark
-                    ? toolsOpen ? "#d4a017" : "rgba(244,237,224,0.58)"
-                    : toolsOpen ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
+                    ? (toolsOpen || toolsRouteActive) ? "#d4a017" : "rgba(244,237,224,0.58)"
+                    : (toolsOpen || toolsRouteActive) ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
@@ -544,7 +548,11 @@ export function SiteNav() {
               type="button"
               onClick={() => setMobileToolsOpen((o) => !o)}
               className="w-full flex items-center justify-between px-4 py-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors"
-              style={{ color: dark ? "rgba(244,237,224,0.65)" : "hsl(var(--muted-foreground))" }}
+              style={{
+                color: dark
+                  ? (mobileToolsOpen || toolsRouteActive) ? "#d4a017" : "rgba(244,237,224,0.65)"
+                  : (mobileToolsOpen || toolsRouteActive) ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
+              }}
               aria-haspopup="menu"
               aria-expanded={mobileToolsOpen}
               aria-controls="mobile-tools-menu"
