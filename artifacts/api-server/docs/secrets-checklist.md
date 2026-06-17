@@ -1,5 +1,22 @@
 # API Server — Secrets & Deployment Checklist
 
+## ⚠️ Current status (audited 2026-06-17)
+
+| Item | Status |
+|------|--------|
+| Webhook handler code (`stripeWebhook.ts`) | ✅ Complete |
+| Goodbye Kit in kit registry | ✅ Complete |
+| `STRIPE_SECRET_KEY` in Replit Secrets | ❌ **Missing — must be added before any purchase can be processed** |
+| `STRIPE_WEBHOOK_SECRET` in Replit Secrets | ❌ **Missing — must be added before webhook delivery works** |
+| Payment Link `kit_id = goodbye-kit` metadata | ⚠️ Unconfirmed — requires manual step in Stripe Dashboard (see below) |
+| Webhook endpoint registered in Stripe Dashboard | ⚠️ Unconfirmed — requires manual step in Stripe Dashboard (see below) |
+
+Until `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are added to Replit Secrets,
+every incoming webhook will be rejected with `503 Stripe not configured` or
+`503 Webhook not configured` and no delivery emails will be sent.
+
+---
+
 ## Required environment secrets
 
 Set these via the Replit Secrets panel (or your deployment environment).
@@ -13,10 +30,27 @@ Set these via the Replit Secrets panel (or your deployment environment).
 
 ## Stripe webhook setup
 
+### Step A — Set Payment Link metadata (Goodbye Kit)
+
+The Goodbye Kit Payment Link must have `kit_id` in its metadata so the webhook
+handler knows which kit to deliver.
+
+1. Go to **Stripe Dashboard → Payment Links**.
+2. Open: `https://buy.stripe.com/28E7sNd4N399egs6fNbwk08`
+3. Click **Edit**.
+4. Under **Metadata**, add:
+   - Key: `kit_id`  Value: `goodbye-kit`
+5. Save.
+
+> Without this, the webhook handler will log `missing kit_id in metadata` and
+> skip every delivery silently.
+
+### Step B — Register the webhook endpoint
+
 1. Go to **Stripe Dashboard → Developers → Webhooks → Add endpoint**
 2. Set the endpoint URL:
    ```
-   https://<your-deployed-api-domain>/api/stripe/webhook
+   https://ourheadwaters.ca/api/stripe/webhook
    ```
 3. Select events to listen for:
    - `checkout.session.completed`
