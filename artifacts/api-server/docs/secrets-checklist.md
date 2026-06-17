@@ -7,9 +7,9 @@
 | Webhook handler code (`stripeWebhook.ts`) | ✅ Complete — writes tokens to `kit_tokens` DB table |
 | Goodbye Kit in kit registry | ✅ Complete |
 | `STRIPE_SECRET_KEY` in Replit Secrets | ✅ Set 2026-06-17 |
-| `STRIPE_WEBHOOK_SECRET` in Replit Secrets | ⚠️ Needs live-mode value — see Step B below |
+| `STRIPE_WEBHOOK_SECRET` in Replit Secrets | ✅ Set 2026-06-17 |
 | Payment Link `kit_id = goodbye-kit` metadata | ✅ Confirmed 2026-06-17 |
-| Webhook endpoint registered in Stripe Dashboard | ❌ **Not done — required before any live purchase triggers delivery** |
+| Webhook endpoint registered in Stripe Dashboard | ✅ Registered 2026-06-17 — `https://ourheadwaters.ca/api/stripe/webhook`, event: `checkout.session.completed` |
 | End-to-end test (purchase → token → email → magic link) | ✅ Verified 2026-06-17 in test mode |
 
 ---
