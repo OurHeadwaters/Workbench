@@ -81,5 +81,5 @@ app.listen(port, "0.0.0.0", (err) => {
   setInterval(scheduledExpire, 24 * 60 * 60 * 1000);
 
   scheduledPruneRateLimits();
-  setInterval(scheduledPruneRateLimits, 24 * 60 * 60 * 1000);
+  setInterval(scheduledPruneRateLimits, 7 * 60 * 1000); // every 7 minutes
 });
