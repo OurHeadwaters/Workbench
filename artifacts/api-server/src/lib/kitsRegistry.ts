@@ -14,6 +14,34 @@
  *   tagline     — one sentence for the delivery email
  *   arcNote     — what the buyer should do re: The Arc (self-register, no integration)
  *   contentNote — what the buyer receives / where it lives
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * STRIPE SETUP CHECKLIST — required for every kit
+ * ─────────────────────────────────────────────────────────────────────────────
+ * When you create or update a Stripe Payment Link for any kit, you MUST add
+ * a metadata field on that Payment Link:
+ *
+ *   Key:   kit_id
+ *   Value: <the kit's id field from this registry>
+ *
+ * Example for the Goodbye Kit:
+ *   kit_id = goodbye-kit
+ *
+ * Where to set it in Stripe Dashboard:
+ *   Payment Links → [select link] → Edit → Advanced → Metadata → Add field
+ *
+ * Why this matters:
+ *   The webhook handler (artifacts/api-server/src/routes/webhook.ts) reads
+ *   `kit_id` from the Stripe checkout session metadata to look up this registry
+ *   and dispatch the correct delivery email. If the metadata is missing, the
+ *   purchase succeeds but delivery fails silently — the buyer gets nothing.
+ *
+ * Adding a new kit checklist:
+ *   1. Add the kit entry below (id, name, tagline, arcNote, contentNote)
+ *   2. Create a Stripe Payment Link for it
+ *   3. Set  kit_id = <id>  in that Payment Link's metadata  ← do not skip this
+ *   4. Add the STRIPE_* constant in HeadwatersProductsPage.tsx
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 
 export interface Kit {
@@ -175,6 +203,7 @@ export const KITS: Record<string, Kit> = {
       "h-seasonal-recipes":           "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
     },
   },
+  // Stripe Payment Link for this kit must have metadata: kit_id = goodbye-kit
   "goodbye-kit": {
     id: "goodbye-kit",
     name: "Goodbye Kit",
