@@ -26,9 +26,10 @@
  *      and send the magic-link delivery email via Google Mail.
  *
  * Idempotency:
- *   Processed Stripe event IDs are persisted to data/stripe-processed-events.json.
+ *   Processed Stripe event IDs are persisted to the stripe_processed_events table.
  *   Replayed events (Stripe retries on 5xx or network failure) are detected and
- *   skipped so buyers never receive duplicate emails.
+ *   skipped so buyers never receive duplicate emails. The DB-backed guard is safe
+ *   across multiple service instances.
  *
  * See also: artifacts/api-server/docs/secrets-checklist.md for operational setup.
  */
@@ -36,19 +37,14 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import express from "express";
 import crypto from "crypto";
-import fs from "fs";
-import path from "path";
 import Stripe from "stripe";
+import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { getKit } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail } from "../lib/kitsMailer";
-import { db, kitTokensTable } from "@workspace/db";
+import { db, kitTokensTable, stripeProcessedEventsTable } from "@workspace/db";
 
 const router: IRouter = Router();
-
-// ── Shared data directory ─────────────────────────────────────────────────────
-
-const DATA_DIR = path.resolve(process.cwd(), "data");
 
 // ── Token helpers ─────────────────────────────────────────────────────────────
 
@@ -70,45 +66,23 @@ function accessUrl(token: string): string {
 // ── Processed event ID store (idempotency) ────────────────────────────────────
 //
 // Stripe retries webhook delivery on 5xx responses or network timeouts.
-// Persisting the event ID ensures we never send a buyer duplicate emails.
+// Persisting the event ID to the database ensures we never send duplicate emails
+// and the guard is shared across all instances of the service.
 
-const PROCESSED_EVENTS_FILE = path.join(DATA_DIR, "stripe-processed-events.json");
-
-interface ProcessedEvent {
-  event_id: string;
-  processed_at: string;
-  purchase_id: string;
+async function isEventAlreadyProcessed(eventId: string): Promise<boolean> {
+  const rows = await db
+    .select({ eventId: stripeProcessedEventsTable.eventId })
+    .from(stripeProcessedEventsTable)
+    .where(eq(stripeProcessedEventsTable.eventId, eventId))
+    .limit(1);
+  return rows.length > 0;
 }
 
-type ProcessedEventsStore = Record<string, ProcessedEvent>;
-
-function readProcessedEvents(): ProcessedEventsStore {
-  try {
-    if (!fs.existsSync(PROCESSED_EVENTS_FILE)) return {};
-    return JSON.parse(fs.readFileSync(PROCESSED_EVENTS_FILE, "utf-8")) as ProcessedEventsStore;
-  } catch {
-    return {};
-  }
-}
-
-function markEventProcessed(eventId: string, purchaseId: string): void {
-  try {
-    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-    const store = readProcessedEvents();
-    store[eventId] = {
-      event_id: eventId,
-      processed_at: new Date().toISOString(),
-      purchase_id: purchaseId,
-    };
-    fs.writeFileSync(PROCESSED_EVENTS_FILE, JSON.stringify(store, null, 2), "utf-8");
-  } catch (err) {
-    logger.warn({ err, eventId }, "[stripe-webhook] failed to persist processed event ID (non-fatal)");
-  }
-}
-
-function isEventAlreadyProcessed(eventId: string): boolean {
-  const store = readProcessedEvents();
-  return eventId in store;
+async function markEventProcessed(eventId: string, purchaseId: string): Promise<void> {
+  await db
+    .insert(stripeProcessedEventsTable)
+    .values({ eventId, purchaseId })
+    .onConflictDoNothing();
 }
 
 // ── POST /stripe/webhook ──────────────────────────────────────────────────────
@@ -155,7 +129,7 @@ router.post(
     logger.info({ type: event.type, id: event.id }, "[stripe-webhook] event received");
 
     // Idempotency check — Stripe retries on 5xx; skip already-processed events.
-    if (isEventAlreadyProcessed(event.id)) {
+    if (await isEventAlreadyProcessed(event.id)) {
       logger.info({ eventId: event.id, type: event.type }, "[stripe-webhook] duplicate event — skipping");
       res.json({ received: true, duplicate: true });
       return;
@@ -229,7 +203,7 @@ router.post(
 
       // Mark processed only after successful token persistence + email attempt,
       // so a hard crash before this point will let Stripe retry and re-deliver.
-      markEventProcessed(event.id, purchaseId);
+      await markEventProcessed(event.id, purchaseId);
     }
 
     res.json({ received: true });

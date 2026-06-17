@@ -87,9 +87,17 @@ export const kitTokensTable = pgTable(
   }),
 );
 
+export const stripeProcessedEventsTable = pgTable("stripe_processed_events", {
+  eventId: text("event_id").primaryKey(),
+  processedAt: timestamp("processed_at", { withTimezone: true }).notNull().defaultNow(),
+  purchaseId: text("purchase_id").notNull(),
+});
+
 export type KitRow = typeof kitsTable.$inferSelect;
 export type KitInsert = typeof kitsTable.$inferInsert;
 export type PractitionerApplicationRow = typeof practitionerApplicationsTable.$inferSelect;
 export type PractitionerApplicationInsert = typeof practitionerApplicationsTable.$inferInsert;
 export type KitTokenRow = typeof kitTokensTable.$inferSelect;
 export type KitTokenInsert = typeof kitTokensTable.$inferInsert;
+export type StripeProcessedEventRow = typeof stripeProcessedEventsTable.$inferSelect;
+export type StripeProcessedEventInsert = typeof stripeProcessedEventsTable.$inferInsert;
