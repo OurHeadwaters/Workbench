@@ -4,6 +4,7 @@ import {
   AQUIFER_ZONE,
   TOOL_HIGHLIGHT_MAP,
   getMismatchedHighlightAddresses,
+  getPlannedHighlightAddresses,
 } from "@/data/zones";
 
 describe("TOOL_HIGHLIGHT_MAP address integrity", () => {
@@ -51,5 +52,23 @@ describe("TOOL_HIGHLIGHT_MAP address integrity", () => {
       .map((t) => t.name);
 
     expect(missingAddress).toHaveLength(0);
+  });
+
+  it("every address in TOOL_HIGHLIGHT_MAP resolves to a 'live' tool, not a planned one", () => {
+    const planned = getPlannedHighlightAddresses();
+
+    if (planned.length > 0) {
+      const lines = planned.map(
+        ({ key, address, toolName }) =>
+          `  TOOL_HIGHLIGHT_MAP["${key}"] → "${address}" ("${toolName}") has status "planned"`
+      );
+      throw new Error(
+        `TOOL_HIGHLIGHT_MAP references ${planned.length} planned tool(s) — visitors would see a broken link:\n` +
+          lines.join("\n") +
+          `\n\nFix: remove the address from TOOL_HIGHLIGHT_MAP, or mark the tool as "live" in zones.ts once it ships.`
+      );
+    }
+
+    expect(planned).toHaveLength(0);
   });
 });

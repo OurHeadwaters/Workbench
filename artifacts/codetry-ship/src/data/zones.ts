@@ -693,6 +693,30 @@ export const TOOL_HIGHLIGHT_REASON_MAP: Record<string, string> = {
 };
 
 /**
+ * Returns every zone-address in TOOL_HIGHLIGHT_MAP whose matching tool has
+ * status "planned".  An empty array means all highlighted tools are live.
+ * Used by the Vitest test to catch planned tools surfacing in quiz results.
+ */
+export function getPlannedHighlightAddresses(): Array<{
+  key: string;
+  address: string;
+  toolName: string;
+}> {
+  const allTools = [...ZONES, AQUIFER_ZONE].flatMap((z) => z.tools);
+  const planned: Array<{ key: string; address: string; toolName: string }> = [];
+
+  for (const [key, addresses] of Object.entries(TOOL_HIGHLIGHT_MAP)) {
+    for (const address of addresses) {
+      const tool = allTools.find((t) => t.zoneAddress === address);
+      if (tool && tool.status === "planned") {
+        planned.push({ key, address, toolName: tool.name });
+      }
+    }
+  }
+  return planned;
+}
+
+/**
  * Returns every zone-address in TOOL_HIGHLIGHT_MAP that has no matching
  * zoneAddress in ZONES or AQUIFER_ZONE.  An empty array means everything is
  * in sync.  Used by the Vitest test and the dev-console guard below.

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ZONES, TOOL_HIGHLIGHT_MAP, TOOL_HIGHLIGHT_REASON_MAP } from "@/data/zones";
+import { ZONES, AQUIFER_ZONE, TOOL_HIGHLIGHT_MAP, TOOL_HIGHLIGHT_REASON_MAP } from "@/data/zones";
 import type { ZoneData, ZoneTool } from "@/data/zones";
 import WatershedMap from "@/components/WatershedMap";
 
@@ -35,7 +35,14 @@ function resolveHighlightedZones(quiz: QuizState): number[] {
 
 function resolveHighlightedTools(quiz: QuizState): string[] {
   if (quiz.skipped || quiz.who === null || quiz.situation === null) return [];
-  return TOOL_HIGHLIGHT_MAP[`${quiz.who}:${quiz.situation}`] ?? [];
+  const addresses = TOOL_HIGHLIGHT_MAP[`${quiz.who}:${quiz.situation}`] ?? [];
+  const plannedAddresses = new Set<string>(
+    [...ZONES, AQUIFER_ZONE]
+      .flatMap((z) => z.tools)
+      .filter((t) => t.status === "planned" && t.zoneAddress !== undefined)
+      .map((t) => t.zoneAddress as string)
+  );
+  return addresses.filter((addr) => !plannedAddresses.has(addr));
 }
 
 function resolveToolHighlightReason(quiz: QuizState, zoneAddress: string): string | null {
