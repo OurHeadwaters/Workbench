@@ -869,10 +869,7 @@ export function KitchenTablePage() {
     return DEFAULT_SEATS;
   });
 
-<<<<<<< HEAD
   const [seatLoadStatus, setSeatLoadStatus] = useState<"server" | "local" | "defaults" | "auth-expired" | null>(null);
-=======
-  const [seatLoadStatus, setSeatLoadStatus] = useState<"server" | "local" | "defaults" | null>(null);
   const [seatSyncFailed, setSeatSyncFailed] = useState(false);
   const seatSyncFailedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -881,7 +878,9 @@ export function KitchenTablePage() {
     if (seatSyncFailedTimerRef.current) clearTimeout(seatSyncFailedTimerRef.current);
     seatSyncFailedTimerRef.current = setTimeout(() => setSeatSyncFailed(false), 4000);
   }, []);
->>>>>>> be7cdfe9 (Show a gentle warning when seat config couldn't be saved to the server)
+
+  const [reAuthOpen, setReAuthOpen] = useState(false);
+  const [reAuthDraft, setReAuthDraft] = useState("");
 
   useEffect(() => {
     const ref = seatSyncFailedTimerRef;
@@ -926,8 +925,8 @@ export function KitchenTablePage() {
             setSeatLoadStatus("auth-expired");
           } else {
             setSeatLoadStatus(seatLocalHadDataRef.current ? "local" : "defaults");
+            setTimeout(() => setSeatLoadStatus(null), 3000);
           }
-          setTimeout(() => setSeatLoadStatus(null), 3000);
         }
       });
     return () => { cancelled = true; };
@@ -1298,17 +1297,73 @@ export function KitchenTablePage() {
             />
 
             {/* Seat hydration status note */}
-            {seatLoadStatus && (
+            {seatLoadStatus && seatLoadStatus !== "auth-expired" && (
               <div className="px-6 pt-3 pb-0">
                 <p className="text-[10px] tracking-[0.12em] text-[#4A3D30]">
                   {seatLoadStatus === "server"
                     ? "✓ seats loaded from server"
-                    : seatLoadStatus === "auth-expired"
-                    ? "· server auth expired — using local config"
                     : seatLoadStatus === "local"
                     ? "· using saved local config"
                     : "· using local defaults"}
                 </p>
+              </div>
+            )}
+
+            {/* Auth-expired persistent prompt */}
+            {seatLoadStatus === "auth-expired" && (
+              <div className="mx-6 mt-3 mb-0 rounded-sm border border-[#3A2A1A] bg-[#1E1510] px-4 py-2.5">
+                {!reAuthOpen ? (
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] tracking-[0.12em] text-[#6B4F30] flex-1">
+                      · server token expired — seat config may be out of date
+                    </span>
+                    <button
+                      onClick={() => { setReAuthOpen(true); setReAuthDraft(""); }}
+                      className="flex-shrink-0 text-[10px] tracking-[0.1em] text-[#B75C34] hover:text-[#D4713F] underline underline-offset-2 transition-colors"
+                    >
+                      Sign in again
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] tracking-[0.12em] text-[#6B4F30]">
+                      Enter your owner token to reconnect
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <input
+                        autoFocus
+                        type="password"
+                        value={reAuthDraft}
+                        onChange={(e) => setReAuthDraft(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Escape") { setReAuthOpen(false); setReAuthDraft(""); }
+                          if (e.key === "Enter" && reAuthDraft.trim()) {
+                            try { localStorage.setItem("library.ownerToken", reAuthDraft.trim()); } catch {}
+                            window.location.reload();
+                          }
+                        }}
+                        placeholder="paste token…"
+                        className="flex-1 min-w-0 bg-[#13110E] border border-[#3D3228] rounded-sm px-2.5 py-1.5 text-[11px] text-[#C8B8A0] placeholder:text-[#4A3D30] outline-none focus:border-[#5C4A35] font-mono"
+                      />
+                      <button
+                        onClick={() => {
+                          if (!reAuthDraft.trim()) return;
+                          try { localStorage.setItem("library.ownerToken", reAuthDraft.trim()); } catch {}
+                          window.location.reload();
+                        }}
+                        className="flex-shrink-0 px-3 py-1.5 rounded-sm bg-[#2A1C10] border border-[#5C4A35] text-[10px] tracking-[0.1em] text-[#B75C34] hover:text-[#D4713F] hover:border-[#7A5A3A] transition-colors"
+                      >
+                        Connect
+                      </button>
+                      <button
+                        onClick={() => { setReAuthOpen(false); setReAuthDraft(""); }}
+                        className="flex-shrink-0 text-[10px] text-[#4A3D30] hover:text-[#6B5A48] transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
