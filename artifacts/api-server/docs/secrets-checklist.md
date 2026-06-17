@@ -6,14 +6,10 @@
 |------|--------|
 | Webhook handler code (`stripeWebhook.ts`) | ✅ Complete |
 | Goodbye Kit in kit registry | ✅ Complete |
-| `STRIPE_SECRET_KEY` in Replit Secrets | ❌ **Missing — must be added before any purchase can be processed** |
-| `STRIPE_WEBHOOK_SECRET` in Replit Secrets | ❌ **Missing — must be added before webhook delivery works** |
+| `STRIPE_SECRET_KEY` in Replit Secrets | ✅ Set 2026-06-17 |
+| `STRIPE_WEBHOOK_SECRET` in Replit Secrets | ✅ Set 2026-06-17 |
 | Payment Link `kit_id = goodbye-kit` metadata | ⚠️ Unconfirmed — requires manual step in Stripe Dashboard (see below) |
 | Webhook endpoint registered in Stripe Dashboard | ⚠️ Unconfirmed — requires manual step in Stripe Dashboard (see below) |
-
-Until `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are added to Replit Secrets,
-every incoming webhook will be rejected with `503 Stripe not configured` or
-`503 Webhook not configured` and no delivery emails will be sent.
 
 ---
 
