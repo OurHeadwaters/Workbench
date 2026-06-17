@@ -28,6 +28,12 @@ import {
   getWalletBalance,
 } from "../lib/xrplEscrow";
 import { logger } from "../lib/logger";
+import {
+  sendTokenPayment,
+  writeDID,
+  xrplIsLive,
+  bandWalletAddress,
+} from "../lib/xrpl";
 
 const router: IRouter = Router();
 
@@ -264,6 +270,7 @@ async function loadHhMember(req: Request) {
 // ──────────────────────────────────────────────
 router.get("/band", requireAuth(), async (_req: Request, res: Response) => {
   const band = await getOrCreateDefaultBand();
+  const net = (process.env.XRPL_NETWORK ?? "testnet").toLowerCase();
   res.json({
     id: band.id,
     name: band.name,
@@ -275,6 +282,8 @@ router.get("/band", requireAuth(), async (_req: Request, res: Response) => {
     reliabilityBonusAmount: band.reliabilityBonusAmount,
     reliabilityBonusCurrency: band.reliabilityBonusCurrency,
     xrplEscrowEnabled: band.xrplEscrowEnabled,
+    xrplNetwork: net,
+    xrplLive: xrplIsLive(),
   });
 });
 
@@ -467,8 +476,8 @@ router.post("/tasks", requireAuth(), async (req: Request, res: Response) => {
 
   // escrowSequence and escrowTxHash are set at claim time (when the worker is
   // known), not at post time. XRPL escrow Destination must be the recipient
-  // (the eventual claimer), which is unknown here.
-
+  // (the eventual claimer), which is unknown here. Token payments are settled
+  // at confirm time via a direct Payment tx from the issuer wallet.
   const inserted = await db
     .insert(hhTasksTable)
     .values({
@@ -483,6 +492,36 @@ router.post("/tasks", requireAuth(), async (req: Request, res: Response) => {
       availableDate: parsed.data.availableDate,
     })
     .returning();
+
+  const task = inserted[0];
+
+  // For XRP tasks: create an on-chain escrow from the band wallet.
+  // Destination is the band's own hot wallet (since we don't know the claimant yet);
+  // on confirm the escrow is cancelled and a direct Payment is sent to the member.
+  // For token tasks: no escrow — payment is sent at confirm time.
+  if (parsed.data.payCurrency === "xrp") {
+    try {
+      const wallet = xrplIsLive() ? bandWalletAddress() : null;
+      const escrow = await escrowCreate({
+        destinationAddress: wallet,
+        xrpAmount: parsed.data.payAmount,
+        taskId: task.id,
+      });
+      if (escrow.sequence || escrow.txHash) {
+        await db
+          .update(hhTasksTable)
+          .set({
+            escrowSequence: escrow.sequence || null,
+            escrowTxHash: escrow.txHash || null,
+            updatedAt: new Date(),
+          })
+          .where(eq(hhTasksTable.id, task.id));
+      }
+    } catch (err) {
+      // Non-fatal: task is posted, escrow creation failed — log and continue.
+      console.error("[XRPL] EscrowCreate failed:", err);
+    }
+  }
 
   const serialized = await enrichTasksWithNames(inserted);
   res.status(201).json(serialized[0]);
@@ -663,12 +702,23 @@ router.post("/tasks/:id/confirm", requireAuth(), async (req: Request, res: Respo
     return;
   }
 
-  // ── XRPL EscrowFinish or DB simulation ───────────────────────────────────
-  // Submit EscrowFinish on-chain when:
-  //   • band has xrplEscrowEnabled + XRPL_ESCROW_SEED set
-  //   • task was created with a real escrow (escrowTxHash is not a SIM_ prefix)
-  //   • payCurrency is "xrp"
-  // Falls back to mock hash for token tasks or simulation-mode tasks.
+  // Look up the member who completed the task (needed for XRPL address + DID).
+  const claimantRows = existing[0].claimedByMemberId
+    ? await db
+        .select()
+        .from(hhMembersTable)
+        .where(eq(hhMembersTable.id, existing[0].claimedByMemberId))
+        .limit(1)
+    : [];
+  const claimant = claimantRows[0] ?? null;
+
+  // ── On-chain settlement ────────────────────────────────────────────────────
+  // XRP tasks:   EscrowFinish via xrplEscrow lib (uses XRPL_ESCROW_SEED +
+  //              xrplEscrowEnabled flag). Falls back to SIM_ hash when escrow
+  //              is not configured or task was posted in simulation mode.
+  // Token tasks: Direct IOU Payment from the issuer wallet to the member
+  //              (uses xrpl.ts / XRPL_BAND_SEED or XRPL_BAND_MNEMONIC).
+  //              Falls back to SIM_ hash when xrpl lib is not configured.
   const taskForEscrow = existing[0];
   const isRealEscrow =
     bandUsesXrplEscrow(band) &&
@@ -694,8 +744,39 @@ router.post("/tasks/:id/confirm", requireAuth(), async (req: Request, res: Respo
       logger.error({ err, taskId }, "helpingHands/confirm: EscrowFinish failed — using simulation hash");
       settleTxHash = `SIM_ERR_${Date.now().toString(16).toUpperCase()}`;
     }
+  } else if (taskForEscrow.payCurrency !== "xrp") {
+    // Token payment: send IOU from issuer wallet to member's XRPL address.
+    try {
+      const payment = await sendTokenPayment({
+        destinationAddress: claimant?.xrplAddress ?? null,
+        tokenAmount: taskForEscrow.payAmount ?? "0",
+        tokenCode: band.communityTokenCode,
+        taskId,
+      });
+      settleTxHash = payment.txHash;
+    } catch (err) {
+      logger.error({ err, taskId }, "helpingHands/confirm: token Payment failed — using simulation hash");
+      settleTxHash = `SIM_ERR_${Date.now().toString(16).toUpperCase()}`;
+    }
   } else {
     settleTxHash = `SIM_${Date.now().toString(16).toUpperCase()}`;
+  }
+
+  // ── DID credential write (non-fatal, fire-and-forget) ─────────────────────
+  if (claimant) {
+    writeDID({
+      memberAddress: claimant.xrplAddress ?? null,
+      memberId: claimant.id,
+    }).catch((err) => logger.error({ err }, "helpingHands/confirm: DID write failed"));
+
+    if (!claimant.didRef && claimant.xrplAddress) {
+      const net = (process.env.XRPL_NETWORK ?? "testnet").toLowerCase();
+      const didRef = `did:xrpl:${net}:${claimant.xrplAddress}`;
+      db.update(hhMembersTable)
+        .set({ didRef, updatedAt: new Date() })
+        .where(eq(hhMembersTable.id, claimant.id))
+        .catch((err) => logger.error({ err }, "helpingHands/confirm: DID ref persist failed"));
+    }
   }
 
   // Atomic conditional transition: only update if current status is "completed".
@@ -703,7 +784,7 @@ router.post("/tasks/:id/confirm", requireAuth(), async (req: Request, res: Respo
   // request can win the status transition from completed → confirmed.
   // NOTE: escrowTxHash is intentionally NOT updated here — it holds the
   // EscrowCreate hash written at claim time and must not be overwritten.
-  // The EscrowFinish hash is written only to hh_earnings.xrpl_tx_hash below.
+  // The EscrowFinish / Payment hash is written only to hh_earnings below.
   const updated = await db
     .update(hhTasksTable)
     .set({ status: "confirmed", confirmedAt: new Date(), updatedAt: new Date() })

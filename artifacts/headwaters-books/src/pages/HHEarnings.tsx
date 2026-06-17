@@ -116,13 +116,17 @@ export default function HHEarnings() {
                   {e.currency === "xrp" ? "XRP" : tokenCode}
                 </Badge>
               </div>
-              {e.xrplTxHash && (
+              {e.xrplTxHash && !e.xrplTxHash.startsWith("SIM_") && !e.xrplTxHash.startsWith("ERR_") && (
                 <a
-                  href={`https://livenet.xrpl.org/transactions/${e.xrplTxHash}`}
+                  href={
+                    band?.xrplNetwork === "mainnet"
+                      ? `https://livenet.xrpl.org/transactions/${e.xrplTxHash}`
+                      : `https://testnet.xrpl.org/transactions/${e.xrplTxHash}`
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground shrink-0"
-                  title="View on XRPL"
+                  title={`View on XRPL ${band?.xrplNetwork ?? "testnet"}`}
                 >
                   <ExternalLink className="w-4 h-4" />
                 </a>
