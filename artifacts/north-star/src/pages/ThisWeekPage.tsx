@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus, Check, Trash2, X } from "lucide-react";
+import { Plus, Check, Trash2, X, ChevronDown, ChevronRight } from "lucide-react";
 
 interface WeekItem {
   id: string;
@@ -8,8 +8,11 @@ interface WeekItem {
   createdAt: string;
 }
 
-const LS_KEY      = "north-star-this-week";
-const LS_WEEK_KEY = "north-star-this-week-iso";
+type Archive = Record<string, WeekItem[]>;
+
+const LS_KEY         = "north-star-this-week";
+const LS_WEEK_KEY    = "north-star-this-week-iso";
+const LS_ARCHIVE_KEY = "north-star-archive";
 
 const BG     = "#0B0905";
 const SURF   = "#141210";
@@ -31,6 +34,22 @@ function isoWeek(date: Date): string {
   return `${year}-W${String(week).padStart(2, "0")}`;
 }
 
+function isoWeekLabel(key: string): string {
+  const match = key.match(/^(\d{4})-W(\d{2})$/);
+  if (!match) return key;
+  const year = parseInt(match[1], 10);
+  const week = parseInt(match[2], 10);
+  const jan4 = new Date(Date.UTC(year, 0, 4));
+  const dayOfWeek = jan4.getUTCDay() || 7;
+  const monday = new Date(jan4);
+  monday.setUTCDate(jan4.getUTCDate() - (dayOfWeek - 1) + (week - 1) * 7);
+  const sunday = new Date(monday);
+  sunday.setUTCDate(monday.getUTCDate() + 6);
+  const fmt = (d: Date) =>
+    d.toLocaleDateString("en-CA", { month: "short", day: "numeric", timeZone: "UTC" });
+  return `Week of ${fmt(monday)} – ${fmt(sunday)}`;
+}
+
 function loadItems(): WeekItem[] {
   try {
     const raw = localStorage.getItem(LS_KEY);
@@ -46,6 +65,28 @@ function saveItems(items: WeekItem[]) {
   } catch { /* ignore */ }
 }
 
+function loadArchive(): Archive {
+  try {
+    const raw = localStorage.getItem(LS_ARCHIVE_KEY);
+    return raw ? (JSON.parse(raw) as Archive) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveArchive(archive: Archive) {
+  try {
+    localStorage.setItem(LS_ARCHIVE_KEY, JSON.stringify(archive));
+  } catch { /* ignore */ }
+}
+
+function archiveItems(weekKey: string, doneItems: WeekItem[]) {
+  if (doneItems.length === 0) return;
+  const archive = loadArchive();
+  archive[weekKey] = [...(archive[weekKey] ?? []), ...doneItems];
+  saveArchive(archive);
+}
+
 function runWeeklyReset(): { items: WeekItem[]; cleared: number } {
   const items = loadItems();
   try {
@@ -56,28 +97,35 @@ function runWeeklyReset(): { items: WeekItem[]; cleared: number } {
       return { items, cleared: 0 };
     }
 
-    const carried = items.filter((it) => !it.done);
-    const cleared = items.length - carried.length;
+    const carried   = items.filter((it) => !it.done);
+    const doneItems = items.filter((it) => it.done);
+
+    if (doneItems.length > 0) {
+      archiveItems(lastWeek || currentWeek, doneItems);
+    }
 
     saveItems(carried);
     localStorage.setItem(LS_WEEK_KEY, currentWeek);
 
-    return { items: carried, cleared };
+    return { items: carried, cleared: doneItems.length };
   } catch {
     return { items, cleared: 0 };
   }
 }
 
 export function ThisWeekPage() {
-  const [items, setItems]     = useState<WeekItem[]>([]);
-  const [cleared, setCleared] = useState(0);
-  const [draft, setDraft]     = useState("");
-  const inputRef              = useRef<HTMLInputElement>(null);
+  const [items, setItems]           = useState<WeekItem[]>([]);
+  const [cleared, setCleared]       = useState(0);
+  const [draft, setDraft]           = useState("");
+  const [archive, setArchive]       = useState<Archive>({});
+  const [openWeeks, setOpenWeeks]   = useState<Set<string>>(new Set());
+  const inputRef                    = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const { items: initial, cleared: n } = runWeeklyReset();
     setItems(initial);
     if (n > 0) setCleared(n);
+    setArchive(loadArchive());
   }, []);
 
   useEffect(() => {
@@ -105,11 +153,28 @@ export function ThisWeekPage() {
   }
 
   function clearDone() {
-    setItems((prev) => prev.filter((it) => !it.done));
+    const currentWeek = isoWeek(new Date());
+    const doneItems = items.filter((it) => it.done);
+    archiveItems(currentWeek, doneItems);
+    const next = items.filter((it) => !it.done);
+    setItems(next);
+    const updated = loadArchive();
+    setArchive(updated);
+  }
+
+  function toggleWeek(key: string) {
+    setOpenWeeks((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
   }
 
   const open = items.filter((it) => !it.done);
   const done = items.filter((it) => it.done);
+
+  const archiveKeys = Object.keys(archive).sort().reverse();
 
   return (
     <div className="min-h-dvh pb-24" style={{ backgroundColor: BG }}>
@@ -145,7 +210,7 @@ export function ThisWeekPage() {
             }}
           >
             <p className="text-sm" style={{ color: AMBER }}>
-              {cleared} completed {cleared === 1 ? "item" : "items"} cleared from last week
+              {cleared} completed {cleared === 1 ? "item" : "items"} archived from last week
             </p>
             <button
               onClick={() => setCleared(0)}
@@ -297,6 +362,79 @@ export function ThisWeekPage() {
             <p className="text-sm" style={{ color: TEXT2 }}>
               Add what you want to finish this week. Items stay here until you clear them.
             </p>
+          </div>
+        )}
+
+        {/* Past weeks archive */}
+        {archiveKeys.length > 0 && (
+          <div className="pt-4">
+            <p
+              className="text-xs uppercase tracking-widest px-1 mb-3"
+              style={{ color: TEXT2 }}
+            >
+              Archive
+            </p>
+            <div className="space-y-2">
+              {archiveKeys.map((weekKey) => {
+                const weekItems = archive[weekKey];
+                const isOpen = openWeeks.has(weekKey);
+                return (
+                  <div
+                    key={weekKey}
+                    className="rounded-xl overflow-hidden"
+                    style={{ backgroundColor: SURF, border: `1px solid ${BORDER}` }}
+                  >
+                    <button
+                      onClick={() => toggleWeek(weekKey)}
+                      className="w-full flex items-center justify-between gap-3 px-4 py-3"
+                      style={{ color: TEXT2 }}
+                    >
+                      <span className="text-sm text-left">
+                        {isoWeekLabel(weekKey)}
+                      </span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span
+                          className="text-xs px-2 py-0.5 rounded-full"
+                          style={{ backgroundColor: "rgba(237,232,213,0.06)", color: TEXT2 }}
+                        >
+                          {weekItems.length} done
+                        </span>
+                        {isOpen
+                          ? <ChevronDown size={14} />
+                          : <ChevronRight size={14} />}
+                      </div>
+                    </button>
+
+                    {isOpen && (
+                      <div style={{ borderTop: `1px solid ${BORDER}`, opacity: 0.6 }}>
+                        {weekItems.map((item, i) => (
+                          <div
+                            key={item.id}
+                            className="flex items-center gap-3 px-4 py-3"
+                            style={{
+                              borderBottom: i < weekItems.length - 1 ? `1px solid ${BORDER}` : "none",
+                            }}
+                          >
+                            <div
+                              className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center"
+                              style={{ backgroundColor: "rgba(74,222,128,0.12)", border: "1.5px solid rgba(74,222,128,0.25)" }}
+                            >
+                              <Check size={11} style={{ color: GREEN }} />
+                            </div>
+                            <span
+                              className="flex-1 text-[14px] line-through leading-snug"
+                              style={{ color: TEXT2 }}
+                            >
+                              {item.text}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
