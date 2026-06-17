@@ -151,6 +151,30 @@ export async function checkRateLimit(
   return checkInMemory(key, opts);
 }
 
+/**
+ * Delete all rows from the `rate_limits` table whose window has already
+ * expired (i.e. reset_at < now).  These rows will never be hit again by
+ * active traffic — their next access would simply overwrite them — so
+ * removing them keeps the table size bounded.
+ *
+ * Returns the number of rows deleted, or null when the Postgres backend is
+ * not configured (in-memory mode has no persistent rows to prune).
+ */
+export async function pruneExpiredRateLimits(): Promise<number | null> {
+  if (!pgPool) return null;
+
+  const now = Date.now();
+  const result = await pgPool.query<{ count: string }>(
+    `WITH deleted AS (
+       DELETE FROM rate_limits WHERE reset_at < $1 RETURNING 1
+     )
+     SELECT COUNT(*)::text AS count FROM deleted`,
+    [now],
+  );
+
+  return Number(result.rows[0]?.count ?? 0);
+}
+
 /** Test-only.  Production code should never call this. */
 export function __resetRateLimitForTests(): void {
   store.clear();

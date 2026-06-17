@@ -3,7 +3,7 @@ import { logger } from "./lib/logger";
 import { seedBookkeeper } from "./lib/bookkeeperSeed";
 import { runExpireOverdue } from "./routes/helpingHands";
 import { pool } from "@workspace/db";
-import { setRateLimitBackend } from "./lib/rateLimit";
+import { setRateLimitBackend, pruneExpiredRateLimits } from "./lib/rateLimit";
 
 setRateLimitBackend(pool);
 
@@ -61,7 +61,25 @@ app.listen(port, "0.0.0.0", (err) => {
     }
   }
 
+  // ── Daily rate-limit pruner ─────────────────────────────────────
+  // Deletes rows from the rate_limits table whose window has already
+  // expired.  Without this the table grows forever as bots and
+  // one-time visitors accumulate rows that are never touched again.
+  async function scheduledPruneRateLimits() {
+    try {
+      const deleted = await pruneExpiredRateLimits();
+      if (deleted !== null && deleted > 0) {
+        logger.info({ deleted }, "rate-limit prune complete");
+      }
+    } catch (pruneErr) {
+      logger.error({ err: pruneErr }, "rate-limit prune failed");
+    }
+  }
+
   // Run immediately on startup, then repeat every 24 h
   scheduledExpire();
   setInterval(scheduledExpire, 24 * 60 * 60 * 1000);
+
+  scheduledPruneRateLimits();
+  setInterval(scheduledPruneRateLimits, 24 * 60 * 60 * 1000);
 });
