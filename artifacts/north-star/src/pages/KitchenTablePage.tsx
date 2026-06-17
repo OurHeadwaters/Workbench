@@ -870,6 +870,8 @@ export function KitchenTablePage() {
   });
 
   const [seatLoadStatus, setSeatLoadStatus] = useState<"server" | "local" | "defaults" | "auth-expired" | null>(null);
+  const [reAuthOpen, setReAuthOpen] = useState(false);
+  const [reAuthDraft, setReAuthDraft] = useState("");
   const [seatSyncFailed, setSeatSyncFailed] = useState(false);
   const seatSyncFailedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -1078,6 +1080,33 @@ export function KitchenTablePage() {
     setStreaming(false);
     streamingIdRef.current = null;
   }, [input, streaming, activeSeat, messages, brief]);
+
+  const continueInChat = useCallback((question: string, verdictContent: string, itemQ: string) => {
+    const ishmaelSeat = seats.find((s) => s.id === "ishmael");
+    const seatName = ishmaelSeat?.name ?? "Ishmael";
+    const seatColor = ishmaelSeat?.color ?? "#2D6A4F";
+    const prompt = `Ishmael — run the seven-generation test on: ${question}. What does this proposal leave for the person who inherits it in seven generations?`;
+    const userMsg: Message = {
+      id: `u-7gen-${Date.now()}`,
+      role: "user",
+      content: prompt,
+      seatId: "ishmael",
+      seatName,
+      seatColor,
+    };
+    const assistantMsg: Message = {
+      id: `a-7gen-${Date.now()}`,
+      role: "assistant",
+      content: verdictContent,
+      seatId: "ishmael",
+      seatName,
+      seatColor,
+    };
+    setMessages((prev) => [...prev, userMsg, assistantMsg]);
+    setActiveSeatId("ishmael");
+    setSevenGenPanels((prev) => ({ ...prev, [itemQ]: { ...(prev[itemQ]!), open: false } }));
+    setBriefOpen(false);
+  }, [seats]);
 
   const sevenGenLoadingRef = useRef<Set<string>>(new Set());
 
@@ -1566,6 +1595,16 @@ export function KitchenTablePage() {
                               <span className="inline-block w-1.5 h-3.5 bg-[#4A6B5A] ml-0.5 animate-pulse rounded-sm" />
                             )}
                           </div>
+                          {panel.status !== "loading" && panel.content !== "" && (
+                            <div className="px-4 py-2 border-t border-[#1E2A20] flex justify-end">
+                              <button
+                                onClick={() => continueInChat(item.question, panel.content, item.q)}
+                                className="text-[11px] font-medium text-[#6B9A80] hover:text-[#A8BFB0] tracking-wide transition-colors"
+                              >
+                                Continue in chat →
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -1671,6 +1710,16 @@ export function KitchenTablePage() {
                                   <span className="inline-block w-1 h-3 bg-[#4A6B5A] ml-0.5 animate-pulse rounded-sm" />
                                 )}
                               </div>
+                              {panel.status !== "loading" && panel.content !== "" && (
+                                <div className="px-3 py-1.5 border-t border-[#1E2A20] flex justify-end">
+                                  <button
+                                    onClick={() => continueInChat(item.question, panel.content, item.q)}
+                                    className="text-[10px] font-medium text-[#6B9A80] hover:text-[#A8BFB0] tracking-wide transition-colors"
+                                  >
+                                    Continue in chat →
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
