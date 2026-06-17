@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Inbox, ChevronDown, ChevronUp, Check, Clock } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Inbox, ChevronDown, ChevronUp, Check, Clock, RefreshCw } from "lucide-react";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +16,7 @@ interface EnrichedEmailThread {
 type AccountStatus = "ok" | "scope" | "unavailable" | "no-connection";
 
 const BASE_API = "/api";
+const POLL_INTERVAL_MS = 4 * 60 * 1000;
 
 const BADGE_COLORS: Record<string, string> = {
   "acc-bobbie-personal": "bg-[#EDE9FE] text-[#5B21B6]",
@@ -42,29 +43,42 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
   const [globalError, setGlobalError] = useState<"unavailable" | "scope" | null>(null);
   const [expanded, setExpanded] = useState(true);
 
-  // Enabled non-alias accounts that will participate in the fan-out
   const enabledAccounts = gmailAccounts.filter((a) => a.enabled && !a.isAlias);
 
-  useEffect(() => {
-    if (!inbox.enabled || enabledAccounts.length === 0) return;
-    setLoading(true);
-    setGlobalError(null);
+  const enabledRef = useRef(inbox.enabled);
+  const enabledAccountsRef = useRef(enabledAccounts);
+  const inboxRef = useRef(inbox);
+
+  enabledRef.current = inbox.enabled;
+  enabledAccountsRef.current = enabledAccounts;
+  inboxRef.current = inbox;
+
+  const loadThreads = useCallback((showSpinner: boolean) => {
+    const currentInbox = inboxRef.current;
+    const accounts = enabledAccountsRef.current;
+
+    if (!enabledRef.current || accounts.length === 0) return;
+
+    if (showSpinner) {
+      setLoading(true);
+      setGlobalError(null);
+    }
 
     const params = new URLSearchParams();
-    if (inbox.keywords?.length) params.set("keywords", inbox.keywords.join(","));
-    if (inbox.senders?.length) params.set("senders", inbox.senders.join(","));
-    if (inbox.hatLabels?.length) params.set("labels", inbox.hatLabels.map((h) => h.label).join(","));
+    if (currentInbox.keywords?.length) params.set("keywords", currentInbox.keywords.join(","));
+    if (currentInbox.senders?.length) params.set("senders", currentInbox.senders.join(","));
+    if (currentInbox.hatLabels?.length) params.set("labels", currentInbox.hatLabels.map((h) => h.label).join(","));
 
-    params.set("accountIds", enabledAccounts.map((a) => a.id).join(","));
+    params.set("accountIds", accounts.map((a) => a.id).join(","));
     params.set(
       "accountLabels",
-      enabledAccounts.map((a) => `${a.id}:${a.label}`).join(","),
+      accounts.map((a) => `${a.id}:${a.label}`).join(","),
     );
 
     fetch(`${BASE_API}/inbox/threads/all?${params.toString()}`)
       .then(async (r) => {
         if (r.status === 403) {
-          setGlobalError("scope");
+          if (showSpinner) setGlobalError("scope");
           setLoading(false);
           return;
         }
@@ -78,10 +92,21 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
         setLoading(false);
       })
       .catch(() => {
-        setGlobalError("unavailable");
+        if (showSpinner) setGlobalError("unavailable");
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    if (!inbox.enabled || enabledAccounts.length === 0) return;
+    loadThreads(true);
   }, [inbox.enabled, inbox.keywords, inbox.senders, inbox.hatLabels, inbox.lastSavedAt, gmailAccounts]);
+
+  useEffect(() => {
+    if (!inbox.enabled || enabledAccounts.length === 0) return;
+    const id = setInterval(() => loadThreads(false), POLL_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [inbox.enabled, enabledAccounts.length, loadThreads]);
 
   if (!inbox.enabled) return null;
   if (!loading && threads.length === 0 && globalError !== "scope") return null;
@@ -122,6 +147,17 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
               {failedCount} needs auth
             </span>
           )}
+          <button
+            onClick={() => loadThreads(true)}
+            disabled={loading}
+            className="ml-auto p-1.5 rounded-lg hover:bg-[#F5F5F0] disabled:opacity-40 transition-opacity"
+            title="Refresh inbox"
+          >
+            <RefreshCw
+              size={14}
+              className={cn("text-[#78716C]", loading && "animate-spin")}
+            />
+          </button>
         </div>
       ) : (
         <button
