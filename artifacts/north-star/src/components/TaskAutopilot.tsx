@@ -333,9 +333,11 @@ interface TaskAutopilotProps {
   defaultOpen?: boolean;
   /** Table-room mode: auto-triages on load, auto-approves GREEN, shows AMBER binary card, RED queued at top */
   tableMode?: boolean;
+  /** Called whenever the session-cleared count changes (table mode) */
+  onClearedCountChange?: (count: number) => void;
 }
 
-export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false, tableMode = false }: TaskAutopilotProps) {
+export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false, tableMode = false, onClearedCountChange }: TaskAutopilotProps) {
   const [open, setOpen] = useState(defaultOpen);
   const [configOpen, setConfigOpen] = useState(false);
   const [pasteOpen, setPasteOpen] = useState(false);
@@ -429,6 +431,11 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false, tableMo
   const autoApprovedFingerprintRef = useRef("");
   // Table-mode: AMBER clusters the founder wants to decide herself ("I'll decide")
   const [deferredAmberClusters, setDeferredAmberClusters] = useState<Set<string>>(new Set());
+
+  // Notify parent of cleared count changes (table mode)
+  useEffect(() => {
+    if (tableMode) onClearedCountChange?.(sessionCleared);
+  }, [sessionCleared, tableMode, onClearedCountChange]);
 
   // Persist accepted titles so cleared tasks continue to suppress their seed brief
   useEffect(() => {
