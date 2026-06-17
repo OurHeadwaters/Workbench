@@ -22,7 +22,7 @@
  *   1. Stripe fires checkout.session.completed when a payment succeeds.
  *   2. We extract kit_id from session.metadata and customer email from
  *      session.customer_details.email (falling back to session.customer_email).
- *   3. We generate a 30-day access token, persist it to kit-tokens.json,
+ *   3. We generate a 90-day access token, persist it to kit-tokens.json,
  *      and send the magic-link delivery email via Google Mail.
  *
  * Idempotency:
@@ -48,7 +48,7 @@ const router: IRouter = Router();
 
 // ── Token helpers ─────────────────────────────────────────────────────────────
 
-const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+const TOKEN_TTL_MS = 90 * 24 * 60 * 60 * 1000;
 
 function generateToken(): string {
   return crypto.randomBytes(32).toString("hex");

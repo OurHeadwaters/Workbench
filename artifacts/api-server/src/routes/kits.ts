@@ -141,7 +141,7 @@ function getStripe(): Stripe | null {
 
 // ── Token store (legacy purchase webhook, now DB-backed) ──────────────────────
 
-const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+const TOKEN_TTL_MS = 90 * 24 * 60 * 60 * 1000;
 
 function generateToken(): string {
   return crypto.randomBytes(32).toString("hex");
@@ -499,6 +499,57 @@ router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
   );
 
   res.json({ ok: true, sent: true, mailStatus: mailResult.status });
+});
+
+// ── POST /kits/token/:token/extend — owner-only, extend a token's expiry ─────
+//
+// Extends a buyer's kit access token by another TOKEN_TTL_MS (90 days) from
+// the later of now or the token's current expiresAt, whichever is further out.
+// Useful when a buyer returns after their link has expired or is about to expire.
+//
+// Auth: requireKitOwnerAuth (LIBRARY_OWNER_TOKEN or Clerk bookkeeper owner role)
+
+router.post("/token/:token/extend", requireKitOwnerAuth, async (req: Request, res: Response) => {
+  const rawToken = req.params["token"];
+  const token = Array.isArray(rawToken) ? (rawToken[0] ?? "") : (rawToken ?? "");
+  if (!token || token.length > 128) {
+    res.status(400).json({ error: "Invalid token" });
+    return;
+  }
+
+  const [record] = await db
+    .select()
+    .from(kitTokensTable)
+    .where(eq(kitTokensTable.token, token))
+    .limit(1);
+
+  if (!record) {
+    res.status(404).json({ error: "Token not found" });
+    return;
+  }
+
+  const base = record.expiresAt > new Date() ? record.expiresAt : new Date();
+  const newExpiresAt = new Date(base.getTime() + TOKEN_TTL_MS);
+
+  await db
+    .update(kitTokensTable)
+    .set({ expiresAt: newExpiresAt })
+    .where(eq(kitTokensTable.token, token));
+
+  logger.info(
+    { token: token.slice(0, 8) + "…", kitId: record.kitId, buyerEmail: record.buyerEmail, newExpiresAt },
+    "[kits/token/extend] token extended by owner",
+  );
+
+  res.json({
+    ok: true,
+    token,
+    kitId: record.kitId,
+    buyerEmail: record.buyerEmail,
+    buyerName: record.buyerName,
+    previousExpiresAt: record.expiresAt.toISOString(),
+    newExpiresAt: newExpiresAt.toISOString(),
+  });
 });
 
 // ── GET /kits/access/:token ───────────────────────────────────────────────────

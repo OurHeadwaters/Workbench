@@ -91,7 +91,7 @@ function ExpiredState({ expiredAt }: { expiredAt: string }) {
             marginBottom: "0.5rem",
           }}
         >
-          Your 30-day access window closed on {date}.
+          Your 90-day access window closed on {date}.
         </p>
         <p
           style={{
@@ -101,9 +101,26 @@ function ExpiredState({ expiredAt }: { expiredAt: string }) {
             marginBottom: "2rem",
           }}
         >
-          To re-access your kit, you can purchase again or reach Bobbie directly.
+          If your link was recently extended, enter your email below to get a
+          fresh copy. Otherwise you can purchase again or reach Bobbie directly.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", alignItems: "center" }}>
+          <Link
+            href="/kits/resend"
+            style={{
+              display: "inline-block",
+              background: EVERGREEN,
+              color: "white",
+              fontWeight: 700,
+              fontSize: "0.9rem",
+              letterSpacing: "0.04em",
+              padding: "0.75rem 2rem",
+              borderRadius: 6,
+              textDecoration: "none",
+            }}
+          >
+            Re-send my access link →
+          </Link>
           <a
             href="/parrsjars/kit"
             style={{
