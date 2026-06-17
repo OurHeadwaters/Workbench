@@ -10,6 +10,7 @@
 import { logger } from "./logger";
 import { db, kitTokensTable } from "@workspace/db";
 import { lt, sql } from "drizzle-orm";
+import { sendKitTokensCleanupFailureEmail } from "./riverSmithMailer";
 
 function msUntilNextRun(hour: number, minute: number): number {
   const now = new Date();
@@ -34,7 +35,9 @@ async function purgeExpiredKitTokens(): Promise<void> {
       "kit-tokens: expired token cleanup complete",
     );
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
     logger.error({ err }, "kit-tokens: expired token cleanup failed");
+    void sendKitTokensCleanupFailureEmail(message);
   }
 }
 

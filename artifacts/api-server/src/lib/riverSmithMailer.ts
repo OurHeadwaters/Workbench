@@ -156,3 +156,39 @@ export async function sendRiverSmithFailureEmail(
 
   return result;
 }
+
+export async function sendKitTokensCleanupFailureEmail(
+  errorMessage: string,
+): Promise<MailResult> {
+  const to = await resolveNotifyEmail();
+  if (!to) return { status: "skipped" };
+
+  const date = new Date();
+  const label = date.toLocaleDateString("en-CA", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const subject = `Kit Tokens Cleanup Failed — ${label}`;
+
+  const body = [
+    "Kit Tokens Cleanup — nightly expired-token purge could not run.",
+    "",
+    `Error: ${errorMessage}`,
+    "",
+    "The cleanup will run again tonight at 03:15.",
+    "",
+    "—Headwaters API",
+  ].join("\n");
+
+  const result = await sendViaGmail(to, subject, body);
+
+  if (result.status === "sent") {
+    logger.info({ to, messageId: result.messageId }, "kit-tokens: failure notice email sent");
+  } else {
+    logger.warn({ to, error: result.error }, "kit-tokens: failure notice email failed");
+  }
+
+  return result;
+}
