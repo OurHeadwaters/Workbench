@@ -559,6 +559,83 @@ router.get("/access/:token", accessRateLimit, async (req: Request, res: Response
   });
 });
 
+// ── GET /kits/handout ─────────────────────────────────────────────────────────
+//
+// Token-gated handout redirect.  Validates the buyer's kit token, looks up the
+// handout URL by key from the kit registry, then issues a 302 redirect so the
+// actual Drive/PDF URL is never exposed in the frontend bundle.
+//
+// Query params:
+//   token — the buyer's 64-hex kit access token
+//   key   — the stable handout slug (e.g. "wb-process-diagram")
+//
+// Rate-limited per IP: 60 requests per 15 minutes.
+
+const handoutRateLimitStore = new MemoryStore();
+
+const handoutRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 60,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Too many requests — please try again later." },
+  store: handoutRateLimitStore,
+});
+
+/** Reset the handout rate-limit store — for use in tests only. */
+export function __clearHandoutRateLimiter(): void {
+  void handoutRateLimitStore.resetAll();
+}
+
+router.get("/handout", handoutRateLimit, async (req: Request, res: Response) => {
+  const token = typeof req.query["token"] === "string" ? req.query["token"] : "";
+  const key   = typeof req.query["key"]   === "string" ? req.query["key"]   : "";
+
+  if (!token || token.length > 128) {
+    res.status(400).json({ error: "Missing or invalid token" });
+    return;
+  }
+  if (!key || key.length > 200) {
+    res.status(400).json({ error: "Missing or invalid key" });
+    return;
+  }
+
+  const [record] = await db
+    .select()
+    .from(kitTokensTable)
+    .where(eq(kitTokensTable.token, token))
+    .limit(1);
+
+  if (!record) {
+    res.status(404).json({ error: "Token not found" });
+    return;
+  }
+  if (new Date() > record.expiresAt) {
+    res.status(410).json({ error: "Token expired" });
+    return;
+  }
+
+  const kit = getKit(record.kitId);
+  if (!kit) {
+    res.status(500).json({ error: "Kit record inconsistency — contact support" });
+    return;
+  }
+
+  const handouts = kit.handouts ?? {};
+  if (!(key in handouts)) {
+    res.status(404).json({ error: "Handout not found" });
+    return;
+  }
+
+  const destination = handouts[key];
+  if (!destination) {
+    res.status(503).json({ error: "This handout link is not yet active — check back soon or contact bobbie@ourheadwaters.ca" });
+    return;
+  }
+
+  res.redirect(302, destination);
+});
+
 // ── GET /kits/registry ────────────────────────────────────────────────────────
 
 router.get("/registry", (_req: Request, res: Response) => {

@@ -22,6 +22,13 @@ export interface Kit {
   tagline: string;
   arcNote: string | null;
   contentNote: string;
+  /**
+   * Token-gated handout files.  Keys are stable slugs used in the
+   * GET /kits/handout?token=xxx&key=yyy endpoint.  Values are the
+   * real destination URLs (Google Drive or direct PDF links).
+   * Empty-string value means the file is not yet linked.
+   */
+  handouts?: Record<string, string>;
 }
 
 export const KITS: Record<string, Kit> = {
@@ -114,6 +121,59 @@ export const KITS: Record<string, Kit> = {
     arcNote: null,
     contentNote:
       "Your kit includes all 13 redesigned workshop handouts — blanching cheat sheets, dehydrating and freezing flows, station setup worksheets, process documentation sheets, and the Jarista lead magnet. Print-ready, no filler.",
+    handouts: {
+      // ─────────────────────────────────────────────────────────────────────────
+      // Replace each value with the real Google Drive share URL or PDF link.
+      // Pattern: https://drive.google.com/file/d/<FILE_ID>/view?usp=sharing
+      // ─────────────────────────────────────────────────────────────────────────
+
+      // Module 1 — Water-Bath Canning
+      "wb-process-diagram":           "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "wb-intro-safe-practices":      "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "wb-recipes":                   "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "wb-stages-stations":           "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "wb-canning-cheat-sheet":       "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+
+      // Module 2 — Pressure Canning
+      "pc-process-diagram":           "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "pc-intro-safe-practices":      "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "pc-times-table":               "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "pc-deeper-dive":               "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "pc-process-the-process":       "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+
+      // Module 3 — Blanching, Freezing & Dehydrating
+      "bfd-blanching-cheat-sheet":    "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "bfd-freezing-vs-dehydrating":  "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "bfd-process-the-process":      "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "bfd-dehydrating-diagram":      "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "bfd-freezer-prep":             "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+
+      // Module 4 — Cooking With What You Store
+      "cook-preserves":               "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "cook-local-gotos":             "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "cook-just-add-h2o":            "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "cook-value-added-meals":       "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "cook-harvest-salad":           "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+
+      // Module 5 — The System
+      "sys-get-started":              "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "sys-food-audit":               "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "sys-inperson-checklist":       "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "sys-ratios-cheat-sheet":       "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "sys-best-methods":             "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+
+      // Also-included handouts
+      "h-waterbath-vs-pressure":      "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "h-ratios-cheat-sheet":         "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "h-local-gotos":                "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "h-just-add-h2o":               "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "h-freezer-prep":               "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "h-inperson-checklist":         "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "h-food-audit-worksheet":       "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "h-tips-faq":                   "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "h-feedback-worksheet":         "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+      "h-seasonal-recipes":           "https://drive.google.com/drive/folders/1_pj-solutions-kit-placeholder",
+    },
   },
   "goodbye-kit": {
     id: "goodbye-kit",

@@ -519,9 +519,16 @@ function KitContentView({ data, token }: { data: KitAccessResult; token: string 
                         </p>
                         <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                           {mod.items.map((item) => (
-                            <li key={item} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.76rem", color: "#bbb" }}>
+                            <li key={item.label} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.76rem", color: "#bbb" }}>
                               <span style={{ color: mod.color, flexShrink: 0 }}>→</span>
-                              {item}
+                              <a
+                                href={handoutUrl(token, item.key)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ color: "#bbb", textDecoration: "underline", textDecorationColor: mod.color, textUnderlineOffset: "2px" }}
+                              >
+                                {item.label}
+                              </a>
                             </li>
                           ))}
                         </ul>
@@ -585,7 +592,7 @@ function KitContentView({ data, token }: { data: KitAccessResult; token: string 
               >
                 {KIT_HANDOUTS.map((item) => (
                   <div
-                    key={item}
+                    key={item.label}
                     style={{
                       background: "#1a1a1a",
                       border: "1px solid #2a2a2a",
@@ -599,7 +606,14 @@ function KitContentView({ data, token }: { data: KitAccessResult; token: string 
                     }}
                   >
                     <span style={{ color: GOLD, flexShrink: 0 }}>✓</span>
-                    {item}
+                    <a
+                      href={handoutUrl(token, item.key)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "#bbb", textDecoration: "underline", textDecorationColor: GOLD, textUnderlineOffset: "2px" }}
+                    >
+                      {item.label}
+                    </a>
                   </div>
                 ))}
               </div>
