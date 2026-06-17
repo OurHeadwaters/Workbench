@@ -15,6 +15,17 @@ interface Kit {
   createdAt: string;
 }
 
+interface BuyerToken {
+  token: string;
+  kitId: string;
+  buyerEmail: string;
+  buyerName: string;
+  purchaseId: string;
+  createdAt: string;
+  expiresAt: string;
+  expired: boolean;
+}
+
 function getOwnerToken(): string | null {
   try {
     return (
@@ -32,13 +43,24 @@ function formatPrice(cents: number): string {
   return `$${(cents / 100).toFixed(2)} CAD`;
 }
 
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-CA", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 export function KitsPage() {
   const [kits, setKits] = useState<Kit[]>([]);
   const [allKits, setAllKits] = useState<Kit[]>([]);
+  const [tokens, setTokens] = useState<BuyerToken[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [publishingId, setPublishingId] = useState<string | null>(null);
   const [publishMsg, setPublishMsg] = useState<Record<string, string>>({});
+  const [extendingToken, setExtendingToken] = useState<string | null>(null);
+  const [extendMsg, setExtendMsg] = useState<Record<string, string>>({});
 
   const isOwner = !!getOwnerToken();
 
@@ -51,9 +73,10 @@ export function KitsPage() {
   async function fetchKits() {
     setLoading(true);
     try {
-      const [pubRes, draftRes] = await Promise.all([
+      const [pubRes, draftRes, tokensRes] = await Promise.all([
         fetch("/api/kits/list"),
         isOwner ? fetch("/api/kits/drafts", { headers: ownerHeaders() }) : Promise.resolve(null),
+        isOwner ? fetch("/api/kits/tokens", { headers: ownerHeaders() }) : Promise.resolve(null),
       ]);
 
       if (!pubRes.ok) throw new Error("Failed to load published kits");
@@ -63,6 +86,11 @@ export function KitsPage() {
       if (draftRes?.ok) {
         const draftData = (await draftRes.json()) as { kits: Kit[] };
         setAllKits(draftData.kits ?? []);
+      }
+
+      if (tokensRes?.ok) {
+        const tokensData = (await tokensRes.json()) as { tokens: BuyerToken[] };
+        setTokens(tokensData.tokens ?? []);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load kits");
@@ -96,7 +124,41 @@ export function KitsPage() {
     }
   }
 
+  async function handleExtend(token: string) {
+    setExtendingToken(token);
+    try {
+      const res = await fetch(`/api/kits/token/${token}/extend`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...ownerHeaders() },
+      });
+      const data = (await res.json()) as {
+        ok?: boolean;
+        error?: string;
+        newExpiresAt?: string;
+      };
+      if (data.ok && data.newExpiresAt) {
+        const newExpiry = formatDate(data.newExpiresAt);
+        setExtendMsg((prev) => ({ ...prev, [token]: `Extended to ${newExpiry}` }));
+        setTokens((prev) =>
+          prev.map((t) =>
+            t.token === token
+              ? { ...t, expiresAt: data.newExpiresAt!, expired: false }
+              : t,
+          ),
+        );
+      } else {
+        setExtendMsg((prev) => ({ ...prev, [token]: data.error ?? "Failed to extend" }));
+      }
+    } catch {
+      setExtendMsg((prev) => ({ ...prev, [token]: "Network error" }));
+    } finally {
+      setExtendingToken(null);
+    }
+  }
+
   const drafts = allKits.filter((k) => k.status === "draft");
+  const expiredTokens = tokens.filter((t) => t.expired);
+  const activeTokens = tokens.filter((t) => !t.expired);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] px-4 py-8">
@@ -166,6 +228,55 @@ export function KitsPage() {
           </section>
         )}
 
+        {/* Owner: Buyer tokens */}
+        {isOwner && tokens.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-lg font-semibold text-stone-600 mb-4 flex items-center gap-2">
+              Buyer Access Links
+              {expiredTokens.length > 0 && (
+                <span className="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full font-medium">
+                  {expiredTokens.length} expired
+                </span>
+              )}
+            </h2>
+
+            {/* Expired tokens — shown first so they're easy to act on */}
+            {expiredTokens.length > 0 && (
+              <div className="flex flex-col gap-3 mb-4">
+                {expiredTokens.map((t) => (
+                  <TokenRow
+                    key={t.token}
+                    t={t}
+                    extendingToken={extendingToken}
+                    extendMsg={extendMsg}
+                    onExtend={handleExtend}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Active tokens */}
+            {activeTokens.length > 0 && (
+              <div className="flex flex-col gap-3">
+                {expiredTokens.length > 0 && (
+                  <p className="text-xs text-stone-400 font-medium uppercase tracking-wide mt-2 mb-1">
+                    Active
+                  </p>
+                )}
+                {activeTokens.map((t) => (
+                  <TokenRow
+                    key={t.token}
+                    t={t}
+                    extendingToken={extendingToken}
+                    extendMsg={extendMsg}
+                    onExtend={handleExtend}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
         {/* Published kits */}
         <section>
           {kits.length > 0 && (
@@ -232,6 +343,58 @@ export function KitsPage() {
             </a>
           </p>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ── TokenRow ──────────────────────────────────────────────────────────────────
+
+interface TokenRowProps {
+  t: BuyerToken;
+  extendingToken: string | null;
+  extendMsg: Record<string, string>;
+  onExtend: (token: string) => void;
+}
+
+function TokenRow({ t, extendingToken, extendMsg, onExtend }: TokenRowProps) {
+  const isExtending = extendingToken === t.token;
+  const msg = extendMsg[t.token];
+
+  return (
+    <div
+      className={`bg-white border rounded-xl px-4 py-3 flex items-center gap-3 shadow-sm ${
+        t.expired ? "border-red-200" : "border-stone-200"
+      }`}
+    >
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-stone-800 truncate">{t.buyerName}</p>
+        <p className="text-xs text-stone-400 truncate">{t.buyerEmail}</p>
+        <p className="text-xs text-stone-400 mt-0.5">
+          Kit: <span className="text-stone-500">{t.kitId}</span>
+          {" · "}
+          {t.expired ? (
+            <span className="text-red-600 font-medium">Expired {formatDate(t.expiresAt)}</span>
+          ) : (
+            <span className="text-emerald-600">Expires {formatDate(t.expiresAt)}</span>
+          )}
+        </p>
+      </div>
+      <div className="flex flex-col items-end gap-1 shrink-0">
+        <button
+          onClick={() => onExtend(t.token)}
+          disabled={isExtending}
+          className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 ${
+            t.expired
+              ? "bg-red-600 hover:bg-red-700 text-white"
+              : "bg-stone-100 hover:bg-stone-200 text-stone-700"
+          }`}
+        >
+          {isExtending ? "Extending…" : "Extend 90d"}
+        </button>
+        {msg && (
+          <span className="text-xs text-stone-400">{msg}</span>
+        )}
       </div>
     </div>
   );

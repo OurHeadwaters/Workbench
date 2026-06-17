@@ -68,6 +68,9 @@ vi.mock("../lib/kitAuth", () => ({
   requireKitOwnerAuth: vi.fn(
     (_req: unknown, _res: unknown, next: () => void) => next(),
   ),
+  requireFounderOnlyAuth: vi.fn(
+    (_req: unknown, _res: unknown, next: () => void) => next(),
+  ),
   FOUNDER_OWNER_ID: "founder",
 }));
 

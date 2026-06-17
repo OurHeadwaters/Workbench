@@ -38,7 +38,7 @@ import { logger } from "../lib/logger";
 import { getKit, KITS } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail } from "../lib/kitsMailer";
 import { runCodetryFilter } from "../lib/codetryFilter";
-import { requireKitOwnerAuth, FOUNDER_OWNER_ID } from "../lib/kitAuth";
+import { requireKitOwnerAuth, requireFounderOnlyAuth, FOUNDER_OWNER_ID } from "../lib/kitAuth";
 import { db, kitsTable, practitionerApplicationsTable, kitTokensTable } from "@workspace/db";
 import { eq, and, gt, desc } from "drizzle-orm";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
@@ -501,15 +501,48 @@ router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
   res.json({ ok: true, sent: true, mailStatus: mailResult.status });
 });
 
-// ── POST /kits/token/:token/extend — owner-only, extend a token's expiry ─────
+// ── GET /kits/tokens — owner-only, list all buyer tokens with expiry status ───
+//
+// Returns every row in kit_tokens, ordered most-recent first.
+// Each row includes an `expired` boolean so the UI can highlight stale links
+// without the caller having to compare timestamps.
+//
+// Auth: requireFounderOnlyAuth — founder token (North Star/GORD) or Clerk bookkeeper owner.
+// Practitioners are explicitly excluded: this endpoint returns all buyer rows globally,
+// not scoped to a single kit owner, so it must be restricted to the founder.
+
+router.get("/tokens", requireFounderOnlyAuth, async (_req: Request, res: Response) => {
+  const now = new Date();
+
+  const rows = await db
+    .select()
+    .from(kitTokensTable)
+    .orderBy(desc(kitTokensTable.createdAt));
+
+  const tokens = rows.map((r) => ({
+    token: r.token,
+    kitId: r.kitId,
+    buyerEmail: r.buyerEmail,
+    buyerName: r.buyerName,
+    purchaseId: r.purchaseId,
+    createdAt: r.createdAt.toISOString(),
+    expiresAt: r.expiresAt.toISOString(),
+    expired: r.expiresAt < now,
+  }));
+
+  res.json({ ok: true, tokens });
+});
+
+// ── POST /kits/token/:token/extend — founder-only, extend a token's expiry ────
 //
 // Extends a buyer's kit access token by another TOKEN_TTL_MS (90 days) from
 // the later of now or the token's current expiresAt, whichever is further out.
 // Useful when a buyer returns after their link has expired or is about to expire.
 //
-// Auth: requireKitOwnerAuth (LIBRARY_OWNER_TOKEN or Clerk bookkeeper owner role)
+// Auth: requireFounderOnlyAuth — practitioners excluded to prevent cross-tenant
+// extension of another seller's buyer links.
 
-router.post("/token/:token/extend", requireKitOwnerAuth, async (req: Request, res: Response) => {
+router.post("/token/:token/extend", requireFounderOnlyAuth, async (req: Request, res: Response) => {
   const rawToken = req.params["token"];
   const token = Array.isArray(rawToken) ? (rawToken[0] ?? "") : (rawToken ?? "");
   if (!token || token.length > 128) {
