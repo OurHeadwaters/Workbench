@@ -3,7 +3,7 @@
  *
  * Regression tests for the share-link landing banner:
  *   - Banner appears when the page loads with ?zone=3
- *   - Banner text includes "Zone 3 — Greenhouse"
+ *   - Banner text includes "Zone 3 — {zone name from zones.ts}"
  *   - Zone card with id="zone-3" scrolls into view on mount
  *   - Clicking "Got it ✕" dismisses the banner (opacity → 0)
  *   - Banner auto-dismisses after 5 seconds
@@ -13,6 +13,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { MapPage } from "@/pages/MapPage";
+import { ZONES } from "@/data/zones";
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
 
@@ -54,9 +55,12 @@ describe("MapPage — share-link banner (?zone=3)", () => {
   });
 
   it("renders the banner with correct zone text", () => {
+    const zone3 = ZONES.find((z) => z.number === 3);
+    if (!zone3) throw new Error("Zone 3 not found in zones.ts");
+    const escapedName = zone3.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     render(<MapPage />);
     expect(
-      screen.getByText(/Zone 3\s*[—–]\s*Greenhouse/i)
+      screen.getByText(new RegExp(`Zone 3\\s*[—–]\\s*${escapedName}`, "i"))
     ).toBeInTheDocument();
   });
 
