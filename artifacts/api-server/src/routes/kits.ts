@@ -571,7 +571,7 @@ router.get("/access/:token", accessRateLimit, async (req: Request, res: Response
 //
 // Rate-limited per IP: 60 requests per 15 minutes.
 
-const handoutRateLimitStore = new MemoryStore();
+const handoutRateLimitStore = new PgExpressRateLimitStore(15 * 60 * 1000, "kits:handout");
 
 const handoutRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000,

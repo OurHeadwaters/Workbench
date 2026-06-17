@@ -23,15 +23,7 @@ const router: IRouter = Router();
 
 const NOTIFY_EMAIL_KEY = "river_smith_notify_email";
 
-function requireOwner(req: Request, res: Response): boolean {
-  if (!OWNER_TOKEN || !isOwnerRequest(req)) {
-    res.status(401).json({ error: "Unauthorized" });
-    return false;
-  }
-  return true;
-}
-
-async function requireSeatConfigOwner(
+async function requireOwnerOrOwnerCurator(
   req: Request,
   res: Response,
 ): Promise<boolean> {
@@ -46,7 +38,7 @@ async function requireSeatConfigOwner(
 }
 
 router.get("/notify-email", async (req: Request, res: Response) => {
-  if (!requireOwner(req, res)) return;
+  if (!(await requireOwnerOrOwnerCurator(req, res))) return;
   try {
     const rows = await db
       .select()
@@ -62,7 +54,7 @@ router.get("/notify-email", async (req: Request, res: Response) => {
 });
 
 router.put("/notify-email", async (req: Request, res: Response) => {
-  if (!requireOwner(req, res)) return;
+  if (!(await requireOwnerOrOwnerCurator(req, res))) return;
   const { email } = req.body as { email?: string };
   const trimmed = (email ?? "").trim();
   if (trimmed && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
@@ -91,7 +83,7 @@ router.put("/notify-email", async (req: Request, res: Response) => {
 const SEAT_CONFIG_KEY = "kitchen_table_seat_config";
 
 router.get("/seat-config", async (req: Request, res: Response) => {
-  if (!(await requireSeatConfigOwner(req, res))) return;
+  if (!(await requireOwnerOrOwnerCurator(req, res))) return;
   try {
     const rows = await db
       .select()
@@ -114,7 +106,7 @@ router.get("/seat-config", async (req: Request, res: Response) => {
 });
 
 router.put("/seat-config", async (req: Request, res: Response) => {
-  if (!(await requireSeatConfigOwner(req, res))) return;
+  if (!(await requireOwnerOrOwnerCurator(req, res))) return;
   const { seats } = req.body as { seats?: unknown };
   if (!seats || typeof seats !== "object") {
     res.status(400).json({ error: "seats object required" });
