@@ -45,6 +45,34 @@ export function clearKitToken(kitId: string): void {
   }
 }
 
+// ── Per-token visited-module tracking ─────────────────────────────────────────
+
+const KIT_VISITED_PREFIX = "headwaters:kit-visited:";
+
+export function getVisitedModules(token: string): Set<string> {
+  try {
+    const raw = localStorage.getItem(`${KIT_VISITED_PREFIX}${token}`);
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw) as string[];
+    return new Set(parsed);
+  } catch {
+    return new Set();
+  }
+}
+
+export function markModuleVisited(token: string, moduleTitle: string): void {
+  try {
+    const visited = getVisitedModules(token);
+    visited.add(moduleTitle);
+    localStorage.setItem(
+      `${KIT_VISITED_PREFIX}${token}`,
+      JSON.stringify(Array.from(visited))
+    );
+  } catch {
+    // localStorage unavailable
+  }
+}
+
 // ── API fetch helpers ──────────────────────────────────────────────────────────
 
 export interface KitAccessResult {

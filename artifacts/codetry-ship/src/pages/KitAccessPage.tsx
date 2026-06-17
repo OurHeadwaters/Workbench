@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "wouter";
-import { fetchKitAccess, setKitToken, type KitAccessResult } from "@/lib/kitTokens";
+import { fetchKitAccess, setKitToken, getVisitedModules, markModuleVisited, type KitAccessResult } from "@/lib/kitTokens";
 import { KIT_MODULES, KIT_HANDOUTS } from "@/data/pjSolutionsKit";
 
 const EVERGREEN = "#1f3d2e";
@@ -223,7 +223,7 @@ function InvalidState() {
 
 const PJ_SOLUTIONS_HUB_URL = "/parrsjars/hub";
 
-function KitContentView({ data }: { data: KitAccessResult }) {
+function KitContentView({ data, token }: { data: KitAccessResult; token: string }) {
   const expiryDate = new Date(data.expires_at).toLocaleDateString("en-CA", {
     year: "numeric",
     month: "long",
@@ -231,6 +231,18 @@ function KitContentView({ data }: { data: KitAccessResult }) {
   });
 
   const isPjSolutionsKit = data.kit.id === "pj-solutions-kit";
+
+  const [visitedTitles, setVisitedTitles] = useState<Set<string>>(() =>
+    getVisitedModules(token)
+  );
+
+  const handleModuleClick = useCallback(
+    (moduleTitle: string) => {
+      markModuleVisited(token, moduleTitle);
+      setVisitedTitles(getVisitedModules(token));
+    },
+    [token]
+  );
 
   return (
     <div
@@ -373,87 +385,172 @@ function KitContentView({ data }: { data: KitAccessResult }) {
         {isPjSolutionsKit && (
           <>
             <div style={{ marginBottom: "2rem" }}>
-              <p
+              {/* Progress summary */}
+              <div
                 style={{
-                  fontSize: "0.62rem",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: GOLD,
-                  fontWeight: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: "0.5rem",
                   marginBottom: "1.25rem",
                 }}
               >
-                5 Modules · 20+ Handouts
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                {KIT_MODULES.map((mod, i) => (
-                  <div
-                    key={mod.title}
+                <p
+                  style={{
+                    fontSize: "0.62rem",
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: GOLD,
+                    fontWeight: 700,
+                    margin: 0,
+                  }}
+                >
+                  5 Modules · 20+ Handouts
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    background: "#1a1a1a",
+                    border: "1px solid #2a2a2a",
+                    borderRadius: 20,
+                    padding: "0.3rem 0.85rem",
+                  }}
+                >
+                  {/* Progress dots */}
+                  <div style={{ display: "flex", gap: "4px" }}>
+                    {KIT_MODULES.map((mod) => (
+                      <div
+                        key={mod.title}
+                        style={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: "50%",
+                          background: visitedTitles.has(mod.title) ? GOLD : "#333",
+                          transition: "background 0.2s",
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <span
                     style={{
-                      background: "#1e1e1e",
-                      borderRadius: 8,
-                      border: "1px solid #2a2a2a",
-                      borderLeft: `4px solid ${mod.color}`,
-                      overflow: "hidden",
-                      display: "flex",
-                      flexWrap: "wrap",
+                      fontSize: "0.72rem",
+                      color: visitedTitles.size === KIT_MODULES.length ? GOLD : "#888",
+                      fontWeight: visitedTitles.size === KIT_MODULES.length ? 700 : 400,
                     }}
                   >
-                    <div style={{ flex: "1 1 240px", padding: "1.25rem 1.5rem" }}>
-                      <p
-                        style={{
-                          fontSize: "0.58rem",
-                          letterSpacing: "0.15em",
-                          textTransform: "uppercase",
-                          color: mod.color,
-                          fontWeight: 700,
-                          marginBottom: "0.3rem",
-                        }}
-                      >
-                        Module {i + 1}
-                      </p>
-                      <h3
-                        style={{
-                          fontFamily: "var(--font-serif, Georgia, serif)",
-                          fontSize: "1rem",
-                          fontWeight: 800,
-                          color: "white",
-                          marginBottom: "0.5rem",
-                        }}
-                      >
-                        {mod.title}
-                      </h3>
-                      <p style={{ color: "#999", fontSize: "0.8rem", lineHeight: 1.65, marginBottom: "0.75rem" }}>
-                        {mod.desc}
-                      </p>
-                      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                        {mod.items.map((item) => (
-                          <li key={item} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.76rem", color: "#bbb" }}>
-                            <span style={{ color: mod.color, flexShrink: 0 }}>→</span>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    {visitedTitles.size} of {KIT_MODULES.length} modules visited
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                {KIT_MODULES.map((mod, i) => {
+                  const isVisited = visitedTitles.has(mod.title);
+                  return (
                     <div
+                      key={mod.title}
+                      onClick={() => handleModuleClick(mod.title)}
                       style={{
-                        flex: "0 0 110px",
-                        minHeight: 110,
+                        background: "#1e1e1e",
+                        borderRadius: 8,
+                        border: isVisited ? `1px solid ${mod.color}40` : "1px solid #2a2a2a",
+                        borderLeft: `4px solid ${mod.color}`,
                         overflow: "hidden",
-                        background: "#111",
                         display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        flexWrap: "wrap",
+                        cursor: "pointer",
+                        position: "relative",
+                        transition: "border-color 0.2s",
                       }}
                     >
-                      <img
-                        src={mod.img}
-                        alt={mod.title}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.65 }}
-                      />
+                      {/* Visited badge */}
+                      {isVisited && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "0.75rem",
+                            right: "0.75rem",
+                            background: mod.color,
+                            color: "white",
+                            borderRadius: 12,
+                            padding: "0.15rem 0.55rem",
+                            fontSize: "0.6rem",
+                            fontWeight: 700,
+                            letterSpacing: "0.08em",
+                            textTransform: "uppercase",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.25rem",
+                            zIndex: 1,
+                          }}
+                        >
+                          <span>✓</span> Visited
+                        </div>
+                      )}
+                      <div style={{ flex: "1 1 240px", padding: "1.25rem 1.5rem" }}>
+                        <p
+                          style={{
+                            fontSize: "0.58rem",
+                            letterSpacing: "0.15em",
+                            textTransform: "uppercase",
+                            color: mod.color,
+                            fontWeight: 700,
+                            marginBottom: "0.3rem",
+                          }}
+                        >
+                          Module {i + 1}
+                        </p>
+                        <h3
+                          style={{
+                            fontFamily: "var(--font-serif, Georgia, serif)",
+                            fontSize: "1rem",
+                            fontWeight: 800,
+                            color: "white",
+                            marginBottom: "0.5rem",
+                          }}
+                        >
+                          {mod.title}
+                        </h3>
+                        <p style={{ color: "#999", fontSize: "0.8rem", lineHeight: 1.65, marginBottom: "0.75rem" }}>
+                          {mod.desc}
+                        </p>
+                        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                          {mod.items.map((item) => (
+                            <li key={item} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.76rem", color: "#bbb" }}>
+                              <span style={{ color: mod.color, flexShrink: 0 }}>→</span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                        {!isVisited && (
+                          <p style={{ fontSize: "0.65rem", color: "#555", marginTop: "0.75rem", margin: "0.75rem 0 0" }}>
+                            Tap to mark as visited
+                          </p>
+                        )}
+                      </div>
+                      <div
+                        style={{
+                          flex: "0 0 110px",
+                          minHeight: 110,
+                          overflow: "hidden",
+                          background: "#111",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <img
+                          src={mod.img}
+                          alt={mod.title}
+                          style={{ width: "100%", height: "100%", objectFit: "cover", opacity: isVisited ? 0.85 : 0.65, transition: "opacity 0.2s" }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -699,5 +796,5 @@ export function KitAccessPage() {
     );
   }
 
-  return <KitContentView data={state.data} />;
+  return <KitContentView data={state.data} token={token} />;
 }
