@@ -22,8 +22,30 @@ function EagleMark({ size = 160 }: { size?: number }) {
   );
 }
 
+/* ── Deadline urgency helper ─────────────────────────────────────────────── */
+function daysUntil(isoDate: string): number {
+  const [y, m, d] = isoDate.split("-").map(Number);
+  const now = new Date();
+  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const targetMidnight = new Date(y, m - 1, d);
+  const msPerDay = 1000 * 60 * 60 * 24;
+  return Math.round((targetMidnight.getTime() - todayMidnight.getTime()) / msPerDay);
+}
+
+const ALTERNA_DEADLINE = "2026-06-26";
+const URGENCY_THRESHOLD_DAYS = 14;
+
 /* ── Landing wall ────────────────────────────────────────────────────────── */
 export default function Index() {
+  const alternaRemaining = daysUntil(ALTERNA_DEADLINE);
+  const alternaUrgent = alternaRemaining <= URGENCY_THRESHOLD_DAYS;
+  const alternaLabel =
+    alternaRemaining <= 0
+      ? "Deadline passed"
+      : alternaRemaining === 1
+      ? "Due tomorrow"
+      : `Due in ${alternaRemaining} days`;
+
   return (
     <div
       style={{
@@ -335,47 +357,86 @@ export default function Index() {
               gap: "1rem",
               padding: "0.85rem 1.1rem",
               minHeight: "56px",
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(212,160,23,0.18)",
+              background: alternaUrgent ? "rgba(212,160,23,0.11)" : "rgba(255,255,255,0.04)",
+              border: alternaUrgent
+                ? "1px solid rgba(212,160,23,0.6)"
+                : "1px solid rgba(212,160,23,0.18)",
               borderRadius: "3px",
               textDecoration: "none",
               transition: "background 0.18s, border-color 0.18s",
+              boxShadow: alternaUrgent ? "0 0 0 1px rgba(212,160,23,0.18) inset" : "none",
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.10)";
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.4)";
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.18)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.7)";
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.18)";
+              (e.currentTarget as HTMLAnchorElement).style.background = alternaUrgent
+                ? "rgba(212,160,23,0.11)"
+                : "rgba(255,255,255,0.04)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = alternaUrgent
+                ? "rgba(212,160,23,0.6)"
+                : "rgba(212,160,23,0.18)";
             }}
           >
-            <div>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <div
                 style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.8rem",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "rgba(244,237,224,0.92)",
-                  fontWeight: 500,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  flexWrap: "wrap",
                   marginBottom: "0.2rem",
                 }}
               >
-                Alterna Grant Proposal
+                <div
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.8rem",
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "rgba(244,237,224,0.92)",
+                    fontWeight: 500,
+                  }}
+                >
+                  Alterna Grant Proposal
+                </div>
+                {alternaUrgent && (
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "0.28rem",
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "0.62rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      color: "#1a2e1f",
+                      background: "#d4a017",
+                      borderRadius: "2px",
+                      padding: "0.18em 0.55em",
+                      lineHeight: 1,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span style={{ fontSize: "0.7em" }}>⚑</span>
+                    {alternaLabel}
+                  </span>
+                )}
               </div>
               <div
                 style={{
                   fontFamily: "var(--font-sans)",
                   fontSize: "0.78rem",
-                  color: "rgba(244,237,224,0.62)",
+                  color: alternaUrgent ? "rgba(244,237,224,0.78)" : "rgba(244,237,224,0.62)",
                   lineHeight: 1.4,
                 }}
               >
                 Financial Inclusion Grant · $20,000 · due June 26, 2026
               </div>
             </div>
-            <span style={{ color: "rgba(212,160,23,0.75)", fontSize: "1.1rem", flexShrink: 0 }}>→</span>
+            <span style={{ color: "rgba(212,160,23,0.85)", fontSize: "1.1rem", flexShrink: 0 }}>→</span>
           </a>
 
           {/* Parr's Jars Workshop Kit */}
