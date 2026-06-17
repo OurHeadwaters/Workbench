@@ -1651,12 +1651,10 @@ export function MapPage() {
             const isHighlighted = highlightedZones.includes(zone.number);
             const isDimmed = quizActive && highlightedZones.length > 0 && !isHighlighted;
             const zoneHighlightReasons: Record<string, string> = {};
-            if (isHighlighted) {
-              for (const tool of zone.tools) {
-                if (tool.zoneAddress) {
-                  const reason = resolveToolHighlightReason(quiz, tool.zoneAddress);
-                  if (reason) zoneHighlightReasons[tool.zoneAddress] = reason;
-                }
+            for (const tool of zone.tools) {
+              if (tool.zoneAddress) {
+                const reason = resolveToolHighlightReason(quiz, tool.zoneAddress);
+                if (reason) zoneHighlightReasons[tool.zoneAddress] = reason;
               }
             }
             return (
@@ -1666,7 +1664,7 @@ export function MapPage() {
                 standby={standby}
                 highlighted={isHighlighted}
                 dimmed={isDimmed}
-                highlightedTools={isHighlighted ? highlightedTools : []}
+                highlightedTools={highlightedTools}
                 highlightReasons={zoneHighlightReasons}
               />
             );

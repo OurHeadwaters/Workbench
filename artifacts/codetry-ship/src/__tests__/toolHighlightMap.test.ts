@@ -7,6 +7,12 @@ import {
   getPlannedHighlightAddresses,
 } from "@/data/zones";
 
+function toolNameByAddress(address: string): string | undefined {
+  return [...ZONES, AQUIFER_ZONE]
+    .flatMap((z) => z.tools)
+    .find((t) => t.zoneAddress === address)?.name;
+}
+
 describe("TOOL_HIGHLIGHT_MAP address integrity", () => {
   it("every address in TOOL_HIGHLIGHT_MAP matches a zoneAddress in ZONES or AQUIFER_ZONE", () => {
     const mismatches = getMismatchedHighlightAddresses();
@@ -70,5 +76,35 @@ describe("TOOL_HIGHLIGHT_MAP address integrity", () => {
     }
 
     expect(planned).toHaveLength(0);
+  });
+});
+
+describe("practitioner quiz results include Z1 money tools", () => {
+  it("practitioner:normal highlights Headwaters Books (Z1–B)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["practitioner:normal"] ?? [];
+    expect(highlights).toContain("Z1–B");
+    expect(toolNameByAddress("Z1–B")).toBe("Headwaters Books");
+  });
+
+  it("practitioner:normal highlights North Star (Z1–C)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["practitioner:normal"] ?? [];
+    expect(highlights).toContain("Z1–C");
+    expect(toolNameByAddress("Z1–C")).toBe("North Star");
+  });
+
+  it("practitioner:standby highlights Headwaters Books (Z1–B)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["practitioner:standby"] ?? [];
+    expect(highlights).toContain("Z1–B");
+  });
+
+  it("practitioner:standby highlights North Star (Z1–C)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["practitioner:standby"] ?? [];
+    expect(highlights).toContain("Z1–C");
+  });
+
+  it("practitioner:standby also highlights The Eave (Z1–D)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["practitioner:standby"] ?? [];
+    expect(highlights).toContain("Z1–D");
+    expect(toolNameByAddress("Z1–D")).toBe("The Eave");
   });
 });
