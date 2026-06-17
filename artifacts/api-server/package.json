@@ -10,6 +10,7 @@
     "sync-chapters": "node scripts/sync-chapters.mjs",
     "check-chapters": "node scripts/sync-chapters.mjs --check",
     "typecheck": "node scripts/sync-chapters.mjs --check && tsc -p tsconfig.json --noEmit",
+    "migrate-kit-tokens": "tsx src/scripts/migrate-kit-tokens.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
