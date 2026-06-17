@@ -22,7 +22,7 @@ import type { AddressInfo } from "node:net";
 //   "expired"        — session token exists but DB returns null (expired/revoked) → 401
 //   "no-token"       — no token on the request at all → 401
 
-const { authState, mockGetCuratorFromToken } = vi.hoisted(() => ({
+const { authState, mockGetCuratorFromToken, dbState } = vi.hoisted(() => ({
   authState: { mode: "owner-token" as
     | "owner-token"
     | "owner-curator"
@@ -31,6 +31,7 @@ const { authState, mockGetCuratorFromToken } = vi.hoisted(() => ({
     | "no-token"
   },
   mockGetCuratorFromToken: vi.fn<(token: string | null | undefined) => Promise<{ isOwner: boolean } | null>>(),
+  dbState: { shouldFail: false },
 }));
 
 vi.mock("../lib/ownerAuth", () => ({
@@ -59,8 +60,48 @@ vi.mock("@workspace/db", async () => {
 
   const fakeDb = makeFakeDb();
 
+  // A builder whose every chainable method returns itself and whose
+  // thenable always rejects — used when dbState.shouldFail is true.
+  function makeFailingBuilder(): Record<string, unknown> {
+    const err = new Error("DB connection failure");
+    const b: Record<string, unknown> = {};
+    for (const m of [
+      "from", "where", "limit", "offset", "orderBy",
+      "groupBy", "for", "innerJoin", "leftJoin",
+      "values", "onConflictDoUpdate", "onConflictDoNothing",
+      "returning", "set",
+    ]) {
+      b[m] = () => b;
+    }
+    b.then = (
+      _resolve: unknown,
+      reject?: (e: unknown) => unknown,
+    ) =>
+      reject
+        ? Promise.resolve(reject(err))
+        : Promise.reject(err);
+    return b;
+  }
+
+  const guardedDb = {
+    select: (...args: Parameters<typeof fakeDb.select>) =>
+      dbState.shouldFail ? makeFailingBuilder() : fakeDb.select(...args),
+    selectDistinct: (...args: Parameters<typeof fakeDb.selectDistinct>) =>
+      dbState.shouldFail ? makeFailingBuilder() : fakeDb.selectDistinct(...args),
+    insert: (...args: Parameters<typeof fakeDb.insert>) =>
+      dbState.shouldFail ? makeFailingBuilder() : fakeDb.insert(...args),
+    update: (...args: Parameters<typeof fakeDb.update>) =>
+      dbState.shouldFail ? makeFailingBuilder() : fakeDb.update(...args),
+    delete: (...args: Parameters<typeof fakeDb.delete>) =>
+      dbState.shouldFail ? makeFailingBuilder() : fakeDb.delete(...args),
+    transaction: (...args: Parameters<typeof fakeDb.transaction>) =>
+      dbState.shouldFail
+        ? Promise.reject(new Error("DB connection failure"))
+        : fakeDb.transaction(...args),
+  };
+
   return {
-    db: fakeDb,
+    db: guardedDb,
     appSettingsTable,
   };
 });
@@ -117,6 +158,7 @@ function put(base: string, path: string, body: unknown, headers?: Record<string,
 beforeEach(async () => {
   authState.mode = "owner-token";
   mockGetCuratorFromToken.mockReset();
+  dbState.shouldFail = false;
 
   // Clear the in-memory store between tests by splicing the shared __store.
   // We reach into the mock module to get the table reference.
@@ -480,6 +522,86 @@ describe("seat-config — read/write behaviour (owner-token auth)", () => {
     try {
       const res = await put(h.base, "/seat-config", {});
       expect(res.status).toBe(400);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── DB failure scenarios ──────────────────────────────────────────────────────
+
+describe("GET /api/settings/notify-email — DB throws", () => {
+  it("returns 500 with a safe error message and no stack trace", async () => {
+    dbState.shouldFail = true;
+    const h = await startHarness();
+    try {
+      const res = await get(h.base, "/notify-email");
+      expect(res.status).toBe(500);
+      const body = (await res.json()) as { error?: string };
+      expect(body.error).toBe("Failed to read setting");
+      expect(Object.keys(body)).toEqual(["error"]);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+describe("PUT /api/settings/notify-email — DB throws", () => {
+  it("returns 500 with a safe error message and no stack trace when storing an email", async () => {
+    dbState.shouldFail = true;
+    const h = await startHarness();
+    try {
+      const res = await put(h.base, "/notify-email", { email: "river@example.com" });
+      expect(res.status).toBe(500);
+      const body = (await res.json()) as { error?: string };
+      expect(body.error).toBe("Failed to save setting");
+      expect(Object.keys(body)).toEqual(["error"]);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 500 with a safe error message and no stack trace when clearing the email", async () => {
+    dbState.shouldFail = true;
+    const h = await startHarness();
+    try {
+      const res = await put(h.base, "/notify-email", { email: "" });
+      expect(res.status).toBe(500);
+      const body = (await res.json()) as { error?: string };
+      expect(body.error).toBe("Failed to save setting");
+      expect(Object.keys(body)).toEqual(["error"]);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+describe("GET /api/settings/seat-config — DB throws", () => {
+  it("returns 500 with a safe error message and no stack trace", async () => {
+    dbState.shouldFail = true;
+    const h = await startHarness();
+    try {
+      const res = await get(h.base, "/seat-config");
+      expect(res.status).toBe(500);
+      const body = (await res.json()) as { error?: string };
+      expect(body.error).toBe("Failed to read seat config");
+      expect(Object.keys(body)).toEqual(["error"]);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+describe("PUT /api/settings/seat-config — DB throws", () => {
+  it("returns 500 with a safe error message and no stack trace", async () => {
+    dbState.shouldFail = true;
+    const h = await startHarness();
+    try {
+      const res = await put(h.base, "/seat-config", { seats: { total: 8, reserved: 2 } });
+      expect(res.status).toBe(500);
+      const body = (await res.json()) as { error?: string };
+      expect(body.error).toBe("Failed to save seat config");
+      expect(Object.keys(body)).toEqual(["error"]);
     } finally {
       await h.close();
     }
