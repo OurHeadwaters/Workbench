@@ -136,7 +136,7 @@ const IntakeSchema = z.object({
 router.post("/sponsor-intake", async (req, res) => {
   const ip = clientIp(req);
 
-  const limitResult = checkRateLimit(`odyssey-intake:${ip}`, {
+  const limitResult = await checkRateLimit(`odyssey-intake:${ip}`, {
     windowMs: 60 * 60 * 1000,
     max: 5,
   });

@@ -46,7 +46,7 @@ function appendInquiry(record: Record<string, unknown>): void {
 router.post("/inquiry", async (req, res) => {
   const ip = clientIp(req);
 
-  const limitResult = checkRateLimit(`codetry-inquiry:${ip}`, {
+  const limitResult = await checkRateLimit(`codetry-inquiry:${ip}`, {
     windowMs: 60 * 60 * 1000,
     max: 5,
   });

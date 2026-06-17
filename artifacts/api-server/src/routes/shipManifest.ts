@@ -67,7 +67,7 @@ router.post("/", async (req, res) => {
 
   // 5/min per IP, then 30/hour per IP — covers casual mash-the-button
   // mistakes without locking out a small workshop room behind one NAT.
-  const minute = checkRateLimit(`ship:ip:min:${ip}`, {
+  const minute = await checkRateLimit(`ship:ip:min:${ip}`, {
     max: 5,
     windowMs: 60 * 1000,
   });
@@ -78,7 +78,7 @@ router.post("/", async (req, res) => {
     });
     return;
   }
-  const hour = checkRateLimit(`ship:ip:hr:${ip}`, {
+  const hour = await checkRateLimit(`ship:ip:hr:${ip}`, {
     max: 30,
     windowMs: 60 * 60 * 1000,
   });
@@ -121,7 +121,7 @@ router.post("/", async (req, res) => {
 
   // Per-email cap: re-signing once a minute is fine; spamming the same
   // address is not.
-  const perEmail = checkRateLimit(`ship:email:${email}`, {
+  const perEmail = await checkRateLimit(`ship:email:${email}`, {
     max: 3,
     windowMs: 60 * 60 * 1000,
   });

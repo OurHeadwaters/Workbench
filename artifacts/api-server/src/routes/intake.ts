@@ -29,7 +29,7 @@ function readStr(
 router.post("/intake", async (req, res) => {
   const ip = clientIp(req);
 
-  const limitResult = checkRateLimit(`intake:${ip}`, {
+  const limitResult = await checkRateLimit(`intake:${ip}`, {
     windowMs: 60 * 60 * 1000,
     max: 5,
   });

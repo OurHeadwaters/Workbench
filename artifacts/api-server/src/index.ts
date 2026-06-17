@@ -2,6 +2,10 @@ import app from "./app";
 import { logger } from "./lib/logger";
 import { seedBookkeeper } from "./lib/bookkeeperSeed";
 import { runExpireOverdue } from "./routes/helpingHands";
+import { pool } from "@workspace/db";
+import { setRateLimitBackend } from "./lib/rateLimit";
+
+setRateLimitBackend(pool);
 
 const rawPort = process.env["PORT"];
 

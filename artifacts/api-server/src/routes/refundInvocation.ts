@@ -57,7 +57,7 @@ export interface RefundInvocationPayload {
 router.post("/", async (req, res) => {
   const ip = clientIp(req);
 
-  const minuteLimit = checkRateLimit(`refund-inv:ip:min:${ip}`, {
+  const minuteLimit = await checkRateLimit(`refund-inv:ip:min:${ip}`, {
     max: 3,
     windowMs: 60 * 1000,
   });
@@ -68,7 +68,7 @@ router.post("/", async (req, res) => {
     });
     return;
   }
-  const hourLimit = checkRateLimit(`refund-inv:ip:hr:${ip}`, {
+  const hourLimit = await checkRateLimit(`refund-inv:ip:hr:${ip}`, {
     max: 10,
     windowMs: 60 * 60 * 1000,
   });
