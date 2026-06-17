@@ -79,6 +79,76 @@ describe("TOOL_HIGHLIGHT_MAP address integrity", () => {
   });
 });
 
+describe("household quiz results highlight the right tools", () => {
+  it("household:normal highlights Saltbox/Homeschool (Z0–A)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["household:normal"] ?? [];
+    expect(highlights).toContain("Z0–A");
+    expect(toolNameByAddress("Z0–A")).toBe("Saltbox / Homeschool");
+  });
+
+  it("household:normal highlights Headwaters Books (Z1–B)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["household:normal"] ?? [];
+    expect(highlights).toContain("Z1–B");
+    expect(toolNameByAddress("Z1–B")).toBe("Headwaters Books");
+  });
+
+  it("household:normal highlights North Star (Z1–C)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["household:normal"] ?? [];
+    expect(highlights).toContain("Z1–C");
+    expect(toolNameByAddress("Z1–C")).toBe("North Star");
+  });
+
+  it("household:standby highlights The Eave (Z1–D)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["household:standby"] ?? [];
+    expect(highlights).toContain("Z1–D");
+    expect(toolNameByAddress("Z1–D")).toBe("The Eave");
+  });
+
+  it("household:standby highlights 807 Community Benefits (Z3–A)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["household:standby"] ?? [];
+    expect(highlights).toContain("Z3–A");
+    expect(toolNameByAddress("Z3–A")).toBe("807 Community Benefits");
+  });
+
+  it("household:standby highlights Standby Supplies (Z3–D)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["household:standby"] ?? [];
+    expect(highlights).toContain("Z3–D");
+    expect(toolNameByAddress("Z3–D")).toBe("Standby Supplies");
+  });
+});
+
+describe("community quiz results highlight the right tools", () => {
+  it("community:normal highlights Research Library (Z2/Z4)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["community:normal"] ?? [];
+    expect(highlights).toContain("Z2/Z4");
+    expect(toolNameByAddress("Z2/Z4")).toBe("Research Library");
+  });
+
+  it("community:normal highlights Grants Finder (Z3–B)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["community:normal"] ?? [];
+    expect(highlights).toContain("Z3–B");
+    expect(toolNameByAddress("Z3–B")).toBe("Grants Finder");
+  });
+
+  it("community:normal highlights Market Mosaic (Z3–C)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["community:normal"] ?? [];
+    expect(highlights).toContain("Z3–C");
+    expect(toolNameByAddress("Z3–C")).toBe("Market Mosaic");
+  });
+
+  it("community:standby adds 807 Community Benefits (Z3–A)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["community:standby"] ?? [];
+    expect(highlights).toContain("Z3–A");
+    expect(toolNameByAddress("Z3–A")).toBe("807 Community Benefits");
+  });
+
+  it("community:standby adds Standby Supplies (Z3–D)", () => {
+    const highlights = TOOL_HIGHLIGHT_MAP["community:standby"] ?? [];
+    expect(highlights).toContain("Z3–D");
+    expect(toolNameByAddress("Z3–D")).toBe("Standby Supplies");
+  });
+});
+
 describe("practitioner quiz results include Z1 money tools", () => {
   it("practitioner:normal highlights Headwaters Books (Z1–B)", () => {
     const highlights = TOOL_HIGHLIGHT_MAP["practitioner:normal"] ?? [];
