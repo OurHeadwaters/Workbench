@@ -1,36 +1,30 @@
 /**
  * stripeWebhook.test.ts
  *
- * Tests for POST /stripe/webhook covering:
- *   1. Valid checkout.session.completed event with kit_id → token written, email sent
- *   2. Missing kit_id in metadata → skipped gracefully
- *   3. Bad / missing Stripe signature → 400
- *   4. Duplicate event (event already in stripeProcessedEventsTable) → idempotency guard fires
+ * Tests for POST /stripe/webhook (stripeWebhook.ts).
  *
- * Mocking strategy
- * ─────────────────
- * - @workspace/db: two fakeDb tables — kitTokensTable and stripeProcessedEventsTable
- * - drizzle-orm: fakeDrizzle (eq, etc.)
- * - stripe: class mock so `new Stripe(key)` returns an instance with a
- *   controllable webhooks.constructEvent via vi.hoisted() shared state
- * - ../lib/logger, ../lib/kitsRegistry, ../lib/kitsMailer: plain vi.fn() mocks
- * - fs is NOT mocked — the route no longer uses the filesystem for idempotency
- *   (it was migrated to DB-backed idempotency via stripeProcessedEventsTable).
+ * Strategy: rather than mocking stripe.webhooks.constructEvent, we generate
+ * real HMAC-SHA256 Stripe signatures so the genuine SDK verification passes.
+ * This exercises the actual signature-check code path and avoids vi.mock /
+ * vi.hoisted propagation issues with the Stripe constructor.
+ *
+ * Idempotency: the implementation uses stripeProcessedEventsTable (Postgres).
+ * The fakeDb mock is extended with that table so duplicate-event tests work
+ * by making two real HTTP calls with the same event ID.
+ *
+ * Note on GET /kits/access/:token coverage:
+ *   Token validation (valid → 200, expired → 410, unknown → 404) is already
+ *   covered by the "GET /kits/access/:token — token validation" suite in
+ *   kits.test.ts. Those tests are not duplicated here.
  */
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { createServer, type Server } from "node:http";
-import type { AddressInfo } from "node:net";
 
-// ── hoisted shared state (for constructEvent control) ─────────────────────────
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import type { Server } from "http";
+import { createServer } from "http";
+import type { AddressInfo } from "net";
+import crypto from "crypto";
 
-const shared = vi.hoisted(() => ({
-  /** Returned by stripe.webhooks.constructEvent — set per-test. */
-  constructEventResult: null as unknown,
-  /** When non-empty, constructEvent throws with this message. */
-  constructEventError: "" as string,
-}));
-
-// ── mocks ─────────────────────────────────────────────────────────────────────
+// ── DB mock ───────────────────────────────────────────────────────────────────
 
 vi.mock("@workspace/db", async () => {
   const { makeTable, makeFakeDb } = await import("../test/fakeDb");
@@ -76,26 +70,6 @@ vi.mock("../lib/kitsMailer", () => ({
   sendKitDeliveryEmail: vi.fn().mockResolvedValue({ status: "ok" }),
 }));
 
-// Stripe class mock.  constructEvent reads shared state at call time so
-// per-test control works without any vi.fn() plumbing across the hoisting
-// boundary.
-vi.mock("stripe", () => ({
-  default: class MockStripe {
-    webhooks = {
-      constructEvent: (..._args: unknown[]) => {
-        if (shared.constructEventError) {
-          throw new Error(shared.constructEventError);
-        }
-        return shared.constructEventResult;
-      },
-    };
-    accounts = { create: vi.fn(), retrieve: vi.fn() };
-    accountLinks = { create: vi.fn() };
-    products = { create: vi.fn() };
-    prices = { create: vi.fn() };
-  },
-}));
-
 // ── imports (after mocks) ─────────────────────────────────────────────────────
 
 import express from "express";
@@ -113,30 +87,72 @@ const getKitMock = kitsRegistryModule.getKit as ReturnType<typeof vi.fn>;
 const sendKitDeliveryEmailMock =
   kitsMailerModule.sendKitDeliveryEmail as ReturnType<typeof vi.fn>;
 
-// ── per-test setup ────────────────────────────────────────────────────────────
+// ── Stripe signing helpers ────────────────────────────────────────────────────
+//
+// Reproduces the HMAC-SHA256 signing that Stripe uses so that the real
+// stripe.webhooks.constructEvent() accepts the request without being mocked.
+//
+//   secret format: "whsec_<base64>" — same as Stripe dashboard provides
+//   signing algo  : HMAC-SHA256( "${timestamp}.${payload}", secret )
+//   header format : "t=${timestamp},v1=${signature}"
+
+const TEST_WEBHOOK_SECRET =
+  "whsec_dGVzdHNlY3JldGZvcmhlYWR3YXRlcnN3ZWJob29r";
+
+function makeStripeSignature(payload: string, secret: string): string {
+  const timestamp = Math.floor(Date.now() / 1000);
+  const signedPayload = `${timestamp}.${payload}`;
+  const sig = crypto
+    .createHmac("sha256", secret)
+    .update(signedPayload)
+    .digest("hex");
+  return `t=${timestamp},v1=${sig}`;
+}
+
+function makeStripeSignatureWithWrongKey(payload: string): string {
+  const wrongSecret = "whsec_d3Jvbmdzb2Zhcndyb25nc2VjcmV0d3Jvbmc=";
+  const timestamp = Math.floor(Date.now() / 1000);
+  const signedPayload = `${timestamp}.${payload}`;
+  const sig = crypto
+    .createHmac("sha256", wrongSecret)
+    .update(signedPayload)
+    .digest("hex");
+  return `t=${timestamp},v1=${sig}`;
+}
+
+// ── lifecycle ─────────────────────────────────────────────────────────────────
+
+let savedWebhookSecret: string | undefined;
+let savedStripeKey: string | undefined;
 
 beforeEach(() => {
-  // Reset Stripe mock state
-  shared.constructEventResult = null;
-  shared.constructEventError = "";
+  savedWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  savedStripeKey = process.env.STRIPE_SECRET_KEY;
+  process.env.STRIPE_WEBHOOK_SECRET = TEST_WEBHOOK_SECRET;
+  process.env.STRIPE_SECRET_KEY = "sk_test_headwaters";
 
-  // Clear both DB tables
   tables.kitTokensTable.__store.length = 0;
   tables.stripeProcessedEventsTable.__store.length = 0;
-
-  // Reset mock call histories and default return values
-  getKitMock.mockReset();
+  getKitMock.mockClear();
   getKitMock.mockReturnValue(null);
-
-  sendKitDeliveryEmailMock.mockReset();
+  sendKitDeliveryEmailMock.mockClear();
   sendKitDeliveryEmailMock.mockResolvedValue({ status: "ok" });
-
-  // Ensure env vars present
-  process.env.STRIPE_SECRET_KEY = "sk_test_fake";
-  process.env.STRIPE_WEBHOOK_SECRET = "whsec_fake";
 });
 
-// ── harness ───────────────────────────────────────────────────────────────────
+afterEach(() => {
+  if (savedWebhookSecret === undefined) {
+    delete process.env.STRIPE_WEBHOOK_SECRET;
+  } else {
+    process.env.STRIPE_WEBHOOK_SECRET = savedWebhookSecret;
+  }
+  if (savedStripeKey === undefined) {
+    delete process.env.STRIPE_SECRET_KEY;
+  } else {
+    process.env.STRIPE_SECRET_KEY = savedStripeKey;
+  }
+});
+
+// ── test harness ──────────────────────────────────────────────────────────────
 
 interface Harness {
   base: string;
@@ -145,7 +161,7 @@ interface Harness {
 
 async function startHarness(): Promise<Harness> {
   const app = express();
-  // Mount BEFORE express.json() — mirrors production registration order.
+  // Mount BEFORE express.json() so express.raw() in the route sees the Buffer
   app.use("/stripe", stripeWebhookRouter);
   app.use(express.json());
   const srv: Server = createServer(app);
@@ -163,13 +179,13 @@ async function startHarness(): Promise<Harness> {
 function postWebhook(
   base: string,
   body: string,
-  sig: string,
+  sig?: string,
 ): Promise<Response> {
   return fetch(`${base}/stripe/webhook`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      "stripe-signature": sig,
+      ...(sig !== undefined ? { "stripe-signature": sig } : {}),
     },
     body,
   });
@@ -178,276 +194,270 @@ function postWebhook(
 // ── fixtures ──────────────────────────────────────────────────────────────────
 
 const FAKE_KIT = {
-  id: "goodbye-kit",
-  name: "Goodbye Kit",
-  tagline: "The household transition guide.",
-  arcNote: null,
-  contentNote: "Your kit includes...",
+  id: "economy-kit",
+  title: "Economy Kit",
+  description: "A test kit",
+  handouts: {},
 };
 
-function makeSessionEvent(opts: {
+function makeCheckoutPayload(opts?: {
   id?: string;
   kitId?: string | null;
   email?: string | null;
-}): object {
-  const {
-    id = "evt_test_001",
-    kitId = "goodbye-kit",
-    email = "buyer@example.com",
-  } = opts;
-  return {
-    id,
+  name?: string | null;
+}): string {
+  const kitId = opts?.kitId !== undefined ? opts.kitId : "economy-kit";
+  const metadata: Record<string, string> = {};
+  if (kitId) metadata.kit_id = kitId;
+
+  return JSON.stringify({
+    id: opts?.id ?? "evt_test_001",
+    object: "event",
+    api_version: "2023-10-16",
     type: "checkout.session.completed",
     data: {
       object: {
         id: "cs_test_001",
+        object: "checkout.session",
         payment_intent: "pi_test_001",
-        metadata: kitId !== null ? { kit_id: kitId } : {},
-        customer_details: { email, name: "Test Buyer" },
+        metadata,
+        customer_details: {
+          email:
+            opts?.email !== undefined ? opts.email : "buyer@example.com",
+          name: opts?.name !== undefined ? opts.name : "Test Buyer",
+        },
         customer_email: null,
       },
     },
-  };
+  });
 }
 
-// ── tests ─────────────────────────────────────────────────────────────────────
+// ── tests: configuration guards ───────────────────────────────────────────────
 
-describe("POST /stripe/webhook — valid event with kit_id", () => {
-  it("returns 200 with received: true", async () => {
-    shared.constructEventResult = makeSessionEvent({});
-    getKitMock.mockReturnValue(FAKE_KIT);
-
+describe("POST /stripe/webhook — configuration guards", () => {
+  it("returns 503 when STRIPE_WEBHOOK_SECRET is not set", async () => {
+    delete process.env.STRIPE_WEBHOOK_SECRET;
+    const payload = makeCheckoutPayload();
     const h = await startHarness();
     try {
-      const r = await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
-      expect(r.status).toBe(200);
-      const body = (await r.json()) as { received?: boolean };
-      expect(body.received).toBe(true);
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(503);
     } finally {
       await h.close();
     }
   });
 
-  it("writes a token row to the DB", async () => {
-    shared.constructEventResult = makeSessionEvent({});
-    getKitMock.mockReturnValue(FAKE_KIT);
-
+  it("returns 503 when STRIPE_SECRET_KEY is not set", async () => {
+    delete process.env.STRIPE_SECRET_KEY;
+    const payload = makeCheckoutPayload();
     const h = await startHarness();
     try {
-      await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
-      expect(tables.kitTokensTable.__store).toHaveLength(1);
-      const row = tables.kitTokensTable.__store[0];
-      expect(row.kitId).toBe("goodbye-kit");
-      expect(row.buyerEmail).toBe("buyer@example.com");
-      expect(row.purchaseId).toBe("pi_test_001");
-      expect(typeof row.token).toBe("string");
-      expect((row.token as string).length).toBe(64);
-    } finally {
-      await h.close();
-    }
-  });
-
-  it("calls sendKitDeliveryEmail with the buyer and kit details", async () => {
-    shared.constructEventResult = makeSessionEvent({});
-    getKitMock.mockReturnValue(FAKE_KIT);
-
-    const h = await startHarness();
-    try {
-      await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
-      expect(sendKitDeliveryEmailMock).toHaveBeenCalledOnce();
-      const callArgs = sendKitDeliveryEmailMock.mock.calls[0][0] as {
-        to: string;
-        kit: { id: string };
-        buyerName: string;
-      };
-      expect(callArgs.to).toBe("buyer@example.com");
-      expect(callArgs.kit).toMatchObject({ id: "goodbye-kit" });
-      expect(callArgs.buyerName).toBe("Test Buyer");
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(503);
     } finally {
       await h.close();
     }
   });
 });
 
-describe("POST /stripe/webhook — missing kit_id in metadata", () => {
-  it("returns 200 with skipped reason", async () => {
-    shared.constructEventResult = makeSessionEvent({ kitId: null });
+// ── tests: signature verification ─────────────────────────────────────────────
 
+describe("POST /stripe/webhook — signature verification", () => {
+  it("returns 400 when the stripe-signature header is missing", async () => {
     const h = await startHarness();
     try {
-      const r = await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
+      const r = await postWebhook(h.base, makeCheckoutPayload());
+      expect(r.status).toBe(400);
+      const body = (await r.json()) as { error?: string };
+      expect(body.error).toContain("Missing stripe-signature");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 400 when the signature does not match (wrong key)", async () => {
+    const payload = makeCheckoutPayload();
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignatureWithWrongKey(payload),
+      );
+      expect(r.status).toBe(400);
+      const body = (await r.json()) as { error?: string };
+      expect(body.error).toContain("signature verification failed");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 200 when the signature is valid", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    const payload = makeCheckoutPayload({ id: "evt_sig_ok" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── tests: checkout.session.completed dispatch ────────────────────────────────
+
+describe("POST /stripe/webhook — checkout.session.completed", () => {
+  it("writes a token row to kit_tokens for a complete, valid event", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    const payload = makeCheckoutPayload({ id: "evt_complete_001" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      const body = (await r.json()) as Record<string, unknown>;
+      expect(body, `response body was: ${JSON.stringify(body)}`).toEqual({
+        received: true,
+      });
+      expect(sendKitDeliveryEmailMock).toHaveBeenCalledTimes(1);
+
+      expect(tables.kitTokensTable.__store).toHaveLength(1);
+      const row = tables.kitTokensTable.__store[0];
+      expect(row.kitId).toBe("economy-kit");
+      expect(row.buyerEmail).toBe("buyer@example.com");
+      expect(row.buyerName).toBe("Test Buyer");
+      expect(row.purchaseId).toBe("pi_test_001");
+      expect(typeof row.token).toBe("string");
+      expect((row.token as string).length).toBe(64);
+      expect(row.expiresAt).toBeInstanceOf(Date);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("skips delivery and returns skipped reason when kit_id is absent from metadata", async () => {
+    const payload = makeCheckoutPayload({
+      id: "evt_nokitid_001",
+      kitId: null,
+    });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
       expect(r.status).toBe(200);
       const body = (await r.json()) as {
         received?: boolean;
         skipped?: string;
       };
       expect(body.received).toBe(true);
-      expect(body.skipped).toBe("no kit_id in metadata");
-    } finally {
-      await h.close();
-    }
-  });
-
-  it("does not write a token row to the DB", async () => {
-    shared.constructEventResult = makeSessionEvent({ kitId: null });
-
-    const h = await startHarness();
-    try {
-      await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
+      expect(body.skipped).toMatch(/kit_id/);
       expect(tables.kitTokensTable.__store).toHaveLength(0);
-    } finally {
-      await h.close();
-    }
-  });
-
-  it("does not call sendKitDeliveryEmail", async () => {
-    shared.constructEventResult = makeSessionEvent({ kitId: null });
-
-    const h = await startHarness();
-    try {
-      await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
       expect(sendKitDeliveryEmailMock).not.toHaveBeenCalled();
     } finally {
       await h.close();
     }
   });
-});
 
-describe("POST /stripe/webhook — bad signature", () => {
-  it("returns 400", async () => {
-    shared.constructEventError =
-      "No signatures found matching the expected signature for payload";
-
-    const h = await startHarness();
-    try {
-      const r = await postWebhook(h.base, JSON.stringify({}), "t=bad,v1=bad");
-      expect(r.status).toBe(400);
-    } finally {
-      await h.close();
-    }
-  });
-
-  it("returns an error message in the body", async () => {
-    shared.constructEventError =
-      "No signatures found matching the expected signature for payload";
-
-    const h = await startHarness();
-    try {
-      const r = await postWebhook(h.base, JSON.stringify({}), "t=bad,v1=bad");
-      const body = (await r.json()) as { error?: string };
-      expect(body.error).toMatch(/Webhook signature verification failed/);
-    } finally {
-      await h.close();
-    }
-  });
-
-  it("does not write a token row to the DB", async () => {
-    shared.constructEventError = "signature mismatch";
-
-    const h = await startHarness();
-    try {
-      await postWebhook(h.base, JSON.stringify({}), "t=bad,v1=bad");
-      expect(tables.kitTokensTable.__store).toHaveLength(0);
-    } finally {
-      await h.close();
-    }
-  });
-
-  it("returns 400 when stripe-signature header is missing", async () => {
-    const h = await startHarness();
-    try {
-      const r = await fetch(`${h.base}/stripe/webhook`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({}),
-      });
-      expect(r.status).toBe(400);
-      const body = (await r.json()) as { error?: string };
-      expect(body.error).toBe("Missing stripe-signature header");
-    } finally {
-      await h.close();
-    }
-  });
-});
-
-describe("POST /stripe/webhook — duplicate event (idempotency guard)", () => {
-  it("returns 200 with duplicate: true for a replayed event", async () => {
-    const eventId = "evt_dup_guard_1";
-    // Pre-seed the DB so the route treats this event as already processed.
-    tables.stripeProcessedEventsTable.__store.push({
-      eventId,
-      processedAt: new Date(),
-      purchaseId: "pi_original_1",
-    });
-    shared.constructEventResult = makeSessionEvent({ id: eventId });
+  it("skips delivery when customer email is absent", async () => {
     getKitMock.mockReturnValue(FAKE_KIT);
-
+    const payload = makeCheckoutPayload({
+      id: "evt_noemail_001",
+      email: null,
+    });
     const h = await startHarness();
     try {
-      const r = await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
       expect(r.status).toBe(200);
       const body = (await r.json()) as {
         received?: boolean;
-        duplicate?: boolean;
+        skipped?: string;
       };
       expect(body.received).toBe(true);
-      expect(body.duplicate).toBe(true);
-    } finally {
-      await h.close();
-    }
-  });
-
-  it("does not write a second token row for a replayed event", async () => {
-    const eventId = "evt_dup_guard_2";
-    tables.stripeProcessedEventsTable.__store.push({
-      eventId,
-      processedAt: new Date(),
-      purchaseId: "pi_original_2",
-    });
-    shared.constructEventResult = makeSessionEvent({ id: eventId });
-    getKitMock.mockReturnValue(FAKE_KIT);
-
-    const h = await startHarness();
-    try {
-      await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
+      expect(body.skipped).toMatch(/email/);
       expect(tables.kitTokensTable.__store).toHaveLength(0);
     } finally {
       await h.close();
     }
   });
 
-  it("does not call sendKitDeliveryEmail for a replayed event", async () => {
-    const eventId = "evt_dup_guard_3";
-    tables.stripeProcessedEventsTable.__store.push({
-      eventId,
-      processedAt: new Date(),
-      purchaseId: "pi_original_3",
+  it("skips delivery when the kit_id is not in the registry", async () => {
+    const payload = makeCheckoutPayload({
+      id: "evt_badkit_001",
+      kitId: "kit-does-not-exist",
     });
-    shared.constructEventResult = makeSessionEvent({ id: eventId });
-    getKitMock.mockReturnValue(FAKE_KIT);
-
     const h = await startHarness();
     try {
-      await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
-      expect(sendKitDeliveryEmailMock).not.toHaveBeenCalled();
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      const body = (await r.json()) as {
+        received?: boolean;
+        skipped?: string;
+      };
+      expect(body.received).toBe(true);
+      expect(body.skipped).toMatch(/kit_id/);
+      expect(tables.kitTokensTable.__store).toHaveLength(0);
     } finally {
       await h.close();
     }
   });
 
-  it("marks an event processed in the DB after the first successful delivery", async () => {
-    const eventId = "evt_new_for_processing";
-    shared.constructEventResult = makeSessionEvent({ id: eventId });
+  it("skips re-delivery and returns duplicate:true when the same event is replayed", async () => {
     getKitMock.mockReturnValue(FAKE_KIT);
+    const payload = makeCheckoutPayload({ id: "evt_dup_001" });
 
     const h = await startHarness();
     try {
-      await postWebhook(h.base, JSON.stringify({}), "t=1,v1=abc");
-      const processed = tables.stripeProcessedEventsTable.__store.find(
-        (r) => r.eventId === eventId,
+      const r1 = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
       );
-      expect(processed).toBeDefined();
-      expect(processed?.purchaseId).toBe("pi_test_001");
+      expect(r1.status).toBe(200);
+      expect(tables.kitTokensTable.__store).toHaveLength(1);
+
+      // Stripe retries use a fresh signature (new timestamp) but same event ID
+      const r2 = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r2.status).toBe(200);
+      const body = (await r2.json()) as {
+        received?: boolean;
+        duplicate?: boolean;
+      };
+      expect(body.duplicate).toBe(true);
+
+      // Token written only once, email sent only once
+      expect(tables.kitTokensTable.__store).toHaveLength(1);
+      expect(sendKitDeliveryEmailMock).toHaveBeenCalledTimes(1);
     } finally {
       await h.close();
     }
