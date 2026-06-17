@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus, Check, Trash2, X, ChevronDown, ChevronRight } from "lucide-react";
+import { Plus, Check, Trash2, X, ChevronDown, ChevronRight, Undo2 } from "lucide-react";
 
 interface WeekItem {
   id: string;
@@ -22,6 +22,7 @@ const TEXT   = "#EDE8D5";
 const TEXT2  = "rgba(237,232,213,0.55)";
 const AMBER  = "#C8923A";
 const GREEN  = "#4ADE80";
+const RED    = "rgba(239,68,68,0.7)";
 
 function isoWeek(date: Date): string {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -113,12 +114,19 @@ function runWeeklyReset(): { items: WeekItem[]; cleared: number } {
   }
 }
 
+interface UndoState {
+  weekKey: string;
+  weekItems: WeekItem[];
+}
+
 export function ThisWeekPage() {
   const [items, setItems]           = useState<WeekItem[]>([]);
   const [cleared, setCleared]       = useState(0);
   const [draft, setDraft]           = useState("");
   const [archive, setArchive]       = useState<Archive>({});
   const [openWeeks, setOpenWeeks]   = useState<Set<string>>(new Set());
+  const [undoState, setUndoState]   = useState<UndoState | null>(null);
+  const undoTimerRef                = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef                    = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -131,6 +139,12 @@ export function ThisWeekPage() {
   useEffect(() => {
     saveItems(items);
   }, [items]);
+
+  useEffect(() => {
+    return () => {
+      if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    };
+  }, []);
 
   function addItem() {
     const text = draft.trim();
@@ -169,6 +183,43 @@ export function ThisWeekPage() {
       else next.add(key);
       return next;
     });
+  }
+
+  function deleteWeek(weekKey: string, e: React.MouseEvent) {
+    e.stopPropagation();
+    const weekItems = archive[weekKey] ?? [];
+
+    const updated = { ...archive };
+    delete updated[weekKey];
+    setArchive(updated);
+    saveArchive(updated);
+
+    setOpenWeeks((prev) => {
+      const next = new Set(prev);
+      next.delete(weekKey);
+      return next;
+    });
+
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    setUndoState({ weekKey, weekItems });
+    undoTimerRef.current = setTimeout(() => {
+      setUndoState(null);
+    }, 5000);
+  }
+
+  function handleUndo() {
+    if (!undoState) return;
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+
+    const restored = { ...loadArchive(), [undoState.weekKey]: undoState.weekItems };
+    saveArchive(restored);
+    setArchive(restored);
+    setUndoState(null);
+  }
+
+  function dismissUndo() {
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    setUndoState(null);
   }
 
   const open = items.filter((it) => !it.done);
@@ -381,29 +432,39 @@ export function ThisWeekPage() {
                 return (
                   <div
                     key={weekKey}
-                    className="rounded-xl overflow-hidden"
+                    className="rounded-xl overflow-hidden group/week"
                     style={{ backgroundColor: SURF, border: `1px solid ${BORDER}` }}
                   >
-                    <button
-                      onClick={() => toggleWeek(weekKey)}
-                      className="w-full flex items-center justify-between gap-3 px-4 py-3"
-                      style={{ color: TEXT2 }}
-                    >
-                      <span className="text-sm text-left">
-                        {isoWeekLabel(weekKey)}
-                      </span>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span
-                          className="text-xs px-2 py-0.5 rounded-full"
-                          style={{ backgroundColor: "rgba(237,232,213,0.06)", color: TEXT2 }}
-                        >
-                          {weekItems.length} done
+                    <div className="flex items-center">
+                      <button
+                        onClick={() => toggleWeek(weekKey)}
+                        className="flex-1 flex items-center justify-between gap-3 px-4 py-3"
+                        style={{ color: TEXT2 }}
+                      >
+                        <span className="text-sm text-left">
+                          {isoWeekLabel(weekKey)}
                         </span>
-                        {isOpen
-                          ? <ChevronDown size={14} />
-                          : <ChevronRight size={14} />}
-                      </div>
-                    </button>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span
+                            className="text-xs px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: "rgba(237,232,213,0.06)", color: TEXT2 }}
+                          >
+                            {weekItems.length} done
+                          </span>
+                          {isOpen
+                            ? <ChevronDown size={14} />
+                            : <ChevronRight size={14} />}
+                        </div>
+                      </button>
+                      <button
+                        onClick={(e) => deleteWeek(weekKey, e)}
+                        className="shrink-0 px-3 py-3 opacity-0 group-hover/week:opacity-100 transition-opacity flex items-center justify-center min-h-[44px] min-w-[44px]"
+                        style={{ color: RED }}
+                        title="Delete this week"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
 
                     {isOpen && (
                       <div style={{ borderTop: `1px solid ${BORDER}`, opacity: 0.6 }}>
@@ -438,6 +499,38 @@ export function ThisWeekPage() {
           </div>
         )}
       </div>
+
+      {/* Undo toast */}
+      {undoState && (
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg z-50"
+          style={{
+            backgroundColor: "#272320",
+            border: `1px solid rgba(237,232,213,0.14)`,
+            maxWidth: "calc(100vw - 2rem)",
+          }}
+        >
+          <p className="text-sm whitespace-nowrap" style={{ color: TEXT }}>
+            {isoWeekLabel(undoState.weekKey)} deleted
+          </p>
+          <button
+            onClick={handleUndo}
+            className="flex items-center gap-1.5 text-sm font-medium px-2.5 py-1 rounded-lg shrink-0"
+            style={{ color: AMBER, backgroundColor: "rgba(200,146,58,0.12)" }}
+          >
+            <Undo2 size={13} />
+            Undo
+          </button>
+          <button
+            onClick={dismissUndo}
+            className="shrink-0 p-1 rounded-md"
+            style={{ color: TEXT2 }}
+            title="Dismiss"
+          >
+            <X size={13} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
