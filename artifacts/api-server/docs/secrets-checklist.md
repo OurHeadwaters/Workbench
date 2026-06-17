@@ -8,7 +8,7 @@
 | Goodbye Kit in kit registry | ✅ Complete |
 | `STRIPE_SECRET_KEY` in Replit Secrets | ✅ Set 2026-06-17 |
 | `STRIPE_WEBHOOK_SECRET` in Replit Secrets | ✅ Set 2026-06-17 |
-| Payment Link `kit_id = goodbye-kit` metadata | ⚠️ Unconfirmed — requires manual step in Stripe Dashboard (see below) |
+| Payment Link `kit_id = goodbye-kit` metadata | ✅ Confirmed — `kit_id = goodbye-kit` set in Stripe Dashboard (2026-06-17) |
 | Webhook endpoint registered in Stripe Dashboard | ⚠️ Unconfirmed — requires manual step in Stripe Dashboard (see below) |
 
 ---
