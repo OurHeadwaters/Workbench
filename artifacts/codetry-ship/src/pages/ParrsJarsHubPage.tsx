@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useKitAccess } from "@/lib/useKitAccess";
-import { getVisitedHandouts, markHandoutVisited, getVisitedModules } from "@/lib/kitTokens";
+import { getVisitedHandouts, markHandoutVisited, getVisitedModules, markModuleVisited } from "@/lib/kitTokens";
 import getStartedImg from "@assets/IMG_1184_1780775510410.PNG";
 import foodAuditImg from "@assets/IMG_1130_1780775510411.PNG";
 import inPersonChecklistImg from "@assets/IMG_1187_1780775510410.PNG";
@@ -350,6 +350,18 @@ export function ParrsJarsHubPage() {
     }
   }, [status, storedToken]);
 
+  const handleModuleSwitch = useCallback(
+    (moduleId: string) => {
+      setActiveModule(moduleId);
+      if (!storedToken) return;
+      const mod = MODULES.find((m) => m.id === moduleId);
+      if (!mod) return;
+      markModuleVisited(storedToken.token, mod.title);
+      setVisitedTitles((prev) => new Set([...prev, mod.title]));
+    },
+    [storedToken]
+  );
+
   const handleVisit = useCallback(
     (handoutKey: string) => {
       if (!storedToken) return;
@@ -482,7 +494,7 @@ export function ParrsJarsHubPage() {
           </div>
           {!allVisited && nextUnvisited && (
             <button
-              onClick={() => setActiveModule(nextUnvisited.id)}
+              onClick={() => handleModuleSwitch(nextUnvisited.id)}
               style={{
                 flexShrink: 0,
                 background: nextUnvisited.color,
@@ -521,7 +533,7 @@ export function ParrsJarsHubPage() {
           return (
             <button
               key={mod.id}
-              onClick={() => setActiveModule(mod.id)}
+              onClick={() => handleModuleSwitch(mod.id)}
               style={{
                 flexShrink: 0,
                 padding: "0.85rem 1.25rem",
