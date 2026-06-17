@@ -647,6 +647,9 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false, tableMo
       approvedTasks.forEach((t) => pendingIdToTitle.current.set(t.id, t.title));
       setAcceptedTitles((prev) => { const next = new Set(prev); approvedTitles.forEach((title) => next.add(title)); return next; });
       setProposed((prev) => prev.filter((t) => !idSet.has(t.id)));
+      if (tableMode && (tier === "green" || tier === "amber")) {
+        setSessionCleared((prev) => prev + taskIds.length);
+      }
     } catch (e) {
       setAuthBlocked(false);
       setError(e instanceof Error ? e.message : "Approve failed");
