@@ -37,6 +37,7 @@ import stompingGroundsRouter from "./stompingGrounds";
 import taskAutopilotRouter from "./taskAutopilot";
 import didRouter from "./did";
 import codetryInquiryRouter from "./codetryInquiry";
+import adminRouter from "./admin";
 
 const router: IRouter = Router();
 
@@ -81,5 +82,6 @@ router.use("/stomping-grounds", stompingGroundsRouter);
 router.use("/tasks", taskAutopilotRouter);
 router.use("/did", didRouter);
 router.use("/codetry", codetryInquiryRouter);
+router.use("/admin", adminRouter);
 
 export default router;
