@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus, Check, Trash2, X, ChevronDown, ChevronRight, Undo2 } from "lucide-react";
+import { Plus, Check, Trash2, X, ChevronDown, ChevronRight, Undo2, Download } from "lucide-react";
 
 interface WeekItem {
   id: string;
@@ -23,6 +23,56 @@ const TEXT2  = "rgba(237,232,213,0.55)";
 const AMBER  = "#C8923A";
 const GREEN  = "#4ADE80";
 const RED    = "rgba(239,68,68,0.7)";
+
+const API = import.meta.env.VITE_API_URL ?? "";
+
+function getOwnerToken(): string | null {
+  try {
+    return (
+      localStorage.getItem("library.ownerToken") ||
+      localStorage.getItem("ownerToken") ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
+function ownerHeaders(): HeadersInit {
+  const token = getOwnerToken();
+  return token
+    ? { "x-library-owner-token": token, "Content-Type": "application/json" }
+    : { "Content-Type": "application/json" };
+}
+
+async function fetchArchiveFromServer(): Promise<Archive | null> {
+  const token = getOwnerToken();
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API}/api/north-star/archive`, {
+      headers: ownerHeaders(),
+    });
+    if (!res.ok) return null;
+    const data = await res.json() as { archive: Archive };
+    return data.archive ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function pushArchiveToServer(archive: Archive): Promise<void> {
+  const token = getOwnerToken();
+  if (!token) return;
+  try {
+    await fetch(`${API}/api/north-star/archive`, {
+      method: "PUT",
+      headers: ownerHeaders(),
+      body: JSON.stringify({ archive }),
+    });
+  } catch {
+    // fire-and-forget; localStorage is the fallback
+  }
+}
 
 function isoWeek(date: Date): string {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -79,6 +129,17 @@ function saveArchive(archive: Archive) {
   try {
     localStorage.setItem(LS_ARCHIVE_KEY, JSON.stringify(archive));
   } catch { /* ignore */ }
+  pushArchiveToServer(archive);
+}
+
+function mergeArchives(local: Archive, server: Archive): Archive {
+  const merged: Archive = { ...local };
+  for (const [week, serverItems] of Object.entries(server)) {
+    if (!merged[week] || serverItems.length > merged[week].length) {
+      merged[week] = serverItems;
+    }
+  }
+  return merged;
 }
 
 function archiveItems(weekKey: string, doneItems: WeekItem[]) {
@@ -119,6 +180,18 @@ interface UndoState {
   weekItems: WeekItem[];
 }
 
+function downloadJson(data: unknown, filename: string) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export function ThisWeekPage() {
   const [items, setItems]           = useState<WeekItem[]>([]);
   const [cleared, setCleared]       = useState(0);
@@ -126,6 +199,7 @@ export function ThisWeekPage() {
   const [archive, setArchive]       = useState<Archive>({});
   const [openWeeks, setOpenWeeks]   = useState<Set<string>>(new Set());
   const [undoState, setUndoState]   = useState<UndoState | null>(null);
+  const [syncing, setSyncing]       = useState(false);
   const undoTimerRef                = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef                    = useRef<HTMLInputElement>(null);
 
@@ -133,7 +207,19 @@ export function ThisWeekPage() {
     const { items: initial, cleared: n } = runWeeklyReset();
     setItems(initial);
     if (n > 0) setCleared(n);
-    setArchive(loadArchive());
+
+    const localArchive = loadArchive();
+    setArchive(localArchive);
+
+    fetchArchiveFromServer().then((serverArchive) => {
+      if (!serverArchive) return;
+      const merged = mergeArchives(localArchive, serverArchive);
+      const changed = JSON.stringify(merged) !== JSON.stringify(localArchive);
+      if (changed) {
+        saveArchive(merged);
+        setArchive(merged);
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -220,6 +306,38 @@ export function ThisWeekPage() {
   function dismissUndo() {
     if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
     setUndoState(null);
+  }
+
+  async function handleExport() {
+    setSyncing(true);
+    try {
+      const token = getOwnerToken();
+      if (token) {
+        const res = await fetch(`${API}/api/north-star/archive/export`, {
+          headers: ownerHeaders(),
+        });
+        if (res.ok) {
+          const blob = await res.blob();
+          const filename = `north-star-archive-${new Date().toISOString().slice(0, 10)}.json`;
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          return;
+        }
+      }
+      const filename = `north-star-archive-${new Date().toISOString().slice(0, 10)}.json`;
+      downloadJson(archive, filename);
+    } catch {
+      const filename = `north-star-archive-${new Date().toISOString().slice(0, 10)}.json`;
+      downloadJson(archive, filename);
+    } finally {
+      setSyncing(false);
+    }
   }
 
   const open = items.filter((it) => !it.done);
@@ -419,12 +537,24 @@ export function ThisWeekPage() {
         {/* Past weeks archive */}
         {archiveKeys.length > 0 && (
           <div className="pt-4">
-            <p
-              className="text-xs uppercase tracking-widest px-1 mb-3"
-              style={{ color: TEXT2 }}
-            >
-              Archive
-            </p>
+            <div className="flex items-center justify-between px-1 mb-3">
+              <p
+                className="text-xs uppercase tracking-widest"
+                style={{ color: TEXT2 }}
+              >
+                Archive
+              </p>
+              <button
+                onClick={handleExport}
+                disabled={syncing}
+                className="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg transition-opacity"
+                style={{ color: TEXT2, backgroundColor: SURF2, opacity: syncing ? 0.5 : 1 }}
+                title="Download archive as JSON"
+              >
+                <Download size={11} />
+                Export
+              </button>
+            </div>
             <div className="space-y-2">
               {archiveKeys.map((weekKey) => {
                 const weekItems = archive[weekKey];

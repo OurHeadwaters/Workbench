@@ -38,6 +38,7 @@ import taskAutopilotRouter from "./taskAutopilot";
 import didRouter from "./did";
 import codetryInquiryRouter from "./codetryInquiry";
 import adminRouter from "./admin";
+import northStarArchiveRouter from "./northStarArchive";
 
 const router: IRouter = Router();
 
@@ -83,5 +84,6 @@ router.use("/tasks", taskAutopilotRouter);
 router.use("/did", didRouter);
 router.use("/codetry", codetryInquiryRouter);
 router.use("/admin", adminRouter);
+router.use("/north-star", northStarArchiveRouter);
 
 export default router;
