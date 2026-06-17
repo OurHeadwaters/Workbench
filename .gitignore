@@ -56,3 +56,5 @@ test-results/
 
 # Generated manuscript (rebuild with codetry-book/assemble-manuscript.sh)
 codetry-book/manuscript.md
+artifacts/api-server/data/kit-tokens.json
+artifacts/api-server/data/stripe-processed-events.json
