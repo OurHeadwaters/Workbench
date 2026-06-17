@@ -881,9 +881,6 @@ export function KitchenTablePage() {
     seatSyncFailedTimerRef.current = setTimeout(() => setSeatSyncFailed(false), 4000);
   }, []);
 
-  const [reAuthOpen, setReAuthOpen] = useState(false);
-  const [reAuthDraft, setReAuthDraft] = useState("");
-
   useEffect(() => {
     const ref = seatSyncFailedTimerRef;
     return () => { if (ref.current) clearTimeout(ref.current); };

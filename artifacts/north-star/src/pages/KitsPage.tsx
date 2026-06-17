@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "wouter";
 
 interface Kit {
   id: string;
@@ -226,6 +227,18 @@ export function KitsPage() {
               ))}
             </div>
           </section>
+        )}
+
+        {/* Owner: link to dedicated purchases page */}
+        {isOwner && (
+          <div className="mb-6">
+            <Link
+              href="/kits/purchases"
+              className="inline-flex items-center gap-2 bg-stone-800 hover:bg-stone-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+            >
+              🧾 View all purchases &amp; access links →
+            </Link>
+          </div>
         )}
 
         {/* Owner: Buyer tokens */}
