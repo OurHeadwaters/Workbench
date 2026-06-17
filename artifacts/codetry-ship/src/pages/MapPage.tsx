@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ZONES, TOOL_HIGHLIGHT_MAP } from "@/data/zones";
+import { ZONES, TOOL_HIGHLIGHT_MAP, TOOL_HIGHLIGHT_REASON_MAP } from "@/data/zones";
 import type { ZoneData, ZoneTool } from "@/data/zones";
 import WatershedMap from "@/components/WatershedMap";
 
@@ -36,6 +36,11 @@ function resolveHighlightedZones(quiz: QuizState): number[] {
 function resolveHighlightedTools(quiz: QuizState): string[] {
   if (quiz.skipped || quiz.who === null || quiz.situation === null) return [];
   return TOOL_HIGHLIGHT_MAP[`${quiz.who}:${quiz.situation}`] ?? [];
+}
+
+function resolveToolHighlightReason(quiz: QuizState, zoneAddress: string): string | null {
+  if (quiz.skipped || quiz.who === null || quiz.situation === null) return null;
+  return TOOL_HIGHLIGHT_REASON_MAP[`${quiz.who}:${quiz.situation}:${zoneAddress}`] ?? null;
 }
 
 interface HeaderContent {
@@ -192,9 +197,11 @@ function ToggleSwitch({
 function ToolPill({
   tool,
   highlighted,
+  highlightReason,
 }: {
   tool: ZoneTool;
   highlighted: boolean;
+  highlightReason?: string | null;
 }) {
   const isExternal = !tool.url.startsWith("/") || tool.url === "#";
   const disabled = tool.url === "#";
@@ -270,6 +277,20 @@ function ToolPill({
       >
         {tool.tagline}
       </p>
+      {highlighted && highlightReason && (
+        <p
+          style={{
+            margin: "5px 0 0",
+            fontSize: 10,
+            color: FOREST,
+            lineHeight: 1.4,
+            fontStyle: "italic",
+            opacity: 0.8,
+          }}
+        >
+          {highlightReason}
+        </p>
+      )}
       {!tool.inRepo && tool.url !== "#" && (
         <span
           style={{
@@ -295,12 +316,14 @@ function ZoneCard({
   highlighted,
   dimmed,
   highlightedTools,
+  highlightReasons,
 }: {
   zone: ZoneData;
   standby: boolean;
   highlighted: boolean;
   dimmed: boolean;
   highlightedTools: string[];
+  highlightReasons: Record<string, string>;
 }) {
   return (
     <div
@@ -476,17 +499,24 @@ function ZoneCard({
             No tools in this project for this zone yet.
           </p>
         ) : (
-          zone.tools.map((tool) => (
-            <ToolPill
-              key={tool.zoneAddress ?? tool.name}
-              tool={tool}
-              highlighted={
-                highlightedTools.length > 0 &&
-                !!tool.zoneAddress &&
-                highlightedTools.includes(tool.zoneAddress)
-              }
-            />
-          ))
+          zone.tools.map((tool) => {
+            const isHighlighted =
+              highlightedTools.length > 0 &&
+              !!tool.zoneAddress &&
+              highlightedTools.includes(tool.zoneAddress);
+            return (
+              <ToolPill
+                key={tool.zoneAddress ?? tool.name}
+                tool={tool}
+                highlighted={isHighlighted}
+                highlightReason={
+                  isHighlighted && tool.zoneAddress
+                    ? highlightReasons[tool.zoneAddress] ?? null
+                    : null
+                }
+              />
+            );
+          })
         )}
       </div>
 
@@ -1613,6 +1643,15 @@ export function MapPage() {
           {ZONES.map((zone) => {
             const isHighlighted = highlightedZones.includes(zone.number);
             const isDimmed = quizActive && highlightedZones.length > 0 && !isHighlighted;
+            const zoneHighlightReasons: Record<string, string> = {};
+            if (isHighlighted) {
+              for (const tool of zone.tools) {
+                if (tool.zoneAddress) {
+                  const reason = resolveToolHighlightReason(quiz, tool.zoneAddress);
+                  if (reason) zoneHighlightReasons[tool.zoneAddress] = reason;
+                }
+              }
+            }
             return (
               <ZoneCard
                 key={zone.number}
@@ -1621,6 +1660,7 @@ export function MapPage() {
                 highlighted={isHighlighted}
                 dimmed={isDimmed}
                 highlightedTools={isHighlighted ? highlightedTools : []}
+                highlightReasons={zoneHighlightReasons}
               />
             );
           })}

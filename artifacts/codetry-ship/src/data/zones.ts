@@ -647,6 +647,51 @@ export const TOOL_HIGHLIGHT_MAP: Record<string, string[]> = {
   "community:standby": ["Z2/Z4", "Z3–A", "Z3–B", "Z3–C", "Z3–D"],
 };
 
+// ── Per-tool highlight reasons ────────────────────────────────────────────────
+// Keys are "who:situation:zoneAddress". Values are a short one-line note shown
+// beneath the tagline on highlighted ToolPills so visitors know why a tool was
+// recommended for their situation.
+export const TOOL_HIGHLIGHT_REASON_MAP: Record<string, string> = {
+  // household · normal
+  "household:normal:Z0–A": "Your household hub — sorted, stocked, and schooled",
+  "household:normal:Z1–B": "Track what comes in before you plan what goes out",
+  "household:normal:Z1–C": "Map your income and lifestyle plan for the year",
+
+  // household · standby
+  "household:standby:Z0–A": "Your household hub is your first line of readiness",
+  "household:standby:Z1–C": "Income plan stays live when things start moving",
+  "household:standby:Z1–D": "Eave flows keep your household economy visible",
+  "household:standby:Z3–A": "Community benefits layer activates alongside your household",
+  "household:standby:Z3–D": "Supply coordination moves when the network is watching",
+
+  // practitioner · normal
+  "practitioner:normal:Z1–B": "Bookkeeping underpins every practitioner engagement",
+  "practitioner:normal:Z1–C": "Map your income plan for planning season",
+  "practitioner:normal:Z2–C": "Run client meetings with a clear protocol",
+  "practitioner:normal:Z2–D": "Hauling services layer for active contracts",
+
+  // practitioner · standby
+  "practitioner:standby:Z1–B": "Bookkeeping stays live when clients are moving",
+  "practitioner:standby:Z1–C": "Income plan active through execution season",
+  "practitioner:standby:Z1–D": "Eave flows track practitioner income in real time",
+  "practitioner:standby:Z2–C": "Client meetings move faster when the tools are hot",
+  "practitioner:standby:Z2–D": "Hauling is live — the workbench is open",
+  "practitioner:standby:Z3–A": "Community benefits layer supports your clients too",
+  "practitioner:standby:Z3–B": "Grants discovery opens new funding for your work",
+
+  // community · normal
+  "community:normal:Z2/Z4": "Evidence for governance — grants and deliberation",
+  "community:normal:Z3–B": "Grants discovery for community planning",
+  "community:normal:Z3–C": "Community market layer for the deliberation table",
+
+  // community · standby
+  "community:standby:Z2/Z4": "Research on hand when decisions need evidence",
+  "community:standby:Z3–A": "Community benefits layer active during sessions",
+  "community:standby:Z3–B": "Grants finder live when decisions are being made",
+  "community:standby:Z3–C": "Market mosaic stays open during active sessions",
+  "community:standby:Z3–D": "Supply coordination moves with standby sessions",
+};
+
 /**
  * Returns every zone-address in TOOL_HIGHLIGHT_MAP that has no matching
  * zoneAddress in ZONES or AQUIFER_ZONE.  An empty array means everything is
