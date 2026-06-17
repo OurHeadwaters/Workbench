@@ -1076,6 +1076,14 @@ export const HhBandReliabilityBonusCurrency = {
   xrp: "xrp",
 } as const;
 
+export type HhBandXrplNetwork =
+  (typeof HhBandXrplNetwork)[keyof typeof HhBandXrplNetwork];
+
+export const HhBandXrplNetwork = {
+  mainnet: "mainnet",
+  testnet: "testnet",
+} as const;
+
 export interface HhBand {
   id: string;
   name: string;
@@ -1088,6 +1096,12 @@ export interface HhBand {
   /** Bonus payment amount (as string numeric) */
   reliabilityBonusAmount: string;
   reliabilityBonusCurrency: HhBandReliabilityBonusCurrency;
+  /** Whether on-chain XRPL escrow is active for this band */
+  xrplEscrowEnabled: boolean;
+  /** XRPL network the band is operating on */
+  xrplNetwork: HhBandXrplNetwork;
+  /** Whether the XRPL node connection is live */
+  xrplLive: boolean;
 }
 
 export type HhMemberTier = (typeof HhMemberTier)[keyof typeof HhMemberTier];

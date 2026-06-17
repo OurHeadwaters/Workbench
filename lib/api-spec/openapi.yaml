@@ -4004,7 +4004,7 @@ components:
 
     HhBand:
       type: object
-      required: [id, name, communityTokenCode, defaultPayCurrency, missedShiftThreshold, reliabilityBonusThreshold, reliabilityBonusAmount, reliabilityBonusCurrency]
+      required: [id, name, communityTokenCode, defaultPayCurrency, missedShiftThreshold, reliabilityBonusThreshold, reliabilityBonusAmount, reliabilityBonusCurrency, xrplEscrowEnabled, xrplNetwork, xrplLive]
       properties:
         id: { type: string, format: uuid }
         name: { type: string }
@@ -4015,6 +4015,9 @@ components:
         reliabilityBonusThreshold: { type: integer, description: "Bonus awarded every N confirmed shifts" }
         reliabilityBonusAmount: { type: string, description: "Bonus payment amount (as string numeric)" }
         reliabilityBonusCurrency: { type: string, enum: [token, xrp] }
+        xrplEscrowEnabled: { type: boolean, description: "Whether on-chain XRPL escrow is active for this band" }
+        xrplNetwork: { type: string, enum: [mainnet, testnet], description: "XRPL network the band is operating on" }
+        xrplLive: { type: boolean, description: "Whether the XRPL node connection is live" }
 
     HhMember:
       type: object
