@@ -3,7 +3,7 @@
  *
  * Regression tests for the share-link landing banner:
  *   - Banner appears when the page loads with ?zone=3
- *   - Banner text includes "Zone 3 — The Standby"
+ *   - Banner text includes "Zone 3 — Greenhouse"
  *   - Zone card with id="zone-3" scrolls into view on mount
  *   - Clicking "Got it ✕" dismisses the banner (opacity → 0)
  *   - Banner auto-dismisses after 5 seconds
@@ -56,7 +56,7 @@ describe("MapPage — share-link banner (?zone=3)", () => {
   it("renders the banner with correct zone text", () => {
     render(<MapPage />);
     expect(
-      screen.getByText(/Zone 3\s*[—–]\s*The Standby/i)
+      screen.getByText(/Zone 3\s*[—–]\s*Greenhouse/i)
     ).toBeInTheDocument();
   });
 
