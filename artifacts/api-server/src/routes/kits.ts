@@ -1353,4 +1353,41 @@ router.get("/failures", requireFounderOnlyAuth, async (_req: Request, res: Respo
   res.json({ ok: true, failures });
 });
 
+// ── POST /kits/failures/:id/resolve — founder-only, mark a failure resolved ───
+//
+// Sets resolvedAt = now on the given kit_delivery_failures row so it no longer
+// appears in GET /kits/failures (which filters to unresolved only).  Call this
+// once the buyer has been reached manually and the delivery situation is closed.
+//
+// Auth: requireFounderOnlyAuth — only the founder can close failure records.
+
+router.post("/failures/:id/resolve", requireFounderOnlyAuth, async (req: Request, res: Response) => {
+  const rawId = req.params["id"];
+  const id = Array.isArray(rawId) ? rawId[0] : rawId;
+
+  if (!id) {
+    res.status(400).json({ error: "id required" });
+    return;
+  }
+
+  try {
+    const [updated] = await db
+      .update(kitDeliveryFailuresTable)
+      .set({ resolvedAt: new Date() })
+      .where(eq(kitDeliveryFailuresTable.id, id))
+      .returning();
+
+    if (!updated) {
+      res.status(404).json({ error: "Failure record not found" });
+      return;
+    }
+
+    logger.info({ id }, "kits: delivery failure marked resolved");
+    res.json({ ok: true, id, resolvedAt: (updated.resolvedAt as Date).toISOString() });
+  } catch (err) {
+    logger.error({ err, id }, "kits: POST /failures/:id/resolve failed");
+    res.status(500).json({ error: "Failed to resolve failure record" });
+  }
+});
+
 export default router;

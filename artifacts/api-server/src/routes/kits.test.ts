@@ -724,3 +724,94 @@ describe("fulfillKitPurchase — delivery failure written to kitDeliveryFailures
     }
   });
 });
+
+// ── POST /kits/failures/:id/resolve ──────────────────────────────────────────
+
+function postResolve(base: string, id: string): Promise<Response> {
+  return fetch(`${base}/kits/failures/${id}/resolve`, { method: "POST" });
+}
+
+describe("POST /kits/failures/:id/resolve", () => {
+  it("returns 200 and sets resolvedAt on an existing unresolved failure", async () => {
+    const failureId = "aaaaaaaa-0000-4000-8000-000000000001";
+    tables.kitDeliveryFailuresTable.__store.push({
+      id: failureId,
+      buyerEmail: "buyer@example.com",
+      kitId: "economy-kit",
+      purchaseId: "purchase-fail-001",
+      error: "smtp timeout",
+      resolvedAt: null,
+      createdAt: new Date(),
+    });
+
+    const h = await startHarness();
+    try {
+      const r = await postResolve(h.base, failureId);
+      expect(r.status).toBe(200);
+      const body = (await r.json()) as { ok?: boolean; id?: string; resolvedAt?: string };
+      expect(body.ok).toBe(true);
+      expect(body.id).toBe(failureId);
+      expect(typeof body.resolvedAt).toBe("string");
+
+      const stored = tables.kitDeliveryFailuresTable.__store.find((row) => row["id"] === failureId);
+      expect(stored?.["resolvedAt"]).toBeInstanceOf(Date);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 404 when the failure record does not exist", async () => {
+    const h = await startHarness();
+    try {
+      const r = await postResolve(h.base, "nonexistent-id");
+      expect(r.status).toBe(404);
+      const body = (await r.json()) as { error?: string };
+      expect(body.error).toBe("Failure record not found");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("resolved record no longer appears in GET /kits/failures", async () => {
+    const resolvedId = "aaaaaaaa-0000-4000-8000-000000000002";
+    const unresolvedId = "aaaaaaaa-0000-4000-8000-000000000003";
+    const now = new Date();
+
+    tables.kitDeliveryFailuresTable.__store.push(
+      {
+        id: resolvedId,
+        buyerEmail: "resolved@example.com",
+        kitId: "economy-kit",
+        purchaseId: "purchase-resolved",
+        error: "timeout",
+        resolvedAt: null,
+        createdAt: now,
+      },
+      {
+        id: unresolvedId,
+        buyerEmail: "unresolved@example.com",
+        kitId: "economy-kit",
+        purchaseId: "purchase-unresolved",
+        error: "smtp error",
+        resolvedAt: null,
+        createdAt: now,
+      },
+    );
+
+    const h = await startHarness();
+    try {
+      const resolveRes = await postResolve(h.base, resolvedId);
+      expect(resolveRes.status).toBe(200);
+
+      const listRes = await fetch(`${h.base}/kits/failures`);
+      expect(listRes.status).toBe(200);
+      const body = (await listRes.json()) as { ok?: boolean; failures?: Array<{ id: string }> };
+      expect(body.ok).toBe(true);
+      const ids = (body.failures ?? []).map((f) => f.id);
+      expect(ids).not.toContain(resolvedId);
+      expect(ids).toContain(unresolvedId);
+    } finally {
+      await h.close();
+    }
+  });
+});
