@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 
@@ -56,9 +56,16 @@ vi.mock("../lib/kitsRegistry", () => ({
   KITS: {},
 }));
 
-vi.mock("../lib/kitsMailer", () => ({
-  sendKitDeliveryEmail: vi.fn().mockResolvedValue({ status: "ok" }),
-}));
+vi.mock("../lib/kitsMailer", async () => {
+  // Keep verifyResendToken real so we exercise the actual HMAC logic in tests.
+  const actual = await vi.importActual<typeof import("../lib/kitsMailer")>(
+    "../lib/kitsMailer",
+  );
+  return {
+    ...actual,
+    sendKitDeliveryEmail: vi.fn().mockResolvedValue({ status: "ok" }),
+  };
+});
 
 vi.mock("../lib/codetryFilter", () => ({
   runCodetryFilter: vi.fn().mockResolvedValue([]),
@@ -96,9 +103,11 @@ import kitsRouter, { __clearAccessRateLimiter, __clearResendRateLimiter } from "
 import * as dbModule from "@workspace/db";
 import type { FakeTable } from "../test/fakeDb";
 import * as kitsRegistryModule from "../lib/kitsRegistry";
+import * as kitsMailerModule from "../lib/kitsMailer";
 
 const tables = dbModule as unknown as { kitTokensTable: FakeTable };
 const getKitMock = kitsRegistryModule.getKit as ReturnType<typeof vi.fn>;
+const sendKitDeliveryEmailMock = kitsMailerModule.sendKitDeliveryEmail as ReturnType<typeof vi.fn>;
 
 // ── harness ───────────────────────────────────────────────────────────────────
 //
@@ -363,6 +372,191 @@ describe("GET /kits/access/:token — token validation", () => {
       expect(r.status).toBe(404);
       const body = (await r.json()) as { error?: string };
       expect(body.error).toBe("Token not found");
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── GET /kits/resend — signed one-click resend link ───────────────────────────
+
+const TEST_SECRET = "test-webhook-secret-for-resend-tests";
+const TEST_PURCHASE_ID = "purchase-resend-001";
+
+function makeResendUrl(
+  base: string,
+  opts: { purchaseId?: string; exp?: number; sig?: string } = {},
+): string {
+  const purchaseId = opts.purchaseId ?? TEST_PURCHASE_ID;
+  const exp = opts.exp ?? Date.now() + 7 * 24 * 60 * 60 * 1000;
+  const { generateResendLink, verifyResendToken: _v } = kitsMailerModule;
+  // Use the real generateResendLink to produce a valid token, then substitute
+  // the base URL with the test server's address.
+  const full = generateResendLink({ purchaseId, secret: TEST_SECRET });
+  const url = new URL(full);
+  if (opts.sig !== undefined) url.searchParams.set("sig", opts.sig);
+  if (opts.exp !== undefined) url.searchParams.set("exp", String(opts.exp));
+  return `${base}/kits/resend?${url.searchParams.toString()}`;
+}
+
+describe("GET /kits/resend — signed one-click resend link", () => {
+  const originalSecret = process.env.KIT_WEBHOOK_SECRET;
+
+  beforeEach(() => {
+    process.env.KIT_WEBHOOK_SECRET = TEST_SECRET;
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent" });
+  });
+
+  afterEach(() => {
+    if (originalSecret === undefined) {
+      delete process.env.KIT_WEBHOOK_SECRET;
+    } else {
+      process.env.KIT_WEBHOOK_SECRET = originalSecret;
+    }
+  });
+
+  it("returns 500 HTML when KIT_WEBHOOK_SECRET is not set", async () => {
+    delete process.env.KIT_WEBHOOK_SECRET;
+    const h = await startHarness();
+    try {
+      const r = await fetch(`${h.base}/kits/resend?purchaseId=x&exp=1&sig=abc`);
+      expect(r.status).toBe(500);
+      expect(r.headers.get("content-type")).toMatch(/html/);
+      const text = await r.text();
+      expect(text).toMatch(/Not Configured/);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 400 HTML when required query params are missing", async () => {
+    const h = await startHarness();
+    try {
+      const r = await fetch(`${h.base}/kits/resend?purchaseId=only`);
+      expect(r.status).toBe(400);
+      expect(r.headers.get("content-type")).toMatch(/html/);
+      const text = await r.text();
+      expect(text).toMatch(/Invalid Link/);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 403 HTML when the signature is wrong", async () => {
+    const h = await startHarness();
+    try {
+      const r = await fetch(makeResendUrl(h.base, { sig: "a".repeat(64) }));
+      expect(r.status).toBe(403);
+      const text = await r.text();
+      expect(text).toMatch(/Invalid Link/);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 410 HTML when the link has expired", async () => {
+    const h = await startHarness();
+    try {
+      // Compute a real sig for an already-expired exp
+      const crypto = await import("node:crypto");
+      const expiredExp = Date.now() - 1000;
+      const payload = `${TEST_PURCHASE_ID}:${expiredExp}`;
+      const sig = crypto
+        .createHmac("sha256", TEST_SECRET)
+        .update(payload)
+        .digest("hex");
+      const r = await fetch(
+        makeResendUrl(h.base, { exp: expiredExp, sig }),
+      );
+      expect(r.status).toBe(410);
+      const text = await r.text();
+      expect(text).toMatch(/Link Expired/);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 404 HTML when the purchase ID is not in the token store", async () => {
+    const h = await startHarness();
+    try {
+      const r = await fetch(makeResendUrl(h.base));
+      expect(r.status).toBe(404);
+      const text = await r.text();
+      expect(text).toMatch(/Purchase Not Found/);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 500 HTML when the kit is not in the registry", async () => {
+    tables.kitTokensTable.__store.push({
+      token: "d".repeat(64),
+      kitId: "unknown-kit",
+      buyerEmail: "buyer@example.com",
+      buyerName: "Test Buyer",
+      purchaseId: TEST_PURCHASE_ID,
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    getKitMock.mockReturnValue(null);
+
+    const h = await startHarness();
+    try {
+      const r = await fetch(makeResendUrl(h.base));
+      expect(r.status).toBe(500);
+      const text = await r.text();
+      expect(text).toMatch(/Kit Not Found/);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 500 HTML when the delivery email fails", async () => {
+    tables.kitTokensTable.__store.push({
+      token: "e".repeat(64),
+      kitId: FAKE_KIT.id,
+      buyerEmail: "buyer@example.com",
+      buyerName: "Test Buyer",
+      purchaseId: TEST_PURCHASE_ID,
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "failed", error: "smtp timeout" });
+
+    const h = await startHarness();
+    try {
+      const r = await fetch(makeResendUrl(h.base));
+      expect(r.status).toBe(500);
+      const text = await r.text();
+      expect(text).toMatch(/Send Failed/);
+      expect(text).toMatch(/smtp timeout/);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 200 HTML confirming delivery when the email sends successfully", async () => {
+    tables.kitTokensTable.__store.push({
+      token: "f".repeat(64),
+      kitId: FAKE_KIT.id,
+      buyerEmail: "buyer@example.com",
+      buyerName: "Test Buyer",
+      purchaseId: TEST_PURCHASE_ID,
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent", messageId: "msg-001" });
+
+    const h = await startHarness();
+    try {
+      const r = await fetch(makeResendUrl(h.base));
+      expect(r.status).toBe(200);
+      expect(r.headers.get("content-type")).toMatch(/html/);
+      const text = await r.text();
+      expect(text).toMatch(/Kit Resent/);
+      expect(text).toMatch(/buyer@example\.com/);
     } finally {
       await h.close();
     }

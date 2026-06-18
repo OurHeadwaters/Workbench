@@ -14,6 +14,7 @@
  * Email is sent from the connected Gmail account (the Replit google-mail connector).
  */
 
+import crypto from "crypto";
 import { ReplitConnectors } from "@replit/connectors-sdk";
 import { logger } from "./logger";
 import type { Kit } from "./kitsRegistry";
@@ -90,6 +91,65 @@ function buildBody(opts: {
   return lines.join("\n");
 }
 
+// ── Signed resend link ────────────────────────────────────────────────────────
+//
+// Generates a one-click URL the founder can open in a browser to re-send a
+// failed kit delivery without needing a REST client or terminal access.
+//
+// Token structure:  ?purchaseId=<id>&exp=<unix_ms>&sig=<hmac_sha256_hex>
+// Signing key: KIT_WEBHOOK_SECRET (already required for the purchase webhook).
+// TTL: 7 days — long enough to not expire before the founder notices the alert.
+
+const RESEND_LINK_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function resolveBaseUrl(): string {
+  return (
+    process.env.API_BASE_URL ??
+    (process.env.REPLIT_DEV_DOMAIN
+      ? `https://${process.env.REPLIT_DEV_DOMAIN}`
+      : "http://localhost:8081")
+  );
+}
+
+export function generateResendLink(opts: {
+  purchaseId: string;
+  secret: string;
+}): string {
+  const { purchaseId, secret } = opts;
+  const exp = Date.now() + RESEND_LINK_TTL_MS;
+  const payload = `${purchaseId}:${exp}`;
+  const sig = crypto.createHmac("sha256", secret).update(payload).digest("hex");
+  const params = new URLSearchParams({ purchaseId, exp: String(exp), sig });
+  return `${resolveBaseUrl()}/kits/resend?${params.toString()}`;
+}
+
+export function verifyResendToken(opts: {
+  purchaseId: string;
+  exp: string;
+  sig: string;
+  secret: string;
+}): { ok: true } | { ok: false; reason: string } {
+  const { purchaseId, exp, sig, secret } = opts;
+
+  const expMs = parseInt(exp, 10);
+  if (isNaN(expMs)) return { ok: false, reason: "invalid exp" };
+  if (Date.now() > expMs) return { ok: false, reason: "expired" };
+
+  const payload = `${purchaseId}:${exp}`;
+  const expected = crypto.createHmac("sha256", secret).update(payload).digest("hex");
+
+  try {
+    const sigBuf = Buffer.from(sig, "hex");
+    const expBuf = Buffer.from(expected, "hex");
+    if (sigBuf.length !== expBuf.length) return { ok: false, reason: "invalid sig" };
+    if (!crypto.timingSafeEqual(sigBuf, expBuf)) return { ok: false, reason: "invalid sig" };
+  } catch {
+    return { ok: false, reason: "invalid sig" };
+  }
+
+  return { ok: true };
+}
+
 async function resolveAlertRecipient(): Promise<string | null> {
   if (process.env.KIT_DELIVERY_ALERT_EMAIL) {
     return process.env.KIT_DELIVERY_ALERT_EMAIL;
@@ -129,6 +189,12 @@ export async function sendKitDeliveryFailureAlert(opts: {
   }
 
   const subject = `[ACTION REQUIRED] Kit delivery failed — ${kitId}`;
+
+  const secret = process.env.KIT_WEBHOOK_SECRET;
+  const resendLink = secret
+    ? generateResendLink({ purchaseId, secret })
+    : null;
+
   const body = [
     "A kit purchase was completed but the delivery email could not be sent.",
     "",
@@ -137,10 +203,18 @@ export async function sendKitDeliveryFailureAlert(opts: {
     `  Purchase ID : ${purchaseId}`,
     deliveryError ? `  Error       : ${deliveryError}` : "",
     "",
-    "Resend the kit manually:",
-    "",
-    `  POST /api/kits/resend`,
-    `  Body: { "purchaseId": "${purchaseId}" }`,
+    resendLink
+      ? [
+          "One-click resend (open in any browser, valid for 7 days):",
+          "",
+          `  ${resendLink}`,
+        ].join("\n")
+      : [
+          "Resend manually (KIT_WEBHOOK_SECRET not set — link unavailable):",
+          "",
+          `  POST /api/kits/resend`,
+          `  Body: { "purchaseId": "${purchaseId}" }`,
+        ].join("\n"),
     "",
     "— Headwaters server alert",
   ]
