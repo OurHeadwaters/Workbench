@@ -243,10 +243,16 @@ export function KitPurchasesPage() {
           </section>
         )}
 
-        {/* Back link */}
-        <div className="mt-12 pt-8 border-t border-stone-200">
+        {/* Back link + failures link */}
+        <div className="mt-12 pt-8 border-t border-stone-200 flex items-center justify-between">
           <Link href="/kits" className="text-stone-400 hover:text-stone-600 text-sm transition-colors">
             ← Back to Kits
+          </Link>
+          <Link
+            href="/kits/failures"
+            className="text-xs font-medium text-red-600 hover:text-red-700 transition-colors"
+          >
+            View failed deliveries →
           </Link>
         </div>
       </div>

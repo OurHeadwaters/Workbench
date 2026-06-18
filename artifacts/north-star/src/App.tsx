@@ -29,6 +29,7 @@ import { DebriefPage } from "@/pages/DebriefPage";
 import { LandPlanPage } from "@/pages/LandPlanPage";
 import { KitsPage } from "@/pages/KitsPage";
 import { KitPurchasesPage } from "@/pages/KitPurchasesPage";
+import { KitFailuresPage } from "@/pages/KitFailuresPage";
 import { VisionBoardPage } from "@/pages/VisionBoardPage";
 import { PractitionerApplicationPage } from "@/pages/PractitionerApplicationPage";
 import { PractitionerReviewPage } from "@/pages/PractitionerReviewPage";
@@ -176,6 +177,10 @@ export default function App() {
 
         <Route path="/kits/purchases">
           <AppShell><KitPurchasesPage /></AppShell>
+        </Route>
+
+        <Route path="/kits/failures">
+          <AppShell><KitFailuresPage /></AppShell>
         </Route>
 
         <Route path="/apply-practitioner">
