@@ -33,13 +33,13 @@ const today = new Date().toLocaleDateString("en-CA", {
 });
 
 // ── Zone circuit rows ───────────────────────────────────────────────
-// Z4 = The Clearing (zone). Stomping Paths is a platform within The Clearing, not the zone name.
+// Z4 = The Clearing (zone). The Stomping Grounds is a platform within The Clearing, not the zone name.
 const ZONES = [
   { tag: "Z0", name: "Saltbox", terrain: "The Hearth", desc: "Household sovereignty. Zone 0 kits, crate subscriptions, the jar kitchen." },
   { tag: "Z1", name: "Kitchen Table", terrain: "The Spring", desc: "Daily tools. Course 1 — Food Preservation. Weekly rhythm and the teaching kitchen." },
   { tag: "Z2", name: "Workbench", terrain: "The Worn Path", desc: "PJ Solutions consulting. Co-op and community development — the knowledge that built Zone 0–1 becomes billable." },
   { tag: "Z3", name: "Greenhouse", terrain: "The Circle", desc: "Member circle. The Arc + 807 Benefits. Practitioner subscriptions, Earth Kit licencing, Goodbye Kit, practitioner directory." },
-  { tag: "Z4", name: "The Clearing", terrain: "The Clearing · Public Gathering", desc: "Community formation and governance. The Clearing is where the community decides together — zone board votes, pilots, cooperative formation. Stomping Paths is a platform that operates here." },
+  { tag: "Z4", name: "The Clearing", terrain: "The Clearing · Public Gathering", desc: "Community formation and governance. The Clearing is where the community decides together — zone board votes, pilots, cooperative formation. The Stomping Grounds is a platform that operates here." },
   { tag: "Z5", name: "The Edge", terrain: "The Studio & Long View", desc: "Blockchain builds. XRPL Studio, Dam Days, Slim Evey. Long-range infrastructure for the next generation." },
   { tag: "—", name: "The Aquifer", terrain: "Cross-Zone Substrate", desc: "API + DB + bucket splits + Eave Flows. The water table under all zones — never numbered, always cycling." },
 ];

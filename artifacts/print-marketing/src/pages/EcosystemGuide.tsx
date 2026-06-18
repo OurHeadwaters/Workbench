@@ -29,7 +29,7 @@ const tools = [
     subtitle: "Daily operating cockpit",
     href: "/north-star/",
     color: EVERGREEN,
-    what: "North Star is where the work gets done each day. It's the founder's home base — a dashboard that shows what needs attention right now, tracks every client engagement from start to hand-off, and keeps a live view of money coming in and going out. Everything that happens in the business runs through here first.",
+    what: "North Star is where the work gets done each day — a dashboard that shows what needs attention right now, tracks every client engagement from start to hand-off, and keeps a live view of money coming in and going out. Everything that happens in the business runs through here first.",
     bullets: [
       "See today's priorities, open tasks, and active client files in one place.",
       "Run financial scenarios to plan for the months ahead.",
@@ -63,7 +63,7 @@ const tools = [
     subtitle: "Daily working ledger",
     href: "/headwaters-books/",
     color: LAKE,
-    what: "Headwaters Books is the internal financial record for the agency. Every dollar that comes in or goes out gets logged here. Community members who contribute labour earn credits that flow into their personal envelopes. At month-end, the books get packaged and handed to the accountant.",
+    what: "Headwaters Books is the internal financial record for the agency. Every dollar in or out gets logged, labour contributions are credited to member envelopes, and month-end packages are prepared for the accountant.",
     bullets: [
       "Record every receipt, payment, and submission from food handlers.",
       "Track labour contributions from community members and assign earnings to their envelopes.",
@@ -80,7 +80,7 @@ const tools = [
     subtitle: "Northern food systems evidence base",
     href: "/library/",
     color: "#5c3317",
-    what: "The Research Library is a curated collection of reports, research, and links about northern food systems, supply chain challenges, and community economic development. Anyone on the team can add a source; curators review what comes in. Nothing stays unsupported — every recommendation can be traced back to real evidence.",
+    what: "The Research Library is a curated collection of reports, research, and links about northern food systems, supply chains, and community economic development. Anyone on the team can add a source; curators review what comes in, ensuring every recommendation can be traced to real evidence.",
     bullets: [
       "Browse and search hundreds of curated sources on northern food systems.",
       "Submit a URL or upload a file; it gets deduplicated and filed automatically.",
@@ -97,7 +97,7 @@ const tools = [
     subtitle: "The paper layer",
     href: "/print-marketing/",
     color: RUST,
-    what: "The Print Marketing Suite is the document toolkit for Headwaters — over forty print-ready materials organized into five zones. Flyers, posters, intro letters, pitch packets, governance cards, and internal forms. When a document needs to leave a screen and land on a table in a band office or at a farmers market, it comes from here.",
+    what: "The Print Marketing Suite is the document toolkit for Headwaters — over forty print-ready materials organized into five zones. When a document needs to leave a screen and land on a table in a band office or at a farmers market, it comes from here.",
     bullets: [
       "Download a print-ready PDF of any document with one click.",
       "Choose from over 40 materials across identity, outreach, strategy, and operations.",
@@ -114,7 +114,7 @@ const tools = [
     subtitle: "Crew manifest and public outreach portal",
     href: "/",
     color: "#3a5c6e",
-    what: "Codetry Ship is the public face of the Headwaters crew. It shows who is on the team, what role each person fills, and what the agency offers. It also hosts the Odyssey — a self-paced journey for adults and youth who want to learn the Codetry discipline and understand how a community economy works from the inside out.",
+    what: "Codetry Ship is the public face of the Headwaters crew — who is on the team, what they do, and what the agency offers. It also hosts the Odyssey, a self-paced journey for adults and youth to learn the Codetry discipline from the inside out.",
     bullets: [
       "See the full crew — who is active, what they work on, and how they connect.",
       "Explore service descriptions and rate cards for community and organizational clients.",
@@ -131,7 +131,7 @@ const tools = [
     subtitle: "How a community runs its own economy",
     href: "/codetry-handbook/",
     color: "#5a3e28",
-    what: "The Handbook is the written record of the Codetry discipline — a practical guide to the Headwaters method, written in plain language so any community member can understand it. It lives as a mobile-friendly app so it can be read in the field, off-grid, without a data connection. The Pioneer Path walks readers through each of the five core stations with audio narration.",
+    what: "The Handbook is the written record of the Codetry discipline — a practical, plain-language guide to the Headwaters method that any community member can follow. It lives as a mobile-friendly app, readable off-grid in the field, with the Pioneer Path walking readers through each of the five core stations with audio narration.",
     bullets: [
       "Read the full draft manuscript of the Headwaters economic discipline.",
       "Walk the Pioneer Path — a narrated, station-by-station journey through the method.",
@@ -148,7 +148,7 @@ const tools = [
     subtitle: "Shared data layer",
     href: "/sandbox/",
     color: "#37474f",
-    what: "The Village Board is the shared backend service that all other Headwaters tools draw from. It stores content, manages files, handles authentication, and delivers the handbook text, pioneer path data, and vocabulary definitions to whatever tool needs them. It is not a tool the founder opens and uses directly — it runs quietly in the background, keeping everything connected.",
+    what: "The Village Board is the shared backend service that all other Headwaters tools draw from — storing content, managing files, handling authentication, and delivering handbook text, pioneer path data, and vocabulary definitions on demand. It runs quietly in the background; the founder never opens it directly, but nothing else in the ecosystem works without it.",
     bullets: [
       "Stores photos, documents, and media assets for the whole ecosystem.",
       "Delivers handbook content, pioneer path audio, and vocabulary definitions on demand.",
@@ -157,6 +157,23 @@ const tools = [
       "Keeps all tools synchronized so changes in one place reflect everywhere.",
     ],
     why: "Every other tool in this ecosystem works because this one runs reliably behind it. It is the shared infrastructure that makes the whole constellation possible.",
+  },
+  {
+    id: "stomping-grounds",
+    icon: "⬡",
+    name: "The Stomping Grounds",
+    subtitle: "Five stations. The public gathering place.",
+    href: "https://thestompinggrounds.com",
+    color: "#4a7c59",
+    what: "The Stomping Grounds is the public-facing gathering place for the Headwaters community — five stations where neighbours, visitors, and prospective partners can explore the discipline, find their footing, and decide how they want to engage. It's the front door before any formal conversation begins.",
+    bullets: [
+      "Explore five stations, each representing a different dimension of the Codetry discipline.",
+      "Find your entry point — whether you're a community member, potential partner, or first-time visitor.",
+      "Move through the grounds at your own pace with no login, no commitment, and no jargon.",
+      "Connect with the broader Headwaters constellation without needing a formal introduction.",
+      "Dig in — the grounds reward those who stomp.",
+    ],
+    why: "Not every relationship starts with a contract. The Stomping Grounds gives curious people a place to begin.",
   },
 ];
 
@@ -225,7 +242,7 @@ function CoverPage() {
         color: "rgba(244,237,224,0.65)",
         margin: "0 0 2.5rem",
       }}>
-        Eight tools. One connected ecosystem.
+        Nine tools. One connected ecosystem.
       </p>
 
       {/* Gold rule */}
@@ -240,10 +257,9 @@ function CoverPage() {
         maxWidth: "5.5in",
         margin: "0 0 2.5rem",
       }}>
-        Headwaters runs eight connected tools that handle everything from daily operations
-        to community outreach to financial record-keeping. This guide explains each one
-        in plain language — what it does, what you can do with it, and why it matters.
-        No technical knowledge required.
+        Headwaters runs nine connected tools — from the daily operating cockpit to the
+        public gathering place. This guide explains each one in plain language: what it
+        does, what you can do with it, and why it matters.
       </p>
 
       {/* Tool index chips */}
@@ -297,7 +313,7 @@ function CoverPage() {
 function ToolSection({ tool, even }: { tool: typeof tools[0]; even: boolean }) {
   return (
     <div style={{
-      padding: "0.5in 0",
+      padding: "0.35in 0",
       borderBottom: `1px solid rgba(31,61,46,0.1)`,
     }}>
       {/* Tool header row */}
@@ -348,8 +364,7 @@ function ToolSection({ tool, even }: { tool: typeof tools[0]; even: boolean }) {
             </span>
             <a
               href={tool.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(tool.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="no-print"
               style={{
                 display: "inline-flex",
@@ -477,7 +492,7 @@ function ContentPage({ pageTools, pageNum }: { pageTools: typeof tools; pageNum:
           letterSpacing: "0.1em",
           textTransform: "uppercase",
         }}>
-          {pageNum} / 4
+          {pageNum} / 5
         </span>
       </div>
 
@@ -566,7 +581,7 @@ function ClosingPage() {
         margin: "0 0 0.35in",
         lineHeight: 1.15,
       }}>
-        Eight tools.<br />One system.<br />Yours.
+        Nine tools.<br />One system.<br />Yours.
       </h2>
 
       {/* Narrative */}
@@ -586,7 +601,8 @@ function ClosingPage() {
         the <strong>Print Marketing Suite</strong> translates strategy into physical materials,{" "}
         <strong>Codetry Ship</strong> shows who is on the team and what the agency offers,{" "}
         the <strong>Handbook</strong> captures the method so communities can run it themselves,{" "}
-        and the <strong>Village Board</strong> runs quietly behind everything, keeping it all connected.
+        and the <strong>Village Board</strong> runs quietly behind everything, keeping it all connected.{" "}
+        <strong>The Stomping Grounds</strong> is the public front door — where curious visitors find their footing before any formal engagement begins.
       </p>
 
       {/* Visual flow */}
@@ -598,7 +614,7 @@ function ClosingPage() {
       }}>
         {[
           { label: "Core flow", items: ["North Star", "Headwaters Learning", "Headwaters Books"], color: EVERGREEN },
-          { label: "Supporting layer", items: ["Research Library", "Print Marketing Suite", "Codetry Ship"], color: RUST },
+          { label: "Supporting layer", items: ["Research Library", "Print Marketing Suite", "Codetry Ship", "The Stomping Grounds"], color: RUST },
           { label: "Foundation", items: ["The Handbook", "Village Board"], color: LAKE },
         ].map((row) => (
           <div key={row.label} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
@@ -655,7 +671,7 @@ function ClosingPage() {
         }}>
           The goal of Headwaters has always been to build something that the community
           owns and runs — not something that keeps a consultant in the room forever.
-          These eight tools are built to that standard. When the work is done,
+          These nine tools are built to that standard. When the work is done,
           the system stays.
         </p>
       </div>
@@ -724,6 +740,7 @@ export function EcosystemGuidePage() {
     tools.slice(2, 4),
     tools.slice(4, 6),
     tools.slice(6, 8),
+    tools.slice(8, 9),
   ];
 
   return (

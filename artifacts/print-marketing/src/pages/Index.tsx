@@ -70,7 +70,7 @@ export default function Index() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: "4rem 1.5rem 3rem",
+          padding: "3rem 1.5rem 2rem",
           textAlign: "center",
         }}
       >
@@ -201,7 +201,7 @@ export default function Index() {
         style={{
           position: "relative",
           borderTop: "1px solid rgba(212,160,23,0.18)",
-          padding: "2rem 1.5rem",
+          padding: "1.5rem 1.5rem",
         }}
       >
         <p
@@ -377,6 +377,61 @@ export default function Index() {
               </div>
             </div>
             <span style={{ color: "rgba(212,160,23,0.75)", fontSize: "1.1rem", flexShrink: 0 }}>→</span>
+          </a>
+
+          {/* The Stomping Grounds — external */}
+          <a
+            href="https://thestompinggrounds.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "1rem",
+              padding: "0.85rem 1.1rem",
+              minHeight: "56px",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(212,160,23,0.18)",
+              borderRadius: "3px",
+              textDecoration: "none",
+              transition: "background 0.18s, border-color 0.18s",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.10)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.4)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.18)";
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "rgba(244,237,224,0.92)",
+                  fontWeight: 500,
+                  marginBottom: "0.2rem",
+                }}
+              >
+                The Stomping Grounds
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.78rem",
+                  color: "rgba(244,237,224,0.62)",
+                  lineHeight: 1.4,
+                }}
+              >
+                Five stations. Dig in — the grounds reward those who stomp.
+              </div>
+            </div>
+            <span style={{ color: "rgba(212,160,23,0.75)", fontSize: "1rem", flexShrink: 0 }}>↗</span>
           </a>
         </div>
 

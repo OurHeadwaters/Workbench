@@ -136,7 +136,7 @@ const ZONES: Array<{
       { href: "/poster-services", title: "Poster — Development Services", label: "Headwaters", desc: "Three service lines, $28k trial offer — aimed at band councils." },
       { href: "/poster-market", title: "Poster — Combined Market Presence", label: "Community", desc: '"Find us at the market" poster combining Parr\'s Jars and Headwaters.' },
       { href: "/salt-of-the-earth-club", title: "Salt of the Earth Club", label: "Jarista", desc: "Product sheet for the Jarista salt line and circular economy origin." },
-      { href: "/pj-kit", title: "PJ Solutions Kit — Workshop Handouts", label: "Parr's Jars · Local Food Zone", desc: "Full print suite for the Principles to Preservation workshop — 12 redesigned handouts, cheat sheets, and worksheets." },
+      { href: "/pj-kit", title: "PJ Solutions Kit — Workshop Handouts", label: "Parr's Jars · Local Food Zone", desc: "Print suite for Principles to Preservation — handouts, cheat sheets, and worksheets." },
       { href: "/suite/parrs-jars-email-sequence", title: "Parr's Jars Email Drip Sequence", label: "Parr's Jars · Marketing", desc: "Five-email welcome and nurture sequence for Parr's Jars workshop buyers." },
       { href: "/suite/northern-pantry", title: "Northern Pantry Printable", label: "Local Food Zone", desc: "Print-ready pantry planning and inventory sheet for northern households." },
     ],
@@ -154,8 +154,8 @@ const ZONES: Array<{
       { href: "/rack-card-indigenous", title: "Rack Card — Indigenous & Community Orgs", label: "Headwaters", desc: "4×9 rack card for band offices, friendship centres, and cork boards." },
       { href: "/going-digital", title: "Going Digital — Online Courses", label: "Headwaters", desc: "A5/letter flyer for the five Headwaters online courses." },
       { href: "/nan-outreach-packet", title: "NAN Outreach Packet (4-page PDF)", label: "Aboriginal Outreach", desc: "One click — full four-page packet: intro → funding brief → one-pager → proposal." },
-      { href: "/nan-treaty9-packet", title: "Treaty 9 / NAN Outreach Packet (4-page PDF)", label: "Aboriginal Outreach · Treaty 9", desc: "For communities not yet reached: intro → funding brief → one-pager → Treaty 9 context brief (NAN geography, Standby supply model)." },
-      { href: "/nan-treaty9-context-brief", title: "Treaty 9 Context Brief", label: "Aboriginal Outreach · Treaty 9", desc: "NAN territory overview, remote food infrastructure realities, and the Standby supply model — standalone reference or packet insert." },
+      { href: "/nan-treaty9-packet", title: "Treaty 9 / NAN Outreach Packet (4-page PDF)", label: "Aboriginal Outreach · Treaty 9", desc: "Intro → brief → one-pager → Treaty 9 context brief, for communities not yet reached." },
+      { href: "/nan-treaty9-context-brief", title: "Treaty 9 Context Brief", label: "Aboriginal Outreach · Treaty 9", desc: "NAN territory, remote food realities, and the Standby model — standalone or packet insert." },
     ],
   },
   {
@@ -173,14 +173,14 @@ const ZONES: Array<{
       { href: "/codetry-pilot-proposal-deer-lake", title: "Pilot Proposal — Deer Lake", label: "Deer Lake", desc: "Deer Lake-specific proposal — hotel audit, 807 grants, 2027 activation." },
       { href: "/codetry-funding-brief", title: "Partnership & Funding Brief — Generic", label: "Aboriginal Outreach", desc: "Two-column brief: what Codetry is, the ask, the model." },
       { href: "/codetry-funding-brief-deer-lake", title: "Partnership & Funding Brief — Deer Lake", label: "Deer Lake", desc: "807 supply chain connection, coordinator as a Deer Lake hire." },
-      { href: "/deer-lake-why-now", title: "Why Deer Lake. Why Now.", label: "Deer Lake", desc: "What Deer Lake already has, the 807 flow, and the January 2027 urgency." },
+      { href: "/deer-lake-why-now", title: "Why Deer Lake. Why Now.", label: "Deer Lake", desc: "Deer Lake's assets, the 807 flow, and the Jan 2027 urgency." },
       { href: "/deer-lake-partnership", title: "Deer Lake — 2027 Partnership Pitch", label: "807 × Deer Lake", desc: "Leave-behind: grants, truck route, letter of support by May 31." },
       { href: "/northern-pilot", title: "Northern Pilot Pitch", label: "Deer Lake Pilot", desc: "Three pillars, Chief's vision, $28,000 · 6–8 week engagement." },
-      { href: "/money-machine-report", title: "Quarterly Money Machine Report — Template", label: "Governance · Part 6", desc: "Fillable nine-section template: opening balances through closing balances and flags. Saves locally, prints or exports to PDF." },
+      { href: "/money-machine-report", title: "Quarterly Money Machine Report — Template", label: "Governance · Part 6", desc: "Nine-section fillable template — opening to closing balances, flags, saves and exports to PDF." },
       { href: "/community-finance-brief", title: "Gamified Community Finance Brief", label: "Product brief · 2027", desc: "HWBAND + xbuckets circuit, five gamification mechanics, four partner angles." },
-      { href: "/cdp-grant-narrative", title: "CDP Grant Narrative — Helping Hands", label: "Grant · 2026", desc: "Full narrative: problem, engine, wallet reveal, badges, Partnership Portal, XRPL sovereignty, and the ask." },
-      { href: "/cdp-grant-narrative/one-pager", title: "CDP Grant Narrative — One-Pager", label: "Grant · 2026", desc: "Single-page leave-behind for program officers: problem in two sentences, engine in three, three proof points, the ask." },
-      { href: "/governance-card", title: "Governance Quick-Reference Card", label: "Community governance", desc: "Print-and-post card: decision authority matrix, quorum rules, voting thresholds, and the full Reserve Raid 5-step protocol." },
+      { href: "/cdp-grant-narrative", title: "CDP Grant Narrative — Helping Hands", label: "Grant · 2026", desc: "Full narrative: problem, engine, wallet reveal, badges, XRPL sovereignty, and the ask." },
+      { href: "/cdp-grant-narrative/one-pager", title: "CDP Grant Narrative — One-Pager", label: "Grant · 2026", desc: "One-pager for program officers: problem, engine, three proof points, and the ask." },
+      { href: "/governance-card", title: "Governance Quick-Reference Card", label: "Community governance", desc: "Decision matrix, quorum rules, voting thresholds, and the full Reserve Raid protocol." },
       { href: "/pace-referral", title: "PACE Referral — NWO Food Businesses", label: "Business Dev", desc: "For PACE to forward to NWO clients — Phase 1 offer, four deliverables." },
       { href: "/gilles-pitch", title: "Gilles Pitch — Two Weeks", label: "Private", desc: "Two-week engagement: capture knowledge, document systems, legacy at Deer Lake." },
     ],
@@ -192,15 +192,15 @@ const ZONES: Array<{
     season: "Provisions laid in before the flood.",
     accent: "#9c4a2f",
     docs: [
-      { href: "/ecosystem-guide", title: "Plain-Language Guide — All 8 Headwaters Tools (PDF)", label: "Start here", desc: "Print-ready 6-page PDF: cover, one section per tool, what it does, what you can do with it, and why it matters." },
-      { href: "/overview", title: "Project Overview — All 7 Headwaters Tools", label: "Start here", desc: "Plain-language visual guide showing what every tool does and how they connect." },
+      { href: "/ecosystem-guide", title: "Plain-Language Guide — All Headwaters Tools (PDF)", label: "Start here", desc: "6-page print PDF — one section per tool: what it does, what you can do, why it matters." },
+      { href: "/overview", title: "Project Overview — All Headwaters Tools", label: "Start here", desc: "Plain-language visual guide — what every tool does and how they connect." },
       { href: "/internal-scope-plan", title: "Internal Scope Plan", label: "Internal", desc: "Internal reference for active engagement scope and milestones." },
       { href: "/codetry-packet-sandy-lake", title: "Codetry Print Packet — Sandy Lake", label: "Aboriginal Outreach", desc: "Full Sandy Lake packet: cover + intro + one-pager + brief + proposal." },
       { href: "/codetry-packet-deer-lake", title: "Codetry Print Packet — Deer Lake", label: "Deer Lake", desc: "Eight pages in one PDF — declaration through Chief Brief." },
       { href: "/codetry-one-pager", title: "Codetry Economic Development One-Pager", label: "Aboriginal Outreach", desc: "Compact single-page: four service lines, trial-first model." },
       { href: "/coop-compliance-notice", title: "807 Co-op — Compliance Notice (2025)", label: "807 Co-op", desc: "CPA engagement letter and members' waiver resolution before the AGM." },
-      { href: "/family-income", title: "Family Income Picture — 18-Month Outlook", label: "Internal reference", desc: "Kitchen-table one-pager: three take-home scenarios (Cautious / Realistic / Things go well), four revenue sources, and Month 6/12/18 milestones in plain language." },
-      { href: "/watershed-vision", title: "Watershed Vision & Financial Projections — Sheet 39", label: "Internal reference", desc: "Zone circuit, revenue streams, and three-year financial projections. Z4 = The Clearing. Landscape print sheet." },
+      { href: "/family-income", title: "Family Income Picture — 18-Month Outlook", label: "Internal reference", desc: "Three take-home scenarios, four revenue sources, Month 6/12/18 milestones in plain language." },
+      { href: "/watershed-vision", title: "Watershed Vision & Financial Projections — Sheet 39", label: "Internal reference", desc: "Zone circuit, revenue streams, and 3-year projections. Landscape print sheet." },
       { href: "/constellation-session-may16", title: "Constellation Session — May 16, 2026", label: "Internal reference", desc: "Full personal constellation map + four new ledger entries + open decisions." },
       { href: "/northern-economic-tools", title: "Tools & Training for Northern Economic Systems", label: "Working document", desc: "Codetry discipline mapped onto reserve labour pools and work-share." },
       { href: "/square-setup", title: "Square — Parr's Jars to Headwaters", label: "Square identity", desc: "Step-by-step walkthrough for changing the Square account name." },
@@ -210,7 +210,7 @@ const ZONES: Array<{
       { href: "/deer-lake-youth-odyssey", title: "Deer Lake Youth Odyssey", label: "Deer Lake", desc: "Youth-focused Odyssey framing for the Deer Lake community." },
       { href: "/deer-lake-chief-brief", title: "Deer Lake Chief Brief", label: "Deer Lake", desc: "One-page brief prepared for the Chief of Deer Lake First Nation." },
       { href: "/xrpl-tip", title: "The Shallows — XRPL Tipping PoC", label: "Zone 5 · Dam Days", desc: "Peer-to-peer XRP tipping on XRPL Testnet — interactive, not printable." },
-      { href: "/pace-self-serve", title: "PACE — Start Here (Self-Serve Tools)", label: "Business Dev", desc: "Print leave-behind for PACE clients — three starter offerings with prices and QR pointing to ourheadwaters.ca/start." },
+      { href: "/pace-self-serve", title: "PACE — Start Here (Self-Serve Tools)", label: "Business Dev", desc: "Leave-behind for PACE clients — three starter offerings, prices, and QR to ourheadwaters.ca/start." },
     ],
   },
   {
@@ -220,12 +220,12 @@ const ZONES: Array<{
     season: "Provincial scale starts with one table.",
     accent: "#2e6b4f",
     docs: [
-      { href: "/oca-intro-letter", title: "OCA Intro Letter", label: "Ontario Co-ops · OCA", desc: "Personalized opening letter for individual co-op contacts — salutation and first paragraph adapt to ?org= query parameter." },
-      { href: "/oca-partnership-brief", title: "OCA Partnership Brief", label: "Ontario Co-ops · OCA", desc: "Letter-format brief for OCA: platform suite overview, two-tier model (consulting vs. license), CDP proof point ($20k → provincial scale), and the ask." },
-      { href: "/cdp-grant-narrative", title: "CDP Grant Narrative", label: "CDP · Grant Application", desc: "Printable letter-format grant narrative — $75–100k ask, seven numbered sections, OCA as proposed operator, named deliverables and outcomes." },
-      { href: "/oca-outreach-packet", title: "OCA Outreach Packet (4-page PDF)", label: "Ontario Co-ops · OCA", desc: "One click — Intro Letter + OCA Partnership Brief + CDP Grant Narrative + Capability Statement bundled as a single PDF. Includes personalized org-name link generator." },
-      { href: "/capability-statement/view", title: "Capability Statement — Public", label: "Headwaters", desc: "Full platform suite (Market Mosaic, 807 Benefits, Grants Finder), CDP proof-point case study, and two engagement paths (consulting + licensing)." },
-      { href: "/rack-card-indigenous", title: "Rack Card — Indigenous & Community Orgs", label: "Headwaters", desc: "4×9 rack card updated for Treaty 3 · Treaty 9 territory with platform suite listed in services and NAN in who-we-work-with." },
+      { href: "/oca-intro-letter", title: "OCA Intro Letter", label: "Ontario Co-ops · OCA", desc: "Opening letter for co-op contacts — salutation and first paragraph adapt to the org name." },
+      { href: "/oca-partnership-brief", title: "OCA Partnership Brief", label: "Ontario Co-ops · OCA", desc: "OCA brief: suite overview, two-tier model, CDP proof point ($20k → provincial scale), the ask." },
+      { href: "/cdp-grant-narrative", title: "CDP Grant Narrative", label: "CDP · Grant Application", desc: "Letter-format narrative — $75–100k ask, seven sections, OCA as operator, named deliverables." },
+      { href: "/oca-outreach-packet", title: "OCA Outreach Packet (4-page PDF)", label: "Ontario Co-ops · OCA", desc: "Intro Letter + OCA Brief + CDP Narrative + Capability Statement — one click, personalized PDF." },
+      { href: "/capability-statement/view", title: "Capability Statement — Public", label: "Headwaters", desc: "Platform suite, CDP case study, and two engagement paths — consulting and licensing." },
+      { href: "/rack-card-indigenous", title: "Rack Card — Indigenous & Community Orgs", label: "Headwaters", desc: "4×9 rack card for Treaty 3 · Treaty 9 territory — platform suite and NAN in the copy." },
     ],
   },
 ];
@@ -480,6 +480,28 @@ export default function InternalDocs() {
             >
               <span style={{ color: "#d4a017", fontSize: "0.65rem" }}>⊕</span>
               Pioneer Path
+            </a>
+            <a
+              href="https://thestompinggrounds.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.72rem",
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "rgba(244,237,224,0.72)",
+                textDecoration: "none",
+                padding: "0.3rem 0.7rem",
+                border: "1px solid rgba(244,237,224,0.18)",
+                borderRadius: "3px",
+              }}
+            >
+              <span style={{ color: "#d4a017", fontSize: "0.65rem" }}>⬡</span>
+              The Stomping Grounds ↗
             </a>
           </div>
 
@@ -1072,23 +1094,42 @@ export default function InternalDocs() {
 
         {/* Personalized link generator */}
         <div style={{
-          background: "#f4ede0",
-          border: "1.5px solid rgba(31,61,46,0.18)",
+          background: "#ece5d3",
+          border: "1.5px solid rgba(31,61,46,0.28)",
+          borderTop: "3px solid #1f3d2e",
           borderRadius: "7px",
           padding: "1.2rem 1.4rem",
+          marginTop: "1.25rem",
           marginBottom: "1.75rem",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
         }}>
-          <p style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.65rem",
-            fontWeight: 700,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "#1f3d2e",
-            marginBottom: "0.7rem",
-          }}>
-            ◎ Generate a personalized link
-          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.7rem" }}>
+            <span style={{
+              display: "inline-block",
+              background: "#1f3d2e",
+              color: "#f4ede0",
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.58rem",
+              fontWeight: 800,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              padding: "0.18em 0.55em",
+              borderRadius: "3px",
+            }}>
+              Tool
+            </span>
+            <p style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.65rem",
+              fontWeight: 700,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "#1f3d2e",
+              margin: 0,
+            }}>
+              ◎ Generate a personalized link
+            </p>
+          </div>
           <p style={{
             fontFamily: "var(--font-sans)",
             fontSize: "0.8rem",
