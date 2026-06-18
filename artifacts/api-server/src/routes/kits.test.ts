@@ -39,7 +39,12 @@ vi.mock("@workspace/db", async () => {
     pk: ["id"],
     columns: ["id", "contactEmail", "status", "stripeAccountId", "clerkUserId"],
   });
-  return { db: makeFakeDb(), kitTokensTable, kitsTable, practitionerApplicationsTable };
+  const kitDeliveryFailuresTable = makeTable({
+    name: "kit_delivery_failures",
+    pk: ["id"],
+    columns: ["id", "buyerEmail", "kitId", "purchaseId", "error", "createdAt", "resolvedAt"],
+  });
+  return { db: makeFakeDb(), kitTokensTable, kitsTable, practitionerApplicationsTable, kitDeliveryFailuresTable };
 });
 
 vi.mock("drizzle-orm", async () => {
@@ -105,7 +110,7 @@ import type { FakeTable } from "../test/fakeDb";
 import * as kitsRegistryModule from "../lib/kitsRegistry";
 import * as kitsMailerModule from "../lib/kitsMailer";
 
-const tables = dbModule as unknown as { kitTokensTable: FakeTable };
+const tables = dbModule as unknown as { kitTokensTable: FakeTable; kitDeliveryFailuresTable: FakeTable };
 const getKitMock = kitsRegistryModule.getKit as ReturnType<typeof vi.fn>;
 const sendKitDeliveryEmailMock = kitsMailerModule.sendKitDeliveryEmail as ReturnType<typeof vi.fn>;
 
@@ -119,10 +124,21 @@ interface Harness {
   close: () => Promise<void>;
 }
 
-async function startHarness(): Promise<Harness> {
+async function startHarness(opts: { rawBody?: boolean } = {}): Promise<Harness> {
   const app = express();
   app.set("trust proxy", 1);
-  app.use(express.json());
+  if (opts.rawBody) {
+    // Mirror app.ts: attach rawBody buffer so Zaprite HMAC verification works.
+    app.use(
+      express.json({
+        verify: (_req, _res, buf) => {
+          (_req as express.Request & { rawBody?: Buffer }).rawBody = buf;
+        },
+      }),
+    );
+  } else {
+    app.use(express.json());
+  }
   app.use("/kits", kitsRouter);
   const srv: Server = createServer(app);
   await new Promise<void>((resolve) => srv.listen(0, "127.0.0.1", resolve));
@@ -146,6 +162,7 @@ beforeEach(() => {
   __clearAccessRateLimiter();
   __clearResendRateLimiter();
   tables.kitTokensTable.__store.length = 0;
+  tables.kitDeliveryFailuresTable.__store.length = 0;
   getKitMock.mockReturnValue(null);
 });
 
@@ -557,6 +574,151 @@ describe("GET /kits/resend — signed one-click resend link", () => {
       const text = await r.text();
       expect(text).toMatch(/Kit Resent/);
       expect(text).toMatch(/buyer@example\.com/);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── fulfillKitPurchase — delivery failure persistence ─────────────────────────
+//
+// Both the legacy purchase-webhook and the Zaprite webhook call fulfillKitPurchase.
+// When the delivery email fails, a row must be written to kitDeliveryFailuresTable
+// so Bitcoin purchasers who don't receive their kit appear in the audit trail.
+
+const WEBHOOK_SECRET = "test-webhook-secret";
+const ZAPRITE_SECRET = "test-zaprite-secret";
+
+function postPurchaseWebhook(
+  base: string,
+  body: Record<string, string>,
+  secret = WEBHOOK_SECRET,
+): Promise<Response> {
+  return fetch(`${base}/kits/purchase-webhook`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-webhook-secret": secret,
+    },
+    body: JSON.stringify(body),
+  });
+}
+
+async function postZapriteWebhook(
+  base: string,
+  body: Record<string, unknown>,
+  secret = ZAPRITE_SECRET,
+): Promise<Response> {
+  const { createHmac } = await import("node:crypto");
+  const raw = JSON.stringify(body);
+  const sig = createHmac("sha256", secret).update(raw).digest("hex");
+  return fetch(`${base}/kits/zaprite-webhook`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-zaprite-signature": `sha256=${sig}`,
+    },
+    body: raw,
+  });
+}
+
+describe("fulfillKitPurchase — delivery failure written to kitDeliveryFailuresTable", () => {
+  const originalKitSecret = process.env.KIT_WEBHOOK_SECRET;
+  const originalZapriteSecret = process.env.ZAPRITE_WEBHOOK_SECRET;
+
+  beforeEach(() => {
+    process.env.KIT_WEBHOOK_SECRET = WEBHOOK_SECRET;
+    process.env.ZAPRITE_WEBHOOK_SECRET = ZAPRITE_SECRET;
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "failed", error: "smtp timeout" });
+  });
+
+  afterEach(() => {
+    if (originalKitSecret === undefined) {
+      delete process.env.KIT_WEBHOOK_SECRET;
+    } else {
+      process.env.KIT_WEBHOOK_SECRET = originalKitSecret;
+    }
+    if (originalZapriteSecret === undefined) {
+      delete process.env.ZAPRITE_WEBHOOK_SECRET;
+    } else {
+      process.env.ZAPRITE_WEBHOOK_SECRET = originalZapriteSecret;
+    }
+  });
+
+  it("writes a failure row via the legacy purchase-webhook path", async () => {
+    const h = await startHarness();
+    try {
+      const r = await postPurchaseWebhook(h.base, {
+        kit_id: FAKE_KIT.id,
+        buyer_email: "Bitcoin@Example.com",
+        buyer_name: "Bitcoin Buyer",
+        purchase_id: "tsp-purchase-001",
+      });
+      expect(r.status).toBe(201);
+      expect(tables.kitDeliveryFailuresTable.__store).toHaveLength(1);
+      const row = tables.kitDeliveryFailuresTable.__store[0] as Record<string, unknown>;
+      expect(row.buyerEmail).toBe("bitcoin@example.com");
+      expect(row.kitId).toBe(FAKE_KIT.id);
+      expect(row.purchaseId).toBe("tsp-purchase-001");
+      expect(row.error).toBe("smtp timeout");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does NOT write a failure row via the legacy purchase-webhook when email succeeds", async () => {
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent", messageId: "msg-ok" });
+    const h = await startHarness();
+    try {
+      await postPurchaseWebhook(h.base, {
+        kit_id: FAKE_KIT.id,
+        buyer_email: "buyer@example.com",
+        buyer_name: "Happy Buyer",
+        purchase_id: "tsp-purchase-002",
+      });
+      expect(tables.kitDeliveryFailuresTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("writes a failure row via the Zaprite webhook path", async () => {
+    const h = await startHarness({ rawBody: true });
+    try {
+      const r = await postZapriteWebhook(h.base, {
+        type: "payment.completed",
+        data: {
+          id: "zaprite-order-001",
+          customer: { email: "Sats@Example.com", name: "Sats Buyer" },
+          metadata: { kit_id: FAKE_KIT.id },
+        },
+      });
+      expect(r.status).toBe(201);
+      expect(tables.kitDeliveryFailuresTable.__store).toHaveLength(1);
+      const row = tables.kitDeliveryFailuresTable.__store[0] as Record<string, unknown>;
+      expect(row.buyerEmail).toBe("sats@example.com");
+      expect(row.kitId).toBe(FAKE_KIT.id);
+      expect(row.purchaseId).toBe("zaprite-order-001");
+      expect(row.error).toBe("smtp timeout");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does NOT write a failure row via the Zaprite webhook when email succeeds", async () => {
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent", messageId: "msg-ok" });
+    const h = await startHarness({ rawBody: true });
+    try {
+      await postZapriteWebhook(h.base, {
+        type: "payment.completed",
+        data: {
+          id: "zaprite-order-002",
+          customer: { email: "buyer@example.com", name: "Happy Buyer" },
+          metadata: { kit_id: FAKE_KIT.id },
+        },
+      });
+      expect(tables.kitDeliveryFailuresTable.__store).toHaveLength(0);
     } finally {
       await h.close();
     }

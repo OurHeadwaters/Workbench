@@ -227,6 +227,22 @@ async function fulfillKitPurchase(opts: {
     `${logTag} purchase processed`,
   );
 
+  if (mailResult.status === "failed") {
+    try {
+      await db.insert(kitDeliveryFailuresTable).values({
+        buyerEmail: buyer_email.toLowerCase(),
+        kitId: kit_id,
+        purchaseId: purchase_id,
+        error: mailResult.error ?? null,
+      });
+    } catch (dbErr) {
+      logger.error(
+        { dbErr, kit_id, purchase_id },
+        `${logTag} failed to persist delivery failure record`,
+      );
+    }
+  }
+
   return { token, accessUrl: url, expiresAt, mailStatus: mailResult.status };
 }
 
