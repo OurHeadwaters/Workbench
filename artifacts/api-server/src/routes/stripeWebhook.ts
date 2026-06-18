@@ -38,7 +38,6 @@ import { Router, type IRouter, type Request, type Response } from "express";
 import express from "express";
 import crypto from "crypto";
 import Stripe from "stripe";
-import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { getKit } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, sendKitDeliveryFailureAlert } from "../lib/kitsMailer";
@@ -68,21 +67,25 @@ function accessUrl(token: string): string {
 // Stripe retries webhook delivery on 5xx responses or network timeouts.
 // Persisting the event ID to the database ensures we never send duplicate emails
 // and the guard is shared across all instances of the service.
+//
+// Race safety: we INSERT … ON CONFLICT DO NOTHING *before* token creation and
+// email delivery, then check the affected-row count via .returning(). If the
+// insert is a no-op (another concurrent request already claimed this event_id),
+// .returning() returns an empty array and we bail immediately — without ever
+// creating a token or sending an email. This closes the TOCTOU window that
+// existed when the SELECT check and the INSERT were separate steps.
 
-async function isEventAlreadyProcessed(eventId: string): Promise<boolean> {
-  const rows = await db
-    .select({ eventId: stripeProcessedEventsTable.eventId })
-    .from(stripeProcessedEventsTable)
-    .where(eq(stripeProcessedEventsTable.eventId, eventId))
-    .limit(1);
-  return rows.length > 0;
-}
-
-async function markEventProcessed(eventId: string, purchaseId: string): Promise<void> {
-  await db
+async function claimEvent(
+  eventId: string,
+  purchaseId: string,
+): Promise<boolean> {
+  const inserted = await db
     .insert(stripeProcessedEventsTable)
     .values({ eventId, purchaseId })
-    .onConflictDoNothing();
+    .onConflictDoNothing()
+    .returning({ eventId: stripeProcessedEventsTable.eventId });
+  // inserted.length === 1 → we own this event; 0 → another handler got there first
+  return inserted.length > 0;
 }
 
 // ── POST /stripe/webhook ──────────────────────────────────────────────────────
@@ -128,13 +131,6 @@ router.post(
 
     logger.info({ type: event.type, id: event.id }, "[stripe-webhook] event received");
 
-    // Idempotency check — Stripe retries on 5xx; skip already-processed events.
-    if (await isEventAlreadyProcessed(event.id)) {
-      logger.info({ eventId: event.id, type: event.type }, "[stripe-webhook] duplicate event — skipping");
-      res.json({ received: true, duplicate: true });
-      return;
-    }
-
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
 
@@ -164,6 +160,18 @@ router.post(
       if (!kit) {
         logger.warn({ sessionId: session.id, kitId }, "[stripe-webhook] unknown kit_id — skipping delivery");
         res.json({ received: true, skipped: `unknown kit_id: ${kitId}` });
+        return;
+      }
+
+      // Atomic idempotency gate: claim the event row *before* token creation or
+      // email delivery. The INSERT … ON CONFLICT DO NOTHING + RETURNING pattern
+      // means only the one request that actually inserts a row proceeds — any
+      // concurrent retry that loses the race gets 0 rows back and returns early.
+      // This closes the TOCTOU window of the old SELECT-then-INSERT approach.
+      const claimed = await claimEvent(event.id, purchaseId);
+      if (!claimed) {
+        logger.info({ eventId: event.id, type: event.type }, "[stripe-webhook] duplicate event — skipping");
+        res.json({ received: true, duplicate: true });
         return;
       }
 
@@ -225,10 +233,6 @@ router.post(
           deliveryError: mailResult.error,
         });
       }
-
-      // Mark processed only after successful token persistence + email attempt,
-      // so a hard crash before this point will let Stripe retry and re-deliver.
-      await markEventProcessed(event.id, purchaseId);
     }
 
     res.json({ received: true });
