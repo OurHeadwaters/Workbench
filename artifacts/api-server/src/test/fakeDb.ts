@@ -537,7 +537,9 @@ function makeInsert(table: FakeTable) {
             },
           };
         },
-        // Ignore conflicts — used by library tag attachers.
+        // Ignore conflicts — used by the stripe idempotency gate and library
+        // tag attachers.  Returns a builder with .returning() so callers can
+        // chain `.onConflictDoNothing().returning(...)` (drizzle style).
         onConflictDoNothing() {
           const out: Row[] = [];
           for (const v of arr) {
