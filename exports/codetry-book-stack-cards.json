@@ -1,0 +1,708 @@
+{
+  "_meta": {
+    "exportedAt": "2026-06-18T23:19:11.664Z",
+    "section": "stack-cards"
+  },
+  "STACK_CARDS": [
+    {
+      "id": "rename-test",
+      "category": "Foundation Skills",
+      "question": "What does the rename test check for?",
+      "context": "The rename test is codetry's primary diagnostic. Before accepting a name, you try to rename the thing. If a better name comes easily, the first name was generic. If renaming is difficult — if something would be lost — the name is doing real work.",
+      "steps": [
+        {
+          "id": "rename-test-1",
+          "prompt": "In your own words, what question does the rename test ask?"
+        },
+        {
+          "id": "rename-test-2",
+          "prompt": "What does it mean for a name to 'resist' renaming? What quality does that reveal?"
+        },
+        {
+          "id": "rename-test-3",
+          "prompt": "Give an example of a name from your own work or life that would pass the rename test. Why would it resist?"
+        }
+      ]
+    },
+    {
+      "id": "load-bearing-vs-decorative",
+      "category": "Foundation Skills",
+      "question": "What is the difference between a load-bearing name and a decorative one?",
+      "context": "A load-bearing name carries meaning that would be lost if you replaced it with a synonym. A decorative name could be swapped for a generic term without changing what people understand. The distinction matters because only load-bearing names earn their place in a vocabulary.",
+      "steps": [
+        {
+          "id": "lbd-1",
+          "prompt": "How would you explain 'load-bearing' in naming to someone who has never heard the term?"
+        },
+        {
+          "id": "lbd-2",
+          "prompt": "What test could you apply to decide whether a name in your own practice is load-bearing or decorative?"
+        },
+        {
+          "id": "lbd-3",
+          "prompt": "Name one term from this handbook that you think is clearly load-bearing, and explain why."
+        }
+      ]
+    },
+    {
+      "id": "codetry-vs-ddd",
+      "category": "Positioning",
+      "question": "How does codetry differ from Domain-Driven Design?",
+      "context": "Both codetry and DDD take language seriously as a design tool. DDD works inside software systems, building ubiquitous language for technical teams. Codetry works at the practitioner level — it is about how a person names the things that make their specific practice distinct, not about software architecture. The distinction matters because codetry asks the same question DDD does — whose language runs the system? — but asks it on behalf of the community, not the development team. A self-reliant practitioner who names their water system, their food reserve, and their mutual-aid network precisely is doing codetry whether or not they have ever written a line of code.",
+      "steps": [
+        {
+          "id": "ddd-1",
+          "prompt": "What does DDD mean by 'ubiquitous language'? What is it trying to solve?"
+        },
+        {
+          "id": "ddd-2",
+          "prompt": "Where does codetry's concern with naming begin — and where does DDD's begin? What is each discipline's starting point?"
+        },
+        {
+          "id": "ddd-3",
+          "prompt": "Could a practitioner use codetry without building any software? What does your answer reveal about the two disciplines?"
+        }
+      ]
+    },
+    {
+      "id": "codetry-vs-literate-programming",
+      "category": "Positioning",
+      "question": "How does codetry relate to literate programming?",
+      "context": "Literate programming, as Knuth described it, interweaves code and prose so the program reads as a coherent essay — the human logic drives the machine, documented in the same breath. Codetry is interested in a narrower question: whether the names a practitioner assigns to their concepts are precise enough that the practice survives translation — into writing, into conversation, into someone else's hands. For a self-reliant practitioner, the stakes are direct: if your food storage system, your mutual-aid network, or your water management only makes sense to you, it will not survive you. Codetry is how you make it transferable.",
+      "steps": [
+        {
+          "id": "lp-1",
+          "prompt": "What was Knuth's core insight with literate programming? What problem was he solving?"
+        },
+        {
+          "id": "lp-2",
+          "prompt": "Codetry is described as narrower. What is it narrowing to, exactly?"
+        },
+        {
+          "id": "lp-3",
+          "prompt": "What does 'the practice survives translation' mean? Give a concrete example of a practice that might not survive without precise naming."
+        }
+      ]
+    },
+    {
+      "id": "practitioner-role",
+      "category": "The Practitioner",
+      "question": "What makes someone a 'practitioner' in the codetry sense?",
+      "context": "A practitioner is not simply someone who does a thing — it is someone who has developed a vocabulary for how they do it. The practitioner can describe the trade, explain the distinctions, and pass the practice on. The vocabulary is the evidence that the practice is real, not accidental.",
+      "steps": [
+        {
+          "id": "pr-1",
+          "prompt": "What separates a practitioner from someone who simply does the same work repeatedly?"
+        },
+        {
+          "id": "pr-2",
+          "prompt": "Why is vocabulary described as evidence that the practice is real? What would its absence suggest?"
+        },
+        {
+          "id": "pr-3",
+          "prompt": "By this definition, are you a practitioner in something right now? What vocabulary do you have — or need to build?"
+        }
+      ]
+    },
+    {
+      "id": "trade-vs-tool",
+      "category": "The Practitioner",
+      "question": "What is the distinction between the trade and the tool?",
+      "context": "The trade is the durable practice — the knowledge, the relationships, the judgment a practitioner develops. The tool is the current instrument: the software, the device, the platform. Tools change; the trade persists. Naming the trade correctly means it doesn't disappear when the tool does.",
+      "steps": [
+        {
+          "id": "tvt-1",
+          "prompt": "In your own words: what is the trade? What is the tool? Give an example of each from any field."
+        },
+        {
+          "id": "tvt-2",
+          "prompt": "What happens to a practice when the practitioner can only name the tool, not the trade?"
+        },
+        {
+          "id": "tvt-3",
+          "prompt": "Name one thing you do where you have named the tool but not yet named the trade. What would a trade-level name look like?"
+        }
+      ]
+    },
+    {
+      "id": "jar-kitchen-vocabulary",
+      "category": "Jar Kitchen",
+      "question": "What names make up the Jar Kitchen vocabulary set, and what work does each do?",
+      "context": "The Jar Kitchen vocabulary includes: Jarista (the person), Jar Kitchen (the workspace), Seasonal Shelf (the preserved inventory), Harvest Hold (the bulk reserve), Bulk Round (the sourcing cycle), and Preservation Season (the active production period). Each name holds a specific role — they are not interchangeable with generic equivalents.",
+      "steps": [
+        {
+          "id": "jkv-1",
+          "prompt": "Without looking, list as many terms from the Jar Kitchen vocabulary as you can recall."
+        },
+        {
+          "id": "jkv-2",
+          "prompt": "Pick two terms from the set. For each, explain what generic phrase it replaces and what is lost by using the generic instead."
+        },
+        {
+          "id": "jkv-3",
+          "prompt": "What principle ties the whole vocabulary together? What shared logic connects each name?"
+        }
+      ]
+    },
+    {
+      "id": "jarista",
+      "category": "Jar Kitchen",
+      "question": "What does the name 'Jarista' do that 'home preserver' or 'canner' does not?",
+      "context": "Jarista names a practitioner with a specific relationship to preservation as a practice — not a hobbyist, not a nostalgist. The name implies discipline, a vocabulary, and a method. It also implies that the practice is transferable: a Jarista is something another person could become.",
+      "steps": [
+        {
+          "id": "jarista-1",
+          "prompt": "What connotations does 'canner' carry? What does it suggest about who does the work and why?"
+        },
+        {
+          "id": "jarista-2",
+          "prompt": "What does 'Jarista' claim that 'home preserver' does not? What is being asserted about the practice?"
+        },
+        {
+          "id": "jarista-3",
+          "prompt": "Can you think of a role in another field where the common name undersells the practice? What would a more load-bearing name look like?"
+        }
+      ]
+    },
+    {
+      "id": "constellation",
+      "category": "The Constellation",
+      "question": "What is the constellation, and what does it hold?",
+      "context": "The constellation is the manifest of a practitioner's specific vocabulary: the terms that name the zones, the roles, the primitives, and the tools in their practice. It is not a mission statement or a philosophy. It is the working vocabulary that makes the practice legible — to the practitioner, to collaborators, and to the future.",
+      "steps": [
+        {
+          "id": "con-1",
+          "prompt": "How would you describe the constellation to someone who has not read the handbook?"
+        },
+        {
+          "id": "con-2",
+          "prompt": "What is the difference between a mission statement and a constellation? Why does the distinction matter?"
+        },
+        {
+          "id": "con-3",
+          "prompt": "If you were to draft three entries in your own constellation right now — three names specific to your practice — what would they be?"
+        }
+      ]
+    },
+    {
+      "id": "constellation-zones",
+      "category": "The Constellation",
+      "question": "What are the constellation zones, and what does each represent?",
+      "context": "The zones organize scale and relationship: Zone 0 is the household (the smallest unit of practice); Eave is the immediate network; Zone 2 is the community; Zone 3 is the broader ecosystem. Work done in Zone 0 generates the capacity that makes Zone 3 possible. The zones are not a hierarchy — they are a map of how the practice propagates.",
+      "steps": [
+        {
+          "id": "zones-1",
+          "prompt": "Describe Zone 0 in your own words. What is it not?"
+        },
+        {
+          "id": "zones-2",
+          "prompt": "The zones are described as a map, not a hierarchy. What is the difference? What would change if they were treated as a hierarchy?"
+        },
+        {
+          "id": "zones-3",
+          "prompt": "Where does most of your current practice live — Zone 0, 1, 2, or 3? What would a move outward require?"
+        }
+      ]
+    },
+    {
+      "id": "fork-mechanic",
+      "category": "The Constellation",
+      "question": "What is the fork mechanic, and when does it apply?",
+      "context": "A fork is a deliberate split in the practice — a moment where two versions are allowed to coexist while it is not yet clear which one is right. The fork is not indecision. It is a commitment to running both branches until the question resolves itself through use, not through argument.",
+      "steps": [
+        {
+          "id": "fork-1",
+          "prompt": "What is the difference between forking and being undecided?"
+        },
+        {
+          "id": "fork-2",
+          "prompt": "What conditions make a fork appropriate? When would it be a mistake to fork?"
+        },
+        {
+          "id": "fork-3",
+          "prompt": "Is there something in your practice right now that deserves a fork rather than a forced decision? Describe it."
+        }
+      ]
+    },
+    {
+      "id": "standby-primitive",
+      "category": "Key Concepts",
+      "question": "What is the Standby primitive, and what posture does it require?",
+      "context": "Standby is the practice of building capacity before it is needed — infrastructure, vocabulary, relationships, skills — so that when the activated state arrives, the practitioner is already positioned to act. Standby is not waiting. It is a specific form of preparation that is only possible during periods of relative ease.",
+      "steps": [
+        {
+          "id": "standby-1",
+          "prompt": "How is Standby different from waiting? What does Standby require that waiting does not?"
+        },
+        {
+          "id": "standby-2",
+          "prompt": "What is the 'activated state' that Standby is preparing for? Give an example from the handbook or from your own context."
+        },
+        {
+          "id": "standby-3",
+          "prompt": "What are you currently in Standby for? What capacity are you building that isn't needed yet?"
+        }
+      ]
+    },
+    {
+      "id": "seven-generation-horizon",
+      "category": "Key Concepts",
+      "question": "What does the seven-generation horizon framing ask of a practitioner?",
+      "context": "The seven-generation framing — drawn from Haudenosaunee governance — asks that decisions account for consequences seven generations forward. Applied to codetry, it means the names a practitioner chooses, the infrastructure they build, and the vocabulary they develop should be legible and useful beyond their own working life.",
+      "steps": [
+        {
+          "id": "seven-1",
+          "prompt": "Where does the seven-generation framing originate, and what was its original purpose?"
+        },
+        {
+          "id": "seven-2",
+          "prompt": "How does codetry apply this framing to naming? What does it demand of a vocabulary?"
+        },
+        {
+          "id": "seven-3",
+          "prompt": "Is there a name or a structure in your practice that you believe would still be useful seven generations from now? What makes it durable?"
+        }
+      ]
+    },
+    {
+      "id": "trust-as-protocol",
+      "category": "Key Concepts",
+      "question": "What does it mean to treat trust as a protocol rather than a feeling?",
+      "context": "Trust-as-protocol means designing collaboration around explicit, legible agreements — roles, vocabulary, decision rules — rather than relying on personal rapport alone. Protocol-based trust can be transferred to new collaborators, audited, and repaired when broken. Rapport-based trust cannot.",
+      "steps": [
+        {
+          "id": "trust-1",
+          "prompt": "What is the difference between trust as a feeling and trust as a protocol? Give an example of each."
+        },
+        {
+          "id": "trust-2",
+          "prompt": "Why is protocol-based trust more transferable? What can it survive that rapport-based trust cannot?"
+        },
+        {
+          "id": "trust-3",
+          "prompt": "Where in your current collaborations does trust rest on rapport that hasn't been made explicit? What would a protocol version look like?"
+        }
+      ]
+    },
+    {
+      "id": "name-as-infrastructure",
+      "category": "Foundation Skills",
+      "question": "In what sense is a name infrastructure?",
+      "context": "Infrastructure is what other things are built on top of. A name becomes infrastructure when other people, decisions, and practices depend on it. When a name is infrastructure, changing it has costs — dependencies break. This is why load-bearing names must be chosen carefully: they are harder to revise than they appear at the moment of naming.",
+      "steps": [
+        {
+          "id": "nai-1",
+          "prompt": "What makes something 'infrastructure' rather than just a component? What is the defining quality?"
+        },
+        {
+          "id": "nai-2",
+          "prompt": "Give an example from your own work or life of a name that has become infrastructure. What would breaking it cost?"
+        },
+        {
+          "id": "nai-3",
+          "prompt": "If a name is infrastructure, what does that imply about the moment of naming? What does it ask of the practitioner then?"
+        }
+      ]
+    },
+    {
+      "id": "generic-vocabulary-erosion",
+      "category": "Foundation Skills",
+      "question": "How does generic vocabulary quietly erase a practice?",
+      "context": "When a practitioner stops using their specific vocabulary and defaults to generic equivalents, the precision of the practice leaks away. 'Preserving food' in place of 'Preservation Season' loses the temporal frame. 'Workspace' in place of 'Jar Kitchen' loses the identity. The practice becomes harder to teach, replicate, or defend — not because it changed, but because the language did.",
+      "steps": [
+        {
+          "id": "gve-1",
+          "prompt": "Choose one term from the Jar Kitchen vocabulary. Replace it with the most natural generic equivalent. What is lost?"
+        },
+        {
+          "id": "gve-2",
+          "prompt": "Why would a practitioner drift toward generic vocabulary over time? What pressures push in that direction?"
+        },
+        {
+          "id": "gve-3",
+          "prompt": "What is the cost of that drift — for the practitioner, and for anyone trying to learn from them?"
+        }
+      ]
+    },
+    {
+      "id": "practice-vs-project",
+      "category": "The Practitioner",
+      "question": "What distinguishes a practice from a project?",
+      "context": "A project has a finish line. A practice does not — it is an ongoing relationship with a domain, a discipline, or a craft. The codetry distinction matters because naming something a practice changes what you build around it: infrastructure, vocabulary, and rhythm rather than milestones and completion.",
+      "steps": [
+        {
+          "id": "pvp-1",
+          "prompt": "What does a project have that a practice does not? What does a practice have that a project does not?"
+        },
+        {
+          "id": "pvp-2",
+          "prompt": "How does naming something a 'practice' change what you build around it?"
+        },
+        {
+          "id": "pvp-3",
+          "prompt": "Is there something in your life that you have been treating as a project but is actually a practice? What would the reframe change?"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-shelf",
+      "category": "Jar Kitchen",
+      "question": "What is the Seasonal Shelf, and what function does it serve in the Jar Kitchen system?",
+      "context": "The Seasonal Shelf is the preserved inventory maintained by the Jarista — the result of the Preservation Season and the Bulk Round. It is not a pantry in the casual sense. It is a managed reserve that connects the season of abundance (when food is available and cheap) to the season of scarcity (when it is not).",
+      "steps": [
+        {
+          "id": "ss-1",
+          "prompt": "What problem does the Seasonal Shelf solve? What would break in the Jar Kitchen system without it?"
+        },
+        {
+          "id": "ss-2",
+          "prompt": "What makes it a 'shelf' rather than just 'stored food'? What does the name claim about how it is managed?"
+        },
+        {
+          "id": "ss-3",
+          "prompt": "Where in your own practice is there a 'shelf' — a managed reserve that connects abundance to scarcity — even if it hasn't been named that way?"
+        }
+      ]
+    },
+    {
+      "id": "bulk-round",
+      "category": "Jar Kitchen",
+      "question": "What is the Bulk Round and what discipline does it require?",
+      "context": "The Bulk Round is the sourcing cycle during which the Jarista acquires ingredients in volume — at the right moment in the growing season, from the right suppliers, at scale. It is a defined event, not a continuous activity. Treating it as an event rather than a habit is what makes it manageable.",
+      "steps": [
+        {
+          "id": "br-1",
+          "prompt": "Why is calling the sourcing cycle a 'Round' important? What does the name imply about timing?"
+        },
+        {
+          "id": "br-2",
+          "prompt": "What is the difference between treating sourcing as a continuous habit versus a defined event? What does the event frame change?"
+        },
+        {
+          "id": "br-3",
+          "prompt": "Is there a cyclical activity in your practice that would benefit from being named as a Round rather than a habit? What would defining it as an event allow?"
+        }
+      ]
+    },
+    {
+      "id": "practitioner-as-incubator",
+      "category": "The Practitioner",
+      "question": "What does it mean for a practitioner to function as an incubator?",
+      "context": "The practitioner who has developed a vocabulary, a method, and a track record can offer something beyond their own output: they can help others develop their practices. The incubation role is named explicitly in the codetry framework because it is a distinct responsibility — not a side effect of doing good work, but a commitment the practitioner makes.",
+      "steps": [
+        {
+          "id": "pai-1",
+          "prompt": "What does a practitioner need to have developed before they can function as an incubator?"
+        },
+        {
+          "id": "pai-2",
+          "prompt": "Why is incubation named as a distinct commitment rather than a natural consequence of expertise?"
+        },
+        {
+          "id": "pai-3",
+          "prompt": "Is there a role for you as an incubator — now or in the near future? What would that look like specifically?"
+        }
+      ]
+    },
+    {
+      "id": "vocabulary-as-evidence",
+      "category": "Foundation Skills",
+      "question": "Why is vocabulary described as evidence that a practice is real?",
+      "context": "A practice that cannot be named — whose methods, phases, roles, and outputs lack specific language — may be real to the practitioner but is invisible to everyone else. Vocabulary is the form in which a practice becomes legible: teachable, auditable, reproducible. Without it, the practice dies with the practitioner.",
+      "steps": [
+        {
+          "id": "vae-1",
+          "prompt": "What does it mean for a practice to be 'legible'? Legible to whom, and for what purpose?"
+        },
+        {
+          "id": "vae-2",
+          "prompt": "Can a practice be real without vocabulary? What is the cost of that invisibility?"
+        },
+        {
+          "id": "vae-3",
+          "prompt": "What aspect of your own practice is currently real but not yet legible — not yet named specifically enough to be passed on?"
+        }
+      ]
+    },
+    {
+      "id": "harvest-hold",
+      "category": "Jar Kitchen",
+      "question": "What is the Harvest Hold and how does it differ from the Seasonal Shelf?",
+      "context": "The Harvest Hold is the bulk reserve acquired through the Bulk Round — raw materials in volume, before processing. The Seasonal Shelf is the processed, preserved output ready for use. The two names mark different stages in the Jar Kitchen system: acquisition versus completion.",
+      "steps": [
+        {
+          "id": "hh-1",
+          "prompt": "At what stage in the Jar Kitchen system does the Harvest Hold exist? What comes before it and what comes after?"
+        },
+        {
+          "id": "hh-2",
+          "prompt": "Why does the distinction between Harvest Hold and Seasonal Shelf matter? What would be lost by using one name for both?"
+        },
+        {
+          "id": "hh-3",
+          "prompt": "In your own practice, are there 'holds' — raw material you've acquired but not yet processed or made ready? What are they?"
+        }
+      ]
+    },
+    {
+      "id": "forward-motion-principle",
+      "category": "Key Concepts",
+      "question": "What is the 'forward motion is easier to redirect than stillness' principle?",
+      "context": "This principle holds that beginning — even imperfectly, even with incomplete information — creates the conditions for correction. A practice in motion can be steered. A practice that hasn't started cannot. The Jar Kitchen didn't wait for perfect infrastructure; the co-op didn't wait for regulatory clarity. The logic is that starting generates the feedback that planning cannot.",
+      "steps": [
+        {
+          "id": "fmp-1",
+          "prompt": "What does 'forward motion is easier to redirect than stillness' mean in practice? What specific situation does it apply to?"
+        },
+        {
+          "id": "fmp-2",
+          "prompt": "What is the risk of applying this principle carelessly? When would you not want to start moving?"
+        },
+        {
+          "id": "fmp-3",
+          "prompt": "Is there something in your practice where stillness is masquerading as planning? What would starting — even imperfectly — reveal?"
+        }
+      ]
+    },
+    {
+      "id": "compounding-asset",
+      "category": "The Practitioner",
+      "question": "What makes a skill a 'compounding asset' rather than just a skill?",
+      "context": "A compounding asset is one that grows in value through use — each application makes the next application more effective, faster, or richer. Codetry treats food skills, naming discipline, and community relationships as compounding assets: the longer and more consistently they are practiced, the greater their yield relative to the effort applied.",
+      "steps": [
+        {
+          "id": "ca-1",
+          "prompt": "What is the difference between a skill and a compounding asset? What does 'compounding' add?"
+        },
+        {
+          "id": "ca-2",
+          "prompt": "Why is naming discipline described as a compounding asset? How does each name built make the next one easier or better?"
+        },
+        {
+          "id": "ca-3",
+          "prompt": "What is your most valuable compounding asset right now — the practice that has grown most in yield per unit of effort over time?"
+        }
+      ]
+    },
+    {
+      "id": "preservation-season",
+      "category": "Jar Kitchen",
+      "question": "What is Preservation Season, and why does naming it as a season matter?",
+      "context": "Preservation Season is the defined period during which the Jarista does the active work of processing, canning, fermenting, and stocking the Seasonal Shelf. Calling it a season is deliberate: seasons are bounded, recurring, and require preparation in advance. The name encodes the discipline — it is not a whenever activity.",
+      "steps": [
+        {
+          "id": "ps-1",
+          "prompt": "What does the word 'season' imply about an activity — in contrast to words like 'process', 'project', or 'task'?"
+        },
+        {
+          "id": "ps-2",
+          "prompt": "What preparation does Preservation Season require that a more casual name would not encode?"
+        },
+        {
+          "id": "ps-3",
+          "prompt": "Is there a recurring bounded period in your practice that deserves to be named as a Season? What would naming it change about how you approach it?"
+        }
+      ]
+    },
+    {
+      "id": "three-layers",
+      "category": "The Three Layers",
+      "question": "You can rearrange the furniture. You cannot move the load-bearing walls. Which layer of a Codetry platform is which?",
+      "context": "Every platform Headwaters builds has three layers. The Ledger of Words is the foundation — vocabulary, zone structure, logic. Load-bearing. The Administrator Panel is everything built on top of it: listings, members, prices, schedules. Furniture. The Codetry Filter is the door frame that makes sure nothing added through the admin panel damages the structure underneath. Communities have full run of the house. Only the walls require the developer back.",
+      "steps": [
+        {
+          "id": "tl-1",
+          "prompt": "What makes something load-bearing in a building — and what is the equivalent in a platform? What happens when someone tries to move the wrong thing?"
+        },
+        {
+          "id": "tl-2",
+          "prompt": "From the administrator's seat on day one, how would you explain which things are furniture and which are walls? What language would you use?"
+        },
+        {
+          "id": "tl-3",
+          "prompt": "The filter is the door frame. What does that mean — what does a door frame do that neither the wall nor the furniture does?"
+        }
+      ]
+    },
+    {
+      "id": "ledger-of-words",
+      "category": "The Three Layers",
+      "question": "The Ledger of Words is to a Codetry platform what bylaws are to a co-op. Who can read them, who wrote them, and who gets called when they need to change?",
+      "context": "Bylaws define how the co-op thinks and behaves. You don't amend them through the meeting-booking form. The Ledger of Words is the same thing: the vocabulary, zone names, and structural rules that define how the platform operates. A board member can run a meeting inside those rules all day. When the rules themselves need to change — when the co-op wants to rename a zone or restructure an envelope — that is when the developer comes back. The ledger is the constitution. The admin panel is the day-to-day business of governance.",
+      "steps": [
+        {
+          "id": "low-1",
+          "prompt": "A board member asks: 'Can I just change that term in the system myself?' Walk through the bylaw analogy out loud. What does it help them understand?"
+        },
+        {
+          "id": "low-2",
+          "prompt": "Name three things a community might want to change that would require amending the constitution — and three that are just the day-to-day business of governance."
+        },
+        {
+          "id": "low-3",
+          "prompt": "What is lost if the bylaws can be edited by anyone at any time? What does that analogy reveal about the Ledger of Words?"
+        }
+      ]
+    },
+    {
+      "id": "administrator-boundary",
+      "category": "The Three Layers",
+      "question": "Content flows freely. Grammar stays fixed. What does that boundary feel like from inside the administrator's seat?",
+      "context": "Grammar is the Ledger of Words — the vocabulary and zone structure the platform is built on. Content is everything that moves through that grammar: listings, members, meetings, prices, schedules, announcements. The administrator has full, unsupervised control over all of it. They do not control the grammar. This is what makes the handoff real: the community isn't waiting on the developer for operations, only for architecture. Most administrators will never need to touch the grammar. That is the point.",
+      "steps": [
+        {
+          "id": "ab-1",
+          "prompt": "What is 'grammar' in a platform — not linguistically, but operationally? Give two examples of grammar and two examples of content in a food co-op platform."
+        },
+        {
+          "id": "ab-2",
+          "prompt": "What does it feel like to have full control over content? What would it feel like if you also had to call someone every time you updated a price?"
+        },
+        {
+          "id": "ab-3",
+          "prompt": "'Grammar stays fixed' sounds like a constraint. How would you reframe it as a protection — something the administrator benefits from?"
+        }
+      ]
+    },
+    {
+      "id": "codetry-filter",
+      "category": "The Three Layers",
+      "question": "A Codetry Filter is a gate, not a manual. What does it catch that even the best onboarding session cannot?",
+      "context": "A manual relies on memory. A gate acts at the moment of passage. When drift enters a platform — a listing in the wrong zone, a budget line with no bucket, a term that doesn't match the vocabulary — it usually enters through a well-meaning administrator who didn't remember the rule. The Codetry Filter doesn't rely on memory. It speaks the community's own vocabulary and catches the inconsistency at the moment it's being created, not six months later when the reports stop making sense.",
+      "steps": [
+        {
+          "id": "cf-1",
+          "prompt": "What is 'drift' — not as a concept, but as something you can watch happen in real time in an organisation you know? Describe a specific example."
+        },
+        {
+          "id": "cf-2",
+          "prompt": "What is the difference between a gate and a manual? One relies on the person. What does the other rely on — and why does that matter at handoff?"
+        },
+        {
+          "id": "cf-3",
+          "prompt": "The filter speaks the community's own vocabulary. What makes that different from a generic error message? What does it preserve?"
+        }
+      ]
+    },
+    {
+      "id": "build-inside-out",
+      "category": "Build Inside Out",
+      "question": "Local Line was built for someone else. What is the difference between wearing clothes made for you and wearing what was on sale?",
+      "context": "Building outside in means taking a platform built for a different body — a different language, a different set of rhythms, a different idea of what an 'organisation' looks like — and training the community to fit into it. The tool was on sale. The community reshapes itself around it. Building inside out starts with the community's actual body: their vocabulary, their roles, their cycles. The platform is cut to fit. It wears their name from the first screen. The community doesn't have to translate itself to use it.",
+      "steps": [
+        {
+          "id": "bio-1",
+          "prompt": "Think of a platform recommended by a consultant: Local Line, QuickBooks, Square, Slack. Whose body was it cut for? What does the community have to do to fit into it?"
+        },
+        {
+          "id": "bio-2",
+          "prompt": "What does 'built for someone else' mean at the level of language — not just interface? What assumptions are baked into the vocabulary of an outside-in tool?"
+        },
+        {
+          "id": "bio-3",
+          "prompt": "'Build it inside out and wear it proudly.' What does wearing it proudly mean — not as a slogan, but as something you would actually say to a band council?"
+        }
+      ]
+    },
+    {
+      "id": "handoff-promise",
+      "category": "Build Inside Out",
+      "question": "When is a handoff a gift — something the community owns outright — and when is it a loan with no clear end date?",
+      "context": "A gift changes hands completely. A loan keeps the original owner in the relationship. Most platform 'handoffs' are loans: the vendor stays in the relationship through licensing, through the admin password, through the fact that the community can't update the thing without calling someone. The Headwaters handoff is designed to be a gift from day one — not a milestone at the end of the engagement, but the design constraint that shapes what gets built. Build it so it can leave your hands entirely.",
+      "steps": [
+        {
+          "id": "hp-1",
+          "prompt": "What are the signs that a handoff is a loan dressed as a gift? What keeps the original owner in the relationship?"
+        },
+        {
+          "id": "hp-2",
+          "prompt": "What three things must be true of a platform before the gift can honestly be given? What makes each one non-negotiable?"
+        },
+        {
+          "id": "hp-3",
+          "prompt": "If the handoff is the design constraint from day one, what does it change about how you scope and price the initial engagement?"
+        }
+      ]
+    },
+    {
+      "id": "flat-fee-no-retainer",
+      "category": "Build Inside Out",
+      "question": "A retainer is rent. A flat fee is a deed. What does the community own when the invoice is paid and the developer is gone?",
+      "context": "Rent keeps the landlord in the relationship. As long as the community is paying a retainer, the developer is still needed — and the community knows it. A deed transfers the thing entirely: the vocabulary, the platform, the logic. The community owns it and owes nothing further. The flat fee is how the deed is structured — scope and price agreed before the first line is written, total cost known before commitment. No scope creep dressed as service. No dependency dressed as support.",
+      "steps": [
+        {
+          "id": "ffnr-1",
+          "prompt": "What does rent say about a relationship that a deed does not? What power does the landlord hold that a deed removes?"
+        },
+        {
+          "id": "ffnr-2",
+          "prompt": "A band council or co-op board used to consultant dependency hears 'flat fee, no retainer required.' What does that signal to them — and why might it be hard to believe at first?"
+        },
+        {
+          "id": "ffnr-3",
+          "prompt": "The flat fee requires honesty about scope before the work starts. What must you know — about the community, the platform, and the work — before you can name a number that is also a deed?"
+        }
+      ]
+    },
+    {
+      "id": "sovereignty-over-tools",
+      "category": "Build Inside Out",
+      "question": "What can the landlord do to the tenant's tools that the tenant cannot prevent — and what changes when the community owns the building?",
+      "context": "Every SaaS platform is a landlord-tenant arrangement. The vendor can raise prices, change terms, shut down, be acquired, deprecate features, or simply decide the northern food co-op market isn't worth serving. The tenant has no recourse. When the community owns the platform outright — the data, the vocabulary, the codebase — the landlord is gone. In northern and Indigenous contexts, tool sovereignty is also cultural: the tools reflect the community's logic, not a product manager's assumptions about what 'normal' organisations look like.",
+      "steps": [
+        {
+          "id": "sot-1",
+          "prompt": "Name three things a SaaS vendor could do — without asking — that would break a community food system built on their platform."
+        },
+        {
+          "id": "sot-2",
+          "prompt": "What does 'owning the building' mean in practice? Not metaphorically — what does the board actually hold when the platform is theirs?"
+        },
+        {
+          "id": "sot-3",
+          "prompt": "Tool sovereignty is one expression of economic sovereignty. What is the connection? What does owning your tools protect that renting them does not?"
+        }
+      ]
+    },
+    {
+      "id": "saltbox-your-work",
+      "category": "Explain It",
+      "question": "What gets salted in the Saltbox before it leaves — and what happens to something that leaves before it's ready?",
+      "context": "The Saltbox is Zone 0 — the practitioner's own household, the most private space in the constellation. Salt preserves. Work done in the Saltbox is work on yourself: vocabulary-building, personal finances, deep practice, the Jar Kitchen. It has to cure before it can be offered outward. The Workbench, the Commons, and the Arc are built on what was prepared in Zone 0. Something that leaves the Saltbox before it's ready — vocabulary that isn't precise yet, a practice that hasn't been tested — won't survive the journey.",
+      "steps": [
+        {
+          "id": "sy-1",
+          "prompt": "What does 'salting' preserve? What quality does it protect that would otherwise be lost in transit or over time?"
+        },
+        {
+          "id": "sy-2",
+          "prompt": "What does something that left before it was ready look like — in your practice, specifically? Name an example. What got lost?"
+        },
+        {
+          "id": "sy-3",
+          "prompt": "What are you currently salting in your own Saltbox? What is it not ready to do yet — and what will tell you when it is?"
+        }
+      ]
+    },
+    {
+      "id": "explain-codetry-to-your-circle",
+      "category": "Explain It",
+      "question": "The tool name doesn't survive. The trade name does. How do you explain that gap — in under two minutes, without the book?",
+      "context": "The entry point for most people in your circle is the contrast: we normally name the tool ('we use QuickBooks for accounting'), Codetry names the trade ('we track every dollar through its natural destination'). When the tool changes, the tool name disappears. The trade name stays — it describes the practice, not the instrument. Most people have felt this gap without naming it: the moment a software migration wiped out everything that had been organised around the old tool's vocabulary. That is the opening.",
+      "steps": [
+        {
+          "id": "ectc-1",
+          "prompt": "Write it. Two minutes, no book terms — explain Codetry to your husband, a board member, or a band council contact as if the handbook doesn't exist."
+        },
+        {
+          "id": "ectc-2",
+          "prompt": "What is the one sentence — not paragraph — that everything else hangs from? The sentence that, if they get it, the rest follows?"
+        },
+        {
+          "id": "ectc-3",
+          "prompt": "What is the confused question you expect them to ask? ('Is this like...?') Write your answer — not the corrected version, the one that meets them where they are."
+        }
+      ]
+    }
+  ]
+}

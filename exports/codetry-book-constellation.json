@@ -1,0 +1,1181 @@
+{
+  "_meta": {
+    "exportedAt": "2026-06-18T23:19:11.664Z",
+    "section": "constellation"
+  },
+  "constellation": {
+    "version": "0.5.7",
+    "lastUpdated": "2026-05-05",
+    "grammar": {
+      "practice": "codetry — naming IS architecture (distinct from code-poetry)",
+      "zoneSystem": "permaculture 0–5",
+      "thunder": "there is no shortage of problems, but when we look for solutions it all becomes a little easier"
+    },
+    "principles": [
+      {
+        "id": "saltbox",
+        "name": "one bounded thing you can point at",
+        "statement": "A primitive names one bounded system with one specific job. The name holds across every zone, every season, every personnel rotation. It works from day one — empty and full, built and forming. The name is not a category label; it is the system itself.",
+        "workedExample": "Saltbox — named for the cold-climate vernacular house whose asymmetric roof and thick north wall were the only way a house survived a boreal winter. The form is the function. Every beam carries weight. A codetry app is named the same way: the name is the design spec, and changing it changes the structure underneath."
+      },
+      {
+        "id": "both-states",
+        "name": "the name has to hold both states",
+        "statement": "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+        "workedExample": "The Standby — the umbrella name had to hold both the always-on shelf (preparation, standby stock, the watch as a posture) and the active event (a call, an active rung, a debrief). Splitting into two names — say, *the Pantry* for the slow side and *the Call* for the fast side — would have produced two systems with two cultures. One word, two states."
+      },
+      {
+        "id": "both-sides",
+        "name": "the name has to hold both sides",
+        "statement": "When a system has language that has to live in two contexts that hold different vocabularies as legitimate, the umbrella name has to fit both contexts in one word, or the system will pick a dialect and lose the other room.",
+        "workedExample": "The Gate — the umbrella name had to hold both the *bright side* (the constellation's own dialect: neighbour, channel, the books, standby stock) and *the systems* (the outside world's dialect: resident, bank account, financial statements, inventory reserves). Splitting into two names — say, *Translator* for the bright-to-systems direction and *Importer* for the systems-to-bright direction — would have produced two pipes and no posture, with no record that both names exist for the same thing. One word, two contexts."
+      }
+    ],
+    "constellationWidePrimitives": [
+      {
+        "id": "the-standby",
+        "name": "The Standby",
+        "kind": "constellation-wide primitive",
+        "summary": "The umbrella system + always-on state for *temporary centralized disruptions* — drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down. One name that holds both the slow side (always-on preparation) and the fast side (active event).",
+        "hostZone": 3,
+        "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where centralized disruptions are felt collectively. The co-op shelf, the producer pipeline, the orders ledger are where the absence of freight, power, or staff lands first. Read by every zone.",
+        "vocabulary": [
+          {
+            "term": "the Standby",
+            "role": "the umbrella system + always-on state"
+          },
+          {
+            "term": "a call",
+            "role": "a specific active event (a fire call, a flood call, a freight call)"
+          },
+          {
+            "term": "the watch",
+            "role": "the active-monitoring posture between advisory and active — the sub-noun for the act of watching a developing situation"
+          },
+          {
+            "term": "standby stock",
+            "role": "the physical/operational reserves the always-on side maintains"
+          },
+          {
+            "term": "the debrief",
+            "role": "the after-action synthesis once a call has stood down"
+          },
+          {
+            "term": "centralized disruption",
+            "role": "the class of event the Standby is for — a temporary loss or strain of a centralized system the community depends on"
+          }
+        ],
+        "severityLadder": [
+          {
+            "rung": "advisory",
+            "meaning": "something is forming on the horizon; no posture change required, but the watch is informed"
+          },
+          {
+            "rung": "standby",
+            "meaning": "preparation is sleeved in; standby stock is verified; envelopes ready to flex"
+          },
+          {
+            "rung": "active",
+            "meaning": "a call is open; the system is responding; envelopes and rosters have flipped"
+          },
+          {
+            "rung": "standdown",
+            "meaning": "the call is closed; debrief opens; standby stock is replenished"
+          }
+        ],
+        "subShelves": [
+          {
+            "name": "The Common Pantry",
+            "role": "the food/supply sub-noun — the literal shelf inside the Standby that holds staples, water, fuel, medicine. Sub-noun, not replacement."
+          },
+          {
+            "name": "The Watch",
+            "role": "the active-monitoring sub-noun — the posture and the people doing the watching during advisory/standby rungs. Sub-noun, not replacement."
+          }
+        ],
+        "rejectedAlternatives": [
+          {
+            "name": "The Common Pantry (as the umbrella name)",
+            "reason": "Holds the slow side beautifully (a pantry is by definition always-on) but cannot hold an active fire call, an evacuation, or a payment-systems outage without straining the metaphor. A pantry is what you keep; the Standby is also what you do. The Pantry sits *inside* the Standby as the food/supply sub-shelf."
+          },
+          {
+            "name": "The Watch (as the umbrella name)",
+            "reason": "Holds the active-monitoring posture (the watch is active by definition) but cannot hold the slow shelf of standby stock without bending into something that sounds like a permanent vigil. The Watch sits *inside* the Standby as the active-monitoring sub-noun."
+          }
+        ],
+        "principle": "both-states",
+        "scope": "naming and filing only — no UI surface for tracking calls, watches, or debriefs is built on this pass. Future task once the vocabulary has been used in the field."
+      },
+      {
+        "id": "the-gate",
+        "name": "The Gate",
+        "kind": "constellation-wide primitive",
+        "summary": "A calm passage between the bright side and the systems. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable.",
+        "hostZone": 3,
+        "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where the community meets the legacy world — the co-op invoices a wholesaler, the producer signs a band council resolution, the Headwaters bookkeeper files with CRA. Sibling to The Standby (also Z3-hosted): both umbrella systems operate at the boundary where centralized systems and the community-controlled side touch. Read by every zone whose work has to leave the constellation in writing.",
+        "vocabulary": [
+          {
+            "term": "the Gate",
+            "role": "the umbrella system + always-on posture"
+          },
+          {
+            "term": "the bright side",
+            "role": "the codetry-vocabulary side; the constellation's own dialect"
+          },
+          {
+            "term": "the systems",
+            "role": "the outside world's side; the systems dialect (regulators, bankers, funders, lawyers, generic SaaS English)"
+          },
+          {
+            "term": "a mapping",
+            "role": "a registered correspondence between a bright-side term and its systems-side equivalent (e.g. neighbour → resident, send → remit, fee → service charge, money → funds)"
+          },
+          {
+            "term": "a substitution",
+            "role": "a single instance of a mapping being applied to a piece of crossing language"
+          },
+          {
+            "term": "a category",
+            "role": "the domain a mapping belongs to (Pragmatism, Politics, Regulations, Privacy, Banking, …); each category is a sub-shelf inside the Gate"
+          },
+          {
+            "term": "a translation",
+            "role": "a piece of language that has passed through the Gate in either direction; the auditable record of what crossed and what changed"
+          },
+          {
+            "term": "a calm membrane",
+            "role": "the metaphor doing the load — selectively permeable, alive, not a wall and not a wide-open door; the gate does work without picking a side"
+          }
+        ],
+        "severityLadder": [
+          {
+            "rung": "draft",
+            "meaning": "language has been written but not run past the Gate yet; no posture change required"
+          },
+          {
+            "rung": "under-review",
+            "meaning": "the Gate is reading the language; mappings are being proposed; the founder is in the loop"
+          },
+          {
+            "rung": "cleared",
+            "meaning": "the language has crossed; substitutions are logged; the translation is part of the record"
+          },
+          {
+            "rung": "refused",
+            "meaning": "the Gate declined to translate — usually because the bright-side noun has no honest systems-side equivalent and forcing one would lose the meaning the founder is trying to keep"
+          }
+        ],
+        "subShelves": [
+          {
+            "name": "Mappings",
+            "role": "the registered correspondences that the Gate carries — the dictionary side. Sub-noun, not replacement: a Mapping is what the Gate knows; the Gate is also what it does with what it knows."
+          },
+          {
+            "name": "Substitutions",
+            "role": "the applied-instance ledger — every time a mapping has been used, who used it, on what document, in which direction. Sub-noun, not replacement: substitutions are the Gate's history; the Gate is also its present."
+          },
+          {
+            "name": "Categories",
+            "role": "the domain shelves the mappings live on (Pragmatism, Politics, Regulations, Privacy, Banking, …). Sub-noun, not replacement: a category is where a mapping is filed; the Gate is the building all the categories sit in."
+          }
+        ],
+        "rejectedAlternatives": [
+          {
+            "name": "Translator",
+            "reason": "Holds the directional work but flattens the gate's posture into pure transaction — a translator processes; a gate decides whether to. Strips the calm-passage feel out of the metaphor."
+          },
+          {
+            "name": "Filter",
+            "reason": "Implies the Gate's job is to remove or block, which mis-frames the work — the Gate doesn't subtract, it relabels in flight while keeping both names on file. A filter chooses what gets through; the Gate chooses what the through-language is called on each side."
+          },
+          {
+            "name": "Censor",
+            "reason": "Carries punitive weight the metaphor refuses; the Gate is collaborative with the founder, not adversarial. A censor decides for you; the Gate proposes and lets the founder confirm."
+          },
+          {
+            "name": "Glossary",
+            "reason": "Holds the dictionary side (Mappings) beautifully but cannot hold the active posture of substituting in real documents, the ledger of past substitutions, or the refused-translation rung. A glossary is what you keep on a shelf; the Gate is the shelf plus the room plus the work happening in it."
+          }
+        ],
+        "principle": "both-sides",
+        "scope": "in-repo runnable surface lives at /gate inside artifacts/headwaters-books — a sibling route to /standby that reads this manifest verbatim for vocabulary, severity ladder (draft/under-review/cleared/refused), sub-shelves, and rejected alternatives, lets a real bright-side ↔ systems substitution be entered with category and direction, and persists the substitution ledger in the browser so it survives reload. The legacy surface at legacy-gatekeeper.replit.app is linked from the page footer for historical reference but is no longer the source of truth. Task #489 first landed the in-constellation home as a shell page that read this entry verbatim and linked out to the legacy surface; Task #478 then brought the runnable substitution surface fully in-repo at the same /gate route. The artifact-limit on this project ruled out a standalone artifacts/the-gate at this pass; if the limit is raised the page may move to a dedicated artifact without changing the manifest contract."
+      }
+    ],
+    "teachers": [
+      {
+        "name": "Jack Spirko",
+        "channel": "The Survival Podcast",
+        "tagline": "for if times get tough or even if they don't",
+        "url": "https://www.thesurvivalpodcast.com/"
+      },
+      {
+        "name": "Joel Salatin",
+        "channel": "The Lunatic Farmer",
+        "tagline": "frequent meditations on food and farming that bring a wise and humble conscience to practice, policy, and participation",
+        "url": "https://www.thelunaticfarmer.com/"
+      },
+      {
+        "name": "Nicole Sauce",
+        "channel": "Living Free in Tennessee",
+        "tagline": "build the life you choose on your terms",
+        "url": "https://www.livingfreeintennessee.com/"
+      },
+      {
+        "name": "Freedom Cells",
+        "channel": null,
+        "tagline": "peer-to-peer community organization, co-founded by Derrick Broze and John Bush",
+        "url": "https://freedomcells.org/"
+      },
+      {
+        "name": "Henry Cloud",
+        "channel": "Boundaries / Your Desired Future",
+        "tagline": "you cannot change what you do not own; you cannot build what you have not named",
+        "url": "https://www.drcloud.com/"
+      }
+    ],
+    "zones": [
+      {
+        "zone": 0,
+        "slot": "decentralized",
+        "name": "Saltbox",
+        "domain": "Decentralized homes — homeschool day companion, local-first per family",
+        "url": "https://salt-box.replit.app/",
+        "status": "live",
+        "workedExamples": [
+          {
+            "name": "Lock-In Wins",
+            "rule": "15 quiet minutes is enough to count. No MM:SS, no sound, no streak, no score. Lock-in is a state of attention, not a measured performance."
+          },
+          {
+            "name": "Gentle Words",
+            "rule": "6-line bank, ≤1×/day per surface; Deakon's voice ≤1×/week. Scarcity is the design — a line loses its weight when it's shouted daily."
+          },
+          {
+            "name": "Brave Moments",
+            "rule": "Amber Shield, one-tap capture from Home; surfaced per-child in seasonal Family Recap. Courage is named, kept, and surfaced — never scored."
+          },
+          {
+            "name": "Quote of the Day",
+            "rule": "Deterministic per calendar date; rotates next morning. The quote rests with the day."
+          },
+          {
+            "name": "Live Follow-Along",
+            "rule": "Opt-in only, passphrase as header (X-Share-Pass), lock-in count excluded from share payload. Privacy is the default posture, not a setting."
+          },
+          {
+            "name": "Per-child Goals + tips",
+            "rule": "Goal lives with the child, the tip meets them where they are. No streaks, no leaderboards. (Goals row in flight: #175 milestone badges, #176 starter-goal suggestions, #177 stalled-goal nudge — Z0 agent will send a delta before this row locks.)"
+          }
+        ],
+        "standby": "Reads The Standby (constellation-wide primitive) as the household standby checklist — a per-family list mirroring the co-op's standby stock list, item for item, so the household side of a centralized disruption is named with the same vocabulary the co-op uses. Same rungs (advisory / standby / active / standdown), same nouns (a call, the watch, the debrief).",
+        "opening": "Sitting on the deck with the morning sun and a cup of black coffee. Getting cold, but that's nothing new. Watching the children play outside — and then all of a sudden there's a moment. There's always a beautiful moment to capture. A moment where we wonder: will this ever cross my mind again? Will they remember? Saltbox is the reminder of the things that are true and unshakeable. The sunny moments that make the boreal winters worth bearing. The spring days when the outdoors is the parent and we can just enjoy documenting the ride.\n\nThe no-scoring rule comes from this: a measure of a fish's worth cannot be how well it can climb a tree. We each have our individual strengths, and when channeled, those strengths allow a waterfall of value that was never dammed. With a proper saltbox, the children grow brave in their own time — and the dams that don't need breaking down the line are the fruit of that patience.\n\nZone 0 holds both the family on the land and the elder in the care home. They are just homes in different stages, and they deserve the same value placed on their life stage.",
+        "inlinePrompt": "What moment from this week would you regret losing? Name it before the day ends.",
+        "reflections": [
+          "What are the things that are true and unshakeable in your household right now?",
+          "Where are you measuring a fish by how well it climbs a tree?",
+          "What would it look like to let someone grow brave in their own time instead of pushing the pace?",
+          "What were you handed by the generations before you in this household — and what are you handing forward to the ones who will sit in this kitchen after you?",
+          "What does this household look like three generations from now — and is anything you are building today pointed at that?"
+        ]
+      },
+      {
+        "zone": 1,
+        "name": "Kitchen Table",
+        "domain": "Non-custodial XRPL stablecoin envelope-budgeting installable web app (PWA) — household balance is the source of the watershed",
+        "url": "https://x-buckets-vision.replit.app/",
+        "status": "live",
+        "formerNames": [
+          "xBuckets",
+          "Watershed",
+          "Headwaters",
+          "Eave"
+        ],
+        "formerNamesNote": "Watershed was an earlier product name for xBuckets before Edge (formerly The Margin) existed as a separate zone. The name was retired as a product identifier but its metaphor — diversified income streams, flow not restriction — is retained as active concept language in Zone 1. The Zone 5 app (watershed.replit.app) inherited the name as an infrastructure artifact of that earlier period; the conceptual separation is now resolved. Watershed belongs to Zone 1.",
+        "tagline": "Channel every drop. Nothing from nowhere.",
+        "workedExamples": [
+          {
+            "name": "Eave",
+            "rule": "the eave is the first shelter outward from the household — the immediate circle of trust that catches what the household cannot hold alone. Rename to 'Network' and you lose the constraint that this zone is built on invitation, not open access; every downstream zone flows from that boundary being held."
+          },
+          {
+            "name": "Buckets",
+            "rule": "envelope categories. You can only pour from one bucket into another; never summon water from nothing. Every transfer is a literal redistribution. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking. Per Test 005, 'cistern' was retired in favour of Bucket — the Earn surface had been calling savings envelopes 'cisterns' in violation of the locked Eave word map."
+          },
+          {
+            "name": "XRP Spring",
+            "rule": "savings, defined as free XRP above the 10-XRP network reserve. A spring upwells from below the reserve floor; the user sees what's pooled above the rock. The new six-stage bamboo growth scene (just shipped, #793) extends the metaphor from data model into artwork — same constraint, now visible."
+          },
+          {
+            "name": "Drip Harvester",
+            "rule": "two senses, both held by Test 008's resolution. As a noun: an earner wallet that holds RLUSD before it is parked in a Lake — the station between Reservoir and Private Lake on the Earn flow ribbon. As a verb: the move that drips Lake earnings into a Bucket once a sweep threshold is reached. The verb 'harvest' carries patience and seasonality; 'Auto-Compound' would have erased both."
+          },
+          {
+            "name": "Community Well",
+            "rule": "monthly pooled tips that round-distribute to community proposals. A well everyone draws from and contributes to; the monthly snapshot/round cycle is the well refilling."
+          },
+          {
+            "name": "Giving Well",
+            "rule": "user-to-user tip pool for charitable giving. Same well metaphor at the household scale."
+          },
+          {
+            "name": "Surplus Pool",
+            "rule": "where Payday overflow goes once envelopes are full. Pool, not 'extra savings account' — water seeking level. (In flight: #794)"
+          },
+          {
+            "name": "Payday Planner",
+            "rule": "the moment the spring refills. Allocation flow follows water's priority order: must-pay buckets first, then comfort buckets, then Surplus Pool, then giving."
+          },
+          {
+            "name": "Rainfall",
+            "rule": "income arriving this payday — paycheck plus side gig combined, before anything is taken out. The act of arriving, not the leftover; the leftover is the Reservoir."
+          },
+          {
+            "name": "Siphon",
+            "rule": "auto-bills drawn out of the rainfall before it reaches the Reservoir. The locked verb for money leaving rainfall before it reaches the wallet — replaces 'bank' wherever it had crept in (Test 001 Sighting 1)."
+          },
+          {
+            "name": "Reservoir",
+            "rule": "the stablecoin wallet — what's left after the Siphon. The locked noun for the wallet itself; the field name in code is `reservoirLabel`, no longer `masterBucketLabel`. The wallet/XRP-swap chip honours this lock end-to-end after Tests 009 and 010."
+          },
+          {
+            "name": "Channel (verb)",
+            "rule": "distributing the Reservoir into named Buckets — the act of 'every drop into a bucket'. Reserved for Reservoir → Bucket only; the Bridge sheet uses 'Bridge' for above-cap transfers, the Drainage lesson uses 'Drainage' for debt payoff, and the Drip Harvester uses 'drip' for Lake → Bucket."
+          },
+          {
+            "name": "Cloud Cover",
+            "rule": "compound interest — the weather that keeps producing rain. Separated from the vehicle (Glacier) where it happens; the lesson formerly called 'Compound Rainfall' was re-named to introduce both nouns explicitly."
+          },
+          {
+            "name": "Rain Barrel",
+            "rule": "emergency fund — the short-term reserve for surprises. The first layer of the Aquifer ladder; the daily drops about not draining the emergency fund were re-pointed from 'Reservoir' to 'Rain Barrel' to honour Test 002's lock."
+          },
+          {
+            "name": "Aquifer",
+            "rule": "long-term savings — the deep reserve that fills slowly. The 3–6 month layer of the savings ladder; replaces 'Reservoir' wherever the lessons were using it for long-term savings."
+          },
+          {
+            "name": "Glacier",
+            "rule": "tax-advantaged accounts (RRSP, TFSA) — savings the tax authority leaves alone. The vehicle Cloud Cover compounds inside; named explicitly so compounding (the weather) is no longer conflated with where it happens (the vehicle)."
+          },
+          {
+            "name": "Watershed",
+            "rule": "diversified income streams — one fragile stream becomes many resilient ones. Distinct from the former xBuckets product name 'Watershed' (still active at the URL/storage layer); here the noun refers to multiple income streams the household draws from. 'Three is a Watershed' replaces 'Three is a reservoir' across the side-income card and daily drops."
+          },
+          {
+            "name": "Bridge (verb)",
+            "rule": "above-tap-cap transfers — the Abundance Bridge sheet. The locked verb for transfers that exceed the daily cap; the Bridge sheet was rewritten to use 'Bridge this rainfall' / 'Bridge this →' / 'Bridged across' instead of 'Channel', preserving Channel for Reservoir → Bucket only."
+          },
+          {
+            "name": "Public Lake",
+            "rule": "regulated / credit-union yield product — the advisor-mode Earn destination. Half of the Park-rename pair (Public Park / Private Park were renamed to Public Lake / Private Lake by Task #849 so the destination sits cleanly inside the watershed metaphor)."
+          },
+          {
+            "name": "Private Lake",
+            "rule": "DeFi liquidity pool — the enthusiast-mode Earn destination, self-custody. The Earn flow ribbon's third station after Reservoir and Drip Harvester; replaces 'AMM pool' / 'liquidity pool' on every user-facing surface (Test 005)."
+          },
+          {
+            "name": "Lake current",
+            "rule": "the small fee paid into a Public/Private Lake each time a swap flows through it; the Drip Harvester's earnings are its share of those currents. Renamed from 'Park toll' by Task #849; the metaphor is that water flows through channels, collects in your Lake, and Currents from the Lake drip back into your Buckets."
+          },
+          {
+            "name": "Fill (verb)",
+            "rule": "the act of putting idle RLUSD into a Lake. Renamed from 'park' by Task #849 — the Earn surface used 'park' as the verb for moving RLUSD into an LP; 'fill' brings the verb inside the water register and removes the last instance of 'park' from any Eave surface (decision logged in Test 002, Task #851)."
+          },
+          {
+            "name": "Drainage",
+            "rule": "debt payoff — the opposite move from Channel. The locked noun for paying down debt; the lesson formerly called 'Debt Channeling' was renamed 'Debt Drainage' so 'Channel' could be reserved for Reservoir → Bucket only (Test 002)."
+          },
+          {
+            "name": "Park toll",
+            "rule": "the swap fee a Park collects when someone exchanges through it; the Drip Harvester's earnings are its share of those tolls. Coined in Test 005 as the new noun replacing 'fee per swap' / 'trading fees' on the Earn surface — later renamed to 'Lake current' by Task #849 when the Park metaphor itself was renamed to Lake. Recorded here as the original sanctioned noun from Test 005's vocabulary sweep."
+          },
+          {
+            "name": "Scaffolding pretending to be engine",
+            "rule": "Roughly 600 lines of procedural-music machinery — kick/snare scheduler, synth functions, chord timeline, LFO, music bus, per-scene chord-morph effect — sat behind ENABLE_PROCEDURAL_MUSIC = false for months in the Headwaters promo video's audio file, shaping how the file read and what future contributors thought the system did. Named as 'feature behind a flag' it was untouchable; named honestly as scaffolding pretending to be engine, it could be deleted, and ambient-audio.ts collapsed from 933 lines to ~330 with no change in runtime behavior. A flag that has been off long enough to forget why it was added is not a feature toggle — it is a name lying about the system's intent, and the honest move is to delete it."
+          }
+        ],
+        "standby": "Reads The Standby as a standby budget envelope that sleeves up automatically during an active call — drought routes a water-cost envelope, fire routes a supply-cost envelope, freight routes a stockpile-cost envelope. Channel/Bridge verbs already model the flex; Standby gives the trigger language.",
+        "opening": "The word \"budget\" evokes restriction, tightening. \"Watershed\" invokes flow, abundance. That difference is not cosmetic — it changes what the person holding the tool believes is possible before they touch a single number.\n\nThe Siphon is the bill that leaves before you see the money. But the siphon isn't permanent. You choose the size of it. You can reduce those bills, downgrade the lifestyle, make pivots. You ultimately control it — which is the opposite of what the word \"expense\" implies.",
+        "inlinePrompt": "Pick one name in this zone and try to rename it. What cracks?",
+        "reflections": [
+          "What in your financial life feels like restriction — and what would it feel like as flow instead?",
+          "Where is your siphon larger than you chose it to be?",
+          "What would it mean to channel every drop on purpose this week?",
+          "Is the way your household earns and spends today something you would want your great-grandchildren to inherit as normal — or is it a pattern worth interrupting now?",
+          "What financial pattern has been passed down through your family for two or three generations — and does it deserve to continue?"
+        ]
+      },
+      {
+        "zone": 2,
+        "name": "Workbench",
+        "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, synthesis across all the zones",
+        "url": "https://northern-store-plan.replit.app/codetry-handbook/",
+        "status": "live (you are here)",
+        "workedExamples": [
+          {
+            "name": "Today / Week / Year",
+            "rule": "time-shape not feature-shape. The same data — phases × weeks × steps — surfaces three ways depending on the time-window the practitioner is standing in. 'Dashboard' would have flattened them."
+          },
+          {
+            "name": "Idea → Pitch → Contract → Fulfillment → Impact",
+            "rule": "deal-flow as the spine the slide deck is re-spined around (src/lib/phases.ts). The phase IS where the practitioner currently is, and the deck reorders around that phase. Renaming to 'stages' would let the deck go static again."
+          },
+          {
+            "name": "Cost review walkthrough",
+            "rule": "~70 dollar figures registered in costRegistry.ts with rank order. Walked one-at-a-time, Approve/Edit/Skip + private notes. Not 'settings' — a discipline that gets done, like a pre-flight check."
+          },
+          {
+            "name": "Carry-over",
+            "rule": "unfinished steps from past weeks roll forward as 'Carried over' on Today (not 'Overdue,' not 'Tasks'). Honest about time having passed without making it punitive."
+          },
+          {
+            "name": "Codetry (this doc)",
+            "rule": "the version-controlled paper trail of the practice. Renaming to 'Design system' would erase that codetry is the practice naming itself."
+          }
+        ],
+        "standby": "Reads The Standby as the cross-zone synthesis the workbench is for — standby debriefs surface here as a recurring weekly-steps item once a call has stood down. The workbench keeps no live call state; it keeps the after-action read across zones.",
+        "opening": "\"Founder\" feels odd. You don't found a community — you practice within it. You join to help. You have the phone calls, take the actions, practice listening. We practice these things because we know we need to. Crafting all day is what makes life that extra bit sweeter.\n\nThis is not a founder's dashboard. It is a practitioner's workbench — the place where the week is planned, the costs are walked, and the work is kept honest against what was said it would be.",
+        "inlinePrompt": "What are you practicing this week that you weren't practicing a year ago?",
+        "reflections": [
+          "Where are you still using the language of a founder when you mean the work of a practitioner?",
+          "What step have you been carrying over longest — and what would it mean to set it down instead of forward?",
+          "Who in the community did you listen to this week?",
+          "Is the practice you are building something you would want a grandchild to inherit — not the business, the way of working?",
+          "What will be different in this community in fifty years if this practice continues — and is that the difference you intend?"
+        ]
+      },
+      {
+        "zone": 3,
+        "name": "Greenhouse",
+        "domain": "Community production for NWO food systems — multi-tenant member-portal pattern",
+        "url": "https://community-knowledge-hub.replit.app/",
+        "status": "live",
+        "memberFacingBrand": "807 Benefits",
+        "workedExamples": [
+          {
+            "name": "'Today I…' verbs as routing primitive",
+            "rule": "the library front door isn't a menu of features; it's a shelf of verbs the member picks based on what today asks for (Today I cook & preserve / gather / order / learn / trade / help). The verb is the route, the photo-tile is the chapter cover, the cream recipe-card label sits on the photo. Audience (household vs producer) swaps which shelf you're looking at."
+          },
+          {
+            "name": "Library of recipe books",
+            "rule": "audience-aware shelves of 8–12 themed stacks. Stacks = chapters, audience choice = which book. Visual recently caught up to metaphor — tiles read as printed recipe cards on a photo. Two-column on phones (a paired spread), three-column on desktop."
+          },
+          {
+            "name": "Treasurer Calm Monthly Journey",
+            "rule": "'Calm' is the contract, not a vibe. Confidence meter + per-treasurer lookahead preference (off / 1 / 2 / 3 days) + 14-day snooze-expiry outline + email digest + in-app banner. Treasurers plan ahead instead of reacting."
+          },
+          {
+            "name": "Dues snooze as primary verb",
+            "rule": "treasurers don't 'defer' or 'pause' a dues line — they snooze it, and the system auto-wakes them with a digest tied to (recipient, lineItem, snoozedUntil). The verb dictates the behavior (something will wake you), not the other way around."
+          },
+          {
+            "name": "Stuck Board",
+            "rule": "cross-domain aggregator at /admin/stuck and /board-hub/stuck. Pulls aging items from member onboarding, producer pipeline, outstanding dues, partner/grant sync errors, open grants, and marketplace seller replies into one owner-tagged view with last-touch timestamps. The name is the spec: things get stuck → the board surfaces them."
+          },
+          {
+            "name": "Producer Playbook",
+            "rule": "sequenced markdown chapters producers work through, surfaced as list/detail with mailto CTAs back to the co-op. Playbook = ordered plays, not a wiki."
+          },
+          {
+            "name": "NOHFC Grow Application Workspace",
+            "rule": "single-grant focused workspace at /applications/nohfc-grow-stream (lives in the Grants Finder artifact). Five tabs (eligibility, sections, budget, attachments, submission packet), deadline countdown, one-click switch to July 31 intake on a not-eligible verdict. Deliberately not a generalized grant form-builder — the grant is the unit of work."
+          },
+          {
+            "name": "Audience chooser as structural pivot",
+            "rule": "signed-out visitors choose household vs producer; the choice persists in localStorage (807.audience.v1) and changes which library, which CTAs, and which dashboard cards render. One pivot, two products."
+          },
+          {
+            "name": "Board hub as cluster of role rooms",
+            "rule": "/board-hub/{chair, treasurer, secretary, director, operations, distribution, agm, training, applications, drive-map, social-ideas, cashflow-budget, onboarding, stuck, orders} — each role gets its own room rather than a single admin dashboard. The role IS the room."
+          },
+          {
+            "name": "Tenant seam",
+            "rule": "tenant.headerProductLabel, tenant.legalName, board contact routing in api-server/src/config/board.ts — anywhere the app would say the co-op name goes through the seam. The seam is what makes the Commons zone a pattern for community production, not a one-off for Dryden."
+          },
+          {
+            "name": "Kitchen rental kept quiet",
+            "rule": "public marketing has zero kitchen-rental promotion; /partners/kitchen-rental exists as a 'borrow equipment for community programs' page that still POSTs the same inquiry route. The naming carries the policy: it's borrowing, not renting."
+          },
+          {
+            "name": "Appreciation Wall / 'help' stack",
+            "rule": "members pin thank-you notes to other members. A first-class surface, not a footer widget — gratitude has its own room because the system says it matters."
+          }
+        ],
+        "standby": "Host zone for The Standby. Centralized disruptions (drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down) are felt collectively here first — at the co-op shelf, the producer pipeline, the orders ledger. Call history is the record kept here; standby stock is the inventory primitive; The Common Pantry is the food/supply sub-shelf; The Watch is the active-monitoring sub-noun.",
+        "opening": "Treasurer is the job nobody wants. Some try and fail; a few do well. It is a big commitment for a volunteer organization, and this generation does not have the same bookkeeping skills that the last one had. Nobody wants to step up because they do not want to mess up.\n\nThe answer is not to lower the standard — it is to make the job fail-safe, stress-free, and easy as pie for the people willing to take it on. Calm is the contract. The name is not a vibe; it is a promise the system makes to the person who was brave enough to say yes.",
+        "inlinePrompt": "What job in your community has gone unfilled because it felt too risky to get wrong?",
+        "reflections": [
+          "Where in your organization is bravery being asked for without a safety net underneath it?",
+          "What would change if the hardest volunteer job was also the most supported one?",
+          "Who said yes to something difficult recently — and did they hear that it was noticed?",
+          "Who in this community is making decisions as if they will be held accountable by people not yet born — and what does that look like in practice?",
+          "What does a thriving version of this commons look like in 175 years — and what has to be true today for that to be possible?"
+        ]
+      },
+      {
+        "zone": 4,
+        "name": "Clearing",
+        "domain": "Conventional → regenerative track for industries — multi-year, sector-scale; current sector is regen beef in NWO",
+        "url": "https://regen-revolution-zone-4.replit.app/",
+        "status": "live (v0.1 anchor shipping)",
+        "workedExamples": [
+          {
+            "name": "Per-customer share split",
+            "rule": "replaced 'cut sheet management' as the v0.1 centerpiece. Pre-Jude strawman optimized a symptom; the real work was the math after the kill — 6-14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move."
+          },
+          {
+            "name": "Don't fix my book",
+            "rule": "Jude's line. Dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) REMOVED a feature."
+          },
+          {
+            "name": "Failures land on the tool, not on her",
+            "rule": "Black Barn's tone note. Now an architectural constraint on every error state — operator-protective copy, not generic 'something went wrong'."
+          },
+          {
+            "name": "Make it easier for Jude to say no",
+            "rule": "Lisa Koshel's add. A v0.1 design principle, not a feature: scope-creep guards, lock-date enforcement, no-button-that-just-absorbs-pain."
+          },
+          {
+            "name": "OMAFRA traceability as byproduct",
+            "rule": "the animal record was designed so the regulator's log falls out for free. Naming it 'byproduct' prevented a parallel ledger from being built."
+          },
+          {
+            "name": "Estimate → actual → variance loop",
+            "rule": "Jude records real packaged weights; the same UI that showed '≈' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent."
+          },
+          {
+            "name": "Pre-zone parked thread",
+            "rule": "'Homestead-sitter / childcare app for farm families' — discovered during Black Barn discovery, deliberately not absorbed into Z4. Parked as a scratch thread; probably Z0 or Z5 when it finds a home."
+          }
+        ],
+        "standby": "Reads The Standby as sector-level standby modeling — which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Jude herself. Sector → call → first-touched node is the modeling unit.",
+        "opening": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
+        "inlinePrompt": "Which thread in your operation are you the only one holding right now?",
+        "reflections": [
+          "Where is the ball of yarn closest to unraveling — and what would it take to add one more pair of hands?",
+          "What do you call what you do? Not what the movement calls it — what you call it.",
+          "What would systematic look like for one part of your operation this season?",
+          "Is the land in this sector producing more or less life than it was seven generations ago — and which direction are you pointed?",
+          "What would this sector look like if every decision made in it for the last 175 years had been made with the seventh generation in mind — and how far is today from that?"
+        ]
+      },
+      {
+        "zone": 5,
+        "name": "Edge",
+        "domain": "Wild / observation — private capture (takes) with structured channel-out and opt-in float to the Shallows",
+        "url": "https://conversation-log.replit.app/",
+        "status": "live",
+        "formerNames": [
+          "The Margin"
+        ],
+        "workedExamples": [
+          {
+            "name": "The rebrand without a rewrite",
+            "rule": "The Zone 5 app was deployed as watershed.replit.app before The Margin existed as a zone name. When the rename happened, it touched display strings, prose, and the Forge prompt — not chapter IDs, storage keys, or schema. The codetry test: change the name, did the structure survive? Yes — because the structure was the metaphor underneath the name. The URL stayed watershed.replit.app; the concept Watershed moved to Zone 1 where it always belonged."
+          },
+          {
+            "name": "Slowly at first, then all at once",
+            "rule": "Same line lives on the home page (web), the book cover (screen reader), and the print PDF. One epigraph, three surfaces, identical bytes."
+          },
+          {
+            "name": "Typos as fingerprints",
+            "rule": "The Forge system prompt mandates verbatim artifact preservation. The book that gets generated quotes the user's own typos back at them as evidence. The metaphor 'every drop is sacred' is implemented as // preserve typos, casing, weird spacing."
+          },
+          {
+            "name": "The Shallows handle",
+            "rule": "A user posts anonymously; their pseudonym in that thread is stable; in another thread they're someone else. The 'depths below the shallows' framing is literally the session-hash one-way derivation."
+          }
+        ],
+        "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in Edge unless its author chooses to float it. The Standby gives the chapter hint.",
+        "opening": "A dam day is a day without rhyme or reason — where a spark was lit and a fire burst forth. It may be a creative hyperfocus, or a day that required a shift of energy that no constellation can contain. Dam days are fleeting. But there are gems worth harnessing in them — they may just be covered in muck.\n\nThe Shallows is where you clean them off. Not every take becomes something. But the practice of catching it before it disappears is the whole discipline.",
+        "inlinePrompt": "What was the last dam day you had — and what did you catch from it before it passed?",
+        "reflections": [
+          "What is sitting in the muck right now that might be worth cleaning off?",
+          "How do you know when a day is a dam day versus a day that just got away from you?",
+          "What would it mean to trust the dam day instead of fighting it?",
+          "Which ideas in your margin are too big for your lifetime — and does that make them worth keeping or worth letting go?",
+          "What would you want the seventh generation after you to know you were trying to do — and does anything you captured today point at that?"
+        ]
+      }
+    ],
+    "preZone": [
+      {
+        "zone": -1,
+        "name": "Brainstorm Library",
+        "domain": "Seed bank — ideas before they're sorted into a zone",
+        "url": "https://replit.com/@xbucketsapp/Brainstorm-Library?s=app",
+        "status": "pending",
+        "context": "awaiting agent context-pack",
+        "opening": "Think of it as a volunteer seed. One that fell from last year's harvest and found a little water and sunshine on its own. Not a parking lot — ideas parked don't grow. Not a curated library — you don't browse volunteer seeds; you notice them. If cultivated, who knows what they could become?",
+        "inlinePrompt": "What idea have you been walking past for months that might just be waiting for the right season?",
+        "reflections": [
+          "What is sitting in your seed bed right now that you have not yet named?",
+          "When did an idea that had no zone find its place — and what gave it the opening?",
+          "Which seed in this bed is not for you — it is for someone two generations forward who will know exactly what to do with it?"
+        ]
+      }
+    ],
+    "z3": {
+      "zone": 3,
+      "name": "Greenhouse",
+      "memberFacingBrand": "807 Benefits",
+      "standby": "Host zone for The Standby. Centralized disruptions (drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down) are felt collectively here first — at the co-op shelf, the producer pipeline, the orders ledger. Call history is the record kept here; standby stock is the inventory primitive; The Common Pantry is the food/supply sub-shelf; The Watch is the active-monitoring sub-noun."
+    }
+  },
+  "ZONE_AUTHOR_ENTRIES": [
+    {
+      "id": "z0",
+      "name": "Saltbox",
+      "subtitle": "Zone 0 · the household · where everything flows from",
+      "prompts": [
+        {
+          "id": "z0-01",
+          "question": "What is Saltbox, in your own words — not the description, the real thing?",
+          "hint": "Skip the tech. What does it do for your family on an ordinary Tuesday?"
+        },
+        {
+          "id": "z0-02",
+          "question": "How did the jar kitchen start?",
+          "hint": "Was there a surplus? A specific season? A moment when you decided this was how you’d live?"
+        },
+        {
+          "id": "z0-03",
+          "question": "What does the seasonal shelf teach your kids that school can’t?",
+          "hint": "This can be one thing. It doesn’t have to be a list."
+        },
+        {
+          "id": "z0-04",
+          "question": "What was breaking down before Saltbox existed — what were you trying to do that had no right tool?",
+          "hint": "The problem that made this necessary."
+        },
+        {
+          "id": "z0-05",
+          "question": "What does Zone 0 feel like when it’s running well?",
+          "hint": "A season, a morning, a smell. Something specific."
+        },
+        {
+          "id": "z0-06",
+          "question": "What would someone misunderstand about this zone if they only read the description?",
+          "hint": "What does the data not capture?"
+        }
+      ]
+    },
+    {
+      "id": "z1",
+      "name": "Kitchen Table",
+      "subtitle": "Zone 1 · kitchen table · envelope budgeting · the household source",
+      "prompts": [
+        {
+          "id": "z1-01",
+          "question": "Why couldn’t you just use YNAB, Mint, or any other budget app?",
+          "hint": "What did they all get wrong — not technically, but in what they assumed about how you live?"
+        },
+        {
+          "id": "z1-02",
+          "question": "What does “the household balance is the source of the watershed” mean on a real Tuesday?",
+          "hint": "Put it in your own words. Not the chapter. The actual feeling when the system is working."
+        },
+        {
+          "id": "z1-03",
+          "question": "When did you know the water metaphor was doing real work and not just decoration?",
+          "hint": "Was there a moment — a conversation, a pay day, a decision — where you felt the metaphor holding weight?"
+        },
+        {
+          "id": "z1-04",
+          "question": "What’s the difference between a Bucket and a category?",
+          "hint": "Not the definition. The difference in how you behave when you think in each one."
+        },
+        {
+          "id": "z1-05",
+          "question": "What does XRPL give this that a regular bank account doesn’t?",
+          "hint": "In plain language — no crypto jargon."
+        },
+        {
+          "id": "z1-06",
+          "question": "What would be lost if you called it “Budget App” instead of Headwaters?",
+          "hint": "Say this like you’re explaining it to someone who asked why the name matters."
+        }
+      ]
+    },
+    {
+      "id": "z2",
+      "name": "Workbench",
+      "subtitle": "Zone 2 · the workbench · you are here",
+      "prompts": [
+        {
+          "id": "z2-01",
+          "question": "What’s the difference between running a practice and running a startup?",
+          "hint": "This is the zone where you work. What makes it a practice and not a business?"
+        },
+        {
+          "id": "z2-02",
+          "question": "What does the week-card ritual actually do for you?",
+          "hint": "Not what it’s supposed to do. What it actually does when you sit down with it."
+        },
+        {
+          "id": "z2-03",
+          "question": "What does codetry protect that a business plan would erase?",
+          "hint": "If someone handed you a standard business plan template to fill out, what would be missing that matters?"
+        },
+        {
+          "id": "z2-04",
+          "question": "What does it mean that this is the zone where the names get decided?",
+          "hint": "You’re the practitioner. You’re the one who says what things are called. What is that responsibility like?"
+        },
+        {
+          "id": "z2-05",
+          "question": "What does this workbench look like on its best morning?",
+          "hint": "Walk through it. What’s open, what’s working, what’s clear."
+        }
+      ]
+    },
+    {
+      "id": "z3",
+      "name": "Greenhouse",
+      "subtitle": "Zone 3 · greenhouse · community production",
+      "prompts": [
+        {
+          "id": "z3-01",
+          "question": "How did the 807 co-op actually start — what was the original problem?",
+          "hint": "Before the system existed. What were people doing, and what wasn’t working?"
+        },
+        {
+          "id": "z3-02",
+          "question": "What does community production mean to you — not the definition, the feeling?",
+          "hint": "When it’s working, what does it look like from inside?"
+        },
+        {
+          "id": "z3-03",
+          "question": "What’s the hardest thing about running a food co-op in Northwestern Ontario?",
+          "hint": "Geography, weather, supply chains, people, trust — whatever is actually hard."
+        },
+        {
+          "id": "z3-04",
+          "question": "When a neighbour walks through the door, what are they actually walking toward?",
+          "hint": "Not the product. The relationship, the thing you’ve built together."
+        },
+        {
+          "id": "z3-05",
+          "question": "What would be lost if you called members “residents” instead of “neighbours”?",
+          "hint": "What changes when the word changes?"
+        },
+        {
+          "id": "z3-06",
+          "question": "What does the treasurer’s calm monthly journey protect — for the treasurer, and for the co-op?",
+          "hint": "Why does the calm matter? What was happening before?"
+        }
+      ]
+    },
+    {
+      "id": "z4",
+      "name": "Arc",
+      "subtitle": "Zone 4 · the arc · in motion",
+      "prompts": [
+        {
+          "id": "z4-01",
+          "question": "Why abattoir capacity — why is that the chokepoint and not land, customers, or knowledge?",
+          "hint": "Explain this the way you’d explain it to a farmer who doesn’t know what Zone 4 is."
+        },
+        {
+          "id": "z4-02",
+          "question": "What does “conventional to regenerative” look like when you can see it happening in a field?",
+          "hint": "Not the theory. The actual change — what do you see, smell, observe?"
+        },
+        {
+          "id": "z4-03",
+          "question": "Who is Jude, and what does it mean that she’s the pilot operator?",
+          "hint": "Tell me about the person. Why her, why now, why CCM?"
+        },
+        {
+          "id": "z4-04",
+          "question": "What does a farmer’s path to transition actually look like — the steps, the risks, the fears?",
+          "hint": "Walk me through it from the farmer’s side."
+        },
+        {
+          "id": "z4-05",
+          "question": "What would this zone look like if the abattoir capacity problem were solved — what comes next?",
+          "hint": "You can look five years out here."
+        }
+      ]
+    },
+    {
+      "id": "z5",
+      "name": "Edge",
+      "subtitle": "Zone 5 · edge · private first, shared by choice",
+      "prompts": [
+        {
+          "id": "z5-01",
+          "question": "What’s a take in Edge — not the definition, a real one you remember keeping?",
+          "hint": "Describe a specific take. What you noticed, what made you write it down."
+        },
+        {
+          "id": "z5-02",
+          "question": "Why “dam” — what’s being held back, and why is the holding back the point?",
+          "hint": "Not the rebrand story. The metaphor. What does a dam do that matters here?"
+        },
+        {
+          "id": "z5-03",
+          "question": "What’s the difference between a thought staying in Edge and floating to the Shallows?",
+          "hint": "What makes you choose to share? What makes you keep something private?"
+        },
+        {
+          "id": "z5-04",
+          "question": "What have you learned about yourself from keeping a record this way?",
+          "hint": "Not what the app does. What the practice has taught you."
+        },
+        {
+          "id": "z5-05",
+          "question": "What’s the relationship between Edge and the rest of the constellation?",
+          "hint": "It’s Zone 5 — the outermost zone. What does that position mean?"
+        },
+        {
+          "id": "z5-06",
+          "question": "What would be lost if you made Edge public by default?",
+          "hint": "Why does privacy-first matter for this kind of thinking?"
+        }
+      ]
+    }
+  ],
+  "DAILY_DRIVER_SCHEMA": {
+    "GOAL_KIND_LABELS": {
+      "offer": "Offer or product",
+      "target": "Financial target",
+      "creative": "Creative project",
+      "habit": "Daily habit or pattern",
+      "community": "Community or team goal"
+    },
+    "GOAL_KIND_DESCRIPTIONS": {
+      "offer": "Build something to sell or trade",
+      "target": "Hit a specific number or milestone",
+      "creative": "Make something that didn't exist before",
+      "habit": "Change how you show up day to day",
+      "community": "Move something forward with other people"
+    },
+    "HORIZON_LABELS": {
+      "done": "The finish line",
+      "3mo": "Three months out",
+      "1mo": "One month out",
+      "2wk": "Two weeks out",
+      "today": "This week"
+    },
+    "UNIVERSAL_STEPS_BEFORE": [
+      {
+        "id": "kind",
+        "eyebrow": "WHAT KIND",
+        "question": "What kind of goal is this?",
+        "hint": "Be honest — this shapes every question that follows.",
+        "kind": "choice",
+        "field": "kind",
+        "choices": [
+          {
+            "value": "offer",
+            "label": "Offer or product",
+            "description": "Build something to sell or trade"
+          },
+          {
+            "value": "target",
+            "label": "Financial target",
+            "description": "Hit a specific number or milestone"
+          },
+          {
+            "value": "creative",
+            "label": "Creative project",
+            "description": "Make something that didn't exist before"
+          },
+          {
+            "value": "habit",
+            "label": "Daily habit or pattern",
+            "description": "Change how you show up day to day"
+          },
+          {
+            "value": "community",
+            "label": "Community or team goal",
+            "description": "Move something forward with other people"
+          }
+        ]
+      },
+      {
+        "id": "name",
+        "eyebrow": "NAME IT",
+        "question": "What do you call this?",
+        "hint": "Short is fine — a working title you'll refer back to.",
+        "kind": "text-sm",
+        "field": "name",
+        "placeholder": "e.g. \"The Salts line\" or \"Morning writing\""
+      },
+      {
+        "id": "dream",
+        "eyebrow": "THE DREAM",
+        "question": "Describe the dream. What does this look like when it's real?",
+        "hint": "Don't filter. Write it the way you'd say it to someone you trust.",
+        "kind": "text-lg",
+        "field": "dream",
+        "placeholder": "When this works..."
+      },
+      {
+        "id": "doneState",
+        "eyebrow": "THE FINISH LINE",
+        "question": "What does 'done' look like — specifically?",
+        "hint": "Not perfect. The last concrete thing that needs to happen.",
+        "kind": "text-lg",
+        "field": "doneState",
+        "placeholder": "Done looks like..."
+      }
+    ],
+    "UNIVERSAL_STEPS_AFTER": [
+      {
+        "id": "blocker",
+        "eyebrow": "RIGHT NOW",
+        "question": "What's the single biggest thing blocking this today?",
+        "hint": "Internal or external — name it plainly.",
+        "kind": "text-sm",
+        "field": "blocker",
+        "placeholder": "The main thing in the way is..."
+      },
+      {
+        "id": "todayAction",
+        "eyebrow": "TODAY",
+        "question": "What could you do today that moves this forward — even a little?",
+        "hint": "Small is fine. One real thing.",
+        "kind": "text-sm",
+        "field": "todayAction",
+        "placeholder": "Today I could..."
+      },
+      {
+        "id": "risk",
+        "eyebrow": "PIVOTAL INFO",
+        "question": "What could derail this that isn't in your control?",
+        "hint": "This becomes your first pivotal info card — the thing the driver watches for.",
+        "kind": "text-sm",
+        "field": "risk",
+        "placeholder": "The thing I can't fully control is..."
+      },
+      {
+        "id": "scenarioName",
+        "eyebrow": "THIS PATH",
+        "question": "What do you call the path you just mapped?",
+        "hint": "This is your first scenario. You can add alternatives later.",
+        "kind": "text-sm",
+        "field": "scenarioName",
+        "placeholder": "e.g. \"Bootstrap it\" or \"Find a partner first\""
+      }
+    ],
+    "KIND_STEPS": {
+      "offer": [
+        {
+          "id": "offer-who",
+          "eyebrow": "THE BUYER",
+          "question": "Who needs this? Specifically — a real person or group, not a category.",
+          "hint": "Name them if you can. The more specific, the sharper the offer.",
+          "kind": "text-sm",
+          "field": "specifics",
+          "placeholder": "The person who needs this most is..."
+        },
+        {
+          "id": "offer-edge",
+          "eyebrow": "THE EDGE",
+          "question": "What makes this different from what they're already doing?",
+          "hint": "One clear thing — not a list.",
+          "kind": "text-sm",
+          "field": "edge",
+          "placeholder": "The one thing that makes this different is..."
+        },
+        {
+          "id": "offer-3mo",
+          "eyebrow": "THREE MONTHS OUT",
+          "question": "What needs to be true in three months for this offer to be real?",
+          "kind": "text-sm",
+          "field": "threeMonths",
+          "placeholder": "In three months..."
+        },
+        {
+          "id": "offer-1mo",
+          "eyebrow": "ONE MONTH OUT",
+          "question": "What's the one thing that has to happen this month for that to be possible?",
+          "kind": "text-sm",
+          "field": "oneMonth",
+          "placeholder": "This month..."
+        },
+        {
+          "id": "offer-2wk",
+          "eyebrow": "TWO WEEKS",
+          "question": "What are you proving or building in the next two weeks?",
+          "kind": "text-sm",
+          "field": "twoWeeks",
+          "placeholder": "In two weeks I need to..."
+        }
+      ],
+      "target": [
+        {
+          "id": "target-number",
+          "eyebrow": "THE NUMBER",
+          "question": "What's the target? Specific — not 'more', an actual number.",
+          "hint": "Revenue, savings, units, whatever 'done' measures.",
+          "kind": "text-sm",
+          "field": "specifics",
+          "placeholder": "The target is..."
+        },
+        {
+          "id": "target-gap",
+          "eyebrow": "THE GAP",
+          "question": "What's between you and that number right now?",
+          "kind": "text-sm",
+          "field": "edge",
+          "placeholder": "The gap is..."
+        },
+        {
+          "id": "target-3mo",
+          "eyebrow": "THREE MONTHS OUT",
+          "question": "Where do you need to be in three months to stay on track?",
+          "kind": "text-sm",
+          "field": "threeMonths",
+          "placeholder": "In three months I need to be at..."
+        },
+        {
+          "id": "target-1mo",
+          "eyebrow": "ONE MONTH OUT",
+          "question": "What does this month's milestone look like?",
+          "kind": "text-sm",
+          "field": "oneMonth",
+          "placeholder": "This month the goal is..."
+        },
+        {
+          "id": "target-2wk",
+          "eyebrow": "TWO WEEKS",
+          "question": "What's the one action this week that keeps the number moving?",
+          "kind": "text-sm",
+          "field": "twoWeeks",
+          "placeholder": "This week..."
+        }
+      ],
+      "creative": [
+        {
+          "id": "creative-medium",
+          "eyebrow": "THE MEDIUM",
+          "question": "What is it made of? Words, sound, image, object, experience — be specific.",
+          "kind": "text-sm",
+          "field": "specifics",
+          "placeholder": "It's made of..."
+        },
+        {
+          "id": "creative-for",
+          "eyebrow": "FOR WHO",
+          "question": "Who is the first person you'd hand this to?",
+          "hint": "One person. Name them or describe them exactly.",
+          "kind": "text-sm",
+          "field": "edge",
+          "placeholder": "The first person I'd hand this to is..."
+        },
+        {
+          "id": "creative-3mo",
+          "eyebrow": "THREE MONTHS OUT",
+          "question": "What does 'finished enough to share' look like?",
+          "kind": "text-sm",
+          "field": "threeMonths",
+          "placeholder": "Finished enough looks like..."
+        },
+        {
+          "id": "creative-1mo",
+          "eyebrow": "ONE MONTH OUT",
+          "question": "What section, chapter, piece, or component do you finish this month?",
+          "kind": "text-sm",
+          "field": "oneMonth",
+          "placeholder": "This month I finish..."
+        },
+        {
+          "id": "creative-2wk",
+          "eyebrow": "TWO WEEKS",
+          "question": "What do you make or draft in the next two weeks — even badly?",
+          "kind": "text-sm",
+          "field": "twoWeeks",
+          "placeholder": "In the next two weeks I make..."
+        }
+      ],
+      "habit": [
+        {
+          "id": "habit-behaviour",
+          "eyebrow": "THE BEHAVIOUR",
+          "question": "What behaviour are you building — or breaking?",
+          "kind": "text-sm",
+          "field": "specifics",
+          "placeholder": "The behaviour I'm changing is..."
+        },
+        {
+          "id": "habit-trigger",
+          "eyebrow": "THE TRIGGER",
+          "question": "What currently triggers the old pattern?",
+          "hint": "A time, a place, a feeling — be honest.",
+          "kind": "text-sm",
+          "field": "edge",
+          "placeholder": "The old pattern starts when..."
+        },
+        {
+          "id": "habit-3mo",
+          "eyebrow": "THREE MONTHS OUT",
+          "question": "What does 'locked in' look like in three months?",
+          "kind": "text-sm",
+          "field": "threeMonths",
+          "placeholder": "In three months this is just how I..."
+        },
+        {
+          "id": "habit-1mo",
+          "eyebrow": "ONE MONTH OUT",
+          "question": "What's the smallest version of the new behaviour you do every day this month?",
+          "kind": "text-sm",
+          "field": "oneMonth",
+          "placeholder": "Every day this month I..."
+        },
+        {
+          "id": "habit-2wk",
+          "eyebrow": "TWO WEEKS",
+          "question": "What's the first two-week test? What are you tracking?",
+          "kind": "text-sm",
+          "field": "twoWeeks",
+          "placeholder": "For the next two weeks I track..."
+        }
+      ],
+      "community": [
+        {
+          "id": "community-who",
+          "eyebrow": "THE PEOPLE",
+          "question": "Who needs to be involved for this to work? Name them or name the roles.",
+          "kind": "text-sm",
+          "field": "specifics",
+          "placeholder": "The people who need to move are..."
+        },
+        {
+          "id": "community-decision",
+          "eyebrow": "THE FIRST DECISION",
+          "question": "What's the one decision that needs to happen before anything else?",
+          "kind": "text-sm",
+          "field": "edge",
+          "placeholder": "The first decision is..."
+        },
+        {
+          "id": "community-3mo",
+          "eyebrow": "THREE MONTHS OUT",
+          "question": "What does visible progress look like in three months?",
+          "kind": "text-sm",
+          "field": "threeMonths",
+          "placeholder": "In three months we can show..."
+        },
+        {
+          "id": "community-1mo",
+          "eyebrow": "ONE MONTH OUT",
+          "question": "What's the first concrete thing the group does together this month?",
+          "kind": "text-sm",
+          "field": "oneMonth",
+          "placeholder": "This month we..."
+        },
+        {
+          "id": "community-2wk",
+          "eyebrow": "TWO WEEKS",
+          "question": "What can YOU do in the next two weeks regardless of what others do?",
+          "kind": "text-sm",
+          "field": "twoWeeks",
+          "placeholder": "What only I can do is..."
+        }
+      ]
+    }
+  }
+}

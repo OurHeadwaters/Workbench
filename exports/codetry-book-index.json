@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "exportedAt": "2026-06-18T23:19:11.688Z",
+    "constellationVersion": "0.5.7",
+    "constellationLastUpdated": "2026-05-05",
+    "description": "Index of per-section JSON exports. Import only the section(s) you need."
+  },
+  "files": [
+    {
+      "filename": "codetry-book-chapters.json",
+      "section": "chapters",
+      "recordCount": 96
+    },
+    {
+      "filename": "codetry-book-glossary.json",
+      "section": "glossary",
+      "recordCount": 43
+    },
+    {
+      "filename": "codetry-book-tales.json",
+      "section": "tales",
+      "recordCount": 8
+    },
+    {
+      "filename": "codetry-book-pioneer-path.json",
+      "section": "pioneer-path",
+      "recordCount": 28
+    },
+    {
+      "filename": "codetry-book-constellation.json",
+      "section": "constellation",
+      "recordCount": 7
+    },
+    {
+      "filename": "codetry-book-standby.json",
+      "section": "standby",
+      "recordCount": 28
+    },
+    {
+      "filename": "codetry-book-narrations.json",
+      "section": "narrations",
+      "recordCount": 5
+    },
+    {
+      "filename": "codetry-book-stack-cards.json",
+      "section": "stack-cards",
+      "recordCount": 35
+    }
+  ]
+}

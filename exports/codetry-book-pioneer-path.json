@@ -1,0 +1,975 @@
+{
+  "_meta": {
+    "exportedAt": "2026-06-18T23:19:11.664Z",
+    "section": "pioneer-path"
+  },
+  "PIONEER_PHASES": [
+    {
+      "number": 1,
+      "label": "Read Your Community",
+      "description": "Before building anything, see what's already there."
+    },
+    {
+      "number": 2,
+      "label": "Name Your Model",
+      "description": "Identify the right shape before you commit to a structure."
+    },
+    {
+      "number": 3,
+      "label": "Make Your First Agreement",
+      "description": "Practice the translation, then make one real commitment."
+    },
+    {
+      "number": 4,
+      "label": "Build the Floor",
+      "description": "Establish the stability mechanisms before you grow."
+    },
+    {
+      "number": 5,
+      "label": "Hold the Line",
+      "description": "Build the habits that make the model last past the first person."
+    }
+  ],
+  "PIONEER_STATIONS": [
+    {
+      "id": "the-saltbox",
+      "ordinal": 1,
+      "phase": 1,
+      "name": "The Saltbox",
+      "subtitle": "Where every beam carries weight",
+      "sourceChapterId": "1-2",
+      "doPrompt": "Walk through your home and pick the one room that does the most jobs. Write down — by hand, on paper — the three jobs it carries. Tape the paper to the doorframe.",
+      "narrationSlug": "the-saltbox"
+    },
+    {
+      "id": "both-states",
+      "ordinal": 2,
+      "phase": 1,
+      "name": "Both-States",
+      "subtitle": "One word, two tempos",
+      "sourceChapterId": "1-3",
+      "doPrompt": "Pick one thing in your community that runs in two tempos — mostly quiet but sometimes everything. Write its name. Then write the second name you almost gave it.",
+      "narrationSlug": "both-states"
+    },
+    {
+      "id": "the-ledger-walk",
+      "ordinal": 3,
+      "phase": 1,
+      "name": "The Ledger Walk",
+      "subtitle": "Follow the money before you move it",
+      "sourceChapterId": "4-3",
+      "doPrompt": "Go through one week of purchases in your community — groceries, fuel, building supplies, anything bought from outside. Write down where each dollar went. At the bottom, write one number: how much left your community that week. Keep the paper.",
+      "narrationSlug": "the-ledger-walk"
+    },
+    {
+      "id": "the-names",
+      "ordinal": 4,
+      "phase": 1,
+      "name": "The Names",
+      "subtitle": "The connective tissue you already have",
+      "sourceChapterId": "4-1",
+      "doPrompt": "Write down three names — real people in your community — who you would trust to hold a hard conversation honestly. Not a role, not a title. Three actual names. Fold the paper and keep it somewhere you'll find it. These are your connective tissue.",
+      "narrationSlug": "the-names"
+    },
+    {
+      "id": "the-gap",
+      "ordinal": 5,
+      "phase": 1,
+      "name": "The Gap",
+      "subtitle": "What leaves your community every week",
+      "sourceChapterId": "5-5",
+      "doPrompt": "Name one thing your community buys every week from somewhere outside — food, fuel, a service — that someone in your community could provide. Write the name of the thing. Next to it, write the name of one person in your community who already knows how to make or do it.",
+      "narrationSlug": "the-gap"
+    },
+    {
+      "id": "the-archetype",
+      "ordinal": 6,
+      "phase": 2,
+      "name": "The Archetype",
+      "subtitle": "Which shape fits before you build it",
+      "sourceChapterId": "3-0",
+      "doPrompt": "Read the four shapes: The Store, The Agency, The Platform, The Cooperative. Write down which one your community is already closest to — even if it's informal and unnamed. Then write one sentence about why that shape fits. Don't pick the most ambitious one. Pick the truest one.",
+      "narrationSlug": "the-archetype"
+    },
+    {
+      "id": "the-first-trade",
+      "ordinal": 7,
+      "phase": 2,
+      "name": "The First Trade",
+      "subtitle": "What moves informally already",
+      "sourceChapterId": "4-2",
+      "doPrompt": "Name one exchange that already happens in your community without money changing hands — a favour, a barter, a standing agreement. Write: who gives, who receives, what moves, and what makes it work. Then write: what would change if that exchange had a name and a simple agreement behind it?",
+      "narrationSlug": "the-first-trade"
+    },
+    {
+      "id": "the-floor",
+      "ordinal": 8,
+      "phase": 2,
+      "name": "The Floor",
+      "subtitle": "The minimum before you think about growing",
+      "sourceChapterId": "1-5",
+      "doPrompt": "Write down the minimum monthly number that keeps your community's most critical function running — not thriving, just running. One number. Then write the three things that number has to cover. This is your floor. Post it somewhere visible.",
+      "narrationSlug": "the-floor"
+    },
+    {
+      "id": "the-waterfall",
+      "ordinal": 9,
+      "phase": 2,
+      "name": "The Waterfall",
+      "subtitle": "The order that makes a dollar last",
+      "sourceChapterId": "3-1",
+      "doPrompt": "On a piece of paper, draw a simple flow: if your community's first trade brought in $1,000, where would it go — in what order? Draw the sequence top to bottom. Each box gets one label in your community's own words. The order is the decision.",
+      "narrationSlug": "the-waterfall"
+    },
+    {
+      "id": "both-sides",
+      "ordinal": 10,
+      "phase": 3,
+      "name": "Both-Sides",
+      "subtitle": "One word, two rooms",
+      "sourceChapterId": "1-4",
+      "doPrompt": "Find one form, letter, or invoice on your kitchen table that uses words your family doesn't. On a sticky note, write the family's word for the same thing next to the form's word. Leave both visible.",
+      "narrationSlug": "both-sides"
+    },
+    {
+      "id": "the-standby",
+      "ordinal": 11,
+      "phase": 3,
+      "name": "The Standby",
+      "subtitle": "Always-on, until it isn't",
+      "sourceChapterId": "4-1",
+      "doPrompt": "Walk your property and write down the three things that fail first when the power goes out. Don't fix them yet — just name them, in your own words, in pencil, where you can see them tomorrow.",
+      "narrationSlug": "the-standby"
+    },
+    {
+      "id": "the-gate",
+      "ordinal": 12,
+      "phase": 3,
+      "name": "The Gate",
+      "subtitle": "A calm passage between two dialects",
+      "sourceChapterId": "4-1",
+      "doPrompt": "Take one piece of mail from a regulator, banker, or government office. Underline every word in it your family wouldn't say at the table. Write your family's word in the margin next to each one. Keep both.",
+      "narrationSlug": "the-gate"
+    },
+    {
+      "id": "the-agreement",
+      "ordinal": 13,
+      "phase": 3,
+      "name": "The Agreement",
+      "subtitle": "The same thing, said two ways",
+      "sourceChapterId": "4-4",
+      "doPrompt": "Write one paragraph describing the first trade you named in Station 7. Write it twice: once in your community's own words, the way you'd explain it at a kitchen table. Once in the way you'd write it on a form or say it to a banker. Keep both. The gap between them is the work.",
+      "narrationSlug": "the-agreement"
+    },
+    {
+      "id": "the-buffer",
+      "ordinal": 14,
+      "phase": 4,
+      "name": "The Buffer",
+      "subtitle": "The firewall before the debt plan",
+      "sourceChapterId": "4-6",
+      "doPrompt": "How many months could your community's most critical function keep running if your main income stopped tomorrow? Write the honest number — not the optimistic one. If you don't know, write 'unknown.' That is also the answer. Now write one thing that would make that number one month longer.",
+      "narrationSlug": "the-buffer"
+    },
+    {
+      "id": "the-tithe",
+      "ordinal": 15,
+      "phase": 4,
+      "name": "The Tithe",
+      "subtitle": "First claim, not last",
+      "sourceChapterId": "0-1",
+      "doPrompt": "Name what your community already gives back — to the land, to elders, to those who have less, to the next generation. Write the practice down, even if it's informal and has no dollar amount attached. This is your tithe. It goes first, before the rest of the waterfall.",
+      "narrationSlug": "the-tithe"
+    },
+    {
+      "id": "the-reserve",
+      "ordinal": 16,
+      "phase": 4,
+      "name": "The Reserve",
+      "subtitle": "Where extra goes when there's extra",
+      "sourceChapterId": "4-5",
+      "doPrompt": "Write one rule for where extra goes when there's extra. Not a wish — a rule: 'When we have more than X, Y goes to Z.' If you don't have a rule yet, write the one that feels right. Write it in your community's language. Post it next to the waterfall you drew in Station 9.",
+      "narrationSlug": "the-reserve"
+    },
+    {
+      "id": "the-renegotiation",
+      "ordinal": 17,
+      "phase": 5,
+      "name": "The Renegotiation",
+      "subtitle": "Name the trigger before you need it",
+      "sourceChapterId": "4-3",
+      "doPrompt": "Write down the three things that would have to change before you'd go back to the table and ask for different terms. Not feelings — conditions. 'When the store turns a profit for three months in a row.' 'When the grant runs out.' 'When the hours double.' Name the triggers before you need them.",
+      "narrationSlug": "the-renegotiation"
+    },
+    {
+      "id": "the-replication",
+      "ordinal": 18,
+      "phase": 5,
+      "name": "The Replication",
+      "subtitle": "Who walks this after you",
+      "sourceChapterId": "4-7",
+      "doPrompt": "Name one person in your community who could walk this path after you — who could run this model if you stepped back. Write their name. Write the one thing they would need to learn that they don't already know. That gap is your next teaching.",
+      "narrationSlug": "the-replication"
+    },
+    {
+      "id": "the-handoff",
+      "ordinal": 19,
+      "phase": 5,
+      "name": "The Handoff",
+      "subtitle": "Three load-bearing sentences for the next person",
+      "sourceChapterId": "1-7",
+      "doPrompt": "Write the three things the next person needs to know to pick this up if you're not there. Not the full plan — three load-bearing sentences: the floor number, the waterfall order, and the name of the gate person. One page, in plain language, somewhere they can find it.",
+      "narrationSlug": "the-handoff"
+    },
+    {
+      "id": "the-return",
+      "ordinal": 20,
+      "phase": 5,
+      "name": "The Return",
+      "subtitle": "What Tuesday morning looks like when it works",
+      "sourceChapterId": "1-0",
+      "doPrompt": "Write one paragraph: what does your community look like in five years if this works? Not a grant objective, not an economic development target. What does it actually feel like on a Tuesday morning? Write it in your own words, in the language your community uses at the table.",
+      "narrationSlug": "the-return"
+    }
+  ],
+  "YOUTH_PHASES": [
+    {
+      "number": 1,
+      "label": "Your Kitchen",
+      "description": "Where what you already know lives"
+    },
+    {
+      "number": 2,
+      "label": "Your People",
+      "description": "The ones who shaped you without trying"
+    },
+    {
+      "number": 3,
+      "label": "The Hard Thing",
+      "description": "What was called a weakness"
+    },
+    {
+      "number": 4,
+      "label": "The Crossing",
+      "description": "What doesn't need permission to begin"
+    }
+  ],
+  "YOUTH_STATIONS": [
+    {
+      "id": "youth-the-watcher",
+      "ordinal": 1,
+      "phase": 1,
+      "name": "The Watcher",
+      "subtitle": "Someone in your life who teaches without a word",
+      "sourceTaleId": "the-elder-who-sat-at-the-creek",
+      "taleExcerpt": "The old woman had not taught any of them anything. She had just shown them how to stay. You look until you stop looking. And then you see.",
+      "prompts": {
+        "young": [
+          {
+            "id": "watcher_name",
+            "question": "Who in your family or community sits quietly and watches things — without making a big deal of it? Write their name.",
+            "placeholder": "Their name"
+          },
+          {
+            "id": "watcher_subject",
+            "question": "What do they watch? A fire, the garden, the water, the road — what is it?",
+            "placeholder": "What they watch"
+          },
+          {
+            "id": "learned_thing",
+            "question": "Write one thing you know because of them — not because they told you, just because you were nearby.",
+            "placeholder": "What you learned by being close"
+          }
+        ],
+        "tween": [
+          {
+            "id": "watcher_name",
+            "question": "Name someone in your life who teaches without explaining. They don't lecture. They just do the thing.",
+            "placeholder": "Their name"
+          },
+          {
+            "id": "watcher_subject",
+            "question": "What do they pay attention to that most people walk right past?",
+            "placeholder": "What they notice"
+          },
+          {
+            "id": "learned_thing",
+            "question": "Describe one thing you know because of them — something you absorbed, not something you were taught.",
+            "placeholder": "What transferred without words"
+          },
+          {
+            "id": "knowledge_name",
+            "question": "If you had to give a name to the kind of knowledge they carry — not a school subject, just a name — what would you call it?",
+            "placeholder": "A name for what they carry"
+          }
+        ],
+        "older": [
+          {
+            "id": "watcher_name",
+            "question": "Name someone whose stillness carries more information than most people's explanations.",
+            "placeholder": "Their name"
+          },
+          {
+            "id": "watcher_subject",
+            "question": "What have they spent years watching, tending, or attending to — the thing most people overlook?",
+            "placeholder": "What they watch or tend"
+          },
+          {
+            "id": "time_to_understand",
+            "question": "How long did it take you to understand that their silence was a form of instruction?",
+            "placeholder": "Days, years, a moment — be specific"
+          },
+          {
+            "id": "learned_thing",
+            "question": "What did you absorb from them that you couldn't have been told — only lived near?",
+            "placeholder": "What transferred"
+          }
+        ]
+      },
+      "storyInstruction": {
+        "young": "Write a story in second person ('you') about a child and the person named in the answers. The watcher sits with the thing they watch, and the child is nearby. Something transfers — not through words, just through presence. Write it as a specific memory with one concrete image. 2 short paragraphs. The last line should feel like a landing.",
+        "tween": "Write a story in second person about a teenager and the person from the answers. The person pays quiet attention to the thing they notice, and the teenager absorbs something from being nearby — not from being taught. The story should carry the specific texture of watching someone who knows how to stay. 3 paragraphs. End with the weight of something understood slowly.",
+        "older": "Write a story in second person about a young person and the watcher in the answers. The young person spent time near this person before understanding what the silence was. The thing transferred — through presence, not instruction — was the thing in the answers. Write it like something you'd tell a much younger person who needed to hear that this kind of learning exists. 4 paragraphs. Don't smooth the edges."
+      },
+      "authorNote": "The deepest learning is not a curriculum. It is proximity to someone who has learned to be still — and the willingness to stay nearby long enough for something to cross over."
+    },
+    {
+      "id": "youth-the-rings",
+      "ordinal": 2,
+      "phase": 1,
+      "name": "The Rings",
+      "subtitle": "Something handed to you before you understood its weight",
+      "sourceTaleId": "the-boy-who-counted-the-rings",
+      "taleExcerpt": "How did you know I could do it? the boy asked. His grandfather picked up the knife and folded it closed and handed it back to him. I didn't know, he said. But you did it anyway.",
+      "prompts": {
+        "young": [
+          {
+            "id": "the_thing",
+            "question": "Has someone ever handed you something — a tool, a job, a responsibility — before you felt ready for it? What was it?",
+            "placeholder": "The thing they gave you"
+          },
+          {
+            "id": "the_giver",
+            "question": "Who gave it to you?",
+            "placeholder": "Their name"
+          },
+          {
+            "id": "what_you_found",
+            "question": "What did you figure out about it later — something you didn't understand when you first got it?",
+            "placeholder": "What you found inside it"
+          }
+        ],
+        "tween": [
+          {
+            "id": "the_thing",
+            "question": "Describe something you were given — a task, a tool, a role, a responsibility — before you felt ready for it.",
+            "placeholder": "The thing entrusted to you"
+          },
+          {
+            "id": "the_giver",
+            "question": "Who gave it to you, and did they explain why?",
+            "placeholder": "Who and what they said (or didn't say)"
+          },
+          {
+            "id": "what_you_found",
+            "question": "What did you discover when you actually did it — something that wouldn't have been visible any other way?",
+            "placeholder": "What was revealed"
+          },
+          {
+            "id": "lesson_name",
+            "question": "If the lesson hidden inside that task had a name — not a school lesson, just a name — what would you call it?",
+            "placeholder": "A name for what was inside it"
+          }
+        ],
+        "older": [
+          {
+            "id": "the_thing",
+            "question": "What were you entrusted with before you could fully hold it — a task, a role, a piece of knowledge, a responsibility?",
+            "placeholder": "What was placed in your hands"
+          },
+          {
+            "id": "the_giver",
+            "question": "Who gave it to you, and what did their giving it without explanation tell you about what they believed?",
+            "placeholder": "Who, and what their trust implied"
+          },
+          {
+            "id": "what_you_found",
+            "question": "What did you find inside it when you finally looked close enough — the rings you didn't know were there?",
+            "placeholder": "What was layered inside"
+          },
+          {
+            "id": "what_it_opened",
+            "question": "What did carrying that thing open in you — what did you become able to do or see that you couldn't before?",
+            "placeholder": "What it unlocked"
+          }
+        ]
+      },
+      "storyInstruction": {
+        "young": "Write a story in second person about a child who was given the thing in the answers by the person named, before they understood it. They carry it and figure something out. 2 paragraphs. Specific and concrete. The ending should hold the feeling of quiet discovery.",
+        "tween": "Write a story in second person about a teenager trusted with the thing in the answers. The person who gave it didn't explain. The teenager does it anyway and finds what's inside. Use the lesson name they gave as the heart of the story. 3 paragraphs with the texture of real labor — not easy, not explained, but real.",
+        "older": "Write a story in second person about a young person who was handed something before they were ready. The giver's silence was itself a message. When they finally did it, they found the rings — the layers they couldn't have been told about. What it opened in them is in the answers. Write it so it carries the weight of being trusted before you felt trustworthy. 4 paragraphs."
+      },
+      "authorNote": "The lesson is never in the telling. It is in the knife handed over without explanation — the counting that gets harder before it gets easier. The one who explains robs the learner of the discovery."
+    },
+    {
+      "id": "youth-the-button",
+      "ordinal": 3,
+      "phase": 2,
+      "name": "The Button",
+      "subtitle": "A small move that connected you to something real",
+      "sourceTaleId": "the-button-she-almost-didnt-press",
+      "taleExcerpt": "She pressed it. Nothing happened. The screen didn't change. No confetti. No notification. She put her phone down and went back to watching the ceiling. Four days later, Margaret Swain called her.",
+      "prompts": {
+        "young": [
+          {
+            "id": "the_action",
+            "question": "When's a time you did something small — showed up, said yes, pressed a button, knocked on a door — and something real happened after?",
+            "placeholder": "The small thing you did"
+          },
+          {
+            "id": "what_held_back",
+            "question": "What almost stopped you from doing it?",
+            "placeholder": "What you almost let stop you"
+          },
+          {
+            "id": "who_responded",
+            "question": "Who showed up or what opened after you did it?",
+            "placeholder": "What came after"
+          }
+        ],
+        "tween": [
+          {
+            "id": "the_action",
+            "question": "Describe a small action you almost didn't take — a reach, a reply, a yes, a show-up. What was it?",
+            "placeholder": "The thing you almost didn't do"
+          },
+          {
+            "id": "what_held_back",
+            "question": "What was the specific thing that almost stopped you — doubt, pride, fear of nothing happening?",
+            "placeholder": "What held you back"
+          },
+          {
+            "id": "why_anyway",
+            "question": "What made you do it anyway?",
+            "placeholder": "What pushed you through"
+          },
+          {
+            "id": "who_responded",
+            "question": "Who was on the other side of that small move — what person, what opportunity, what door?",
+            "placeholder": "Who or what responded"
+          }
+        ],
+        "older": [
+          {
+            "id": "the_action",
+            "question": "Name a moment when you almost didn't reach out — a call you nearly didn't make, a message you sat on, a room you almost didn't walk into.",
+            "placeholder": "The thing you almost held back"
+          },
+          {
+            "id": "what_held_back",
+            "question": "What was the internal argument against it — the specific voice that said don't?",
+            "placeholder": "The exact resistance"
+          },
+          {
+            "id": "why_anyway",
+            "question": "What finally moved you — was it courage, impatience, someone else, or just deciding to stop deciding?",
+            "placeholder": "What finally moved you"
+          },
+          {
+            "id": "who_responded",
+            "question": "Who responded, and what did that response open — a relationship, an opportunity, a version of yourself you hadn't met?",
+            "placeholder": "What came through the door you pushed open"
+          }
+        ]
+      },
+      "storyInstruction": {
+        "young": "Write a story in second person about a child who almost didn't do the thing in the answers. They almost let the thing that held them back win. But they did it. The person or thing that responded is in the answers. 2 paragraphs. Make the small action feel real and unheroic — just a real move by a real person. End with what came after.",
+        "tween": "Write a story in second person about a teenager who almost didn't make the move in the answers. The thing that held them back was real. What made them do it anyway was real too. Who responded opened something they didn't expect. 3 paragraphs with the specific textures of the answers. The ending should carry the weight of what happens when someone shows up despite not being sure.",
+        "older": "Write a story in second person. The young person in the story almost didn't make the reach in the answers. The internal resistance was specific and real. What finally moved them is in the answers. Who responded opened the thing described in the answers. Write it so the reader understands that the whole arc — everything that came after — balanced on one almost-not-taken step. 4 paragraphs. Don't inflate it. The power is in the smallness."
+      },
+      "authorNote": "Most connections begin with a button pressed without knowing why. The system is built around that moment — because that moment is where it starts, every time."
+    },
+    {
+      "id": "youth-the-word",
+      "ordinal": 4,
+      "phase": 2,
+      "name": "The Word",
+      "subtitle": "A name from home that the outside world doesn't have",
+      "sourceTaleId": "the-girl-who-waited-for-the-eagle",
+      "taleExcerpt": "The old woman talked about how her people said trade in a way that also meant you are now inside my story. How they said home in a way that held the river, the season, the name of a grandmother, and a specific kind of light all at once. The girl listened. Then, very quietly, she asked: Would it be alright if I wrote some of these down? The old woman looked at her for a long time. Not yet, she said. Come back.",
+      "prompts": {
+        "young": [
+          {
+            "id": "the_word",
+            "question": "What's a word, a name, or a phrase your family or community uses at home that you've never heard anywhere else?",
+            "placeholder": "The word"
+          },
+          {
+            "id": "full_meaning",
+            "question": "What does it really mean — what does it carry that you can't say in one sentence?",
+            "placeholder": "What it holds"
+          },
+          {
+            "id": "who_uses_it",
+            "question": "Who uses it? When?",
+            "placeholder": "Who carries it and when"
+          }
+        ],
+        "tween": [
+          {
+            "id": "the_word",
+            "question": "Write one word, name, or phrase your family or community uses that doesn't have a real equivalent anywhere else — not in school, not in the news, not online.",
+            "placeholder": "The word"
+          },
+          {
+            "id": "full_meaning",
+            "question": "What does it hold — what would you lose if you had to translate it into plain English?",
+            "placeholder": "What gets lost in translation"
+          },
+          {
+            "id": "who_uses_it",
+            "question": "Who uses it, and in what moment?",
+            "placeholder": "Who carries it"
+          },
+          {
+            "id": "why_it_matters",
+            "question": "Why does it matter that this word exists — what does it make possible that a translation can't?",
+            "placeholder": "What the word protects or makes possible"
+          }
+        ],
+        "older": [
+          {
+            "id": "the_word",
+            "question": "Name something your family or community calls by a name the outside world doesn't have — a person, a practice, a way of doing things, a feeling. Write the name.",
+            "placeholder": "The word or name"
+          },
+          {
+            "id": "full_meaning",
+            "question": "What would be lost if you had to translate it into a form a grant application or school assignment would accept?",
+            "placeholder": "What translation destroys"
+          },
+          {
+            "id": "who_uses_it",
+            "question": "Who carries this word — who uses it, and what does using it signal about belonging to something?",
+            "placeholder": "Who carries it and what it marks"
+          },
+          {
+            "id": "how_long",
+            "question": "How long have you known this word without knowing that it was something the outside world didn't have?",
+            "placeholder": "When you realized it was yours specifically"
+          }
+        ]
+      },
+      "storyInstruction": {
+        "young": "Write a story in second person about a child who carries the word in the answers. The word is used by the people in the answers. The story shows one moment when the word is used — not explained, just used — and what that use does. 2 paragraphs. Keep it in the kitchen, in the yard, in the boat — wherever this word lives. Don't explain the word; use it.",
+        "tween": "Write a story in second person about a teenager who grew up with the word in the answers. The story shows one moment when they try to explain it to someone outside, fail to translate it, and understand for the first time what it means that there is no translation. What the word protects or makes possible is in the answers. 3 paragraphs. The ending should honor the untranslatability.",
+        "older": "Write a story in second person. The young person in the story has carried the word in the answers for the length of time described without understanding it was irreplaceable. The story shows the moment they realized the word isn't just vocabulary — it's a vessel. What translation destroys is in the answers. What the word marks about belonging is in the answers. 4 paragraphs. Write it like a private record — precise and unperformative."
+      },
+      "authorNote": "A living word in a living community is not a translation waiting to happen. It is a record — specific, located, belonging to the people who carry it. Some of the most important things a community holds together are held in the words that have no English equivalent."
+    },
+    {
+      "id": "youth-the-readiness",
+      "ordinal": 5,
+      "phase": 3,
+      "name": "The Readiness",
+      "subtitle": "What was called a weakness is a kind of equipment",
+      "sourceTaleId": "the-girl-who-never-knew",
+      "taleExcerpt": "That a heart worn on the outside is not a weakness. It is a kind of readiness. She just never knew, until then, what she was ready for.",
+      "prompts": {
+        "young": [
+          {
+            "id": "the_quality",
+            "question": "What's something about you that people sometimes say is 'too much' — too loud, too quiet, too sensitive, too intense?",
+            "placeholder": "The thing people call too much"
+          },
+          {
+            "id": "what_called",
+            "question": "What word do people use for it — shy, dramatic, spacey, stubborn, something else?",
+            "placeholder": "The word they use"
+          },
+          {
+            "id": "when_it_helped",
+            "question": "Has that thing ever actually helped — you or someone else? Write one time.",
+            "placeholder": "One time it was the exact right thing"
+          }
+        ],
+        "tween": [
+          {
+            "id": "the_quality",
+            "question": "Name something about you that's been called a weakness or 'too much' — a way of feeling, thinking, or moving through the world.",
+            "placeholder": "The quality"
+          },
+          {
+            "id": "what_called",
+            "question": "What label has been put on it — in school, at home, by a doctor, by kids your age?",
+            "placeholder": "The label"
+          },
+          {
+            "id": "when_it_helped",
+            "question": "When did that exact quality turn out to be exactly what the situation needed?",
+            "placeholder": "The moment it was the right thing"
+          },
+          {
+            "id": "new_name",
+            "question": "If it had a different name — not a flaw, not a diagnosis, but a kind of readiness — what would you call it?",
+            "placeholder": "A truer name for it"
+          }
+        ],
+        "older": [
+          {
+            "id": "the_quality",
+            "question": "Name the thing about you that's been framed as a problem — too sensitive, too intense, too strange, too much for the room you were in.",
+            "placeholder": "The quality that doesn't fit standard rooms"
+          },
+          {
+            "id": "what_called",
+            "question": "What did the systems call it — the school, the counselor, the peer group, the family? What was their word?",
+            "placeholder": "Their word for it"
+          },
+          {
+            "id": "when_it_helped",
+            "question": "When did that quality become the exact equipment the situation required? Describe one instance.",
+            "placeholder": "When it was precisely right"
+          },
+          {
+            "id": "new_name",
+            "question": "If you were naming it not as a deficiency but as a specific kind of preparation — what would you call it?",
+            "placeholder": "Its actual name"
+          }
+        ]
+      },
+      "storyInstruction": {
+        "young": "Write a story in second person about a child who carries the quality in the answers. People call it by the label in the answers. The story shows one moment when that quality is exactly what's needed — the instance described in the answers. 2 paragraphs. Don't lecture. Just show the moment.",
+        "tween": "Write a story in second person about a teenager whose quality — named in the answers — has been labeled the way the answers describe. The story shows the moment when it was exactly right. It ends with the new name the teenager gave it. 3 paragraphs. Write it so the reader understands the label was never the whole truth.",
+        "older": "Write a story in second person. The young person carries the quality named in the answers. The systems in their life called it the label in the answers. The moment it was precisely right is in the answers. The actual name for it — the one they gave it — is the one that closes the story. 4 paragraphs. Write it like a record correcting an earlier misdiagnosis. Don't soften what the label cost. Don't inflate the reframe."
+      },
+      "authorNote": "The heart that feels things deeply is the same heart that can hold what breaks other containers. That is not a coincidence. It is architecture — pointing in the wrong direction until the person finds the right room."
+    },
+    {
+      "id": "youth-the-current",
+      "ordinal": 6,
+      "phase": 3,
+      "name": "The Current",
+      "subtitle": "The thing you were built for vs. the tree you were told to climb",
+      "sourceTaleId": "the-fish-who-stopped-trying-to-climb",
+      "taleExcerpt": "She had swum down, not up. And in the going down, she had found the whole river. The river gave her what the tree never could. Not a view from above. A knowledge from within.",
+      "prompts": {
+        "young": [
+          {
+            "id": "the_current",
+            "question": "What's one thing you do that feels easy — like water feels natural to a fish? Something you don't have to try hard at.",
+            "placeholder": "The thing that comes naturally"
+          },
+          {
+            "id": "the_tree",
+            "question": "Is there something you've spent time trying to be good at because you thought you were supposed to — even though it never felt right?",
+            "placeholder": "The thing you tried to be instead"
+          },
+          {
+            "id": "coming_back",
+            "question": "What helped you find your way back to the thing that's actually yours?",
+            "placeholder": "What brought you back"
+          }
+        ],
+        "tween": [
+          {
+            "id": "the_current",
+            "question": "What were you built for? What thing, when you do it, makes everything go quiet and feel like it's working right?",
+            "placeholder": "Your current"
+          },
+          {
+            "id": "the_tree",
+            "question": "What did you spend time trying to do instead — because it looked like what success was supposed to look like?",
+            "placeholder": "The tree you tried to climb"
+          },
+          {
+            "id": "why_tree",
+            "question": "Why that tree? Whose version of success did it represent?",
+            "placeholder": "Whose measure you were using"
+          },
+          {
+            "id": "coming_back",
+            "question": "What did coming back to your actual current look like — was there a moment, a flood, a person, a decision?",
+            "placeholder": "What returned you to yourself"
+          }
+        ],
+        "older": [
+          {
+            "id": "the_current",
+            "question": "Name the thing you were built for — the current you were made for, not the tree. The thing that, when you're in it, feels like actual movement instead of effort.",
+            "placeholder": "Your current"
+          },
+          {
+            "id": "the_tree",
+            "question": "Describe the tree you spent time climbing. What did it look like from the outside, and why did you think that's where you needed to go?",
+            "placeholder": "The tree and why it looked right"
+          },
+          {
+            "id": "whose_measure",
+            "question": "Whose measure of success was the tree — who was already in it that made it seem like the right direction?",
+            "placeholder": "Whose version you were chasing"
+          },
+          {
+            "id": "coming_back",
+            "question": "Describe the moment you dropped back into the water. What changed — was it a choice, a failure, a flood, or something you didn't plan?",
+            "placeholder": "The return to water"
+          }
+        ]
+      },
+      "storyInstruction": {
+        "young": "Write a story in second person about a child who naturally does the thing in the answers — their current. They tried to do the tree instead, for the reason in the answers. What brought them back is in the answers. 2 paragraphs. The current should feel real and specific — not a metaphor, a real thing the child actually does well.",
+        "tween": "Write a story in second person about a teenager who was built for their current but spent time in the tree in the answers. They used the measure of success named in the answers. The return is in the answers. 3 paragraphs. Write it so the reader feels the difference between effort and movement — the wrongness of the tree and the rightness of the water.",
+        "older": "Write a story in second person. The young person's current is named in the answers. The tree they climbed — why it looked right, whose measure it was — is in the answers. The return to water happened the way described. 4 paragraphs. Don't romanticize the tree-climbing or the return. Write it as it actually goes: sideways, muddy, slower than expected, then suddenly clear."
+      },
+      "authorNote": "The fish who can't climb isn't failing at trees. She's free to swim. Learning that difference is not a single moment of clarity — it is the whole river, moved through over time."
+    },
+    {
+      "id": "youth-the-green",
+      "ordinal": 7,
+      "phase": 4,
+      "name": "The Green",
+      "subtitle": "The aliveness that doesn't wait for permission",
+      "sourceTaleId": "the-girl-who-stopped-waiting-for-spring",
+      "taleExcerpt": "It did not ask if it was time. It did not look at the ice on the lake. It grew toward something it could not see yet, through ground that had not softened, in a month that gave it nothing to work with. And yet.",
+      "prompts": {
+        "young": [
+          {
+            "id": "waiting_for",
+            "question": "Is there something you've been waiting for before you start — waiting until you're older, until things change, until someone says it's okay?",
+            "placeholder": "What you've been waiting for"
+          },
+          {
+            "id": "permission_expected",
+            "question": "Who were you expecting to give you permission?",
+            "placeholder": "Who you were waiting on"
+          },
+          {
+            "id": "one_thing_now",
+            "question": "What's one small thing — one thread — you could do today, without waiting?",
+            "placeholder": "The one small move"
+          }
+        ],
+        "tween": [
+          {
+            "id": "waiting_for",
+            "question": "What have you been putting off — something you've been waiting on permission, a season, a grade, a relationship to begin?",
+            "placeholder": "What you've been deferring"
+          },
+          {
+            "id": "permission_expected",
+            "question": "What form were you expecting the permission to come in — an achievement, an age, someone's approval?",
+            "placeholder": "The permission you expected"
+          },
+          {
+            "id": "cost_of_waiting",
+            "question": "What has the waiting cost you — what have you not started that you already knew how to begin?",
+            "placeholder": "What the waiting cost"
+          },
+          {
+            "id": "one_thing_now",
+            "question": "What is the smallest possible move — one that needs no external change to make it?",
+            "placeholder": "The move that asks nothing to be different first"
+          }
+        ],
+        "older": [
+          {
+            "id": "waiting_for",
+            "question": "Name something you've been deferring to a season, a grade, a relationship, a milestone, an age — something you've been holding in reserve.",
+            "placeholder": "What you've been holding back"
+          },
+          {
+            "id": "external_change",
+            "question": "What external change have you been using as a precondition — the thing that has to happen before you can start?",
+            "placeholder": "The precondition you've been waiting for"
+          },
+          {
+            "id": "what_waiting_says",
+            "question": "What has the waiting been protecting you from having to find out?",
+            "placeholder": "What the waiting keeps you from knowing"
+          },
+          {
+            "id": "one_thing_now",
+            "question": "What is the smallest possible move that would not require anything to change except your decision to make it?",
+            "placeholder": "The move that's already available"
+          }
+        ]
+      },
+      "storyInstruction": {
+        "young": "Write a story in second person about a child who has been waiting for the thing in the answers. They were waiting on the person or permission in the answers. The story ends with them making the small move described — in winter, before anything changes. 2 paragraphs. The green thing grows without asking. The child moves before the ice breaks. That's the whole story.",
+        "tween": "Write a story in second person about a teenager who has been deferring the thing in the answers, expecting the permission described. The cost of waiting is in the answers. The small move that doesn't need anything to change first is in the answers. 3 paragraphs. Write it in February — nothing blooming, cold not done. They start anyway. The ending should feel like the exhale before spring, not spring itself.",
+        "older": "Write a story in second person. The young person has been holding something in reserve, waiting for the external change in the answers. What the waiting has been protecting them from knowing is in the answers. The smallest available move is in the answers. 4 paragraphs. Write it like the green thing in the story — not because conditions are right, but because waiting for conditions to be right is itself the problem. Don't resolve it. Just show them starting."
+      },
+      "authorNote": "The drive that needs external permission to feel legitimate is still the drive. It just hasn't trusted itself yet. The February green doesn't wait for the ice to break. It starts. That is what it looks like."
+    },
+    {
+      "id": "youth-the-return",
+      "ordinal": 8,
+      "phase": 4,
+      "name": "The Return",
+      "subtitle": "What empty hands make possible that full ones can't",
+      "sourceTaleId": "the-man-who-came-back-with-empty-hands",
+      "taleExcerpt": "Standing at the frozen creek in January, empty-handed, he could feel it. Not arriving. Already here. It had been here the whole time. He had just been somewhere else. The freedom he had been looking for was not a location. It was a permission. And he had always had it.",
+      "prompts": {
+        "young": [
+          {
+            "id": "what_sought",
+            "question": "Have you ever looked for something somewhere — in a different school, a different group, a different place — and found out it was actually already home?",
+            "placeholder": "What you were looking for"
+          },
+          {
+            "id": "where_looked",
+            "question": "Where did you go looking?",
+            "placeholder": "Where you went"
+          },
+          {
+            "id": "what_was_home",
+            "question": "What did you find when you stopped looking far away? What had been there the whole time?",
+            "placeholder": "What was already there"
+          }
+        ],
+        "tween": [
+          {
+            "id": "what_sought",
+            "question": "Describe something you looked for somewhere other than home — recognition, belonging, knowledge, a version of yourself that felt real.",
+            "placeholder": "What you went looking for"
+          },
+          {
+            "id": "where_looked",
+            "question": "Where did you look — what places, programs, groups, or people did you seek it in?",
+            "placeholder": "Where you searched"
+          },
+          {
+            "id": "what_was_home",
+            "question": "When did you find the version of it that had been available at home all along?",
+            "placeholder": "The moment you found what was already there"
+          },
+          {
+            "id": "what_going_gave",
+            "question": "What do you carry back from the looking — what did the going give you that staying never could have?",
+            "placeholder": "What the going made possible"
+          }
+        ],
+        "older": [
+          {
+            "id": "what_sought",
+            "question": "Name something you sought away from your community, your family, or your home ground — recognition, belonging, freedom, a kind of knowledge, a version of yourself.",
+            "placeholder": "What you went looking for"
+          },
+          {
+            "id": "how_far",
+            "question": "How far did you go — in distance, in time, in the distance between who you were and who you were trying to become?",
+            "placeholder": "How far the going took you"
+          },
+          {
+            "id": "what_was_home",
+            "question": "What did you find when you came back — what had been here that you couldn't see before you left?",
+            "placeholder": "What the return revealed"
+          },
+          {
+            "id": "empty_hands",
+            "question": "What do empty hands make possible that full ones couldn't — what are you able to receive now that you came back without what you went to find?",
+            "placeholder": "What the empty hands allow"
+          }
+        ]
+      },
+      "storyInstruction": {
+        "young": "Write a story in second person about a child who went looking for the thing in the answers in the place described. They came back. What was already home is in the answers. 2 paragraphs. The kitchen should smell like itself. The story ends before the child knows what to do next — they're just home, and that's a beginning.",
+        "tween": "Write a story in second person about a teenager who sought the thing in the answers in the places described. They found what was already available at home in the moment described. What the going gave them is in the answers. 3 paragraphs. Write it like a return in January — the bush coming up on both sides the same way it always did, and something different in the person driving through it.",
+        "older": "Write a story in second person. The young person sought what's in the answers, went how far is described. When they came back, they found what the answers describe was always there. The empty hands make possible what's in the answers. 4 paragraphs. Write it like the man at the frozen creek — not triumphant, not defeated. Just present, with empty hands, in the place that was always the answer, finally able to receive it. The freedom was never a location."
+      },
+      "authorNote": "Some things have to be looked for far away before you can receive what's close. The leaving is not a mistake. It is part of the knowing. The empty hands are not failure. They are readiness — finally prepared to hold what was here the whole time."
+    }
+  ],
+  "FOUNDING_EXAMPLE_COMMENTARY": [
+    {
+      "primitiveId": "the-standby",
+      "titleSuffix": "the constellation's first non-zone primitive",
+      "whyTwoSided": [
+        {
+          "kind": "subhead",
+          "text": "Why the umbrella has to hold both states"
+        },
+        {
+          "kind": "para",
+          "text": "The Standby is one piece of infrastructure that moves between two operational states. The resting state is always-on practice — the pantry shelf is stocked, the contact tree is current, the generator gets test-started, the watch reads the morning advisory before anything is happening. The activated state is a fast, episodic event — a fire call opens, the rosters flip, the standby stock comes out where everyone can see it, and the system runs in active until the call stands down. One infrastructure, two states."
+        },
+        {
+          "kind": "para",
+          "text": "If the resting state and the activated state were named separately — *The Pantry* for the shelf, *The Call* for the event — the constellation would end up with two systems. One would have an inventory cadence and no event handling. The other would have an event handler and no preparation discipline. The cultures would diverge, and the moment a call opened the practitioner would discover that the people who keep the pantry are not the people who run the call, and the handoff would have to be invented under fire. The both-states test catches this before it happens: pick the resting state, ask whether the umbrella name still holds in the activated state; pick the activated state, ask whether the umbrella name still holds in the resting state. *Standby* passes both — *on standby* and *standby stock* are the same posture in either state. *Pantry* and *Call* each pass only one."
+        },
+        {
+          "kind": "callout",
+          "text": "The both-states principle applies here: one piece of infrastructure — the Standby — that moves between a resting state and an activated state. The name names the pipe, not the valve position. *Standby* holds in either state."
+        }
+      ],
+      "crossZoneReads": [
+        "Zone 0 (Saltbox + Bright Side) — household and institutional standby checklists mirror the co-op's standby stock list, item for item.",
+        "Eave — a standby budget envelope sleeves up automatically during an active call (drought → water-cost envelope, fire → supply-cost envelope, freight → stockpile envelope).",
+        "Zone 2 (Workbench) — standby debriefs surface here as the cross-zone synthesis the workbench is for; no live call state is kept on the workbench, only the after-action read.",
+        "Zone 3 (Commons) — host zone. Centralized disruptions are felt collectively here first; call history is the record kept here; The Common Pantry and The Watch are the sub-shelves.",
+        "Zone 4 (Arc) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Jude).",
+        "Zone 5 (The Margin) — debriefs that someone wants to share publicly float to the Shallows; private-by-default holds."
+      ],
+      "takeaway": {
+        "pull": "When a system is one piece of infrastructure that moves between a resting state and an activated state, the name has to hold in either state without bending — or the system will fork into two systems with two cultures.",
+        "closingPara": "The Standby is the constellation's first non-zone primitive. It is hosted in Zone 3 because that is where centralized disruptions are felt collectively first, but it is read by every zone — and the both-states principle it carries is now registered as a named principle in the manifest, available the next time a primitive has to do double duty."
+      },
+      "openQuestions": [
+        "What is the right cadence for the resting state's stock-check ritual that does not drift into bureaucratic ritual? Monthly is too easy to skip; weekly is too easy to resent; *whenever there's an advisory* is reactive, not standby.",
+        "Does standby stock get ledgered the way money does in Eave, or is it deliberately kept off the books — held by the household and the co-op directly, outside the financial primitives — so the act of stocking does not become an act of accounting?",
+        "When two calls overlap (a fire call open while a freight call is still standing down), do they share a single active rung, or does each call get its own ladder running in parallel? The manifest currently assumes one call at a time.",
+        "How does the practitioner know when *not* to open a call? An over-eager active rung erodes the discipline as fast as a missed one does, and there is no rejected-alternative entry yet for *did not open the call when we should have*.",
+        "When does a prolonged activated state stop being an activated state and become the new resting state? A six-month freight outage is no longer a call — it is a new always-on. Does the system know how to absorb a call into the resting state without losing the debrief?"
+      ]
+    },
+    {
+      "primitiveId": "the-gate",
+      "titleSuffix": "language across institutional boundaries",
+      "whyTwoSided": [
+        {
+          "kind": "subhead",
+          "text": "Why the umbrella name has to hold both sides"
+        },
+        {
+          "kind": "para",
+          "text": "The Gate holds two registers that an outside system would not even recognise as siblings. On one side is the *bright side* — the constellation's own dialect, the words a community uses with itself in its own kitchens, meetings, and ledgers: *neighbour*, *channel*, *the books*, *standby stock*, *the watch*. On the other side is *the systems* — the outside world's dialect, the language a regulator, a banker, a funder, a lawyer, or generic SaaS English will accept: *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*. Neither side is wrong inside its own context. Each side is unfit currency in the other's context."
+        },
+        {
+          "kind": "para",
+          "text": "If the two sides were named separately — *Translator* for the bright-to-systems direction, *Importer* for the systems-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction; it logs every substitution so the bright-side noun stays on file alongside the systems-side equivalent; and it has a *refused* bar — a function that passes the both-sides test in its own right — for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape: pick the bright side, ask whether the umbrella name still respects the systems side; pick the systems side, ask whether the umbrella name still respects the bright side. *Gate* passes both — neither side is the inside, neither is the outside; the Gate is the membrane that lets each context keep its own language while still allowing communication across."
+        },
+        {
+          "kind": "callout",
+          "text": "The both-sides principle applies here: one membrane — the Gate — that faces two rooms simultaneously, always. Bright side and the systems both look at it at once; the name has to hold from either direction."
+        },
+        {
+          "kind": "subhead",
+          "text": "How this differs from the Standby"
+        },
+        {
+          "kind": "para",
+          "text": "The Standby's two *states* are temporal — the infrastructure is constant; the system moves between resting and activated, and the name has to hold in either. The Gate's two *sides* are contextual — both face the system at once; the name has to hold from either direction. The Standby's principle is *both-states*; the Gate's principle is *both-sides*. Both are now registered as named principles in the manifest. A future primitive may need a third axis (densities? scales? jurisdictions?) and the principles array is open-ended on purpose — the discipline travels, the worked examples accumulate."
+        }
+      ],
+      "crossZoneReads": [
+        "Zone 0 (Saltbox + Bright Side) — every form filled out for the school, the doctor, the child welfare office crosses a small gate; the household's word for who-belongs is *kin* or *neighbour*; the form's word is *resident* or *legal guardian*. The household keeps both on the fridge; the form goes out with the systems' word. *Gate Refused (Zone 0 — Parrs Jars, 2020–2022):* the Jarista built a smoked salt blend from freeze-dried local microgreens, hydroponic greens, and farm-sourced onions — a circular economy product whose value proposition was the specific sourcing. The health unit required lab testing for each farm ingredient and recommended switching to commercial ingredients instead. The practitioner crossed with commercial ingredients to meet orders. The product crossed; the story did not. The systems-side form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The bright-side value proposition was Gate Refused: no honest systems-side equivalent existed that could carry the same meaning, so the sourcing story stayed on the bright side and the jar went out with a different recipe. The lesson: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label.",
+        "Eave — every grant application, CRA filing, and banker meeting is a Gate event. The bright side says *channel*; the systems say *bank account*. Same plumbing, different room. The mappings ledger is what keeps the two from drifting apart in the practitioner's own head.",
+        "Zone 2 (Workbench) — proposals, contracts, and statements of work cross the Gate between practitioner-vocabulary and client-vocabulary; the workbench logs which words crossed, in which direction, and what they became, so the next contract starts from the previous translation, not from scratch.",
+        "Zone 3 (Commons) — host zone alongside The Standby. Co-op invoices, band council resolutions, and regulator filings are the highest-volume gate traffic in the constellation. Host because Z3 is where the community's collective economic surface meets every external counterparty at once.",
+        "Zone 4 (Arc) — sector-level translation: a *trapline*, a *family-run cold truck*, a *seed library* gets one systems-side equivalent for grant purposes (*harvesting operation*, *refrigerated logistics SME*, *plant-genetic-resource program*) and the bright-side name continues to live unchanged at home.",
+        "Zone 5 (The Margin) — public communication runs into a third register the Gate refuses to formalise: *plain language for the wider public*, neither bright-side nor the systems. The Gate handles bright-to-systems and back; the third register lives one zone over, and the Shallows decide what gets said publicly in whose words."
+      ],
+      "takeaway": {
+        "pull": "When a system has language that has to live inside two contexts that do not trust each other, the metaphor must hold both sides without flattening either, or the system will pick a dialect and lose the other room.",
+        "closingPara": "The Gate is the constellation's second non-zone primitive. It is hosted in Zone 3 alongside The Standby because that is where the community's collective surface meets every external counterparty — and it is read by every zone. The both-sides principle it carries is registered alongside both-states in the manifest, available the next time a primitive has to hold two contexts at once."
+      },
+      "openQuestions": [
+        "Should *refused* (the rung) become its own ledger, or is it just a category of *cleared with a note that no honest equivalent existed*? The first treats refusal as a first-class outcome the practitioner reviews periodically; the second treats it as a footnote on a clearance and lets it disappear into the file.",
+        "Where does the third register — plain public language for Zone 5 — live? Inside the Gate as a fourth direction, alongside it as a sibling primitive (a *Public Voice*?), or out of scope entirely on the grounds that the Shallows already do it without naming it?",
+        "When the Gate refuses to translate, what is the next move? Does the practitioner rewrite the source-side language until it is gateable, or does the document just go out untranslated with a footnote saying *this term has no honest equivalent in the target dialect*? The first protects the document; the second protects the noun.",
+        "Does the Gate need a severity escalation when the systems try to *replace* a bright-side word inside source documents — not just translate them on the way out? A funder editing the practitioner's own kitchen-language inside a draft is a different event than the practitioner translating it on the way out, and the manifest currently does not distinguish.",
+        "Is *the systems* precise enough as the name for the outside-world side? It carries the load — the world of regulators, forms, dashboards, and policy — and it uses language the self-reliant community already knows and trusts. Worth re-examining once the Gate has been used in the field to see whether it holds under pressure or needs a sharper edge."
+      ]
+    }
+  ]
+}

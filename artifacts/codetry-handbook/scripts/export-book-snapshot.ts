@@ -440,6 +440,112 @@ function buildJsonData(narrations: Record<string, string>): object {
   };
 }
 
+// ── Per-section files ────────────────────────────────────────────────────────
+
+interface SectionFile {
+  filename: string;
+  section: string;
+  recordCount: number;
+}
+
+function writePerSectionFiles(
+  narrations: Record<string, string>
+): SectionFile[] {
+  const exportedAt = new Date().toISOString();
+  const index: SectionFile[] = [];
+
+  function writeSection(filename: string, section: string, payload: unknown, count: number) {
+    const content = JSON.stringify({ _meta: { exportedAt, section }, ...( payload as object ) }, null, 2);
+    writeFileSync(join(EXPORTS_DIR, filename), content, "utf-8");
+    const kb = Math.round(content.length / 1024);
+    console.log(`✓ exports/${filename} written (${kb} KB, ${count} records)`);
+    index.push({ filename, section, recordCount: count });
+  }
+
+  // chapters
+  writeSection(
+    "codetry-book-chapters.json",
+    "chapters",
+    { PARTS, CHAPTERS },
+    CHAPTERS.length
+  );
+
+  // glossary
+  writeSection(
+    "codetry-book-glossary.json",
+    "glossary",
+    { SECTION_ORDER, SECTION_LABELS, GLOSSARY_ENTRIES },
+    GLOSSARY_ENTRIES.length
+  );
+
+  // tales
+  writeSection(
+    "codetry-book-tales.json",
+    "tales",
+    { TALES },
+    TALES.length
+  );
+
+  // pioneer-path (includes youth path and founding examples for completeness)
+  writeSection(
+    "codetry-book-pioneer-path.json",
+    "pioneer-path",
+    {
+      PIONEER_PHASES,
+      PIONEER_STATIONS,
+      YOUTH_PHASES,
+      YOUTH_STATIONS,
+      FOUNDING_EXAMPLE_COMMENTARY,
+    },
+    PIONEER_STATIONS.length + YOUTH_STATIONS.length
+  );
+
+  // constellation
+  writeSection(
+    "codetry-book-constellation.json",
+    "constellation",
+    {
+      constellation,
+      ZONE_AUTHOR_ENTRIES,
+      DAILY_DRIVER_SCHEMA: {
+        GOAL_KIND_LABELS,
+        GOAL_KIND_DESCRIPTIONS,
+        HORIZON_LABELS,
+        UNIVERSAL_STEPS_BEFORE,
+        UNIVERSAL_STEPS_AFTER,
+        KIND_STEPS,
+      },
+    },
+    (constellation.zones?.length ?? 0) + (constellation.preZone?.length ?? 0)
+  );
+
+  // standby
+  writeSection(
+    "codetry-book-standby.json",
+    "standby",
+    { PRIMITIVE: STANDBY_PRIMITIVE, RUNGS, SUB_SHELVES, VOCAB, ITEMS },
+    ITEMS.length
+  );
+
+  // narrations
+  writeSection(
+    "codetry-book-narrations.json",
+    "narrations",
+    { NARRATION_SLUGS, NARRATION_SCRIPTS: narrations },
+    NARRATION_SLUGS.length
+  );
+
+  // stack cards (not called out in task but present in the full export — include for completeness)
+  writeSection(
+    "codetry-book-stack-cards.json",
+    "stack-cards",
+    { STACK_CARDS },
+    STACK_CARDS.length
+  );
+
+  return index;
+}
+
 // ── Main ────────────────────────────────────────────────────────────────────
 
 function run() {
@@ -464,7 +570,24 @@ function run() {
   const jsonKb = Math.round(jsonContent.length / 1024);
   console.log(`✓ exports/codetry-book-data.json written (${jsonKb} KB)`);
 
-  console.log(`\nBoth files are at ${EXPORTS_DIR}`);
+  console.log("\n── Per-section files ─────────────────────────────────────");
+  const sectionFiles = writePerSectionFiles(narrations);
+
+  const indexPayload = {
+    _meta: {
+      exportedAt: new Date().toISOString(),
+      constellationVersion: constellation.version,
+      constellationLastUpdated: constellation.lastUpdated,
+      description:
+        "Index of per-section JSON exports. Import only the section(s) you need.",
+    },
+    files: sectionFiles,
+  };
+  const indexContent = JSON.stringify(indexPayload, null, 2);
+  writeFileSync(join(EXPORTS_DIR, "codetry-book-index.json"), indexContent, "utf-8");
+  console.log(`✓ exports/codetry-book-index.json written (${sectionFiles.length} sections)`);
+
+  console.log(`\nAll files are at ${EXPORTS_DIR}`);
   console.log("No build step needed — readable and parseable as-is.");
 }
 
