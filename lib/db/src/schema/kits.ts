@@ -93,6 +93,28 @@ export const stripeProcessedEventsTable = pgTable("stripe_processed_events", {
   purchaseId: text("purchase_id").notNull(),
 });
 
+// Audit trail of every failed kit delivery email.  A row is written whenever
+// sendKitDeliveryEmail returns status:"failed", in addition to the one-shot
+// alert email.  resolvedAt is set (manually or via a future retry queue) once
+// the buyer has been reached.
+export const kitDeliveryFailuresTable = pgTable(
+  "kit_delivery_failures",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    buyerEmail: text("buyer_email").notNull(),
+    kitId: text("kit_id").notNull(),
+    purchaseId: text("purchase_id").notNull(),
+    error: text("error"),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    purchaseIdIdx: index("kit_delivery_failures_purchase_id_idx").on(t.purchaseId),
+    resolvedAtIdx: index("kit_delivery_failures_resolved_at_idx").on(t.resolvedAt),
+    buyerEmailIdx: index("kit_delivery_failures_buyer_email_idx").on(t.buyerEmail),
+  }),
+);
+
 export type KitRow = typeof kitsTable.$inferSelect;
 export type KitInsert = typeof kitsTable.$inferInsert;
 export type PractitionerApplicationRow = typeof practitionerApplicationsTable.$inferSelect;
@@ -101,3 +123,5 @@ export type KitTokenRow = typeof kitTokensTable.$inferSelect;
 export type KitTokenInsert = typeof kitTokensTable.$inferInsert;
 export type StripeProcessedEventRow = typeof stripeProcessedEventsTable.$inferSelect;
 export type StripeProcessedEventInsert = typeof stripeProcessedEventsTable.$inferInsert;
+export type KitDeliveryFailureRow = typeof kitDeliveryFailuresTable.$inferSelect;
+export type KitDeliveryFailureInsert = typeof kitDeliveryFailuresTable.$inferInsert;

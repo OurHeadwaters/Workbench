@@ -49,7 +49,13 @@ vi.mock("@workspace/db", async () => {
     columns: ["eventId", "processedAt", "purchaseId"],
   });
 
-  return { db: makeFakeDb(), kitTokensTable, stripeProcessedEventsTable };
+  const kitDeliveryFailuresTable = makeTable({
+    name: "kit_delivery_failures",
+    pk: ["id"],
+    columns: ["id", "buyerEmail", "kitId", "purchaseId", "error", "resolvedAt", "createdAt"],
+  });
+
+  return { db: makeFakeDb(), kitTokensTable, stripeProcessedEventsTable, kitDeliveryFailuresTable };
 });
 
 vi.mock("drizzle-orm", async () => {
@@ -83,6 +89,7 @@ import * as kitsMailerModule from "../lib/kitsMailer";
 const tables = dbModule as unknown as {
   kitTokensTable: FakeTable;
   stripeProcessedEventsTable: FakeTable;
+  kitDeliveryFailuresTable: FakeTable;
 };
 const getKitMock = kitsRegistryModule.getKit as ReturnType<typeof vi.fn>;
 const sendKitDeliveryEmailMock =
@@ -136,6 +143,7 @@ beforeEach(() => {
 
   tables.kitTokensTable.__store.length = 0;
   tables.stripeProcessedEventsTable.__store.length = 0;
+  tables.kitDeliveryFailuresTable.__store.length = 0;
   getKitMock.mockClear();
   getKitMock.mockReturnValue(null);
   sendKitDeliveryEmailMock.mockClear();
@@ -427,6 +435,51 @@ describe("POST /stripe/webhook — checkout.session.completed", () => {
       expect(body.received).toBe(true);
       expect(body.skipped).toMatch(/kit_id/);
       expect(tables.kitTokensTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("writes a row to kit_delivery_failures when delivery email fails", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({
+      status: "failed",
+      error: "gmail 503: service unavailable",
+    });
+    const payload = makeCheckoutPayload({ id: "evt_dbfail_001" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      expect(tables.kitDeliveryFailuresTable.__store).toHaveLength(1);
+      const row = tables.kitDeliveryFailuresTable.__store[0];
+      expect(row.buyerEmail).toBe("buyer@example.com");
+      expect(row.kitId).toBe("economy-kit");
+      expect(row.purchaseId).toBe("pi_test_001");
+      expect(row.error).toBe("gmail 503: service unavailable");
+      expect(row.resolvedAt).toBeFalsy();
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does not write to kit_delivery_failures when delivery email succeeds", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent", messageId: "msg_ok" });
+    const payload = makeCheckoutPayload({ id: "evt_mailok_nofail_001" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      expect(tables.kitDeliveryFailuresTable.__store).toHaveLength(0);
     } finally {
       await h.close();
     }

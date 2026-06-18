@@ -39,8 +39,8 @@ import { getKit, KITS } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, verifyResendToken } from "../lib/kitsMailer";
 import { runCodetryFilter } from "../lib/codetryFilter";
 import { requireKitOwnerAuth, requireFounderOnlyAuth, FOUNDER_OWNER_ID } from "../lib/kitAuth";
-import { db, kitsTable, practitionerApplicationsTable, kitTokensTable } from "@workspace/db";
-import { eq, and, gt, desc } from "drizzle-orm";
+import { db, kitsTable, practitionerApplicationsTable, kitTokensTable, kitDeliveryFailuresTable } from "@workspace/db";
+import { eq, and, gt, desc, isNull } from "drizzle-orm";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { clerkClient } from "@clerk/express";
 
@@ -1308,6 +1308,33 @@ router.post("/gord-draft", requireKitOwnerAuth, async (req: Request, res: Respon
     logger.error({ err }, "kits: POST /gord-draft failed");
     res.status(500).json({ error: "Gord's kit-builder mode went quiet. Try again." });
   }
+});
+
+// ── GET /kits/failures — founder-only, list unresolved delivery failures ──────
+//
+// Returns all kit_delivery_failures rows where resolvedAt IS NULL, ordered
+// most-recent first.  Gives the founder a queryable audit trail even if the
+// one-shot alert email was missed or itself failed.
+//
+// Auth: requireFounderOnlyAuth — practitioners excluded (global failure list).
+
+router.get("/failures", requireFounderOnlyAuth, async (_req: Request, res: Response) => {
+  const rows = await db
+    .select()
+    .from(kitDeliveryFailuresTable)
+    .where(isNull(kitDeliveryFailuresTable.resolvedAt))
+    .orderBy(desc(kitDeliveryFailuresTable.createdAt));
+
+  const failures = rows.map((r) => ({
+    id: r.id,
+    buyerEmail: r.buyerEmail,
+    kitId: r.kitId,
+    purchaseId: r.purchaseId,
+    error: r.error,
+    createdAt: r.createdAt.toISOString(),
+  }));
+
+  res.json({ ok: true, failures });
 });
 
 export default router;

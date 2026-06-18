@@ -42,7 +42,7 @@ import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { getKit } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, sendKitDeliveryFailureAlert } from "../lib/kitsMailer";
-import { db, kitTokensTable, stripeProcessedEventsTable } from "@workspace/db";
+import { db, kitTokensTable, stripeProcessedEventsTable, kitDeliveryFailuresTable } from "@workspace/db";
 
 const router: IRouter = Router();
 
@@ -202,6 +202,22 @@ router.post(
       );
 
       if (mailResult.status === "failed") {
+        // Persist the failure to the DB audit trail so it's queryable even if
+        // the alert email also fails or the founder misses it.
+        try {
+          await db.insert(kitDeliveryFailuresTable).values({
+            buyerEmail: buyerEmail.toLowerCase(),
+            kitId,
+            purchaseId,
+            error: mailResult.error ?? null,
+          });
+        } catch (dbErr) {
+          logger.error(
+            { dbErr, kitId, purchaseId },
+            "[stripe-webhook] failed to persist delivery failure record",
+          );
+        }
+
         await sendKitDeliveryFailureAlert({
           buyerEmail,
           kitId,
