@@ -58,6 +58,57 @@ function readNarration(slug: string): string {
   }
 }
 
+// ── Anchor / TOC helpers ────────────────────────────────────────────────────
+
+/**
+ * Produces a heading anchor that matches GitHub-Flavored Markdown:
+ *   – lowercase
+ *   – strip everything except word chars (\w = [a-zA-Z0-9_]), spaces, and hyphens
+ *   – replace spaces with hyphens
+ */
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
+}
+
+function buildTOC(): string {
+  const lines: string[] = [];
+
+  lines.push("## Table of Contents\n\n");
+
+  // ── Book Content ──
+  lines.push("### Book Content\n\n");
+  for (const part of PARTS) {
+    const partHeading = `Part ${part.roman} · ${part.title}`;
+    lines.push(`- [${partHeading}](#${slugify(partHeading)})\n`);
+    for (const chapter of part.chapters) {
+      const chHeading = `${chapter.number} · ${chapter.title}`;
+      lines.push(`  - [${chHeading}](#${slugify(chHeading)})\n`);
+    }
+  }
+  lines.push("\n");
+
+  // ── Supplementary Sections ──
+  lines.push("### Supplementary Sections\n\n");
+  const supplements: [string, string][] = [
+    ["FORMAL VOCABULARY (GLOSSARY)", "formal-vocabulary-glossary"],
+    ["TALES", "tales"],
+    ["PRACTICE CARDS", "practice-cards"],
+    ["PIONEER PATH", "pioneer-path"],
+    ["CONSTELLATION SNAPSHOT", "constellation-snapshot"],
+    ["STANDBY CHECKLIST (ZONE 0 HOUSEHOLD)", "standby-checklist-zone-0-household"],
+    ["NARRATION SCRIPTS", "narration-scripts"],
+  ];
+  for (const [label, anchor] of supplements) {
+    lines.push(`- [${label}](#${anchor})\n`);
+  }
+
+  lines.push("\n---\n\n");
+  return lines.join("");
+}
+
 // ── Block → Markdown renderer ───────────────────────────────────────────────
 
 function renderBlock(block: Block): string {
@@ -143,7 +194,10 @@ function buildMarkdown(narrations: Record<string, string>): string {
   sections.push(`# Headwaters: How a Community Runs Its Own Economy\n`);
   sections.push(`*Full content snapshot — exported ${new Date().toISOString().split("T")[0]}*\n`);
   sections.push(`*Constellation version: ${constellation.version} (last updated ${constellation.lastUpdated})*\n`);
-  sections.push("\n---\n");
+  sections.push("\n---\n\n");
+
+  // ── Table of Contents ──────────────────────────────────────────────────────
+  sections.push(buildTOC());
 
   // ── Main chapters ─────────────────────────────────────────────────────────
   sections.push("# BOOK CONTENT\n\n");
