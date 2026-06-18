@@ -173,3 +173,15 @@ id = "m7vZ5-u5f4m0OUqh6syz4"
 uri = "file://.local/codetry-headwaters-agent-briefing.md"
 type = "text"
 title = "Codetry / Headwaters — Full Agent Briefing"
+
+[[outputs]]
+id = "B5c9aKYdRwpcbsTCG2W6F"
+uri = "file://exports/codetry-book-full.md"
+type = "text"
+title = "Codetry Book — Full Prose Snapshot (509 KB)"
+
+[[outputs]]
+id = "iS5oeMRSLMVYBOWGcvoeG"
+uri = "file://exports/codetry-book-data.json"
+type = "unspecified"
+title = "Codetry Book — Structured Data (1.2 MB)"

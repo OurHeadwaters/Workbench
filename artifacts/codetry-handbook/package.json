@@ -26,6 +26,7 @@
     "refresh:preview:android": "node scripts/refresh-preview-apk.js",
     "serve": "node server/serve.js",
     "export-content": "tsx scripts/export-handbook-content.ts",
+    "export-book": "tsx scripts/export-book-snapshot.ts",
     "sync-constellation": "node scripts/sync-constellation.js",
     "check-constellation": "node scripts/sync-constellation.js --check",
     "typecheck": "node scripts/sync-constellation.js --check && node scripts/regenerate-router-types.js && tsc -p tsconfig.json --noEmit",
