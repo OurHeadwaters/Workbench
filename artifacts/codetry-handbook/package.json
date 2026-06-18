@@ -14,7 +14,7 @@
   },
   "scripts": {
     "dev": "EXPO_PACKAGER_PROXY_URL=https://$REPLIT_EXPO_DEV_DOMAIN EXPO_PUBLIC_DOMAIN=$REPLIT_DEV_DOMAIN EXPO_PUBLIC_REPL_ID=$REPL_ID REACT_NATIVE_PACKAGER_HOSTNAME=$REPLIT_DEV_DOMAIN pnpm exec expo start --localhost --port $PORT",
-    "build": "node scripts/sync-constellation.js && node scripts/build.js",
+    "build": "node scripts/sync-constellation.js && tsx scripts/export-book-snapshot.ts && node scripts/build.js",
     "build:web": "EXPO_PUBLIC_BASE_URL=${EXPO_PUBLIC_BASE_URL:-/codetry-handbook} pnpm exec expo export --platform web --output-dir static-build/web",
     "build:android": "pnpm exec eas build --platform android --profile production --non-interactive",
     "build:ios": "pnpm exec eas build --platform ios --profile production --non-interactive",
@@ -29,6 +29,7 @@
     "export-book": "tsx scripts/export-book-snapshot.ts",
     "sync-constellation": "node scripts/sync-constellation.js",
     "check-constellation": "node scripts/sync-constellation.js --check",
+    "check-exports": "node scripts/check-book-exports.js",
     "typecheck": "node scripts/sync-constellation.js --check && node scripts/regenerate-router-types.js && tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
