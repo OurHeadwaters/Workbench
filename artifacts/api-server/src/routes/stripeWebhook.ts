@@ -38,6 +38,7 @@ import { Router, type IRouter, type Request, type Response } from "express";
 import express from "express";
 import crypto from "crypto";
 import Stripe from "stripe";
+import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { getKit } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, sendKitDeliveryFailureAlert } from "../lib/kitsMailer";
@@ -74,6 +75,12 @@ function accessUrl(token: string): string {
 // .returning() returns an empty array and we bail immediately — without ever
 // creating a token or sending an email. This closes the TOCTOU window that
 // existed when the SELECT check and the INSERT were separate steps.
+//
+// Retry safety: claimEvent() runs before the kit-token INSERT. If the token
+// INSERT then fails (DB error, constraint violation, etc.) we call
+// unclaimEvent() to remove the row so the next Stripe retry can re-enter the
+// delivery flow. Without this rollback, the duplicate gate would permanently
+// block every subsequent retry and the buyer would never receive their kit.
 
 async function claimEvent(
   eventId: string,
@@ -86,6 +93,12 @@ async function claimEvent(
     .returning({ eventId: stripeProcessedEventsTable.eventId });
   // inserted.length === 1 → we own this event; 0 → another handler got there first
   return inserted.length > 0;
+}
+
+async function unclaimEvent(eventId: string): Promise<void> {
+  await db
+    .delete(stripeProcessedEventsTable)
+    .where(eq(stripeProcessedEventsTable.eventId, eventId));
 }
 
 // ── POST /stripe/webhook ──────────────────────────────────────────────────────
@@ -190,7 +203,22 @@ router.post(
           expiresAt,
         });
       } catch (err) {
-        logger.error({ err, kitId, sessionId: session.id }, "[stripe-webhook] failed to persist token");
+        // Remove the duplicate-delivery lock so the next Stripe retry can
+        // re-enter the full delivery flow. Without this, every subsequent
+        // retry would hit the duplicate gate and skip delivery permanently,
+        // leaving the buyer without their kit.
+        try {
+          await unclaimEvent(event.id);
+          logger.error(
+            { err, kitId, sessionId: session.id, eventId: event.id },
+            "[stripe-webhook] failed to persist token — event unclaimed, delivery WILL be retried by Stripe",
+          );
+        } catch (unclaimErr) {
+          logger.error(
+            { err, unclaimErr, kitId, sessionId: session.id, eventId: event.id },
+            "[stripe-webhook] failed to persist token AND failed to unclaim event — delivery will NOT be retried, manual intervention required",
+          );
+        }
         res.status(500).json({ error: "Failed to record purchase" });
         return;
       }

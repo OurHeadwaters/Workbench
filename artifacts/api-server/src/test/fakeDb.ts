@@ -555,7 +555,32 @@ function makeInsert(table: FakeTable) {
             table.__store.push(row);
             out.push({ ...row });
           }
-          return Promise.resolve(out);
+          // Return a builder so callers can optionally chain .returning().
+          // This mirrors the onConflictDoUpdate pattern and supports drizzle's
+          // `.onConflictDoNothing().returning({ col })` used for idempotency
+          // guards that need to know whether the row was actually inserted.
+          return {
+            returning(projection?: Record<string, Col>) {
+              if (!projection) return Promise.resolve(out);
+              return Promise.resolve(
+                out.map((r) => {
+                  const result: Row = {};
+                  for (const [k, col] of Object.entries(projection)) {
+                    if (isCol(col)) result[k] = r[col.__c];
+                  }
+                  return result;
+                }),
+              );
+            },
+            then(
+              resolve: (v: Row[]) => unknown,
+              reject?: (e: unknown) => unknown,
+            ) {
+              return Promise.resolve(out)
+                .then(resolve)
+                .catch((e) => (reject ? reject(e) : Promise.reject(e)));
+            },
+          };
         },
         then(
           resolve: (v: undefined) => unknown,

@@ -82,11 +82,12 @@ vi.mock("../lib/kitsMailer", () => ({
 import express from "express";
 import stripeWebhookRouter from "./stripeWebhook";
 import * as dbModule from "@workspace/db";
-import type { FakeTable } from "../test/fakeDb";
+import type { FakeDb, FakeTable } from "../test/fakeDb";
 import * as kitsRegistryModule from "../lib/kitsRegistry";
 import * as kitsMailerModule from "../lib/kitsMailer";
 
 const tables = dbModule as unknown as {
+  db: FakeDb;
   kitTokensTable: FakeTable;
   stripeProcessedEventsTable: FakeTable;
   kitDeliveryFailuresTable: FakeTable;
@@ -561,6 +562,54 @@ describe("POST /stripe/webhook — checkout.session.completed", () => {
       expect(tables.kitTokensTable.__store).toHaveLength(1);
       expect(sendKitDeliveryEmailMock).toHaveBeenCalledTimes(1);
     } finally {
+      await h.close();
+    }
+  });
+
+  it("removes the event claim when kit-token insert fails so the next Stripe retry can re-deliver", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    const payload = makeCheckoutPayload({ id: "evt_token_insert_fail_001" });
+
+    // Temporarily make db.insert throw for kitTokensTable while still
+    // allowing the stripeProcessedEventsTable claim insert to succeed.
+    const db = tables.db;
+    const originalInsert = db.insert.bind(db);
+    const insertSpy = vi.spyOn(db, "insert").mockImplementation((table: FakeTable) => {
+      if (table === tables.kitTokensTable) {
+        return {
+          values: () => ({
+            returning: () => Promise.reject(new Error("simulated DB failure on token insert")),
+            onConflictDoNothing: () => Promise.reject(new Error("simulated DB failure on token insert")),
+            then: (_: unknown, reject?: (e: Error) => unknown) => {
+              const err = new Error("simulated DB failure on token insert");
+              return reject ? Promise.resolve(reject(err)) : Promise.reject(err);
+            },
+          }),
+        } as unknown as ReturnType<typeof originalInsert>;
+      }
+      return originalInsert(table);
+    });
+
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+
+      // Handler must return 500 so Stripe knows to retry
+      expect(r.status).toBe(500);
+
+      // The event claim row must be removed so the next retry is not blocked
+      // by the duplicate gate — this is the core protection for the buyer
+      expect(tables.stripeProcessedEventsTable.__store).toHaveLength(0);
+
+      // No token written and no email sent on this failed attempt
+      expect(tables.kitTokensTable.__store).toHaveLength(0);
+      expect(sendKitDeliveryEmailMock).not.toHaveBeenCalled();
+    } finally {
+      insertSpy.mockRestore();
       await h.close();
     }
   });
