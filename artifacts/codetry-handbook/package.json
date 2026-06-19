@@ -30,7 +30,7 @@
     "sync-constellation": "node scripts/sync-constellation.js",
     "check-constellation": "node scripts/sync-constellation.js --check",
     "check-exports": "node scripts/check-book-exports.js",
-    "typecheck": "node scripts/sync-constellation.js --check && node scripts/regenerate-router-types.js && tsc -p tsconfig.json --noEmit",
+    "typecheck": "node scripts/sync-constellation.js --check && node scripts/regenerate-router-types.js && tsc -p tsconfig.json --noEmit && node scripts/check-book-exports.js --strict",
     "test": "vitest run",
     "test:watch": "vitest"
   },
