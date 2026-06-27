@@ -85,6 +85,7 @@
     "zod": "catalog:"
   },
   "dependencies": {
+    "@clerk/react": "^6.4.3",
     "@workspace/gord-widget": "workspace:*",
     "qrcode.react": "^4.2.0",
     "@workspace/kitchen-table-client": "workspace:*"

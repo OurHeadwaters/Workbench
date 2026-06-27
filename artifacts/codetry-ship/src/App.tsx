@@ -47,6 +47,7 @@ import { GordWidget } from "@workspace/gord-widget";
 import { StompingGroundsPage } from "@/pages/StompingGroundsPage";
 import { CastlePage } from "@/pages/CastlePage";
 import { HelpingHandsPage } from "@/pages/HelpingHandsPage";
+import { ArcLoginPage } from "@/pages/ArcLoginPage";
 
 const queryClient = new QueryClient();
 
@@ -155,12 +156,15 @@ function Router() {
       <Route path="/castle" component={CastlePage} />
       <Route path="/stomping-grounds" component={StompingGroundsPage} />
 
+      {/* ── Arc login (Clerk sign-in for arc artifact) ── */}
+      <Route path="/arc/login" component={ArcLoginPage} />
+
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-const STANDALONE_ROUTES = ["/", "/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub", "/kits/resend"];
+const STANDALONE_ROUTES = ["/", "/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub", "/kits/resend", "/arc/login"];
 
 function NavShell() {
   const [location] = useLocation();

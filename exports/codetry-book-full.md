@@ -1,5 +1,5 @@
 # Headwaters: How a Community Runs Its Own Economy
-*Full content snapshot — exported 2026-06-18*
+*Full content snapshot — exported 2026-06-27*
 *Constellation version: 0.5.7 (last updated 2026-05-05)*
 
 ---
