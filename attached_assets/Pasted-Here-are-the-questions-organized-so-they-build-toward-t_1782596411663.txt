@@ -1,0 +1,64 @@
+Here are the questions, organized so they build toward the numbers an investor needs to hear. Give these to your business agent in order — each section feeds the next.
+
+Round 1 — The Loan and the Ask
+These set the frame before anything else.
+
+What size loan are you actually considering? Give me a range — low, middle, high — and what each scenario would fund differently.
+
+What's your ideal repayment structure? Interest-free + principal back at 12 months? Revenue share? Equity? Or a hybrid — e.g., fixed repayment if revenue hits a threshold, equity stake if it doesn't?
+
+Who is the investor? Is this a personal relationship, a community funder, a patient capital org, or a cold approach? The relationship type changes the entire pitch tone.
+
+What's your personal minimum to operate for 12 months? Not the build budget — your household floor. That number is what tells us how much of the loan is operational runway vs. pure go-to-market.
+
+Round 2 — The OCA / Co-operators Anchor
+This is the hinge that changes whether year-one revenue is $40k or $120k.
+
+Do you have an existing contact at OCA or Co-operators, or is this a cold approach? Warm intro, past relationship, or fresh outreach?
+
+Have you had any conversation with them — formal or informal — that suggested they'd see value in a watershed licensing model? Even a corridor conversation counts.
+
+What would the OCA actually be buying? Is it a white-label of the whole Arc + 807 layer for member communities? A curriculum license? A practitioner network access? Get specific — because they'll ask.
+
+What's your realistic confidence that the OCA license converts within 12 months? Be honest: 30%? 60%? 90%? This determines whether it belongs in the investor's base case or upside scenario.
+
+What does the development retainer in the $60k–$120k figure refer to? Is that Headwaters building custom features for OCA, or is the retainer for ongoing maintenance? Who pays it — OCA, Co-operators, or both?
+
+Round 3 — The 807 White-Label Licensing
+The engine is built. We need the price.
+
+Have you licensed the 807 layer to any community yet — even informally or at a discount? Any precedent sets the anchor.
+
+What does a community actually get with a license? List the things: the Greenhouse tools, Helping Hands engine, member benefit tiers, custom branding, what else? Being specific here justifies the price.
+
+What's your gut number for the price — setup fee, annual fee, or both? Don't optimize it yet — just say what feels right to you, and we'll pressure-test it.
+
+What's the realistic number of communities you could convert in 12 months if you had the runway to make calls? Be conservative: 3? 5? 10? Multiply that by your gut price and see if it moves the needle.
+
+Are there any communities — reserves, co-ops, mutual aid networks — that have already expressed interest, even loosely? Warm leads are worth naming.
+
+Round 4 — Kit Pricing
+Right now none of the Kit prices are set. An investor will ask.
+
+What does the Goodbye Kit currently charge for access? (Check the live Stripe config — this is the one Kit that's actually wired. That number is your anchor for everything else.)
+
+For the Earth Kit and other lifecycle Kits — do you lean toward a one-time purchase per Kit, a bundle price, or a household subscription? The Revenue Watershed doc says one-time for most Kits. Is that still your instinct?
+
+Who is the paying customer for the Kits — the family directly, or a practitioner buying on behalf of a family? That distinction changes both the price point and the channel.
+
+What would you charge for a life-stage bundle (e.g., the caregiving cluster: Shattered Kit + Violated Kit + Cultural Concern Kit)? What feels like a fair price to a family standing at that crossing?
+
+How many Kit sales per month would feel like traction to you? 10? 50? 200? Knowing your expectation calibrates whether Kit revenue is a meaningful stream or a rounding error in the investor pitch.
+
+Round 5 — The Investor's ROI
+Close the loop so you can name a number.
+
+What ROI percentage feels fair to offer for an interest-free 12-month loan? 15%? 20%? 30%? This is partly about what's fair and partly about what you can actually service from projected revenue.
+
+What happens to the investor if you hit only 50% of projected revenue — is there a graceful extension clause, or is the 12-month repayment hard? Investors ask this. Know your answer.
+
+Is there any scenario where you'd offer a small equity stake instead of or alongside the interest premium? Some patient capital investors prefer a small ongoing share over a lump return. Know if you're open to it before the conversation.
+
+What's the single sentence you'd use to describe what their money unlocks? Not the whole pitch — one sentence. If you can't say it cleanly, the pitch isn't ready yet. Let's find that sentence together.
+
+Once your business agent works through these, bring me the answers and I'll turn it into the investor one-pager with actual numbers, the revenue scenarios (base / upside), and the repayment math laid out cleanly.
