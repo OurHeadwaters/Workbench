@@ -117,6 +117,16 @@ if (fs.existsSync(fieldGuideFinanceDist)) {
 const mediaManagerHtml = new URL("../src/media-manager.html", import.meta.url).pathname;
 app.get(["/media", "/media/"], (_req, res) => res.sendFile(mediaManagerHtml));
 
+// Serve codetry-ship SPA at / (root) — must be LAST so it doesn't shadow
+// any of the above /api, /print-marketing, /sandbox, /field-guide-finance, or /media routes.
+const codetryShipDist = path.resolve(process.cwd(), "artifacts/codetry-ship/dist/public");
+if (fs.existsSync(codetryShipDist)) {
+  app.use("/", express.static(codetryShipDist));
+  app.get("/*path", (_req, res) => {
+    res.sendFile(path.join(codetryShipDist, "index.html"));
+  });
+}
+
 scheduleNightlyBriefing();
 scheduleWeeklyArchive();
 scheduleKitTokensCleanup();
