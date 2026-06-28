@@ -82,7 +82,6 @@ import CdpGrantNarrative from "@/pages/CdpGrantNarrative";
 import CdpGrantNarrativeOnePager from "@/pages/CdpGrantNarrativeOnePager";
 import FamilyIncomeOnePager from "@/pages/FamilyIncomeOnePager";
 import NotFound from "@/pages/not-found";
-import { GordWidget } from "@workspace/gord-widget";
 import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
 
 function Router() {
@@ -179,7 +178,6 @@ export default function App() {
         <Router />
       </WouterRouter>
       <div className="print:hidden"><KitchenTableButton /></div>
-      <div className="print:hidden"><GordWidget /></div>
       <PrintEcosystemFooter />
     </PreviewProvider>
     </ZoneStoreProvider>
