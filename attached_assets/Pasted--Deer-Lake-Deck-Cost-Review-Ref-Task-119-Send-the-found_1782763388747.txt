@@ -1,0 +1,109 @@
+🦌 Deer Lake Deck & Cost Review
+Ref	Task
+#119	Send the founder a weekly nudge to finish reviewing remaining costs
+#121	Cover the cost review flow with automated tests
+#138	Catch other stale slide-position links in the deck
+#141	Show each People bucket's ~target % inside cost review
+#142	Bring the Reinvestment slide in line with net-after-buckets framing
+#146	Resize the four reinvestment destinations to fit ~$10.5k/mo
+#156	Echo the Headwaters ethos into the Deer Lake deck (band council voice)
+#163	Match the Brightside timeline to the active scenario
+#215	Y1 Picture slide reads locked numbers from one source
+#216	Cost-review modal deep-links to the gap-closing slide
+#217	Lock $201k / $420k reserve pricing in the take-home one-pager
+#218	Wire the one-pager's reserve price to the central cost registry
+#221	Show three travel pass-through examples on the Path-to-Scale slide
+#222	Let receiving reserves swap in their own drive-in / winter-road numbers
+#223	Give each of the six people their own role page
+#236	Sync cost-review modal headline to match slides' planning round-up
+#237	Lock cross-reserve numbers with text-source guard tests
+#238	Stop slide manifest description from drifting on Reserve #2 day-rates
+#241	Friendly social preview when chiefs paste the corridor share link
+#242	Keep corridor numbers visible when band managers click between slides
+#249	Guard the rest of the cross-reserve / path-to-scale headlines against drift
+#251	Every practitioner-edited PDF picks up live edits
+#257	Wire $69.7k cost basis and tier table to the cost registry
+#258	Add a one-line contract-upgrade diagram
+#264	Three pricing tiers from one source so decks can't drift
+#267	Lock corridor guards with an automated test
+#268	Stop drive-in and winter-road travel costs from drifting
+#269	Clean share-link URLs after corridor calculator reset
+📚 Headwaters Handbook (Mobile)
+Ref	Task
+#160	Show eagle prologue once; returning visitors skip straight to content
+#165	Add spreadsheet export to the Personal cash page
+#166	Give the founder one combined spreadsheet covering every bucket
+#169	Side-by-side V2 vs V3 comparison view
+#170	Lock full Phase-3 month-by-month cash schedule for V3
+#181	Auto-refresh the handbook snapshot when the constellation changes
+#182	Print all of Part IV button for practitioners
+#183	On-screen print preview matches the printed page
+#184	Downloadable PDF booklet for Part IV
+#189	Regenerate handbook icons automatically from a single source
+#190	Tell readers what changed when a new handbook version drops
+#191	Stop forcing readers to reload mid-chapter on new version
+#192	Export an alternative reality as a PDF or shareable link
+#194	E2E click-through test for the operating-framework workspace
+#200	Auto-push every iOS preview build to TestFlight
+#201	Serve handbook content from the API so edits never touch the app
+#203	Send a heads-up if the preview APK is about to expire
+#204	Show the install page when scanning the printed handbook QR
+#332	Check practitioner working-doc pages against practice-vs-governance line
+#333	Make Part-level pointers (e.g. "Part VI") tappable
+#334	Show a peek of the destination chapter when hovering a §6.1 link
+#337	Gloss 'Quiet trial run' and resolve the unexplained '$22,000 last time'
+#358	Sync writer's bookmarks to their account across phones
+📖 Replication & Handbook Pages
+Ref	Task
+#178	Cross-link Replication chapter from Compare and Contracts pages
+#179	Worked-example panel on Replication page that switches with scenario toggle
+#180	E2E test that V4 toggle and Replication page render correctly
+🏪 Why Stores Fail / Research Library
+Ref	Task
+#279	Print a one-page plain-English summary of why current stores fail
+#280	Let library curators see research and plain-English versions side-by-side
+#285	Rewrite the number-and-label captions on failure-mode cards
+#290	Plain-language pass through the remaining failure-mode summaries
+#291	Research library failure-mode page shows the same plain language as the deck
+#302	Expand the reverse-test catalog beyond three seeds
+#303	Show reverse-test findings inline on each failure-mode card
+#304	Expose /reverse-test on the public share view
+#306	Let visitors browse cross-industry phenomena from the public share link
+#307	Make adding new phenomena easy without editing source code
+🗺️ Constellation / Cross-Artifact Governance
+Ref	Task
+#259	Surface the shared glossary on a human-readable page
+#260	Sweep other potential cross-artifact name collisions before they fork
+#261	Auto-bump the codetry-test review date when entries change
+#262	Run the canonical-names audit across the whole constellation
+#263	Write the cross-artifact vocabulary glossary before any wiring crosses a boundary
+🔁 Wordpile Sync & Cloud Backup
+Ref	Task
+#330	Lock the rest of Wordpile data behaviors with tests
+#331	Catch Wordpile UI regressions with an E2E browser test
+#360	Auto-retry stuck cloud syncs without waiting for the next edit
+#361	Let users recover from a stuck-in-error sync without signing out
+#363	Show a 'what changed' summary after a backup restore
+#368	Catch duplicate piles when importing from a file
+#369	Show what a merge will actually change before confirming
+#370	Tell users which specific changes the server rejected
+#371	Auto-reconcile sticky failures in the background
+#373	Stop the retry banner from blocking the bookmark icon
+#374	Unit coverage for the failed-op registry
+#379	Make short links expire automatically after a chosen window
+#385	Let recipients peek inside a backup before restoring, pile by pile
+#386	Warn before a merge would overwrite curated words
+🧹 Code Quality & Cleanup
+Ref	Task
+#274	Remove unused UI components (button-group + chart starters)
+#292	TypeScript hygiene pass — fix errors and add typecheck to CI
+⚠️ Flagged — Need Your Action (can't be auto-closed)
+Ref	Flag	Task
+#159	HUMAN DECISION	Lock eagle prologue version with the author
+#335	HUMAN SESSION	Run the live read-aloud session with a Deer Lake reader
+#173	STALE — VERIFY	Visually re-check the research library after corridor co-op rename
+#273	SUPERSEDED → #292	Add typecheck to CI
+#342	SUPERSEDED → #292	Stop file-upload modal type drift
+#343	SUPERSEDED → #292	Stop OTP login type error
+#366	SUPERSEDED → #274	Drop unused chart starter
+86 actionable, 6 flagged for your dismissal, 3 require a human (you). The flagged ones are clearly labeled so no agent will pick them up by mistake — but they won't disappear until you archive them from the task UI.
