@@ -632,6 +632,13 @@ function makeUpdate(table: FakeTable) {
         .then(() => resolve(undefined))
         .catch((e) => (reject ? reject(e) : Promise.reject(e)));
     },
+    // Expose .catch() so callers can fire-and-forget with `.catch(handler)`
+    // (e.g. background DID writes in helpingHands confirm route).
+    catch(handler: (e: unknown) => unknown) {
+      return this.returning()
+        .then(() => undefined)
+        .catch(handler);
+    },
   };
   return builder;
 }
