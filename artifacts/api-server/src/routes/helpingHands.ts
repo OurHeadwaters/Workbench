@@ -1199,6 +1199,87 @@ router.post("/tasks/:id/release", requireAuth(), async (req: Request, res: Respo
 });
 
 // ──────────────────────────────────────────────
+// POST /helping-hands/tasks/:id/cancel
+// Admin: cancel a task that is in "available" or "claimed" state without
+// recording earnings.  This is the explicit cancellation path — distinct
+// from /expire (overdue no-show → "missed") and /release (re-open for
+// re-claim).  If the task had an active on-chain escrow and the band
+// uses XRPL, a best-effort EscrowCancel is submitted to return XRP to
+// the escrow wallet.  The DB transition is always committed regardless
+// of whether the on-chain cancel succeeds.
+// ──────────────────────────────────────────────
+router.post("/tasks/:id/cancel", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admins only" });
+    return;
+  }
+
+  const band = await getOrCreateDefaultBand();
+  const taskId = param(req.params.id);
+
+  const existing = await db
+    .select()
+    .from(hhTasksTable)
+    .where(and(eq(hhTasksTable.id, taskId), eq(hhTasksTable.bandId, band.id)))
+    .limit(1);
+
+  if (!existing[0]) {
+    res.status(404).json({ error: "Task not found" });
+    return;
+  }
+
+  const task = existing[0];
+
+  if (!["available", "claimed"].includes(task.status)) {
+    res.status(409).json({ error: `Task is '${task.status}' — only available or claimed tasks can be cancelled` });
+    return;
+  }
+
+  const updated = await db
+    .update(hhTasksTable)
+    .set({ status: "cancelled", updatedAt: new Date() })
+    .where(
+      and(
+        eq(hhTasksTable.id, taskId),
+        sql`${hhTasksTable.status} IN ('available', 'claimed')`,
+      ),
+    )
+    .returning();
+
+  if (!updated[0]) {
+    res.status(409).json({ error: "Task state changed concurrently — retry" });
+    return;
+  }
+
+  // ── XRPL EscrowCancel (best-effort) ─────────────────────────────────────
+  // If the task had an active on-chain escrow, attempt to cancel it so the
+  // XRP is returned to the escrow wallet. EscrowCancel may fail if the
+  // CancelAfter ledger time has not yet passed — we log and continue.
+  if (
+    bandUsesXrplEscrow(band) &&
+    task.payCurrency === "xrp" &&
+    task.escrowSequence &&
+    task.escrowTxHash &&
+    !task.escrowTxHash.startsWith("SIM_")
+  ) {
+    try {
+      const ownerAddr = escrowWalletAddress();
+      await submitEscrowCancel({ ownerAddress: ownerAddr, escrowSequence: task.escrowSequence });
+      logger.info({ taskId, escrowSequence: task.escrowSequence }, "helpingHands/cancel: EscrowCancel succeeded");
+    } catch (err) {
+      logger.warn(
+        { err, taskId, escrowSequence: task.escrowSequence },
+        "helpingHands/cancel: EscrowCancel skipped (CancelAfter may not have passed yet)",
+      );
+    }
+  }
+
+  const serialized = await enrichTasksWithNames(updated);
+  res.json(serialized[0]);
+});
+
+// ──────────────────────────────────────────────
 // POST /helping-hands/tasks/:id/repost
 // Admin: reopen a "missed" task back to "available" so it can be claimed
 // again.  Clears the claim fields; the original task record is reused

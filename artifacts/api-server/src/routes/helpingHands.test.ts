@@ -978,3 +978,316 @@ describe("confirm — auth guard", () => {
     }
   });
 });
+
+// ═════════════════════════════════════════════════════════════════════════════
+// POST /tasks/:id/cancel — EscrowCancel path
+// ═════════════════════════════════════════════════════════════════════════════
+
+describe("cancel — simulated mode (xrplEscrowEnabled = false)", () => {
+  it("transitions a claimed task to 'cancelled' and records no earnings", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand({ xrplEscrowEnabled: false });
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_clerk_c1",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_clerk_c1",
+        email: "workerc1@example.com",
+        role: "food_handler",
+      });
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        payCurrency: "xrp",
+        payAmount: "2",
+        status: "claimed",
+        escrowSequence: null,
+        escrowTxHash: `SIM_${Date.now().toString(16).toUpperCase()}`,
+        escrowSimulated: false,
+      });
+
+      setUser("admin_clerk_c1");
+      const res = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { status: string };
+      expect(body.status).toBe("cancelled");
+
+      // No earnings row should be created
+      expect(tables.hhEarningsTable.__store).toHaveLength(0);
+
+      // submitEscrowCancel must NOT be called when escrow is simulated
+      expect(vi.mocked(xrplEscrowModule.submitEscrowCancel)).not.toHaveBeenCalled();
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("transitions an available task to 'cancelled' with no earnings", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand({ xrplEscrowEnabled: false });
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_clerk_c2",
+        email: "admin@example.com",
+        role: "owner",
+      });
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        payCurrency: "token",
+        payAmount: "5",
+        status: "available",
+      });
+
+      setUser("admin_clerk_c2");
+      const res = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { status: string };
+      expect(body.status).toBe("cancelled");
+
+      expect(tables.hhEarningsTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+describe("cancel — xrplEscrowEnabled = true (submitEscrowCancel is called)", () => {
+  it("calls submitEscrowCancel with the correct owner and sequence when a real escrow exists", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand({ xrplEscrowEnabled: true });
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_clerk_c3",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_clerk_c3",
+        email: "workerc3@example.com",
+        role: "food_handler",
+        xrplAddress: "rWORKER_C3_ADDR",
+      });
+
+      vi.mocked(xrplEscrowModule.bandUsesXrplEscrow).mockReturnValue(true);
+      vi.mocked(xrplEscrowModule.escrowWalletAddress).mockReturnValue("rESCROW_HOT_WALLET_C3");
+      vi.mocked(xrplEscrowModule.submitEscrowCancel).mockResolvedValue({
+        txHash: "SIM_ESCROW_CANCEL_HASH",
+      });
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        payCurrency: "xrp",
+        payAmount: "3",
+        status: "claimed",
+        // Non-SIM_ hash signals a real on-chain escrow
+        escrowSequence: 55,
+        escrowTxHash: "REAL_ESCROW_HASH_C3",
+        escrowSimulated: false,
+      });
+
+      setUser("admin_clerk_c3");
+      const res = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { status: string };
+      expect(body.status).toBe("cancelled");
+
+      // submitEscrowCancel must be called with the escrow wallet address and sequence
+      expect(vi.mocked(xrplEscrowModule.submitEscrowCancel)).toHaveBeenCalledOnce();
+      expect(vi.mocked(xrplEscrowModule.submitEscrowCancel)).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ownerAddress: "rESCROW_HOT_WALLET_C3",
+          escrowSequence: 55,
+        }),
+      );
+
+      // No earnings row must be created
+      expect(tables.hhEarningsTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("still cancels the task even when submitEscrowCancel throws (best-effort)", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand({ xrplEscrowEnabled: true });
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_clerk_c4",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_clerk_c4",
+        email: "workerc4@example.com",
+        role: "food_handler",
+        xrplAddress: "rWORKER_C4_ADDR",
+      });
+
+      vi.mocked(xrplEscrowModule.bandUsesXrplEscrow).mockReturnValue(true);
+      vi.mocked(xrplEscrowModule.escrowWalletAddress).mockReturnValue("rESCROW_HOT_WALLET_C4");
+      vi.mocked(xrplEscrowModule.submitEscrowCancel).mockRejectedValue(
+        new Error("tecNO_TARGET — CancelAfter has not passed yet"),
+      );
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        payCurrency: "xrp",
+        payAmount: "1",
+        status: "claimed",
+        escrowSequence: 99,
+        escrowTxHash: "REAL_ESCROW_HASH_C4",
+        escrowSimulated: false,
+      });
+
+      setUser("admin_clerk_c4");
+      const res = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      // The route must still return 200 — escrow cancel is best-effort
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { status: string };
+      expect(body.status).toBe("cancelled");
+
+      // submitEscrowCancel was attempted
+      expect(vi.mocked(xrplEscrowModule.submitEscrowCancel)).toHaveBeenCalledOnce();
+
+      // Still no earnings row
+      expect(tables.hhEarningsTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+describe("cancel — auth guard and validation", () => {
+  it("returns 403 when caller is not an owner or ops_manager", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand();
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_clerk_c5",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_clerk_c5",
+        email: "workerc5@example.com",
+        role: "food_handler",
+      });
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        status: "claimed",
+      });
+
+      setUser("worker_clerk_c5");
+      const res = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      expect(res.status).toBe(403);
+
+      // Task must remain unchanged
+      const taskRow = tables.hhTasksTable.__store.find((r) => r.id === taskId)!;
+      expect(taskRow.status).toBe("claimed");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 404 for an unknown task id", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand();
+      seedMember({
+        bandId,
+        clerkUserId: "admin_clerk_c6",
+        email: "admin@example.com",
+        role: "owner",
+      });
+
+      setUser("admin_clerk_c6");
+      const res = await fetch(
+        `${h.base}/api/helping-hands/tasks/00000000-0000-4000-8000-000000000000/cancel`,
+        { method: "POST", headers: { "Content-Type": "application/json" } },
+      );
+      expect(res.status).toBe(404);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 409 when the task is already in a terminal state", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand();
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_clerk_c7",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_clerk_c7",
+        email: "workerc7@example.com",
+        role: "food_handler",
+      });
+
+      // Task is already confirmed — cannot be cancelled
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        status: "confirmed",
+      });
+
+      setUser("admin_clerk_c7");
+      const res = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      expect(res.status).toBe(409);
+      const body = (await res.json()) as { error: string };
+      expect(body.error).toMatch(/confirmed/);
+    } finally {
+      await h.close();
+    }
+  });
+});
