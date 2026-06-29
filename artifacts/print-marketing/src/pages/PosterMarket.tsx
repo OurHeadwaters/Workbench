@@ -4,7 +4,7 @@ import { PrintNav } from "../components/PrintNav";
 const MARKET_CONFIG = {
   venue: "Dryden Arena",
   hours: "3:00 – 6:00 pm",
-  season: "July 2 – mid September",
+  season: "through the summer season",
   day: "Thursdays",
 };
 
