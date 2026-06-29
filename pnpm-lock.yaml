@@ -1793,9 +1793,6 @@ importers:
 
   artifacts/print-marketing:
     dependencies:
-      '@workspace/gord-widget':
-        specifier: workspace:*
-        version: link:../../lib/gord-widget
       '@workspace/kitchen-table-client':
         specifier: workspace:*
         version: link:../../lib/kitchen-table-client
