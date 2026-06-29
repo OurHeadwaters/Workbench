@@ -2,7 +2,7 @@ import { Router, type IRouter, type Request, type Response } from "express";
 import { pruneExpiredRateLimits } from "../lib/rateLimit";
 import { requireFounderOnlyAuth } from "../lib/kitAuth";
 import { logger } from "../lib/logger";
-import { db, kitDeliveryFailuresTable, kitTokensTable } from "@workspace/db";
+import { db, kitDeliveryFailuresTable, kitTokensTable, kitWebhookAttemptsTable } from "@workspace/db";
 import { isNull, eq, desc } from "drizzle-orm";
 import { sendKitDeliveryEmail } from "../lib/kitsMailer";
 import { getKit } from "../lib/kitsRegistry";
@@ -183,6 +183,78 @@ router.patch(
     } catch (err) {
       logger.error({ err, id }, "[admin] kit-failures patch failed");
       res.status(500).json({ error: "Failed to update kit delivery failure" });
+    }
+  },
+);
+
+// GET /admin/webhook-attempts
+// List all unresolved kit_webhook_attempts rows (resolvedAt IS NULL).
+// These are Stripe checkout.session.completed events that failed to complete
+// fulfillment after multiple retries. Returns newest-last-attempt first.
+router.get(
+  "/webhook-attempts",
+  requireFounderOnlyAuth,
+  async (_req: Request, res: Response) => {
+    try {
+      const rows = await db
+        .select()
+        .from(kitWebhookAttemptsTable)
+        .where(isNull(kitWebhookAttemptsTable.resolvedAt))
+        .orderBy(desc(kitWebhookAttemptsTable.lastAttemptAt));
+
+      res.json({ attempts: rows });
+    } catch (err) {
+      logger.error({ err }, "[admin] webhook-attempts list failed");
+      res.status(500).json({ error: "Failed to fetch webhook attempts" });
+    }
+  },
+);
+
+// PATCH /admin/webhook-attempts/:eventId
+// Mark a kit_webhook_attempts row as resolved (buyer has been sorted out manually).
+// Body: { resolve: true }
+router.patch(
+  "/webhook-attempts/:eventId",
+  requireFounderOnlyAuth,
+  async (req: Request, res: Response) => {
+    const rawEventId = req.params["eventId"];
+    const eventId = Array.isArray(rawEventId) ? rawEventId[0] : rawEventId;
+
+    const parsed = z.object({ resolve: z.boolean() }).safeParse(req.body);
+    if (!parsed.success || !parsed.data.resolve) {
+      res.status(400).json({ error: "Body must be { resolve: true }" });
+      return;
+    }
+
+    try {
+      const [row] = await db
+        .select()
+        .from(kitWebhookAttemptsTable)
+        .where(eq(kitWebhookAttemptsTable.eventId, eventId))
+        .limit(1);
+
+      if (!row) {
+        res.status(404).json({ error: "Webhook attempt not found" });
+        return;
+      }
+
+      await db
+        .update(kitWebhookAttemptsTable)
+        .set({ resolvedAt: new Date() })
+        .where(eq(kitWebhookAttemptsTable.eventId, eventId));
+
+      logger.info({ eventId, purchaseId: row.purchaseId }, "[admin] webhook-attempt marked resolved");
+
+      const [updated] = await db
+        .select()
+        .from(kitWebhookAttemptsTable)
+        .where(eq(kitWebhookAttemptsTable.eventId, eventId))
+        .limit(1);
+
+      res.json({ attempt: updated });
+    } catch (err) {
+      logger.error({ err, eventId }, "[admin] webhook-attempts patch failed");
+      res.status(500).json({ error: "Failed to update webhook attempt" });
     }
   },
 );

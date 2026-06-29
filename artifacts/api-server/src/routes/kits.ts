@@ -586,6 +586,21 @@ router.get("/resend", async (req: Request, res: Response) => {
     return;
   }
 
+  // Stamp any open delivery-failure rows for this purchase as resolved
+  try {
+    await db
+      .update(kitDeliveryFailuresTable)
+      .set({ resolvedAt: new Date() })
+      .where(
+        and(
+          eq(kitDeliveryFailuresTable.purchaseId, purchaseId),
+          isNull(kitDeliveryFailuresTable.resolvedAt),
+        ),
+      );
+  } catch (resolveErr) {
+    logger.warn({ resolveErr, purchaseId }, "[kits/resend-link] failed to auto-resolve delivery failure rows (non-fatal)");
+  }
+
   res.type("html").send(
     resendHtmlPage(
       "Kit Resent",
@@ -673,6 +688,23 @@ router.post("/resend", resendRateLimit, async (req: Request, res: Response) => {
     { email, kit_id: record.kitId, mailStatus: mailResult.status },
     "[kits/resend] resend requested",
   );
+
+  // Stamp any open delivery-failure rows for this buyer as resolved on success
+  if (mailResult.status !== "failed") {
+    try {
+      await db
+        .update(kitDeliveryFailuresTable)
+        .set({ resolvedAt: new Date() })
+        .where(
+          and(
+            eq(kitDeliveryFailuresTable.buyerEmail, email.toLowerCase()),
+            isNull(kitDeliveryFailuresTable.resolvedAt),
+          ),
+        );
+    } catch (resolveErr) {
+      logger.warn({ resolveErr, email }, "[kits/resend] failed to auto-resolve delivery failure rows (non-fatal)");
+    }
+  }
 
   res.json({ ok: true, sent: true, mailStatus: mailResult.status });
 });

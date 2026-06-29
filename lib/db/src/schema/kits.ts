@@ -133,7 +133,11 @@ export const kitWebhookAttemptsTable = pgTable("kit_webhook_attempts", {
   lastAttemptAt: timestamp("last_attempt_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
-});
+  resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+},
+(t) => ({
+  resolvedAtIdx: index("kit_webhook_attempts_resolved_at_idx").on(t.resolvedAt),
+}));
 
 export type KitRow = typeof kitsTable.$inferSelect;
 export type KitInsert = typeof kitsTable.$inferInsert;

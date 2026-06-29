@@ -6,8 +6,9 @@ interface DeliveryFailure {
   buyerEmail: string;
   kitId: string;
   purchaseId: string;
-  error: string;
+  error: string | null;
   createdAt: string;
+  resolvedAt: string | null;
 }
 
 interface WebhookAttempt {
@@ -17,6 +18,7 @@ interface WebhookAttempt {
   purchaseId: string;
   attemptCount: number;
   lastAttemptAt: string;
+  resolvedAt: string | null;
 }
 
 function getOwnerToken(): string | null {
@@ -37,6 +39,10 @@ function ownerHeaders(): Record<string, string> {
   return { "x-library-owner-token": token };
 }
 
+function jsonHeaders(): Record<string, string> {
+  return { ...ownerHeaders(), "Content-Type": "application/json" };
+}
+
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleString("en-CA", {
     year: "numeric",
@@ -49,86 +55,119 @@ function formatDate(iso: string): string {
 
 export function KitFailuresPage() {
   const [failures, setFailures] = useState<DeliveryFailure[]>([]);
-  const [webhookAttempts, setWebhookAttempts] = useState<WebhookAttempt[]>([]);
+  const [attempts, setAttempts] = useState<WebhookAttempt[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [resendingId, setResendingId] = useState<string | null>(null);
-  const [resendMsg, setResendMsg] = useState<Record<string, string>>({});
+
+  const [actioningId, setActioningId] = useState<string | null>(null);
+  const [actionMsg, setActionMsg] = useState<Record<string, string>>({});
 
   const isOwner = !!getOwnerToken();
 
-  const fetchFailures = useCallback(async () => {
+  const fetchAll = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const [failuresRes, attemptsRes] = await Promise.all([
-        fetch("/api/kits/failures", { headers: ownerHeaders() }),
-        fetch("/api/kits/webhook-attempts", { headers: ownerHeaders() }),
+      const [failRes, attRes] = await Promise.all([
+        fetch("/api/admin/kit-failures", { headers: ownerHeaders() }),
+        fetch("/api/admin/webhook-attempts", { headers: ownerHeaders() }),
       ]);
-      if (failuresRes.status === 401 || failuresRes.status === 403) {
+
+      if (failRes.status === 401 || failRes.status === 403) {
         setError("Access denied — founder token required.");
         return;
       }
-      if (!failuresRes.ok) throw new Error(`Server error ${failuresRes.status}`);
-      const data = (await failuresRes.json()) as { failures: DeliveryFailure[] };
-      setFailures(data.failures ?? []);
+      if (!failRes.ok) throw new Error(`Server error ${failRes.status} on failures`);
+      if (!attRes.ok) throw new Error(`Server error ${attRes.status} on webhook attempts`);
 
-      if (attemptsRes.ok) {
-        const attemptsData = (await attemptsRes.json()) as { attempts: WebhookAttempt[] };
-        setWebhookAttempts(attemptsData.attempts ?? []);
-      }
+      const failData = (await failRes.json()) as { failures: DeliveryFailure[] };
+      const attData = (await attRes.json()) as { attempts: WebhookAttempt[] };
+
+      setFailures(failData.failures ?? []);
+      setAttempts(attData.attempts ?? []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load failures");
+      setError(err instanceof Error ? err.message : "Failed to load data");
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void fetchFailures();
-  }, [fetchFailures]);
+    void fetchAll();
+  }, [fetchAll]);
 
-  async function handleResend(failure: DeliveryFailure) {
-    setResendingId(failure.id);
+  async function handleRetrigger(f: DeliveryFailure) {
+    setActioningId(f.id);
     try {
-      const res = await fetch("/api/kits/resend", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: failure.buyerEmail }),
+      const res = await fetch(`/api/admin/kit-failures/${f.id}`, {
+        method: "PATCH",
+        headers: jsonHeaders(),
+        body: JSON.stringify({ retrigger: true }),
       });
       const data = (await res.json()) as {
-        ok?: boolean;
-        sent?: boolean;
-        mailStatus?: string;
+        failure?: DeliveryFailure;
+        redelivery?: { status: string; error?: string };
         error?: string;
       };
-      if (res.status === 429) {
-        setResendMsg((prev) => ({
-          ...prev,
-          [failure.id]: "Rate limited — try again in 15 min",
-        }));
+      if (!res.ok) {
+        setActionMsg((prev) => ({ ...prev, [f.id]: data.error ?? `Error ${res.status}` }));
         return;
       }
-      if (data.ok && data.sent) {
-        setResendMsg((prev) => ({
-          ...prev,
-          [failure.id]: data.mailStatus === "failed" ? "Send failed — check Gmail connector" : "Resent ✓",
-        }));
-      } else if (data.ok && !data.sent) {
-        setResendMsg((prev) => ({
-          ...prev,
-          [failure.id]: "No active token found for this buyer",
-        }));
+      const status = data.redelivery?.status;
+      if (status === "sent") {
+        setActionMsg((prev) => ({ ...prev, [f.id]: "Resent ✓ — marked resolved" }));
+        setFailures((prev) => prev.filter((x) => x.id !== f.id));
+      } else if (status === "failed") {
+        setActionMsg((prev) => ({ ...prev, [f.id]: `Send failed: ${data.redelivery?.error ?? "unknown"}` }));
       } else {
-        setResendMsg((prev) => ({
-          ...prev,
-          [failure.id]: data.error ?? "Resend failed",
-        }));
+        setActionMsg((prev) => ({ ...prev, [f.id]: "Retrigger skipped — check registry" }));
       }
     } catch {
-      setResendMsg((prev) => ({ ...prev, [failure.id]: "Network error" }));
+      setActionMsg((prev) => ({ ...prev, [f.id]: "Network error" }));
     } finally {
-      setResendingId(null);
+      setActioningId(null);
+    }
+  }
+
+  async function handleResolve(f: DeliveryFailure) {
+    setActioningId(f.id);
+    try {
+      const res = await fetch(`/api/admin/kit-failures/${f.id}`, {
+        method: "PATCH",
+        headers: jsonHeaders(),
+        body: JSON.stringify({ resolve: true }),
+      });
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        setActionMsg((prev) => ({ ...prev, [f.id]: data.error ?? `Error ${res.status}` }));
+        return;
+      }
+      setFailures((prev) => prev.filter((x) => x.id !== f.id));
+    } catch {
+      setActionMsg((prev) => ({ ...prev, [f.id]: "Network error" }));
+    } finally {
+      setActioningId(null);
+    }
+  }
+
+  async function handleResolveAttempt(a: WebhookAttempt) {
+    setActioningId(a.eventId);
+    try {
+      const res = await fetch(`/api/admin/webhook-attempts/${encodeURIComponent(a.eventId)}`, {
+        method: "PATCH",
+        headers: jsonHeaders(),
+        body: JSON.stringify({ resolve: true }),
+      });
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        setActionMsg((prev) => ({ ...prev, [a.eventId]: data.error ?? `Error ${res.status}` }));
+        return;
+      }
+      setAttempts((prev) => prev.filter((x) => x.eventId !== a.eventId));
+    } catch {
+      setActionMsg((prev) => ({ ...prev, [a.eventId]: "Network error" }));
+    } finally {
+      setActioningId(null);
     }
   }
 
@@ -152,6 +191,8 @@ export function KitFailuresPage() {
     );
   }
 
+  const totalOpen = failures.length + attempts.length;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] px-4 py-8">
       <div className="max-w-3xl mx-auto">
@@ -159,13 +200,13 @@ export function KitFailuresPage() {
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-stone-800 mb-1">Failed Deliveries</h1>
+            <h1 className="text-3xl font-bold text-stone-800 mb-1">Delivery Failures</h1>
             <p className="text-stone-500 text-sm">
-              Unresolved kit delivery failures — resend the email to the buyer in one click.
+              Resend a kit or mark a buyer sorted — no terminal needed.
             </p>
           </div>
           <button
-            onClick={() => void fetchFailures()}
+            onClick={() => void fetchAll()}
             disabled={loading}
             className="shrink-0 bg-white border border-stone-200 text-stone-600 text-xs font-medium px-3 py-2 rounded-xl hover:bg-stone-50 transition-colors disabled:opacity-50"
           >
@@ -180,83 +221,71 @@ export function KitFailuresPage() {
           </div>
         )}
 
-        {/* Empty state */}
-        {!loading && !error && failures.length === 0 && webhookAttempts.length === 0 && (
+        {/* All-clear */}
+        {!loading && !error && totalOpen === 0 && (
           <div className="text-center py-20">
             <p className="text-4xl mb-4">✅</p>
-            <p className="font-medium text-stone-500">No unresolved failures</p>
+            <p className="font-medium text-stone-500">No open issues</p>
             <p className="mt-1 text-stone-400 text-sm">
-              All kit deliveries are accounted for.
+              All kit deliveries and webhook retries are accounted for.
             </p>
           </div>
         )}
 
         {/* Count badges */}
-        {!loading && (failures.length > 0 || webhookAttempts.length > 0) && (
+        {!loading && (failures.length > 0 || attempts.length > 0) && (
           <div className="flex flex-wrap gap-3 mb-6 text-xs font-medium">
             {failures.length > 0 && (
               <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full">
                 {failures.length} unresolved {failures.length === 1 ? "failure" : "failures"}
               </span>
             )}
-            {webhookAttempts.length > 0 && (
+            {attempts.length > 0 && (
               <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full">
-                {webhookAttempts.length} uncommitted {webhookAttempts.length === 1 ? "delivery" : "deliveries"}
+                {attempts.length} uncommitted {attempts.length === 1 ? "delivery" : "deliveries"}
               </span>
             )}
           </div>
         )}
 
-        {/* Uncommitted deliveries (webhook attempts where no token was committed) */}
-        {webhookAttempts.length > 0 && (
+        {/* ── Section 1: Delivery failures ──────────────────────────────────── */}
+        {failures.length > 0 && (
+          <div className="flex flex-col gap-3 mb-10">
+            {failures.map((f) => (
+              <FailureRow
+                key={f.id}
+                f={f}
+                actioningId={actioningId}
+                actionMsg={actionMsg}
+                onRetrigger={handleRetrigger}
+                onResolve={handleResolve}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* ── Section 2: Uncommitted Deliveries ────────────────────────────────────── */}
+        {attempts.length > 0 && (
           <section className="mb-8">
             <h2 className="text-sm font-semibold text-amber-700 uppercase tracking-wide mb-1">
               Uncommitted Deliveries
             </h2>
             <p className="text-xs text-stone-400 mb-4">
-              Stripe sent a webhook for these purchases but the access token was never committed — the buyer paid but has no access link.
+              Stripe sent a webhook for these purchases but the access token was never committed — the buyer paid but has no access link. Once you&apos;ve confirmed the buyer has been sorted, mark them cleared here.
             </p>
+
             <div className="flex flex-col gap-3">
-              {webhookAttempts.map((a) => (
-                <div key={a.eventId} className="bg-white border border-amber-200 rounded-2xl p-4 shadow-sm">
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-stone-800 truncate">{a.buyerEmail}</p>
-                      <p className="text-xs text-stone-400 mt-0.5">
-                        Kit: <span className="text-stone-600 font-medium">{a.kitId}</span>
-                        {" · "}
-                        <span className="text-stone-400">Last attempt {formatDate(a.lastAttemptAt)}</span>
-                      </p>
-                    </div>
-                    <span className="shrink-0 bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      {a.attemptCount} {a.attemptCount === 1 ? "attempt" : "attempts"}
-                    </span>
-                  </div>
-                  <p className="text-xs text-stone-400">
-                    Purchase ID: <span className="font-mono text-stone-500">{a.purchaseId}</span>
-                  </p>
-                  <p className="text-xs text-stone-400 mt-0.5">
-                    Event ID: <span className="font-mono text-stone-500">{a.eventId}</span>
-                  </p>
-                </div>
+              {attempts.map((a) => (
+                <AttemptRow
+                  key={a.eventId}
+                  a={a}
+                  actioningId={actioningId}
+                  actionMsg={actionMsg}
+                  onResolve={handleResolveAttempt}
+                />
               ))}
             </div>
           </section>
-        )}
-
-        {/* Failure rows */}
-        {failures.length > 0 && (
-          <div className="flex flex-col gap-3">
-            {failures.map((f) => (
-              <FailureRow
-                key={f.id}
-                f={f}
-                resendingId={resendingId}
-                resendMsg={resendMsg}
-                onResend={handleResend}
-              />
-            ))}
-          </div>
         )}
 
         {/* Back link */}
@@ -274,19 +303,19 @@ export function KitFailuresPage() {
 
 interface FailureRowProps {
   f: DeliveryFailure;
-  resendingId: string | null;
-  resendMsg: Record<string, string>;
-  onResend: (f: DeliveryFailure) => void;
+  actioningId: string | null;
+  actionMsg: Record<string, string>;
+  onRetrigger: (f: DeliveryFailure) => void;
+  onResolve: (f: DeliveryFailure) => void;
 }
 
-function FailureRow({ f, resendingId, resendMsg, onResend }: FailureRowProps) {
-  const isSending = resendingId === f.id;
-  const msg = resendMsg[f.id];
-  const succeeded = msg?.startsWith("Resent");
+function FailureRow({ f, actioningId, actionMsg, onRetrigger, onResolve }: FailureRowProps) {
+  const isActioning = actioningId === f.id;
+  const msg = actionMsg[f.id];
+  const succeeded = msg?.includes("✓");
 
   return (
     <div className="bg-white border border-red-200 rounded-2xl p-4 shadow-sm">
-      {/* Top row: email + kit */}
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="min-w-0">
           <p className="text-sm font-semibold text-stone-800 truncate">{f.buyerEmail}</p>
@@ -301,29 +330,86 @@ function FailureRow({ f, resendingId, resendMsg, onResend }: FailureRowProps) {
         </span>
       </div>
 
-      {/* Error snippet */}
-      <div className="bg-red-50 border border-red-100 rounded-lg px-3 py-2 mb-3">
-        <p className="text-xs text-red-700 font-mono break-all line-clamp-3">{f.error}</p>
-      </div>
+      {f.error && (
+        <div className="bg-red-50 border border-red-100 rounded-lg px-3 py-2 mb-3">
+          <p className="text-xs text-red-700 font-mono break-all line-clamp-3">{f.error}</p>
+        </div>
+      )}
 
-      {/* Purchase ID */}
       <p className="text-xs text-stone-400 mb-3">
         Purchase ID: <span className="font-mono text-stone-500">{f.purchaseId}</span>
       </p>
 
-      {/* Resend button */}
       <div className="flex items-center gap-2 flex-wrap">
         <button
-          onClick={() => void onResend(f)}
-          disabled={isSending}
+          onClick={() => void onRetrigger(f)}
+          disabled={isActioning}
           className="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
         >
-          {isSending ? "Sending…" : "Resend delivery email"}
+          {isActioning ? "Working…" : "Resend delivery email"}
+        </button>
+        <button
+          onClick={() => void onResolve(f)}
+          disabled={isActioning}
+          className="bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+        >
+          Mark resolved
         </button>
         {msg && (
           <span className={`text-xs font-medium ${succeeded ? "text-emerald-600" : "text-stone-400"}`}>
             {msg}
           </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── AttemptRow ────────────────────────────────────────────────────────────────
+
+interface AttemptRowProps {
+  a: WebhookAttempt;
+  actioningId: string | null;
+  actionMsg: Record<string, string>;
+  onResolve: (a: WebhookAttempt) => void;
+}
+
+function AttemptRow({ a, actioningId, actionMsg, onResolve }: AttemptRowProps) {
+  const isActioning = actioningId === a.eventId;
+  const msg = actionMsg[a.eventId];
+
+  return (
+    <div className="bg-white border border-amber-200 rounded-2xl p-4 shadow-sm">
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-stone-800 truncate">{a.buyerEmail}</p>
+          <p className="text-xs text-stone-400 mt-0.5">
+            Kit: <span className="text-stone-600 font-medium">{a.kitId}</span>
+            {" · "}
+            Last attempt: <span className="text-stone-500">{formatDate(a.lastAttemptAt)}</span>
+          </p>
+        </div>
+        <span className="shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-700">
+          {a.attemptCount} {a.attemptCount === 1 ? "attempt" : "attempts"}
+        </span>
+      </div>
+
+      <p className="text-xs text-stone-400 mb-3">
+        Event: <span className="font-mono text-stone-500 break-all">{a.eventId}</span>
+        {" · "}
+        Purchase: <span className="font-mono text-stone-500">{a.purchaseId}</span>
+      </p>
+
+      <div className="flex items-center gap-2 flex-wrap">
+        <button
+          onClick={() => void onResolve(a)}
+          disabled={isActioning}
+          className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+        >
+          {isActioning ? "Working…" : "Mark buyer sorted"}
+        </button>
+        {msg && (
+          <span className="text-xs font-medium text-stone-400">{msg}</span>
         )}
       </div>
     </div>

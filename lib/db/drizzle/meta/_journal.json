@@ -99,6 +99,13 @@
       "when": 1751155300000,
       "tag": "0016_kit_webhook_attempts",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1751212800000,
+      "tag": "0017_kit_webhook_attempts_resolved",
+      "breakpoints": true
     }
   ]
 }
