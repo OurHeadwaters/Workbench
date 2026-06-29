@@ -1060,6 +1060,135 @@ describe("reliability bonus — milestone awarded on threshold crossing", () => 
 });
 
 // ═════════════════════════════════════════════════════════════════════════════
+// Running totals accumulate correctly across multiple confirmed shifts
+// ═════════════════════════════════════════════════════════════════════════════
+
+describe("confirm — totalEarnedToken and totalEarnedXrp accumulate across multiple shifts", () => {
+  it("sums token earnings numerically (not string-concatenation) after two confirms", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand();
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_clerk_acc1",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_clerk_acc1",
+        email: "worker_acc1@example.com",
+        role: "food_handler",
+      });
+
+      // First task: 5 tokens
+      const task1Id = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        payCurrency: "token",
+        payAmount: "5",
+        status: "completed",
+      });
+
+      setUser("admin_clerk_acc1");
+      const res1 = await fetch(`${h.base}/api/helping-hands/tasks/${task1Id}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      expect(res1.status).toBe(200);
+
+      // Second task: 5 tokens
+      const task2Id = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        payCurrency: "token",
+        payAmount: "5",
+        status: "completed",
+      });
+
+      const res2 = await fetch(`${h.base}/api/helping-hands/tasks/${task2Id}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      expect(res2.status).toBe(200);
+
+      // totalEarnedToken must be "10", not "55" or an object
+      const memberRow = tables.hhMembersTable.__store.find((r) => r.id === workerId)!;
+      expect(Number(memberRow.totalEarnedToken)).toBe(10);
+      expect(memberRow.completedShiftCount).toBe(2);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("sums XRP earnings numerically after two confirms", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand({ xrplEscrowEnabled: false });
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_clerk_acc2",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_clerk_acc2",
+        email: "worker_acc2@example.com",
+        role: "food_handler",
+        xrplAddress: "rWORKER_ACC2",
+      });
+
+      // First XRP task: 3 XRP
+      const task1Id = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        payCurrency: "xrp",
+        payAmount: "3",
+        status: "completed",
+        escrowTxHash: `SIM_FIRST`,
+        escrowSimulated: false,
+      });
+
+      setUser("admin_clerk_acc2");
+      const res1 = await fetch(`${h.base}/api/helping-hands/tasks/${task1Id}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      expect(res1.status).toBe(200);
+
+      // Second XRP task: 7 XRP
+      const task2Id = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        payCurrency: "xrp",
+        payAmount: "7",
+        status: "completed",
+        escrowTxHash: `SIM_SECOND`,
+        escrowSimulated: false,
+      });
+
+      const res2 = await fetch(`${h.base}/api/helping-hands/tasks/${task2Id}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      expect(res2.status).toBe(200);
+
+      // totalEarnedXrp must be "10" (3 + 7), not "37" or an object
+      const memberRow = tables.hhMembersTable.__store.find((r) => r.id === workerId)!;
+      expect(Number(memberRow.totalEarnedXrp)).toBe(10);
+      expect(memberRow.completedShiftCount).toBe(2);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
 // Confirm returns 403 when caller is not an admin
 // ═════════════════════════════════════════════════════════════════════════════
 
