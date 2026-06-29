@@ -81,6 +81,8 @@ import OCAOutreachPacket from "@/pages/OCAOutreachPacket";
 import CdpGrantNarrative from "@/pages/CdpGrantNarrative";
 import CdpGrantNarrativeOnePager from "@/pages/CdpGrantNarrativeOnePager";
 import FamilyIncomeOnePager from "@/pages/FamilyIncomeOnePager";
+import LetterKonstantinos from "@/pages/LetterKonstantinos";
+import LetterHinterland from "@/pages/LetterHinterland";
 import NotFound from "@/pages/not-found";
 import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
 
@@ -165,6 +167,8 @@ function Router() {
       <Route path="/cdp-grant-narrative" component={CdpGrantNarrative} />
       <Route path="/cdp-grant-narrative/one-pager" component={CdpGrantNarrativeOnePager} />
       <Route path="/family-income" component={FamilyIncomeOnePager} />
+      <Route path="/letter-konstantinos" component={LetterKonstantinos} />
+      <Route path="/letter-hinterland" component={LetterHinterland} />
       <Route component={NotFound} />
     </Switch>
   );
