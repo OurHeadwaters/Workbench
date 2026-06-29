@@ -88,6 +88,11 @@ export default function ProjectOverview() {
   const coreTools = tools.filter((t) => t.layer === "core");
   const supportTools = tools.filter((t) => t.layer === "support");
 
+  const WORDS = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve"];
+  const toWord = (n: number) => WORDS[n] ?? String(n);
+  const totalCount = toWord(tools.length);
+  const supportCount = toWord(supportTools.length).toLowerCase();
+
   return (
     <div style={{ minHeight: "100vh", background: "var(--cream)", fontFamily: "var(--font-sans)" }}>
       {/* ── Print stylesheet ── */}
@@ -137,7 +142,7 @@ export default function ProjectOverview() {
               marginBottom: "0.75rem",
             }}
           >
-            Nine simple tools.<br />One community economy.
+            {totalCount} simple tools.<br />One community economy.
           </h1>
           <p
             style={{
@@ -297,7 +302,7 @@ export default function ProjectOverview() {
               marginBottom: "0.25rem",
             }}
           >
-            These six tools back up the core flow — they hold the evidence, the materials, the team, the files, the daily operating view, and the public front door that everything else draws from.
+            These {supportCount} tools back up the core flow — they hold the evidence, the materials, the team, the files, the daily operating view, and the public front door that everything else draws from.
           </p>
 
           {supportTools.map((tool) => (
@@ -409,7 +414,7 @@ export default function ProjectOverview() {
             the <strong>Media Library</strong> keeps the files in one place,
             <strong>North Star</strong> is the daily operating cockpit that keeps it all on track,
             and <a href="https://thestompinggrounds.com" target="_blank" rel="noopener noreferrer" style={{ color: "var(--evergreen)", textDecoration: "underline" }}>The Stomping Grounds</a> is the public front door where anyone can find their footing first.
-            Nine simple tools. One system. Yours.
+            {totalCount} simple tools. One system. Yours.
           </p>
         </div>
 
