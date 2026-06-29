@@ -1,3 +1,4 @@
+// live — called by artifacts/api-server/src/routes/helpingHands.ts
 /**
  * XRPL client singleton, escrow helpers, token payment helpers, and DID writer.
  *
