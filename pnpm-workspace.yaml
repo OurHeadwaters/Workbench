@@ -2,6 +2,7 @@ packages:
   - artifacts/*
   - lib/*
   - lib/integrations/*
+  - lib/k-pizza-client-react
   - scripts
 
 autoInstallPeers: false

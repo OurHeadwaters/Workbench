@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/hinterland/"
+title = "Hinterland & Co. — Demo Site"
+version = "1.0.0"
+id = "artifacts/hinterland"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/hinterland/" ]
+localPort = 20311
+
+[services.development]
+run = "pnpm --filter @workspace/hinterland run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/hinterland", "run", "build" ]
+publicDir = "artifacts/hinterland/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20311"
+BASE_PATH = "/hinterland/"

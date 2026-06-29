@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/k-pizza/"
+title = "Konstantinos Pizza & Wings"
+version = "1.0.0"
+id = "artifacts/k-pizza"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/k-pizza/" ]
+localPort = 24335
+
+[services.development]
+run = "pnpm --filter @workspace/k-pizza run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/k-pizza", "run", "build" ]
+publicDir = "artifacts/k-pizza/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24335"
+BASE_PATH = "/k-pizza/"
