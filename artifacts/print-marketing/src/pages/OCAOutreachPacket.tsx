@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { downloadAsPdf } from "@/lib/pdf";
 import { OCAIntroLetterPage } from "./OCAIntroLetter";
 import { OCAPartnershipBriefPage } from "./OCAPartnershipBrief";
-import { CDPGrantNarrativePage } from "./CDPGrantNarrative";
+import { CdpGrantNarrativePage as CDPGrantNarrativePage } from "./CdpGrantNarrative";
 import { CapabilityStatementPublicPage } from "./CapabilityStatementPublic";
 
 const EVERGREEN = "#1f3d2e";

@@ -37,8 +37,33 @@ export function PrintNav({
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
   const [copiedInModal, setCopiedInModal] = useState(false);
+  const [overflowCount, setOverflowCount] = useState(0);
   const { previewing, setPreviewing } = usePreview();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (!previewing) {
+      setOverflowCount(0);
+      return;
+    }
+    function checkOverflow() {
+      const pages = document.querySelectorAll<HTMLElement>(".page-letter, .page-letter-landscape");
+      let count = 0;
+      pages.forEach((page) => {
+        if (page.scrollHeight > page.clientHeight + 2) count++;
+      });
+      setOverflowCount(count);
+    }
+    checkOverflow();
+    const resizeObs = new ResizeObserver(checkOverflow);
+    document.querySelectorAll<HTMLElement>(".page-letter, .page-letter-landscape").forEach((p) => resizeObs.observe(p));
+    const mutationObs = new MutationObserver(checkOverflow);
+    mutationObs.observe(document.body, { subtree: true, childList: true, characterData: true });
+    return () => {
+      resizeObs.disconnect();
+      mutationObs.disconnect();
+    };
+  }, [previewing]);
 
   function closeModal() {
     setPreviewText(null);
@@ -386,6 +411,27 @@ export function PrintNav({
           >
             {previewing ? "✕ Exit preview" : "🖨 Preview print layout"}
           </button>
+          {previewing && overflowCount > 0 && (
+            <span
+              title={`${overflowCount} page${overflowCount > 1 ? "s have" : " has"} content that overflows the letter boundary and will be clipped when printed.`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.3rem",
+                background: "#7a2e0e",
+                color: "#fef3c7",
+                borderRadius: 4,
+                padding: "0.22rem 0.6rem",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                fontFamily: "var(--font-sans, sans-serif)",
+                letterSpacing: "0.02em",
+                whiteSpace: "nowrap",
+              }}
+            >
+              ⚠ {overflowCount} page{overflowCount > 1 ? "s" : ""} overflow
+            </span>
+          )}
           {onCopyPlainText && (
             <button
               className="no-print"

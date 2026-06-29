@@ -11,6 +11,10 @@ const MUTED = "#6b6b5e";
 const GOLD = "#c89a2e";
 const BLACK = "#141414";
 
+function handoutUrl(token: string, key: string): string {
+  return `/api/kits/handout?token=${encodeURIComponent(token)}&key=${encodeURIComponent(key)}`;
+}
+
 type PageState =
   | { status: "loading" }
   | { status: "valid"; data: KitAccessResult }

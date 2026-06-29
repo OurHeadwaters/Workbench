@@ -56,6 +56,7 @@ export function KitsPage() {
   const [kits, setKits] = useState<Kit[]>([]);
   const [allKits, setAllKits] = useState<Kit[]>([]);
   const [tokens, setTokens] = useState<BuyerToken[]>([]);
+  const [failureCount, setFailureCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [publishingId, setPublishingId] = useState<string | null>(null);
@@ -74,10 +75,11 @@ export function KitsPage() {
   async function fetchKits() {
     setLoading(true);
     try {
-      const [pubRes, draftRes, tokensRes] = await Promise.all([
+      const [pubRes, draftRes, tokensRes, failuresRes] = await Promise.all([
         fetch("/api/kits/list"),
         isOwner ? fetch("/api/kits/drafts", { headers: ownerHeaders() }) : Promise.resolve(null),
         isOwner ? fetch("/api/kits/tokens", { headers: ownerHeaders() }) : Promise.resolve(null),
+        isOwner ? fetch("/api/kits/failures", { headers: ownerHeaders() }) : Promise.resolve(null),
       ]);
 
       if (!pubRes.ok) throw new Error("Failed to load published kits");
@@ -92,6 +94,11 @@ export function KitsPage() {
       if (tokensRes?.ok) {
         const tokensData = (await tokensRes.json()) as { tokens: BuyerToken[] };
         setTokens(tokensData.tokens ?? []);
+      }
+
+      if (failuresRes?.ok) {
+        const failuresData = (await failuresRes.json()) as { failures: unknown[] };
+        setFailureCount(failuresData.failures?.length ?? 0);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load kits");
@@ -229,14 +236,29 @@ export function KitsPage() {
           </section>
         )}
 
-        {/* Owner: link to dedicated purchases page */}
+        {/* Owner: link to dedicated purchases page + failures badge */}
         {isOwner && (
-          <div className="mb-6">
+          <div className="mb-6 flex flex-wrap items-center gap-3">
             <Link
               href="/kits/purchases"
               className="inline-flex items-center gap-2 bg-stone-800 hover:bg-stone-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
             >
               🧾 View all purchases &amp; access links →
+            </Link>
+            <Link
+              href="/kits/failures"
+              className={`inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors ${
+                failureCount > 0
+                  ? "bg-red-600 hover:bg-red-700 text-white"
+                  : "bg-stone-100 hover:bg-stone-200 text-stone-500"
+              }`}
+            >
+              ⚠ Failed deliveries
+              {failureCount > 0 && (
+                <span className="bg-white text-red-600 text-xs font-bold px-1.5 py-0.5 rounded-full leading-none">
+                  {failureCount}
+                </span>
+              )}
             </Link>
           </div>
         )}

@@ -167,7 +167,7 @@ export function ZoneDiagramPage() {
                 fill={isHighlighted("Z3") ? "#EDE9FE" : "#F5F0FA"}
                 stroke={isHighlighted("Z3") ? "#7C4E8A" : "#C4B5CD"}
                 strokeWidth={isHighlighted("Z3") ? 2.5 : 1.5}
-                transition="all 0.15s"
+                style={{ transition: "all 0.15s" }}
               />
               <text x="240" y="50" textAnchor="middle" fontSize="13" fontWeight="600" fill="#7C4E8A" opacity="0.85">
                 Z3 — Community

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, type ReactElement } from "react";
 import { cn } from "@/lib/utils";
 import { RiverSmithPanel } from "@/components/RiverSmithPanel";
 import { TaskAutopilot } from "@/components/TaskAutopilot";
@@ -748,7 +748,7 @@ GROUND RULES
 // ── Reference Doc renderer ────────────────────────────────────────────────────
 function RefDocContent({ raw }: { raw: string }) {
   const lines = raw.split("\n");
-  const elements: JSX.Element[] = [];
+  const elements: ReactElement[] = [];
   let key = 0;
 
   for (let i = 0; i < lines.length; i++) {

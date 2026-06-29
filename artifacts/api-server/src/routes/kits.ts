@@ -39,7 +39,7 @@ import { getKit, KITS } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, verifyResendToken } from "../lib/kitsMailer";
 import { runCodetryFilter } from "../lib/codetryFilter";
 import { requireKitOwnerAuth, requireFounderOnlyAuth, FOUNDER_OWNER_ID } from "../lib/kitAuth";
-import { db, kitsTable, practitionerApplicationsTable, kitTokensTable, kitDeliveryFailuresTable } from "@workspace/db";
+import { db, kitsTable, practitionerApplicationsTable, kitTokensTable, kitDeliveryFailuresTable, kitWebhookAttemptsTable } from "@workspace/db";
 import { eq, and, gt, desc, isNull } from "drizzle-orm";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { clerkClient } from "@clerk/express";
@@ -1360,6 +1360,25 @@ router.get("/failures", requireFounderOnlyAuth, async (_req: Request, res: Respo
 // once the buyer has been reached manually and the delivery situation is closed.
 //
 // Auth: requireFounderOnlyAuth — only the founder can close failure records.
+
+// ── GET /kits/webhook-attempts — founder-only, list uncommitted deliveries ────
+//
+// Returns all kit_webhook_attempts rows (Stripe webhooks that were received but
+// where the token INSERT never completed — i.e. the purchase was logged by Stripe
+// but no access token was ever committed to the database).  Ordered newest-first.
+router.get("/webhook-attempts", requireFounderOnlyAuth, async (_req: Request, res: Response) => {
+  try {
+    const rows = await db
+      .select()
+      .from(kitWebhookAttemptsTable)
+      .orderBy(desc(kitWebhookAttemptsTable.lastAttemptAt));
+
+    res.json({ ok: true, attempts: rows });
+  } catch (err) {
+    logger.error({ err }, "kits: GET /webhook-attempts failed");
+    res.status(500).json({ error: "Failed to fetch webhook attempts" });
+  }
+});
 
 router.post("/failures/:id/resolve", requireFounderOnlyAuth, async (req: Request, res: Response) => {
   const rawId = req.params["id"];

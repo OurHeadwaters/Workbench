@@ -296,9 +296,9 @@ export function ParrsJarsKitPage() {
                     </p>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                       {mod.items.map((item) => (
-                        <li key={item} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.78rem", color: "#bbb" }}>
+                        <li key={item.key} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", fontSize: "0.78rem", color: "#bbb" }}>
                           <span style={{ color: mod.color, flexShrink: 0 }}>→</span>
-                          {item}
+                          {item.label}
                         </li>
                       ))}
                     </ul>
@@ -422,7 +422,7 @@ export function ParrsJarsKitPage() {
           >
             {KIT_HANDOUTS.map((item) => (
               <div
-                key={item}
+                key={item.key}
                 style={{
                   background: "#1a1a1a",
                   border: "1px solid #2a2a2a",
@@ -436,7 +436,7 @@ export function ParrsJarsKitPage() {
                 }}
               >
                 <span style={{ color: GOLD, flexShrink: 0 }}>✓</span>
-                {item}
+                {item.label}
               </div>
             ))}
           </div>

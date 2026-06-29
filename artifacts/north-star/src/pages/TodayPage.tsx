@@ -610,11 +610,12 @@ function OdysseySection() {
   const dismissedNudges = useStore((s) => s.dismissedNudges);
   const dismissNudge = useStore((s) => s.dismissNudge);
   const todayKey = getTodayKey();
-  const [signs, setSigns] = useState(() => getTrailSigns(activeZone));
+  const odysseyZone = activeZone as "Z1" | "Z2" | "Z3" | "Z4";
+  const [signs, setSigns] = useState(() => getTrailSigns(odysseyZone));
 
   useEffect(() => {
     let cancelled = false;
-    fetchTrailSigns(BASE_API, activeZone).then((live) => { if (!cancelled) setSigns(live); });
+    fetchTrailSigns(BASE_API, odysseyZone).then((live) => { if (!cancelled) setSigns(live); });
     return () => { cancelled = true; };
   }, [activeZone]);
 

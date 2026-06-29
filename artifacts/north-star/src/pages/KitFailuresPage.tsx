@@ -10,6 +10,15 @@ interface DeliveryFailure {
   createdAt: string;
 }
 
+interface WebhookAttempt {
+  eventId: string;
+  kitId: string;
+  buyerEmail: string;
+  purchaseId: string;
+  attemptCount: number;
+  lastAttemptAt: string;
+}
+
 function getOwnerToken(): string | null {
   try {
     return (
@@ -40,6 +49,7 @@ function formatDate(iso: string): string {
 
 export function KitFailuresPage() {
   const [failures, setFailures] = useState<DeliveryFailure[]>([]);
+  const [webhookAttempts, setWebhookAttempts] = useState<WebhookAttempt[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [resendingId, setResendingId] = useState<string | null>(null);
@@ -51,14 +61,22 @@ export function KitFailuresPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/kits/failures", { headers: ownerHeaders() });
-      if (res.status === 401 || res.status === 403) {
+      const [failuresRes, attemptsRes] = await Promise.all([
+        fetch("/api/kits/failures", { headers: ownerHeaders() }),
+        fetch("/api/kits/webhook-attempts", { headers: ownerHeaders() }),
+      ]);
+      if (failuresRes.status === 401 || failuresRes.status === 403) {
         setError("Access denied — founder token required.");
         return;
       }
-      if (!res.ok) throw new Error(`Server error ${res.status}`);
-      const data = (await res.json()) as { failures: DeliveryFailure[] };
+      if (!failuresRes.ok) throw new Error(`Server error ${failuresRes.status}`);
+      const data = (await failuresRes.json()) as { failures: DeliveryFailure[] };
       setFailures(data.failures ?? []);
+
+      if (attemptsRes.ok) {
+        const attemptsData = (await attemptsRes.json()) as { attempts: WebhookAttempt[] };
+        setWebhookAttempts(attemptsData.attempts ?? []);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load failures");
     } finally {
@@ -163,7 +181,7 @@ export function KitFailuresPage() {
         )}
 
         {/* Empty state */}
-        {!loading && !error && failures.length === 0 && (
+        {!loading && !error && failures.length === 0 && webhookAttempts.length === 0 && (
           <div className="text-center py-20">
             <p className="text-4xl mb-4">✅</p>
             <p className="font-medium text-stone-500">No unresolved failures</p>
@@ -173,13 +191,57 @@ export function KitFailuresPage() {
           </div>
         )}
 
-        {/* Count badge */}
-        {!loading && failures.length > 0 && (
-          <div className="flex gap-3 mb-6 text-xs font-medium">
-            <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full">
-              {failures.length} unresolved {failures.length === 1 ? "failure" : "failures"}
-            </span>
+        {/* Count badges */}
+        {!loading && (failures.length > 0 || webhookAttempts.length > 0) && (
+          <div className="flex flex-wrap gap-3 mb-6 text-xs font-medium">
+            {failures.length > 0 && (
+              <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+                {failures.length} unresolved {failures.length === 1 ? "failure" : "failures"}
+              </span>
+            )}
+            {webhookAttempts.length > 0 && (
+              <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full">
+                {webhookAttempts.length} uncommitted {webhookAttempts.length === 1 ? "delivery" : "deliveries"}
+              </span>
+            )}
           </div>
+        )}
+
+        {/* Uncommitted deliveries (webhook attempts where no token was committed) */}
+        {webhookAttempts.length > 0 && (
+          <section className="mb-8">
+            <h2 className="text-sm font-semibold text-amber-700 uppercase tracking-wide mb-1">
+              Uncommitted Deliveries
+            </h2>
+            <p className="text-xs text-stone-400 mb-4">
+              Stripe sent a webhook for these purchases but the access token was never committed — the buyer paid but has no access link.
+            </p>
+            <div className="flex flex-col gap-3">
+              {webhookAttempts.map((a) => (
+                <div key={a.eventId} className="bg-white border border-amber-200 rounded-2xl p-4 shadow-sm">
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-stone-800 truncate">{a.buyerEmail}</p>
+                      <p className="text-xs text-stone-400 mt-0.5">
+                        Kit: <span className="text-stone-600 font-medium">{a.kitId}</span>
+                        {" · "}
+                        <span className="text-stone-400">Last attempt {formatDate(a.lastAttemptAt)}</span>
+                      </p>
+                    </div>
+                    <span className="shrink-0 bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                      {a.attemptCount} {a.attemptCount === 1 ? "attempt" : "attempts"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-stone-400">
+                    Purchase ID: <span className="font-mono text-stone-500">{a.purchaseId}</span>
+                  </p>
+                  <p className="text-xs text-stone-400 mt-0.5">
+                    Event ID: <span className="font-mono text-stone-500">{a.eventId}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
         )}
 
         {/* Failure rows */}

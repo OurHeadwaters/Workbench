@@ -170,9 +170,9 @@ parrsjars.ca`,
 export default function ParrsJarsEmailSequence() {
   return (
     <div style={{ minHeight: "100vh", background: "#fff", fontFamily: "Georgia, serif" }}>
-      <PrintNav />
+      <PrintNav targetId="parrs-jars-email-sequence" filename="parrs-jars-email-sequence.pdf" />
 
-      <div style={{ maxWidth: "42rem", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
+      <div id="parrs-jars-email-sequence" style={{ maxWidth: "42rem", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
 
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "2rem", gap: "1.5rem", flexWrap: "wrap" }}>
           <div>

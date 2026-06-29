@@ -54,7 +54,7 @@ export function WeeklyPage() {
       d.setDate(d.getDate() + i);
       days.push(format(d, "yyyy-MM-dd"));
     }
-    const totals: Record<ZoneId, number> = { Z1: 0, Z2: 0, Z3: 0, Z4: 0 };
+    const totals: Record<ZoneId, number> = { Z0: 0, Z1: 0, Z2: 0, Z3: 0, Z4: 0, Z5: 0 };
     days.forEach((day) => {
       const pick = dailyPicks[day];
       if (pick?.hoursByZone) {

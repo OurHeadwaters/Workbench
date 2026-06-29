@@ -1899,6 +1899,8 @@ function RedSection({
           {/* ── Dismissed seed briefs (shown only when "show dismissed" is on) ── */}
           {dismissedSeedBriefs.map((brief) => {
             const seat = SEAT_META[brief.councilSeat];
+            const answered = !!briefAnswers[brief.taskRef];
+            const isAnswerOpen = !!answerOpen[brief.taskRef];
             return (
               <div key={brief.taskRef} className="px-4 py-3 opacity-40">
                 <div className="flex items-start gap-3">

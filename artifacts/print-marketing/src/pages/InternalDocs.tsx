@@ -6,7 +6,7 @@ import { CodetryFundingBriefPage } from "./CodetryFundingBrief";
 import { CodetryOnePagerPage } from "./CodetryOnePager";
 import { CodetryPilotProposalPage } from "./CodetryPilotProposal";
 import { OCAPartnershipBriefPage } from "./OCAPartnershipBrief";
-import { CDPGrantNarrativePage } from "./CDPGrantNarrative";
+import { CdpGrantNarrativePage as CDPGrantNarrativePage } from "./CdpGrantNarrative";
 import { CapabilityStatementPublicPage } from "./CapabilityStatementPublic";
 
 const base = import.meta.env.BASE_URL;

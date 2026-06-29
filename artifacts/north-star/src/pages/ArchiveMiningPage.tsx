@@ -32,17 +32,21 @@ interface ArchiveThread {
 type Tab = "search" | "bank";
 
 const ZONE_LABELS: Record<ZoneId, string> = {
+  Z0: "Z0 — Center",
   Z1: "Z1 — Income",
   Z2: "Z2 — Contract",
   Z3: "Z3 — Future",
   Z4: "Z4 — Community",
+  Z5: "Z5 — Wild",
 };
 
 const ZONE_COLORS: Record<ZoneId, string> = {
+  Z0: "bg-[#FDF6E3] text-[#8A6A1A]",
   Z1: "bg-[#D1E7DB] text-[#1D4430]",
   Z2: "bg-[#DBEAFE] text-[#1E3A5F]",
   Z3: "bg-[#EDE9FE] text-[#3B1F6E]",
   Z4: "bg-[#FEF3C7] text-[#78350F]",
+  Z5: "bg-[#E8EDF0] text-[#4A6272]",
 };
 
 const CONTENT_TYPE_LABELS: Record<ArchiveContentType, string> = {
@@ -542,7 +546,7 @@ function ContentBankTab() {
       acc[z] = contentBank.filter((x) => x.zone === z && x.contentType !== "discard");
       return acc;
     },
-    { Z1: [], Z2: [], Z3: [], Z4: [] },
+    { Z0: [], Z1: [], Z2: [], Z3: [], Z4: [], Z5: [] },
   );
 
   function exportMarkdown() {

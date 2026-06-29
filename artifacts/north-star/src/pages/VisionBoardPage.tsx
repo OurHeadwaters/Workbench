@@ -152,10 +152,12 @@ function Section({
   children,
   className = "",
   id,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
   id?: string;
+  style?: React.CSSProperties;
 }) {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -180,6 +182,7 @@ function Section({
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(24px)",
         transition: "opacity 0.8s ease, transform 0.8s ease",
+        ...style,
       }}
     >
       {children}
