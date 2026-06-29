@@ -1,5 +1,5 @@
 # Headwaters: How a Community Runs Its Own Economy
-*Full content snapshot — exported 2026-06-27*
+*Full content snapshot — exported 2026-06-29*
 *Constellation version: 0.5.7 (last updated 2026-05-05)*
 
 ---
@@ -9,16 +9,19 @@
 ### Book Content
 
 - [Part P · Prologue](#part-p-prologue)
+  *Pioneer training — the calm before the storm, and who this work is for.*
   - [P.E · The eagle answered](#pe-the-eagle-answered)
   - [P.0 · For the mothers](#p0-for-the-mothers)
   - [P.1 · Pioneer training](#p1-pioneer-training)
   - [P.2 · What this is](#p2-what-this-is)
 - [Part G · Grounding](#part-g-grounding)
+  *Start here. The teachers whose thinking this practice grows from, Thunder — the statement that arrives before you can reason about it — and the reading lineages that trained the practitioner's ear. Understand the roots and the discipline in Part I will make immediate sense. Understand the soil before you plant.*
   - [4.1 · The four teachers and Thunder](#41-the-four-teachers-and-thunder)
   - [4.2 · Lineage](#42-lineage)
   - [4.3 · The reading lineage — fiction](#43-the-reading-lineage-fiction)
   - [4.4 · The reading lineage — nonfiction](#44-the-reading-lineage-nonfiction)
 - [Part I · The Discipline](#part-i-the-discipline)
+  *The discipline itself — what it is, where it lives, and why the words you choose carry structural weight. The Grounding section laid the roots; this part names the moves.*
   - [1.0 · Why codetry exists](#10-why-codetry-exists)
   - [1.1 · What codetry is](#11-what-codetry-is)
   - [1.2 · The saltbox principle](#12-the-saltbox-principle)
@@ -28,6 +31,7 @@
   - [1.6 · The single-sentence definition](#16-the-single-sentence-definition)
   - [1.7 · Nearest neighbors — the disciplines codetry is not](#17-nearest-neighbors-the-disciplines-codetry-is-not)
 - [Part II · The Constellation: 6 Zones and 3 Naming Primitives](#part-ii-the-constellation-6-zones-and-3-naming-primitives)
+  *The discipline applied to a real community economy. Six zones and three naming primitives (Saltbox, Both-States, Both-Sides), each name chosen by the rules Part I named, plus two constellation-wide tools. These are the worked examples that were in front of the practitioner when codetry got named. The list is open; your own constellation will look different.*
   - [2.0 · How to read these](#20-how-to-read-these)
   - [2.1 · Saltbox](#21-saltbox)
   - [2.2 · Kitchen Table](#22-kitchen-table)
@@ -40,6 +44,7 @@
   - [2.9 · The Gate — language across institutional boundaries](#29-the-gate-language-across-institutional-boundaries)
   - [2.10 · Closing reflection](#210-closing-reflection)
 - [Part III · The Practice](#part-iii-the-practice)
+  *The practitioner in the field. Six moves for working with communities, then Zone 0 — the household as the first and most durable ground. Bobbie's practice is the example here. Yours will be the proof.*
   - [3.1 · Listen for the noun](#31-listen-for-the-noun)
   - [3.2 · Test the name by trying to rename it](#32-test-the-name-by-trying-to-rename-it)
   - [3.3 · Detect drift](#33-detect-drift)
@@ -52,6 +57,7 @@
   - [3.10 · We don't hide our numbers; we deliver on them](#310-we-dont-hide-our-numbers-we-deliver-on-them)
   - [3.11 · The feast](#311-the-feast)
 - [Part IV · The Quiet Examples](#part-iv-the-quiet-examples)
+  *Six zones applied to one life. Zone 0's household economy — the Jar Kitchen, the Jarista, the Seasonal Shelf, the Homestead — and then the constellation: the operational centre, the operating plan, the co-op, the territory, the wild edge. These are not instructions. They are the practitioner's own example, offered as a map.*
   - [4.1 · Zone 0 — The Household](#41-zone-0-the-household)
   - [4.2 · The Jarista](#42-the-jarista)
   - [4.3 · The Jar Kitchen](#43-the-jar-kitchen)
@@ -67,6 +73,7 @@
   - [4.12 · Zone 4 — The Territory](#412-zone-4-the-territory)
   - [4.13 · Zone 5 — Edge](#413-zone-5-edge)
 - [Part V · Open Questions](#part-v-open-questions)
+  *A handbook needs a place where the questions live before they have answers. The chapters in this part are written to be returned to. Each one names a thing the discipline is being asked that the discipline has not yet finished thinking through.*
   - [5.1 · Tokenization, and what it does to the noun](#51-tokenization-and-what-it-does-to-the-noun)
   - [5.2 · Name as architecture, when the noun goes on-chain](#52-name-as-architecture-when-the-noun-goes-on-chain)
   - [5.3 · Name as a trade, practiced through the wisdom keepers](#53-name-as-a-trade-practiced-through-the-wisdom-keepers)
@@ -77,6 +84,7 @@
   - [5.8 · Sponsors and experts — base first, then networking outward](#58-sponsors-and-experts-base-first-then-networking-outward)
   - [5.9 · Lodge, Path A, and Zone 4 — three open questions, two resolved, one still held](#59-lodge-path-a-and-zone-4-three-open-questions-two-resolved-one-still-held)
 - [Part DD · Deep Dives](#part-dd-deep-dives)
+  *Optional deeper reading — you do not need this section to begin practising. If you understand what codetry is and you are ready to use it, go directly to the Field Ledger or set the book down and begin. These seven chapters are here for practitioners who want to know exactly how codetry differs from the disciplines it most closely resembles. Return when a question of intellectual lineage arises.*
   - [DD.1 · Different from code poetry](#dd1-different-from-code-poetry)
   - [DD.2 · Different from literate programming](#dd2-different-from-literate-programming)
   - [DD.3 · Different from DDD and Conway's Law](#dd3-different-from-ddd-and-conways-law)
@@ -92,6 +100,7 @@
   - [DD.V · Bright Side — Data Sovereignty at the Facility Level](#ddv-bright-side-data-sovereignty-at-the-facility-level)
   - [DD.VI · Northern Store Plan — A Methodology, Not a One-Off](#ddvi-northern-store-plan-a-methodology-not-a-one-off)
 - [Part FL · Field Ledger](#part-fl-field-ledger)
+  *Eleven worked codetry tests, in chronological order. Each one is a small piece of the practice — a question about a name, what was on the screen before, the intervention tried, the rule discovered, the falsifier the rule lives or dies by, and the verdict. The ledger is here so the discipline can be inspected against its own examples rather than only against its rules.*
   - [FL.1 · Test 001 — Payday: words bearing weight](#fl1-test-001-payday-words-bearing-weight)
   - [FL.2 · Test 002 — Eave: the word map locked](#fl2-test-002-eave-the-word-map-locked)
   - [FL.3 · Test 003 — Bamboo field on the wallet chip](#fl3-test-003-bamboo-field-on-the-wallet-chip)
@@ -104,6 +113,7 @@
   - [FL.10 · Test 010 — Water-register wordings on the shortfall CTA](#fl10-test-010-water-register-wordings-on-the-shortfall-cta)
   - [FL.11 · Test 010 (second entry) — Water-register wording on the swap-sheet header](#fl11-test-010-second-entry-water-register-wording-on-the-swap-sheet-header)
 - [Part APP · Appendix G — Community Money Machine Governance Rules](#part-app-appendix-g-community-money-machine-governance-rules)
+  *The operating rules for a community-owned money machine. Decision authority, quorum, voting, dispute escalation, Reserve raid protocol, quarterly reporting, and annual audit — drawn from the canonical governance document and carried here so stewards can reference them offline.*
   - [APP.0 · About this appendix](#app0-about-this-appendix)
   - [APP.1 · Decision Authority Matrix](#app1-decision-authority-matrix)
   - [APP.2 · Quorum](#app2-quorum)
@@ -113,6 +123,7 @@
   - [APP.6 · Quarterly Money Machine Report](#app6-quarterly-money-machine-report)
   - [APP.7 · Annual Audit](#app7-annual-audit)
 - [Part CODA · Conclusion](#part-coda-conclusion)
+  *The practitioner's own arc — from scared to prepared, from 2011 to present — and the source from which this handbook was drawn.*
   - [Coda · From scared to prepared](#coda-from-scared-to-prepared)
   - [C · The Source](#c-the-source)
 

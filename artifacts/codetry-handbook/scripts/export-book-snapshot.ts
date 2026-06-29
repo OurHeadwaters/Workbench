@@ -83,6 +83,9 @@ function buildTOC(): string {
   for (const part of PARTS) {
     const partHeading = `Part ${part.roman} · ${part.title}`;
     lines.push(`- [${partHeading}](#${slugify(partHeading)})\n`);
+    if (part.blurb) {
+      lines.push(`  *${part.blurb}*\n`);
+    }
     for (const chapter of part.chapters) {
       const chHeading = `${chapter.number} · ${chapter.title}`;
       lines.push(`  - [${chHeading}](#${slugify(chHeading)})\n`);
