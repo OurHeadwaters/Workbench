@@ -8,6 +8,7 @@
     "upload-attached-assets": "tsx ./src/uploadAttachedAssets.ts",
     "flush-deadhead-backlog": "tsx src/flushDeadheadBacklog.ts",
     "notify-github-sync-failure": "tsx src/notifyGithubSyncFailure.ts",
+    "notify-book-export-failure": "tsx src/notifyBookExportFailure.ts",
     "tsx": "tsx",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

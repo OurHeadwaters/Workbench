@@ -16,10 +16,23 @@ else
   DIFF_BASE=""
 fi
 
+run_book_export() {
+  # Use || so set -e doesn't exit before we can capture the failure and notify.
+  EXPORT_OUTPUT=$(pnpm --filter @workspace/codetry-handbook run export-book 2>&1) || {
+    EXPORT_EXIT=$?
+    echo "ERROR: Book export failed (exit $EXPORT_EXIT):"
+    echo "$EXPORT_OUTPUT"
+    pnpm --filter @workspace/scripts run notify-book-export-failure \
+      "export-book exited $EXPORT_EXIT — $EXPORT_OUTPUT" || true
+    exit $EXPORT_EXIT
+  }
+  echo "$EXPORT_OUTPUT"
+  echo "Book export complete."
+}
+
 if [ -z "$DIFF_BASE" ]; then
   echo "No diff base available — running book export unconditionally."
-  pnpm --filter @workspace/codetry-handbook run export-book
-  echo "Book export complete."
+  run_book_export
 else
   HANDBOOK_CHANGED=$(git diff --name-only "$DIFF_BASE" HEAD 2>/dev/null | grep -E \
     '^artifacts/codetry-handbook/data/|^artifacts/codetry-handbook/public/narration/' \
@@ -28,8 +41,7 @@ else
   if [ -n "$HANDBOOK_CHANGED" ]; then
     echo "Handbook data changed — regenerating book exports..."
     echo "$HANDBOOK_CHANGED" | sed 's/^/  /'
-    pnpm --filter @workspace/codetry-handbook run export-book
-    echo "Book export complete."
+    run_book_export
   else
     echo "No handbook data changes detected — skipping book export."
   fi
