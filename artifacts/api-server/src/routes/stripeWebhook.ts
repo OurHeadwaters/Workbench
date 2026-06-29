@@ -50,10 +50,11 @@ const router: IRouter = Router();
 // ── Stripe retry exhaustion ───────────────────────────────────────────────────
 //
 // Stripe retries a webhook endpoint up to ~8 times over ~3 days when it
-// receives a non-2xx response.  Each time the token INSERT fails and we
-// unclaim the event, we increment a counter in kit_webhook_attempts.  Once
-// the count reaches STRIPE_MAX_RETRIES the delivery cannot succeed through
-// normal retries; we send an alert so the founder can intervene manually.
+// receives a non-2xx response.  Each time the transaction fails (and the
+// claim row is automatically rolled back), we increment a counter in
+// kit_webhook_attempts.  Once the count reaches STRIPE_MAX_RETRIES the
+// delivery cannot succeed through normal retries; we send an alert so the
+// founder can intervene manually.
 
 const STRIPE_MAX_RETRIES = 8;
 
@@ -116,30 +117,11 @@ function accessUrl(token: string): string {
 // creating a token or sending an email. This closes the TOCTOU window that
 // existed when the SELECT check and the INSERT were separate steps.
 //
-// Retry safety: claimEvent() runs before the kit-token INSERT. If the token
-// INSERT then fails (DB error, constraint violation, etc.) we call
-// unclaimEvent() to remove the row so the next Stripe retry can re-enter the
-// delivery flow. Without this rollback, the duplicate gate would permanently
-// block every subsequent retry and the buyer would never receive their kit.
-
-async function claimEvent(
-  eventId: string,
-  purchaseId: string,
-): Promise<boolean> {
-  const inserted = await db
-    .insert(stripeProcessedEventsTable)
-    .values({ eventId, purchaseId })
-    .onConflictDoNothing()
-    .returning({ eventId: stripeProcessedEventsTable.eventId });
-  // inserted.length === 1 → we own this event; 0 → another handler got there first
-  return inserted.length > 0;
-}
-
-async function unclaimEvent(eventId: string): Promise<void> {
-  await db
-    .delete(stripeProcessedEventsTable)
-    .where(eq(stripeProcessedEventsTable.eventId, eventId));
-}
+// Atomicity: both the claim INSERT and the token INSERT are wrapped in a single
+// db.transaction() call. If the token INSERT fails (DB error, constraint
+// violation, crash between the two calls, etc.) Postgres automatically rolls
+// back the claim row — no manual unclaimEvent() needed. The next Stripe retry
+// finds no claim row and re-enters the full delivery flow.
 
 // ── POST /stripe/webhook ──────────────────────────────────────────────────────
 //
@@ -216,91 +198,83 @@ router.post(
         return;
       }
 
-      // Atomic idempotency gate: claim the event row *before* token creation or
-      // email delivery. The INSERT … ON CONFLICT DO NOTHING + RETURNING pattern
-      // means only the one request that actually inserts a row proceeds — any
-      // concurrent retry that loses the race gets 0 rows back and returns early.
-      // This closes the TOCTOU window of the old SELECT-then-INSERT approach.
-      const claimed = await claimEvent(event.id, purchaseId);
-      if (!claimed) {
-        logger.info({ eventId: event.id, type: event.type }, "[stripe-webhook] duplicate event — skipping");
-        res.json({ received: true, duplicate: true });
-        return;
-      }
-
       const token = generateToken();
       const createdAt = new Date();
       const expiresAt = new Date(createdAt.getTime() + TOKEN_TTL_MS);
 
+      // Atomic idempotency gate + token creation: both INSERTs run inside a
+      // single transaction. The claim INSERT uses ON CONFLICT DO NOTHING so
+      // duplicate events are detected without throwing. If the token INSERT
+      // fails (or the process crashes after the claim INSERT), Postgres rolls
+      // back the claim row automatically — no manual unclaimEvent() needed —
+      // and the next Stripe retry re-enters the full delivery flow cleanly.
+      let claimed: boolean;
       try {
-        await db.insert(kitTokensTable).values({
-          token,
-          kitId,
-          buyerEmail: buyerEmail.toLowerCase(),
-          buyerName: buyerName ?? "there",
-          purchaseId,
-          createdAt,
-          expiresAt,
+        claimed = await db.transaction(async (tx) => {
+          const inserted = await tx
+            .insert(stripeProcessedEventsTable)
+            .values({ eventId: event.id, purchaseId })
+            .onConflictDoNothing()
+            .returning({ eventId: stripeProcessedEventsTable.eventId });
+
+          if (inserted.length === 0) return false;
+
+          await tx.insert(kitTokensTable).values({
+            token,
+            kitId,
+            buyerEmail: buyerEmail.toLowerCase(),
+            buyerName: buyerName ?? "there",
+            purchaseId,
+            createdAt,
+            expiresAt,
+          });
+
+          return true;
         });
       } catch (err) {
-        // Remove the duplicate-delivery lock so the next Stripe retry can
-        // re-enter the full delivery flow. Without this, every subsequent
-        // retry would hit the duplicate gate and skip delivery permanently,
-        // leaving the buyer without their kit.
-        try {
-          await unclaimEvent(event.id);
-          logger.error(
-            { err, kitId, sessionId: session.id, eventId: event.id },
-            "[stripe-webhook] failed to persist token — event unclaimed, delivery WILL be retried by Stripe",
-          );
+        // The transaction was rolled back automatically by Postgres — the
+        // claim row is gone, so the next Stripe retry re-enters cleanly.
+        logger.error(
+          { err, kitId, sessionId: session.id, eventId: event.id },
+          "[stripe-webhook] failed to persist token — transaction rolled back, delivery WILL be retried by Stripe",
+        );
 
-          // Track how many times this event has failed.  Once the count
-          // reaches STRIPE_MAX_RETRIES the retries are exhausted and the
-          // buyer will never receive their kit without manual intervention.
-          try {
-            const { exhausted, attemptCount } = await trackAndCheckRetryExhaustion({
-              eventId: event.id,
-              kitId,
-              buyerEmail: buyerEmail.toLowerCase(),
-              purchaseId,
-            });
-            if (exhausted) {
-              logger.error(
-                { kitId, purchaseId, buyerEmail, attemptCount },
-                "[stripe-webhook] Stripe retries exhausted — alerting founder",
-              );
-              await sendKitDeliveryFailureAlert({
-                buyerEmail,
-                kitId,
-                purchaseId,
-                deliveryError: `Token INSERT failed after ${attemptCount} Stripe delivery attempts — retries exhausted`,
-              });
-            }
-          } catch (trackErr) {
+        // Track how many times this event has failed. Once the count
+        // reaches STRIPE_MAX_RETRIES the retries are exhausted and the
+        // buyer will never receive their kit without manual intervention.
+        try {
+          const { exhausted, attemptCount } = await trackAndCheckRetryExhaustion({
+            eventId: event.id,
+            kitId,
+            buyerEmail: buyerEmail.toLowerCase(),
+            purchaseId,
+          });
+          if (exhausted) {
             logger.error(
-              { trackErr, kitId, purchaseId },
-              "[stripe-webhook] failed to track retry exhaustion",
+              { kitId, purchaseId, buyerEmail, attemptCount },
+              "[stripe-webhook] Stripe retries exhausted — alerting founder",
             );
-          }
-        } catch (unclaimErr) {
-          logger.error(
-            { err, unclaimErr, kitId, sessionId: session.id, eventId: event.id },
-            "[stripe-webhook] failed to persist token AND failed to unclaim event — delivery will NOT be retried, manual intervention required",
-          );
-          // Alert immediately: with the event still claimed, Stripe's
-          // duplicate gate will block every future retry permanently.
-          try {
             await sendKitDeliveryFailureAlert({
               buyerEmail,
               kitId,
               purchaseId,
-              deliveryError: "Token INSERT failed and unclaim also failed — no further Stripe retries possible",
+              deliveryError: `Token INSERT failed after ${attemptCount} Stripe delivery attempts — retries exhausted`,
             });
-          } catch (alertErr) {
-            logger.error({ alertErr, kitId, purchaseId }, "[stripe-webhook] failed to send alert after unclaim failure");
           }
+        } catch (trackErr) {
+          logger.error(
+            { trackErr, kitId, purchaseId },
+            "[stripe-webhook] failed to track retry exhaustion",
+          );
         }
+
         res.status(500).json({ error: "Failed to record purchase" });
+        return;
+      }
+
+      if (!claimed) {
+        logger.info({ eventId: event.id, type: event.type }, "[stripe-webhook] duplicate event — skipping");
+        res.json({ received: true, duplicate: true });
         return;
       }
 

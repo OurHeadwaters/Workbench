@@ -738,8 +738,36 @@ export function makeFakeDb(): FakeDb {
     insert: (t: FakeTable) => makeInsert(t),
     update: (t: FakeTable) => makeUpdate(t),
     delete: (t: FakeTable) => makeDelete(t),
-    transaction: async <T,>(fn: (tx: FakeDb) => Promise<T>): Promise<T> =>
-      fn(db),
+    transaction: async <T,>(fn: (tx: FakeDb) => Promise<T>): Promise<T> => {
+      // Snapshot each table's __store lazily on first write so we can roll
+      // back if the callback throws — mirroring real Postgres behaviour.
+      const snapshots = new Map<FakeTable, Row[]>();
+      function snapshotBefore(table: FakeTable) {
+        if (!snapshots.has(table)) {
+          snapshots.set(table, [...table.__store]);
+        }
+      }
+      // The tx proxy delegates every write back to `db` (so vi.spyOn(db, …)
+      // mocks set up in tests still intercept the call), but it takes a
+      // before-write snapshot first so rollback can restore the store.
+      const tx: FakeDb = {
+        select: db.select,
+        selectDistinct: db.selectDistinct,
+        insert: (t: FakeTable) => { snapshotBefore(t); return db.insert(t); },
+        update: (t: FakeTable) => { snapshotBefore(t); return db.update(t); },
+        delete: (t: FakeTable) => { snapshotBefore(t); return db.delete(t); },
+        transaction: db.transaction,
+      };
+      try {
+        return await fn(tx);
+      } catch (e) {
+        for (const [table, snap] of snapshots) {
+          table.__store.length = 0;
+          table.__store.push(...snap);
+        }
+        throw e;
+      }
+    },
   };
   return db;
 }
