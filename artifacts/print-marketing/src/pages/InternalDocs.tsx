@@ -194,8 +194,8 @@ const ZONES: Array<{
     season: "Provisions laid in before the flood.",
     accent: "#9c4a2f",
     docs: [
-      { href: "/ecosystem-guide", title: "Plain-Language Guide — All Headwaters Tools (PDF)", label: "Start here", desc: "6-page print PDF — one section per tool: what it does, what you can do, why it matters." },
-      { href: "/overview", title: "Project Overview — All Headwaters Tools", label: "Start here", desc: "Plain-language visual guide — what every tool does and how they connect." },
+      { href: "/ecosystem-guide", title: "Plain-Language Guide — All Headwaters Tools (PDF)", label: "Start here", desc: "6-page print PDF — one section per tool: what it does, what you can do, why it matters. Includes The Stomping Grounds (thestompinggrounds.com)." },
+      { href: "/overview", title: "Project Overview — All Headwaters Tools", label: "Start here", desc: "Plain-language visual guide — what every tool does and how they connect. Includes The Stomping Grounds (thestompinggrounds.com)." },
       { href: "/internal-scope-plan", title: "Internal Scope Plan", label: "Internal", desc: "Internal reference for active engagement scope and milestones." },
       { href: "/codetry-packet-sandy-lake", title: "Codetry Print Packet — Sandy Lake", label: "Aboriginal Outreach", desc: "Full Sandy Lake packet: cover + intro + one-pager + brief + proposal." },
       { href: "/codetry-packet-deer-lake", title: "Codetry Print Packet — Deer Lake", label: "Deer Lake", desc: "Eight pages in one PDF — declaration through Chief Brief." },

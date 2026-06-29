@@ -1,5 +1,15 @@
+interface Tool {
+  icon: string;
+  name: string;
+  subtitle: string;
+  color: string;
+  desc: string;
+  layer: "core" | "support";
+  href?: string;
+}
+
 export default function ProjectOverview() {
-  const tools = [
+  const tools: Tool[] = [
     {
       icon: "📖",
       name: "The Handbook",
@@ -56,6 +66,15 @@ export default function ProjectOverview() {
       desc: "The file vault. Stores photos, documents, and media assets so every other tool can pull from one reliable source — no more hunting for the right version of a logo.",
       layer: "support",
     },
+    {
+      icon: "⬡",
+      name: "The Stomping Grounds",
+      subtitle: "thestompinggrounds.com",
+      color: "#4a7c59",
+      href: "https://thestompinggrounds.com",
+      desc: "The public front door. Five stations where neighbours, visitors, and prospective partners can explore the discipline, find their footing, and decide how they want to engage — no login, no commitment required.",
+      layer: "support",
+    },
   ];
 
   const coreTools = tools.filter((t) => t.layer === "core");
@@ -110,7 +129,7 @@ export default function ProjectOverview() {
               marginBottom: "0.75rem",
             }}
           >
-            Seven simple tools.<br />One community economy.
+            Eight simple tools.<br />One community economy.
           </h1>
           <p
             style={{
@@ -270,7 +289,7 @@ export default function ProjectOverview() {
               marginBottom: "0.25rem",
             }}
           >
-            These four tools back up the core flow — they hold the evidence, the materials, the team, and the files that everything else draws from.
+            These five tools back up the core flow — they hold the evidence, the materials, the team, the files, and the public front door that everything else draws from.
           </p>
 
           {supportTools.map((tool) => (
@@ -315,6 +334,32 @@ export default function ProjectOverview() {
                   >
                     {tool.subtitle}
                   </span>
+                  {tool.href && (
+                    <a
+                      href={tool.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="no-print"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.2rem",
+                        fontSize: "0.6rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        color: tool.color,
+                        textDecoration: "none",
+                        border: `1px solid ${tool.color}`,
+                        borderRadius: "3px",
+                        padding: "0.12rem 0.4rem",
+                        opacity: 0.75,
+                        lineHeight: 1,
+                      }}
+                    >
+                      Open ↗
+                    </a>
+                  )}
                 </div>
                 <p style={{ fontSize: "0.85rem", color: "var(--muted)", lineHeight: 1.55 }}>
                   {tool.desc}
@@ -353,8 +398,9 @@ export default function ProjectOverview() {
             the <strong>Research Library</strong> grounds decisions in real evidence,
             the <strong>Print Suite</strong> puts everything on paper,
             the <strong>Crew Manifest</strong> shows who's doing what,
-            and the <strong>Media Library</strong> keeps the files in one place.
-            Seven simple tools. One system. Yours.
+            the <strong>Media Library</strong> keeps the files in one place,
+            and <a href="https://thestompinggrounds.com" target="_blank" rel="noopener noreferrer" style={{ color: "var(--evergreen)", textDecoration: "underline" }}>The Stomping Grounds</a> is the public front door where anyone can find their footing first.
+            Eight tools. One system. Yours.
           </p>
         </div>
 
