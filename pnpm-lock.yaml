@@ -161,6 +161,13 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      '@replit/connectors-sdk':
+        specifier: ^0.4.1
+        version: 0.4.1
+      xlsx:
+        specifier: ^0.18.5
+        version: 0.18.5
     devDependencies:
       '@playwright/test':
         specifier: ^1.59.1
@@ -174,9 +181,6 @@ importers:
       typescript:
         specifier: ~5.9.2
         version: 5.9.3
-      xlsx:
-        specifier: ^0.18.5
-        version: 0.18.5
 
   artifacts/api-server:
     dependencies:
@@ -2187,6 +2191,9 @@ importers:
       '@google-cloud/storage':
         specifier: ^7.19.0
         version: 7.19.0
+      '@replit/connectors-sdk':
+        specifier: latest
+        version: 0.4.1
       '@workspace/db':
         specifier: workspace:*
         version: link:../lib/db

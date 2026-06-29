@@ -7,6 +7,7 @@
     "hello": "tsx ./src/hello.ts",
     "upload-attached-assets": "tsx ./src/uploadAttachedAssets.ts",
     "flush-deadhead-backlog": "tsx src/flushDeadheadBacklog.ts",
+    "notify-github-sync-failure": "tsx src/notifyGithubSyncFailure.ts",
     "tsx": "tsx",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^7.19.0",
+    "@replit/connectors-sdk": "latest",
     "@workspace/db": "workspace:*",
     "drizzle-orm": "catalog:"
   }
