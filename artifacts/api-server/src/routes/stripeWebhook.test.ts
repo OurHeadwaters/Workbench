@@ -55,7 +55,13 @@ vi.mock("@workspace/db", async () => {
     columns: ["id", "buyerEmail", "kitId", "purchaseId", "error", "resolvedAt", "createdAt"],
   });
 
-  return { db: makeFakeDb(), kitTokensTable, stripeProcessedEventsTable, kitDeliveryFailuresTable };
+  const kitWebhookAttemptsTable = makeTable({
+    name: "kit_webhook_attempts",
+    pk: ["eventId"],
+    columns: ["eventId", "kitId", "buyerEmail", "purchaseId", "attemptCount", "lastAttemptAt"],
+  });
+
+  return { db: makeFakeDb(), kitTokensTable, stripeProcessedEventsTable, kitDeliveryFailuresTable, kitWebhookAttemptsTable };
 });
 
 vi.mock("drizzle-orm", async () => {
@@ -91,6 +97,7 @@ const tables = dbModule as unknown as {
   kitTokensTable: FakeTable;
   stripeProcessedEventsTable: FakeTable;
   kitDeliveryFailuresTable: FakeTable;
+  kitWebhookAttemptsTable: FakeTable;
 };
 const getKitMock = kitsRegistryModule.getKit as ReturnType<typeof vi.fn>;
 const sendKitDeliveryEmailMock =
@@ -145,6 +152,7 @@ beforeEach(() => {
   tables.kitTokensTable.__store.length = 0;
   tables.stripeProcessedEventsTable.__store.length = 0;
   tables.kitDeliveryFailuresTable.__store.length = 0;
+  tables.kitWebhookAttemptsTable.__store.length = 0;
   getKitMock.mockClear();
   getKitMock.mockReturnValue(null);
   sendKitDeliveryEmailMock.mockClear();
@@ -610,6 +618,196 @@ describe("POST /stripe/webhook — checkout.session.completed", () => {
       expect(sendKitDeliveryEmailMock).not.toHaveBeenCalled();
     } finally {
       insertSpy.mockRestore();
+      await h.close();
+    }
+  });
+});
+
+// ── tests: retry exhaustion alert ─────────────────────────────────────────────
+
+// Helper: simulate a token-INSERT failure without touching stripeProcessedEvents
+// or kitWebhookAttempts, so the handler's unclaim + retry-tracking logic runs.
+function makeTokenInsertFailSpy(
+  db: FakeDb,
+  kitTokensTable: FakeTable,
+  originalInsert: FakeDb["insert"],
+) {
+  return vi.spyOn(db, "insert").mockImplementation((table: FakeTable) => {
+    if (table === kitTokensTable) {
+      return {
+        values: () => ({
+          returning: () => Promise.reject(new Error("simulated DB failure")),
+          onConflictDoNothing: () => Promise.reject(new Error("simulated DB failure")),
+          then: (_: unknown, reject?: (e: Error) => unknown) => {
+            const err = new Error("simulated DB failure");
+            return reject ? Promise.resolve(reject(err)) : Promise.reject(err);
+          },
+        }),
+      } as unknown as ReturnType<typeof originalInsert>;
+    }
+    return originalInsert(table);
+  });
+}
+
+describe("POST /stripe/webhook — retry exhaustion alert", () => {
+  it("increments kit_webhook_attempts on each token-INSERT failure", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    const db = tables.db;
+    const originalInsert = db.insert.bind(db);
+    const spy = makeTokenInsertFailSpy(db, tables.kitTokensTable, originalInsert);
+
+    const payload = makeCheckoutPayload({ id: "evt_retry_count_001" });
+    const h = await startHarness();
+    try {
+      await postWebhook(h.base, payload, makeStripeSignature(payload, TEST_WEBHOOK_SECRET));
+      // Stripe retries with the same event ID but a fresh signature
+      await postWebhook(h.base, payload, makeStripeSignature(payload, TEST_WEBHOOK_SECRET));
+
+      expect(tables.kitWebhookAttemptsTable.__store).toHaveLength(1);
+      expect(tables.kitWebhookAttemptsTable.__store[0].eventId).toBe("evt_retry_count_001");
+      expect(tables.kitWebhookAttemptsTable.__store[0].attemptCount).toBe(2);
+    } finally {
+      spy.mockRestore();
+      await h.close();
+    }
+  });
+
+  it("does NOT alert before STRIPE_MAX_RETRIES (8) are exhausted", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    const db = tables.db;
+    const originalInsert = db.insert.bind(db);
+    const spy = makeTokenInsertFailSpy(db, tables.kitTokensTable, originalInsert);
+
+    const payload = makeCheckoutPayload({ id: "evt_no_alert_007" });
+    const h = await startHarness();
+    try {
+      // 7 failures — one short of the exhaustion threshold
+      for (let i = 0; i < 7; i++) {
+        await postWebhook(h.base, payload, makeStripeSignature(payload, TEST_WEBHOOK_SECRET));
+      }
+      expect(sendKitDeliveryFailureAlertMock).not.toHaveBeenCalled();
+      expect(tables.kitWebhookAttemptsTable.__store[0].attemptCount).toBe(7);
+    } finally {
+      spy.mockRestore();
+      await h.close();
+    }
+  });
+
+  it("sends sendKitDeliveryFailureAlert after STRIPE_MAX_RETRIES (8) token-INSERT failures", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    const db = tables.db;
+    const originalInsert = db.insert.bind(db);
+    const spy = makeTokenInsertFailSpy(db, tables.kitTokensTable, originalInsert);
+
+    const payload = makeCheckoutPayload({ id: "evt_exhausted_001" });
+    const h = await startHarness();
+    try {
+      for (let i = 0; i < 8; i++) {
+        await postWebhook(h.base, payload, makeStripeSignature(payload, TEST_WEBHOOK_SECRET));
+      }
+
+      expect(sendKitDeliveryFailureAlertMock).toHaveBeenCalledTimes(1);
+      const alertCall = sendKitDeliveryFailureAlertMock.mock.calls[0][0] as {
+        buyerEmail: string;
+        kitId: string;
+        purchaseId: string;
+        deliveryError?: string;
+      };
+      expect(alertCall.buyerEmail).toBe("buyer@example.com");
+      expect(alertCall.kitId).toBe("economy-kit");
+      expect(alertCall.purchaseId).toBe("pi_test_001");
+      expect(alertCall.deliveryError).toMatch(/retries exhausted/i);
+    } finally {
+      spy.mockRestore();
+      await h.close();
+    }
+  });
+});
+
+// ── tests: checkout.session.async_payment_failed ──────────────────────────────
+
+function makeAsyncPaymentFailedPayload(opts?: {
+  id?: string;
+  kitId?: string;
+  email?: string;
+}): string {
+  const kitId = opts?.kitId ?? "economy-kit";
+  return JSON.stringify({
+    id: opts?.id ?? "evt_async_fail_001",
+    object: "event",
+    api_version: "2023-10-16",
+    type: "checkout.session.async_payment_failed",
+    data: {
+      object: {
+        id: "cs_async_001",
+        object: "checkout.session",
+        payment_intent: "pi_async_001",
+        metadata: kitId ? { kit_id: kitId } : {},
+        customer_details: {
+          email: opts?.email ?? "buyer@example.com",
+          name: "Test Buyer",
+        },
+        customer_email: null,
+      },
+    },
+  });
+}
+
+describe("POST /stripe/webhook — checkout.session.async_payment_failed", () => {
+  it("calls sendKitDeliveryFailureAlert when Stripe fires async_payment_failed", async () => {
+    const payload = makeAsyncPaymentFailedPayload({ id: "evt_apf_001" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      const body = (await r.json()) as { received?: boolean };
+      expect(body.received).toBe(true);
+
+      expect(sendKitDeliveryFailureAlertMock).toHaveBeenCalledTimes(1);
+      const alertCall = sendKitDeliveryFailureAlertMock.mock.calls[0][0] as {
+        buyerEmail: string;
+        kitId: string;
+        purchaseId: string;
+        deliveryError?: string;
+      };
+      expect(alertCall.buyerEmail).toBe("buyer@example.com");
+      expect(alertCall.kitId).toBe("economy-kit");
+      expect(alertCall.purchaseId).toBe("pi_async_001");
+      expect(alertCall.deliveryError).toMatch(/async payment failed/i);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does NOT write a kit token when async payment fails", async () => {
+    const payload = makeAsyncPaymentFailedPayload({ id: "evt_apf_notoken_001" });
+    const h = await startHarness();
+    try {
+      await postWebhook(h.base, payload, makeStripeSignature(payload, TEST_WEBHOOK_SECRET));
+      expect(tables.kitTokensTable.__store).toHaveLength(0);
+      expect(sendKitDeliveryEmailMock).not.toHaveBeenCalled();
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("handles async_payment_failed gracefully even when kit_id is absent from metadata", async () => {
+    const payload = makeAsyncPaymentFailedPayload({ id: "evt_apf_nokitid_001", kitId: "" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      // Alert is still sent so the founder knows a payment failed, even without a kit_id
+      expect(sendKitDeliveryFailureAlertMock).toHaveBeenCalledTimes(1);
+    } finally {
       await h.close();
     }
   });

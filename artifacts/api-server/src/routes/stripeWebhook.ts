@@ -17,6 +17,7 @@
  * Stripe dashboard webhook configuration:
  *   Endpoint URL : https://<your-api-domain>/api/stripe/webhook
  *   Events       : checkout.session.completed
+ *                  checkout.session.async_payment_failed
  *
  * Kit delivery flow:
  *   1. Stripe fires checkout.session.completed when a payment succeeds.
@@ -42,9 +43,48 @@ import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { getKit } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, sendKitDeliveryFailureAlert } from "../lib/kitsMailer";
-import { db, kitTokensTable, stripeProcessedEventsTable, kitDeliveryFailuresTable } from "@workspace/db";
+import { db, kitTokensTable, stripeProcessedEventsTable, kitDeliveryFailuresTable, kitWebhookAttemptsTable } from "@workspace/db";
 
 const router: IRouter = Router();
+
+// ── Stripe retry exhaustion ───────────────────────────────────────────────────
+//
+// Stripe retries a webhook endpoint up to ~8 times over ~3 days when it
+// receives a non-2xx response.  Each time the token INSERT fails and we
+// unclaim the event, we increment a counter in kit_webhook_attempts.  Once
+// the count reaches STRIPE_MAX_RETRIES the delivery cannot succeed through
+// normal retries; we send an alert so the founder can intervene manually.
+
+const STRIPE_MAX_RETRIES = 8;
+
+async function trackAndCheckRetryExhaustion(opts: {
+  eventId: string;
+  kitId: string;
+  buyerEmail: string;
+  purchaseId: string;
+}): Promise<{ exhausted: boolean; attemptCount: number }> {
+  const { eventId, kitId, buyerEmail, purchaseId } = opts;
+
+  // Read the current count first so we can increment it in application code.
+  // Stripe retries are spaced hours apart, so the SELECT→upsert window is
+  // safe in practice.
+  const existing = await db
+    .select({ attemptCount: kitWebhookAttemptsTable.attemptCount })
+    .from(kitWebhookAttemptsTable)
+    .where(eq(kitWebhookAttemptsTable.eventId, eventId));
+
+  const newCount = existing.length > 0 ? (existing[0].attemptCount as number) + 1 : 1;
+
+  await db
+    .insert(kitWebhookAttemptsTable)
+    .values({ eventId, kitId, buyerEmail, purchaseId, attemptCount: newCount, lastAttemptAt: new Date() })
+    .onConflictDoUpdate({
+      target: kitWebhookAttemptsTable.eventId,
+      set: { attemptCount: newCount, lastAttemptAt: new Date() },
+    });
+
+  return { exhausted: newCount >= STRIPE_MAX_RETRIES, attemptCount: newCount };
+}
 
 // ── Token helpers ─────────────────────────────────────────────────────────────
 
@@ -213,11 +253,52 @@ router.post(
             { err, kitId, sessionId: session.id, eventId: event.id },
             "[stripe-webhook] failed to persist token — event unclaimed, delivery WILL be retried by Stripe",
           );
+
+          // Track how many times this event has failed.  Once the count
+          // reaches STRIPE_MAX_RETRIES the retries are exhausted and the
+          // buyer will never receive their kit without manual intervention.
+          try {
+            const { exhausted, attemptCount } = await trackAndCheckRetryExhaustion({
+              eventId: event.id,
+              kitId,
+              buyerEmail: buyerEmail.toLowerCase(),
+              purchaseId,
+            });
+            if (exhausted) {
+              logger.error(
+                { kitId, purchaseId, buyerEmail, attemptCount },
+                "[stripe-webhook] Stripe retries exhausted — alerting founder",
+              );
+              await sendKitDeliveryFailureAlert({
+                buyerEmail,
+                kitId,
+                purchaseId,
+                deliveryError: `Token INSERT failed after ${attemptCount} Stripe delivery attempts — retries exhausted`,
+              });
+            }
+          } catch (trackErr) {
+            logger.error(
+              { trackErr, kitId, purchaseId },
+              "[stripe-webhook] failed to track retry exhaustion",
+            );
+          }
         } catch (unclaimErr) {
           logger.error(
             { err, unclaimErr, kitId, sessionId: session.id, eventId: event.id },
             "[stripe-webhook] failed to persist token AND failed to unclaim event — delivery will NOT be retried, manual intervention required",
           );
+          // Alert immediately: with the event still claimed, Stripe's
+          // duplicate gate will block every future retry permanently.
+          try {
+            await sendKitDeliveryFailureAlert({
+              buyerEmail,
+              kitId,
+              purchaseId,
+              deliveryError: "Token INSERT failed and unclaim also failed — no further Stripe retries possible",
+            });
+          } catch (alertErr) {
+            logger.error({ alertErr, kitId, purchaseId }, "[stripe-webhook] failed to send alert after unclaim failure");
+          }
         }
         res.status(500).json({ error: "Failed to record purchase" });
         return;
@@ -261,6 +342,31 @@ router.post(
           deliveryError: mailResult.error,
         });
       }
+    } else if (event.type === "checkout.session.async_payment_failed") {
+      // Fired by Stripe when an async payment method (e.g. ACH / BACS) is
+      // ultimately declined after the checkout session was created.  The
+      // buyer will not be charged and their kit will not be delivered.
+      // Alert the founder so they can follow up manually.
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      const kitId = session.metadata?.kit_id ?? "(unknown)";
+      const buyerEmail =
+        session.customer_details?.email ?? session.customer_email ?? "(unknown)";
+      const purchaseId = session.payment_intent
+        ? String(session.payment_intent)
+        : session.id;
+
+      logger.warn(
+        { sessionId: session.id, kitId, buyerEmail, purchaseId },
+        "[stripe-webhook] checkout.session.async_payment_failed — alerting founder",
+      );
+
+      await sendKitDeliveryFailureAlert({
+        buyerEmail,
+        kitId,
+        purchaseId,
+        deliveryError: "Stripe async payment failed — buyer was not charged and kit was not delivered",
+      });
     }
 
     res.json({ received: true });

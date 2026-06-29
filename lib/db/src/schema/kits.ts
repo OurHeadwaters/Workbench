@@ -115,6 +115,21 @@ export const kitDeliveryFailuresTable = pgTable(
   }),
 );
 
+// Tracks how many times a checkout.session.completed webhook has been
+// attempted but failed (token INSERT error → unclaim → Stripe retry).
+// Used to detect when Stripe has exhausted all retries so the founder
+// can be alerted before the event is silently abandoned.
+export const kitWebhookAttemptsTable = pgTable("kit_webhook_attempts", {
+  eventId: text("event_id").primaryKey(),
+  kitId: text("kit_id").notNull(),
+  buyerEmail: text("buyer_email").notNull(),
+  purchaseId: text("purchase_id").notNull(),
+  attemptCount: integer("attempt_count").notNull().default(1),
+  lastAttemptAt: timestamp("last_attempt_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export type KitRow = typeof kitsTable.$inferSelect;
 export type KitInsert = typeof kitsTable.$inferInsert;
 export type PractitionerApplicationRow = typeof practitionerApplicationsTable.$inferSelect;
@@ -125,3 +140,5 @@ export type StripeProcessedEventRow = typeof stripeProcessedEventsTable.$inferSe
 export type StripeProcessedEventInsert = typeof stripeProcessedEventsTable.$inferInsert;
 export type KitDeliveryFailureRow = typeof kitDeliveryFailuresTable.$inferSelect;
 export type KitDeliveryFailureInsert = typeof kitDeliveryFailuresTable.$inferInsert;
+export type KitWebhookAttemptRow = typeof kitWebhookAttemptsTable.$inferSelect;
+export type KitWebhookAttemptInsert = typeof kitWebhookAttemptsTable.$inferInsert;
