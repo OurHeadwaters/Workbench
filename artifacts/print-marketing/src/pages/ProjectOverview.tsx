@@ -5,7 +5,7 @@ interface Tool {
   color: string;
   desc: string;
   layer: "core" | "support";
-  url?: string;
+  href?: string;
 }
 
 export default function ProjectOverview() {
@@ -78,7 +78,7 @@ export default function ProjectOverview() {
       icon: "⬡",
       name: "The Stomping Grounds",
       subtitle: "thestompinggrounds.com",
-      url: "https://thestompinggrounds.com",
+      href: "https://thestompinggrounds.com",
       color: "#4a7c59",
       desc: "The public front door. Five stations where neighbours, visitors, and prospective partners can explore the discipline, find their footing, and decide how they want to engage — no login, no commitment required.",
       layer: "support",
@@ -347,9 +347,9 @@ export default function ProjectOverview() {
                   >
                     {tool.subtitle}
                   </span>
-                  {tool.url && (
+                  {tool.href && (
                     <a
-                      href={tool.url}
+                      href={tool.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="no-print"
