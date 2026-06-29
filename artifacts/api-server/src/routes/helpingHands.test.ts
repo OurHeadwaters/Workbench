@@ -462,6 +462,8 @@ interface SeedMemberOpts {
   role?: "owner" | "ops_manager" | "bookkeeper" | "food_handler";
   xrplAddress?: string;
   completedShiftCount?: number;
+  tier?: "full_time" | "casual" | "task_based";
+  missedShiftCount?: number;
 }
 
 function seedMember(opts: SeedMemberOpts): string {
@@ -475,10 +477,10 @@ function seedMember(opts: SeedMemberOpts): string {
     lastName: "User",
     xrplAddress: opts.xrplAddress ?? null,
     didRef: null,
-    tier: "task_based",
+    tier: opts.tier ?? "task_based",
     isActive: true,
     completedShiftCount: opts.completedShiftCount ?? 0,
-    missedShiftCount: 0,
+    missedShiftCount: opts.missedShiftCount ?? 0,
     noShowCount: 0,
     flaggedForDemotion: false,
     totalEarnedXrp: "0",
@@ -522,6 +524,7 @@ interface SeedTaskOpts {
   escrowSequence?: number | null;
   escrowTxHash?: string | null;
   escrowSimulated?: boolean;
+  availableDate?: string;
 }
 
 function seedTask(opts: SeedTaskOpts): string {
@@ -543,7 +546,7 @@ function seedTask(opts: SeedTaskOpts): string {
     claimedAt: opts.status !== "available" ? new Date() : null,
     completedAt: opts.status === "completed" || opts.status === "confirmed" ? new Date() : null,
     confirmedAt: opts.status === "confirmed" ? new Date() : null,
-    availableDate: "2026-06-29",
+    availableDate: opts.availableDate ?? "2026-06-29",
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -1436,6 +1439,239 @@ describe("cancel — xrplEscrowEnabled = true (submitEscrowCancel is called)", (
 
       // Still no earnings row
       expect(tables.hhEarningsTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
+// POST /tasks/:id/expire — flaggedForDemotion threshold crossing
+// ═════════════════════════════════════════════════════════════════════════════
+//
+// These tests verify that fakeDb correctly evaluates the CASE WHEN … THEN true
+// ELSE … END sql-tag expression so that flaggedForDemotion is set to a real
+// boolean in the in-memory store (not left as the raw template-tag object).
+
+describe("expire — flaggedForDemotion threshold crossing", () => {
+  it("sets flaggedForDemotion=true on a full_time member when missedShiftCount reaches the band threshold", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand(); // missedShiftThreshold: 3
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_exp_d1",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_exp_d1",
+        email: "worker_exp_d1@example.com",
+        role: "food_handler",
+        tier: "full_time",
+        missedShiftCount: 2, // one more miss → 3 >= threshold of 3 → flagged
+      });
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        status: "claimed",
+        availableDate: "2026-06-28", // yesterday — past the date guard
+      });
+
+      setUser("admin_exp_d1");
+      const res = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/expire`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(res.status).toBe(200);
+
+      const memberRow = tables.hhMembersTable.__store.find((r) => r.id === workerId)!;
+      expect(memberRow.missedShiftCount).toBe(3);
+      expect(memberRow.flaggedForDemotion).toBe(true);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does not set flaggedForDemotion when missedShiftCount stays below the threshold", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand(); // missedShiftThreshold: 3
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_exp_d2",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_exp_d2",
+        email: "worker_exp_d2@example.com",
+        role: "food_handler",
+        tier: "full_time",
+        missedShiftCount: 1, // 1 + 1 = 2, still below threshold of 3
+      });
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        status: "claimed",
+        availableDate: "2026-06-28",
+      });
+
+      setUser("admin_exp_d2");
+      const res = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/expire`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(res.status).toBe(200);
+
+      const memberRow = tables.hhMembersTable.__store.find((r) => r.id === workerId)!;
+      expect(memberRow.missedShiftCount).toBe(2);
+      expect(memberRow.flaggedForDemotion).toBe(false);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does not penalise a task_based member (only full_time members are penalised)", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand(); // missedShiftThreshold: 3
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_exp_d3",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_exp_d3",
+        email: "worker_exp_d3@example.com",
+        role: "food_handler",
+        tier: "task_based",
+        missedShiftCount: 2,
+      });
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        status: "claimed",
+        availableDate: "2026-06-28",
+      });
+
+      setUser("admin_exp_d3");
+      const res = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/expire`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(res.status).toBe(200);
+
+      // task_based member: missedShiftCount and flaggedForDemotion must be unchanged
+      const memberRow = tables.hhMembersTable.__store.find((r) => r.id === workerId)!;
+      expect(memberRow.missedShiftCount).toBe(2);
+      expect(memberRow.flaggedForDemotion).toBe(false);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
+// POST /expire-overdue — flaggedForDemotion threshold crossing via batch path
+// ═════════════════════════════════════════════════════════════════════════════
+//
+// Tests the runExpireOverdue code path which uses a variable-delta CASE
+// expression (Form B in sqlTpl).  The availableDate < today filter falls
+// through to { kind: 'raw' } in fakeDb (matches all rows), so past-dated
+// seeded tasks are picked up naturally.
+
+describe("expire-overdue — flaggedForDemotion threshold crossing", () => {
+  it("sets flaggedForDemotion=true on a full_time member when batch missed shifts hit the threshold", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand(); // missedShiftThreshold: 3
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_exp_ov1",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_exp_ov1",
+        email: "worker_exp_ov1@example.com",
+        role: "food_handler",
+        tier: "full_time",
+        missedShiftCount: 1, // + 2 claimed tasks below → 3 >= threshold → flagged
+      });
+
+      // Two overdue claimed tasks for the same worker
+      seedTask({ bandId, postedByMemberId: adminId, claimedByMemberId: workerId, status: "claimed", availableDate: "2026-06-27" });
+      seedTask({ bandId, postedByMemberId: adminId, claimedByMemberId: workerId, status: "claimed", availableDate: "2026-06-28" });
+
+      setUser("admin_exp_ov1");
+      const res = await fetch(`${h.base}/api/helping-hands/expire-overdue`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { expired: number; flagged: number };
+      expect(body.expired).toBe(2);
+      expect(body.flagged).toBe(1);
+
+      const memberRow = tables.hhMembersTable.__store.find((r) => r.id === workerId)!;
+      expect(memberRow.missedShiftCount).toBe(3);
+      expect(memberRow.flaggedForDemotion).toBe(true);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does not flag a full_time member whose count stays below the threshold after batch expiry", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand(); // missedShiftThreshold: 3
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_exp_ov2",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_exp_ov2",
+        email: "worker_exp_ov2@example.com",
+        role: "food_handler",
+        tier: "full_time",
+        missedShiftCount: 0, // + 1 task → 1 < 3
+      });
+
+      seedTask({ bandId, postedByMemberId: adminId, claimedByMemberId: workerId, status: "claimed", availableDate: "2026-06-28" });
+
+      setUser("admin_exp_ov2");
+      const res = await fetch(`${h.base}/api/helping-hands/expire-overdue`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { expired: number; flagged: number };
+      expect(body.expired).toBe(1);
+      expect(body.flagged).toBe(0);
+
+      const memberRow = tables.hhMembersTable.__store.find((r) => r.id === workerId)!;
+      expect(memberRow.missedShiftCount).toBe(1);
+      expect(memberRow.flaggedForDemotion).toBe(false);
     } finally {
       await h.close();
     }

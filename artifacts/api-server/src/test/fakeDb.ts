@@ -108,21 +108,109 @@ const desc = (col: Col): Order => ({ kind: "desc", col });
 //
 //   sql`${col} + 1`              → { kind: "sql_increment", col, delta: 1 }
 //   sql`${col} + ${val}::numeric`→ { kind: "sql_add",       col, addend: val }
+//
+//   CASE WHEN col + 1 >= threshold THEN true ELSE flagCol END
+//                                → { kind: "sql_case_gte_flag", counterCol, delta: 1, threshold, flagCol }
+//   CASE WHEN col + delta >= threshold THEN true ELSE flagCol END
+//                                → { kind: "sql_case_gte_flag", counterCol, delta, threshold, flagCol }
+//
 //   everything else              → { kind: "raw" }   (opaque — matches every row)
+//
+// The CASE pattern is used by the expire / runExpireOverdue handlers to
+// atomically set flaggedForDemotion without a read-modify-write race in
+// Postgres.  The in-memory fake must evaluate it against the current row so
+// tests that check flaggedForDemotion after a threshold crossing see `true`
+// rather than the raw template object.
 //
 function sqlTpl(strings?: TemplateStringsArray, ...vals: unknown[]) {
   if (strings && strings.length >= 2 && vals.length >= 1 && isCol(vals[0])) {
     const afterCol = strings[1]!.trimStart();
+
     // col + N  (e.g. sql`${col} + 1`)
     const incrMatch = afterCol.match(/^\+\s*(\d+(?:\.\d+)?)\s*$/);
     if (incrMatch) {
       return { kind: "sql_increment" as const, col: vals[0] as Col, delta: Number(incrMatch[1]) };
     }
     // col + val (e.g. sql`${col} + ${amount}::numeric`)
-    if (afterCol.startsWith("+") && vals.length >= 2) {
-      return { kind: "sql_add" as const, col: vals[0] as Col, addend: vals[1] };
+    // Guard: exactly 2 vals (col + addend) so CASE expressions with more vals
+    // fall through to the CASE detection block below instead of matching here.
+    // The trailing string after the second interpolation tells us whether Postgres
+    // is treating the result as a numeric text column (::numeric cast present) or
+    // a plain integer column.  We preserve that distinction in the fake so that
+    // integer counters come back as numbers and token/XRP amounts come back as
+    // strings — matching the real DB column types.
+    if (afterCol.startsWith("+") && vals.length === 2) {
+      const trailingStr = (strings[2] ?? "").trimStart();
+      const stringify = trailingStr.startsWith("::");
+      return { kind: "sql_add" as const, col: vals[0] as Col, addend: vals[1], stringify };
     }
   }
+
+  // CASE WHEN counterCol + delta >= threshold THEN true ELSE flagCol END
+  //
+  // Two forms emitted by the expire routes:
+  //
+  //   Form A — literal delta baked into the string, 3 vals:
+  //     sql`...CASE WHEN ${counterCol} + 1 >= ${threshold}\n...THEN true...ELSE ${flagCol}...END`
+  //     strings.length === 4, vals = [counterCol, threshold, flagCol]
+  //
+  //   Form B — variable delta as a template val, 4 vals:
+  //     sql`...CASE WHEN ${counterCol} + ${delta} >= ${threshold}\n...THEN true...ELSE ${flagCol}...END`
+  //     strings.length === 5, vals = [counterCol, delta, threshold, flagCol]
+  //
+  if (strings) {
+    const upper0 = strings[0]!.toUpperCase().replace(/\s+/g, " ");
+    const lastStr = strings[strings.length - 1]!.toUpperCase();
+    const hasCase = upper0.includes("CASE") && upper0.includes("WHEN");
+    const hasThenTrue = strings.some((s) => s.toUpperCase().replace(/\s+/g, " ").includes("THEN TRUE"));
+    const hasEnd = lastStr.includes("END");
+
+    if (hasCase && hasThenTrue && hasEnd) {
+      // Form A: strings[1] contains "+ <literal> >= ", vals = [counterCol, threshold, flagCol]
+      if (
+        strings.length === 4 &&
+        vals.length === 3 &&
+        isCol(vals[0]) &&
+        typeof vals[1] === "number" &&
+        isCol(vals[2])
+      ) {
+        const between = strings[1]!.trim();
+        const formA = between.match(/^\+\s*(\d+(?:\.\d+)?)\s*>=\s*$/);
+        if (formA) {
+          return {
+            kind: "sql_case_gte_flag" as const,
+            counterCol: vals[0] as Col,
+            delta: Number(formA[1]),
+            threshold: vals[1] as number,
+            flagCol: vals[2] as Col,
+          };
+        }
+      }
+
+      // Form B: strings[1] = " + ", strings[2] = " >= ", vals = [counterCol, delta, threshold, flagCol]
+      if (
+        strings.length === 5 &&
+        vals.length === 4 &&
+        isCol(vals[0]) &&
+        typeof vals[1] === "number" &&
+        typeof vals[2] === "number" &&
+        isCol(vals[3])
+      ) {
+        const sep1 = strings[1]!.trim();
+        const sep2 = strings[2]!.trim();
+        if (sep1 === "+" && sep2 === ">=") {
+          return {
+            kind: "sql_case_gte_flag" as const,
+            counterCol: vals[0] as Col,
+            delta: vals[1] as number,
+            threshold: vals[2] as number,
+            flagCol: vals[3] as Col,
+          };
+        }
+      }
+    }
+  }
+
   return { kind: "raw" } as const;
 }
 
@@ -615,14 +703,33 @@ function resolveSqlExprsInPatch(patch: Row, row: Row): Row {
   const out: Row = {};
   for (const [k, val] of Object.entries(patch)) {
     if (val && typeof val === "object") {
-      const v = val as { kind?: unknown; col?: Col; delta?: number; addend?: unknown };
+      const v = val as {
+        kind?: unknown;
+        col?: Col;
+        delta?: number;
+        addend?: unknown;
+        stringify?: boolean;
+        counterCol?: Col;
+        threshold?: number;
+        flagCol?: Col;
+      };
       if (v.kind === "sql_increment" && v.col) {
         const current = Number(row[v.col.__c] ?? 0);
         out[k] = current + (v.delta ?? 1);
       } else if (v.kind === "sql_add" && v.col) {
         const current = Number(row[v.col.__c] ?? 0);
         const addend = Number(v.addend ?? 0);
-        out[k] = String(current + addend);
+        // Preserve the column's type: text/numeric columns (::numeric cast) stay
+        // strings; plain integer columns come back as numbers.
+        out[k] = v.stringify ? String(current + addend) : current + addend;
+      } else if (v.kind === "sql_case_gte_flag" && v.counterCol && v.flagCol) {
+        // CASE WHEN counterCol + delta >= threshold THEN true ELSE flagCol END
+        // Evaluates against the current row so the in-memory store reflects the
+        // same conditional-set logic that Postgres would apply atomically.
+        const current = Number(row[v.counterCol.__c] ?? 0);
+        const newCount = current + (v.delta ?? 0);
+        const threshold = v.threshold ?? 0;
+        out[k] = newCount >= threshold ? true : Boolean(row[v.flagCol.__c]);
       } else if (v.kind === "raw") {
         // Approximate sql`now()` / other raw expressions as current Date.
         out[k] = new Date();
