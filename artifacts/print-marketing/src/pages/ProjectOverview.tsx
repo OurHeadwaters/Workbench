@@ -5,7 +5,7 @@ interface Tool {
   color: string;
   desc: string;
   layer: "core" | "support";
-  href?: string;
+  url?: string;
 }
 
 export default function ProjectOverview() {
@@ -67,11 +67,19 @@ export default function ProjectOverview() {
       layer: "support",
     },
     {
+      icon: "★",
+      name: "North Star",
+      subtitle: "Daily operating cockpit",
+      color: "var(--evergreen)",
+      desc: "The engine room. A live dashboard that shows what needs attention today, tracks every client engagement from scope to hand-off, and keeps money coming in and going out in plain view.",
+      layer: "support",
+    },
+    {
       icon: "⬡",
       name: "The Stomping Grounds",
       subtitle: "thestompinggrounds.com",
+      url: "https://thestompinggrounds.com",
       color: "#4a7c59",
-      href: "https://thestompinggrounds.com",
       desc: "The public front door. Five stations where neighbours, visitors, and prospective partners can explore the discipline, find their footing, and decide how they want to engage — no login, no commitment required.",
       layer: "support",
     },
@@ -129,7 +137,7 @@ export default function ProjectOverview() {
               marginBottom: "0.75rem",
             }}
           >
-            Eight simple tools.<br />One community economy.
+            Nine simple tools.<br />One community economy.
           </h1>
           <p
             style={{
@@ -289,7 +297,7 @@ export default function ProjectOverview() {
               marginBottom: "0.25rem",
             }}
           >
-            These five tools back up the core flow — they hold the evidence, the materials, the team, the files, and the public front door that everything else draws from.
+            These six tools back up the core flow — they hold the evidence, the materials, the team, the files, the daily operating view, and the public front door that everything else draws from.
           </p>
 
           {supportTools.map((tool) => (
@@ -334,9 +342,9 @@ export default function ProjectOverview() {
                   >
                     {tool.subtitle}
                   </span>
-                  {tool.href && (
+                  {tool.url && (
                     <a
-                      href={tool.href}
+                      href={tool.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="no-print"
@@ -399,8 +407,9 @@ export default function ProjectOverview() {
             the <strong>Print Suite</strong> puts everything on paper,
             the <strong>Crew Manifest</strong> shows who's doing what,
             the <strong>Media Library</strong> keeps the files in one place,
+            <strong>North Star</strong> is the daily operating cockpit that keeps it all on track,
             and <a href="https://thestompinggrounds.com" target="_blank" rel="noopener noreferrer" style={{ color: "var(--evergreen)", textDecoration: "underline" }}>The Stomping Grounds</a> is the public front door where anyone can find their footing first.
-            Eight tools. One system. Yours.
+            Nine simple tools. One system. Yours.
           </p>
         </div>
 
