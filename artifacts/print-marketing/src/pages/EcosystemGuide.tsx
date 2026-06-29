@@ -310,41 +310,41 @@ function CoverPage() {
   );
 }
 
-function ToolSection({ tool, even }: { tool: typeof tools[0]; even: boolean }) {
+function ToolSection({ tool, even, compact = false }: { tool: typeof tools[0]; even: boolean; compact?: boolean }) {
   return (
     <div style={{
-      padding: "0.35in 0",
+      padding: compact ? "0.14in 0" : "0.35in 0",
       borderBottom: `1px solid rgba(31,61,46,0.1)`,
     }}>
       {/* Tool header row */}
       <div style={{
         display: "flex",
         alignItems: "flex-start",
-        gap: "1rem",
-        marginBottom: "0.85rem",
+        gap: "0.75rem",
+        marginBottom: compact ? "0.45rem" : "0.85rem",
       }}>
         {/* Icon badge */}
         <div style={{
-          width: "2.6rem",
-          height: "2.6rem",
-          borderRadius: "6px",
+          width: compact ? "2.1rem" : "2.6rem",
+          height: compact ? "2.1rem" : "2.6rem",
+          borderRadius: "5px",
           background: tool.color,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: "1.1rem",
+          fontSize: compact ? "0.9rem" : "1.1rem",
           color: "#fff",
           flexShrink: 0,
-          marginTop: "0.15rem",
+          marginTop: "0.1rem",
         }}>
           {tool.icon}
         </div>
 
         <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "0.5rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "0.4rem" }}>
             <h2 style={{
               fontFamily: "Fraunces, Georgia, serif",
-              fontSize: "1.35rem",
+              fontSize: compact ? "1.15rem" : "1.35rem",
               fontWeight: 700,
               color: INK,
               margin: 0,
@@ -353,7 +353,7 @@ function ToolSection({ tool, even }: { tool: typeof tools[0]; even: boolean }) {
               {tool.name}
             </h2>
             <span style={{
-              fontSize: "0.65rem",
+              fontSize: "0.62rem",
               fontWeight: 600,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
@@ -393,29 +393,29 @@ function ToolSection({ tool, even }: { tool: typeof tools[0]; even: boolean }) {
       {/* What it is */}
       <p style={{
         fontFamily: "'Inter', sans-serif",
-        fontSize: "0.88rem",
+        fontSize: compact ? "0.81rem" : "0.88rem",
         color: INK,
-        lineHeight: 1.7,
-        margin: "0 0 0.75rem",
+        lineHeight: compact ? 1.55 : 1.7,
+        margin: compact ? "0 0 0.4rem" : "0 0 0.75rem",
       }}>
         {tool.what}
       </p>
 
       {/* Bullets */}
       <ul style={{
-        margin: "0 0 0.75rem",
-        paddingLeft: "1.25rem",
+        margin: compact ? "0 0 0.4rem" : "0 0 0.75rem",
+        paddingLeft: "1.1rem",
         display: "flex",
         flexDirection: "column",
-        gap: "0.3rem",
+        gap: compact ? "0.12rem" : "0.3rem",
       }}>
         {tool.bullets.map((b, i) => (
           <li key={i} style={{
             fontFamily: "'Inter', sans-serif",
-            fontSize: "0.83rem",
+            fontSize: compact ? "0.77rem" : "0.83rem",
             color: MUTED,
-            lineHeight: 1.6,
-            paddingLeft: "0.25rem",
+            lineHeight: compact ? 1.45 : 1.6,
+            paddingLeft: "0.2rem",
           }}>
             {b}
           </li>
@@ -426,29 +426,29 @@ function ToolSection({ tool, even }: { tool: typeof tools[0]; even: boolean }) {
       <div style={{
         display: "flex",
         alignItems: "flex-start",
-        gap: "0.6rem",
-        padding: "0.55rem 0.75rem",
+        gap: "0.5rem",
+        padding: compact ? "0.3rem 0.65rem" : "0.55rem 0.75rem",
         background: even ? "rgba(31,61,46,0.05)" : "rgba(212,160,23,0.07)",
         borderLeft: `3px solid ${tool.color}`,
         borderRadius: "2px",
       }}>
         <span style={{
-          fontSize: "0.6rem",
+          fontSize: "0.58rem",
           fontWeight: 700,
           letterSpacing: "0.14em",
           textTransform: "uppercase",
           color: tool.color,
           flexShrink: 0,
-          paddingTop: "0.15rem",
+          paddingTop: "0.1rem",
           fontFamily: "'Inter', sans-serif",
         }}>
           Why it matters
         </span>
         <p style={{
           fontFamily: "'Inter', sans-serif",
-          fontSize: "0.83rem",
+          fontSize: compact ? "0.77rem" : "0.83rem",
           color: INK,
-          lineHeight: 1.6,
+          lineHeight: compact ? 1.45 : 1.6,
           margin: 0,
           fontStyle: "italic",
         }}>
@@ -460,10 +460,11 @@ function ToolSection({ tool, even }: { tool: typeof tools[0]; even: boolean }) {
 }
 
 function ContentPage({ pageTools, pageNum }: { pageTools: typeof tools; pageNum: number }) {
+  const compact = pageTools.length >= 3;
   return (
     <div style={{
       ...BASE_PAGE,
-      padding: "0.65in 0.85in 0.75in",
+      padding: compact ? "0.5in 0.85in 0.55in" : "0.65in 0.85in 0.75in",
       display: "flex",
       flexDirection: "column",
     }}>
@@ -473,7 +474,7 @@ function ContentPage({ pageTools, pageNum }: { pageTools: typeof tools; pageNum:
         justifyContent: "space-between",
         alignItems: "center",
         paddingBottom: "0.3rem",
-        marginBottom: "0.15in",
+        marginBottom: compact ? "0.08in" : "0.15in",
         borderBottom: `2px solid ${EVERGREEN}`,
       }}>
         <span style={{
@@ -499,7 +500,7 @@ function ContentPage({ pageTools, pageNum }: { pageTools: typeof tools; pageNum:
       {/* Tool sections */}
       <div style={{ flex: 1 }}>
         {pageTools.map((t, i) => (
-          <ToolSection key={t.id} tool={t} even={(i % 2) === 0} />
+          <ToolSection key={t.id} tool={t} even={(i % 2) === 0} compact={compact} />
         ))}
       </div>
 
@@ -509,7 +510,7 @@ function ContentPage({ pageTools, pageNum }: { pageTools: typeof tools; pageNum:
         justifyContent: "space-between",
         alignItems: "center",
         paddingTop: "0.3rem",
-        marginTop: "0.2in",
+        marginTop: compact ? "0.12in" : "0.2in",
         borderTop: `1px solid rgba(31,61,46,0.12)`,
       }}>
         <span style={{
