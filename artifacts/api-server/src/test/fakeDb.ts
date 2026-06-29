@@ -102,10 +102,27 @@ const ilike = (col: Col, pattern: string): Pred => ({
 const asc = (col: Col): Order => ({ kind: "asc", col });
 const desc = (col: Col): Order => ({ kind: "desc", col });
 
-// `sql` template — treated as an opaque marker.  None of the predicates
-// our auth tests rely on use raw SQL; if a route reaches for one it will
-// just match every row, and the test will fail loudly on the assertion.
-function sqlTpl(_strings?: TemplateStringsArray, ..._vals: unknown[]) {
+// `sql` template — recognises common arithmetic patterns used in route
+// updates so the in-memory store reflects the real incremented value
+// rather than storing the template object itself.
+//
+//   sql`${col} + 1`              → { kind: "sql_increment", col, delta: 1 }
+//   sql`${col} + ${val}::numeric`→ { kind: "sql_add",       col, addend: val }
+//   everything else              → { kind: "raw" }   (opaque — matches every row)
+//
+function sqlTpl(strings?: TemplateStringsArray, ...vals: unknown[]) {
+  if (strings && strings.length >= 2 && vals.length >= 1 && isCol(vals[0])) {
+    const afterCol = strings[1]!.trimStart();
+    // col + N  (e.g. sql`${col} + 1`)
+    const incrMatch = afterCol.match(/^\+\s*(\d+(?:\.\d+)?)\s*$/);
+    if (incrMatch) {
+      return { kind: "sql_increment" as const, col: vals[0] as Col, delta: Number(incrMatch[1]) };
+    }
+    // col + val (e.g. sql`${col} + ${amount}::numeric`)
+    if (afterCol.startsWith("+") && vals.length >= 2) {
+      return { kind: "sql_add" as const, col: vals[0] as Col, addend: vals[1] };
+    }
+  }
   return { kind: "raw" } as const;
 }
 
@@ -493,21 +510,10 @@ function makeInsert(table: FakeTable) {
               targets.every((c) => r[c.__c] === row[c.__c]),
             );
             if (existing) {
-              const patch: Row = {};
-              for (const [k, val] of Object.entries(opts.set)) {
-                // `sql\`...\`` values become a fakeDrizzle sql tag object —
-                // approximate "current timestamp" here so updated_at flows
-                // through tests like in production.
-                if (
-                  val &&
-                  typeof val === "object" &&
-                  (val as { kind?: unknown }).kind === "raw"
-                ) {
-                  patch[k] = new Date();
-                } else {
-                  patch[k] = val;
-                }
-              }
+              // Resolve sql-tag expressions (sql_increment / sql_add / raw)
+              // against the existing row so arithmetic increments apply
+              // correctly rather than storing the template object.
+              const patch = resolveSqlExprsInPatch(opts.set, existing);
               Object.assign(existing, patch);
               out.push({ ...existing });
               continue;
@@ -598,6 +604,38 @@ function makeInsert(table: FakeTable) {
   };
 }
 
+// ---------- sql-expression resolver ----------
+//
+// Resolves structured sql-tag values produced by `sqlTpl` against the
+// current row before the patch is applied.  This lets the in-memory
+// store reflect real arithmetic increments rather than storing the
+// template object itself.
+
+function resolveSqlExprsInPatch(patch: Row, row: Row): Row {
+  const out: Row = {};
+  for (const [k, val] of Object.entries(patch)) {
+    if (val && typeof val === "object") {
+      const v = val as { kind?: unknown; col?: Col; delta?: number; addend?: unknown };
+      if (v.kind === "sql_increment" && v.col) {
+        const current = Number(row[v.col.__c] ?? 0);
+        out[k] = current + (v.delta ?? 1);
+      } else if (v.kind === "sql_add" && v.col) {
+        const current = Number(row[v.col.__c] ?? 0);
+        const addend = Number(v.addend ?? 0);
+        out[k] = String(current + addend);
+      } else if (v.kind === "raw") {
+        // Approximate sql`now()` / other raw expressions as current Date.
+        out[k] = new Date();
+      } else {
+        out[k] = val;
+      }
+    } else {
+      out[k] = val;
+    }
+  }
+  return out;
+}
+
 // ---------- update ----------
 
 function makeUpdate(table: FakeTable) {
@@ -616,9 +654,11 @@ function makeUpdate(table: FakeTable) {
       const out: Row[] = [];
       for (const r of table.__store) {
         if (rowMatches(r, where)) {
-          // Parse JSON strings in the patch before writing so JSONB columns
-          // are stored as parsed values (mirroring Postgres behaviour).
-          Object.assign(r, parseJsonbInRow(updates));
+          // Resolve sql-tag arithmetic expressions (sql_increment / sql_add)
+          // against the current row value before writing, then parse JSONB
+          // strings so the stored shape matches real Postgres behaviour.
+          const resolved = resolveSqlExprsInPatch(updates, r);
+          Object.assign(r, parseJsonbInRow(resolved));
           out.push({ ...r });
         }
       }

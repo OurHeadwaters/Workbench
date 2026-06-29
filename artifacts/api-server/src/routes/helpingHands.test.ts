@@ -938,6 +938,128 @@ describe("XRP task — xrplEscrowEnabled = true (escrow code path exercised)", (
 });
 
 // ═════════════════════════════════════════════════════════════════════════════
+// Reliability bonus milestone — awarded when completedShiftCount crosses
+// the band's reliabilityBonusThreshold after a confirmed shift
+// ═════════════════════════════════════════════════════════════════════════════
+
+describe("reliability bonus — milestone awarded on threshold crossing", () => {
+  it("awards a bonus and records hh_bonuses row when completedShiftCount hits the threshold", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand(); // reliabilityBonusThreshold: 10
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_bonus_1",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_bonus_1",
+        email: "worker_bonus@example.com",
+        role: "food_handler",
+        completedShiftCount: 9, // one below threshold
+      });
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        payCurrency: "token",
+        payAmount: "5",
+        status: "completed",
+      });
+
+      setUser("admin_bonus_1");
+      const confirmRes = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(confirmRes.status).toBe(200);
+      const body = (await confirmRes.json()) as {
+        task: { status: string };
+        bonusAwarded: {
+          id: string;
+          memberId: string;
+          milestone: number;
+          amount: string;
+          currency: string;
+          reason: string;
+        } | null;
+      };
+
+      // Bonus should have been returned in the response body
+      expect(body.bonusAwarded).not.toBeNull();
+      expect(body.bonusAwarded?.milestone).toBe(10);
+      expect(body.bonusAwarded?.memberId).toBe(workerId);
+      expect(body.bonusAwarded?.amount).toBe("5");
+      expect(body.bonusAwarded?.currency).toBe("token");
+
+      // A bonus row should be present in the in-memory store
+      expect(tables.hhBonusesTable.__store).toHaveLength(1);
+      const bonusRow = tables.hhBonusesTable.__store[0]!;
+      expect(bonusRow.memberId).toBe(workerId);
+      expect(bonusRow.milestone).toBe(10);
+
+      // The member's completedShiftCount should now be 10 (not the sql-tag object)
+      const memberRow = tables.hhMembersTable.__store.find((r) => r.id === workerId)!;
+      expect(memberRow.completedShiftCount).toBe(10);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does not award a bonus when completedShiftCount does not cross a threshold multiple", async () => {
+    const h = await startHarness();
+    try {
+      const bandId = seedBand(); // reliabilityBonusThreshold: 10
+      const adminId = seedMember({
+        bandId,
+        clerkUserId: "admin_bonus_2",
+        email: "admin@example.com",
+        role: "owner",
+      });
+      const workerId = seedMember({
+        bandId,
+        clerkUserId: "worker_bonus_2",
+        email: "worker_bonus2@example.com",
+        role: "food_handler",
+        completedShiftCount: 4, // 4 → 5, no multiple of 10
+      });
+
+      const taskId = seedTask({
+        bandId,
+        postedByMemberId: adminId,
+        claimedByMemberId: workerId,
+        payCurrency: "token",
+        payAmount: "5",
+        status: "completed",
+      });
+
+      setUser("admin_bonus_2");
+      const confirmRes = await fetch(`${h.base}/api/helping-hands/tasks/${taskId}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      expect(confirmRes.status).toBe(200);
+      const body = (await confirmRes.json()) as { bonusAwarded: null };
+      expect(body.bonusAwarded).toBeNull();
+
+      // No bonus row
+      expect(tables.hhBonusesTable.__store).toHaveLength(0);
+
+      // Member's completedShiftCount was still properly incremented
+      const memberRow = tables.hhMembersTable.__store.find((r) => r.id === workerId)!;
+      expect(memberRow.completedShiftCount).toBe(5);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
 // Confirm returns 403 when caller is not an admin
 // ═════════════════════════════════════════════════════════════════════════════
 
