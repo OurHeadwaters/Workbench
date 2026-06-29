@@ -36,7 +36,7 @@ export default function PosterMarket() {
     <>
       <PrintNav targetId="pdf-target" filename="headwaters-poster-market.pdf" onCopyPlainText={getMarketPlainText} />
       <div id="pdf-target" className="print-page page-letter" style={{ padding: 0, overflow: "hidden", background: "var(--cream)", minHeight: "11in" }}>
-        <div style={{ position: "relative", minHeight: "11in", display: "flex", flexDirection: "column" }}>
+        <div style={{ position: "relative", minHeight: "11in", height: "11in", display: "flex", flexDirection: "column" }}>
 
           {/* Decorative background shapes */}
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, overflow: "hidden", pointerEvents: "none" }}>

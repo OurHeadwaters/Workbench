@@ -5,7 +5,7 @@ export default function MarketDisplay() {
   return (
     <>
       <PrintNav targetId="pdf-target" filename="parrs-jars-market-display.pdf" />
-      <div id="pdf-target" className="print-page page-letter" style={{ padding: "0.5in 0.6in", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "11in" }}>
+      <div id="pdf-target" className="print-page page-letter" style={{ padding: "0.5in 0.6in", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "11in", height: "11in" }}>
 
         {/* Top band */}
         <div style={{ background: "var(--evergreen)", margin: "-0.5in -0.6in 0", padding: "0.55rem 0.7in", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -13,7 +13,7 @@ export default function MarketDisplay() {
             Headwaters Development Services
           </span>
           <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)" }}>
-            Dryden Farmers Market · Dryden Arena · Thu 3–6 pm · through the summer season
+            Dryden Farmers Market · Thu 3–6 pm · Summer season
           </span>
         </div>
 
