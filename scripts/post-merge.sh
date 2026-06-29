@@ -3,6 +3,38 @@ set -e
 pnpm install --frozen-lockfile --prefer-offline
 pnpm --filter db push
 
+# Re-generate the exported book files when handbook data changes.
+# ORIG_HEAD is set by git after a merge and covers the full range of
+# merged commits. Fall back to HEAD~1 for cherry-pick / rebase flows.
+# If no reliable base is available, run the export unconditionally so
+# the file is never silently stale.
+if git rev-parse --verify ORIG_HEAD >/dev/null 2>&1; then
+  DIFF_BASE="ORIG_HEAD"
+elif git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
+  DIFF_BASE="HEAD~1"
+else
+  DIFF_BASE=""
+fi
+
+if [ -z "$DIFF_BASE" ]; then
+  echo "No diff base available — running book export unconditionally."
+  pnpm --filter @workspace/codetry-handbook run export-book
+  echo "Book export complete."
+else
+  HANDBOOK_CHANGED=$(git diff --name-only "$DIFF_BASE" HEAD 2>/dev/null | grep -E \
+    '^artifacts/codetry-handbook/data/|^artifacts/codetry-handbook/public/narration/' \
+    || true)
+
+  if [ -n "$HANDBOOK_CHANGED" ]; then
+    echo "Handbook data changed — regenerating book exports..."
+    echo "$HANDBOOK_CHANGED" | sed 's/^/  /'
+    pnpm --filter @workspace/codetry-handbook run export-book
+    echo "Book export complete."
+  else
+    echo "No handbook data changes detected — skipping book export."
+  fi
+fi
+
 # Push to GitHub backup — GITHUB_TOKEN must be set as a Replit secret.
 # The token is embedded in a one-shot URL so it is never written to .git/config.
 if [ -n "$GITHUB_TOKEN" ]; then
