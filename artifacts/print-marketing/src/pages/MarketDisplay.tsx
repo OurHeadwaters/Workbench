@@ -13,7 +13,7 @@ export default function MarketDisplay() {
             Headwaters Development Services
           </span>
           <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)" }}>
-            Dryden Farmers Market · Dryden Arena · Sat 3–6 pm · mid June–mid September
+            Dryden Farmers Market · Dryden Arena · Thu 3–6 pm · July 2 – mid September
           </span>
         </div>
 

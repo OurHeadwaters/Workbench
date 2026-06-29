@@ -4,13 +4,14 @@ import { PrintNav } from "../components/PrintNav";
 const MARKET_CONFIG = {
   venue: "Dryden Arena",
   hours: "3:00 – 6:00 pm",
-  season: "mid June–mid September",
+  season: "July 2 – mid September",
+  day: "Thursdays",
 };
 
 function getMarketPlainText(): string {
   return [
     "DRYDEN FARMERS MARKET",
-    `Saturdays · ${MARKET_CONFIG.season} · ${MARKET_CONFIG.hours} · ${MARKET_CONFIG.venue}`,
+    `${MARKET_CONFIG.day} · ${MARKET_CONFIG.season} · ${MARKET_CONFIG.hours} · ${MARKET_CONFIG.venue}`,
     "",
     "PARR'S JARS — at the market",
     "Hand-blended in Dryden, Ontario",
@@ -23,7 +24,7 @@ function getMarketPlainText(): string {
     "",
     "Presented by Headwaters Development Services",
     "Building capacity in northern communities",
-    "Headwaters works with band councils, Indigenous businesses, and northern organizations on community stores, co-op platforms, and custom software. Ask Bobbie how we can help your community.",
+    "Headwaters works with band councils, Indigenous businesses, and northern organizations on community stores, co-op platforms, and custom software. We also build custom websites and digital tools for Dryden-area small businesses. Ask Bobbie how we can help.",
     "",
     "ourheadwaters.ca | bobbie@ourheadwaters.ca",
     "Dryden, Ontario · Treaty 3 Territory",
@@ -56,7 +57,7 @@ export default function PosterMarket() {
 
             <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", margin: "0.25rem 0" }}>
               <div style={{ height: 2, background: "var(--rust)", width: "1.2in" }} />
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontStyle: "italic", color: "var(--rust-light)" }}>Saturdays · {MARKET_CONFIG.season}</p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontStyle: "italic", color: "var(--rust-light)" }}>{MARKET_CONFIG.day} · {MARKET_CONFIG.season}</p>
             </div>
 
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.3rem", fontWeight: 600, color: "var(--cream)", letterSpacing: "0.02em" }}>
@@ -123,7 +124,7 @@ export default function PosterMarket() {
                 Building capacity in northern communities
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--muted)", lineHeight: 1.55, maxWidth: "4.8in" }}>
-                Headwaters works with band councils, Indigenous businesses, and northern organizations on community stores, co-op platforms, and custom software. Ask Bobbie how we can help your community.
+                Headwaters works with band councils, Indigenous businesses, and northern organizations on community stores, co-op platforms, and custom software. We also build custom websites and digital tools for Dryden-area small businesses. Ask Bobbie how we can help.
               </p>
             </div>
 
