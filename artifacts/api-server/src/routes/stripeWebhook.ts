@@ -43,6 +43,7 @@ import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { getKit } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, sendKitDeliveryFailureAlert } from "../lib/kitsMailer";
+import { stampEmailSent } from "../lib/kitDeliveryRecovery";
 import { db, kitTokensTable, stripeProcessedEventsTable, kitDeliveryFailuresTable, kitWebhookAttemptsTable } from "@workspace/db";
 
 const router: IRouter = Router();
@@ -291,6 +292,14 @@ router.post(
         { kitId, purchaseId, buyerEmail, sessionId: session.id, mailStatus: mailResult.status },
         "[stripe-webhook] kit delivered",
       );
+
+      if (mailResult.status === "sent") {
+        // Stamp emailSentAt so the startup recovery sweep knows this token
+        // has already been delivered and skips it.  Failure to stamp is
+        // non-fatal — the email was sent; the sweep may attempt a harmless
+        // re-check and skip (email already delivered).
+        await stampEmailSent(token);
+      }
 
       if (mailResult.status === "failed") {
         // Persist the failure to the DB audit trail so it's queryable even if

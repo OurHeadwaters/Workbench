@@ -11,6 +11,7 @@ import { logger } from "./lib/logger";
 import { scheduleNightlyBriefing } from "./lib/riverSmithScheduler";
 import { scheduleWeeklyArchive } from "./lib/taskAutopilotScheduler";
 import { scheduleKitTokensCleanup } from "./lib/kitTokensCleanup";
+import { runKitDeliveryRecovery } from "./lib/kitDeliveryRecovery";
 import {
   CLERK_PROXY_PATH,
   clerkProxyMiddleware,
@@ -130,5 +131,10 @@ if (fs.existsSync(codetryShipDist)) {
 scheduleNightlyBriefing();
 scheduleWeeklyArchive();
 scheduleKitTokensCleanup();
+
+// Re-send any kit delivery emails that were committed to the DB but never
+// confirmed sent (emailSentAt IS NULL).  This covers the crash window
+// between the atomic token commit and the email send step.
+void runKitDeliveryRecovery();
 
 export default app;

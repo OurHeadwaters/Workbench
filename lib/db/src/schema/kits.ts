@@ -79,6 +79,11 @@ export const kitTokensTable = pgTable(
       .notNull()
       .defaultNow(),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    // Stamped when the delivery email is successfully sent.  NULL means the
+    // token was committed but the email has not been confirmed sent — the
+    // startup recovery sweep uses this to re-send without creating a
+    // duplicate token.
+    emailSentAt: timestamp("email_sent_at", { withTimezone: true }),
   },
   (t) => ({
     buyerEmailIdx: index("kit_tokens_buyer_email_idx").on(t.buyerEmail),

@@ -40,6 +40,7 @@ vi.mock("@workspace/db", async () => {
       "purchaseId",
       "createdAt",
       "expiresAt",
+      "emailSentAt",
     ],
   });
 
@@ -83,6 +84,11 @@ vi.mock("../lib/kitsMailer", () => ({
   sendKitDeliveryFailureAlert: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock("../lib/kitDeliveryRecovery", () => ({
+  stampEmailSent: vi.fn().mockResolvedValue(undefined),
+  runKitDeliveryRecovery: vi.fn().mockResolvedValue(undefined),
+}));
+
 // ── imports (after mocks) ─────────────────────────────────────────────────────
 
 import express from "express";
@@ -91,6 +97,7 @@ import * as dbModule from "@workspace/db";
 import type { FakeDb, FakeTable } from "../test/fakeDb";
 import * as kitsRegistryModule from "../lib/kitsRegistry";
 import * as kitsMailerModule from "../lib/kitsMailer";
+import * as kitDeliveryRecoveryModule from "../lib/kitDeliveryRecovery";
 
 const tables = dbModule as unknown as {
   db: FakeDb;
@@ -104,6 +111,8 @@ const sendKitDeliveryEmailMock =
   kitsMailerModule.sendKitDeliveryEmail as ReturnType<typeof vi.fn>;
 const sendKitDeliveryFailureAlertMock =
   kitsMailerModule.sendKitDeliveryFailureAlert as ReturnType<typeof vi.fn>;
+const stampEmailSentMock =
+  kitDeliveryRecoveryModule.stampEmailSent as ReturnType<typeof vi.fn>;
 
 // ── Stripe signing helpers ────────────────────────────────────────────────────
 //
@@ -158,6 +167,7 @@ beforeEach(() => {
   sendKitDeliveryEmailMock.mockClear();
   sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent" });
   sendKitDeliveryFailureAlertMock.mockClear();
+  stampEmailSentMock.mockClear();
 });
 
 afterEach(() => {
@@ -367,6 +377,44 @@ describe("POST /stripe/webhook — checkout.session.completed", () => {
       expect(typeof row.token).toBe("string");
       expect((row.token as string).length).toBe(64);
       expect(row.expiresAt).toBeInstanceOf(Date);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("stamps emailSentAt on the token row after a successful email delivery", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    const payload = makeCheckoutPayload({ id: "evt_stamp_001" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      expect(stampEmailSentMock).toHaveBeenCalledTimes(1);
+      const [tokenArg] = stampEmailSentMock.mock.calls[0] as [string];
+      expect(typeof tokenArg).toBe("string");
+      expect(tokenArg.length).toBe(64);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does not stamp emailSentAt when delivery email fails", async () => {
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "failed", error: "upstream error" });
+    const payload = makeCheckoutPayload({ id: "evt_stamp_fail_001" });
+    const h = await startHarness();
+    try {
+      const r = await postWebhook(
+        h.base,
+        payload,
+        makeStripeSignature(payload, TEST_WEBHOOK_SECRET),
+      );
+      expect(r.status).toBe(200);
+      expect(stampEmailSentMock).not.toHaveBeenCalled();
     } finally {
       await h.close();
     }
