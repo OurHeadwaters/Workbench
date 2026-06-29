@@ -48,6 +48,7 @@ import { StompingGroundsPage } from "@/pages/StompingGroundsPage";
 import { CastlePage } from "@/pages/CastlePage";
 import { HelpingHandsPage } from "@/pages/HelpingHandsPage";
 import { ArcLoginPage } from "@/pages/ArcLoginPage";
+import { GoodbyeKitPage } from "@/pages/GoodbyeKitPage";
 
 const queryClient = new QueryClient();
 
@@ -156,6 +157,9 @@ function Router() {
       <Route path="/castle" component={CastlePage} />
       <Route path="/stomping-grounds" component={StompingGroundsPage} />
 
+      {/* ── Goodbye Kit landing page ── */}
+      <Route path="/goodbye" component={GoodbyeKitPage} />
+
       {/* ── Arc login (Clerk sign-in for arc artifact) ── */}
       <Route path="/arc/login" component={ArcLoginPage} />
 
@@ -164,7 +168,7 @@ function Router() {
   );
 }
 
-const STANDALONE_ROUTES = ["/", "/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub", "/kits/resend", "/arc/login"];
+const STANDALONE_ROUTES = ["/", "/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub", "/kits/resend", "/arc/login", "/goodbye"];
 
 function NavShell() {
   const [location] = useLocation();
