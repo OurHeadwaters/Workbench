@@ -68,30 +68,7 @@ Public intake form at `codetry-ship` `/` (home page).
 
 ---
 
-## 3. Subcontract Submissions (`subcontract_submission`)
-
-Work-log form on codetry-ship for subcontractor time/expense entry.
-
-| Field | Type | Notes |
-|-------|------|-------|
-| `submitted_by` | PII | Free-text name of subcontractor |
-| `project` | Financial | Project code |
-| `work_date` | Financial | Date of work |
-| `scope_item` | Financial | Scope line description |
-| `description` | Financial / PII | May include personal detail |
-| `hours` | Financial | Billable hours |
-| `rate_per_hour` | Financial | Billing rate |
-| `expense_description` | Financial | Expense detail |
-| `expense_amount` | Financial | Dollar amount |
-
-**Who can read:** Operator (passphrase-authenticated).  
-**Who can write:** Authenticated subcontractor session (passphrase-gated).  
-**Retention assumption:** Kept until manually deleted; relevant to contract audits.  
-**Processor contact:** API Server on Replit.
-
----
-
-## 4. Library Contributors (`contributors`)
+## 3. Library Contributors (`contributors`)
 
 Curator-managed list of people who submit entries to the Research Library.
 
