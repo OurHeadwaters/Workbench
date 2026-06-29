@@ -93,7 +93,7 @@ function buildPlainText() {
   lines.push("---");
   lines.push("");
   lines.push("TRACKING");
-  lines.push("Tyler tracks time and receipts via the Headwaters submission link.");
+  lines.push("Tyler tracks time and receipts directly with Bobbie.");
   lines.push("Budget: $9,995 total. Tyler sets his own rate. Spend tracked as work proceeds.");
   lines.push("");
   lines.push("---");
@@ -142,7 +142,7 @@ export default function ColdTrailerUpgrade() {
             <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$9,995</p>
           </div>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(244,237,224,0.75)", lineHeight: 1.55 }}>
-            All-in budget covering materials and Tyler's time. Tyler sets his own hourly rate and tracks spend as work proceeds — time and receipts submitted via link. Budget stretches as far as it goes.
+            All-in budget covering materials and Tyler's time. Tyler sets his own hourly rate and tracks spend as work proceeds — time and receipts submitted directly to Bobbie. Budget stretches as far as it goes.
           </p>
         </div>
 
@@ -222,7 +222,7 @@ export default function ColdTrailerUpgrade() {
         {/* Tracking note */}
         <div style={{ background: "rgba(31,61,46,0.06)", border: "1px solid rgba(31,61,46,0.15)", borderRadius: 4, padding: "0.4rem 0.6rem", fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)", lineHeight: 1.55 }}>
           <strong style={{ color: "var(--evergreen)" }}>Tracking: </strong>
-          Tyler submits time and receipts as work proceeds via the Headwaters link. Rate set by Tyler. Decal artwork to be supplied by Bobbie before ordering. CoolBot AC model to be confirmed against compatibility list before purchase.
+          Tyler submits time and receipts directly with Bobbie as work proceeds. Rate set by Tyler. Decal artwork to be supplied by Bobbie before ordering. CoolBot AC model to be confirmed against compatibility list before purchase.
         </div>
 
         {/* Footer */}
