@@ -492,7 +492,7 @@ function ContentPage({ pageTools, pageNum }: { pageTools: typeof tools; pageNum:
           letterSpacing: "0.1em",
           textTransform: "uppercase",
         }}>
-          {pageNum} / 5
+          {pageNum} / 4
         </span>
       </div>
 
@@ -739,8 +739,7 @@ export function EcosystemGuidePage() {
     tools.slice(0, 2),
     tools.slice(2, 4),
     tools.slice(4, 6),
-    tools.slice(6, 8),
-    tools.slice(8, 9),
+    tools.slice(6, 9),
   ];
 
   return (
