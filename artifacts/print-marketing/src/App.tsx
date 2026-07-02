@@ -83,6 +83,7 @@ import CdpGrantNarrativeOnePager from "@/pages/CdpGrantNarrativeOnePager";
 import FamilyIncomeOnePager from "@/pages/FamilyIncomeOnePager";
 import LetterKonstantinos from "@/pages/LetterKonstantinos";
 import LetterHinterland from "@/pages/LetterHinterland";
+import PosterWebDev from "@/pages/PosterWebDev";
 import NotFound from "@/pages/not-found";
 import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
 
@@ -169,6 +170,7 @@ function Router() {
       <Route path="/family-income" component={FamilyIncomeOnePager} />
       <Route path="/letter-konstantinos" component={LetterKonstantinos} />
       <Route path="/letter-hinterland" component={LetterHinterland} />
+      <Route path="/web-dev-poster" component={PosterWebDev} />
       <Route component={NotFound} />
     </Switch>
   );
