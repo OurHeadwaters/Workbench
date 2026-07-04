@@ -1,0 +1,19 @@
+Q&A for North Star — Ethos + AI Hold-the-Line
+
+Context: Headwaters is exploring a framework where a steward writes down their foundational principles (ethos) in the Print Suite, and any AI agent building on their behalf is made to hold the line against that ethos instead of drifting. Before we write doctrine or build anything new, we want to know what North Star / Gord already does here.
+
+Ethos capture — Does North Star already have a place where Bobbie (or any user) writes down foundational principles / values / who they're striving to be — separate from task lists or the Model tab? If yes, where does that live (which tab, what's it called)?
+
+Gord's system prompt — Right now, is Gord's system prompt static per-page, or does it pull from anything the user has personally written (their own stated values, rules, "lines")? If it pulls from something, what's the source of truth for that content?
+
+Hold-the-line mechanism — Has North Star ever needed to stop Gord (or any AI output) from drifting away from a stated principle — and if so, how was that enforced? A prompt instruction, a validation check, a human review step, or nothing formal yet?
+
+Kitchen Table connection — Is the "Today, the win is..." reflection strip, or anything else in North Star, already functioning as a "name what you value" moment the way the Aquifer's Kitchen Table doctrine does? Or is that purely a planning/logging tool with no ethos-naming function?
+
+Scope of existing build — Is any of this ethos-definition + AI-enforcement idea already partially built in North Star (even rough/manual), or is it still just a concept you and I have talked about but never implemented anywhere?
+
+Reusability — If something like this does exist in North Star, is it written in a way that could generalize to any steward (not just Bobbie), or is it hard-coded to her specific practice/business model?
+
+Vocabulary — Does North Star use any of the Codetry vocabulary (Gate, Refused shelf, Rename Test, etc.) internally, or is it a fully separate vocabulary/system that we'd need to translate?
+
+Once you get answers back, bring them to me and I'll fold what's real into a single doctrine document here (naming the framework, mapping it to Print Suite / Gate / Codetry vocabulary the way we discussed) — and only then figure out whether any of it also needs a build task, based on what turns out to already exist versus what's still just talked-about.

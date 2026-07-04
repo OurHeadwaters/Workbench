@@ -1,0 +1,32 @@
+Hook up North Star's live Ethos Gate
+What & Why
+North Star (a separate sibling Replit project — Bobbie Parr's private practice command centre, outside this monorepo) already has a live, working miniature of the Ethos Gate pattern: the Kitchen Table + Guide pages hold the named ethos, and the "Codetry Filter" checks kit-drafts against it (see docs/the-ethos-gate.md § The North Star Precedent). The steward does not want this rebuilt here — they want to consume North Star's live ethos data from this ecosystem, the same way the Goodbye Kit's Legacy Pilot panel already consumes Homebase Ops (another separate sibling project) as an outbound integration, without owning or duplicating North Star's data.
+
+This is a client-into-sibling-project integration, not a Gate (inbound) integration — this app authenticates itself into North Star with a service account, the same reverse-direction pattern already documented for Homebase Ops. See docs/technical-conventions.md § Outbound integration: Homebase Ops Legacy Pilot for the exact checklist to follow, and artifacts/api-server/src/lib/homebase-ops-client.ts + artifacts/api-server/src/routes/goodbye-kit-legacy.ts as the reference implementation to mirror.
+
+Important constraint: North Star's actual API surface (auth endpoint shape, field names for the ethos record / Kitchen Table / Guide content) is unknown until the steward confirms it or the executor inspects North Star directly (a separate Replit project — this task cannot assume routes that don't exist there). The executor must treat the assumed contract as provisional and correct it to match whatever North Star actually exposes, without ever touching North Star's own codebase, exactly as the Homebase Ops pattern already requires.
+
+Done looks like
+A new outbound client module (mirroring homebase-ops-client.ts) logs into North Star with a service account, caches the bearer token in memory, and re-authenticates once on a 401 before failing.
+New internal proxy route(s), gated by this app's own session auth, expose North Star's live named ethos content (Kitchen Table + Guide ethos text, and ideally the Codetry Filter's own doctrine summary) read-only to a steward in this app — the ethos record can be viewed somewhere sensible in the Aquifer or Print Suite (e.g. a read-only "Ethos" panel/card), without inventing a new local copy of the same values.
+If North Star's credentials are unset or the service is unreachable, the panel shows a calm 503/502 retry state — never a hard error, per the existing outbound-integration convention.
+Three new secrets are registered (base URL + service email + service password, following the <NAME>_BASE_URL / <NAME>_SERVICE_EMAIL / <NAME>_SERVICE_PASSWORD shape) and documented in replit.md's Secrets table in the same change.
+The confirmed North Star API contract (once verified end-to-end) is documented in docs/technical-conventions.md alongside the existing Homebase Ops entry, so future agents don't have to re-discover it.
+Out of scope
+Any code, schema, or data changes inside North Star itself — this task only reads from it, the same non-negotiable boundary as the Homebase Ops integration.
+Rebuilding or duplicating the Codetry Filter's enforcement logic here — this task surfaces North Star's existing ethos content for viewing, it does not re-implement kit-draft checking against it.
+Any DID/VC/zero-knowledge implementation (docs/the-ethos-gate.md's DID/VC section remains future doctrine, not part of this task).
+Widening enforcement to general AI output in this app, or making the Filter a hard block — those are separate, larger build items named in the doctrine's "Named gaps" section and not bundled here.
+Steps
+Confirm North Star's real API contract — before writing code, the executor needs North Star's actual auth endpoint and the shape of its ethos/Kitchen-Table/Guide/Codetry-Filter data (ask the steward for API details or credentials if not already available; do not guess a contract and ship it unverified).
+Request the three service-account secrets via the environment-secrets flow (base URL, service email, service password) using a clear <NAME>_* prefix (e.g. NORTH_STAR_*).
+Build the outbound client — login/token-cache/re-auth-once module mirroring homebase-ops-client.ts, with the same typed error class distinguishing unconfigured / unauthorized / unreachable / upstream_error.
+Add contract-first internal proxy routes (defined in the OpenAPI spec like any other route) gated by this app's own requireAuth, returning North Star's live ethos content read-only.
+Surface a read-only "Ethos" view somewhere sensible for a steward to see it in this ecosystem (e.g. a panel in the Aquifer dashboard or a Print Suite reference page) — calm retry state on failure, no local re-encoding of the ethos text as a fallback.
+Document the confirmed contract and new secrets in docs/technical-conventions.md and replit.md in the same change, per the existing required conventions.
+Relevant files
+artifacts/api-server/src/lib/homebase-ops-client.ts
+artifacts/api-server/src/routes/goodbye-kit-legacy.ts
+docs/technical-conventions.md
+docs/the-ethos-gate.md
+replit.md
