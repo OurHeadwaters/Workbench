@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Plus, Archive, Edit2, Check, X, Printer, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, AMBER_LIGHT, AMBER_WASH, GREEN, RED, FONT_DISPLAY } from "@/lib/theme";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -165,18 +166,18 @@ const CHECKLIST_PROMPTS = [
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "Time Leaks": "bg-amber-50 border-amber-200 text-amber-800",
-  "Capacity Gaps": "bg-blue-50 border-blue-200 text-blue-800",
-  "Economic Pressure": "bg-red-50 border-red-200 text-red-800",
-  "Vulnerable Dependencies": "bg-emerald-50 border-emerald-200 text-emerald-800",
+  "Time Leaks": "bg-[rgba(200,146,58,0.12)] border-[rgba(237,232,213,0.15)] text-[#C8923A]",
+  "Capacity Gaps": "bg-blue-900/20 border-blue-800/30 text-blue-300",
+  "Economic Pressure": "bg-[rgba(239,68,68,0.1)] border-[rgba(239,68,68,0.2)] text-[rgba(239,68,68,0.9)]",
+  "Vulnerable Dependencies": "bg-emerald-900/20 border-emerald-800/30 text-emerald-300",
 };
 
 const LEVERAGE_CATEGORIES = [
-  { id: "wage", label: "Wage Pressure", color: "text-red-700 bg-red-50" },
-  { id: "role", label: "Role Attrition", color: "text-orange-700 bg-orange-50" },
-  { id: "dependency", label: "Vulnerable Dependency", color: "text-emerald-700 bg-emerald-50" },
-  { id: "quiet-solution", label: "Quiet Solution", color: "text-blue-700 bg-blue-50" },
-  { id: "other", label: "Other", color: "text-stone-600 bg-stone-50" },
+  { id: "wage", label: "Wage Pressure", color: "text-[rgba(239,68,68,0.9)] bg-[rgba(239,68,68,0.1)]" },
+  { id: "role", label: "Role Attrition", color: "text-orange-300 bg-orange-900/20" },
+  { id: "dependency", label: "Vulnerable Dependency", color: "text-emerald-300 bg-emerald-900/20" },
+  { id: "quiet-solution", label: "Quiet Solution", color: "text-blue-300 bg-blue-900/20" },
+  { id: "other", label: "Other", color: "text-[rgba(237,232,213,0.55)] bg-[rgba(237,232,213,0.08)]" },
 ];
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
@@ -201,8 +202,8 @@ function OrgSelector({
           className={cn(
             "shrink-0 px-3 py-1.5 rounded-full text-sm border transition-all",
             activeId === org.id
-              ? "bg-[#1C1917] text-white border-[#1C1917]"
-              : "bg-white text-[#44403C] border-[#E7E5E4] hover:border-[#A8A29E]"
+              ? "bg-[#C8923A] text-[#0B0905] border-[#C8923A]"
+              : "bg-[#141210] text-[#EDE8D5] border-[rgba(237,232,213,0.08)] hover:border-[rgba(237,232,213,0.15)]"
           )}
         >
           {org.name || "Untitled"}
@@ -210,7 +211,7 @@ function OrgSelector({
       ))}
       <button
         onClick={onNew}
-        className="shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-sm border border-dashed border-[#A8A29E] text-[#78716C] hover:border-[#1C1917] hover:text-[#1C1917] transition-all"
+        className="shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-sm border border-dashed border-[rgba(237,232,213,0.35)] text-[rgba(237,232,213,0.35)] hover:border-[#C8923A] hover:text-[#C8923A] transition-all"
       >
         <Plus size={13} />
         New org
@@ -241,7 +242,7 @@ function CanvasTab({
     const value = org[key] as string;
     return (
       <div className="space-y-1.5">
-        <label className="block text-xs font-medium text-[#44403C] uppercase tracking-wide">
+        <label className="block text-xs font-medium text-[rgba(237,232,213,0.55)] uppercase tracking-wide">
           {label}
         </label>
         {multiline ? (
@@ -250,7 +251,7 @@ function CanvasTab({
             value={value}
             onChange={(e) => onChange({ ...org, [key]: e.target.value, updatedAt: new Date().toISOString() })}
             placeholder={placeholder}
-            className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#A8A29E] resize-none bg-white"
+            className="w-full border border-[rgba(237,232,213,0.08)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[rgba(237,232,213,0.15)] resize-none bg-[#1A1714] text-[#EDE8D5] placeholder-[rgba(237,232,213,0.35)]"
           />
         ) : (
           <input
@@ -258,7 +259,7 @@ function CanvasTab({
             value={value}
             onChange={(e) => onChange({ ...org, [key]: e.target.value, updatedAt: new Date().toISOString() })}
             placeholder={placeholder}
-            className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#A8A29E] bg-white"
+            className="w-full border border-[rgba(237,232,213,0.08)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[rgba(237,232,213,0.15)] bg-[#1A1714] text-[#EDE8D5] placeholder-[rgba(237,232,213,0.35)]"
           />
         )}
       </div>
@@ -268,13 +269,13 @@ function CanvasTab({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-base font-semibold text-[#1C1917]">Pre-Meeting Canvas</h2>
-        <p className="text-sm text-[#78716C] mt-0.5">
+        <h2 className="text-base font-semibold text-[#EDE8D5]" style={{ fontFamily: FONT_DISPLAY }}>Pre-Meeting Canvas</h2>
+        <p className="text-sm text-[rgba(237,232,213,0.55)] mt-0.5">
           Map the host org's existing meeting rhythm before you walk in the door. Use their language, not yours.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-4">
+      <div className="bg-[#141210] rounded-xl border border-[rgba(237,232,213,0.08)] p-4 space-y-4">
         {field("Organization Name", "name", "e.g. Lac Seul Band Council, Dryden Co-op")}
         {field(
           "Meeting Cadence",
@@ -302,23 +303,23 @@ function CanvasTab({
       </div>
 
       <div className="flex items-center justify-between pt-1">
-        <p className="text-xs text-[#A8A29E]">
+        <p className="text-xs text-[rgba(237,232,213,0.35)]">
           {org.updatedAt
             ? `Last saved ${new Date(org.updatedAt).toLocaleDateString()}`
             : "Not yet saved"}
         </p>
         {confirmDelete ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#78716C]">Remove this org?</span>
+            <span className="text-xs text-[rgba(237,232,213,0.55)]">Remove this org?</span>
             <button
               onClick={onDelete}
-              className="text-xs text-red-600 hover:underline"
+              className="text-xs text-[rgba(239,68,68,0.7)] hover:underline"
             >
               Yes, remove
             </button>
             <button
               onClick={() => setConfirmDelete(false)}
-              className="text-xs text-[#78716C] hover:underline"
+              className="text-xs text-[rgba(237,232,213,0.55)] hover:underline"
             >
               Cancel
             </button>
@@ -326,7 +327,7 @@ function CanvasTab({
         ) : (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="flex items-center gap-1 text-xs text-[#A8A29E] hover:text-red-500 transition-colors"
+            className="flex items-center gap-1 text-xs text-[rgba(237,232,213,0.35)] hover:text-[rgba(239,68,68,0.7)] transition-colors"
           >
             <Trash2 size={12} />
             Remove org
@@ -365,14 +366,14 @@ function ChecklistTab({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-base font-semibold text-[#1C1917]">Efficiency Discovery</h2>
-        <p className="text-sm text-[#78716C] mt-0.5">
+        <h2 className="text-base font-semibold text-[#EDE8D5]" style={{ fontFamily: FONT_DISPLAY }}>Efficiency Discovery</h2>
+        <p className="text-sm text-[rgba(237,232,213,0.55)] mt-0.5">
           Work through these prompts before or during observation. Stay in listening mode — no Codetry language in the room.
         </p>
         {highCount > 0 && (
-          <div className="mt-2 inline-flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-full px-3 py-1">
-            <span className="w-2 h-2 rounded-full bg-red-500" />
-            <span className="text-xs text-red-700 font-medium">{highCount} high-priority finding{highCount > 1 ? "s" : ""}</span>
+          <div className="mt-2 inline-flex items-center gap-1.5 bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.2)] rounded-full px-3 py-1">
+            <span className="w-2 h-2 rounded-full bg-[rgba(239,68,68,0.7)]" />
+            <span className="text-xs text-[rgba(239,68,68,0.9)] font-medium">{highCount} high-priority finding{highCount > 1 ? "s" : ""}</span>
           </div>
         )}
       </div>
@@ -383,10 +384,10 @@ function ChecklistTab({
         const catAnswered = prompts.filter((p) => answers[p.id]?.answer?.trim()).length;
 
         return (
-          <div key={cat} className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+          <div key={cat} className="bg-[#141210] rounded-xl border border-[rgba(237,232,213,0.08)] overflow-hidden">
             <button
               onClick={() => setExpanded((e) => ({ ...e, [cat]: !isOpen }))}
-              className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#FAFAF9] transition-colors"
+              className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#1A1714] transition-colors"
             >
               <div className="flex items-center gap-2">
                 <span
@@ -398,31 +399,31 @@ function ChecklistTab({
                   {cat}
                 </span>
                 {catAnswered > 0 && (
-                  <span className="text-xs text-[#78716C]">
+                  <span className="text-xs text-[rgba(237,232,213,0.55)]">
                     {catAnswered}/{prompts.length} answered
                   </span>
                 )}
               </div>
-              {isOpen ? <ChevronUp size={15} className="text-[#A8A29E]" /> : <ChevronDown size={15} className="text-[#A8A29E]" />}
+              {isOpen ? <ChevronUp size={15} className="text-[rgba(237,232,213,0.35)]" /> : <ChevronDown size={15} className="text-[rgba(237,232,213,0.35)]" />}
             </button>
 
             {isOpen && (
-              <div className="border-t border-[#E7E5E4] divide-y divide-[#F5F5F0]">
+              <div className="border-t border-[rgba(237,232,213,0.08)] divide-y divide-[rgba(237,232,213,0.05)]">
                 {prompts.map((p) => {
                   const ans = answers[p.id] ?? { promptId: p.id, answer: "", priority: "" };
                   return (
                     <div key={p.id} className="px-4 py-4 space-y-2.5">
-                      <p className="text-sm font-medium text-[#1C1917] leading-snug">{p.prompt}</p>
-                      <p className="text-xs text-[#A8A29E] italic">{p.hint}</p>
+                      <p className="text-sm font-medium text-[#EDE8D5] leading-snug">{p.prompt}</p>
+                      <p className="text-xs text-[rgba(237,232,213,0.35)] italic">{p.hint}</p>
                       <textarea
                         rows={2}
                         value={ans.answer}
                         onChange={(e) => setAnswer(p.id, "answer", e.target.value)}
                         placeholder="What did you observe or hear?"
-                        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#A8A29E] resize-none bg-[#FAFAF9]"
+                        className="w-full border border-[rgba(237,232,213,0.08)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[rgba(237,232,213,0.15)] resize-none bg-[#1A1714] text-[#EDE8D5] placeholder-[rgba(237,232,213,0.35)]"
                       />
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-[#78716C]">Priority:</span>
+                        <span className="text-xs text-[rgba(237,232,213,0.55)]">Priority:</span>
                         {(["high", "medium", "low"] as const).map((p_level) => (
                           <button
                             key={p_level}
@@ -431,11 +432,11 @@ function ChecklistTab({
                               "text-xs px-2.5 py-1 rounded-full border transition-all",
                               ans.priority === p_level
                                 ? p_level === "high"
-                                  ? "bg-red-500 text-white border-red-500"
+                                  ? "bg-[rgba(239,68,68,0.7)] text-white border-[rgba(239,68,68,0.7)]"
                                   : p_level === "medium"
-                                  ? "bg-amber-400 text-white border-amber-400"
-                                  : "bg-stone-400 text-white border-stone-400"
-                                : "bg-white text-[#78716C] border-[#E7E5E4] hover:border-[#A8A29E]"
+                                  ? "bg-[#C8923A] text-[#0B0905] border-[#C8923A]"
+                                  : "bg-[rgba(237,232,213,0.35)] text-[#0B0905] border-[rgba(237,232,213,0.35)]"
+                                : "bg-[#141210] text-[rgba(237,232,213,0.55)] border-[rgba(237,232,213,0.08)] hover:border-[rgba(237,232,213,0.15)]"
                             )}
                           >
                             {p_level}
@@ -507,19 +508,19 @@ function LeverageTab({
   }
 
   function getCatColor(id: string) {
-    return LEVERAGE_CATEGORIES.find((c) => c.id === id)?.color ?? "text-stone-600 bg-stone-50";
+    return LEVERAGE_CATEGORIES.find((c) => c.id === id)?.color ?? "text-[rgba(237,232,213,0.55)] bg-[#141210]";
   }
 
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-base font-semibold text-[#1C1917]">Leverage Tracker</h2>
-        <p className="text-sm text-[#78716C] mt-0.5">
+        <h2 className="text-base font-semibold text-[#EDE8D5]" style={{ fontFamily: FONT_DISPLAY }}>Leverage Tracker</h2>
+        <p className="text-sm text-[rgba(237,232,213,0.55)] mt-0.5">
           Log the economic pressure points you're noticing. This feeds the rationale for what gets solved behind the scenes.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3">
+      <div className="bg-[#141210] rounded-xl border border-[rgba(237,232,213,0.08)] p-4 space-y-3">
         <div className="flex flex-wrap gap-1.5">
           {LEVERAGE_CATEGORIES.map((cat) => (
             <button
@@ -528,8 +529,8 @@ function LeverageTab({
               className={cn(
                 "text-xs px-2.5 py-1 rounded-full border transition-all",
                 category === cat.id
-                  ? "bg-[#1C1917] text-white border-[#1C1917]"
-                  : "bg-white text-[#78716C] border-[#E7E5E4] hover:border-[#A8A29E]"
+                  ? "bg-[#C8923A] text-[#0B0905] border-[#C8923A]"
+                  : "bg-[#141210] text-[rgba(237,232,213,0.55)] border-[rgba(237,232,213,0.08)] hover:border-[rgba(237,232,213,0.15)]"
               )}
             >
               {cat.label}
@@ -546,11 +547,11 @@ function LeverageTab({
               if (e.key === "Enter" && e.metaKey) addEntry();
             }}
             placeholder="What did you observe? Be specific — exact numbers, quotes, or patterns."
-            className="flex-1 border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#A8A29E] resize-none bg-[#FAFAF9]"
+            className="flex-1 border border-[rgba(237,232,213,0.08)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[rgba(237,232,213,0.15)] resize-none bg-[#1A1714] text-[#EDE8D5] placeholder-[rgba(237,232,213,0.35)]"
           />
           <button
             onClick={addEntry}
-            className="self-end px-3 py-2 bg-[#1C1917] text-white rounded-xl text-sm min-h-[44px] hover:bg-[#292524] transition-colors"
+            className="self-end px-3 py-2 bg-[#C8923A] text-[#0B0905] rounded-xl text-sm min-h-[44px] hover:bg-[#F0B855] transition-colors"
           >
             <Plus size={16} />
           </button>
@@ -558,7 +559,7 @@ function LeverageTab({
       </div>
 
       {active.length === 0 && (
-        <p className="text-sm text-[#A8A29E] text-center py-4">
+        <p className="text-sm text-[rgba(237,232,213,0.35)] text-center py-4">
           No entries yet. Start logging what you observe.
         </p>
       )}
@@ -567,7 +568,7 @@ function LeverageTab({
         {active.map((entry) => (
           <div
             key={entry.id}
-            className="bg-white rounded-xl border border-[#E7E5E4] px-4 py-3 space-y-2"
+            className="bg-[#141210] rounded-xl border border-[rgba(237,232,213,0.08)] px-4 py-3 space-y-2"
           >
             <div className="flex items-start justify-between gap-3">
               <span className={cn("text-xs px-2 py-0.5 rounded-full font-medium shrink-0", getCatColor(entry.category))}>
@@ -576,13 +577,13 @@ function LeverageTab({
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => { setEditId(entry.id); setEditNote(entry.note); }}
-                  className="p-1 text-[#A8A29E] hover:text-[#44403C] transition-colors"
+                  className="p-1 text-[rgba(237,232,213,0.35)] hover:text-[rgba(237,232,213,0.55)] transition-colors"
                 >
                   <Edit2 size={13} />
                 </button>
                 <button
                   onClick={() => archiveEntry(entry.id)}
-                  className="p-1 text-[#A8A29E] hover:text-[#44403C] transition-colors"
+                  className="p-1 text-[rgba(237,232,213,0.35)] hover:text-[rgba(237,232,213,0.55)] transition-colors"
                 >
                   <Archive size={13} />
                 </button>
@@ -595,28 +596,28 @@ function LeverageTab({
                   rows={2}
                   value={editNote}
                   onChange={(e) => setEditNote(e.target.value)}
-                  className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#A8A29E] resize-none"
+                  className="w-full border border-[rgba(237,232,213,0.08)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[rgba(237,232,213,0.15)] resize-none bg-[#1A1714] text-[#EDE8D5]"
                 />
                 <div className="flex gap-2">
                   <button
                     onClick={() => saveEdit(entry.id)}
-                    className="flex items-center gap-1 text-xs text-emerald-700 border border-emerald-200 rounded-lg px-2.5 py-1 hover:bg-emerald-50"
+                    className="flex items-center gap-1 text-xs text-emerald-400 border border-emerald-900/30 rounded-lg px-2.5 py-1 hover:bg-emerald-900/20"
                   >
                     <Check size={12} /> Save
                   </button>
                   <button
                     onClick={() => setEditId(null)}
-                    className="flex items-center gap-1 text-xs text-[#78716C] border border-[#E7E5E4] rounded-lg px-2.5 py-1 hover:bg-[#FAFAF9]"
+                    className="flex items-center gap-1 text-xs text-[rgba(237,232,213,0.55)] border border-[rgba(237,232,213,0.08)] rounded-lg px-2.5 py-1 hover:bg-[#1A1714]"
                   >
                     <X size={12} /> Cancel
                   </button>
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-[#1C1917] leading-snug">{entry.note}</p>
+              <p className="text-sm text-[#EDE8D5] leading-snug">{entry.note}</p>
             )}
 
-            <p className="text-xs text-[#A8A29E]">
+            <p className="text-xs text-[rgba(237,232,213,0.35)]">
               {new Date(entry.createdAt).toLocaleDateString()}
             </p>
           </div>
@@ -627,7 +628,7 @@ function LeverageTab({
         <div>
           <button
             onClick={() => setShowArchived((s) => !s)}
-            className="flex items-center gap-1.5 text-xs text-[#A8A29E] hover:text-[#78716C] transition-colors"
+            className="flex items-center gap-1.5 text-xs text-[rgba(237,232,213,0.45)] hover:text-[rgba(237,232,213,0.7)] transition-colors"
           >
             <Archive size={12} />
             {showArchived ? "Hide" : "Show"} {archived.length} archived
@@ -637,18 +638,18 @@ function LeverageTab({
               {archived.map((entry) => (
                 <div
                   key={entry.id}
-                  className="bg-[#FAFAF9] rounded-xl border border-[#E7E5E4] px-4 py-3 opacity-60"
+                  className="bg-[#141210] rounded-xl border border-[rgba(237,232,213,0.08)] px-4 py-3 opacity-60"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <span className="text-xs text-[#A8A29E]">{getCatLabel(entry.category)}</span>
+                    <span className="text-xs text-[rgba(237,232,213,0.45)]">{getCatLabel(entry.category)}</span>
                     <button
                       onClick={() => restoreEntry(entry.id)}
-                      className="text-xs text-[#78716C] hover:text-[#44403C]"
+                      className="text-xs text-[rgba(237,232,213,0.45)] hover:text-[rgba(237,232,213,0.7)]"
                     >
                       Restore
                     </button>
                   </div>
-                  <p className="text-sm text-[#78716C] mt-1 leading-snug">{entry.note}</p>
+                  <p className="text-sm text-[rgba(237,232,213,0.45)] mt-1 leading-snug">{entry.note}</p>
                 </div>
               ))}
             </div>
@@ -666,8 +667,8 @@ const FIXED_SEATS = [
     zone: "Z0",
     name: "Saltbox",
     icon: "⊡",
-    color: "bg-yellow-50 border-yellow-200",
-    labelColor: "text-yellow-800",
+    color: "bg-[rgba(200,146,58,0.08)] border-[rgba(200,146,58,0.25)]",
+    labelColor: "text-[#F0B855]",
     role: "Internal boundary",
     desc: "Sits with the founder throughout. Asks the one question that tests whether something is ready. Does this hold?",
   },
@@ -675,8 +676,8 @@ const FIXED_SEATS = [
     zone: "Z0 + Z2",
     name: "Standby",
     icon: "⧖",
-    color: "bg-stone-50 border-stone-300",
-    labelColor: "text-stone-700",
+    color: "bg-[#141210] border-[rgba(237,232,213,0.15)]",
+    labelColor: "text-[rgba(237,232,213,0.55)]",
     role: "Both sides",
     desc: "Holds the internal boundary (Z0) and sets the table (Z2) simultaneously. Runs the quick-set draft — agenda, synthesis, gate, and guest seats — before anyone sits down.",
   },
@@ -684,8 +685,8 @@ const FIXED_SEATS = [
     zone: "Z2",
     name: "Table Setter",
     icon: "⬡",
-    color: "bg-blue-50 border-blue-200",
-    labelColor: "text-blue-800",
+    color: "bg-[rgba(91,143,208,0.10)] border-[rgba(91,143,208,0.25)]",
+    labelColor: "text-[#7CA9DE]",
     role: "Sets the table",
     desc: "Drafts the agenda skeleton from the canvas data before the meeting. The structure that gives Grok something to synthesize.",
   },
@@ -693,8 +694,8 @@ const FIXED_SEATS = [
     zone: "Grok",
     name: "Whiteboard",
     icon: "◈",
-    color: "bg-indigo-50 border-indigo-200",
-    labelColor: "text-indigo-800",
+    color: "bg-[rgba(124,78,138,0.10)] border-[rgba(124,78,138,0.25)]",
+    labelColor: "text-[#B98FCB]",
     role: "Agenda synthesis",
     desc: "Works between Z2 and the founder to synthesize and finalize the agenda. Assigns guest seats to line items with the founder before the agenda is locked.",
   },
@@ -921,8 +922,8 @@ function TableSetupTab({
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold text-[#1C1917]">Table Setup</h2>
-          <p className="text-sm text-[#78716C] mt-0.5 leading-snug">
+          <h2 className="text-base font-semibold text-[#EDE8D5]">Table Setup</h2>
+          <p className="text-sm text-[rgba(237,232,213,0.55)] mt-0.5 leading-snug">
             Z2 sets the table. Grok synthesizes the agenda. The founder and Grok assign guest experts to line items before the agenda is finalized.
           </p>
         </div>
@@ -932,8 +933,8 @@ function TableSetupTab({
           className={cn(
             "shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border transition-all",
             quickSetting
-              ? "bg-stone-100 text-[#A8A29E] border-stone-200 cursor-wait"
-              : "bg-[#1C1917] text-white border-[#1C1917] hover:bg-[#292524]"
+              ? "bg-[#1A1714] text-[rgba(237,232,213,0.35)] border-[rgba(237,232,213,0.08)] cursor-wait"
+              : "bg-[#C8923A] text-[#0B0905] border-[#C8923A] hover:bg-[#F0B855]"
           )}
         >
           <span className="text-base leading-none">⧖</span>
@@ -946,10 +947,10 @@ function TableSetupTab({
         <div className={cn(
           "text-xs px-3 py-2 rounded-lg border",
           quickStatus.startsWith("⚠") || quickStatus.startsWith("Fill")
-            ? "bg-amber-50 border-amber-200 text-amber-800"
+            ? "bg-[rgba(200,146,58,0.10)] border-[rgba(200,146,58,0.25)] text-[#F0B855]"
             : quickStatus.startsWith("Table set")
-            ? "bg-emerald-50 border-emerald-200 text-emerald-800"
-            : "bg-stone-50 border-stone-200 text-stone-600"
+            ? "bg-[rgba(74,222,128,0.10)] border-[rgba(74,222,128,0.25)] text-[#4ADE80]"
+            : "bg-[#141210] border-[rgba(237,232,213,0.08)] text-[rgba(237,232,213,0.55)]"
         )}>
           {quickStatus}
           {!quickSetting && (
@@ -960,12 +961,12 @@ function TableSetupTab({
 
       {/* Finalized banner */}
       {config.agendaFinalized && (
-        <div className="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
-          <Check size={15} className="text-emerald-600 shrink-0" />
-          <p className="text-sm text-emerald-800 font-medium">Agenda finalized — table is set.</p>
+        <div className="flex items-center gap-2.5 bg-[rgba(74,222,128,0.10)] border border-[rgba(74,222,128,0.25)] rounded-xl px-4 py-3">
+          <Check size={15} className="text-[#4ADE80] shrink-0" />
+          <p className="text-sm text-[#4ADE80] font-medium">Agenda finalized — table is set.</p>
           <button
             onClick={() => onChange({ ...config, agendaFinalized: false })}
-            className="ml-auto text-xs text-emerald-600 hover:underline"
+            className="ml-auto text-xs text-[#4ADE80] hover:underline"
           >
             Reopen
           </button>
@@ -974,7 +975,7 @@ function TableSetupTab({
 
       {/* Fixed seats */}
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-[#44403C] uppercase tracking-wide">Fixed Seats</p>
+        <p className="text-xs font-semibold text-[rgba(237,232,213,0.35)] uppercase tracking-wide">Fixed Seats</p>
         {FIXED_SEATS.map((seat) => (
           <div
             key={seat.name}
@@ -986,10 +987,10 @@ function TableSetupTab({
                 <span className={cn("text-xs font-semibold uppercase tracking-wide", seat.labelColor)}>
                   {seat.zone}
                 </span>
-                <span className="text-sm font-medium text-[#1C1917]">{seat.name}</span>
-                <span className="text-xs text-[#78716C]">— {seat.role}</span>
+                <span className="text-sm font-medium text-[#EDE8D5]">{seat.name}</span>
+                <span className="text-xs text-[rgba(237,232,213,0.55)]">— {seat.role}</span>
               </div>
-              <p className="text-xs text-[#78716C] mt-1 leading-snug">{seat.desc}</p>
+              <p className="text-xs text-[rgba(237,232,213,0.55)] mt-1 leading-snug">{seat.desc}</p>
             </div>
           </div>
         ))}
@@ -998,20 +999,20 @@ function TableSetupTab({
       {/* Agenda line items */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold text-[#44403C] uppercase tracking-wide">Agenda Line Items</p>
+          <p className="text-xs font-semibold text-[rgba(237,232,213,0.55)] uppercase tracking-wide">Agenda Line Items</p>
           {assignedCount > 0 && (
-            <span className="text-xs text-[#78716C]">{assignedCount}/{config.agendaItems.length} assigned</span>
+            <span className="text-xs text-[rgba(237,232,213,0.35)]">{assignedCount}/{config.agendaItems.length} assigned</span>
           )}
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] divide-y divide-[#F5F5F0] overflow-hidden">
+        <div className="bg-[#141210] rounded-xl border border-[rgba(237,232,213,0.08)] divide-y divide-[rgba(237,232,213,0.05)] overflow-hidden">
           {config.agendaItems.length === 0 && (
-            <p className="text-sm text-[#A8A29E] px-4 py-3">No items yet. Add the agenda line by line.</p>
+            <p className="text-sm text-[rgba(237,232,213,0.35)] px-4 py-3">No items yet. Add the agenda line by line.</p>
           )}
           {config.agendaItems.map((item, idx) => (
             <div key={item.id} className="px-3 py-3 flex items-start gap-2">
-              <span className="text-xs text-[#A8A29E] mt-1 w-5 shrink-0 text-right">{idx + 1}.</span>
-              <p className="flex-1 text-sm text-[#1C1917] leading-snug">{item.text}</p>
+              <span className="text-xs text-[rgba(237,232,213,0.35)] mt-1 w-5 shrink-0 text-right">{idx + 1}.</span>
+              <p className="flex-1 text-sm text-[#EDE8D5] leading-snug">{item.text}</p>
               <div className="flex items-center gap-1.5 shrink-0">
                 {/* Guest assignment */}
                 <select
@@ -1022,7 +1023,7 @@ function TableSetupTab({
                       e.target.value === "" ? null : (Number(e.target.value) as 0 | 1 | 2)
                     )
                   }
-                  className="text-xs border border-[#E7E5E4] rounded-lg px-2 py-1 bg-white text-[#44403C] focus:outline-none"
+                  className="text-xs border border-[rgba(237,232,213,0.08)] rounded-lg px-2 py-1 bg-[#1A1714] text-[rgba(237,232,213,0.55)] focus:outline-none"
                 >
                   <option value="">No guest</option>
                   {GUEST_LABELS.map((label, i) => (
@@ -1033,7 +1034,7 @@ function TableSetupTab({
                 </select>
                 <button
                   onClick={() => removeItem(item.id)}
-                  className="p-1 text-[#A8A29E] hover:text-red-400 transition-colors"
+                  className="p-1 text-[rgba(237,232,213,0.35)] hover:text-[rgba(239,68,68,0.7)] transition-colors"
                 >
                   <X size={13} />
                 </button>
@@ -1049,11 +1050,11 @@ function TableSetupTab({
             onChange={(e) => setNewItem(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addItem()}
             placeholder="Add a line item (Z2 drafts, Grok refines)"
-            className="flex-1 border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#A8A29E] bg-white"
+            className="flex-1 border border-[rgba(237,232,213,0.08)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[rgba(237,232,213,0.15)] bg-[#1A1714] text-[#EDE8D5] placeholder-[rgba(237,232,213,0.35)]"
           />
           <button
             onClick={addItem}
-            className="px-3 py-2 bg-[#1C1917] text-white rounded-xl text-sm hover:bg-[#292524] transition-colors"
+            className="px-3 py-2 bg-[#C8923A] text-[#0B0905] rounded-xl text-sm hover:bg-[#F0B855] transition-colors"
           >
             <Plus size={15} />
           </button>
@@ -1062,8 +1063,8 @@ function TableSetupTab({
 
       {/* Grok synthesis */}
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-[#44403C] uppercase tracking-wide">Grok's Synthesis</p>
-        <p className="text-xs text-[#A8A29E]">
+        <p className="text-xs font-semibold text-[rgba(237,232,213,0.55)] uppercase tracking-wide">Grok's Synthesis</p>
+        <p className="text-xs text-[rgba(237,232,213,0.35)]">
           Where Z2's draft and Grok's read of the situation converge. What is this meeting actually for?
         </p>
         <textarea
@@ -1071,7 +1072,7 @@ function TableSetupTab({
           value={config.agendaSynthesis}
           onChange={(e) => onChange({ ...config, agendaSynthesis: e.target.value, agendaFinalized: false })}
           placeholder="e.g. Three of the five items are symptoms of the same budget freeze. If that's not named, the meeting will produce four follow-ups and no decisions."
-          className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#A8A29E] resize-none bg-white"
+          className="w-full border border-[rgba(237,232,213,0.08)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[rgba(237,232,213,0.15)] resize-none bg-[#1A1714] text-[#EDE8D5] placeholder-[rgba(237,232,213,0.35)]"
         />
       </div>
 
@@ -1082,23 +1083,23 @@ function TableSetupTab({
           className="w-full flex items-center justify-between"
         >
           <div className="flex items-start gap-2">
-            <p className="text-xs font-semibold text-[#44403C] uppercase tracking-wide">Gate Professional</p>
+            <p className="text-xs font-semibold text-[rgba(237,232,213,0.55)] uppercase tracking-wide">Gate Professional</p>
             {config.gateProfessional.name && (
-              <span className="text-xs text-[#78716C]">— {config.gateProfessional.name}</span>
+              <span className="text-xs text-[rgba(237,232,213,0.35)]">— {config.gateProfessional.name}</span>
             )}
           </div>
-          {openGate ? <ChevronUp size={14} className="text-[#A8A29E]" /> : <ChevronDown size={14} className="text-[#A8A29E]" />}
+          {openGate ? <ChevronUp size={14} className="text-[rgba(237,232,213,0.35)]" /> : <ChevronDown size={14} className="text-[rgba(237,232,213,0.35)]" />}
         </button>
 
         {!openGate && (
-          <p className="text-xs text-[#A8A29E] leading-snug">
+          <p className="text-xs text-[rgba(237,232,213,0.35)] leading-snug">
             Every engagement has a licensed professional who holds the gate between what people need and what the regulatory system allows. Name them before the meeting.
           </p>
         )}
 
         {openGate && (
-          <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3">
-            <p className="text-xs text-[#78716C] leading-snug">
+          <div className="bg-[#141210] rounded-xl border border-[rgba(237,232,213,0.08)] p-4 space-y-3">
+            <p className="text-xs text-[rgba(237,232,213,0.35)] leading-snug">
               This person sits at the boundary between Maslow's hierarchy of needs and the regulatory body of this industry. They don't replace the community's voice — they hold the gate that determines what's possible inside the system.
             </p>
             {(
@@ -1111,13 +1112,13 @@ function TableSetupTab({
               ] as [keyof GateProfessional, string, string][]
             ).map(([field, label, placeholder]) => (
               <div key={field} className="space-y-1">
-                <label className="text-xs text-[#44403C]">{label}</label>
+                <label className="text-xs text-[rgba(237,232,213,0.55)]">{label}</label>
                 <input
                   type="text"
                   value={config.gateProfessional[field]}
                   onChange={(e) => updateGate(field, e.target.value)}
                   placeholder={placeholder}
-                  className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#A8A29E]"
+                  className="w-full border border-[rgba(237,232,213,0.08)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[rgba(237,232,213,0.15)] bg-[#1A1714] text-[#EDE8D5] placeholder-[rgba(237,232,213,0.35)]"
                 />
               </div>
             ))}
@@ -1128,8 +1129,8 @@ function TableSetupTab({
       {/* Guest expert seats */}
       <div className="space-y-3">
         <div>
-          <p className="text-xs font-semibold text-[#44403C] uppercase tracking-wide">Guest Expert Seats</p>
-          <p className="text-xs text-[#A8A29E] mt-1">
+          <p className="text-xs font-semibold text-[rgba(237,232,213,0.55)] uppercase tracking-wide">Guest Expert Seats</p>
+          <p className="text-xs text-[rgba(237,232,213,0.35)] mt-1">
             Three seats. Grok and the founder decide who fills each one before the agenda is finalized. Each guest speaks to their assigned line item — nothing more.
           </p>
         </div>
@@ -1142,24 +1143,24 @@ function TableSetupTab({
           const isOpen = openGuest === idx;
 
           return (
-            <div key={idx} className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+            <div key={idx} className="bg-[#141210] rounded-xl border border-[rgba(237,232,213,0.08)] overflow-hidden">
               <button
                 onClick={() => setOpenGuest(isOpen ? null : idx)}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#FAFAF9] transition-colors"
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#1A1714] transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="w-6 h-6 rounded-full bg-[#F5F0E8] text-[#44403C] text-xs font-semibold flex items-center justify-center shrink-0">
+                  <span className="w-6 h-6 rounded-full bg-[#1A1714] text-[#EDE8D5] text-xs font-semibold flex items-center justify-center shrink-0 border border-[rgba(237,232,213,0.08)]">
                     {idx + 1}
                   </span>
                   <div className="text-left">
-                    <span className="text-sm font-medium text-[#1C1917]">
+                    <span className="text-sm font-medium text-[#EDE8D5]">
                       {seat.name || GUEST_LABELS[idx]}
                     </span>
                     {seat.role && (
-                      <span className="text-xs text-[#78716C] ml-1.5">— {seat.role}</span>
+                      <span className="text-xs text-[rgba(237,232,213,0.55)] ml-1.5">— {seat.role}</span>
                     )}
                     {assignedItems.length > 0 && (
-                      <span className="ml-1.5 text-xs text-[#A8A29E]">
+                      <span className="ml-1.5 text-xs text-[rgba(237,232,213,0.35)]">
                         · item{assignedItems.length > 1 ? "s" : ""} {assignedItems.map((_, i) => config.agendaItems.indexOf(assignedItems[i]!) + 1).join(", ")}
                       </span>
                     )}
@@ -1167,16 +1168,16 @@ function TableSetupTab({
                 </div>
                 <div className="flex items-center gap-2">
                   {seat.confirmed && (
-                    <span className="flex items-center gap-1 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5">
+                    <span className="flex items-center gap-1 text-xs text-emerald-400 bg-emerald-900/20 border border-emerald-800/30 rounded-full px-2 py-0.5">
                       <Check size={10} /> Confirmed
                     </span>
                   )}
-                  {isOpen ? <ChevronUp size={14} className="text-[#A8A29E]" /> : <ChevronDown size={14} className="text-[#A8A29E]" />}
+                  {isOpen ? <ChevronUp size={14} className="text-[rgba(237,232,213,0.35)]" /> : <ChevronDown size={14} className="text-[rgba(237,232,213,0.35)]" />}
                 </div>
               </button>
 
               {isOpen && (
-                <div className="border-t border-[#E7E5E4] px-4 py-4 space-y-3">
+                <div className="border-t border-[rgba(237,232,213,0.08)] px-4 py-4 space-y-3">
                   {(
                     [
                       ["name", "Name", "Who is this person?"],
@@ -1185,26 +1186,26 @@ function TableSetupTab({
                     ] as [keyof GuestSeat, string, string][]
                   ).map(([field, label, placeholder]) => (
                     <div key={field} className="space-y-1">
-                      <label className="text-xs text-[#44403C]">{label}</label>
+                      <label className="text-xs text-[rgba(237,232,213,0.55)]">{label}</label>
                       <input
                         type="text"
                         value={seat[field] as string}
                         onChange={(e) => updateGuest(idx, field, e.target.value)}
                         placeholder={placeholder}
-                        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#A8A29E]"
+                        className="w-full border border-[rgba(237,232,213,0.08)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[rgba(237,232,213,0.15)] bg-[#1A1714] text-[#EDE8D5] placeholder-[rgba(237,232,213,0.35)]"
                       />
                     </div>
                   ))}
 
                   {assignedItems.length > 0 ? (
-                    <div className="bg-[#FAFAF9] rounded-lg px-3 py-2">
-                      <p className="text-xs text-[#78716C] font-medium mb-1">Assigned item{assignedItems.length > 1 ? "s" : ""}:</p>
+                    <div className="bg-[#1A1714] rounded-lg px-3 py-2">
+                      <p className="text-xs text-[rgba(237,232,213,0.55)] font-medium mb-1">Assigned item{assignedItems.length > 1 ? "s" : ""}:</p>
                       {assignedItems.map((item) => (
-                        <p key={item.id} className="text-xs text-[#44403C]">· {item.text}</p>
+                        <p key={item.id} className="text-xs text-[rgba(237,232,213,0.55)]">· {item.text}</p>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-xs text-[#A8A29E] italic">No agenda items assigned to this seat yet — use the dropdown on each item above.</p>
+                    <p className="text-xs text-[rgba(237,232,213,0.35)] italic">No agenda items assigned to this seat yet — use the dropdown on each item above.</p>
                   )}
 
                   <button
@@ -1212,8 +1213,8 @@ function TableSetupTab({
                     className={cn(
                       "flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all",
                       seat.confirmed
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                        : "bg-white text-[#78716C] border-[#E7E5E4] hover:border-[#A8A29E]"
+                        ? "bg-emerald-900/20 text-emerald-400 border-emerald-800/30"
+                        : "bg-[#141210] text-[rgba(237,232,213,0.55)] border-[rgba(237,232,213,0.08)] hover:border-[rgba(237,232,213,0.15)]"
                     )}
                   >
                     <Check size={12} />
@@ -1235,8 +1236,8 @@ function TableSetupTab({
             className={cn(
               "w-full py-3 rounded-xl text-sm font-medium border transition-all",
               canFinalize
-                ? "bg-[#1C1917] text-white border-[#1C1917] hover:bg-[#292524]"
-                : "bg-[#F5F5F0] text-[#A8A29E] border-[#E7E5E4] cursor-not-allowed"
+                ? "bg-[#C8923A] text-[#0B0905] border-[#C8923A] hover:bg-[#F0B855]"
+                : "bg-[rgba(237,232,213,0.05)] text-[rgba(237,232,213,0.35)] border-[rgba(237,232,213,0.08)] cursor-not-allowed"
             )}
           >
             {canFinalize ? "Finalize agenda — table is set" : "Add items + gate professional to finalize"}
@@ -1288,8 +1289,8 @@ function BriefTab({
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold text-[#1C1917]">Strategic Meeting Brief</h2>
-          <p className="text-sm text-[#78716C] mt-0.5">
+          <h2 className="text-base font-semibold text-[#EDE8D5]" style={{ fontFamily: FONT_DISPLAY }}>Strategic Meeting Brief</h2>
+          <p className="text-sm text-[rgba(237,232,213,0.55)] mt-0.5">
             A one-page discussion piece. Table it at the right moment — not as a pitch.
           </p>
         </div>
@@ -1299,8 +1300,8 @@ function BriefTab({
             className={cn(
               "flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all",
               editing
-                ? "bg-[#1C1917] text-white border-[#1C1917]"
-                : "bg-white text-[#44403C] border-[#E7E5E4] hover:border-[#A8A29E]"
+                ? "bg-[#C8923A] text-[#0B0905] border-[#C8923A]"
+                : "bg-[#141210] text-[#EDE8D5] border-[rgba(237,232,213,0.08)] hover:border-[rgba(237,232,213,0.15)]"
             )}
           >
             <Edit2 size={12} />
@@ -1308,7 +1309,7 @@ function BriefTab({
           </button>
           <button
             onClick={handlePrint}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-[#E7E5E4] bg-white text-[#44403C] hover:border-[#A8A29E] transition-all"
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-[rgba(237,232,213,0.08)] bg-[#141210] text-[#EDE8D5] hover:border-[rgba(237,232,213,0.15)] transition-all"
           >
             <Printer size={12} />
             Print
@@ -1317,46 +1318,46 @@ function BriefTab({
       </div>
 
       {editing && (
-        <div className="bg-[#FEF9EE] border border-amber-200 rounded-xl p-4 space-y-3">
-          <p className="text-xs font-medium text-amber-800 uppercase tracking-wide">Edit before sharing</p>
+        <div className="bg-[rgba(200,146,58,0.12)] border border-[rgba(237,232,213,0.15)] rounded-xl p-4 space-y-3">
+          <p className="text-xs font-medium text-[#C8923A] uppercase tracking-wide">Edit before sharing</p>
           <div className="space-y-1.5">
-            <label className="text-xs text-[#44403C]">Pain points (override auto-populated)</label>
+            <label className="text-xs text-[rgba(237,232,213,0.55)]">Pain points (override auto-populated)</label>
             <textarea
               rows={3}
               value={overrides.customPainPoints}
               onChange={(e) => onOverridesChange({ ...overrides, customPainPoints: e.target.value })}
               placeholder={painPointsText || "Leave blank to use canvas data"}
-              className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm focus:outline-none resize-none bg-white"
+              className="w-full border border-[rgba(237,232,213,0.08)] rounded-lg px-3 py-2 text-sm focus:outline-none resize-none bg-[#1A1714] text-[#EDE8D5]"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs text-[#44403C]">Leverage notes (override auto-populated)</label>
+            <label className="text-xs text-[rgba(237,232,213,0.55)]">Leverage notes (override auto-populated)</label>
             <textarea
               rows={3}
               value={overrides.customLeverage}
               onChange={(e) => onOverridesChange({ ...overrides, customLeverage: e.target.value })}
               placeholder={leverageText || "Leave blank to use leverage tracker"}
-              className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm focus:outline-none resize-none bg-white"
+              className="w-full border border-[rgba(237,232,213,0.08)] rounded-lg px-3 py-2 text-sm focus:outline-none resize-none bg-[#1A1714] text-[#EDE8D5]"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs text-[#44403C]">Proposed next step</label>
+            <label className="text-xs text-[rgba(237,232,213,0.55)]">Proposed next step</label>
             <input
               type="text"
               value={overrides.customNext}
               onChange={(e) => onOverridesChange({ ...overrides, customNext: e.target.value })}
               placeholder="e.g. One 90-min working session with the band manager"
-              className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm focus:outline-none bg-white"
+              className="w-full border border-[rgba(237,232,213,0.08)] rounded-lg px-3 py-2 text-sm focus:outline-none bg-[#1A1714] text-[#EDE8D5]"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs text-[#44403C]">Confidential practitioner note (not printed)</label>
+            <label className="text-xs text-[rgba(237,232,213,0.55)]">Confidential practitioner note (not printed)</label>
             <textarea
               rows={2}
               value={overrides.editorNote}
               onChange={(e) => onOverridesChange({ ...overrides, editorNote: e.target.value })}
               placeholder="Your private context — this stays off the page."
-              className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm focus:outline-none resize-none bg-white"
+              className="w-full border border-[rgba(237,232,213,0.08)] rounded-lg px-3 py-2 text-sm focus:outline-none resize-none bg-[#1A1714] text-[#EDE8D5]"
             />
           </div>
         </div>
@@ -1366,15 +1367,15 @@ function BriefTab({
       <div
         ref={briefRef}
         id="meeting-brief-print"
-        className="bg-white border border-[#E7E5E4] rounded-xl p-6 space-y-6 print:border-0 print:shadow-none print:p-0"
+        className="bg-[#141210] border border-[rgba(237,232,213,0.08)] rounded-xl p-6 space-y-6 print:border-0 print:shadow-none print:p-0 print:bg-white print:text-black"
       >
         {/* Header */}
-        <div className="space-y-1 border-b border-[#E7E5E4] pb-4">
-          <p className="text-xs text-[#A8A29E] uppercase tracking-widest">Strategic Meeting Brief</p>
-          <h3 className="text-xl font-semibold text-[#1C1917]">
+        <div className="space-y-1 border-b border-[rgba(237,232,213,0.08)] pb-4 print:border-stone-200">
+          <p className="text-xs text-[rgba(237,232,213,0.35)] uppercase tracking-widest print:text-stone-500">Strategic Meeting Brief</p>
+          <h3 className="text-xl font-semibold text-[#EDE8D5] print:text-black">
             {org.name || "Organization Name"}
           </h3>
-          <p className="text-sm text-[#78716C]">
+          <p className="text-sm text-[rgba(237,232,213,0.55)] print:text-stone-600">
             {org.cadence || "Meeting cadence not specified"}
             {org.attendeeRoles ? ` · ${org.attendeeRoles}` : ""}
           </p>
@@ -1382,18 +1383,18 @@ function BriefTab({
 
         {/* Core position */}
         <div className="space-y-2">
-          <h4 className="text-xs font-semibold text-[#1C1917] uppercase tracking-wide">The Position</h4>
-          <p className="text-sm text-[#44403C] leading-relaxed">
+          <h4 className="text-xs font-semibold text-[#EDE8D5] uppercase tracking-wide print:text-black">The Position</h4>
+          <p className="text-sm text-[rgba(237,232,213,0.55)] leading-relaxed print:text-stone-800">
             Every organization has a meeting rhythm that already works — partially. The goal here is not to replace what you have. It is to understand what it costs you, what it's missing, and what can be quietly improved without disrupting the people inside it.
           </p>
-          <p className="text-sm text-[#44403C] leading-relaxed">
+          <p className="text-sm text-[rgba(237,232,213,0.55)] leading-relaxed print:text-stone-800">
             Systems are under pressure. People are leaving. The people who depend most on this organization's services are often the least visible in the room. The pace of change must be controlled — not because change isn't needed, but because a free fall helps no one.
           </p>
         </div>
 
         {/* The approach */}
         <div className="space-y-3">
-          <h4 className="text-xs font-semibold text-[#1C1917] uppercase tracking-wide">The Approach</h4>
+          <h4 className="text-xs font-semibold text-[#EDE8D5] uppercase tracking-wide print:text-black">The Approach</h4>
           <div className="grid grid-cols-1 gap-2">
             {[
               { step: "1", label: "Meet where you are", desc: "Work inside your existing meeting structure. No new formats, no new jargon." },
@@ -1403,12 +1404,12 @@ function BriefTab({
               { step: "5", label: "Controlled pace, not free fall", desc: "You cannot demolish while a thousand people are living inside. Change at the speed the system can absorb." },
             ].map(({ step, label, desc }) => (
               <div key={step} className="flex gap-3 items-start">
-                <span className="shrink-0 w-6 h-6 rounded-full bg-[#F5F0E8] text-[#44403C] text-xs font-semibold flex items-center justify-center mt-0.5">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-[#1A1714] text-[#EDE8D5] text-xs font-semibold flex items-center justify-center mt-0.5 border border-[rgba(237,232,213,0.08)] print:bg-stone-100 print:text-stone-800 print:border-stone-200">
                   {step}
                 </span>
                 <div>
-                  <span className="text-sm font-medium text-[#1C1917]">{label} — </span>
-                  <span className="text-sm text-[#78716C]">{desc}</span>
+                  <span className="text-sm font-medium text-[#EDE8D5] print:text-black">{label} — </span>
+                  <span className="text-sm text-[rgba(237,232,213,0.55)] print:text-stone-600">{desc}</span>
                 </div>
               </div>
             ))}
@@ -1418,15 +1419,15 @@ function BriefTab({
         {/* What we're seeing */}
         {(painPointsText || highFindings.length > 0) && (
           <div className="space-y-2">
-            <h4 className="text-xs font-semibold text-[#1C1917] uppercase tracking-wide">What We're Seeing</h4>
+            <h4 className="text-xs font-semibold text-[#EDE8D5] uppercase tracking-wide print:text-black">What We're Seeing</h4>
             {painPointsText && (
-              <p className="text-sm text-[#44403C] leading-relaxed whitespace-pre-line">{painPointsText}</p>
+              <p className="text-sm text-[rgba(237,232,213,0.55)] leading-relaxed whitespace-pre-line print:text-stone-800">{painPointsText}</p>
             )}
             {highFindings.length > 0 && (
               <ul className="space-y-1">
                 {highFindings.map((f, i) => (
-                  <li key={i} className="flex gap-2 text-sm text-[#44403C]">
-                    <span className="shrink-0 text-red-500 mt-0.5">▲</span>
+                  <li key={i} className="flex gap-2 text-sm text-[rgba(237,232,213,0.55)] print:text-stone-800">
+                    <span className="shrink-0 text-[rgba(239,68,68,0.7)] mt-0.5">▲</span>
                     <span>{f.answer}</span>
                   </li>
                 ))}
@@ -1438,23 +1439,23 @@ function BriefTab({
         {/* Economic context */}
         {leverageText && (
           <div className="space-y-2">
-            <h4 className="text-xs font-semibold text-[#1C1917] uppercase tracking-wide">Economic Context</h4>
-            <p className="text-sm text-[#44403C] leading-relaxed whitespace-pre-line">{leverageText}</p>
+            <h4 className="text-xs font-semibold text-[#EDE8D5] uppercase tracking-wide print:text-black">Economic Context</h4>
+            <p className="text-sm text-[rgba(237,232,213,0.55)] leading-relaxed whitespace-pre-line print:text-stone-800">{leverageText}</p>
           </div>
         )}
 
         {/* Proposed next step */}
-        <div className="space-y-2 border-t border-[#E7E5E4] pt-4">
-          <h4 className="text-xs font-semibold text-[#1C1917] uppercase tracking-wide">Proposed Next Step</h4>
-          <p className="text-sm text-[#44403C] leading-relaxed">
+        <div className="space-y-2 border-t border-[rgba(237,232,213,0.08)] pt-4 print:border-stone-200">
+          <h4 className="text-xs font-semibold text-[#EDE8D5] uppercase tracking-wide print:text-black">Proposed Next Step</h4>
+          <p className="text-sm text-[rgba(237,232,213,0.55)] leading-relaxed print:text-stone-800">
             {overrides.customNext ||
               "One bounded, paid working session to map the current system and identify the first quiet improvement."}
           </p>
         </div>
 
         {/* Footer */}
-        <div className="border-t border-[#E7E5E4] pt-4">
-          <p className="text-xs text-[#A8A29E] text-center">
+        <div className="border-t border-[rgba(237,232,213,0.08)] pt-4 print:border-stone-200">
+          <p className="text-xs text-[rgba(237,232,213,0.35)] text-center print:text-stone-500">
             This document is a discussion piece, not a proposal. It does not represent a commitment or a contract.
           </p>
         </div>
@@ -1571,12 +1572,12 @@ export function MeetingKitPage() {
         }
       `}</style>
 
-      <div className="min-h-dvh bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] pb-28">
+      <div className="min-h-dvh bg-[#0B0905] pb-28">
         <div className="px-4 pt-5 pb-2 max-w-lg mx-auto">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-xl font-semibold text-[#1C1917]">Meeting Kit</h1>
-              <p className="text-sm text-[#78716C] mt-0.5 leading-snug">
+              <h1 className="text-xl font-semibold text-[#EDE8D5]">Meeting Kit</h1>
+              <p className="text-sm text-[rgba(237,232,213,0.55)] mt-0.5 leading-snug">
                 Enter organizations mid-stream. Map the rhythm before you change it.
               </p>
             </div>
@@ -1595,18 +1596,18 @@ export function MeetingKitPage() {
 
         {!activeOrg ? (
           <div className="max-w-lg mx-auto px-4 mt-12 text-center space-y-4">
-            <div className="w-12 h-12 rounded-full bg-[#F5F0E8] flex items-center justify-center mx-auto">
-              <Plus size={22} className="text-[#A8A29E]" />
+            <div className="w-12 h-12 rounded-full bg-[#1A1714] flex items-center justify-center mx-auto">
+              <Plus size={22} className="text-[rgba(237,232,213,0.35)]" />
             </div>
             <div>
-              <p className="text-base font-medium text-[#1C1917]">No organization yet</p>
-              <p className="text-sm text-[#78716C] mt-1">
+              <p className="text-base font-medium text-[#EDE8D5]">No organization yet</p>
+              <p className="text-sm text-[rgba(237,232,213,0.55)] mt-1">
                 Add an org to start mapping their meeting rhythm.
               </p>
             </div>
             <button
               onClick={createOrg}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1C1917] text-white rounded-xl text-sm hover:bg-[#292524] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#C8923A] text-[#0B0905] rounded-xl text-sm hover:bg-[#F0B855] transition-colors font-medium"
             >
               <Plus size={15} />
               Add first organization
@@ -1615,7 +1616,7 @@ export function MeetingKitPage() {
         ) : (
           <>
             {/* Tab bar */}
-            <div className="sticky top-0 z-20 bg-[#FAFAF9]/95 backdrop-blur-sm border-b border-[#E7E5E4]">
+            <div className="sticky top-0 z-20 bg-[#0B0905]/95 backdrop-blur-sm border-b border-[rgba(237,232,213,0.08)]">
               <div className="max-w-lg mx-auto px-4 flex items-center gap-0 overflow-x-auto">
                 {TABS.map(({ id, label }) => (
                   <button
@@ -1624,8 +1625,8 @@ export function MeetingKitPage() {
                     className={cn(
                       "shrink-0 px-4 py-3 text-sm border-b-2 transition-all",
                       tab === id
-                        ? "border-[#1C1917] text-[#1C1917] font-semibold"
-                        : "border-transparent text-[#78716C] hover:text-[#44403C]"
+                        ? "border-[#C8923A] text-[#EDE8D5] font-semibold"
+                        : "border-transparent text-[rgba(237,232,213,0.45)] hover:text-[rgba(237,232,213,0.7)]"
                     )}
                   >
                     {label}

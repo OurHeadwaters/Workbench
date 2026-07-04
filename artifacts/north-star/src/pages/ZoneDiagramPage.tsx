@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BG, SURFACE, SURFACE_2, BORDER, TEXT, TEXT_2, TEXT_3, AMBER, FONT_DISPLAY } from "@/lib/theme";
 
 type ZoneKey = "Z3" | "Z2" | "Z1" | "gate-z1z2" | "gate-z2z3" | "prohibition";
 
@@ -116,38 +117,42 @@ export function ZoneDiagramPage() {
   return (
     <div
       className="min-h-dvh pb-28"
-      style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}
+      style={{ backgroundColor: BG }}
     >
       <div className="px-4 py-6 max-w-lg mx-auto space-y-5">
         <div>
-          <h1 className="text-2xl font-semibold text-[#1C1917] mb-1">Zone Diagram</h1>
-          <p className="text-sm text-[#78716C]">
+          <h1 className="text-2xl font-serif mb-1" style={{ color: TEXT }}>Zone Diagram</h1>
+          <p className="text-sm" style={{ color: TEXT_2 }}>
             Tap or hover a zone, gate, or the prohibition marker to explore the model.
           </p>
         </div>
 
         {/* Watershed context note */}
-        <div className="rounded-xl border border-[#4F6E5C]/25 bg-[#4F6E5C]/06 px-4 py-3 flex items-start gap-3">
-          <div className="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full bg-[#4F6E5C] opacity-60" />
+        <div 
+          className="rounded-xl px-4 py-3 flex items-start gap-3"
+          style={{ border: `1px solid ${BORDER}`, backgroundColor: SURFACE }}
+        >
+          <div className="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#4F6E5C" }} />
           <div className="min-w-0">
-            <p className="text-xs font-mono font-semibold uppercase tracking-widest text-[#4F6E5C] mb-1">
+            <p className="text-xs font-mono font-semibold uppercase tracking-widest mb-1" style={{ color: "#4F6E5C" }}>
               Full Headwaters Watershed
             </p>
-            <p className="text-xs text-[#78716C] leading-relaxed">
+            <p className="text-xs leading-relaxed" style={{ color: TEXT_2 }}>
               This diagram shows the Z1–Z3 privacy model — the core that North Star is built on. In the full 0–5 watershed, these are the inner zones: Lodge (Z1) → Bench (Z2) → Standby (Z3). The outer zones — Saltbox (Z0), The Clearing (Z4), and The Wild (Z5) — live in the neighbourhood map.
             </p>
             <a
               href="/map"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 mt-2 text-[10px] font-mono font-semibold uppercase tracking-wider text-[#4F6E5C] hover:opacity-75 transition-opacity"
+              className="inline-flex items-center gap-1 mt-2 text-[10px] font-mono font-semibold uppercase tracking-wider hover:opacity-75 transition-opacity"
+              style={{ color: "#4F6E5C" }}
             >
               See the full map →
             </a>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm overflow-hidden">
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
           <svg
             viewBox="0 0 480 400"
             width="100%"
@@ -164,8 +169,8 @@ export function ZoneDiagramPage() {
             <g {...hoverProps("Z3")}>
               <rect
                 x="20" y="20" width="440" height="320" rx="28"
-                fill={isHighlighted("Z3") ? "#EDE9FE" : "#F5F0FA"}
-                stroke={isHighlighted("Z3") ? "#7C4E8A" : "#C4B5CD"}
+                fill={isHighlighted("Z3") ? "#7C4E8A20" : "#7C4E8A08"}
+                stroke={isHighlighted("Z3") ? "#7C4E8A" : "#7C4E8A66"}
                 strokeWidth={isHighlighted("Z3") ? 2.5 : 1.5}
                 style={{ transition: "all 0.15s" }}
               />
@@ -181,8 +186,8 @@ export function ZoneDiagramPage() {
             <g {...hoverProps("Z2")}>
               <rect
                 x="80" y="95" width="320" height="220" rx="20"
-                fill={isHighlighted("Z2") ? "#DBEAFE" : "#EEF4FF"}
-                stroke={isHighlighted("Z2") ? "#3B5998" : "#9FB4D8"}
+                fill={isHighlighted("Z2") ? "#3B599820" : "#3B599808"}
+                stroke={isHighlighted("Z2") ? "#3B5998" : "#3B599866"}
                 strokeWidth={isHighlighted("Z2") ? 2.5 : 1.5}
               />
               <text x="240" y="120" textAnchor="middle" fontSize="12.5" fontWeight="600" fill="#3B5998" opacity="0.85">
@@ -197,8 +202,8 @@ export function ZoneDiagramPage() {
             <g {...hoverProps("Z1")}>
               <rect
                 x="152" y="160" width="176" height="132" rx="16"
-                fill={isHighlighted("Z1") ? "#D1FAE5" : "#E8F5EE"}
-                stroke={isHighlighted("Z1") ? "#4F6E5C" : "#8AB09A"}
+                fill={isHighlighted("Z1") ? "#4F6E5C20" : "#4F6E5C08"}
+                stroke={isHighlighted("Z1") ? "#4F6E5C" : "#4F6E5C66"}
                 strokeWidth={isHighlighted("Z1") ? 2.5 : 1.5}
               />
               <text x="240" y="218" textAnchor="middle" fontSize="12.5" fontWeight="600" fill="#4F6E5C" opacity="0.9">
@@ -216,10 +221,10 @@ export function ZoneDiagramPage() {
             <g {...hoverProps("gate-z1z2")}>
               <rect
                 x="190" y="150" width="100" height="26" rx="13"
-                fill={isHighlighted("gate-z1z2") ? "#4F6E5C" : "#6D9E85"}
+                fill={isHighlighted("gate-z1z2") ? "#4F6E5C" : "#4F6E5Ccc"}
                 opacity={isHighlighted("gate-z1z2") ? 1 : 0.82}
               />
-              <text x="240" y="167" textAnchor="middle" fontSize="10" fontWeight="700" fill="white" letterSpacing="0.3">
+              <text x="240" y="167" textAnchor="middle" fontSize="10" fontWeight="700" fill={TEXT} letterSpacing="0.3">
                 Z1–Z2 Gate
               </text>
             </g>
@@ -228,10 +233,10 @@ export function ZoneDiagramPage() {
             <g {...hoverProps("gate-z2z3")}>
               <rect
                 x="190" y="82" width="100" height="26" rx="13"
-                fill={isHighlighted("gate-z2z3") ? "#3B5998" : "#5E7EC8"}
+                fill={isHighlighted("gate-z2z3") ? "#3B5998" : "#3B5998cc"}
                 opacity={isHighlighted("gate-z2z3") ? 1 : 0.82}
               />
-              <text x="240" y="99" textAnchor="middle" fontSize="10" fontWeight="700" fill="white" letterSpacing="0.3">
+              <text x="240" y="99" textAnchor="middle" fontSize="10" fontWeight="700" fill={TEXT} letterSpacing="0.3">
                 Z2–Z3 Gate
               </text>
             </g>
@@ -241,8 +246,8 @@ export function ZoneDiagramPage() {
               {/* Background pill */}
               <rect
                 x="52" y="350" width="376" height="34" rx="17"
-                fill={isHighlighted("prohibition") ? "#FEF3C7" : "#FFF7ED"}
-                stroke={isHighlighted("prohibition") ? "#B45309" : "#E0B882"}
+                fill={isHighlighted("prohibition") ? "#B4530920" : "#B4530908"}
+                stroke={isHighlighted("prohibition") ? "#B45309" : "#B4530966"}
                 strokeWidth={isHighlighted("prohibition") ? 2 : 1.5}
                 strokeDasharray="5 3"
               />
@@ -274,8 +279,8 @@ export function ZoneDiagramPage() {
           <div
             className="rounded-2xl border p-4 space-y-2 transition-all duration-200"
             style={{
-              background: ZONE_BG[item.id] ?? "#F5F0E8",
-              borderColor: ZONE_FILL[item.id] ?? "#D6D0C7",
+              background: SURFACE,
+              borderColor: ZONE_FILL[item.id] ?? BORDER,
             }}
           >
             <div className="flex items-start justify-between gap-2">
@@ -286,47 +291,51 @@ export function ZoneDiagramPage() {
                 >
                   {item.label}
                 </p>
-                <p className="text-xs text-[#78716C]">{item.sublabel}</p>
+                <p className="text-xs" style={{ color: TEXT_3 }}>{item.sublabel}</p>
               </div>
               {pinned === item.id && (
                 <button
                   onClick={() => setPinned(null)}
-                  className="shrink-0 text-xs text-[#78716C] hover:text-[#1C1917] border border-[#D6D0C7] rounded-lg px-2 py-1 bg-white/70"
+                  className="shrink-0 text-xs border rounded-lg px-2 py-1 transition-colors"
+                  style={{ backgroundColor: SURFACE_2, borderColor: BORDER, color: TEXT_2 }}
                 >
                   Close
                 </button>
               )}
             </div>
-            <p className="text-sm text-[#1C1917] leading-relaxed">{item.description}</p>
-            <p className="text-xs text-[#78716C] leading-relaxed border-t border-black/10 pt-2">
+            <p className="text-sm leading-relaxed" style={{ color: TEXT }}>{item.description}</p>
+            <p className="text-xs leading-relaxed border-t pt-2" style={{ color: TEXT_2, borderTopColor: BORDER }}>
               {item.detail}
             </p>
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-[#D6D0C7] p-4 text-center text-sm text-[#B5AFA9]">
+          <div 
+            className="rounded-2xl border border-dashed p-4 text-center text-sm"
+            style={{ borderColor: BORDER, color: TEXT_3 }}
+          >
             Tap a zone, gate, or the prohibition bar to read its description.
           </div>
         )}
 
         {/* ── Legend ── */}
         <div className="space-y-2">
-          <p className="text-xs font-medium text-[#78716C] uppercase tracking-wide">Legend</p>
+          <p className="text-xs font-medium uppercase tracking-wide" style={{ color: TEXT_3 }}>Legend</p>
           <div className="grid grid-cols-2 gap-2">
             {[
-              { color: "#7C4E8A", bg: "#F5F0FA", label: "Z3 Community", sub: "Outermost — public" },
-              { color: "#3B5998", bg: "#EEF4FF", label: "Z2 Workbench", sub: "Middle — operational" },
-              { color: "#4F6E5C", bg: "#E8F5EE", label: "Z1 Circle", sub: "Innermost — private" },
-              { color: "#B45309", bg: "#FFF7ED", label: "Z1↔Z3 Prohibition", sub: "No path exists" },
-            ].map(({ color, bg, label, sub }) => (
+              { color: "#7C4E8A", label: "Z3 Community", sub: "Outermost — public" },
+              { color: "#3B5998", label: "Z2 Workbench", sub: "Middle — operational" },
+              { color: "#4F6E5C", label: "Z1 Circle", sub: "Innermost — private" },
+              { color: "#B45309", label: "Z1↔Z3 Prohibition", sub: "No path exists" },
+            ].map(({ color, label, sub }) => (
               <div
                 key={label}
                 className="flex items-center gap-2 rounded-xl border px-3 py-2"
-                style={{ background: bg, borderColor: color + "44" }}
+                style={{ background: SURFACE, borderColor: color + "44" }}
               >
                 <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: color }} />
                 <div>
                   <p className="text-xs font-medium" style={{ color }}>{label}</p>
-                  <p className="text-[10px] text-[#78716C]">{sub}</p>
+                  <p className="text-[10px]" style={{ color: TEXT_3 }}>{sub}</p>
                 </div>
               </div>
             ))}

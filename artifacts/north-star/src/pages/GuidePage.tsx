@@ -4,6 +4,7 @@ import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 import { MoneyMachineDiagram } from "@/components/MoneyMachineDiagram";
 import { StompingPathCTA } from "@/components/StompingPathCTA";
+import { BG, SURFACE, SURFACE_2, BORDER, TEXT, TEXT_2, TEXT_3, AMBER, FONT_DISPLAY } from "@/lib/theme";
 
 interface FoundationalDoc {
   id: string;
@@ -178,35 +179,49 @@ function FoundationalDocCard({ doc }: { doc: FoundationalDoc }) {
   const [openPoint, setOpenPoint] = useState<number | null>(null);
 
   return (
-    <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+    <div 
+      className="rounded-xl overflow-hidden"
+      style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
+    >
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-4 py-4 min-h-[56px] text-left"
       >
         <div>
-          <p className="text-sm font-medium">{doc.title}</p>
-          <p className="text-xs text-[#78716C]">{doc.subtitle}{doc.version ? ` · ${doc.version}` : ""}</p>
+          <p className="text-sm font-medium" style={{ color: TEXT }}>{doc.title}</p>
+          <p className="text-xs" style={{ color: TEXT_2 }}>{doc.subtitle}{doc.version ? ` · ${doc.version}` : ""}</p>
         </div>
-        {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        {open ? <ChevronUp size={16} style={{ color: TEXT_2 }} /> : <ChevronDown size={16} style={{ color: TEXT_2 }} />}
       </button>
 
       {open && (
-        <div className="border-t border-[#E7E5E4] px-4 pt-3 pb-4 space-y-3">
-          <p className="text-sm text-[#44403C] leading-relaxed">{doc.description}</p>
+        <div className="px-4 pt-3 pb-4 space-y-3" style={{ borderTop: `1px solid ${BORDER}` }}>
+          <p className="text-sm leading-relaxed" style={{ color: TEXT_2 }}>{doc.description}</p>
 
           {doc.keyPoints.length > 0 && (
             <div className="space-y-1">
               {doc.keyPoints.map((point, i) => (
-                <div key={i} className="rounded-lg border border-[#E7E5E4] overflow-hidden">
+                <div 
+                  key={i} 
+                  className="rounded-lg overflow-hidden"
+                  style={{ border: `1px solid ${BORDER}` }}
+                >
                   <button
                     onClick={() => setOpenPoint(openPoint === i ? null : i)}
                     className="w-full flex items-center justify-between px-3 py-2.5 min-h-[44px] text-left"
                   >
-                    <span className="text-xs font-medium text-[#44403C]">{point.label}</span>
-                    {openPoint === i ? <ChevronUp size={13} className="text-[#78716C]" /> : <ChevronDown size={13} className="text-[#78716C]" />}
+                    <span className="text-xs font-medium" style={{ color: TEXT_2 }}>{point.label}</span>
+                    {openPoint === i ? (
+                      <ChevronUp size={13} style={{ color: TEXT_3 }} />
+                    ) : (
+                      <ChevronDown size={13} style={{ color: TEXT_3 }} />
+                    )}
                   </button>
                   {openPoint === i && (
-                    <div className="px-3 pb-3 text-xs text-[#78716C] leading-relaxed border-t border-[#E7E5E4] pt-2">
+                    <div 
+                      className="px-3 pb-3 text-xs leading-relaxed pt-2"
+                      style={{ color: TEXT_3, borderTop: `1px solid ${BORDER}` }}
+                    >
                       {point.detail}
                     </div>
                   )}
@@ -216,7 +231,10 @@ function FoundationalDocCard({ doc }: { doc: FoundationalDoc }) {
           )}
 
           {doc.closingRule && (
-            <p className="text-xs text-[#8C7B6D] italic border-t border-[#E7E5E4] pt-3 leading-relaxed">
+            <p 
+              className="text-xs italic pt-3 leading-relaxed"
+              style={{ color: TEXT_3, borderTop: `1px solid ${BORDER}` }}
+            >
               {doc.closingRule}
             </p>
           )}
@@ -398,16 +416,19 @@ function ChapterCard({ chapter }: { chapter: Chapter }) {
   const lastSection = guideState.lastSectionByChapter[chapter.id];
 
   return (
-    <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+    <div 
+      className="rounded-xl overflow-hidden"
+      style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
+    >
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-4 py-4 min-h-[56px] text-left"
       >
         <div className="flex items-center gap-3">
           <div>
-            <p className="text-sm font-medium">{chapter.title}</p>
+            <p className="text-sm font-medium" style={{ color: TEXT }}>{chapter.title}</p>
             {lastSection && (
-              <p className="text-xs text-[#78716C]">
+              <p className="text-xs" style={{ color: TEXT_2 }}>
                 Last read: {chapter.sections.find((s) => s.id === lastSection)?.title}
               </p>
             )}
@@ -421,14 +442,14 @@ function ChapterCard({ chapter }: { chapter: Chapter }) {
             }}
             className="p-1.5 min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
-            {isBookmarked ? <BookmarkCheck size={16} className="text-[#4F6E5C]" /> : <Bookmark size={16} className="text-[#78716C]" />}
+            {isBookmarked ? <BookmarkCheck size={16} style={{ color: "#4ADE80" }} /> : <Bookmark size={16} style={{ color: TEXT_3 }} />}
           </button>
-          {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          {open ? <ChevronUp size={16} style={{ color: TEXT_3 }} /> : <ChevronDown size={16} style={{ color: TEXT_3 }} />}
         </div>
       </button>
 
       {open && (
-        <div className="border-t border-[#E7E5E4] divide-y divide-[#E7E5E4]">
+        <div className="divide-y" style={{ borderTop: `1px solid ${BORDER}`, borderColor: BORDER }}>
           {chapter.sections.map((s) => (
             <div key={s.id}>
               <button
@@ -438,13 +459,25 @@ function ChapterCard({ chapter }: { chapter: Chapter }) {
                 }}
                 className="w-full flex items-center justify-between px-4 py-3 min-h-[44px] text-left"
               >
-                <span className={cn("text-sm", lastSection === s.id ? "font-medium" : "")}>{s.title}</span>
-                {openSection === s.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                <span 
+                  className={cn("text-sm", lastSection === s.id ? "font-medium" : "")}
+                  style={{ color: lastSection === s.id ? AMBER : TEXT_2 }}
+                >
+                  {s.title}
+                </span>
+                {openSection === s.id ? (
+                  <ChevronUp size={14} style={{ color: TEXT_3 }} />
+                ) : (
+                  <ChevronDown size={14} style={{ color: TEXT_3 }} />
+                )}
               </button>
               {openSection === s.id && (
-                <div className="px-4 pb-4 text-sm text-[#44403C] leading-relaxed whitespace-pre-line">
+                <div 
+                  className="px-4 pb-4 text-sm leading-relaxed whitespace-pre-line"
+                  style={{ color: TEXT_2 }}
+                >
                   {s.content.split(/\*\*(.+?)\*\*/g).map((part, i) =>
-                    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+                    i % 2 === 1 ? <strong key={i} style={{ color: TEXT }}>{part}</strong> : part
                   )}
                 </div>
               )}
@@ -459,18 +492,21 @@ function ChapterCard({ chapter }: { chapter: Chapter }) {
 function MoneyMachineDiagramToggle() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+    <div 
+      className="rounded-xl overflow-hidden"
+      style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
+    >
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-4 py-3 min-h-[48px] text-left"
       >
-        <span className="text-sm text-[#44403C]">
+        <span className="text-sm" style={{ color: TEXT_2 }}>
           {open ? "Hide diagram" : "See how it works — the plumbing diagram"}
         </span>
-        {open ? <ChevronUp size={15} className="text-[#78716C]" /> : <ChevronDown size={15} className="text-[#78716C]" />}
+        {open ? <ChevronUp size={15} style={{ color: TEXT_3 }} /> : <ChevronDown size={15} style={{ color: TEXT_3 }} />}
       </button>
       {open && (
-        <div className="border-t border-[#E7E5E4] px-3 pt-3 pb-4">
+        <div className="px-3 pt-3 pb-4" style={{ borderTop: `1px solid ${BORDER}` }}>
           <MoneyMachineDiagram />
         </div>
       )}
@@ -482,65 +518,71 @@ export function GuidePage() {
   const statement = useStore((s) => s.statement);
 
   return (
-    <div className="min-h-dvh bg-[#FAFAF9] pb-24">
+    <div className="min-h-dvh pb-24" style={{ backgroundColor: BG }}>
       <div className="px-5 py-6 max-w-lg mx-auto space-y-5">
         <div>
-          <h1 className="text-2xl mb-1">Guide</h1>
-          <p className="text-sm text-[#78716C]">The Codetry zone model — what it is and how to use it.</p>
+          <h1 className="text-2xl mb-1 font-serif" style={{ color: TEXT }}>Guide</h1>
+          <p className="text-sm" style={{ color: TEXT_2 }}>The Codetry zone model — what it is and how to use it.</p>
         </div>
 
         {statement && (
-          <div className="bg-[#F5F5F0] rounded-xl p-4 space-y-1">
-            <p className="text-xs text-[#78716C] uppercase tracking-wider mb-2">Your north star</p>
-            {statement.who && <p className="text-sm text-[#44403C]"><span className="font-medium">For</span> {statement.who}</p>}
-            {statement.why && <p className="text-sm text-[#44403C]"><span className="font-medium">So that</span> {statement.why}</p>}
-            {statement.noFly && <p className="text-sm text-[#78716C] italic"><span className="font-medium not-italic">No-fly:</span> {statement.noFly}</p>}
+          <div 
+            className="rounded-xl p-4 space-y-1"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
+          >
+            <p className="text-xs uppercase tracking-wider mb-2" style={{ color: TEXT_3 }}>Your north star</p>
+            {statement.who && <p className="text-sm" style={{ color: TEXT }}><span className="font-medium" style={{ color: AMBER }}>For</span> {statement.who}</p>}
+            {statement.why && <p className="text-sm" style={{ color: TEXT }}><span className="font-medium" style={{ color: AMBER }}>So that</span> {statement.why}</p>}
+            {statement.noFly && <p className="text-sm italic" style={{ color: TEXT_2 }}><span className="font-medium not-italic" style={{ color: AMBER }}>No-fly:</span> {statement.noFly}</p>}
           </div>
         )}
 
         <div className="space-y-2">
-          <p className="text-xs text-[#78716C] uppercase tracking-wider font-medium px-1">Practitioner Tools</p>
+          <p className="text-xs uppercase tracking-wider font-medium px-1" style={{ color: TEXT_3 }}>Practitioner Tools</p>
           <a
             href="/codetry-handbook/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between bg-white rounded-xl border border-[#E7E5E4] px-4 py-3 min-h-[56px]"
+            className="flex items-center justify-between rounded-xl px-4 py-3 min-h-[56px] transition-colors"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
           >
             <div>
-              <p className="text-sm font-medium">Codetry Handbook</p>
-              <p className="text-xs text-[#78716C]">How a community runs its own economy</p>
+              <p className="text-sm font-medium" style={{ color: TEXT }}>Codetry Handbook</p>
+              <p className="text-xs" style={{ color: TEXT_2 }}>How a community runs its own economy</p>
             </div>
-            <ExternalLink size={16} className="text-[#78716C]" />
+            <ExternalLink size={16} style={{ color: TEXT_3 }} />
           </a>
           <a
             href="https://stomping-path-documentation.replit.app/goodbye/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between bg-white rounded-xl border border-[#E7E5E4] px-4 py-3 min-h-[56px]"
+            className="flex items-center justify-between rounded-xl px-4 py-3 min-h-[56px] transition-colors"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
           >
             <div>
-              <p className="text-sm font-medium">The Goodbye Kit</p>
-              <p className="text-xs text-[#78716C]">For practitioners navigating exits — the language and moves for leaving well</p>
+              <p className="text-sm font-medium" style={{ color: TEXT }}>The Goodbye Kit</p>
+              <p className="text-xs" style={{ color: TEXT_2 }}>For practitioners navigating exits — the language and moves for leaving well</p>
             </div>
-            <ExternalLink size={16} className="text-[#78716C]" />
+            <ExternalLink size={16} style={{ color: TEXT_3 }} />
           </a>
           <a
             href="https://stomping-path-documentation.replit.app/logic/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between bg-white rounded-xl border border-[#E7E5E4] px-4 py-3 min-h-[56px]"
+            className="flex items-center justify-between rounded-xl px-4 py-3 min-h-[56px] transition-colors"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
           >
             <div>
-              <p className="text-sm font-medium">The Logic</p>
-              <p className="text-xs text-[#78716C]">A structural reference for naming what's happening in hard conversations</p>
+              <p className="text-sm font-medium" style={{ color: TEXT }}>The Logic</p>
+              <p className="text-xs" style={{ color: TEXT_2 }}>A structural reference for naming what's happening in hard conversations</p>
             </div>
-            <ExternalLink size={16} className="text-[#78716C]" />
+            <ExternalLink size={16} style={{ color: TEXT_3 }} />
           </a>
         </div>
 
         <div className="space-y-3">
           <div>
-            <p className="text-xs text-[#78716C] uppercase tracking-wider font-medium mb-2 px-1">
+            <p className="text-xs uppercase tracking-wider font-medium mb-2 px-1" style={{ color: TEXT_3 }}>
               Foundational Architecture
             </p>
             <div className="space-y-2">
@@ -550,7 +592,7 @@ export function GuidePage() {
                   {doc.id === "money-machine" && <MoneyMachineDiagramToggle />}
                   {doc.id === "stomping-path" && (
                     <div className="space-y-1">
-                      <p className="text-xs text-[#78716C] px-1 pt-1">
+                      <p className="text-xs px-1 pt-1" style={{ color: TEXT_2 }}>
                         Know which stage you're at? Tell us — there's a next step waiting.
                       </p>
                       <StompingPathCTA />
@@ -562,7 +604,7 @@ export function GuidePage() {
           </div>
 
           <div>
-            <p className="text-xs text-[#78716C] uppercase tracking-wider font-medium mb-2 px-1">
+            <p className="text-xs uppercase tracking-wider font-medium mb-2 px-1" style={{ color: TEXT_3 }}>
               Zone Model & Practice
             </p>
             <div className="space-y-3">

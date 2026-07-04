@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "wouter";
+import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, AMBER_LIGHT, AMBER_WASH, GREEN, RED, FONT_DISPLAY } from "@/lib/theme";
 
 interface DeliveryFailure {
   id: string;
@@ -173,16 +174,17 @@ export function KitFailuresPage() {
 
   if (!isOwner) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: BG }}>
         <div className="max-w-sm w-full text-center">
           <p className="text-4xl mb-4">🔒</p>
-          <h1 className="text-xl font-semibold text-stone-800 mb-2">Founder access required</h1>
-          <p className="text-stone-500 text-sm mb-6">
+          <h1 className="text-xl font-semibold mb-2" style={{ color: TEXT }}>Founder access required</h1>
+          <p className="text-sm mb-6" style={{ color: TEXT_2 }}>
             Set your owner token in Settings to view delivery failures.
           </p>
           <Link
             href="/settings"
-            className="inline-block bg-stone-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-stone-700 transition-colors"
+            className="inline-block text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+            style={{ backgroundColor: AMBER }}
           >
             Go to Settings →
           </Link>
@@ -194,21 +196,22 @@ export function KitFailuresPage() {
   const totalOpen = failures.length + attempts.length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] px-4 py-8">
+    <div className="min-h-screen px-4 py-8" style={{ backgroundColor: BG }}>
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-stone-800 mb-1">Delivery Failures</h1>
-            <p className="text-stone-500 text-sm">
+            <h1 className="text-3xl font-bold mb-1" style={{ color: TEXT, fontFamily: FONT_DISPLAY }}>Delivery Failures</h1>
+            <p className="text-sm" style={{ color: TEXT_2 }}>
               Resend a kit or mark a buyer sorted — no terminal needed.
             </p>
           </div>
           <button
             onClick={() => void fetchAll()}
             disabled={loading}
-            className="shrink-0 bg-white border border-stone-200 text-stone-600 text-xs font-medium px-3 py-2 rounded-xl hover:bg-stone-50 transition-colors disabled:opacity-50"
+            className="shrink-0 border text-xs font-medium px-3 py-2 rounded-xl transition-colors disabled:opacity-50"
+            style={{ backgroundColor: SURFACE_2, borderColor: BORDER, color: TEXT_2 }}
           >
             {loading ? "Loading…" : "Refresh"}
           </button>
@@ -216,7 +219,7 @@ export function KitFailuresPage() {
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm mb-6">
+          <div className="border rounded-xl p-4 text-sm mb-6" style={{ backgroundColor: RED, color: "#FFF", borderColor: BORDER_STRONG }}>
             {error}
           </div>
         )}
@@ -225,8 +228,8 @@ export function KitFailuresPage() {
         {!loading && !error && totalOpen === 0 && (
           <div className="text-center py-20">
             <p className="text-4xl mb-4">✅</p>
-            <p className="font-medium text-stone-500">No open issues</p>
-            <p className="mt-1 text-stone-400 text-sm">
+            <p className="font-medium" style={{ color: TEXT_2 }}>No open issues</p>
+            <p className="mt-1 text-sm" style={{ color: TEXT_3 }}>
               All kit deliveries and webhook retries are accounted for.
             </p>
           </div>
@@ -236,12 +239,12 @@ export function KitFailuresPage() {
         {!loading && (failures.length > 0 || attempts.length > 0) && (
           <div className="flex flex-wrap gap-3 mb-6 text-xs font-medium">
             {failures.length > 0 && (
-              <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+              <span className="px-3 py-1 rounded-full" style={{ backgroundColor: RED, color: "#FFF" }}>
                 {failures.length} unresolved {failures.length === 1 ? "failure" : "failures"}
               </span>
             )}
             {attempts.length > 0 && (
-              <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full">
+              <span className="px-3 py-1 rounded-full" style={{ backgroundColor: AMBER_WASH, color: AMBER }}>
                 {attempts.length} uncommitted {attempts.length === 1 ? "delivery" : "deliveries"}
               </span>
             )}
@@ -267,10 +270,10 @@ export function KitFailuresPage() {
         {/* ── Section 2: Uncommitted Deliveries ────────────────────────────────────── */}
         {attempts.length > 0 && (
           <section className="mb-8">
-            <h2 className="text-sm font-semibold text-amber-700 uppercase tracking-wide mb-1">
+            <h2 className="text-sm font-semibold uppercase tracking-wide mb-1" style={{ color: AMBER }}>
               Uncommitted Deliveries
             </h2>
-            <p className="text-xs text-stone-400 mb-4">
+            <p className="text-xs mb-4" style={{ color: TEXT_3 }}>
               Stripe sent a webhook for these purchases but the access token was never committed — the buyer paid but has no access link. Once you&apos;ve confirmed the buyer has been sorted, mark them cleared here.
             </p>
 
@@ -289,8 +292,8 @@ export function KitFailuresPage() {
         )}
 
         {/* Back link */}
-        <div className="mt-12 pt-8 border-t border-stone-200">
-          <Link href="/kits/purchases" className="text-stone-400 hover:text-stone-600 text-sm transition-colors">
+        <div className="mt-12 pt-8 border-t" style={{ borderColor: BORDER }}>
+          <Link href="/kits/purchases" className="text-sm transition-colors" style={{ color: TEXT_3 }}>
             ← Back to Purchases
           </Link>
         </div>
@@ -315,48 +318,50 @@ function FailureRow({ f, actioningId, actionMsg, onRetrigger, onResolve }: Failu
   const succeeded = msg?.includes("✓");
 
   return (
-    <div className="bg-white border border-red-200 rounded-2xl p-4 shadow-sm">
+    <div className="border rounded-2xl p-4 shadow-sm" style={{ backgroundColor: SURFACE, borderColor: RED }}>
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-stone-800 truncate">{f.buyerEmail}</p>
-          <p className="text-xs text-stone-400 mt-0.5">
-            Kit: <span className="text-stone-600 font-medium">{f.kitId}</span>
+          <p className="text-sm font-semibold truncate" style={{ color: TEXT }}>{f.buyerEmail}</p>
+          <p className="text-xs mt-0.5" style={{ color: TEXT_3 }}>
+            Kit: <span className="font-medium" style={{ color: TEXT_2 }}>{f.kitId}</span>
             {" · "}
-            <span className="text-stone-400">{formatDate(f.createdAt)}</span>
+            <span style={{ color: TEXT_3 }}>{formatDate(f.createdAt)}</span>
           </p>
         </div>
-        <span className="shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-100 text-red-700">
+        <span className="shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full" style={{ backgroundColor: RED, color: "#FFF" }}>
           Failed
         </span>
       </div>
 
       {f.error && (
-        <div className="bg-red-50 border border-red-100 rounded-lg px-3 py-2 mb-3">
-          <p className="text-xs text-red-700 font-mono break-all line-clamp-3">{f.error}</p>
+        <div className="border rounded-lg px-3 py-2 mb-3" style={{ backgroundColor: SURFACE_2, borderColor: BORDER }}>
+          <p className="text-xs font-mono break-all line-clamp-3" style={{ color: RED }}>{f.error}</p>
         </div>
       )}
 
-      <p className="text-xs text-stone-400 mb-3">
-        Purchase ID: <span className="font-mono text-stone-500">{f.purchaseId}</span>
+      <p className="text-xs mb-3" style={{ color: TEXT_3 }}>
+        Purchase ID: <span className="font-mono" style={{ color: TEXT_2 }}>{f.purchaseId}</span>
       </p>
 
       <div className="flex items-center gap-2 flex-wrap">
         <button
           onClick={() => void onRetrigger(f)}
           disabled={isActioning}
-          className="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+          className="text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+          style={{ backgroundColor: RED }}
         >
           {isActioning ? "Working…" : "Resend delivery email"}
         </button>
         <button
           onClick={() => void onResolve(f)}
           disabled={isActioning}
-          className="bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+          className="text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+          style={{ backgroundColor: SURFACE_2, color: TEXT_2 }}
         >
           Mark resolved
         </button>
         {msg && (
-          <span className={`text-xs font-medium ${succeeded ? "text-emerald-600" : "text-stone-400"}`}>
+          <span className={`text-xs font-medium ${succeeded ? "text-emerald-400" : "text-stone-400"}`}>
             {msg}
           </span>
         )}
@@ -379,37 +384,38 @@ function AttemptRow({ a, actioningId, actionMsg, onResolve }: AttemptRowProps) {
   const msg = actionMsg[a.eventId];
 
   return (
-    <div className="bg-white border border-amber-200 rounded-2xl p-4 shadow-sm">
+    <div className="border rounded-2xl p-4 shadow-sm" style={{ backgroundColor: SURFACE, borderColor: AMBER }}>
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-stone-800 truncate">{a.buyerEmail}</p>
-          <p className="text-xs text-stone-400 mt-0.5">
-            Kit: <span className="text-stone-600 font-medium">{a.kitId}</span>
+          <p className="text-sm font-semibold truncate" style={{ color: TEXT }}>{a.buyerEmail}</p>
+          <p className="text-xs mt-0.5" style={{ color: TEXT_3 }}>
+            Kit: <span className="font-medium" style={{ color: TEXT_2 }}>{a.kitId}</span>
             {" · "}
-            Last attempt: <span className="text-stone-500">{formatDate(a.lastAttemptAt)}</span>
+            Last attempt: <span style={{ color: TEXT_3 }}>{formatDate(a.lastAttemptAt)}</span>
           </p>
         </div>
-        <span className="shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-700">
+        <span className="shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full" style={{ backgroundColor: AMBER_WASH, color: AMBER }}>
           {a.attemptCount} {a.attemptCount === 1 ? "attempt" : "attempts"}
         </span>
       </div>
 
-      <p className="text-xs text-stone-400 mb-3">
-        Event: <span className="font-mono text-stone-500 break-all">{a.eventId}</span>
+      <p className="text-xs mb-3" style={{ color: TEXT_3 }}>
+        Event: <span className="font-mono break-all" style={{ color: TEXT_2 }}>{a.eventId}</span>
         {" · "}
-        Purchase: <span className="font-mono text-stone-500">{a.purchaseId}</span>
+        Purchase: <span className="font-mono" style={{ color: TEXT_2 }}>{a.purchaseId}</span>
       </p>
 
       <div className="flex items-center gap-2 flex-wrap">
         <button
           onClick={() => void onResolve(a)}
           disabled={isActioning}
-          className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+          className="text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+          style={{ backgroundColor: AMBER }}
         >
           {isActioning ? "Working…" : "Mark buyer sorted"}
         </button>
         {msg && (
-          <span className="text-xs font-medium text-stone-400">{msg}</span>
+          <span className="text-xs font-medium" style={{ color: TEXT_3 }}>{msg}</span>
         )}
       </div>
     </div>

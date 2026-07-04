@@ -18,8 +18,6 @@ import { SponsorIntakePage } from "@/pages/SponsorIntakePage";
 import { TriageLandingPage } from "@/pages/TriageLandingPage";
 import { ArchiveMiningPage } from "@/pages/ArchiveMiningPage";
 import { ZoneDiagramPage } from "@/pages/ZoneDiagramPage";
-import { KitchenTablePage } from "@/pages/KitchenTablePage";
-import { TablePage } from "@/pages/TablePage";
 import { MeetingKitPage } from "@/pages/MeetingKitPage";
 import { MoneyMachinePage } from "@/pages/MoneyMachinePage";
 import { CockpitPage } from "@/pages/CockpitPage";
@@ -224,16 +222,10 @@ export default function App() {
         <Route path="/money-machine">
           <AppShell><MoneyMachinePage /></AppShell>
         </Route>
-        <Route path="/kitchen-table">
-          <OnboardingGuard>
-            <AppShell><KitchenTablePage /></AppShell>
-          </OnboardingGuard>
-        </Route>
-        <Route path="/old-table">
-          <OnboardingGuard>
-            <AppShell><TablePage /></AppShell>
-          </OnboardingGuard>
-        </Route>
+        {/* Kitchen Table's AI council is now the "Council" tab inside /table */}
+        <Route path="/kitchen-table"><Redirect to="/table" /></Route>
+        {/* The legacy wood-table pick/log UI was superseded by TodayPage */}
+        <Route path="/old-table"><Redirect to="/table" /></Route>
 
         <Route path="/land">
           <OnboardingGuard>
@@ -241,7 +233,11 @@ export default function App() {
           </OnboardingGuard>
         </Route>
 
-        <Route path="/vision-board" component={VisionBoardPage} />
+        <Route path="/vision-board">
+          <OnboardingGuard>
+            <AppShell><VisionBoardPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
 
         <Route><Redirect to="/" /></Route>
       </Switch>

@@ -28,7 +28,7 @@ const BADGE_COLORS: Record<string, string> = {
   "acc-the807foodcoop":  "bg-[#DBEAFE] text-[#1E40AF]",
   "acc-807foodhub":      "bg-[#DBEAFE] text-[#1E40AF]",
   "acc-headwaters-alias":"bg-[#FCE7F3] text-[#9D174D]",
-  default:               "bg-[#F5F5F0] text-[#44403C]",
+  default:               "bg-[rgba(237,232,213,0.08)] text-[rgba(237,232,213,0.7)]",
 };
 
 function useRelativeTime(date: Date | null): string {
@@ -184,14 +184,14 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
   ).length;
 
   return (
-    <div className="rounded-xl border border-[#E7E5E4] bg-white overflow-hidden mb-4">
+    <div className="rounded-xl border border-[rgba(237,232,213,0.1)] bg-[#141210] overflow-hidden mb-4">
       {alwaysExpanded ? (
         <div className="px-4 py-3">
           <div className="flex items-center gap-2">
-            <Inbox size={16} className="text-[#78716C]" />
+            <Inbox size={16} className="text-[rgba(237,232,213,0.55)]" />
             <span className="text-sm font-medium">Morning triage</span>
             {active.length > 0 && (
-              <span className="text-xs bg-[#F5F5F0] text-[#44403C] rounded-full px-2 py-0.5">
+              <span className="text-xs bg-[rgba(237,232,213,0.08)] text-[rgba(237,232,213,0.7)] rounded-full px-2 py-0.5">
                 {active.length}
               </span>
             )}
@@ -203,17 +203,17 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
             <button
               onClick={() => loadThreads(true)}
               disabled={loading}
-              className="ml-auto p-1.5 rounded-lg hover:bg-[#F5F5F0] disabled:opacity-40 transition-opacity"
+              className="ml-auto p-1.5 rounded-lg hover:bg-[rgba(237,232,213,0.08)] disabled:opacity-40 transition-opacity"
               title="Refresh inbox"
             >
               <RefreshCw
                 size={14}
-                className={cn("text-[#78716C]", loading && "animate-spin")}
+                className={cn("text-[rgba(237,232,213,0.55)]", loading && "animate-spin")}
               />
             </button>
           </div>
           {relativeTime && (
-            <p className="text-[11px] text-[#A8A29E] mt-0.5 ml-6">{relativeTime}</p>
+            <p className="text-[11px] text-[rgba(237,232,213,0.45)] mt-0.5 ml-6">{relativeTime}</p>
           )}
         </div>
       ) : (
@@ -222,10 +222,10 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
           className="w-full flex items-center justify-between px-4 py-3 min-h-[44px]"
         >
           <div className="flex items-center gap-2">
-            <Inbox size={16} className="text-[#78716C]" />
+            <Inbox size={16} className="text-[rgba(237,232,213,0.55)]" />
             <span className="text-sm font-medium">Morning triage</span>
             {active.length > 0 && (
-              <span className="text-xs bg-[#F5F5F0] text-[#44403C] rounded-full px-2 py-0.5">
+              <span className="text-xs bg-[rgba(237,232,213,0.08)] text-[rgba(237,232,213,0.7)] rounded-full px-2 py-0.5">
                 {active.length}
               </span>
             )}
@@ -240,9 +240,9 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
       )}
 
       {(alwaysExpanded || expanded) && (
-        <div className="border-t border-[#E7E5E4] divide-y divide-[#E7E5E4]">
+        <div className="border-t border-[rgba(237,232,213,0.1)] divide-y divide-[rgba(237,232,213,0.1)]">
           {loading && (
-            <div className="px-4 py-3 text-sm text-[#78716C]">Loading…</div>
+            <div className="px-4 py-3 text-sm text-[rgba(237,232,213,0.55)]">Loading…</div>
           )}
           {active.map((t) => {
             const stateKey = `${t.accountId}:${t.id}`;
@@ -258,8 +258,8 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
                       </span>
                       <p className="text-sm font-medium truncate">{t.subject}</p>
                     </div>
-                    <p className="text-xs text-[#78716C] truncate">{t.from}</p>
-                    <p className="text-xs text-[#78716C] mt-0.5 line-clamp-1">{t.snippet}</p>
+                    <p className="text-xs text-[rgba(237,232,213,0.55)] truncate">{t.from}</p>
+                    <p className="text-xs text-[rgba(237,232,213,0.55)] mt-0.5 line-clamp-1">{t.snippet}</p>
                   </div>
                   <div className="flex gap-1 shrink-0">
                     <button
@@ -276,15 +276,15 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
                           lastDeferred: new Date().toISOString(),
                         })
                       }
-                      className="p-2 rounded-lg hover:bg-[#F5F5F0] min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      className="p-2 rounded-lg hover:bg-[rgba(237,232,213,0.08)] min-h-[44px] min-w-[44px] flex items-center justify-center"
                       title="Defer"
                     >
-                      <Clock size={16} className="text-[#78716C]" />
+                      <Clock size={16} className="text-[rgba(237,232,213,0.55)]" />
                     </button>
                   </div>
                 </div>
                 {(state?.deferredCount ?? 0) > 0 && (
-                  <p className="text-xs text-[#78716C] mt-1">
+                  <p className="text-xs text-[rgba(237,232,213,0.55)] mt-1">
                     Deferred {state.deferredCount}×
                   </p>
                 )}

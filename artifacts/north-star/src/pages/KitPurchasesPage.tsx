@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "wouter";
+import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, AMBER_LIGHT, AMBER_WASH, GREEN, RED, FONT_DISPLAY } from "@/lib/theme";
 
 interface BuyerToken {
   token: string;
@@ -123,16 +124,17 @@ export function KitPurchasesPage() {
 
   if (!isOwner) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: BG }}>
         <div className="max-w-sm w-full text-center">
           <p className="text-4xl mb-4">🔒</p>
-          <h1 className="text-xl font-semibold text-stone-800 mb-2">Founder access required</h1>
-          <p className="text-stone-500 text-sm mb-6">
+          <h1 className="text-xl font-semibold mb-2" style={{ color: TEXT }}>Founder access required</h1>
+          <p className="text-sm mb-6" style={{ color: TEXT_2 }}>
             Set your owner token in Settings to view kit purchases.
           </p>
           <Link
             href="/settings"
-            className="inline-block bg-stone-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-stone-700 transition-colors"
+            className="inline-block text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+            style={{ backgroundColor: AMBER }}
           >
             Go to Settings →
           </Link>
@@ -145,21 +147,22 @@ export function KitPurchasesPage() {
   const expiredTokens = tokens.filter((t) => t.expired);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] px-4 py-8">
+    <div className="min-h-screen px-4 py-8" style={{ backgroundColor: BG }}>
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-stone-800 mb-1">Kit Purchases</h1>
-            <p className="text-stone-500 text-sm">
+            <h1 className="text-3xl font-bold mb-1" style={{ color: TEXT, fontFamily: FONT_DISPLAY }}>Kit Purchases</h1>
+            <p className="text-sm" style={{ color: TEXT_2 }}>
               All buyer access links — copy, extend, or spot failed deliveries.
             </p>
           </div>
           <button
             onClick={() => void fetchTokens()}
             disabled={loading}
-            className="shrink-0 bg-white border border-stone-200 text-stone-600 text-xs font-medium px-3 py-2 rounded-xl hover:bg-stone-50 transition-colors disabled:opacity-50"
+            className="shrink-0 border text-xs font-medium px-3 py-2 rounded-xl transition-colors disabled:opacity-50"
+            style={{ backgroundColor: SURFACE_2, borderColor: BORDER, color: TEXT_2 }}
           >
             {loading ? "Loading…" : "Refresh"}
           </button>
@@ -167,17 +170,17 @@ export function KitPurchasesPage() {
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm mb-6">
+          <div className="border rounded-xl p-4 text-sm mb-6" style={{ backgroundColor: RED, color: "#FFF", borderColor: BORDER_STRONG }}>
             {error}
           </div>
         )}
 
         {/* Empty state */}
         {!loading && !error && tokens.length === 0 && (
-          <div className="text-center py-20 text-stone-400 text-sm">
+          <div className="text-center py-20 text-sm" style={{ color: TEXT_3 }}>
             <p className="text-4xl mb-4">🧾</p>
-            <p className="font-medium text-stone-500">No purchases yet</p>
-            <p className="mt-1 text-stone-400">
+            <p className="font-medium" style={{ color: TEXT_2 }}>No purchases yet</p>
+            <p className="mt-1">
               Tokens will appear here as buyers complete checkout.
             </p>
           </div>
@@ -186,11 +189,11 @@ export function KitPurchasesPage() {
         {/* Summary badges */}
         {!loading && tokens.length > 0 && (
           <div className="flex gap-3 mb-6 text-xs font-medium">
-            <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">
+            <span className="px-3 py-1 rounded-full" style={{ backgroundColor: AMBER_WASH, color: AMBER }}>
               {activeTokens.length} active
             </span>
             {expiredTokens.length > 0 && (
-              <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+              <span className="px-3 py-1 rounded-full" style={{ backgroundColor: RED, color: "#FFF" }}>
                 {expiredTokens.length} expired
               </span>
             )}
@@ -200,7 +203,7 @@ export function KitPurchasesPage() {
         {/* Expired section — shown first so they're easy to act on */}
         {expiredTokens.length > 0 && (
           <section className="mb-8">
-            <h2 className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-3">
+            <h2 className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: RED }}>
               Expired — needs action
             </h2>
             <div className="flex flex-col gap-3">
@@ -223,7 +226,7 @@ export function KitPurchasesPage() {
         {activeTokens.length > 0 && (
           <section>
             {expiredTokens.length > 0 && (
-              <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-wide mb-3">
+              <h2 className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: TEXT_3 }}>
                 Active
               </h2>
             )}
@@ -244,13 +247,14 @@ export function KitPurchasesPage() {
         )}
 
         {/* Back link + failures link */}
-        <div className="mt-12 pt-8 border-t border-stone-200 flex items-center justify-between">
-          <Link href="/kits" className="text-stone-400 hover:text-stone-600 text-sm transition-colors">
+        <div className="mt-12 pt-8 border-t flex items-center justify-between" style={{ borderColor: BORDER }}>
+          <Link href="/kits" className="text-sm transition-colors" style={{ color: TEXT_3 }}>
             ← Back to Kits
           </Link>
           <Link
             href="/kits/failures"
-            className="text-xs font-medium text-red-600 hover:text-red-700 transition-colors"
+            className="text-xs font-medium transition-colors"
+            style={{ color: RED }}
           >
             View failed deliveries →
           </Link>
@@ -285,34 +289,36 @@ function PurchaseRow({
 
   return (
     <div
-      className={`bg-white border rounded-2xl p-4 shadow-sm ${
-        t.expired ? "border-red-200" : "border-stone-200"
-      }`}
+      className="border rounded-2xl p-4 shadow-sm"
+      style={{ 
+        backgroundColor: SURFACE, 
+        borderColor: t.expired ? RED : BORDER 
+      }}
     >
       {/* Top row: name + status badge */}
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-stone-800 truncate">{t.buyerName}</p>
-          <p className="text-xs text-stone-400 truncate">{t.buyerEmail}</p>
+          <p className="text-sm font-semibold truncate" style={{ color: TEXT }}>{t.buyerName}</p>
+          <p className="text-xs truncate" style={{ color: TEXT_3 }}>{t.buyerEmail}</p>
         </div>
         <span
-          className={`shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full ${
-            t.expired
-              ? "bg-red-100 text-red-700"
-              : "bg-emerald-100 text-emerald-700"
-          }`}
+          className="shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full"
+          style={{ 
+            backgroundColor: t.expired ? RED : AMBER_WASH, 
+            color: t.expired ? "#FFF" : AMBER 
+          }}
         >
           {t.expired ? "Expired" : "Active"}
         </span>
       </div>
 
       {/* Meta row: kit, purchased, expiry */}
-      <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-stone-400 mb-3">
+      <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs mb-3" style={{ color: TEXT_3 }}>
         <span>
-          Kit: <span className="text-stone-600 font-medium">{t.kitId}</span>
+          Kit: <span className="font-medium" style={{ color: TEXT_2 }}>{t.kitId}</span>
         </span>
         <span>Purchased {formatDate(t.createdAt)}</span>
-        <span className={t.expired ? "text-red-500 font-medium" : ""}>
+        <span className="font-medium" style={{ color: t.expired ? RED : GREEN }}>
           {t.expired ? "Expired" : "Expires"} {formatDate(t.expiresAt)}
         </span>
       </div>
@@ -321,7 +327,8 @@ function PurchaseRow({
       <div className="flex items-center gap-2 flex-wrap">
         <button
           onClick={() => void onCopyLink(t.token)}
-          className="flex items-center gap-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
+          className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
+          style={{ backgroundColor: SURFACE_2, color: TEXT }}
         >
           {isCopied ? (
             <>
@@ -339,17 +346,17 @@ function PurchaseRow({
         <button
           onClick={() => void onExtend(t.token)}
           disabled={isExtending}
-          className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 ${
-            t.expired
-              ? "bg-red-600 hover:bg-red-700 text-white"
-              : "bg-stone-800 hover:bg-stone-700 text-white"
-          }`}
+          className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+          style={{ 
+            backgroundColor: t.expired ? RED : AMBER, 
+            color: "#FFF"
+          }}
         >
           {isExtending ? "Extending…" : "Extend 90 days"}
         </button>
 
         {msg && (
-          <span className="text-xs text-stone-400">{msg}</span>
+          <span className="text-xs" style={{ color: TEXT_3 }}>{msg}</span>
         )}
       </div>
     </div>

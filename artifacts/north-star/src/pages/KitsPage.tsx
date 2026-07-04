@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
+import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, AMBER_LIGHT, AMBER_WASH, GREEN, RED, FONT_DISPLAY } from "@/lib/theme";
 
 interface Kit {
   id: string;
@@ -169,18 +170,18 @@ export function KitsPage() {
   const activeTokens = tokens.filter((t) => !t.expired);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] px-4 py-8">
+    <div className="min-h-screen px-4 py-8" style={{ backgroundColor: BG }}>
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-stone-800 mb-2">Headwaters Kits</h1>
-        <p className="text-stone-500 mb-8 text-sm">
+        <h1 className="text-3xl font-bold mb-2" style={{ color: TEXT, fontFamily: FONT_DISPLAY }}>Headwaters Kits</h1>
+        <p className="mb-8 text-sm" style={{ color: TEXT_2 }}>
           Tools, frameworks, and field guides for community sovereignty.
         </p>
 
         {loading && (
-          <div className="text-stone-400 text-sm">Loading kits…</div>
+          <div className="text-sm" style={{ color: TEXT_3 }}>Loading kits…</div>
         )}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm mb-6">
+          <div className="border rounded-xl p-4 text-sm mb-6" style={{ backgroundColor: RED, color: "#FFF", borderColor: BORDER_STRONG }}>
             {error}
           </div>
         )}
@@ -188,8 +189,8 @@ export function KitsPage() {
         {/* Owner: Draft kits */}
         {isOwner && drafts.length > 0 && (
           <section className="mb-10">
-            <h2 className="text-lg font-semibold text-stone-600 mb-4 flex items-center gap-2">
-              <span className="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full font-medium">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: TEXT_2 }}>
+              <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: AMBER_WASH, color: AMBER }}>
                 Drafts
               </span>
             </h2>
@@ -197,23 +198,24 @@ export function KitsPage() {
               {drafts.map((kit) => (
                 <div
                   key={kit.id}
-                  className="bg-white border border-amber-200 rounded-2xl p-5 shadow-sm"
+                  className="border rounded-2xl p-5 shadow-sm"
+                  style={{ backgroundColor: SURFACE, borderColor: AMBER }}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-stone-800 text-lg">{kit.title}</h3>
+                      <h3 className="font-semibold text-lg" style={{ color: TEXT }}>{kit.title}</h3>
                       {kit.description && (
-                        <p className="text-stone-500 text-sm mt-1">{kit.description}</p>
+                        <p className="text-sm mt-1" style={{ color: TEXT_2 }}>{kit.description}</p>
                       )}
-                      <p className="text-stone-400 text-xs mt-2">
+                      <p className="text-xs mt-2" style={{ color: TEXT_3 }}>
                         {formatPrice(kit.priceCents)}
                       </p>
                       {kit.codetryResult && (
                         <p className="text-xs mt-2">
-                          <span className={kit.codetryResult.passed ? "text-green-600" : "text-amber-600"}>
+                          <span style={{ color: kit.codetryResult.passed ? GREEN : AMBER }}>
                             {kit.codetryResult.passed ? "✓ Codetry passed" : "⚠ Codetry flags"}{" "}
                           </span>
-                          <span className="text-stone-400">— {kit.codetryResult.summary}</span>
+                          <span style={{ color: TEXT_3 }}>— {kit.codetryResult.summary}</span>
                         </p>
                       )}
                     </div>
@@ -221,12 +223,13 @@ export function KitsPage() {
                       <button
                         onClick={() => void handlePublish(kit.id)}
                         disabled={publishingId === kit.id}
-                        className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-xl disabled:opacity-50 transition-colors"
+                        className="text-white text-xs font-semibold px-4 py-2 rounded-xl disabled:opacity-50 transition-colors"
+                        style={{ backgroundColor: AMBER }}
                       >
                         {publishingId === kit.id ? "Publishing…" : "Publish →"}
                       </button>
                       {publishMsg[kit.id] && (
-                        <span className="text-xs text-stone-400">{publishMsg[kit.id]}</span>
+                        <span className="text-xs" style={{ color: TEXT_3 }}>{publishMsg[kit.id]}</span>
                       )}
                     </div>
                   </div>
@@ -241,17 +244,19 @@ export function KitsPage() {
           <div className="mb-6 flex flex-wrap items-center gap-3">
             <Link
               href="/kits/purchases"
-              className="inline-flex items-center gap-2 bg-stone-800 hover:bg-stone-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+              style={{ backgroundColor: SURFACE_2, border: `1px solid ${BORDER}` }}
             >
               🧾 View all purchases &amp; access links →
             </Link>
             <Link
               href="/kits/failures"
-              className={`inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors ${
-                failureCount > 0
-                  ? "bg-red-600 hover:bg-red-700 text-white"
-                  : "bg-stone-100 hover:bg-stone-200 text-stone-500"
-              }`}
+              className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+              style={{ 
+                backgroundColor: failureCount > 0 ? RED : SURFACE_2,
+                color: failureCount > 0 ? "#FFF" : TEXT_2,
+                border: `1px solid ${failureCount > 0 ? RED : BORDER}`
+              }}
             >
               ⚠ Failed deliveries
               {failureCount > 0 && (
@@ -266,10 +271,10 @@ export function KitsPage() {
         {/* Owner: Buyer tokens */}
         {isOwner && tokens.length > 0 && (
           <section className="mb-10">
-            <h2 className="text-lg font-semibold text-stone-600 mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: TEXT_2 }}>
               Buyer Access Links
               {expiredTokens.length > 0 && (
-                <span className="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full font-medium">
+                <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: RED, color: "#FFF" }}>
                   {expiredTokens.length} expired
                 </span>
               )}
@@ -294,7 +299,7 @@ export function KitsPage() {
             {activeTokens.length > 0 && (
               <div className="flex flex-col gap-3">
                 {expiredTokens.length > 0 && (
-                  <p className="text-xs text-stone-400 font-medium uppercase tracking-wide mt-2 mb-1">
+                  <p className="text-xs font-medium uppercase tracking-wide mt-2 mb-1" style={{ color: TEXT_3 }}>
                     Active
                   </p>
                 )}
@@ -315,14 +320,14 @@ export function KitsPage() {
         {/* Published kits */}
         <section>
           {kits.length > 0 && (
-            <h2 className="text-lg font-semibold text-stone-600 mb-4">Published Kits</h2>
+            <h2 className="text-lg font-semibold mb-4" style={{ color: TEXT_2 }}>Published Kits</h2>
           )}
           {!loading && kits.length === 0 && (
-            <div className="text-center py-16 text-stone-400 text-sm">
+            <div className="text-center py-16 text-sm" style={{ color: TEXT_3 }}>
               <p className="text-4xl mb-4">📦</p>
               <p>No published kits yet.</p>
               {isOwner && (
-                <p className="mt-2 text-stone-300">
+                <p className="mt-2">
                   Open Gord and tap "＋ Add a Kit" to create your first kit.
                 </p>
               )}
@@ -332,15 +337,16 @@ export function KitsPage() {
             {kits.map((kit) => (
               <div
                 key={kit.id}
-                className="bg-white border border-stone-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
+                className="border rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
+                style={{ backgroundColor: SURFACE, borderColor: BORDER }}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-stone-800 text-lg">{kit.title}</h3>
+                    <h3 className="font-semibold text-lg" style={{ color: TEXT }}>{kit.title}</h3>
                     {kit.description && (
-                      <p className="text-stone-500 text-sm mt-1">{kit.description}</p>
+                      <p className="text-sm mt-1" style={{ color: TEXT_2 }}>{kit.description}</p>
                     )}
-                    <p className="text-emerald-700 font-medium text-sm mt-2">
+                    <p className="font-medium text-sm mt-2" style={{ color: GREEN }}>
                       {formatPrice(kit.priceCents)}
                     </p>
                   </div>
@@ -350,12 +356,13 @@ export function KitsPage() {
                         href={kit.stripeCheckoutUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors whitespace-nowrap"
+                        className="text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors whitespace-nowrap"
+                        style={{ backgroundColor: AMBER }}
                       >
                         Get Kit →
                       </a>
                     ) : (
-                      <span className="bg-stone-100 text-stone-500 text-xs px-3 py-1.5 rounded-xl">
+                      <span className="text-xs px-3 py-1.5 rounded-xl" style={{ backgroundColor: SURFACE_2, color: TEXT_2 }}>
                         Contact to access
                       </span>
                     )}
@@ -367,12 +374,13 @@ export function KitsPage() {
         </section>
 
         {/* Practitioner link */}
-        <div className="mt-12 border-t border-stone-200 pt-8 text-center">
-          <p className="text-stone-400 text-sm">
+        <div className="mt-12 border-t pt-8 text-center" style={{ borderColor: BORDER }}>
+          <p className="text-sm" style={{ color: TEXT_3 }}>
             Want to run your own version of these kits in your community?{" "}
             <a
               href="/north-star/apply-practitioner"
-              className="text-emerald-600 hover:text-emerald-700 underline"
+              className="underline"
+              style={{ color: GREEN }}
             >
               Apply to become a practitioner →
             </a>
@@ -398,20 +406,22 @@ function TokenRow({ t, extendingToken, extendMsg, onExtend }: TokenRowProps) {
 
   return (
     <div
-      className={`bg-white border rounded-xl px-4 py-3 flex items-center gap-3 shadow-sm ${
-        t.expired ? "border-red-200" : "border-stone-200"
-      }`}
+      className="border rounded-xl px-4 py-3 flex items-center gap-3 shadow-sm"
+      style={{ 
+        backgroundColor: SURFACE, 
+        borderColor: t.expired ? RED : BORDER 
+      }}
     >
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-stone-800 truncate">{t.buyerName}</p>
-        <p className="text-xs text-stone-400 truncate">{t.buyerEmail}</p>
-        <p className="text-xs text-stone-400 mt-0.5">
-          Kit: <span className="text-stone-500">{t.kitId}</span>
+        <p className="text-sm font-medium truncate" style={{ color: TEXT }}>{t.buyerName}</p>
+        <p className="text-xs truncate" style={{ color: TEXT_3 }}>{t.buyerEmail}</p>
+        <p className="text-xs mt-0.5" style={{ color: TEXT_3 }}>
+          Kit: <span style={{ color: TEXT_2 }}>{t.kitId}</span>
           {" · "}
           {t.expired ? (
-            <span className="text-red-600 font-medium">Expired {formatDate(t.expiresAt)}</span>
+            <span className="font-medium" style={{ color: RED }}>Expired {formatDate(t.expiresAt)}</span>
           ) : (
-            <span className="text-emerald-600">Expires {formatDate(t.expiresAt)}</span>
+            <span style={{ color: GREEN }}>Expires {formatDate(t.expiresAt)}</span>
           )}
         </p>
       </div>
@@ -419,16 +429,16 @@ function TokenRow({ t, extendingToken, extendMsg, onExtend }: TokenRowProps) {
         <button
           onClick={() => onExtend(t.token)}
           disabled={isExtending}
-          className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 ${
-            t.expired
-              ? "bg-red-600 hover:bg-red-700 text-white"
-              : "bg-stone-100 hover:bg-stone-200 text-stone-700"
-          }`}
+          className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+          style={{ 
+            backgroundColor: t.expired ? RED : SURFACE_2, 
+            color: t.expired ? "#FFF" : TEXT 
+          }}
         >
           {isExtending ? "Extending…" : "Extend 90d"}
         </button>
         {msg && (
-          <span className="text-xs text-stone-400">{msg}</span>
+          <span className="text-xs" style={{ color: TEXT_3 }}>{msg}</span>
         )}
       </div>
     </div>

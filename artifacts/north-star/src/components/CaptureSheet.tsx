@@ -63,7 +63,7 @@ export function CaptureSheet({ onClose }: CaptureSheetProps) {
     >
       <div
         ref={sheetRef}
-        className="bg-white rounded-t-2xl pb-8 max-w-lg mx-auto w-full shadow-xl"
+        className="bg-[#141210] rounded-t-2xl pb-8 max-w-lg mx-auto w-full shadow-xl"
         style={{ transform: `translateY(${dragY}px)`, transition: dragY === 0 ? "transform .2s" : "none" }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -73,7 +73,7 @@ export function CaptureSheet({ onClose }: CaptureSheetProps) {
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
-          <span className="block h-1.5 w-12 rounded-full bg-[#E7E5E4]" />
+          <span className="block h-1.5 w-12 rounded-full bg-[rgba(237,232,213,0.15)]" />
         </div>
         <div className="flex items-center justify-between px-4 pb-3">
           <h3 className="text-base font-medium" style={{ fontFamily: "Fraunces, serif" }}>
@@ -81,7 +81,7 @@ export function CaptureSheet({ onClose }: CaptureSheetProps) {
           </h3>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-[#F5F5F0] min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="p-2 rounded-full hover:bg-[rgba(237,232,213,0.08)] min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Close"
           >
             <X size={18} />
@@ -96,12 +96,12 @@ export function CaptureSheet({ onClose }: CaptureSheetProps) {
             onKeyDown={handleKeyDown}
             placeholder="What's on your mind?"
             rows={4}
-            className="w-full border border-[#E7E5E4] rounded-xl p-3 text-base resize-none focus:outline-none focus:ring-2 bg-[#FAFAF9] leading-relaxed"
+            className="w-full border border-[rgba(237,232,213,0.1)] rounded-xl p-3 text-base resize-none focus:outline-none focus:ring-2 bg-[#1A1714] leading-relaxed"
             style={{ ["--tw-ring-color" as string]: `${zoneColor}55` }}
           />
 
           <div className="mt-3">
-            <p className="text-xs text-[#78716C] mb-2">Tag to zone</p>
+            <p className="text-xs text-[rgba(237,232,213,0.55)] mb-2">Tag to zone</p>
             <div className="flex flex-wrap gap-1.5">
               {ZONES.map((z) => {
                 const selected = tag === z;
@@ -112,9 +112,9 @@ export function CaptureSheet({ onClose }: CaptureSheetProps) {
                     onClick={() => setTag(z)}
                     className="px-3 py-1.5 rounded-full text-xs border min-h-[36px] transition-all"
                     style={{
-                      borderColor: selected ? c : "#E7E5E4",
+                      borderColor: selected ? c : "rgba(237,232,213,0.15)",
                       backgroundColor: selected ? `${c}1A` : "white",
-                      color: selected ? c : "#78716C",
+                      color: selected ? c : "rgba(237,232,213,0.55)",
                       fontWeight: selected ? 600 : 400,
                     }}
                   >
@@ -126,7 +126,7 @@ export function CaptureSheet({ onClose }: CaptureSheetProps) {
           </div>
 
           <div className="flex items-center justify-between mt-4 gap-2">
-            <div className="flex items-center gap-1 text-xs text-[#78716C]">
+            <div className="flex items-center gap-1 text-xs text-[rgba(237,232,213,0.55)]">
               <Mic size={14} />
               <span>Voice — soon</span>
             </div>

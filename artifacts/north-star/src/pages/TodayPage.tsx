@@ -12,6 +12,7 @@ import { fetchTrailSigns, getTrailSigns } from "@workspace/odyssey";
 import { OdysseyTrail } from "@/components/TrailSign";
 import { Link, useLocation } from "wouter";
 import { LiveMoneyStrip } from "@/components/LiveMoneyStrip";
+import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, AMBER_LIGHT, AMBER_WASH, RED } from "@/lib/theme";
 
 type Room = "triage" | "pick" | "log";
 
@@ -28,17 +29,21 @@ function BackupNudge() {
   if (daysSince < 7) return null;
 
   return (
-    <div className="rounded-xl border border-[#C8923A]/40 bg-[#FEF9EE] px-4 py-3 flex items-start justify-between gap-3">
+    <div 
+      className="rounded-xl border px-4 py-3 flex items-start justify-between gap-3"
+      style={{ backgroundColor: AMBER_WASH, borderColor: AMBER }}
+    >
       <div className="flex items-start gap-2.5">
-        <AlertTriangle size={14} className="text-[#B45309] mt-1 shrink-0" />
-        <p className="text-sm text-[#78400A]">
+        <AlertTriangle size={14} style={{ color: AMBER }} className="mt-1 shrink-0" />
+        <p className="text-sm" style={{ color: TEXT }}>
           Back up in Settings — North Star lives only on this device.
           {lastBackedUpAt ? ` Last backup: ${daysSince}d ago.` : " No backup yet."}
         </p>
       </div>
       <button
         onClick={() => dismissNudge(nudgeKey)}
-        className="text-xs text-[#B45309]/70 underline shrink-0 min-h-[44px] flex items-center"
+        className="text-xs underline shrink-0 min-h-[44px] flex items-center"
+        style={{ color: AMBER_LIGHT }}
       >
         Dismiss
       </button>
@@ -64,20 +69,26 @@ function ReviewNudges() {
   return (
     <>
       {isSunOrMon && !hasWeekly && !dismissedNudges[weeklyNudgeKey] && (
-        <div className="rounded-xl border border-[#D6D0C7] bg-[#F5F0E8] px-4 py-3 flex items-center justify-between gap-2">
-          <p className="text-sm text-[#44403C]">📋 Weekly review ready</p>
+        <div 
+          className="rounded-xl border px-4 py-3 flex items-center justify-between gap-2"
+          style={{ backgroundColor: SURFACE, borderColor: BORDER }}
+        >
+          <p className="text-sm" style={{ color: TEXT }}>📋 Weekly review ready</p>
           <div className="flex gap-2 shrink-0">
-            <Link href="/weekly" className="text-sm text-[#1C1917] font-medium underline min-h-[44px] flex items-center">Review</Link>
-            <button onClick={() => dismissNudge(weeklyNudgeKey)} className="text-sm text-[#78716C] min-h-[44px] flex items-center">Later</button>
+            <Link href="/weekly" className="text-sm font-medium underline min-h-[44px] flex items-center" style={{ color: AMBER }}>Review</Link>
+            <button onClick={() => dismissNudge(weeklyNudgeKey)} className="text-sm min-h-[44px] flex items-center" style={{ color: TEXT_2 }}>Later</button>
           </div>
         </div>
       )}
       {!hasSeasonal && !dismissedNudges[seasonalNudgeKey] && (
-        <div className="rounded-xl border border-[#D6D0C7] bg-[#F5F0E8] px-4 py-3 flex items-center justify-between gap-2">
-          <p className="text-sm text-[#44403C]">🌿 Seasonal review — {seasonKey.replace("-", " ")}</p>
+        <div 
+          className="rounded-xl border px-4 py-3 flex items-center justify-between gap-2"
+          style={{ backgroundColor: SURFACE, borderColor: BORDER }}
+        >
+          <p className="text-sm" style={{ color: TEXT }}>🌿 Seasonal review — {seasonKey.replace("-", " ")}</p>
           <div className="flex gap-2 shrink-0">
-            <Link href="/seasonal" className="text-sm text-[#1C1917] font-medium underline min-h-[44px] flex items-center">Review</Link>
-            <button onClick={() => dismissNudge(seasonalNudgeKey)} className="text-sm text-[#78716C] min-h-[44px] flex items-center">Later</button>
+            <Link href="/seasonal" className="text-sm font-medium underline min-h-[44px] flex items-center" style={{ color: AMBER }}>Review</Link>
+            <button onClick={() => dismissNudge(seasonalNudgeKey)} className="text-sm min-h-[44px] flex items-center" style={{ color: TEXT_2 }}>Later</button>
           </div>
         </div>
       )}
@@ -107,11 +118,14 @@ function HeaderStrip() {
   }
 
   return (
-    <div className="sticky top-0 z-20 backdrop-blur-md bg-white/85 border-b border-[#E7E5E4]">
+    <div 
+      className="sticky top-0 z-20 backdrop-blur-md border-b"
+      style={{ backgroundColor: `${BG}D9`, borderColor: BORDER }}
+    >
       <div className="px-4 py-2.5 max-w-lg mx-auto space-y-1.5">
         <div className="flex items-center justify-between">
-          <p className="text-xs text-[#78716C] uppercase tracking-widest">{today}</p>
-          <p className="text-xs text-[#78716C] tabular-nums">
+          <p className="text-xs uppercase tracking-widest" style={{ color: TEXT_3 }}>{today}</p>
+          <p className="text-xs tabular-nums" style={{ color: TEXT_3 }}>
             {logged.toFixed(1)}h logged{planned > 0 ? ` / ${planned}h planned` : ""}
           </p>
         </div>
@@ -123,23 +137,24 @@ function HeaderStrip() {
             onBlur={save}
             onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") { setDraft(pick.reflection ?? ""); setEditing(false); } }}
             placeholder="Today, the win is…"
-            className="w-full text-base border border-[#E7E5E4] rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]/30"
+            className="w-full text-base border rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+            style={{ backgroundColor: SURFACE_2, borderColor: BORDER_STRONG, color: TEXT }}
           />
         ) : (
           <button
             onClick={() => { setDraft(pick.reflection ?? ""); setEditing(true); }}
             className="w-full text-left flex items-center gap-2 min-h-[28px]"
           >
-            <Feather size={13} className="text-[#78716C] shrink-0" />
-            <span className={cn("text-base truncate", pick.reflection ? "text-[#1C1917]" : "text-[#B5AFA9] italic")}>
+            <Feather size={13} className="shrink-0" style={{ color: TEXT_3 }} />
+            <span className={cn("text-base truncate", pick.reflection ? "" : "italic")} style={{ color: pick.reflection ? TEXT : TEXT_3 }}>
               {pick.reflection || "Today, the win is…"}
             </span>
-            <Pencil size={12} className="text-[#B5AFA9] shrink-0 ml-auto" />
+            <Pencil size={12} className="shrink-0 ml-auto" style={{ color: TEXT_3 }} />
           </button>
         )}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 -mx-1 px-1" style={{ scrollbarWidth: "none" }}>
           {picked.length === 0 ? (
-            <span className="text-xs text-[#B5AFA9]">No constellations picked yet</span>
+            <span className="text-xs" style={{ color: TEXT_3 }}>No constellations picked yet</span>
           ) : (
             picked.map((c) => {
               const col = ZONE_SOLID[c.zone];
@@ -156,8 +171,8 @@ function HeaderStrip() {
           )}
         </div>
         {planned > 0 && (
-          <div className="h-1 rounded-full bg-[#F5F0E8] overflow-hidden">
-            <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: "#8A6A1A" }} />
+          <div className="h-1 rounded-full overflow-hidden" style={{ backgroundColor: SURFACE_2 }}>
+            <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: AMBER }} />
           </div>
         )}
       </div>
@@ -175,11 +190,14 @@ function TriageRoom() {
 
   if (!inbox.enabled) {
     return (
-      <div className="rounded-2xl border border-[#E7E5E4] bg-white p-5 text-sm text-[#78716C] flex items-start gap-3">
-        <Inbox size={18} className="text-[#B5AFA9] shrink-0 mt-0.5" />
+      <div 
+        className="rounded-2xl border p-5 text-sm flex items-start gap-3"
+        style={{ backgroundColor: SURFACE, borderColor: BORDER, color: TEXT_2 }}
+      >
+        <Inbox size={18} className="shrink-0 mt-0.5" style={{ color: TEXT_3 }} />
         <div>
-          <p className="text-[#44403C] font-medium mb-1">Morning triage is off</p>
-          <p>Enable in <Link href="/inbox-setup" className="underline">Inbox setup</Link> to pull threads here.</p>
+          <p className="font-medium mb-1" style={{ color: TEXT }}>Morning triage is off</p>
+          <p>Enable in <Link href="/inbox-setup" className="underline" style={{ color: AMBER }}>Inbox setup</Link> to pull threads here.</p>
         </div>
       </div>
     );
@@ -189,36 +207,40 @@ function TriageRoom() {
     <>
       <button
         onClick={() => setOpenSheet(true)}
-        className="w-full rounded-2xl border border-[#E7E5E4] bg-white p-5 flex items-center justify-between hover:shadow-sm transition-shadow min-h-[88px]"
+        className="w-full rounded-2xl border p-5 flex items-center justify-between hover:shadow-sm transition-shadow min-h-[88px]"
+        style={{ backgroundColor: SURFACE, borderColor: BORDER }}
       >
         <div className="flex items-center gap-3">
-          <span className="w-10 h-10 rounded-xl bg-[#F5F0E8] flex items-center justify-center">
-            <Inbox size={20} className="text-[#8A6A1A]" />
+          <span className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: SURFACE_2 }}>
+            <Inbox size={20} style={{ color: AMBER }} />
           </span>
           <div className="text-left">
-            <p className="text-base font-medium text-[#1C1917]">Triage</p>
-            <p className="text-sm text-[#78716C]">{pendingCount > 0 ? `${pendingCount} to triage` : "All clear"}</p>
+            <p className="text-base font-medium" style={{ color: TEXT }}>Triage</p>
+            <p className="text-sm" style={{ color: TEXT_2 }}>{pendingCount > 0 ? `${pendingCount} to triage` : "All clear"}</p>
           </div>
         </div>
-        <ChevronRight size={20} className="text-[#B5AFA9]" />
+        <ChevronRight size={20} style={{ color: TEXT_3 }} />
       </button>
 
       {openSheet && (
         <div
-          className="fixed inset-0 z-[55] bg-white flex flex-col"
+          className="fixed inset-0 z-[55] flex flex-col"
+          style={{ backgroundColor: BG }}
           onKeyDown={(e) => e.key === "Escape" && setOpenSheet(false)}
         >
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[#E7E5E4]">
+          <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: BORDER }}>
             <button
               onClick={() => setOpenSheet(false)}
-              className="flex items-center gap-1 text-sm text-[#44403C] min-h-[44px]"
+              className="flex items-center gap-1 text-sm min-h-[44px]"
+              style={{ color: TEXT }}
             >
               <ChevronLeft size={18} /> Back
             </button>
-            <h2 className="text-base font-medium" style={{ fontFamily: "Fraunces, serif" }}>Triage</h2>
+            <h2 className="text-base font-medium" style={{ fontFamily: "Fraunces, serif", color: TEXT }}>Triage</h2>
             <button
               onClick={() => setOpenSheet(false)}
               className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+              style={{ color: TEXT }}
               aria-label="Close"
             >
               <X size={18} />
@@ -337,23 +359,25 @@ function PickRoom() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between px-1">
-        <p className="text-sm text-[#78716C]">Swipe between zones · pick up to 3</p>
-        <span className="text-sm text-[#78716C] tabular-nums">{pickedIds.length} / 3</span>
+        <p className="text-sm" style={{ color: TEXT_3 }}>Swipe between zones · pick up to 3</p>
+        <span className="text-sm tabular-nums" style={{ color: TEXT_3 }}>{pickedIds.length} / 3</span>
       </div>
 
       {guardrailPrompt && (
-        <div className="rounded-xl border border-[#C8923A]/50 bg-[#FEF9EE] p-4 space-y-3">
-          <p className="text-sm text-[#78400A]">{guardrailPrompt}</p>
+        <div className="rounded-xl border p-4 space-y-3" style={{ borderColor: `${AMBER}80`, backgroundColor: AMBER_WASH }}>
+          <p className="text-sm" style={{ color: AMBER_LIGHT }}>{guardrailPrompt}</p>
           <div className="flex gap-2">
             <button
               onClick={() => { setGuardrailPrompt(null); setPendingId(null); navigate("/zones"); }}
-              className="flex-1 border border-[#C8923A]/50 rounded-lg py-2 text-sm text-[#B45309] min-h-[44px]"
+              className="flex-1 border rounded-lg py-2 text-sm min-h-[44px]"
+              style={{ borderColor: `${AMBER}80`, color: AMBER_LIGHT }}
             >
               Go to Zones
             </button>
             <button
               onClick={handleGuardrailAck}
-              className="flex-1 bg-[#1C1917] text-white rounded-lg py-2 text-sm min-h-[44px]"
+              className="flex-1 rounded-lg py-2 text-sm min-h-[44px]"
+              style={{ backgroundColor: AMBER, color: "#0B0905" }}
             >
               Still pick it
             </button>
@@ -362,8 +386,8 @@ function PickRoom() {
       )}
 
       {parkPrompt && !guardrailPrompt && (
-        <div className="rounded-xl border border-[#D6D0C7] bg-[#F5F0E8] p-4 space-y-2">
-          <p className="text-sm font-medium">Park one to make room?</p>
+        <div className="rounded-xl border p-4 space-y-2" style={{ borderColor: BORDER, backgroundColor: SURFACE_2 }}>
+          <p className="text-sm font-medium" style={{ color: TEXT }}>Park one to make room?</p>
           <div className="space-y-1.5">
             {pickedIds.map((id) => {
               const c = constellations.find((co) => co.id === id);
@@ -372,14 +396,15 @@ function PickRoom() {
                 <button
                   key={id}
                   onClick={() => handlePark(id)}
-                  className="w-full text-left px-3 py-2 rounded-lg bg-white text-sm min-h-[44px] border border-[#E7E5E4]"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm min-h-[44px] border"
+                  style={{ backgroundColor: SURFACE, borderColor: BORDER, color: TEXT }}
                 >
                   Park {c.name}
                 </button>
               );
             })}
           </div>
-          <button onClick={handleBypassCap} className="text-sm text-[#78716C] underline min-h-[44px] flex items-center">
+          <button onClick={handleBypassCap} className="text-sm underline min-h-[44px] flex items-center" style={{ color: TEXT_3 }}>
             Don't ask again today
           </button>
         </div>
@@ -397,8 +422,8 @@ function PickRoom() {
           return (
             <div
               key={z}
-              className="snap-start shrink-0 rounded-2xl overflow-hidden border border-[#E7E5E4] bg-white"
-              style={{ width: "calc(100vw - 56px)", maxWidth: 460 }}
+              className="snap-start shrink-0 rounded-2xl overflow-hidden border"
+              style={{ width: "calc(100vw - 56px)", maxWidth: 460, borderColor: BORDER, backgroundColor: SURFACE }}
             >
               <div className="px-4 py-3" style={{ backgroundColor: col }}>
                 <p className="text-white text-xs uppercase tracking-widest opacity-90">{z}</p>
@@ -406,9 +431,9 @@ function PickRoom() {
                   {ZONE_LABELS[z].long}
                 </h3>
               </div>
-              <div className="p-3 space-y-2" style={{ backgroundColor: ZONE_WASH[z] }}>
+              <div className="p-3 space-y-2" style={{ backgroundColor: SURFACE }}>
                 {items.length === 0 && (
-                  <p className="text-sm text-[#78716C] px-2 py-4 text-center">No constellations yet</p>
+                  <p className="text-sm px-2 py-4 text-center" style={{ color: TEXT_3 }}>No constellations yet</p>
                 )}
                 {items.map((c) => {
                   const picked = pickedIds.includes(c.id);
@@ -416,15 +441,16 @@ function PickRoom() {
                     <button
                       key={c.id}
                       onClick={() => handleToggle(c)}
-                      className={cn(
-                        "w-full flex items-start gap-3 px-3 py-3 rounded-xl border min-h-[64px] text-left transition-all",
-                        picked ? "bg-white shadow-sm" : "bg-white/80 border-[#E7E5E4]"
-                      )}
-                      style={picked ? { borderColor: col, boxShadow: `0 0 0 1.5px ${col}, 0 2px 12px ${ZONE_GLOW[c.zone]}` } : undefined}
+                      className="w-full flex items-start gap-3 px-3 py-3 rounded-xl border min-h-[64px] text-left transition-all"
+                      style={{
+                        backgroundColor: picked ? SURFACE_2 : SURFACE,
+                        borderColor: picked ? col : BORDER,
+                        boxShadow: picked ? `0 0 0 1.5px ${col}, 0 2px 12px ${ZONE_GLOW[c.zone]}` : undefined,
+                      }}
                     >
                       <span
                         className="mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0"
-                        style={{ borderColor: picked ? col : "#D6D0C7", backgroundColor: picked ? col : "transparent" }}
+                        style={{ borderColor: picked ? col : BORDER_STRONG, backgroundColor: picked ? col : "transparent" }}
                       >
                         {picked && (
                           <svg width="10" height="8" viewBox="0 0 9 7" fill="none">
@@ -433,8 +459,8 @@ function PickRoom() {
                         )}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-base font-medium text-[#1C1917]">{c.name}</p>
-                        {c.notes && <p className="text-sm text-[#78716C] mt-0.5">{c.notes}</p>}
+                        <p className="text-base font-medium" style={{ color: TEXT }}>{c.name}</p>
+                        {c.notes && <p className="text-sm mt-0.5" style={{ color: TEXT_2 }}>{c.notes}</p>}
                         {picked && (c.urls?.length > 0 || c.deepLinks?.length > 0) && (
                           <div className="flex flex-wrap gap-1.5 mt-2">
                             {(c.urls?.length ? c.urls.map((u) => ({ label: u.label, path: u.url })) : c.deepLinks ?? []).map((dl, i) => (
@@ -511,14 +537,15 @@ function LogRoom() {
 
   return (
     <div className="space-y-3" onBlur={save}>
-      <p className="text-sm text-[#78716C] px-1">Tap +/− to log hours per zone. Total: <span className="text-[#1C1917] font-medium tabular-nums">{total.toFixed(1)}h</span></p>
+      <p className="text-sm px-1" style={{ color: TEXT_2 }}>Tap +/− to log hours per zone. Total: <span className="font-medium tabular-nums" style={{ color: TEXT }}>{total.toFixed(1)}h</span></p>
       {ZONES_ALL.map((z) => {
         const col = ZONE_SOLID[z];
         const items = grouped[z] ?? [];
         return (
           <div
             key={z}
-            className="rounded-2xl border border-[#E7E5E4] bg-white overflow-hidden"
+            className="rounded-2xl border overflow-hidden"
+            style={{ backgroundColor: SURFACE, borderColor: BORDER }}
           >
             <div className="px-4 py-2.5 flex items-center justify-between" style={{ backgroundColor: ZONE_WASH[z] }}>
               <div className="flex items-center gap-2">
@@ -526,13 +553,14 @@ function LogRoom() {
                 <span className="text-sm font-medium" style={{ color: col }}>{z} — {ZONE_LABELS[z].long.split(" / ")[0]}</span>
               </div>
               {items.length > 0 && (
-                <span className="text-xs text-[#78716C]">{items.map((i) => i.name).join(", ")}</span>
+                <span className="text-xs" style={{ color: TEXT_2 }}>{items.map((i) => i.name).join(", ")}</span>
               )}
             </div>
             <div className="flex items-center justify-between px-4 py-3 gap-3">
               <button
                 onClick={() => bump(z, -0.25)}
-                className="w-11 h-11 rounded-full border border-[#E7E5E4] flex items-center justify-center text-xl text-[#44403C] active:scale-95 transition-transform"
+                className="w-11 h-11 rounded-full border flex items-center justify-center text-xl active:scale-95 transition-transform"
+                style={{ borderColor: BORDER, color: TEXT }}
                 aria-label={`Subtract from ${z}`}
               >
                 −
@@ -548,10 +576,11 @@ function LogRoom() {
                 placeholder="0"
                 style={{ color: col }}
               />
-              <span className="text-sm text-[#78716C]">h</span>
+              <span className="text-sm" style={{ color: TEXT_3 }}>h</span>
               <button
                 onClick={() => bump(z, 0.25)}
-                className="w-11 h-11 rounded-full border border-[#E7E5E4] flex items-center justify-center text-xl text-[#44403C] active:scale-95 transition-transform"
+                className="w-11 h-11 rounded-full border flex items-center justify-center text-xl active:scale-95 transition-transform"
+                style={{ borderColor: BORDER, color: TEXT }}
                 aria-label={`Add to ${z}`}
               >
                 +
@@ -562,7 +591,8 @@ function LogRoom() {
       })}
       <button
         onClick={save}
-        className="w-full bg-[#1C1917] text-white rounded-xl py-3 text-sm min-h-[48px] hover:bg-[#2C2420] transition-colors"
+        className="w-full rounded-xl py-3 text-sm min-h-[48px] transition-colors"
+        style={{ backgroundColor: AMBER, color: BG }}
       >
         Save log
       </button>
@@ -575,26 +605,26 @@ function NorthStarStatement() {
   const statement = useStore((s) => s.statement);
   if (!statement) return null;
   return (
-    <div className="relative rounded-2xl overflow-hidden border border-[#D6D0C7]" style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}>
+    <div className="relative rounded-2xl overflow-hidden border" style={{ backgroundColor: SURFACE, borderColor: BORDER }}>
       <div className="px-5 py-5 space-y-3">
         <div className="flex items-center gap-2">
-          <Star size={13} className="text-[#8A6A1A]" fill="#8A6A1A" />
-          <p className="text-xs text-[#8A6A1A] uppercase tracking-widest font-medium">North Star</p>
+          <Star size={13} style={{ color: AMBER }} fill={AMBER} />
+          <p className="text-xs uppercase tracking-widest font-medium" style={{ color: AMBER }}>North Star</p>
         </div>
         {statement.who && (
-          <p className="text-base text-[#1C1917] leading-relaxed">
-            <span className="text-[#78716C] text-sm">For </span>
+          <p className="text-base leading-relaxed" style={{ color: TEXT }}>
+            <span className="text-sm" style={{ color: TEXT_2 }}>For </span>
             <span className="font-medium">{statement.who}</span>
           </p>
         )}
         {statement.why && (
-          <p className="text-base text-[#1C1917] leading-relaxed">
-            <span className="text-[#78716C] text-sm">So that </span>
+          <p className="text-base leading-relaxed" style={{ color: TEXT }}>
+            <span className="text-sm" style={{ color: TEXT_2 }}>So that </span>
             {statement.why}
           </p>
         )}
         {statement.noFly && (
-          <p className="text-sm text-[#78716C] italic border-t border-[#D6D0C7] pt-3">
+          <p className="text-sm italic border-t pt-3" style={{ color: TEXT_3, borderColor: BORDER }}>
             No-fly: {statement.noFly}
           </p>
         )}
@@ -639,14 +669,17 @@ export function TodayPage() {
   return (
     <div
       className="min-h-dvh pb-28"
-      style={{ background: `linear-gradient(180deg, #FAFAF9 0%, ${ZONE_WASH[activeZone]} 100%)` }}
+      style={{ backgroundColor: BG }}
     >
       <HeaderStrip />
 
-      <div className="sticky top-[120px] z-10 backdrop-blur-md bg-white/85 border-b border-[#E7E5E4]">
+      <div 
+        className="sticky top-[120px] z-10 backdrop-blur-md border-b"
+        style={{ backgroundColor: `${BG}D9`, borderColor: BORDER }}
+      >
         <div className="max-w-5xl mx-auto px-4 py-2">
           <div className="max-w-lg">
-            <div role="tablist" className="flex gap-1 bg-[#F5F0E8] rounded-xl p-1">
+            <div role="tablist" className="flex gap-1 rounded-xl p-1" style={{ backgroundColor: SURFACE_2 }}>
               {tabs.map((t) => {
                 const active = room === t.id;
                 return (
@@ -657,9 +690,12 @@ export function TodayPage() {
                     onClick={() => setRoom(t.id)}
                     className={cn(
                       "flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm min-h-[44px] transition-all",
-                      active ? "bg-white shadow-sm font-medium" : "text-[#78716C]"
+                      active ? "shadow-sm font-medium" : ""
                     )}
-                    style={active ? { color: ZONE_SOLID[activeZone] } : undefined}
+                    style={{ 
+                      backgroundColor: active ? SURFACE : "transparent",
+                      color: active ? ZONE_SOLID[activeZone] : TEXT_2
+                    }}
                   >
                     <t.icon size={15} />
                     {t.label}
@@ -695,12 +731,12 @@ export function TodayPage() {
           <div className="hidden lg:flex lg:flex-col lg:gap-4 lg:sticky lg:top-[190px] min-w-0">
             <OdysseySection />
             <NorthStarStatement />
-            <div className="rounded-2xl border border-[#E7E5E4] bg-[#FAFAF9] px-5 py-5 space-y-3">
-              <p className="text-xs text-[#A8A29E] uppercase tracking-widest font-medium">Today</p>
-              <p className="text-sm text-[#44403C] leading-relaxed">
+            <div className="rounded-2xl border px-5 py-5 space-y-3" style={{ backgroundColor: SURFACE, borderColor: BORDER }}>
+              <p className="text-xs uppercase tracking-widest font-medium" style={{ color: TEXT_3 }}>Today</p>
+              <p className="text-sm leading-relaxed" style={{ color: TEXT }}>
                 {new Date().toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}
               </p>
-              <p className="text-xs text-[#78716C] leading-relaxed border-t border-[#E7E5E4] pt-3">
+              <p className="text-xs leading-relaxed border-t pt-3" style={{ color: TEXT_2, borderColor: BORDER }}>
                 Triage clears the inbox. Pick sets intention. Log closes the day.
               </p>
             </div>

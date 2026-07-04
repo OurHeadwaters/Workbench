@@ -48,7 +48,7 @@ export function ConstellationForm({ initial, onSave, onCancel }: Props) {
   const canNext = step === 0 ? name.trim().length > 0 : true;
 
   return (
-    <div className="bg-white rounded-2xl border border-[#D6D0C7] overflow-hidden shadow-sm">
+    <div className="rounded-2xl border overflow-hidden shadow-sm">
       <div className="h-1 w-full" style={{ backgroundColor: zoneColor }} />
       <div className="px-4 pt-4 pb-2 flex items-center justify-center gap-2">
         {[0, 1, 2].map((i) => (
@@ -57,7 +57,7 @@ export function ConstellationForm({ initial, onSave, onCancel }: Props) {
             className="h-1.5 rounded-full transition-all"
             style={{
               width: i === step ? 24 : 8,
-              backgroundColor: i <= step ? zoneColor : "#E7E5E4",
+              backgroundColor: i <= step ? zoneColor : "rgba(237,232,213,0.15)",
             }}
           />
         ))}
@@ -72,14 +72,14 @@ export function ConstellationForm({ initial, onSave, onCancel }: Props) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Project name"
-              className="w-full border border-[#E7E5E4] rounded-xl px-3 py-3 text-base bg-white focus:outline-none focus:ring-2 focus:ring-offset-0"
+              className="w-full border border-[rgba(237,232,213,0.1)] rounded-xl px-3 py-3 text-base bg-[#1A1714] focus:outline-none focus:ring-2 focus:ring-offset-0"
               style={{ ["--tw-ring-color" as string]: `${zoneColor}55` }}
             />
             <input
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="One-line description (optional)"
-              className="w-full border border-[#E7E5E4] rounded-xl px-3 py-3 text-base bg-white focus:outline-none"
+              className="w-full border border-[rgba(237,232,213,0.1)] rounded-xl px-3 py-3 text-base bg-[#1A1714] focus:outline-none"
             />
             <p className="text-sm font-medium mt-3">Zone</p>
             <div className="flex flex-wrap gap-2">
@@ -93,9 +93,9 @@ export function ConstellationForm({ initial, onSave, onCancel }: Props) {
                     onClick={() => setZone(z)}
                     className="px-3 py-2 rounded-xl text-sm border min-h-[44px] transition-all"
                     style={{
-                      borderColor: selected ? c : "#E7E5E4",
+                      borderColor: selected ? c : "rgba(237,232,213,0.15)",
                       backgroundColor: selected ? `${c}1A` : "white",
-                      color: selected ? c : "#44403C",
+                      color: selected ? c : "rgba(237,232,213,0.7)",
                       fontWeight: selected ? 600 : 400,
                     }}
                   >
@@ -114,9 +114,9 @@ export function ConstellationForm({ initial, onSave, onCancel }: Props) {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g. Tue/Thu mornings · ~3h/week"
-              className="w-full border border-[#E7E5E4] rounded-xl px-3 py-3 text-base bg-white focus:outline-none"
+              className="w-full border border-[rgba(237,232,213,0.1)] rounded-xl px-3 py-3 text-base bg-[#1A1714] focus:outline-none"
             />
-            <p className="text-xs text-[#78716C]">
+            <p className="text-xs text-[rgba(237,232,213,0.55)]">
               You'll set actual weekly hour targets later as a Contract.
             </p>
           </>
@@ -129,11 +129,11 @@ export function ConstellationForm({ initial, onSave, onCancel }: Props) {
               {urls.map((u, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2 bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl px-3 py-2"
+                  className="flex items-center gap-2 bg-[#1A1714] border border-[rgba(237,232,213,0.1)] rounded-xl px-3 py-2"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{u.label}</p>
-                    <p className="text-xs text-[#78716C] truncate">{u.url}</p>
+                    <p className="text-xs text-[rgba(237,232,213,0.55)] truncate">{u.url}</p>
                   </div>
                   <button
                     onClick={() => setUrls((p) => p.filter((_, idx) => idx !== i))}
@@ -144,19 +144,19 @@ export function ConstellationForm({ initial, onSave, onCancel }: Props) {
                   </button>
                 </div>
               ))}
-              <div className="flex flex-col gap-2 bg-[#FAFAF9] border border-dashed border-[#D6D0C7] rounded-xl p-2">
+              <div className="flex flex-col gap-2 bg-[#1A1714] border border-dashed border-[rgba(237,232,213,0.15)] rounded-xl p-2">
                 <input
                   value={newLabel}
                   onChange={(e) => setNewLabel(e.target.value)}
                   placeholder="Label (e.g. Open)"
-                  className="w-full border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none"
+                  className="w-full border border-[rgba(237,232,213,0.1)] rounded-lg px-3 py-2 text-sm bg-[#1A1714] focus:outline-none"
                 />
                 <div className="flex gap-2">
                   <input
                     value={newUrl}
                     onChange={(e) => setNewUrl(e.target.value)}
                     placeholder="https:// or /path/"
-                    className="flex-1 border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none"
+                    className="flex-1 border border-[rgba(237,232,213,0.1)] rounded-lg px-3 py-2 text-sm bg-[#1A1714] focus:outline-none"
                   />
                   <button
                     onClick={addUrl}
@@ -172,18 +172,18 @@ export function ConstellationForm({ initial, onSave, onCancel }: Props) {
         )}
       </div>
 
-      <div className="flex gap-2 p-3 border-t border-[#E7E5E4] bg-[#FAFAF9]">
+      <div className="flex gap-2 p-3 border-t border-[rgba(237,232,213,0.1)] bg-[#1A1714]">
         {step === 0 ? (
           <button
             onClick={onCancel}
-            className="flex-1 border border-[#D6D0C7] rounded-xl py-3 text-sm min-h-[48px] hover:bg-white transition-colors"
+            className="flex-1 border border-[rgba(237,232,213,0.15)] rounded-xl py-3 text-sm min-h-[48px] hover:bg-[rgba(237,232,213,0.05)] transition-colors"
           >
             Cancel
           </button>
         ) : (
           <button
             onClick={() => setStep((s) => Math.max(0, s - 1))}
-            className="flex-1 border border-[#D6D0C7] rounded-xl py-3 text-sm min-h-[48px] hover:bg-white transition-colors flex items-center justify-center gap-1"
+            className="flex-1 border border-[rgba(237,232,213,0.15)] rounded-xl py-3 text-sm min-h-[48px] hover:bg-[rgba(237,232,213,0.05)] transition-colors flex items-center justify-center gap-1"
           >
             <ChevronLeft size={16} /> Back
           </button>

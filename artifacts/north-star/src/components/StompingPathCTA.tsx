@@ -82,7 +82,7 @@ function ctaCopy(stage: number): { headline: string; sub: string; cta: string } 
 }
 
 function fieldClass() {
-  return "w-full border border-[#D6D3D0] rounded-lg px-3 py-2 text-sm text-[#1c1917] bg-white focus:outline-none focus:border-[#4F6E5C] transition-colors";
+  return "w-full border border-[rgba(237,232,213,0.15)] rounded-lg px-3 py-2 text-sm text-[#EDE8D5] bg-[#1A1714] focus:outline-none focus:border-[#C8923A] transition-colors";
 }
 
 export function StompingPathCTA() {
@@ -131,17 +131,17 @@ export function StompingPathCTA() {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
-      <div className="px-4 py-4 border-b border-[#E7E5E4]">
-        <p className="text-xs text-[#78716C] uppercase tracking-wider font-medium mb-1">
+    <div className="rounded-xl border border-[rgba(237,232,213,0.15)] overflow-hidden">
+      <div className="px-4 py-4 border-b border-[rgba(237,232,213,0.15)]">
+        <p className="text-xs text-[rgba(237,232,213,0.55)] uppercase tracking-wider font-medium mb-1">
           Where are you on the path?
         </p>
-        <p className="text-sm text-[#44403C]">
+        <p className="text-sm text-[rgba(237,232,213,0.7)]">
           Pick the description that fits. Then we'll show you the right next step.
         </p>
       </div>
 
-      <div className="divide-y divide-[#F5F5F0]">
+      <div className="divide-y divide-[rgba(237,232,213,0.1)]">
         {STAGES.map((s) => {
           const selected = selectedStage === s.n;
           return (
@@ -163,8 +163,8 @@ export function StompingPathCTA() {
                 <span
                   className="shrink-0 mt-0.5 font-mono text-[9px] uppercase tracking-[0.18em] rounded-sm px-2 py-0.5 font-medium"
                   style={{
-                    background: selected ? s.accent : "#F5F5F0",
-                    color: selected ? "#fff" : "#78716C",
+                    background: selected ? s.accent : "rgba(237,232,213,0.08)",
+                    color: selected ? "#fff" : "rgba(237,232,213,0.55)",
                   }}
                 >
                   Stage {s.n}
@@ -172,16 +172,16 @@ export function StompingPathCTA() {
                 <div className="flex-1 min-w-0">
                   <p
                     className="text-sm font-medium mb-0.5"
-                    style={{ color: selected ? s.accent : "#1c1917" }}
+                    style={{ color: selected ? s.accent : "#EDE8D5" }}
                   >
                     {s.label}
                   </p>
-                  <p className="text-xs text-[#78716C] leading-relaxed">{s.desc}</p>
+                  <p className="text-xs text-[rgba(237,232,213,0.55)] leading-relaxed">{s.desc}</p>
                 </div>
                 <div
                   className="shrink-0 w-4 h-4 rounded-full border-2 mt-0.5 flex items-center justify-center"
                   style={{
-                    borderColor: selected ? s.accent : "#D6D3D0",
+                    borderColor: selected ? s.accent : "rgba(237,232,213,0.15)",
                     background: selected ? s.accent : "transparent",
                   }}
                 >
@@ -205,15 +205,15 @@ export function StompingPathCTA() {
 
       {selectedStage && stage && copy && (
         <div
-          className="px-4 py-5 border-t border-[#E7E5E4]"
+          className="px-4 py-5 border-t border-[rgba(237,232,213,0.15)]"
           style={{ background: `${stage.accent}06` }}
         >
           {submitState === "done" ? (
             <div className="text-center py-4">
-              <p className="text-base font-medium text-[#1c1917] mb-1">
+              <p className="text-base font-medium text-[#EDE8D5] mb-1">
                 Message received.
               </p>
-              <p className="text-sm text-[#78716C] leading-relaxed">
+              <p className="text-sm text-[rgba(237,232,213,0.55)] leading-relaxed">
                 Someone will read it and get back to you within 48 hours.
               </p>
             </div>
@@ -225,7 +225,7 @@ export function StompingPathCTA() {
               >
                 {copy.headline}
               </p>
-              <p className="text-sm text-[#44403C] leading-relaxed mb-4">
+              <p className="text-sm text-[rgba(237,232,213,0.7)] leading-relaxed mb-4">
                 {copy.sub}
               </p>
 
@@ -245,7 +245,7 @@ export function StompingPathCTA() {
                     >
                       Book a call
                     </p>
-                    <p className="text-xs text-[#44403C] leading-relaxed">
+                    <p className="text-xs text-[rgba(237,232,213,0.7)] leading-relaxed">
                       Prefer to get right on a call? Reply to the confirmation email
                       with "call" and we'll set one up. Or fill out the form below
                       and mention it — we'll reach back within 48 hours.
@@ -268,7 +268,7 @@ export function StompingPathCTA() {
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs font-medium text-[#44403C] mb-1">
+                    <label className="block text-xs font-medium text-[rgba(237,232,213,0.7)] mb-1">
                       Your name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -281,7 +281,7 @@ export function StompingPathCTA() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-[#44403C] mb-1">
+                    <label className="block text-xs font-medium text-[rgba(237,232,213,0.7)] mb-1">
                       Email <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -296,7 +296,7 @@ export function StompingPathCTA() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-[#44403C] mb-1">
+                  <label className="block text-xs font-medium text-[rgba(237,232,213,0.7)] mb-1">
                     Community or organisation <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -310,7 +310,7 @@ export function StompingPathCTA() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-[#44403C] mb-1">
+                  <label className="block text-xs font-medium text-[rgba(237,232,213,0.7)] mb-1">
                     What are you working on? <span className="text-red-500">*</span>
                   </label>
                   <textarea
@@ -342,7 +342,7 @@ export function StompingPathCTA() {
                   >
                     {submitState === "submitting" ? "Sending…" : copy.cta}
                   </button>
-                  <p className="text-xs text-[#78716C]">
+                  <p className="text-xs text-[rgba(237,232,213,0.55)]">
                     No spam · someone reads every message
                   </p>
                 </div>

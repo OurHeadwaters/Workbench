@@ -4,6 +4,7 @@ import { useStore } from "@/store";
 import { Link } from "wouter";
 import { getEffectivePassword } from "@/components/PasswordGate";
 import { lockKitchenTable, isKitchenTableUnlocked } from "@/lib/lock";
+import { BG, SURFACE, SURFACE_2, BORDER, TEXT, TEXT_2, TEXT_3, AMBER, AMBER_LIGHT, AMBER_WASH, RED } from "@/lib/theme";
 
 const CUSTOM_PW_KEY = "north-star:custom-password";
 const UNLOCK_KEY = "north-star:unlocked";
@@ -191,122 +192,167 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="min-h-dvh pb-24" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
+    <div className="min-h-dvh pb-24" style={{ backgroundColor: BG }}>
       <div className="px-5 py-6 max-w-lg mx-auto space-y-6">
-        <h1 className="text-2xl">Settings</h1>
+        <h1 className="text-2xl font-serif" style={{ color: TEXT }}>Settings</h1>
 
         <div
-          className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-4"
-          style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+          className="rounded-2xl p-4 space-y-4"
+          style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
         >
-          <h2 className="text-base font-medium text-[#1C1917]">North star statement</h2>
+          <h2 className="text-base font-medium" style={{ color: TEXT }}>North star statement</h2>
 
           <div className="space-y-2">
-            <label className="text-xs text-[#78716C] uppercase tracking-wider">Who is this work for?</label>
+            <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>Who is this work for?</label>
             <textarea
               value={who}
               onChange={(e) => setWho(e.target.value)}
               placeholder="A specific kind of person"
               rows={2}
-              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
+              className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 resize-none"
+              style={{ 
+                backgroundColor: SURFACE_2, 
+                border: `1px solid ${BORDER}`, 
+                color: TEXT,
+                boxShadow: 'none'
+              }}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs text-[#78716C] uppercase tracking-wider">So that…</label>
+            <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>So that…</label>
             <textarea
               value={why}
               onChange={(e) => setWhy(e.target.value)}
               placeholder="What shifts for them"
               rows={2}
-              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
+              className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 resize-none"
+              style={{ 
+                backgroundColor: SURFACE_2, 
+                border: `1px solid ${BORDER}`, 
+                color: TEXT,
+                boxShadow: 'none'
+              }}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs text-[#78716C] uppercase tracking-wider">No-fly</label>
+            <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>No-fly</label>
             <textarea
               value={noFly}
               onChange={(e) => setNoFly(e.target.value)}
               placeholder="What you'll politely decline"
               rows={2}
-              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
+              className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 resize-none"
+              style={{ 
+                backgroundColor: SURFACE_2, 
+                border: `1px solid ${BORDER}`, 
+                color: TEXT,
+                boxShadow: 'none'
+              }}
             />
           </div>
 
           <button
             onClick={handleSaveStatement}
-            className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px]"
+            className="w-full rounded-xl py-2 text-sm font-medium min-h-[44px] transition-colors"
+            style={{ backgroundColor: AMBER, color: BG }}
           >
             {statementSaved ? "Saved ✓" : "Save statement"}
           </button>
         </div>
 
         <div
-          className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-4"
-          style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+          className="rounded-2xl p-4 space-y-4"
+          style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
         >
-          <h2 className="text-base font-medium text-[#1C1917]">Workbench plan</h2>
+          <h2 className="text-base font-medium" style={{ color: TEXT }}>Workbench plan</h2>
 
           <div className="space-y-2">
-            <label className="text-xs text-[#78716C] uppercase tracking-wider">Phase</label>
+            <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>Phase</label>
             <input
               type="text"
               value={wpPhase}
               onChange={(e) => setWpPhase(e.target.value)}
               placeholder="e.g. Funnels"
-              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+              className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1"
+              style={{ 
+                backgroundColor: SURFACE_2, 
+                border: `1px solid ${BORDER}`, 
+                color: TEXT
+              }}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs text-[#78716C] uppercase tracking-wider">Burst (minutes)</label>
+            <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>Burst (minutes)</label>
             <input
               type="number"
               value={wpBurst}
               onChange={(e) => setWpBurst(e.target.value)}
               placeholder="e.g. 20"
               min={1}
-              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+              className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1"
+              style={{ 
+                backgroundColor: SURFACE_2, 
+                border: `1px solid ${BORDER}`, 
+                color: TEXT
+              }}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs text-[#78716C] uppercase tracking-wider">Work windows</label>
+            <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>Work windows</label>
             <input
               type="text"
               value={wpWindows}
               onChange={(e) => setWpWindows(e.target.value)}
               placeholder="e.g. 6–8am / 6–8pm / Weekend block"
-              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+              className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1"
+              style={{ 
+                backgroundColor: SURFACE_2, 
+                border: `1px solid ${BORDER}`, 
+                color: TEXT
+              }}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs text-[#78716C] uppercase tracking-wider">Window notes</label>
+            <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>Window notes</label>
             <input
               type="text"
               value={wpWindowNotes}
               onChange={(e) => setWpWindowNotes(e.target.value)}
               placeholder="e.g. when dad is home"
-              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+              className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1"
+              style={{ 
+                backgroundColor: SURFACE_2, 
+                border: `1px solid ${BORDER}`, 
+                color: TEXT
+              }}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs text-[#78716C] uppercase tracking-wider">Notes</label>
+            <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>Notes</label>
             <textarea
               value={wpNotes}
               onChange={(e) => setWpNotes(e.target.value)}
               placeholder="What you're building and why right now"
               rows={3}
-              className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A] resize-none"
+              className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 resize-none"
+              style={{ 
+                backgroundColor: SURFACE_2, 
+                border: `1px solid ${BORDER}`, 
+                color: TEXT
+              }}
             />
           </div>
 
           <button
             onClick={handleSaveWorkbenchPlan}
-            className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px]"
+            className="w-full rounded-xl py-2 text-sm font-medium min-h-[44px] transition-colors"
+            style={{ backgroundColor: AMBER, color: BG }}
           >
             {wpSaved ? "Saved ✓" : "Save workbench plan"}
           </button>
@@ -314,15 +360,15 @@ export function SettingsPage() {
 
         {isOwner && (
           <div
-            className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-4"
-            style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+            className="rounded-2xl p-4 space-y-4"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
           >
             <div className="flex items-center gap-2">
-              <Mail size={15} className="text-[#78716C]" />
-              <h2 className="text-base font-medium text-[#1C1917]">River Smith briefing email</h2>
+              <Mail size={15} style={{ color: TEXT_3 }} />
+              <h2 className="text-base font-medium" style={{ color: TEXT }}>River Smith briefing email</h2>
             </div>
 
-            <p className="text-xs text-[#78716C]">
+            <p className="text-xs" style={{ color: TEXT_2 }}>
               The nightly briefing will be delivered to this address.
               {notifyEmailSource === "env" && (
                 <span className="ml-1 italic">Currently set via server config — saving here will override it.</span>
@@ -333,24 +379,30 @@ export function SettingsPage() {
             </p>
 
             <div className="space-y-2">
-              <label className="text-xs text-[#78716C] uppercase tracking-wider">Delivery address</label>
+              <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>Delivery address</label>
               <input
                 type="email"
                 value={notifyEmail}
                 onChange={(e) => setNotifyEmail(e.target.value)}
                 placeholder="bobbie@example.com"
-                className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+                className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1"
+                style={{ 
+                  backgroundColor: SURFACE_2, 
+                  border: `1px solid ${BORDER}`, 
+                  color: TEXT
+                }}
               />
             </div>
 
             {notifyEmailError && (
-              <p className="text-sm text-[#B45309]">{notifyEmailError}</p>
+              <p className="text-sm" style={{ color: RED }}>{notifyEmailError}</p>
             )}
 
             <button
               onClick={handleSaveNotifyEmail}
               disabled={notifyEmailSaving}
-              className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px] disabled:opacity-60"
+              className="w-full rounded-xl py-2 text-sm font-medium min-h-[44px] disabled:opacity-60 transition-colors"
+              style={{ backgroundColor: AMBER, color: BG }}
             >
               {notifyEmailSaved ? "Saved ✓" : notifyEmailSaving ? "Saving…" : "Save briefing email"}
             </button>
@@ -359,134 +411,159 @@ export function SettingsPage() {
 
         {ENV_PW_SET && (
           <div
-            className="rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-4"
-            style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)" }}
+            className="rounded-2xl p-4 space-y-4"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
           >
             <div className="flex items-center gap-2">
-              <Lock size={15} className="text-[#78716C]" />
-              <h2 className="text-base font-medium text-[#1C1917]">Change password</h2>
+              <Lock size={15} style={{ color: TEXT_3 }} />
+              <h2 className="text-base font-medium" style={{ color: TEXT }}>Change password</h2>
             </div>
 
-            <p className="text-xs text-[#78716C]">
+            <p className="text-xs" style={{ color: TEXT_2 }}>
               Update the Kitchen Table password. The new password is saved on this device and will be required on your next sign-in.
             </p>
 
             <div className="space-y-3">
               <div className="space-y-1">
-                <label className="text-xs text-[#78716C] uppercase tracking-wider">Current password</label>
+                <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>Current password</label>
                 <input
                   type="password"
                   value={pwCurrent}
                   onChange={(e) => { setPwCurrent(e.target.value); setPwError(null); }}
                   placeholder="Your current password"
                   autoComplete="current-password"
-                  className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+                  className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1"
+                  style={{ 
+                    backgroundColor: SURFACE_2, 
+                    border: `1px solid ${BORDER}`, 
+                    color: TEXT
+                  }}
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs text-[#78716C] uppercase tracking-wider">New password</label>
+                <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>New password</label>
                 <input
                   type="password"
                   value={pwNew}
                   onChange={(e) => { setPwNew(e.target.value); setPwError(null); }}
                   placeholder="At least 4 characters"
                   autoComplete="new-password"
-                  className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+                  className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1"
+                  style={{ 
+                    backgroundColor: SURFACE_2, 
+                    border: `1px solid ${BORDER}`, 
+                    color: TEXT
+                  }}
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs text-[#78716C] uppercase tracking-wider">Confirm new password</label>
+                <label className="text-xs uppercase tracking-wider" style={{ color: TEXT_3 }}>Confirm new password</label>
                 <input
                   type="password"
                   value={pwConfirm}
                   onChange={(e) => { setPwConfirm(e.target.value); setPwError(null); }}
                   placeholder="Repeat new password"
                   autoComplete="new-password"
-                  className="w-full border border-[#D6D0C7] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9]/70 focus:outline-none focus:ring-2 focus:ring-[#8A6A1A]"
+                  className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1"
+                  style={{ 
+                    backgroundColor: SURFACE_2, 
+                    border: `1px solid ${BORDER}`, 
+                    color: TEXT
+                  }}
                 />
               </div>
             </div>
 
-            {pwError && <p className="text-sm text-[#B45309]">{pwError}</p>}
-            {pwSaved && <p className="text-sm text-[#4F6E5C]">Password updated — use the new one next time you sign in.</p>}
+            {pwError && <p className="text-sm" style={{ color: RED }}>{pwError}</p>}
+            {pwSaved && <p className="text-sm" style={{ color: "#4ADE80" }}>Password updated — use the new one next time you sign in.</p>}
 
             <button
               onClick={handleChangePassword}
-              className="w-full bg-[#1C1917] text-white rounded-xl py-2 text-sm font-medium min-h-[44px]"
+              className="w-full rounded-xl py-2 text-sm font-medium min-h-[44px] transition-colors"
+              style={{ backgroundColor: AMBER, color: BG }}
             >
               Update password
             </button>
           </div>
         )}
 
-        <div className="bg-white/70 rounded-2xl border border-[#D6D0C7] shadow-sm divide-y divide-[#E7E5E4]">
+        <div className="rounded-2xl divide-y overflow-hidden" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, borderColor: BORDER }}>
           <Link
             href="/zones"
-            className="flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-[#F5F0E8]/50 rounded-t-2xl transition-colors"
+            className="flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-white/5 transition-colors"
           >
-            <span className="text-sm">Manage constellations & contracts</span>
-            <ExternalLink size={16} className="text-[#78716C]" />
+            <span className="text-sm" style={{ color: TEXT }}>Manage constellations & contracts</span>
+            <ExternalLink size={16} style={{ color: TEXT_3 }} />
           </Link>
           <Link
             href="/inbox-setup"
-            className={`flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-[#F5F0E8]/50 transition-colors${kitchenTableUnlocked ? "" : " rounded-b-2xl"}`}
+            className={`flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-white/5 transition-colors`}
           >
-            <span className="text-sm">Gmail inbox setup</span>
-            <ExternalLink size={16} className="text-[#78716C]" />
+            <span className="text-sm" style={{ color: TEXT }}>Gmail inbox setup</span>
+            <ExternalLink size={16} style={{ color: TEXT_3 }} />
           </Link>
           {kitchenTableUnlocked && (
             <button
               onClick={lockKitchenTable}
-              className="w-full flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-[#F5F0E8]/50 rounded-b-2xl transition-colors text-left"
+              className="w-full flex items-center justify-between px-4 py-3 min-h-[56px] hover:bg-white/5 transition-colors text-left"
             >
-              <span className="text-sm text-[#78716C]">Lock Kitchen Table</span>
-              <Lock size={16} className="text-[#78716C]" />
+              <span className="text-sm" style={{ color: TEXT_2 }}>Lock Kitchen Table</span>
+              <Lock size={16} style={{ color: TEXT_3 }} />
             </button>
           )}
         </div>
 
-        <div className="rounded-2xl border border-[#C8923A]/40 shadow-sm p-4 space-y-4" style={{ background: "#FEF9EE" }}>
-          <h2 className="text-base font-medium text-[#1C1917]">Backup & restore</h2>
-          <p className="text-xs text-[#92400E]">North Star lives only on this device. Export a backup regularly.</p>
+        <div className="rounded-2xl p-4 space-y-4" style={{ backgroundColor: AMBER_WASH, border: `1px solid ${AMBER}20` }}>
+          <h2 className="text-base font-medium" style={{ color: TEXT }}>Backup & restore</h2>
+          <p className="text-xs" style={{ color: AMBER }}>North Star lives only on this device. Export a backup regularly.</p>
 
           <button
             onClick={handleExport}
-            className="w-full flex items-center justify-center gap-2 border border-[#D6D0C7] bg-white/60 rounded-xl py-2 text-sm min-h-[44px] hover:bg-white/90 transition-colors"
+            className="w-full flex items-center justify-center gap-2 rounded-xl py-2 text-sm min-h-[44px] hover:bg-white/5 transition-colors"
+            style={{ border: `1px solid ${BORDER}`, backgroundColor: SURFACE_2, color: TEXT }}
           >
             <Download size={16} /> Export backup JSON
           </button>
 
-          <label className="w-full flex items-center justify-center gap-2 border border-[#D6D0C7] bg-white/60 rounded-xl py-2 text-sm min-h-[44px] hover:bg-white/90 transition-colors cursor-pointer">
+          <label 
+            className="w-full flex items-center justify-center gap-2 rounded-xl py-2 text-sm min-h-[44px] hover:bg-white/5 transition-colors cursor-pointer"
+            style={{ border: `1px solid ${BORDER}`, backgroundColor: SURFACE_2, color: TEXT }}
+          >
             <Upload size={16} /> Import backup JSON
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
           </label>
 
-          {importError && <p className="text-sm text-[#B45309]">{importError}</p>}
-          {importSuccess && <p className="text-sm text-[#4F6E5C]">Backup imported successfully.</p>}
+          {importError && <p className="text-sm" style={{ color: RED }}>{importError}</p>}
+          {importSuccess && <p className="text-sm" style={{ color: "#4ADE80" }}>Backup imported successfully.</p>}
         </div>
 
-        <div className="bg-white/70 rounded-2xl border border-[#D6D0C7] shadow-sm p-4 space-y-3">
-          <h2 className="text-base font-medium text-[#1C1917]">Danger zone</h2>
+        <div className="rounded-2xl p-4 space-y-3" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
+          <h2 className="text-base font-medium" style={{ color: TEXT }}>Danger zone</h2>
 
           {!showReset ? (
             <button
               onClick={() => setShowReset(true)}
-              className="w-full flex items-center justify-center gap-2 border border-[#C8923A]/50 bg-[#FEF9EE] text-[#92400E] rounded-xl py-2 text-sm min-h-[44px] hover:bg-[#FEF3C7] transition-colors"
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2 text-sm min-h-[44px] hover:bg-red-500/10 transition-colors"
+              style={{ border: `1px solid ${RED}`, color: RED, backgroundColor: 'transparent' }}
             >
               <RotateCcw size={16} /> Reset all data
             </button>
           ) : (
             <div className="space-y-3">
-              <p className="text-sm text-[#92400E]">
+              <p className="text-sm" style={{ color: TEXT_2 }}>
                 This will permanently erase all your constellations, picks, reviews, and captures. There is no undo. Export a backup first.
               </p>
               <div className="flex gap-2">
-                <button onClick={() => setShowReset(false)} className="flex-1 border border-[#D6D0C7] rounded-xl py-2 text-sm min-h-[44px] hover:bg-[#F5F0E8] transition-colors">
+                <button onClick={() => setShowReset(false)} 
+                  className="flex-1 rounded-xl py-2 text-sm min-h-[44px] hover:bg-white/5 transition-colors"
+                  style={{ border: `1px solid ${BORDER}`, color: TEXT }}
+                >
                   Cancel
                 </button>
                 <button
                   onClick={handleReset}
-                  className="flex-1 bg-[#FEF3C7] border border-[#C8923A]/50 text-[#92400E] rounded-xl py-2 text-sm font-medium min-h-[44px] hover:bg-[#FDE68A] transition-colors"
+                  className="flex-1 rounded-xl py-2 text-sm font-medium min-h-[44px] transition-colors"
+                  style={{ backgroundColor: RED, color: TEXT }}
                 >
                   Yes, reset everything
                 </button>
@@ -496,7 +573,7 @@ export function SettingsPage() {
         </div>
 
         <div className="text-center">
-          <p className="text-xs text-[#78716C]">North Star · Local-first · Schema v4</p>
+          <p className="text-xs" style={{ color: TEXT_3 }}>North Star · Local-first · Schema v4</p>
         </div>
       </div>
     </div>

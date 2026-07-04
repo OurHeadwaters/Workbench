@@ -372,6 +372,7 @@ export function VisionBoardPage() {
       style={{
         position: "relative",
         minHeight: "100vh",
+        paddingBottom: "calc(64px + env(safe-area-inset-bottom, 0px))",
         background: "linear-gradient(180deg, #03090F 0%, #071410 20%, #0A0D08 50%, #0C0A04 80%, #080505 100%)",
         color: "#ede8d5",
         fontFamily: "DM Sans, system-ui, -apple-system, sans-serif",
@@ -387,7 +388,7 @@ export function VisionBoardPage() {
           position: "fixed",
           top: "1.25rem",
           left: "1.5rem",
-          zIndex: 100,
+          zIndex: 40,
           color: "#ede8d550",
           fontSize: "0.8rem",
           textDecoration: "none",

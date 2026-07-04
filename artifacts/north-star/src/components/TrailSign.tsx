@@ -36,7 +36,7 @@ export function TrailSignCard({ sign, onDismiss }: TrailSignCardProps) {
         </div>
         <button
           onClick={handleDismiss}
-          className="text-[#B8A89A] hover:text-[#78716C] transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center -mr-1 -mt-1"
+          className="text-[rgba(237,232,213,0.4)] hover:text-[rgba(237,232,213,0.55)] transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center -mr-1 -mt-1"
           aria-label="Dismiss"
         >
           <X size={14} />
@@ -44,18 +44,18 @@ export function TrailSignCard({ sign, onDismiss }: TrailSignCardProps) {
       </div>
 
       <div>
-        <p className="text-xs text-[#78716C] leading-relaxed">{sign.problemStatement}</p>
+        <p className="text-xs text-[rgba(237,232,213,0.55)] leading-relaxed">{sign.problemStatement}</p>
       </div>
 
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-[#1C1917] truncate">{sign.toolName}</p>
+          <p className="text-sm font-medium text-[#EDE8D5] truncate">{sign.toolName}</p>
           <p className="text-xs text-[#A8998A]">{COST_LABEL[sign.costTier] ?? sign.costTier}</p>
         </div>
         <a
           href={sign.actionUrl}
           className={cn(
-            "shrink-0 flex items-center gap-1 bg-[#1C1917] text-white",
+            "shrink-0 flex items-center gap-1 bg-[#C8923A] text-[#0B0905]",
             "rounded-lg px-3 py-1.5 text-xs font-medium min-h-[36px]",
             "hover:bg-[#292524] transition-colors",
           )}

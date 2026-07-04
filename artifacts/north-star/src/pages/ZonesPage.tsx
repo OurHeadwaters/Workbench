@@ -7,6 +7,7 @@ import { ConstellationForm } from "@/components/ConstellationForm";
 import { ZONE_LABELS, cn } from "@/lib/utils";
 import { ZONE_SOLID, ZONE_WASH } from "@/lib/zone";
 import type { ZoneId, Contract, Constellation } from "@/types";
+import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, AMBER_LIGHT, AMBER_WASH } from "@/lib/theme";
 
 const ZONES: ZoneId[] = ["Z0", "Z1", "Z2", "Z3", "Z4", "Z5"];
 
@@ -33,18 +34,23 @@ function ContractForm({
   }
 
   return (
-    <div className="bg-[#F5F0E8] rounded-xl p-4 space-y-3 border border-[#D6D0C7]">
+    <div 
+      className="rounded-xl p-4 space-y-3 border"
+      style={{ backgroundColor: SURFACE_2, borderColor: BORDER_STRONG }}
+    >
       <input
         autoFocus
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Contract name"
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-3 text-base bg-white focus:outline-none"
+        className="w-full border rounded-lg px-3 py-3 text-base focus:outline-none"
+        style={{ backgroundColor: BG, borderColor: BORDER, color: TEXT }}
       />
       <select
         value={cId}
         onChange={(e) => setCId(e.target.value)}
-        className="w-full border border-[#E7E5E4] rounded-lg px-3 py-3 text-base bg-white focus:outline-none min-h-[48px]"
+        className="w-full border rounded-lg px-3 py-3 text-base focus:outline-none min-h-[48px]"
+        style={{ backgroundColor: BG, borderColor: BORDER, color: TEXT }}
       >
         {constellations.map((c) => (
           <option key={c.id} value={c.id}>{c.name} ({c.zone})</option>
@@ -54,13 +60,26 @@ function ContractForm({
         <input
           type="number" min="0.25" step="0.25" value={hours}
           onChange={(e) => setHours(e.target.value)}
-          className="w-24 border border-[#E7E5E4] rounded-lg px-3 py-2 text-base bg-white focus:outline-none min-h-[44px]"
+          className="w-24 border rounded-lg px-3 py-2 text-base focus:outline-none min-h-[44px]"
+          style={{ backgroundColor: BG, borderColor: BORDER, color: TEXT }}
         />
-        <span className="text-sm text-[#78716C]">hours / week target</span>
+        <span className="text-sm" style={{ color: TEXT_2 }}>hours / week target</span>
       </div>
       <div className="flex gap-2">
-        <button onClick={onCancel} className="flex-1 border border-[#D6D0C7] rounded-lg py-3 text-sm min-h-[48px] hover:bg-white">Cancel</button>
-        <button onClick={handleSave} className="flex-1 bg-[#1C1917] text-white rounded-lg py-3 text-sm min-h-[48px] hover:bg-[#2C2420]">Save</button>
+        <button 
+          onClick={onCancel} 
+          className="flex-1 border rounded-lg py-3 text-sm min-h-[48px]"
+          style={{ borderColor: BORDER, color: TEXT_2 }}
+        >
+          Cancel
+        </button>
+        <button 
+          onClick={handleSave} 
+          className="flex-1 rounded-lg py-3 text-sm min-h-[48px]"
+          style={{ backgroundColor: AMBER, color: BG }}
+        >
+          Save
+        </button>
       </div>
     </div>
   );
@@ -81,16 +100,17 @@ function ArrangeMode({ onExit }: { onExit: () => void }) {
   }
 
   return (
-    <div className="min-h-dvh pb-28" style={{ background: "linear-gradient(180deg, #FAFAF9 0%, #F5F0E8 100%)" }}>
+    <div className="min-h-dvh pb-28" style={{ background: BG }}>
       <div className="px-4 py-6 max-w-lg mx-auto space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl" style={{ fontFamily: "Fraunces, serif", fontWeight: 500 }}>Arrange zones</h1>
-            <p className="text-sm text-[#78716C]">Order them by priority.</p>
+            <h1 className="text-2xl" style={{ fontFamily: "Fraunces, serif", fontWeight: 500, color: TEXT }}>Arrange zones</h1>
+            <p className="text-sm" style={{ color: TEXT_2 }}>Order them by priority.</p>
           </div>
           <button
             onClick={onExit}
-            className="flex items-center gap-1.5 text-sm bg-[#1C1917] text-white rounded-xl px-3 py-2 min-h-[44px]"
+            className="flex items-center gap-1.5 text-sm rounded-xl px-3 py-2 min-h-[44px]"
+            style={{ backgroundColor: AMBER, color: BG }}
           >
             <Check size={16} /> Done
           </button>
@@ -102,20 +122,22 @@ function ArrangeMode({ onExit }: { onExit: () => void }) {
             return (
               <div
                 key={z}
-                className="flex items-center gap-3 bg-white rounded-xl border border-[#E7E5E4] p-3"
+                className="flex items-center gap-3 rounded-xl border p-3"
+                style={{ backgroundColor: SURFACE, borderColor: BORDER }}
               >
-                <GripVertical size={18} className="text-[#B5AFA9]" />
+                <GripVertical size={18} style={{ color: TEXT_3 }} />
                 <span className="w-2 h-10 rounded-full" style={{ backgroundColor: col }} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-base font-medium">{z} — {ZONE_LABELS[z].long}</p>
-                  <p className="text-sm text-[#78716C]">{ZONE_LABELS[z].desc}</p>
+                  <p className="text-base font-medium" style={{ color: TEXT }}>{z} — {ZONE_LABELS[z].long}</p>
+                  <p className="text-sm" style={{ color: TEXT_2 }}>{ZONE_LABELS[z].desc}</p>
                 </div>
-                <span className="text-sm text-[#B5AFA9] tabular-nums mr-1">#{i + 1}</span>
+                <span className="text-sm tabular-nums mr-1" style={{ color: TEXT_3 }}>#{i + 1}</span>
                 <div className="flex flex-col gap-1">
                   <button
                     onClick={() => moveZone(z, -1)}
                     disabled={i === 0}
-                    className="w-9 h-9 rounded-lg border border-[#E7E5E4] flex items-center justify-center disabled:opacity-30"
+                    className="w-9 h-9 rounded-lg border flex items-center justify-center disabled:opacity-30"
+                    style={{ borderColor: BORDER, color: TEXT }}
                     aria-label="Move up"
                   >
                     <ChevronUp size={16} />
@@ -123,7 +145,8 @@ function ArrangeMode({ onExit }: { onExit: () => void }) {
                   <button
                     onClick={() => moveZone(z, 1)}
                     disabled={i === ranked.length - 1}
-                    className="w-9 h-9 rounded-lg border border-[#E7E5E4] flex items-center justify-center disabled:opacity-30"
+                    className="w-9 h-9 rounded-lg border flex items-center justify-center disabled:opacity-30"
+                    style={{ borderColor: BORDER, color: TEXT }}
                     aria-label="Move down"
                   >
                     <ChevronDown size={16} />
@@ -180,7 +203,7 @@ export function ZonesPage() {
   return (
     <div
       className="min-h-dvh pb-28 transition-colors duration-300"
-      style={{ background: `linear-gradient(180deg, #FAFAF9 0%, ${ZONE_WASH[currentZone]} 100%)` }}
+      style={{ background: BG }}
     >
       {/* Header band — full-bleed in zone color */}
       <div
@@ -216,7 +239,10 @@ export function ZonesPage() {
       </div>
 
       {/* Zone tabs */}
-      <div className="sticky top-0 z-10 backdrop-blur-md bg-white/85 border-b border-[#E7E5E4]">
+      <div 
+        className="sticky top-0 z-10 backdrop-blur-md border-b"
+        style={{ backgroundColor: `${BG}D9`, borderColor: BORDER }}
+      >
         <div className="max-w-lg mx-auto px-4 py-2 flex items-center gap-1 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
           {zoneRanking.map((z, i) => {
             const col = ZONE_SOLID[z];
@@ -228,9 +254,9 @@ export function ZonesPage() {
                 title={ZONE_LABELS[z].tagline}
                 className={cn(
                   "px-3 py-2 rounded-lg text-sm min-h-[44px] transition-all whitespace-nowrap",
-                  active ? "font-semibold" : "text-[#78716C]"
+                  active ? "font-semibold" : ""
                 )}
-                style={active ? { color: col, backgroundColor: `${col}1A` } : undefined}
+                style={active ? { color: col, backgroundColor: `${col}1A` } : { color: TEXT_2 }}
               >
                 {z}
               </button>
@@ -260,7 +286,10 @@ export function ZonesPage() {
             >
               <div className="px-4 py-4 max-w-lg mx-auto space-y-3 pb-24">
                 {zoneConsts.length === 0 && !addingConst && !editingConst && (
-                  <div className="text-center text-sm text-[#78716C] py-8 border border-dashed border-[#D6D0C7] rounded-2xl">
+                  <div 
+                    className="text-center text-sm py-8 border border-dashed rounded-2xl"
+                    style={{ color: TEXT_3, borderColor: BORDER }}
+                  >
                     No constellations in {zone} yet.
                   </div>
                 )}
@@ -274,12 +303,15 @@ export function ZonesPage() {
                         onCancel={() => setEditingConst(null)}
                       />
                     ) : (
-                      <div className="flex bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden">
+                      <div 
+                        className="flex rounded-2xl border overflow-hidden"
+                        style={{ backgroundColor: SURFACE, borderColor: BORDER }}
+                      >
                         <div className="w-1.5 self-stretch shrink-0" style={{ backgroundColor: col }} />
                         <div className="flex-1 min-w-0 p-4 flex items-start gap-3">
                           <div className="flex-1 min-w-0">
-                            <p className="text-base font-medium">{c.name}</p>
-                            {c.notes && <p className="text-sm text-[#78716C] mt-0.5">{c.notes}</p>}
+                            <p className="text-base font-medium" style={{ color: TEXT }}>{c.name}</p>
+                            {c.notes && <p className="text-sm mt-0.5" style={{ color: TEXT_2 }}>{c.notes}</p>}
                             {c.urls?.length > 0 && (
                               <div className="flex flex-wrap gap-1.5 mt-2">
                                 {c.urls.map((u, i) => (
@@ -298,21 +330,24 @@ export function ZonesPage() {
                           <div className="flex flex-col gap-1">
                             <button
                               onClick={() => updateConstellation(c.id, { active: false })}
-                              className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#B5AFA9] hover:text-[#B45309]"
+                              className="min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-amber-500"
+                              style={{ color: TEXT_3 }}
                               title="Park"
                             >
                               <Archive size={16} />
                             </button>
                             <button
                               onClick={() => setEditingConst(c.id)}
-                              className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#B5AFA9] hover:text-[#1C1917]"
+                              className="min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white"
+                              style={{ color: TEXT_3 }}
                               title="Edit"
                             >
                               <Pencil size={16} />
                             </button>
                             <button
                               onClick={() => removeConstellation(c.id)}
-                              className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#B5AFA9] hover:text-[#B45309]"
+                              className="min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-red-400"
+                              style={{ color: TEXT_3 }}
                               title="Remove"
                             >
                               <Trash2 size={16} />
@@ -334,18 +369,21 @@ export function ZonesPage() {
                         onCancel={() => setEditingContract(null)}
                       />
                     ) : (
-                      <div className="flex rounded-2xl border border-[#3B5998]/20 overflow-hidden" style={{ background: "#DBEAFE" }}>
+                      <div 
+                        className="flex rounded-2xl border overflow-hidden" 
+                        style={{ backgroundColor: "rgba(141, 169, 230, 0.05)", borderColor: "rgba(141, 169, 230, 0.15)" }}
+                      >
                         <div className="w-1.5 self-stretch shrink-0 bg-[#3B5998]" />
                         <div className="flex-1 min-w-0 p-3 flex items-center gap-2">
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-[#3B5998]">📋 {ct.name}</p>
-                            <p className="text-xs text-[#3B5998]/70">{ct.weeklyHourTarget}h/week</p>
+                            <p className="text-sm font-medium" style={{ color: "#8DA9E6" }}>📋 {ct.name}</p>
+                            <p className="text-xs" style={{ color: "rgba(141, 169, 230, 0.6)" }}>{ct.weeklyHourTarget}h/week</p>
                           </div>
                           <button onClick={() => setEditingContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
-                            <Pencil size={14} className="text-[#3B5998]" />
+                            <Pencil size={14} className="text-[#8DA9E6]" />
                           </button>
                           <button onClick={() => removeContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
-                            <Trash2 size={14} className="text-[#3B5998]" />
+                            <Trash2 size={14} className="text-[#8DA9E6]" />
                           </button>
                         </div>
                       </div>
@@ -379,7 +417,8 @@ export function ZonesPage() {
         <div className="max-w-lg mx-auto px-4 mt-2 mb-4">
           <button
             onClick={() => setShowParked(!showParked)}
-            className="flex items-center gap-2 text-sm text-[#78716C] min-h-[44px]"
+            className="flex items-center gap-2 text-sm min-h-[44px]"
+            style={{ color: TEXT_2 }}
           >
             <Archive size={14} /> Parked ({parked.length}) {showParked ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
@@ -388,23 +427,28 @@ export function ZonesPage() {
               {parked.map((c) => {
                 const col = ZONE_SOLID[c.zone];
                 return (
-                  <div key={c.id} className="flex bg-white rounded-xl border border-[#E7E5E4] overflow-hidden opacity-70">
+                  <div 
+                    key={c.id} 
+                    className="flex rounded-xl border overflow-hidden opacity-70"
+                    style={{ backgroundColor: SURFACE, borderColor: BORDER }}
+                  >
                     <div className="w-1 self-stretch shrink-0" style={{ backgroundColor: col }} />
                     <div className="flex-1 min-w-0 p-3 flex items-center gap-2">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm">{c.name}</p>
+                        <p className="text-sm" style={{ color: TEXT }}>{c.name}</p>
                         <ZoneBadge zone={c.zone} />
                       </div>
                       <button
                         onClick={() => updateConstellation(c.id, { active: true })}
-                        className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#4F6E5C]"
+                        className="min-h-[44px] min-w-[44px] flex items-center justify-center text-green-400"
                         title="Unpark"
                       >
                         <ArchiveRestore size={14} />
                       </button>
                       <button
                         onClick={() => removeConstellation(c.id)}
-                        className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#B5AFA9]"
+                        className="min-h-[44px] min-w-[44px] flex items-center justify-center"
+                        style={{ color: TEXT_3 }}
                       >
                         <Trash2 size={14} />
                       </button>
@@ -423,7 +467,8 @@ export function ZonesPage() {
           <div className="max-w-lg mx-auto px-4 pb-3 flex gap-2 justify-end">
             <button
               onClick={() => setAddingContract(true)}
-              className="flex items-center gap-1.5 text-sm bg-white border border-[#3B5998]/30 text-[#3B5998] rounded-xl px-3 py-2.5 min-h-[44px] shadow-sm hover:bg-[#DBEAFE]"
+              className="flex items-center gap-1.5 text-sm rounded-xl px-3 py-2.5 min-h-[44px] shadow-sm"
+              style={{ backgroundColor: BG, border: `1px solid rgba(59, 89, 152, 0.4)`, color: "#8DA9E6" }}
             >
               <Plus size={14} /> Contract
             </button>
