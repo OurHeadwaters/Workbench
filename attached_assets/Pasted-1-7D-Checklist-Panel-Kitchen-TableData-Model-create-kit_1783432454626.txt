@@ -1,0 +1,131 @@
+1. 7D Checklist Panel — Kitchen TableData Model (create kitchenTable7D.ts or inline in the page):ts
+export const sevenDimensions = [
+  {
+    id: 'physical',
+    name: 'Physical / Material',
+    symbol: '⊡',
+    prompt: 'What tangible things (resources, bodies, land, tools) does this touch?',
+    check: 'Does it respect the physical headwaters and survival floor (Bucket 1)?',
+    gord: 'Can a northern person see the real cost on one page?',
+    leadSeat: 'Saltbox'
+  },
+  {
+    id: 'biological',
+    name: 'Biological / Living Systems',
+    symbol: '🌱',
+    prompt: 'How does this affect health, ecology, vitality, or the living bond?',
+    check: 'Does it keep life flowing or drain the watershed?',
+    gord: '',
+    leadSeat: 'Community'
+  },
+  {
+    id: 'psychological',
+    name: 'Psychological / Narrative',
+    symbol: '🧠',
+    prompt: 'What stories or inner parts does this touch?',
+    check: 'Does it honor personal narratives and avoid fragmentation?',
+    gord: '',
+    leadSeat: 'Smith'
+  },
+  {
+    id: 'quantum',
+    name: 'Quantum / Probabilistic',
+    symbol: '⟳',
+    prompt: 'What branching possibilities or uncertainties does this open?',
+    check: 'Are we comfortable with the range of futures?',
+    gord: '',
+    leadSeat: 'Systems'
+  },
+  {
+    id: 'soul',
+    name: 'Soul / Spiritual',
+    symbol: '☷',
+    prompt: 'Does this preserve essence or risk extraction?',
+    check: 'Any risk to the unmediated heart-to-heart?',
+    gord: '',
+    leadSeat: 'Ishmael'
+  },
+  {
+    id: 'collective',
+    name: 'Collective / Inter-subjective',
+    symbol: '⌂',
+    prompt: 'How does this affect trust circles and mutual aid?',
+    check: 'Does it build ownership or dependency?',
+    gord: '',
+    leadSeat: 'Community'
+  },
+  {
+    id: 'future',
+    name: 'Future / Timelines / Long View',
+    symbol: '🌳',
+    prompt: 'What does this leave seven generations from now?',
+    check: 'Seven-Generation Scrutiny + Honey Principle',
+    gord: 'Does this pass the long view at this table?',
+    leadSeat: 'Ishmael'
+  }
+] as const;
+
+SevenDPanel Component (new file or inline):tsx
+import { useState } from 'react';
+import { sevenDimensions } from './kitchenTable7D';
+
+export default function SevenDPanel({ mode = 'working', onFireSevenGen }: { mode?: string; onFireSevenGen?: () => void }) {
+  const [checks, setChecks] = useState<Record<string, boolean>>({});
+
+  const toggle = (id: string) => setChecks(prev => ({ ...prev, [id]: !prev[id] }));
+
+  const isCompact = mode === 'sounding';
+  const isReview = mode === 'review';
+
+  return (
+    <div className="border-l border-green-900/30 bg-[#1a2f24] p-4 overflow-auto">
+      <h3 className="text-green-300 font-medium mb-4 flex items-center gap-2">
+        7D Filter <span className="text-xs opacity-60">(North Star Guided)</span>
+      </h3>
+
+      <div className={isCompact ? "grid grid-cols-1 gap-3" : "space-y-6"}>
+        {sevenDimensions.map(dim => (
+          <div key={dim.id} className="border border-green-900/20 rounded p-3 bg-[#13221a]">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={checks[dim.id] || false}
+                onChange={() => toggle(dim.id)}
+                className="mt-1 accent-green-600"
+              />
+              <div className="flex-1">
+                <div className="flex items-center gap-2 text-green-200">
+                  <span>{dim.symbol}</span>
+                  <span className="font-medium">{dim.name}</span>
+                </div>
+                <p className="text-sm text-green-400 mt-1">{dim.prompt}</p>
+                <p className="text-xs text-green-500 mt-2">{dim.check}</p>
+                {dim.gord && <p className="text-xs italic text-amber-300 mt-1">Gord: {dim.gord}</p>}
+              </div>
+            </label>
+
+            {dim.id === 'future' && isReview && (
+              <button
+                onClick={onFireSevenGen}
+                className="mt-3 text-xs bg-green-900 hover:bg-green-800 px-3 py-1 rounded"
+              >
+                Run Ishmael Seven-Gen Test
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 pt-4 border-t border-green-900/30">
+        <button className="w-full bg-amber-900 hover:bg-amber-800 text-amber-100 py-3 rounded font-medium">
+          Does this pass the Gord Test at this kitchen table?
+        </button>
+      </div>
+    </div>
+  );
+}
+
+Integration into KitchenTablePage.tsx:Add the panel as a collapsible sidebar (right side) that shows when a session mode is active.
+Toolbar button to toggle it.
+Pass mode and wire fireSevenGen for the Future dimension.
+

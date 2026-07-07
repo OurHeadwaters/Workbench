@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback, type ReactElement } from "rea
 import { cn } from "@/lib/utils";
 import { RiverSmithPanel } from "@/components/RiverSmithPanel";
 import { TaskAutopilot } from "@/components/TaskAutopilot";
+import { SevenDPanel } from "@/components/SevenDPanel";
 import blueprintRaw from "../../../../shared/community-money-machine-blueprint.md?raw";
 import compactRaw from "../../../../shared/watershed-compact.md?raw";
 import stompingRaw from "../../../../shared/stomping-path.md?raw";
@@ -1256,6 +1257,8 @@ export function KitchenTablePage() {
 
   const inSession = messages.length > 0;
   const [riverSmithOpen, setRiverSmithOpen] = useState(false);
+  const [sevenDOpen, setSevenDOpen] = useState(false);
+  const [sevenDMode, setSevenDMode] = useState<"sounding" | "working" | "review">("working");
 
   return (
     <div className="flex flex-col bg-[#13110E] text-[#D8D0C5] font-sans antialiased relative selection:bg-[#B75C34]/40" style={{ height: "calc(100dvh - 90px)" }}>
@@ -1295,6 +1298,20 @@ export function KitchenTablePage() {
               {sessionName}
             </button>
           )}
+          {/* 7D Filter trigger */}
+          <button
+            onClick={() => setSevenDOpen((o) => !o)}
+            className={cn(
+              "flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border text-[11px] tracking-wide transition-colors",
+              sevenDOpen
+                ? "border-[#2A4A35] bg-[#131F18] text-[#7EB89A]"
+                : "border-[#2C241D] bg-[#1C1814] text-[#5C5046] hover:text-[#8C7B6D] hover:border-[#3D3228]"
+            )}
+            title="7D Filter — seven-dimension lens sweep"
+          >
+            <span className="text-[12px]">🌳</span>
+            <span className="hidden sm:inline">7D Filter</span>
+          </button>
           {/* River Smith trigger */}
           <button
             onClick={() => setRiverSmithOpen((o) => !o)}
@@ -1930,6 +1947,19 @@ export function KitchenTablePage() {
             <RiverSmithPanel defaultOpen embedded />
           </div>
         </div>
+      )}
+
+      {/* ── 7D Filter drawer — slides in from the right ── */}
+      {sevenDOpen && (
+        <SevenDPanel
+          mode={sevenDMode}
+          onModeChange={setSevenDMode}
+          onClose={() => setSevenDOpen(false)}
+          onFireSevenGen={fireSevenGen}
+          onGordTestPassed={(note) => addBite(note)}
+          sevenGenResult={sevenGenPanels["7d-future"]}
+          sessionTitle={sessionName}
+        />
       )}
 
       {/* ── Config modal ── */}
