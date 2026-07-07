@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { BG, SURFACE, SURFACE_2, BORDER, TEXT, TEXT_2, TEXT_3, AMBER, FONT_DISPLAY } from "@/lib/theme";
 
 interface ZoneEntry {
   zone: number;
@@ -105,10 +106,10 @@ const ZONES: ZoneEntry[] = [
 ];
 
 const STATUS_COLORS: Record<ZoneEntry["status"], { bg: string; text: string; dot: string }> = {
-  active:  { bg: "#F0FDF4", text: "#166534", dot: "#22C55E" },
-  next:    { bg: "#FFF7ED", text: "#9A3412", dot: "#F97316" },
-  future:  { bg: "#EFF6FF", text: "#1E40AF", dot: "#3B82F6" },
-  wild:    { bg: "#F5F3FF", text: "#5B21B6", dot: "#8B5CF6" },
+  active:  { bg: "rgba(74,222,128,0.1)",   text: "#4ADE80", dot: "#4ADE80" },
+  next:    { bg: "rgba(249,115,22,0.1)",    text: "#FB923C", dot: "#F97316" },
+  future:  { bg: "rgba(59,130,246,0.1)",    text: "#93C5FD", dot: "#3B82F6" },
+  wild:    { bg: "rgba(139,92,246,0.1)",    text: "#C4B5FD", dot: "#8B5CF6" },
 };
 
 const ZONE_COLORS = ["#6B7280","#22C55E","#EAB308","#F97316","#8B5CF6","#EC4899"];
@@ -119,19 +120,19 @@ function ZoneCard({ entry }: { entry: ZoneEntry }) {
   const zoneColor = ZONE_COLORS[Math.min(entry.zone, 5)];
 
   return (
-    <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+    <div className="rounded-xl overflow-hidden" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-start gap-3 px-4 py-4 min-h-[60px] text-left"
       >
         <span
-          className="mt-0.5 shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
-          style={{ backgroundColor: zoneColor }}
+          className="mt-0.5 shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+          style={{ backgroundColor: zoneColor, color: "#fff" }}
         >
           Z{entry.zone}
         </span>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-[#1C1917]">{entry.name}</p>
+          <p className="text-sm font-medium" style={{ color: TEXT }}>{entry.name}</p>
           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
             <span
               className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium"
@@ -143,23 +144,23 @@ function ZoneCard({ entry }: { entry: ZoneEntry }) {
               />
               {entry.statusLabel}
             </span>
-            <span className="text-xs text-[#78716C]">{entry.acres}</span>
+            <span className="text-xs" style={{ color: TEXT_2 }}>{entry.acres}</span>
           </div>
         </div>
         {open ? (
-          <ChevronUp size={16} className="text-[#78716C] shrink-0 mt-1" />
+          <ChevronUp size={16} className="shrink-0 mt-1" style={{ color: TEXT_2 }} />
         ) : (
-          <ChevronDown size={16} className="text-[#78716C] shrink-0 mt-1" />
+          <ChevronDown size={16} className="shrink-0 mt-1" style={{ color: TEXT_2 }} />
         )}
       </button>
 
       {open && (
-        <div className="border-t border-[#E7E5E4] px-4 pt-3 pb-4 space-y-3">
+        <div className="px-4 pt-3 pb-4 space-y-3" style={{ borderTop: `1px solid ${BORDER}` }}>
           <div>
-            <p className="text-xs font-semibold text-[#44403C] uppercase tracking-wide mb-1.5">Parcels</p>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: TEXT_2 }}>Parcels</p>
             <ul className="space-y-1">
               {entry.parcels.map((p, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-[#44403C]">
+                <li key={i} className="flex items-start gap-2 text-xs" style={{ color: TEXT }}>
                   <span className="mt-1 w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: zoneColor }} />
                   {p}
                 </li>
@@ -168,12 +169,12 @@ function ZoneCard({ entry }: { entry: ZoneEntry }) {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-[#44403C] uppercase tracking-wide mb-1">Intention</p>
-            <p className="text-sm text-[#44403C] leading-relaxed">{entry.intention}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: TEXT_2 }}>Intention</p>
+            <p className="text-sm leading-relaxed" style={{ color: TEXT }}>{entry.intention}</p>
           </div>
 
           {entry.note && (
-            <p className="text-xs text-[#8C7B6D] italic border-t border-[#E7E5E4] pt-3 leading-relaxed">
+            <p className="text-xs italic pt-3 leading-relaxed" style={{ color: TEXT_3, borderTop: `1px solid ${BORDER}` }}>
               {entry.note}
             </p>
           )}
@@ -191,39 +192,42 @@ const SEQUENCE = [
 
 export function LandPlanPage() {
   return (
-    <div className="min-h-dvh pb-28 px-4 pt-6 max-w-lg mx-auto space-y-6">
+    <div className="min-h-dvh pb-28 px-4 pt-6 max-w-lg mx-auto space-y-6" style={{ backgroundColor: BG }}>
       <div>
         <h1
-          className="text-2xl font-semibold text-[#1C1917]"
-          style={{ fontFamily: "Fraunces, serif" }}
+          className="text-2xl font-semibold"
+          style={{ fontFamily: FONT_DISPLAY, color: TEXT }}
         >
           Parr Land
         </h1>
-        <p className="text-sm text-[#78716C] mt-1">
+        <p className="text-sm mt-1" style={{ color: TEXT_2 }}>
           Zone use plan · Wabigoon ON · ~600+ ac owned + Crown access
         </p>
       </div>
 
-      <div className="bg-[#1C1917] rounded-xl px-4 py-4 space-y-3">
-        <p className="text-xs font-semibold text-[#ede8d5] uppercase tracking-wide">Sequence</p>
+      <div className="rounded-xl px-4 py-4 space-y-3" style={{ backgroundColor: SURFACE_2, border: `1px solid ${BORDER}` }}>
+        <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: TEXT_2 }}>Sequence</p>
         {SEQUENCE.map((s, i) => (
           <div key={i} className="flex items-start gap-3">
-            <span className="mt-0.5 shrink-0 text-xs font-bold text-[#1C1917] bg-[#ede8d5] rounded-full w-10 text-center py-0.5">
+            <span
+              className="mt-0.5 shrink-0 text-xs font-bold rounded-full w-10 text-center py-0.5"
+              style={{ backgroundColor: AMBER, color: BG }}
+            >
               {s.label}
             </span>
-            <p className="text-sm text-[#ede8d5] leading-relaxed opacity-90">{s.detail}</p>
+            <p className="text-sm leading-relaxed opacity-90" style={{ color: TEXT }}>{s.detail}</p>
           </div>
         ))}
       </div>
 
       <div className="space-y-3">
-        <p className="text-xs font-semibold text-[#78716C] uppercase tracking-wide px-1">Zone by Zone</p>
+        <p className="text-xs font-semibold uppercase tracking-wide px-1" style={{ color: TEXT_2 }}>Zone by Zone</p>
         {ZONES.map((entry, i) => (
           <ZoneCard key={i} entry={entry} />
         ))}
       </div>
 
-      <p className="text-xs text-[#A8A29E] text-center pb-2">
+      <p className="text-xs text-center pb-2" style={{ color: TEXT_3 }}>
         Last updated May 2026
       </p>
     </div>

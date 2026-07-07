@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { useLocation, Link } from "wouter";
 import { ChevronLeft, Moon, Sun } from "lucide-react";
+import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, FONT_DISPLAY } from "@/lib/theme";
 
 function todayKey() {
   return format(new Date(), "yyyy-MM-dd");
@@ -58,7 +59,6 @@ export function DebriefPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    // Re-load when mode switches
     const data = load();
     setText(isEvening ? (data[key]?.evening ?? "") : (data[key]?.morning ?? ""));
     setSaved(false);
@@ -82,27 +82,29 @@ export function DebriefPage() {
   const todayPrompt = prompts[promptIdx];
 
   return (
-    <div className="min-h-dvh flex flex-col bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8]">
+    <div className="min-h-dvh flex flex-col" style={{ backgroundColor: BG }}>
       {/* Header */}
-      <div className="sticky top-0 z-10 backdrop-blur-md bg-white/85 border-b border-[#E7E5E4]">
+      <div className="sticky top-0 z-10" style={{ backgroundColor: `${SURFACE}e6`, backdropFilter: "blur(12px)", borderBottom: `1px solid ${BORDER}` }}>
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1 text-sm text-[#44403C] min-h-[44px]">
+          <Link href="/" className="flex items-center gap-1 text-sm min-h-[44px]" style={{ color: TEXT_2 }}>
             <ChevronLeft size={18} /> Today
           </Link>
           <div className="flex items-center gap-2">
-            {isEvening ? <Moon size={16} className="text-[#78716C]" /> : <Sun size={16} className="text-[#78716C]" />}
-            <h2 className="text-base font-medium" style={{ fontFamily: "Fraunces, serif" }}>
+            {isEvening
+              ? <Moon size={16} style={{ color: TEXT_2 }} />
+              : <Sun size={16} style={{ color: TEXT_2 }} />}
+            <h2 className="text-base font-medium" style={{ fontFamily: FONT_DISPLAY, color: TEXT }}>
               {isEvening ? "Evening Dump" : "Morning Debrief"}
             </h2>
           </div>
-          <span className="text-xs text-[#B5AFA9] min-h-[44px] flex items-center">
+          <span className="text-xs min-h-[44px] flex items-center" style={{ color: TEXT_3 }}>
             {saved ? "Saved" : ""}
           </span>
         </div>
       </div>
 
       <div className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
-        <p className="text-sm text-[#6B5744] italic leading-relaxed">
+        <p className="text-sm italic leading-relaxed" style={{ color: TEXT_2 }}>
           "{todayPrompt}"
         </p>
 
@@ -114,8 +116,14 @@ export function DebriefPage() {
             ? "Write whatever's on your mind. No structure. No right way to do this."
             : "Start anywhere. What happened yesterday? What matters today?"
           }
-          className="w-full rounded-2xl border border-[#E7E5E4] bg-white p-4 text-base text-[#1C1917] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-[#1F3D2E]/20"
-          style={{ minHeight: isEvening ? 320 : 240 }}
+          className="w-full rounded-2xl p-4 text-base leading-relaxed resize-none focus:outline-none focus:ring-2"
+          style={{
+            backgroundColor: SURFACE,
+            border: `1px solid ${BORDER}`,
+            color: TEXT,
+            caretColor: TEXT,
+            minHeight: isEvening ? 320 : 240,
+          }}
         />
 
         {/* Mode toggle */}
@@ -124,9 +132,9 @@ export function DebriefPage() {
             href="/debrief"
             className="flex-1 flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium min-h-[48px] transition-colors"
             style={{
-              borderColor: !isEvening ? "#1F3D2E" : "#E7E5E4",
-              backgroundColor: !isEvening ? "#1F3D2E" : "transparent",
-              color: !isEvening ? "#fff" : "#78716C",
+              borderColor: !isEvening ? AMBER : BORDER,
+              backgroundColor: !isEvening ? AMBER : "transparent",
+              color: !isEvening ? BG : TEXT_2,
             }}
           >
             <Sun size={15} /> Morning
@@ -135,9 +143,9 @@ export function DebriefPage() {
             href="/debrief/evening"
             className="flex-1 flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium min-h-[48px] transition-colors"
             style={{
-              borderColor: isEvening ? "#1F3D2E" : "#E7E5E4",
-              backgroundColor: isEvening ? "#1F3D2E" : "transparent",
-              color: isEvening ? "#fff" : "#78716C",
+              borderColor: isEvening ? AMBER : BORDER,
+              backgroundColor: isEvening ? AMBER : "transparent",
+              color: isEvening ? BG : TEXT_2,
             }}
           >
             <Moon size={15} /> Evening
@@ -162,14 +170,14 @@ function PreviousDays({ isEvening }: { isEvening: boolean }) {
 
   return (
     <div className="space-y-2">
-      <p className="text-[10px] font-black tracking-widest uppercase text-[#78716C]">Previous</p>
+      <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: TEXT_2 }}>Previous</p>
       {entries.map(([dateKey, entry]) => {
         const text = isEvening ? entry.evening : entry.morning;
         if (!text) return null;
         return (
-          <div key={dateKey} className="rounded-xl border border-[#E7E5E4] bg-white p-3 space-y-1">
-            <p className="text-[10px] font-black tracking-widest uppercase text-[#B5AFA9]">{dateKey}</p>
-            <p className="text-sm text-[#78716C] line-clamp-3 leading-relaxed">{text}</p>
+          <div key={dateKey} className="rounded-xl p-3 space-y-1" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
+            <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: TEXT_3 }}>{dateKey}</p>
+            <p className="text-sm line-clamp-3 leading-relaxed" style={{ color: TEXT_2 }}>{text}</p>
           </div>
         );
       })}

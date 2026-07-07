@@ -3,6 +3,7 @@ import { ArrowLeft, MapPin, CheckCircle } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import type { CostTier } from "@workspace/odyssey";
+import { BG, SURFACE, SURFACE_2, BORDER, TEXT, TEXT_2, TEXT_3, AMBER, AMBER_WASH } from "@/lib/theme";
 
 const BASE_API = import.meta.env.VITE_API_URL ?? "/api";
 
@@ -94,16 +95,16 @@ export function SponsorIntakePage() {
 
   if (submitted) {
     return (
-      <div className="min-h-dvh bg-[#FAFAF9] pb-24">
+      <div className="min-h-dvh pb-24" style={{ backgroundColor: BG }}>
         <div className="px-5 py-6 max-w-lg mx-auto space-y-6">
-          <Link href="/" className="flex items-center gap-1.5 text-sm text-[#78716C] hover:text-[#1C1917] transition-colors">
+          <Link href="/" className="flex items-center gap-1.5 text-sm transition-colors" style={{ color: TEXT_2 }}>
             <ArrowLeft size={14} /> Back to today
           </Link>
 
-          <div className="rounded-xl border border-[#D6CFC3] bg-[#F9F6F0] p-6 space-y-3 text-center">
-            <CheckCircle size={32} className="text-[#92785A] mx-auto" />
-            <h2 className="text-lg font-medium">Submission received</h2>
-            <p className="text-sm text-[#78716C]">
+          <div className="rounded-xl p-6 space-y-3 text-center" style={{ backgroundColor: SURFACE_2, border: `1px solid ${BORDER}` }}>
+            <CheckCircle size={32} className="mx-auto" style={{ color: AMBER }} />
+            <h2 className="text-lg font-medium" style={{ color: TEXT }}>Submission received</h2>
+            <p className="text-sm" style={{ color: TEXT_2 }}>
               Thanks — your tool is in the review queue. Headwaters curators
               review every submission before it appears on the trail. You'll
               hear back at the email you provided.
@@ -115,21 +116,21 @@ export function SponsorIntakePage() {
   }
 
   return (
-    <div className="min-h-dvh bg-[#FAFAF9] pb-24">
+    <div className="min-h-dvh pb-24" style={{ backgroundColor: BG }}>
       <div className="px-5 py-6 max-w-lg mx-auto space-y-6">
-        <Link href="/" className="flex items-center gap-1.5 text-sm text-[#78716C] hover:text-[#1C1917] transition-colors">
+        <Link href="/" className="flex items-center gap-1.5 text-sm transition-colors" style={{ color: TEXT_2 }}>
           <ArrowLeft size={14} /> Back to today
         </Link>
 
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <MapPin size={14} className="text-[#92785A]" />
-            <span className="text-[10px] uppercase tracking-widest text-[#92785A] font-medium">
+            <MapPin size={14} style={{ color: AMBER }} />
+            <span className="text-[10px] uppercase tracking-widest font-medium" style={{ color: AMBER }}>
               Odyssey Trail
             </span>
           </div>
-          <h1 className="text-2xl">Submit a trail sign</h1>
-          <p className="text-sm text-[#78716C] mt-1">
+          <h1 className="text-2xl" style={{ color: TEXT }}>Submit a trail sign</h1>
+          <p className="text-sm mt-1" style={{ color: TEXT_2 }}>
             Sponsors earn placement by proving value first. All submissions go
             through community vetting before they appear on the trail.
           </p>
@@ -139,42 +140,44 @@ export function SponsorIntakePage() {
           <input type="text" name="website" value={form.website} onChange={(e) => set("website", e.target.value)} className="sr-only" tabIndex={-1} aria-hidden="true" />
 
           <div className="space-y-1">
-            <label className="text-sm font-medium block">Tool name *</label>
+            <label className="text-sm font-medium block" style={{ color: TEXT }}>Tool name *</label>
             <input
               type="text"
               value={form.toolName}
               onChange={(e) => set("toolName", e.target.value)}
               placeholder="e.g. Morning Triage"
-              className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+              className="w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
+              style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium block">What problem does it solve? *</label>
-            <p className="text-xs text-[#78716C]">Write it from the practitioner's perspective. "When X happens, this tool helps because…"</p>
+            <label className="text-sm font-medium block" style={{ color: TEXT }}>What problem does it solve? *</label>
+            <p className="text-xs" style={{ color: TEXT_2 }}>Write it from the practitioner's perspective. "When X happens, this tool helps because…"</p>
             <textarea
               value={form.problemStatement}
               onChange={(e) => set("problemStatement", e.target.value)}
               placeholder="Without this tool, practitioners struggle to…"
               rows={3}
-              className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917] resize-none"
+              className="w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 resize-none"
+              style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium block">Cost tier *</label>
+            <label className="text-sm font-medium block" style={{ color: TEXT }}>Cost tier *</label>
             <div className="grid grid-cols-4 gap-2">
               {COST_TIERS.map((tier) => (
                 <button
                   key={tier.value}
                   type="button"
                   onClick={() => set("costTier", tier.value)}
-                  className={cn(
-                    "rounded-xl border py-2.5 text-sm font-medium transition-colors min-h-[44px]",
+                  className="rounded-xl py-2.5 text-sm font-medium transition-colors min-h-[44px]"
+                  style={
                     form.costTier === tier.value
-                      ? "border-[#1C1917] bg-[#1C1917] text-white"
-                      : "border-[#E7E5E4] bg-white text-[#44403C] hover:border-[#A8A29E]",
-                  )}
+                      ? { backgroundColor: AMBER, color: BG, border: `1px solid ${AMBER}` }
+                      : { backgroundColor: SURFACE, color: TEXT_2, border: `1px solid ${BORDER}` }
+                  }
                 >
                   {tier.label}
                 </button>
@@ -183,30 +186,32 @@ export function SponsorIntakePage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium block">Action URL *</label>
-            <p className="text-xs text-[#78716C]">Where does the practitioner go to take the first step?</p>
+            <label className="text-sm font-medium block" style={{ color: TEXT }}>Action URL *</label>
+            <p className="text-xs" style={{ color: TEXT_2 }}>Where does the practitioner go to take the first step?</p>
             <input
               type="url"
               value={form.actionUrl}
               onChange={(e) => set("actionUrl", e.target.value)}
               placeholder="https://…"
-              className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+              className="w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
+              style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium block">Call-to-action label</label>
+            <label className="text-sm font-medium block" style={{ color: TEXT }}>Call-to-action label</label>
             <input
               type="text"
               value={form.actionLabel}
               onChange={(e) => set("actionLabel", e.target.value)}
               placeholder="Take a look (default)"
-              className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+              className="w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
+              style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium block">Which zones does this serve? *</label>
+            <label className="text-sm font-medium block" style={{ color: TEXT }}>Which zones does this serve? *</label>
             <div className="space-y-2">
               {ZONES.map((zone) => {
                 const selected = form.zoneTags.includes(zone.id);
@@ -215,17 +220,22 @@ export function SponsorIntakePage() {
                     key={zone.id}
                     type="button"
                     onClick={() => toggleZone(zone.id)}
-                    className={cn(
-                      "w-full flex items-center gap-3 rounded-xl border px-4 py-2.5 text-left transition-colors min-h-[48px]",
-                      selected
-                        ? "border-[#1C1917] bg-white"
-                        : "border-[#E7E5E4] bg-white hover:border-[#A8A29E]",
-                    )}
+                    className="w-full flex items-center gap-3 rounded-xl px-4 py-2.5 text-left transition-colors min-h-[48px]"
+                    style={{
+                      backgroundColor: SURFACE,
+                      border: `1px solid ${selected ? AMBER : BORDER}`,
+                    }}
                   >
-                    <div className={cn("w-4 h-4 rounded border-2 shrink-0 transition-colors", selected ? "bg-[#1C1917] border-[#1C1917]" : "border-[#D6D3D1]")} />
+                    <div
+                      className="w-4 h-4 rounded shrink-0 transition-colors"
+                      style={{
+                        backgroundColor: selected ? AMBER : "transparent",
+                        border: `2px solid ${selected ? AMBER : BORDER}`,
+                      }}
+                    />
                     <div>
-                      <p className="text-sm font-medium">{zone.label}</p>
-                      <p className="text-xs text-[#78716C]">{zone.desc}</p>
+                      <p className="text-sm font-medium" style={{ color: TEXT }}>{zone.label}</p>
+                      <p className="text-xs" style={{ color: TEXT_2 }}>{zone.desc}</p>
                     </div>
                   </button>
                 );
@@ -234,68 +244,73 @@ export function SponsorIntakePage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium block">Topic tags</label>
-            <p className="text-xs text-[#78716C]">Comma-separated keywords (e.g. "finance, tracking, income")</p>
+            <label className="text-sm font-medium block" style={{ color: TEXT }}>Topic tags</label>
+            <p className="text-xs" style={{ color: TEXT_2 }}>Comma-separated keywords (e.g. "finance, tracking, income")</p>
             <input
               type="text"
               value={form.topicTags}
               onChange={(e) => set("topicTags", e.target.value)}
               placeholder="planning, triage, client-work"
-              className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+              className="w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
+              style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium block">Community proof</label>
-            <p className="text-xs text-[#78716C]">One sentence that shows real adoption. "Used by X communities to do Y."</p>
+            <label className="text-sm font-medium block" style={{ color: TEXT }}>Community proof</label>
+            <p className="text-xs" style={{ color: TEXT_2 }}>One sentence that shows real adoption. "Used by X communities to do Y."</p>
             <input
               type="text"
               value={form.communityProof}
               onChange={(e) => set("communityProof", e.target.value)}
               placeholder="Used by 5 cooperatives across the corridor"
-              className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+              className="w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
+              style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
             />
           </div>
 
-          <div className="border-t border-[#E7E5E4] pt-5 space-y-4">
-            <p className="text-xs text-[#78716C] uppercase tracking-wider font-medium">Your details</p>
+          <div className="space-y-4 pt-5" style={{ borderTop: `1px solid ${BORDER}` }}>
+            <p className="text-xs uppercase tracking-wider font-medium" style={{ color: TEXT_2 }}>Your details</p>
 
             <div className="space-y-1">
-              <label className="text-sm font-medium block">Your name *</label>
+              <label className="text-sm font-medium block" style={{ color: TEXT }}>Your name *</label>
               <input
                 type="text"
                 value={form.submitterName}
                 onChange={(e) => set("submitterName", e.target.value)}
                 placeholder="Full name"
-                className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+                className="w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
+                style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-sm font-medium block">Your email *</label>
+              <label className="text-sm font-medium block" style={{ color: TEXT }}>Your email *</label>
               <input
                 type="email"
                 value={form.submitterEmail}
                 onChange={(e) => set("submitterEmail", e.target.value)}
                 placeholder="you@example.com"
-                className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917]"
+                className="w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
+                style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-sm font-medium block">Anything else to add?</label>
+              <label className="text-sm font-medium block" style={{ color: TEXT }}>Anything else to add?</label>
               <textarea
                 value={form.submitterNote}
                 onChange={(e) => set("submitterNote", e.target.value)}
                 placeholder="Context that helps the review team…"
                 rows={2}
-                className="w-full border border-[#E7E5E4] rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1C1917] resize-none"
+                className="w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 resize-none"
+                style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
               />
             </div>
           </div>
 
           {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            <p className="text-sm rounded-xl px-4 py-3" style={{ color: "#F87171", backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)" }}>
               {error}
             </p>
           )}
@@ -303,12 +318,13 @@ export function SponsorIntakePage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-[#1C1917] text-white rounded-xl py-3 text-sm font-medium min-h-[52px] disabled:opacity-50 transition-opacity"
+            className="w-full rounded-xl py-3 text-sm font-medium min-h-[52px] disabled:opacity-50 transition-opacity"
+            style={{ backgroundColor: AMBER, color: BG }}
           >
             {submitting ? "Submitting…" : "Submit for vetting"}
           </button>
 
-          <p className="text-xs text-[#A8A29E] text-center pb-2">
+          <p className="text-xs text-center pb-2" style={{ color: TEXT_3 }}>
             All submissions are reviewed by Headwaters curators before appearing
             on the trail. We'll follow up at the email you provided.
           </p>

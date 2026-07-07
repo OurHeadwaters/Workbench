@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, AMBER_WASH, GREEN } from "@/lib/theme";
 
 export function PractitionerApplicationPage() {
   const [form, setForm] = useState({
@@ -42,32 +43,36 @@ export function PractitionerApplicationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FAFAF9] to-[#F5F0E8] px-4 py-12">
+    <div className="min-h-screen px-4 py-12" style={{ backgroundColor: BG }}>
       <div className="max-w-xl mx-auto">
-        <h1 className="text-3xl font-bold text-stone-800 mb-2">
+        <h1 className="text-3xl font-bold mb-2" style={{ color: TEXT }}>
           Apply to be a Practitioner
         </h1>
-        <p className="text-stone-500 text-sm mb-8 leading-relaxed">
+        <p className="text-sm mb-8 leading-relaxed" style={{ color: TEXT_2 }}>
           Practitioners run Headwaters Kits in their own community under their own doctrine
           and Stripe account. This is a people-first application — tell us who you are and
           what you're building.
         </p>
 
         {/* HH → Earth Kit pathway note */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-8 text-sm text-amber-800">
+        <div
+          className="rounded-xl px-4 py-3 mb-8 text-sm"
+          style={{ backgroundColor: AMBER_WASH, border: `1px solid rgba(200,146,58,0.25)`, color: AMBER }}
+        >
           <p className="font-medium mb-1">Already active in Helping Hands?</p>
-          <p className="text-amber-700 text-xs leading-relaxed">
-            If you hold <span className="font-medium">Teaching-level</span> badges in Food &amp; Harvest, Land &amp; Water, Governance, or Care in the Helping Hands credential system, mention those in your doctrine summary — they are recognised as supporting evidence for Earth Kit Licensed standing and will be reflected in your practitioner profile once approved.
+          <p className="text-xs leading-relaxed" style={{ color: TEXT_2 }}>
+            If you hold <span className="font-medium" style={{ color: AMBER }}>Teaching-level</span> badges in Food &amp; Harvest, Land &amp; Water, Governance, or Care in the Helping Hands credential system, mention those in your doctrine summary — they are recognised as supporting evidence for Earth Kit Licensed standing and will be reflected in your practitioner profile once approved.
           </p>
         </div>
 
         {result ? (
           <div
-            className={`rounded-2xl p-6 text-sm ${
+            className="rounded-2xl p-6 text-sm"
+            style={
               result.ok
-                ? "bg-emerald-50 border border-emerald-200 text-emerald-800"
-                : "bg-red-50 border border-red-200 text-red-700"
-            }`}
+                ? { backgroundColor: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.25)", color: GREEN }
+                : { backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", color: "#F87171" }
+            }
           >
             {result.ok ? "✓ " : "✗ "}
             {result.message}
@@ -75,7 +80,7 @@ export function PractitionerApplicationPage() {
         ) : (
           <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-5">
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">
+              <label className="block text-sm font-medium mb-1" style={{ color: TEXT }}>
                 Your name
               </label>
               <input
@@ -85,12 +90,13 @@ export function PractitionerApplicationPage() {
                 onChange={handleChange}
                 required
                 placeholder="Jane Smith"
-                className="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 bg-white"
+                className="w-full rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2"
+                style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">
+              <label className="block text-sm font-medium mb-1" style={{ color: TEXT }}>
                 Community or organization
               </label>
               <input
@@ -100,12 +106,13 @@ export function PractitionerApplicationPage() {
                 onChange={handleChange}
                 required
                 placeholder="e.g. Moose Jaw Co-op, Deer Lake Band Council"
-                className="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 bg-white"
+                className="w-full rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2"
+                style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">
+              <label className="block text-sm font-medium mb-1" style={{ color: TEXT }}>
                 Doctrine summary
               </label>
               <textarea
@@ -115,12 +122,13 @@ export function PractitionerApplicationPage() {
                 required
                 rows={5}
                 placeholder="What's your approach? What do you believe about community, economy, and sovereignty? What would you build with practitioner access?"
-                className="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 bg-white resize-none"
+                className="w-full rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 resize-none"
+                style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">
+              <label className="block text-sm font-medium mb-1" style={{ color: TEXT }}>
                 Contact email
               </label>
               <input
@@ -130,23 +138,25 @@ export function PractitionerApplicationPage() {
                 onChange={handleChange}
                 required
                 placeholder="you@example.com"
-                className="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 bg-white"
+                className="w-full rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2"
+                style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: TEXT }}
               />
             </div>
 
             <button
               type="submit"
               disabled={submitting}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl text-sm transition-colors disabled:opacity-50"
+              className="font-semibold py-3 rounded-xl text-sm transition-colors disabled:opacity-50"
+              style={{ backgroundColor: AMBER, color: BG }}
             >
               {submitting ? "Submitting…" : "Submit application →"}
             </button>
           </form>
         )}
 
-        <p className="mt-8 text-center text-xs text-stone-400">
+        <p className="mt-8 text-center text-xs" style={{ color: TEXT_3 }}>
           Questions?{" "}
-          <a href="mailto:hello@ourheadwaters.ca" className="underline hover:text-stone-600">
+          <a href="mailto:hello@ourheadwaters.ca" className="underline" style={{ color: TEXT_2 }}>
             hello@ourheadwaters.ca
           </a>
         </p>

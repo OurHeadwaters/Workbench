@@ -16,11 +16,8 @@ which read as visually broken/inconsistent across pages.
 light-theme debris that should be converted to theme.ts tokens or the
 rgba(237,232,213,X) muted-text scale, not left as literal hex.
 
-The following pages still have unconverted light-theme leftovers (last
-checked): WeeklyPage, SeasonalPage, DebriefPage, LandPlanPage,
-PractitionerApplicationPage, PractitionerReviewPage, TesterKitPage,
-TriageLandingPage, SponsorIntakePage, InboxSetupPage. Update this list once
-they're migrated.
+All pages are now fully migrated to the dark theme. No remaining light-theme
+pages in the app as of the task-2463 migration.
 
 Also note: `@workspace/kitchen-table-client`'s `<KitchenTableButton />` is a
 shared dev-only floating widget (max z-index, bottom-right, hidden via

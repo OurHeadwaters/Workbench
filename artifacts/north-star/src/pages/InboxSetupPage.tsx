@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { useStore } from "@/store";
 import type { HatLabel } from "@/types";
 import { cn } from "@/lib/utils";
+import { BG, SURFACE, SURFACE_2, BORDER, TEXT, TEXT_2, TEXT_3, AMBER, GREEN } from "@/lib/theme";
 
 type LiveStatus = "ok" | "scope" | "unavailable" | "no-connection" | "checking";
 
@@ -95,22 +96,22 @@ export function InboxSetupPage() {
 
   function getStatusBadge(entry: AccountStatusEntry | undefined, isAlias: boolean) {
     if (isAlias) {
-      return { icon: <Link2Off size={12} />, label: "Display alias", color: "text-[#78716C]", needsAction: false };
+      return { icon: <Link2Off size={12} />, label: "Display alias", color: TEXT_3, needsAction: false };
     }
     if (!entry) {
-      return { icon: <AlertTriangle size={12} />, label: "Needs auth", color: "text-[#92400E]", needsAction: true };
+      return { icon: <AlertTriangle size={12} />, label: "Needs auth", color: "#FB923C", needsAction: true };
     }
     switch (entry.status) {
       case "ok":
-        return { icon: <CheckCircle2 size={12} />, label: "Connected", color: "text-[#4F6E5C]", needsAction: false };
+        return { icon: <CheckCircle2 size={12} />, label: "Connected", color: GREEN, needsAction: false };
       case "scope":
-        return { icon: <AlertTriangle size={12} />, label: "Needs reconnection", color: "text-[#92400E]", needsAction: true };
+        return { icon: <AlertTriangle size={12} />, label: "Needs reconnection", color: "#FB923C", needsAction: true };
       case "unavailable":
-        return { icon: <AlertTriangle size={12} />, label: "Needs reconnection", color: "text-[#92400E]", needsAction: true };
+        return { icon: <AlertTriangle size={12} />, label: "Needs reconnection", color: "#FB923C", needsAction: true };
       case "no-connection":
-        return { icon: <Wifi size={12} />, label: "Not yet connected", color: "text-[#A8A29E]", needsAction: true };
+        return { icon: <Wifi size={12} />, label: "Not yet connected", color: TEXT_3, needsAction: true };
       case "checking":
-        return { icon: <RefreshCw size={12} className="animate-spin" />, label: "Checking…", color: "text-[#78716C]", needsAction: false };
+        return { icon: <RefreshCw size={12} className="animate-spin" />, label: "Checking…", color: TEXT_2, needsAction: false };
     }
   }
 
@@ -120,47 +121,52 @@ export function InboxSetupPage() {
   ).length;
 
   return (
-    <div className="min-h-dvh bg-[#FAFAF9] pb-24">
+    <div className="min-h-dvh pb-24" style={{ backgroundColor: BG }}>
       <div className="px-5 py-6 max-w-lg mx-auto space-y-5">
         <div>
-          <h1 className="text-2xl mb-1">Gmail inbox setup</h1>
-          <p className="text-sm text-[#78716C]">
+          <h1 className="text-2xl mb-1" style={{ color: TEXT }}>Gmail inbox setup</h1>
+          <p className="text-sm" style={{ color: TEXT_2 }}>
             Configure which threads surface in Morning Triage. All enabled accounts feed into a single unified list.
           </p>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 flex items-center justify-between">
+        <div className="rounded-xl p-4 flex items-center justify-between" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
           <div>
-            <p className="text-sm font-medium">Inbox triage</p>
-            <p className="text-xs text-[#78716C]">Show matching threads on the Today screen</p>
+            <p className="text-sm font-medium" style={{ color: TEXT }}>Inbox triage</p>
+            <p className="text-xs" style={{ color: TEXT_2 }}>Show matching threads on the Today screen</p>
           </div>
           <button
             onClick={() => setEnabled(!enabled)}
-            className={`relative w-12 h-6 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center ${enabled ? "bg-[#1C1917]" : "bg-[#E7E5E4]"}`}
+            className="relative w-12 h-6 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+            style={{ backgroundColor: enabled ? AMBER : SURFACE_2 }}
           >
-            <span className={`absolute w-5 h-5 bg-white rounded-full shadow transition-transform ${enabled ? "translate-x-3" : "-translate-x-3"}`} />
+            <span
+              className="absolute w-5 h-5 bg-white rounded-full shadow transition-transform"
+              style={{ transform: enabled ? "translateX(10px)" : "translateX(-10px)" }}
+            />
           </button>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+        <div className="rounded-xl overflow-hidden" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
           <div className="px-4 pt-4 pb-3 flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <h2 className="text-base font-medium">Gmail accounts</h2>
-              <p className="text-xs text-[#78716C] mt-0.5">
+              <h2 className="text-base font-medium" style={{ color: TEXT }}>Gmail accounts</h2>
+              <p className="text-xs mt-0.5" style={{ color: TEXT_2 }}>
                 Toggle accounts on or off. {connectedCount > 0 ? `${connectedCount} connected` : "None connected yet"}
                 {needsActionCount > 0 ? ` · ${needsActionCount} need setup` : ""}.
               </p>
             </div>
             <button
               onClick={fetchStatuses}
-              className="shrink-0 p-2 rounded-lg hover:bg-[#F5F5F0] min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="shrink-0 p-2 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
+              style={{ backgroundColor: "transparent" }}
               title="Refresh connection status"
             >
-              <RefreshCw size={14} className="text-[#78716C]" />
+              <RefreshCw size={14} style={{ color: TEXT_2 }} />
             </button>
           </div>
 
-          <div className="divide-y divide-[#E7E5E4]">
+          <div style={{ borderTop: `1px solid ${BORDER}` }}>
             {gmailAccounts.map((acc) => {
               const entry = accountStatuses[acc.id];
               const { icon, label, color, needsAction } = getStatusBadge(entry, !!acc.isAlias);
@@ -168,26 +174,27 @@ export function InboxSetupPage() {
               const envVar = entry?.envVar ?? "";
 
               return (
-                <div key={acc.id} className="px-4 py-3">
+                <div key={acc.id} className="px-4 py-3" style={{ borderBottom: `1px solid ${BORDER}` }}>
                   <div className="flex items-start gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-sm font-medium">{acc.fullName}</span>
+                        <span className="text-sm font-medium" style={{ color: TEXT }}>{acc.fullName}</span>
                         {acc.isAlias && (
-                          <span className="text-[10px] bg-[#F5F5F0] text-[#78716C] px-1.5 py-0.5 rounded-full">alias</span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ backgroundColor: SURFACE_2, color: TEXT_2 }}>alias</span>
                         )}
                       </div>
-                      <p className="text-xs text-[#78716C] truncate">{acc.address}</p>
+                      <p className="text-xs truncate" style={{ color: TEXT_2 }}>{acc.address}</p>
 
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
-                        <div className={cn("flex items-center gap-1 text-[10px] font-medium", color)}>
+                        <div className="flex items-center gap-1 text-[10px] font-medium" style={{ color }}>
                           {icon}
                           <span>{label}</span>
                         </div>
                         {needsAction && (
                           <button
                             onClick={() => toggleReconnect(acc.id)}
-                            className="text-[10px] font-medium text-[#1C1917] bg-[#F5F5F0] px-2 py-0.5 rounded-full hover:bg-[#E7E5E4] transition-colors min-h-[24px]"
+                            className="text-[10px] font-medium px-2 py-0.5 rounded-full transition-colors min-h-[24px]"
+                            style={{ color: TEXT, backgroundColor: SURFACE_2, border: `1px solid ${BORDER}` }}
                           >
                             {showReconnect ? "Hide steps" : "How to connect →"}
                           </button>
@@ -195,44 +202,45 @@ export function InboxSetupPage() {
                       </div>
 
                       {acc.isAlias && acc.aliasNote && (
-                        <p className="text-[10px] text-[#A8A29E] mt-1 leading-snug">{acc.aliasNote}</p>
+                        <p className="text-[10px] mt-1 leading-snug" style={{ color: TEXT_3 }}>{acc.aliasNote}</p>
                       )}
 
                       {showReconnect && envVar && (
-                        <div className="mt-2 bg-[#F8F7F6] border border-[#E7E5E4] rounded-xl p-3 space-y-2">
-                          <p className="text-[11px] font-medium text-[#1C1917]">Connect {acc.address}</p>
-                          <ol className="text-[11px] text-[#44403C] space-y-1 leading-snug list-none">
-                            <li><span className="font-mono text-[#78716C] mr-1">1.</span> In the Replit integrations panel, add a new <strong>Gmail</strong> connection and sign in with <strong>{acc.address}</strong>.</li>
-                            <li><span className="font-mono text-[#78716C] mr-1">2.</span> Copy the new connection ID (starts with <code className="font-mono bg-[#E7E5E4] px-0.5 rounded">conn_google-mail_</code>).</li>
-                            <li><span className="font-mono text-[#78716C] mr-1">3.</span> Set this environment variable in Replit Secrets to the connection ID:</li>
+                        <div className="mt-2 rounded-xl p-3 space-y-2" style={{ backgroundColor: SURFACE_2, border: `1px solid ${BORDER}` }}>
+                          <p className="text-[11px] font-medium" style={{ color: TEXT }}>Connect {acc.address}</p>
+                          <ol className="text-[11px] space-y-1 leading-snug list-none" style={{ color: TEXT_2 }}>
+                            <li><span className="font-mono mr-1" style={{ color: TEXT_3 }}>1.</span> In the Replit integrations panel, add a new <strong>Gmail</strong> connection and sign in with <strong>{acc.address}</strong>.</li>
+                            <li><span className="font-mono mr-1" style={{ color: TEXT_3 }}>2.</span> Copy the new connection ID (starts with <code className="font-mono rounded px-0.5" style={{ backgroundColor: BORDER }}>conn_google-mail_</code>).</li>
+                            <li><span className="font-mono mr-1" style={{ color: TEXT_3 }}>3.</span> Set this environment variable in Replit Secrets to the connection ID:</li>
                           </ol>
-                          <div className="flex items-center gap-2 bg-white border border-[#E7E5E4] rounded-lg px-3 py-2">
-                            <code className="text-[11px] font-mono text-[#1C1917] flex-1 break-all">{envVar}</code>
+                          <div className="flex items-center gap-2 rounded-lg px-3 py-2" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
+                            <code className="text-[11px] font-mono flex-1 break-all" style={{ color: TEXT }}>{envVar}</code>
                             <button
                               onClick={() => copyEnvVar(envVar)}
-                              className="shrink-0 p-1 rounded hover:bg-[#F5F5F0] min-h-[28px] min-w-[28px] flex items-center justify-center"
+                              className="shrink-0 p-1 rounded min-h-[28px] min-w-[28px] flex items-center justify-center"
                               title="Copy env var name"
                             >
                               {copiedEnvVar === envVar
-                                ? <CheckIcon size={12} className="text-[#4F6E5C]" />
-                                : <Copy size={12} className="text-[#78716C]" />
+                                ? <CheckIcon size={12} style={{ color: GREEN }} />
+                                : <Copy size={12} style={{ color: TEXT_2 }} />
                               }
                             </button>
                           </div>
-                          <p className="text-[10px] text-[#78716C]">After setting the secret, restart the API server and tap the refresh button above.</p>
+                          <p className="text-[10px]" style={{ color: TEXT_3 }}>After setting the secret, restart the API server and tap the refresh button above.</p>
                         </div>
                       )}
                     </div>
 
                     <button
                       onClick={() => updateGmailAccount(acc.id, { enabled: !acc.enabled })}
-                      className={cn(
-                        "relative w-11 h-6 rounded-full transition-colors mt-0.5 shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center",
-                        acc.enabled ? "bg-[#1C1917]" : "bg-[#E7E5E4]",
-                      )}
+                      className="relative w-11 h-6 rounded-full transition-colors mt-0.5 shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      style={{ backgroundColor: acc.enabled ? AMBER : SURFACE_2 }}
                       title={acc.enabled ? "Disable account" : "Enable account"}
                     >
-                      <span className={cn("absolute w-4 h-4 bg-white rounded-full shadow transition-transform", acc.enabled ? "translate-x-2.5" : "-translate-x-2.5")} />
+                      <span
+                        className="absolute w-4 h-4 bg-white rounded-full shadow transition-transform"
+                        style={{ transform: acc.enabled ? "translateX(10px)" : "translateX(-10px)" }}
+                      />
                     </button>
                   </div>
                 </div>
@@ -241,71 +249,105 @@ export function InboxSetupPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3">
-          <h2 className="text-base">Keywords</h2>
-          <p className="text-xs text-[#78716C]">Threads containing these words will be surfaced across all accounts.</p>
+        <div className="rounded-xl p-4 space-y-3" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
+          <h2 className="text-base" style={{ color: TEXT }}>Keywords</h2>
+          <p className="text-xs" style={{ color: TEXT_2 }}>Threads containing these words will be surfaced across all accounts.</p>
           <div className="flex flex-wrap gap-2">
             {keywords.map((kw) => (
-              <span key={kw} className="flex items-center gap-1 bg-[#F5F5F0] rounded-lg px-2 py-1 text-xs">
+              <span key={kw} className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs" style={{ backgroundColor: SURFACE_2, color: TEXT }}>
                 {kw}
                 <button onClick={() => setKeywords(keywords.filter((k) => k !== kw))} className="min-h-[24px] min-w-[24px] flex items-center justify-center"><X size={10} /></button>
               </span>
             ))}
           </div>
           <div className="flex gap-2">
-            <input value={newKeyword} onChange={(e) => setNewKeyword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addKeyword()} placeholder="Add keyword" className="flex-1 border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#1C1917]" />
-            <button onClick={addKeyword} className="px-3 py-2 bg-[#1C1917] text-white rounded-lg text-sm min-h-[44px]"><Plus size={16} /></button>
+            <input
+              value={newKeyword}
+              onChange={(e) => setNewKeyword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addKeyword()}
+              placeholder="Add keyword"
+              className="flex-1 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2"
+              style={{ backgroundColor: SURFACE_2, border: `1px solid ${BORDER}`, color: TEXT }}
+            />
+            <button onClick={addKeyword} className="px-3 py-2 rounded-lg text-sm min-h-[44px]" style={{ backgroundColor: AMBER, color: BG }}>
+              <Plus size={16} />
+            </button>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3">
-          <h2 className="text-base">Always-surface senders</h2>
-          <p className="text-xs text-[#78716C]">Threads from these senders surface regardless of keywords, across all accounts.</p>
+        <div className="rounded-xl p-4 space-y-3" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
+          <h2 className="text-base" style={{ color: TEXT }}>Always-surface senders</h2>
+          <p className="text-xs" style={{ color: TEXT_2 }}>Threads from these senders surface regardless of keywords, across all accounts.</p>
           <div className="flex flex-wrap gap-2">
             {senders.map((s) => (
-              <span key={s} className="flex items-center gap-1 bg-[#F5F5F0] rounded-lg px-2 py-1 text-xs">
+              <span key={s} className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs" style={{ backgroundColor: SURFACE_2, color: TEXT }}>
                 {s}
                 <button onClick={() => setSenders(senders.filter((x) => x !== s))} className="min-h-[24px] min-w-[24px] flex items-center justify-center"><X size={10} /></button>
               </span>
             ))}
-            {senders.length === 0 && <p className="text-xs text-[#78716C]">No senders added.</p>}
+            {senders.length === 0 && <p className="text-xs" style={{ color: TEXT_2 }}>No senders added.</p>}
           </div>
           <div className="flex gap-2">
-            <input value={newSender} onChange={(e) => setNewSender(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addSender()} placeholder="email@example.com" className="flex-1 border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#1C1917]" />
-            <button onClick={addSender} className="px-3 py-2 bg-[#1C1917] text-white rounded-lg text-sm min-h-[44px]"><Plus size={16} /></button>
+            <input
+              value={newSender}
+              onChange={(e) => setNewSender(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addSender()}
+              placeholder="email@example.com"
+              className="flex-1 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2"
+              style={{ backgroundColor: SURFACE_2, border: `1px solid ${BORDER}`, color: TEXT }}
+            />
+            <button onClick={addSender} className="px-3 py-2 rounded-lg text-sm min-h-[44px]" style={{ backgroundColor: AMBER, color: BG }}>
+              <Plus size={16} />
+            </button>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3">
-          <h2 className="text-base">Hat labels</h2>
-          <p className="text-xs text-[#78716C]">Gmail labels whose threads are always surfaced (e.g. "inbox-priority").</p>
+        <div className="rounded-xl p-4 space-y-3" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
+          <h2 className="text-base" style={{ color: TEXT }}>Hat labels</h2>
+          <p className="text-xs" style={{ color: TEXT_2 }}>Gmail labels whose threads are always surfaced (e.g. "inbox-priority").</p>
           <div className="flex flex-wrap gap-2">
             {hatLabels.map((hl) => (
-              <span key={hl.label} className="flex items-center gap-1 bg-[#F5F5F0] rounded-lg px-2 py-1 text-xs">
+              <span key={hl.label} className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs" style={{ backgroundColor: SURFACE_2, color: TEXT }}>
                 {hl.label}
                 <button onClick={() => setHatLabels(hatLabels.filter((x) => x.label !== hl.label))} className="min-h-[24px] min-w-[24px] flex items-center justify-center"><X size={10} /></button>
               </span>
             ))}
-            {hatLabels.length === 0 && <p className="text-xs text-[#78716C]">No labels added.</p>}
+            {hatLabels.length === 0 && <p className="text-xs" style={{ color: TEXT_2 }}>No labels added.</p>}
           </div>
           <div className="flex gap-2">
-            <input value={newHatLabel} onChange={(e) => setNewHatLabel(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addHatLabel()} placeholder="Label name" className="flex-1 border border-[#E7E5E4] rounded-lg px-3 py-2 text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#1C1917]" />
-            <button onClick={addHatLabel} className="px-3 py-2 bg-[#1C1917] text-white rounded-lg text-sm min-h-[44px]"><Plus size={16} /></button>
+            <input
+              value={newHatLabel}
+              onChange={(e) => setNewHatLabel(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addHatLabel()}
+              placeholder="Label name"
+              className="flex-1 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2"
+              style={{ backgroundColor: SURFACE_2, border: `1px solid ${BORDER}`, color: TEXT }}
+            />
+            <button onClick={addHatLabel} className="px-3 py-2 rounded-lg text-sm min-h-[44px]" style={{ backgroundColor: AMBER, color: BG }}>
+              <Plus size={16} />
+            </button>
           </div>
         </div>
 
         <Link href="/archive-mining">
-          <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 flex items-center gap-3 cursor-pointer hover:bg-[#F5F5F0] transition-colors">
-            <Archive size={18} className="text-[#78716C] shrink-0" />
+          <div
+            className="rounded-xl p-4 flex items-center gap-3 cursor-pointer transition-colors"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
+          >
+            <Archive size={18} className="shrink-0" style={{ color: TEXT_2 }} />
             <div className="min-w-0">
-              <p className="text-sm font-medium">Archive Mining</p>
-              <p className="text-xs text-[#78716C]">Search your Gmail archive by zone, tag threads, build a content bank</p>
+              <p className="text-sm font-medium" style={{ color: TEXT }}>Archive Mining</p>
+              <p className="text-xs" style={{ color: TEXT_2 }}>Search your Gmail archive by zone, tag threads, build a content bank</p>
             </div>
-            <span className="text-[#A8A29E] text-sm ml-auto shrink-0">→</span>
+            <span className="text-sm ml-auto shrink-0" style={{ color: TEXT_3 }}>→</span>
           </div>
         </Link>
 
-        <button onClick={handleSave} className="w-full bg-[#1C1917] text-white rounded-xl py-3 text-sm font-medium min-h-[44px]">
+        <button
+          onClick={handleSave}
+          className="w-full rounded-xl py-3 text-sm font-medium min-h-[44px] transition-colors"
+          style={{ backgroundColor: AMBER, color: BG }}
+        >
           {saved ? "Saved ✓" : "Save settings"}
         </button>
       </div>
