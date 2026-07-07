@@ -1,0 +1,51 @@
+7D Checklist & Prompt Set for Kitchen Table SessionsKeep it lightweight — one page, printable or in-app sidebar. Use it at the start of Sounding, Working, or Review modes. The Six Seats (plus configurable) run through it together.7D Kitchen Table Filter (North Star guided — run every proposal/decision through this)Physical/Material
+Prompt: What tangible things (resources, bodies, land, tools) does this touch?
+Check: Does it respect the physical headwaters and survival floor (Bucket 1)?
+Gord Test version: “Can a northern person see the real cost on one page?”
+Biological/Living Systems
+Prompt: How does this affect health, ecology, vitality, or the living bond?
+Check: Does it keep life flowing or drain the watershed?
+Psychological/Narrative
+Prompt: What stories or inner parts does this touch? Does it honor personal and shared narratives?
+Check: Does it risk fragmentation or support integration? (Protect raw heart-to-heart.)
+Quantum/Probabilistic
+Prompt: What branching possibilities or uncertainties does this open or close?
+Check: Are we comfortable with the range of futures this creates?
+Soul/Spiritual
+Prompt: Does this preserve essence, gifted qualities, or soul integrity?
+Check: Any risk of extraction or forced naming of the sacred? (Default to protection.)
+Collective/Inter-subjective
+Prompt: How does this affect trust circles, mutual aid, and community multipliers?
+Check: Does it build ownership or create new dependency?
+Future/Timelines/Long View
+Prompt: What does this leave seven generations from now? (Ishmael seat leads)
+Check: Seven-Generation Scrutiny + Honey Principle + Eave Rule.
+
+Quick Session Flow:Drop item on table → Quick 7D scan (5–10 min) → Seats deliberate → Seal or reroute.
+End with: “Does this pass the Gord Test at this kitchen table?”
+
+You can add this as a collapsible panel in KitchenTablePage.tsx or a printable PDF in the handbook.UX/UI Fix: Make It Feel Like Sitting Down at the Kitchen TableCurrent implementations are functional but can feel like “yet another dashboard.” Let’s make the Kitchen Table UI feel warm, relational, and grounded — like pulling up a chair with coffee, notes, and people you trust.Core Design Direction (“Kitchen Table” aesthetic):Visual Tone: Warm wood textures, soft forest green (#1f3d2e) accents, gentle lighting, handwritten-style fonts for notes, real object shadows. Background could subtly evoke a wooden table with coffee rings, scattered papers, or a window looking out to the watershed.
+Metaphor: The screen is the table. Items “dropped” appear as notes, cards, or mugs on the surface. Deliberation feels like conversation around it.
+
+Concrete UI Improvements (implementable quickly):Landing / Daily Entry  On load (or via a “Sit Down at the Table” button): A full-screen, calming table view.  
+Central area: The Table surface with today’s dropped items as draggable cards/notes.  
+Around the edges: The Six Seats as illustrated “people” or symbols (clickable to hear their lens/prompt).  
+Top bar: “Kitchen Table — Zone 1 • Today’s Council” with date and mode (Sounding / Working / Review).
+Session Modes (feels like sitting down for different conversations)  Sounding (quick daily check-in): Casual layout — items scattered, voice-note friendly, light prompts.  
+Working (deeper weekly decisions): Structured council view with 7D checklist sidebar that expands.  
+Review (month-end or big proposals): Formal but warm — timeline view + seven-generation overlay.
+Key Interactions  Drop Item: Big, friendly “Put on the Table” button (or drag from other artifacts). Item appears as a handwritten note/card. Auto-groups by source (as you already do).  
+Deliberation: Click a seat → it “speaks” (prompt + reasoning field). 7D checklist as a beautiful radial or linear guide that lights up as you go.  
+Seal Decision: Physical-feeling button (“Stamp it” or “Pass the Plate”) that logs to replit.md with seat reasoning.  
+Mobile/Tablet Feel: Optimized for sitting with a device at a real table — large touch targets, landscape encouragement.
+Warm Details  Subtle animations: Cards settle onto the table with a soft “thud,” steam from a coffee mug icon, gentle wood grain parallax.  
+Audio option: Soft ambient kitchen sounds or seat “voices” (optional text-to-speech with warm, plain-spoken tones).  
+Personalization: Upload a photo of your actual kitchen table as background (with privacy controls).  
+Printable Export: One-click “Print the Table” PDF that looks like handwritten notes for offline council.
+Tech Notes for Implementation:Keep the monorepo/pnpm setup.
+Use the existing @workspace/kitchen-table-client helper.
+For the UI overhaul: React + Vite with a component library like shadcn or a custom warm theme. Add Framer Motion for the table physics feel.
+Start small: Build the “Sit Down” landing view first — it will immediately change how people experience the tool.
+
+This keeps the relational heart of the Kitchen Table while making the 7D lens and council process feel natural and inviting. It turns a powerful filter into something people actually want to sit down at for daily/weekly decisions.
+
