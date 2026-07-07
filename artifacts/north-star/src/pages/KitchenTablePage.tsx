@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, useCallback, type ReactElement } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo, type ReactElement } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { RiverSmithPanel } from "@/components/RiverSmithPanel";
 import { TaskAutopilot } from "@/components/TaskAutopilot";
@@ -20,31 +21,8 @@ interface KTIntakeItem {
   flushedAt: string;
 }
 
-function KitchenTableSourcesPanel() {
-  const [items, setItems] = useState<KTIntakeItem[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const token =
-      typeof window !== "undefined"
-        ? window.localStorage.getItem("library.ownerToken") ||
-          window.localStorage.getItem("ownerToken")
-        : null;
-    if (!token) { setError("no-token"); return; }
-    let cancelled = false;
-    fetch("/api/deadhead/intake?status=new", {
-      headers: { "x-library-owner-token": token },
-    })
-      .then(async (r) => {
-        if (!r.ok) throw new Error(String(r.status));
-        return r.json() as Promise<{ items: KTIntakeItem[] }>;
-      })
-      .then((j) => { if (!cancelled) setItems(j.items); })
-      .catch((e) => { if (!cancelled) setError(e instanceof Error ? e.message : "err"); });
-    return () => { cancelled = true; };
-  }, []);
-
-  if (error || !items || items.length === 0) return null;
+function KitchenTableSourcesPanel({ items }: { items: KTIntakeItem[] | null }) {
+  if (!items || items.length === 0) return null;
 
   const groups = new Map<string, KTIntakeItem[]>();
   for (const it of items) {
@@ -805,6 +783,98 @@ function RefDocContent({ raw }: { raw: string }) {
   return <div className="pb-8">{elements}</div>;
 }
 
+// ── NoteCard — draggable table card with Framer Motion settle animation ───────
+type NoteCardProps = {
+  content: string;
+  label?: string;
+  labelColor?: string;
+  index: number;
+  clusterLeft?: number;
+  posInCluster?: number;
+  variant?: "scatter" | "strip";
+  surfaceRef: React.RefObject<HTMLDivElement | null>;
+};
+
+function NoteCard({
+  content, label, labelColor, index,
+  clusterLeft, posInCluster,
+  variant = "scatter",
+  surfaceRef,
+}: NoteCardProps) {
+  const rotation = useMemo(() => ((index * 7.31) % 5) - 2.5, [index]);
+  const topPct = useMemo(
+    () => posInCluster !== undefined ? 8 + posInCluster * 20 : 8 + ((index * 23) % 52),
+    [index, posInCluster],
+  );
+  const leftPct = useMemo(
+    () => clusterLeft !== undefined ? clusterLeft + (posInCluster ?? 0) * 1.5 : 2 + ((index * 19) % 72),
+    [index, clusterLeft, posInCluster],
+  );
+
+  const inner = (
+    <>
+      {label && (
+        <div
+          className="text-[9px] uppercase tracking-[0.14em] font-bold mb-1.5 opacity-70"
+          style={{ color: labelColor ?? "#8A6A1A" }}
+        >
+          {label}
+        </div>
+      )}
+      <p
+        className="text-[13px] leading-snug"
+        style={{ fontFamily: "'Caveat', 'Segoe Script', cursive, Georgia, serif" }}
+      >
+        {content}
+      </p>
+    </>
+  );
+
+  if (variant === "strip") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.7, y: -10 }}
+        animate={{ opacity: 1, scale: 1, y: 0, rotate: rotation }}
+        transition={{ type: "spring", stiffness: 280, damping: 20, delay: index * 0.05 }}
+        className="flex-shrink-0 select-none rounded-[2px] px-3 py-2.5 shadow-[2px_3px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.6)]"
+        style={{
+          background: "#F5EDD8",
+          color: "#2C1F10",
+          width: 144,
+          transformOrigin: "bottom center",
+        }}
+      >
+        {inner}
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      drag
+      dragConstraints={surfaceRef}
+      dragElastic={0.08}
+      initial={{ opacity: 0, scale: 0.6, rotate: 0, y: -20 }}
+      animate={{ opacity: 1, scale: 1, rotate: rotation, y: 0 }}
+      transition={{ type: "spring", stiffness: 260, damping: 18, delay: index * 0.07 }}
+      whileDrag={{ scale: 1.06, rotate: 0, zIndex: 60, cursor: "grabbing" }}
+      className="absolute cursor-grab select-none rounded-[2px] px-3.5 py-3 shadow-[2px_4px_14px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.7)]"
+      style={{
+        top: `${topPct}%`,
+        left: `${leftPct}%`,
+        background: "#F5EDD8",
+        color: "#2C1F10",
+        maxWidth: 200,
+        minWidth: 130,
+        transformOrigin: "center center",
+        zIndex: 10 + (index % 8),
+      }}
+    >
+      {inner}
+    </motion.div>
+  );
+}
+
 // ── Seat-config persistence helpers ──────────────────────────────────────────
 function getOwnerToken(): string | null {
   try {
@@ -872,6 +942,7 @@ export function KitchenTablePage() {
 
   const [seatLoadStatus, setSeatLoadStatus] = useState<"server" | "local" | "defaults" | "auth-expired" | null>(null);
   const [reAuthOpen, setReAuthOpen] = useState(false);
+  const [intakeItems, setIntakeItems] = useState<KTIntakeItem[] | null>(null);
   const [reAuthDraft, setReAuthDraft] = useState("");
   const [seatSyncFailed, setSeatSyncFailed] = useState(false);
   const seatSyncFailedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -885,6 +956,26 @@ export function KitchenTablePage() {
   useEffect(() => {
     const ref = seatSyncFailedTimerRef;
     return () => { if (ref.current) clearTimeout(ref.current); };
+  }, []);
+
+  useEffect(() => {
+    const token =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("library.ownerToken") ||
+          window.localStorage.getItem("ownerToken")
+        : null;
+    if (!token) return;
+    let cancelled = false;
+    fetch("/api/deadhead/intake?status=new", {
+      headers: { "x-library-owner-token": token },
+    })
+      .then(async (r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json() as Promise<{ items: KTIntakeItem[] }>;
+      })
+      .then((j) => { if (!cancelled) setIntakeItems(j.items); })
+      .catch(() => { if (!cancelled) setIntakeItems([]); });
+    return () => { cancelled = true; };
   }, []);
 
   const fetchSeatConfig = useCallback(() => {
@@ -1256,9 +1347,108 @@ export function KitchenTablePage() {
   const deleteBite = (id: string) => setSoundBites((prev) => prev.filter((b) => b.id !== id));
 
   const inSession = messages.length > 0;
+  type SessionMode = "none" | "sounding" | "working" | "review";
+  const [sessionMode, setSessionMode] = useState<SessionMode>("none");
+  const surfaceRef = useRef<HTMLDivElement>(null);
+  const inSessionSurfaceRef = useRef<HTMLDivElement>(null);
+  const [cardSurfaceOpen, setCardSurfaceOpen] = useState(true);
   const [riverSmithOpen, setRiverSmithOpen] = useState(false);
   const [sevenDOpen, setSevenDOpen] = useState(false);
   const [sevenDMode, setSevenDMode] = useState<"sounding" | "working" | "review">("working");
+
+  const printTable = useCallback(() => {
+    const win = window.open("", "_blank");
+    if (!win) return;
+
+    const doc = win.document;
+    doc.open();
+
+    const date = new Date().toLocaleDateString("en-CA", {
+      weekday: "long", year: "numeric", month: "long", day: "numeric",
+    });
+
+    const STYLE = `
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'Caveat', cursive; background: #FAF5E8; color: #2C1F10; padding: 48px; }
+      h1 { font-size: 32px; font-weight: 600; margin-bottom: 6px; }
+      .date { font-size: 18px; color: #7A5A2A; margin-bottom: 40px; }
+      .section-title { font-size: 16px; text-transform: uppercase; letter-spacing: 0.14em; color: #A08060; margin-bottom: 20px; border-bottom: 1px solid #D4C4A0; padding-bottom: 8px; }
+      .cards { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 48px; }
+      .card { background: #FFF8E8; border: 1px solid #D4C4A0; border-radius: 2px; padding: 16px; width: 220px; box-shadow: 2px 3px 8px rgba(0,0,0,0.12); }
+      .card-label { font-size: 13px; color: #8A6A1A; margin-bottom: 6px; font-weight: 600; }
+      .card-text { font-size: 18px; line-height: 1.4; }
+      .msgs { display: flex; flex-direction: column; gap: 24px; }
+      .msg { border-left: 3px solid #C8A870; padding: 12px 16px; background: #FFF8E8; }
+      .msg-user { border-left-color: #6A9A80; }
+      .msg-name { font-size: 14px; color: #8A6A1A; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+      .msg p { font-size: 18px; line-height: 1.6; white-space: pre-wrap; }
+      @media print { body { padding: 24px; } }
+    `;
+
+    const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap" rel="stylesheet"/>`;
+
+    doc.write(`<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Kitchen Table</title>${FONTS}<style>${STYLE}</style></head><body>`);
+
+    const h1 = doc.createElement("h1");
+    h1.textContent = "Kitchen Table";
+    doc.body.appendChild(h1);
+    const dateEl = doc.createElement("div");
+    dateEl.className = "date";
+    dateEl.textContent = date;
+    doc.body.appendChild(dateEl);
+
+    if (agendaItems.length > 0) {
+      const st = doc.createElement("div");
+      st.className = "section-title";
+      st.textContent = "On the table";
+      doc.body.appendChild(st);
+      const cardsDiv = doc.createElement("div");
+      cardsDiv.className = "cards";
+      agendaItems.forEach((item) => {
+        const seat = seats.find((s) => s.id === item.leadId);
+        const card = doc.createElement("div");
+        card.className = "card";
+        const lbl = doc.createElement("div");
+        lbl.className = "card-label";
+        lbl.textContent = `${seat?.icon ?? ""} ${item.lead}`;
+        const txt = doc.createElement("p");
+        txt.className = "card-text";
+        txt.textContent = item.question;
+        card.appendChild(lbl);
+        card.appendChild(txt);
+        cardsDiv.appendChild(card);
+      });
+      doc.body.appendChild(cardsDiv);
+    }
+
+    if (messages.length > 0) {
+      const st = doc.createElement("div");
+      st.className = "section-title";
+      st.textContent = "Council responses";
+      doc.body.appendChild(st);
+      const msgsDiv = doc.createElement("div");
+      msgsDiv.className = "msgs";
+      messages.forEach((m) => {
+        const msgEl = doc.createElement("div");
+        msgEl.className = m.role === "user" ? "msg msg-user" : "msg msg-seat";
+        if (m.role === "assistant") {
+          const name = doc.createElement("div");
+          name.className = "msg-name";
+          name.textContent = m.seatName;
+          msgEl.appendChild(name);
+        }
+        const p = doc.createElement("p");
+        p.textContent = m.content;
+        msgEl.appendChild(p);
+        msgsDiv.appendChild(msgEl);
+      });
+      doc.body.appendChild(msgsDiv);
+    }
+
+    doc.write(`<script>window.onload = function(){ window.print(); }<\/script></body></html>`);
+    doc.close();
+  }, [agendaItems, seats, messages]);
 
   return (
     <div className="flex flex-col bg-[#13110E] text-[#D8D0C5] font-sans antialiased relative selection:bg-[#B75C34]/40" style={{ height: "calc(100dvh - 90px)" }}>
@@ -1341,17 +1531,194 @@ export function KitchenTablePage() {
             <span className="text-[13px]">✦</span>
             <span>{soundBites.length}</span>
           </button>
+          <button
+            onClick={printTable}
+            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#2C241D] bg-[#1C1814] text-[#5C5046] text-[11px] tracking-wide hover:text-[#8C7B6D] hover:border-[#3D3228] transition-colors"
+            title="Print the Table — handwritten notes style"
+          >
+            <span className="text-[12px]">🖨</span>
+            <span className="hidden sm:inline">Print</span>
+          </button>
+        </div>
+
+        {/* ── Session mode chips ── */}
+        <div className="flex items-center gap-1.5 pb-3 overflow-x-auto scrollbar-hide">
+          {(
+            [
+              { id: "none" as const,     emoji: "◦",  label: "Sit down" },
+              { id: "sounding" as const, emoji: "☕", label: "Sounding" },
+              { id: "working" as const,  emoji: "⚒",  label: "Working" },
+              { id: "review" as const,   emoji: "◎",  label: "Review" },
+            ]
+          ).map((m) => (
+            <button
+              key={m.id}
+              onClick={() => setSessionMode(m.id)}
+              className={cn(
+                "flex-shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide transition-all",
+                sessionMode === m.id
+                  ? "bg-[#3A2B1C] border border-[#8C7B6D]/50 text-[#C8B8A0] shadow-inner"
+                  : "border border-[#251E18] text-[#4A3D30] hover:text-[#8C7B6D] hover:border-[#3D3228]"
+              )}
+            >
+              <span>{m.emoji}</span>
+              <span>{m.label}</span>
+            </button>
+          ))}
         </div>
       </div>
 
       {/* ══════════════════════════════════════════════════════════════
           MAIN SCROLL AREA — table surface
       ══════════════════════════════════════════════════════════════ */}
+      <div className={cn("flex-1 min-h-0", sessionMode === "working" && inSession ? "flex flex-row" : "")}>
       <div className="flex-1 overflow-y-auto relative z-10 min-h-0">
+        <AnimatePresence mode="sync">
+        <motion.div
+          key={`${sessionMode}-${inSession ? "in" : "out"}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.16, ease: "easeOut" }}
+          className="h-full"
+        >
 
-        {/* ── TABLE SET (no messages) — backlog triage is the table surface ── */}
-        {!inSession && (
+        {/* ── LANDING — "Sit Down at the Table" ── */}
+        {sessionMode === "none" && !inSession && (
+          <div className="flex flex-col items-center justify-start px-5 pb-8">
+            {/* Table surface — mobile: portrait full-width / landscape two-column grid */}
+            {(() => {
+              const useIntake = intakeItems && intakeItems.length > 0;
+              const sources = useIntake
+                ? Array.from(new Set(intakeItems!.map((it) => it.source ?? "unknown")))
+                : Array.from(new Set(agendaItems.map((a) => a.leadId)));
+              const displayItems = useIntake
+                ? intakeItems!.slice(0, 7).map((it, i) => ({
+                    key: it.id,
+                    content: it.title.length > 60 ? it.title.slice(0, 58) + "…" : it.title,
+                    label: it.source ?? "—",
+                    labelColor: undefined as string | undefined,
+                    groupKey: it.source ?? "unknown",
+                    index: i,
+                  }))
+                : agendaItems.slice(0, 7).map((item, i) => ({
+                    key: item.q,
+                    content: item.question.length > 60 ? item.question.slice(0, 58) + "…" : item.question,
+                    label: item.lead,
+                    labelColor: seats.find((s) => s.id === item.leadId)?.color,
+                    groupKey: item.leadId,
+                    index: i,
+                  }));
+              return (
+                <>
+                  {/* Mobile grid */}
+                  <div
+                    key={`landing-mobile-${sessionMode}`}
+                    className="sm:hidden grid grid-cols-1 [@media(orientation:landscape)]:grid-cols-2 gap-2 w-full mt-4 mb-4 rounded-xl px-3 pt-3 pb-3"
+                    style={{ background: "radial-gradient(ellipse at 40% 70%,#2A1A08 0%,#0F0C09 100%)" }}
+                  >
+                    {displayItems.map((d) => (
+                      <NoteCard
+                        key={d.key}
+                        content={d.content}
+                        label={d.label}
+                        labelColor={d.labelColor}
+                        index={d.index}
+                        variant="strip"
+                        surfaceRef={surfaceRef}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Desktop: absolute scatter grouped by source */}
+                  <div
+                    ref={surfaceRef}
+                    key={`landing-desktop-${sessionMode}`}
+                    className="hidden sm:block relative w-full rounded-xl overflow-hidden mt-4 mb-6"
+                    style={{
+                      height: "clamp(220px, 38vw, 320px)",
+                      backgroundImage: `radial-gradient(ellipse at 50% 60%, #3A2A14 0%, #1E1610 55%, #13110E 100%),
+                        repeating-linear-gradient(88deg, transparent, transparent 5px, rgba(180,130,70,0.04) 5px, rgba(180,130,70,0.04) 6px),
+                        repeating-linear-gradient(2deg, transparent, transparent 24px, rgba(140,90,40,0.03) 24px, rgba(140,90,40,0.03) 25px)`,
+                      boxShadow: "inset 0 2px 24px rgba(0,0,0,0.5), 0 4px 32px rgba(0,0,0,0.4)",
+                    }}
+                  >
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] h-[60%] rounded-full pointer-events-none"
+                      style={{ background: "radial-gradient(ellipse, rgba(200,115,42,0.18) 0%, transparent 70%)" }} />
+                    {(() => {
+                      const counters: Record<string, number> = {};
+                      return displayItems.map((d) => {
+                        const clusterIdx = sources.indexOf(d.groupKey);
+                        const posInCluster = counters[d.groupKey] ?? 0;
+                        counters[d.groupKey] = posInCluster + 1;
+                        const clusterLeft = sources.length > 1
+                          ? (clusterIdx / (sources.length - 1)) * 74 + 2
+                          : 2 + ((d.index * 19) % 72);
+                        return (
+                          <NoteCard
+                            key={d.key}
+                            content={d.content}
+                            label={d.label}
+                            labelColor={d.labelColor}
+                            index={d.index}
+                            clusterLeft={clusterLeft}
+                            posInCluster={posInCluster}
+                            surfaceRef={surfaceRef}
+                          />
+                        );
+                      });
+                    })()}
+                  </div>
+                </>
+              );
+            })()}
+
+            {/* Date and greeting */}
+            <p className="text-[11px] uppercase tracking-[0.2em] text-[#5C5046] mb-2">
+              {new Date().toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}
+            </p>
+            <p className="text-[17px] font-serif text-[#C8B8A0] mb-6 text-center leading-snug">
+              {agendaItems.length} questions are on the table.
+            </p>
+
+            {/* Sit Down CTA */}
+            <button
+              onClick={() => setSessionMode("sounding")}
+              className="px-8 py-4 rounded-sm text-[15px] font-serif tracking-wide text-[#13110E] transition-all active:scale-[0.97] shadow-[0_6px_24px_rgba(0,0,0,0.5)]"
+              style={{ background: "linear-gradient(135deg, #C8923A 0%, #A0681E 100%)" }}
+            >
+              ☕ Sit Down at the Table
+            </button>
+
+            <p className="text-[11px] text-[#3D3228] mt-4 tracking-wide">
+              or pick a mode above — Sounding, Working, or Review
+            </p>
+          </div>
+        )}
+
+        {/* ── TABLE SET (mode active, no messages) — backlog triage ── */}
+        {sessionMode !== "none" && !inSession && (
           <>
+            {/* Review mode — seven-generation timeline strip */}
+            {sessionMode === "review" && (
+              <div className="flex items-center gap-2 px-5 py-2.5 border-b border-[#251E18] overflow-x-auto scrollbar-hide bg-[#0F0D0B]/80">
+                <span className="text-[9px] uppercase tracking-[0.2em] text-[#2D6A4F] flex-shrink-0 font-medium">7-gen frame</span>
+                {["Today", "5 yr", "25 yr", "50 yr", "100 yr", "200 yr", "7 gen"].map((t, i) => (
+                  <div key={t} className="flex items-center gap-2 flex-shrink-0">
+                    <div className="w-1 h-1 rounded-full" style={{ background: i === 0 ? "#4A8A7C" : "#2A3D30" }} />
+                    <span className="text-[10px] tracking-wide" style={{ color: i === 0 ? "#4A8A7C" : "#2A3D30" }}>{t}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Working mode — structured hint */}
+            {sessionMode === "working" && (
+              <div className="px-5 py-2 border-b border-[#251E18] bg-[#0F0D0B]/60">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[#4A3D30]">⚒ Working mode — structured deliberation · 7D panel available in-session</p>
+              </div>
+            )}
+
             {/* Task Autopilot — leading element, default open */}
             <TaskAutopilot
               defaultOpen
@@ -1635,7 +2002,173 @@ export function KitchenTablePage() {
         {/* ── IN SESSION (messages exist) — sources, agenda toggle, chat ── */}
         {inSession && (
           <>
-            <KitchenTableSourcesPanel />
+            <KitchenTableSourcesPanel items={intakeItems} />
+
+            {/* ── In-session card surface — agenda items as draggable note cards ── */}
+            {agendaItems.length > 0 && (
+              <div className="border-b border-[#251E18]">
+                <button
+                  onClick={() => setCardSurfaceOpen((o) => !o)}
+                  className="flex items-center gap-2 w-full px-5 py-2 text-left hover:bg-[#1A1714] transition-colors group"
+                >
+                  <span className="text-[9px] uppercase tracking-[0.18em] text-[#4A3D30] font-medium group-hover:text-[#6B5846] transition-colors">
+                    ☕ On the table
+                  </span>
+                  <span className="text-[9px] text-[#3A3028] ml-1">
+                    — {agendaItems.length} card{agendaItems.length !== 1 ? "s" : ""}
+                  </span>
+                  <span className="ml-auto text-[10px] text-[#3A3028]">
+                    {cardSurfaceOpen ? "▲" : "▼"}
+                  </span>
+                </button>
+                {cardSurfaceOpen && (() => {
+                  const useIntake = intakeItems && intakeItems.length > 0;
+                  const sources = useIntake
+                    ? Array.from(new Set(intakeItems!.map((it) => it.source ?? "unknown")))
+                    : Array.from(new Set(agendaItems.map((a) => a.leadId)));
+                  const displayItems = useIntake
+                    ? intakeItems!.slice(0, 6).map((it, i) => ({
+                        key: it.id,
+                        content: it.title.length > 55 ? it.title.slice(0, 53) + "…" : it.title,
+                        label: it.source ?? "—",
+                        labelColor: undefined as string | undefined,
+                        groupKey: it.source ?? "unknown",
+                        index: i,
+                      }))
+                    : agendaItems.slice(0, 6).map((item, i) => ({
+                        key: item.q,
+                        content: item.question.length > 55 ? item.question.slice(0, 53) + "…" : item.question,
+                        label: item.lead,
+                        labelColor: seats.find((s) => s.id === item.leadId)?.color,
+                        groupKey: item.leadId,
+                        index: i,
+                      }));
+                  return (
+                    <>
+                      {/* Mobile: portrait full-width / landscape two-column grid */}
+                      <div
+                        key={`insession-mobile-${sessionMode}`}
+                        className="sm:hidden grid grid-cols-1 [@media(orientation:landscape)]:grid-cols-2 gap-2 px-4 pt-2 pb-3"
+                        style={{ background: "radial-gradient(ellipse at 35% 85%,#2A1A08 0%,#0F0C09 100%)" }}
+                      >
+                        {displayItems.map((d) => (
+                          <NoteCard
+                            key={d.key}
+                            content={d.content}
+                            label={d.label}
+                            labelColor={d.labelColor}
+                            index={d.index}
+                            variant="strip"
+                            surfaceRef={inSessionSurfaceRef}
+                          />
+                        ))}
+                      </div>
+                      {/* Desktop: absolute scatter grouped by source */}
+                      <div
+                        ref={inSessionSurfaceRef}
+                        key={`insession-desktop-${sessionMode}`}
+                        className="hidden sm:block relative w-full overflow-hidden"
+                        style={{
+                          height: 152,
+                          background:
+                            "repeating-linear-gradient(90deg,rgba(255,255,255,0.008) 0,rgba(255,255,255,0.008) 1px,transparent 1px,transparent 56px)," +
+                            "radial-gradient(ellipse at 35% 85%,#2A1A08 0%,#0F0C09 100%)",
+                        }}
+                      >
+                        {(() => {
+                          const counters: Record<string, number> = {};
+                          return displayItems.map((d) => {
+                            const clusterIdx = sources.indexOf(d.groupKey);
+                            const posInCluster = counters[d.groupKey] ?? 0;
+                            counters[d.groupKey] = posInCluster + 1;
+                            const clusterLeft = sources.length > 1
+                              ? (clusterIdx / (sources.length - 1)) * 74 + 2
+                              : 2 + ((d.index * 19) % 72);
+                            return (
+                              <NoteCard
+                                key={d.key}
+                                content={d.content}
+                                label={d.label}
+                                labelColor={d.labelColor}
+                                index={d.index}
+                                clusterLeft={clusterLeft}
+                                posInCluster={posInCluster}
+                                surfaceRef={inSessionSurfaceRef}
+                              />
+                            );
+                          });
+                        })()}
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+
+            {/* ── Working mode — mobile 7D quick-prompt strip (sidebar shown on lg+) ── */}
+            {sessionMode === "working" && (
+              <div className="lg:hidden border-b border-[#251E18] bg-[#0F0D0B] px-5 py-2">
+                <p className="text-[9px] uppercase tracking-[0.2em] text-[#4A3D30] font-medium mb-2">
+                  ⚒ 7D frame
+                </p>
+                <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1">
+                  {[
+                    { n: "1", label: "Situation" },
+                    { n: "2", label: "Stakeholders" },
+                    { n: "3", label: "Values" },
+                    { n: "4", label: "Options" },
+                    { n: "5", label: "Consequences" },
+                    { n: "6", label: "Decision" },
+                    { n: "7", label: "Generations" },
+                  ].map((d) => (
+                    <button
+                      key={d.n}
+                      onClick={() => setInput(d.label + ": ")}
+                      className="flex-shrink-0 flex items-center gap-1 rounded-sm border border-[#2A2218] bg-[#181512] px-2 py-1 hover:border-[#4A3D30] transition-all"
+                    >
+                      <span className="text-[9px] font-bold text-[#5C4A35]">{d.n}</span>
+                      <span className="text-[10px] text-[#6B5A48]">{d.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── Review mode — seven-generation timeline strip (in-session) ── */}
+            {sessionMode === "review" && (
+              <div className="flex items-center gap-2 px-5 py-2 border-b border-[#251E18] overflow-x-auto scrollbar-hide bg-[#0F0D0B]/80">
+                <span className="text-[9px] uppercase tracking-[0.2em] text-[#2D6A4F] flex-shrink-0 font-medium">
+                  7-gen frame
+                </span>
+                {["Today", "5 yr", "25 yr", "50 yr", "100 yr", "200 yr", "7 gen"].map((t, i) => (
+                  <div key={t} className="flex items-center gap-2 flex-shrink-0">
+                    <div
+                      className="w-1 h-1 rounded-full"
+                      style={{ background: i === 0 ? "#4A8A7C" : "#2A3D30" }}
+                    />
+                    <span
+                      className="text-[10px] tracking-wide"
+                      style={{ color: i === 0 ? "#4A8A7C" : "#2A3D30" }}
+                    >
+                      {t}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ── Sounding mode — scattered thinking indicator ── */}
+            {sessionMode === "sounding" && (
+              <div className="flex items-center gap-3 px-5 py-2 border-b border-[#251E18] bg-[#0F0D0B]/60">
+                <span className="text-[9px] uppercase tracking-[0.2em] text-[#7A5A2A] font-medium">
+                  ☕ Sounding
+                </span>
+                <span className="text-[10px] text-[#3A3028]">—</span>
+                <span className="text-[10px] text-[#3A3028] italic">
+                  open conversation · no fixed agenda
+                </span>
+              </div>
+            )}
 
             {/* Agenda toggle */}
             <div className="border-b border-[#251E18] bg-[#181512]">
@@ -1826,33 +2359,42 @@ export function KitchenTablePage() {
             </div>
           </>
         )}
+        </motion.div>
+        </AnimatePresence>
+      </div>
+      {/* 7D deliberation panel is available via the sevenDOpen drawer below */}
       </div>
 
-      {/* ── Seat strip — compact ring at the table edge, always visible ── */}
+      {/* ── Seat strip — illustrated seats around the table edge ── */}
       <div className="flex-shrink-0 z-10 bg-[#13110E]/95 backdrop-blur-sm border-t border-[#251E18]">
-        <div className="flex items-end justify-center gap-1 px-3 pt-3 pb-0 overflow-x-auto scrollbar-hide">
+        <div className="flex items-end justify-center gap-0.5 sm:gap-1 px-2 pt-3 pb-0 overflow-x-auto scrollbar-hide">
           {seats.map((seat, i) => {
             const isActive = seat.id === activeSeatId;
             const total = seats.length;
             const centerIdx = (total - 1) / 2;
             const dist = Math.abs(i - centerIdx);
-            const yPx = dist * 7;
-            const scale = 1 - dist * 0.04;
+            const yBase = dist * 6;
             return (
               <button
                 key={seat.id}
                 onClick={() => setActiveSeatId(seat.id)}
                 onDoubleClick={() => seat.configurable && openConfig(seat)}
+                className="flex-shrink-0 flex flex-col items-center gap-1 w-[48px] sm:w-[56px] pb-2 transition-opacity duration-200"
                 style={{
-                  transform: `translateY(-${yPx}px) scale(${scale})`,
+                  transform: `translateY(-${yBase}px)`,
                   transformOrigin: "bottom center",
-                  opacity: isActive ? 1 : 0.35,
+                  opacity: isActive ? 1 : 0.38,
                 }}
-                className="flex-shrink-0 flex flex-col items-center gap-1 w-[52px] pb-2 transition-all duration-200 hover:opacity-80"
                 title={seat.description}
               >
-                <div
-                  className="w-9 h-9 rounded-sm flex items-center justify-center text-[19px] transition-all duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                {/* Framer Motion lean-in: only the active seat icon animates */}
+                <motion.div
+                  animate={isActive
+                    ? { scale: 1.22, y: -6, rotate: 0 }
+                    : { scale: 1,    y:  0, rotate: 0 }
+                  }
+                  transition={{ type: "spring", stiffness: 420, damping: 26 }}
+                  className="w-10 h-10 rounded-lg flex items-center justify-center text-[20px] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.5)]"
                   style={
                     isActive
                       ? { background: seat.color, color: "#13110E" }
@@ -1860,9 +2402,9 @@ export function KitchenTablePage() {
                   }
                 >
                   {seat.icon}
-                </div>
+                </motion.div>
                 <span
-                  className="text-[9px] font-medium tracking-wide text-center leading-tight"
+                  className="text-[9px] font-medium tracking-wide text-center leading-tight truncate max-w-full px-1"
                   style={{ color: isActive ? seat.color : "#4A3D30" }}
                 >
                   {seat.name}
@@ -1887,11 +2429,20 @@ export function KitchenTablePage() {
           <div
             className="flex-1 flex flex-col bg-[#0F0D0B] rounded-sm px-5 pt-4 pb-3.5 transition-colors border border-[#2A231E] focus-within:border-[#5C4A35] shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)] focus-within:shadow-[inset_0_2px_8px_rgba(0,0,0,0.4),0_0_0_1px_rgba(140,100,60,0.15)]"
           >
-            {!inSession && (
-              <p className="text-[11px] uppercase tracking-[0.1em] font-medium mb-2.5 opacity-80" style={{ color: activeSeat.color }}>
-                <span className="mr-1">{activeSeat.icon}</span> {activeSeat.name}
-              </p>
-            )}
+            <div className="flex items-center gap-2 mb-2.5">
+              <span className="text-[11px] uppercase tracking-[0.1em] font-medium opacity-80" style={{ color: activeSeat.color }}>
+                <span className="mr-1">{activeSeat.icon}</span>{activeSeat.name}
+              </span>
+              {sessionMode === "sounding" && (
+                <span className="text-[14px] opacity-30 ml-auto" title="Sounding — casual conversation">☕</span>
+              )}
+              {sessionMode === "working" && (
+                <span className="text-[12px] opacity-30 ml-auto" title="Working — structured">⚒</span>
+              )}
+              {sessionMode === "review" && (
+                <span className="text-[12px] opacity-30 ml-auto" title="Review — seven-generation frame">◎</span>
+              )}
+            </div>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
