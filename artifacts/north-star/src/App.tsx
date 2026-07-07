@@ -242,7 +242,7 @@ export default function App() {
         <Route><Redirect to="/" /></Route>
       </Switch>
     </WouterRouter>
-    <KitchenTableButton />
+    <KitchenTableButton bottom={88} />
     <GordWidget founderMode={isOwner} />
     </ZoneStoreProvider>
     </PasswordGate>

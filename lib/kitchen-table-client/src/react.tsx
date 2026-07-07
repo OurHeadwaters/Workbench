@@ -54,12 +54,19 @@ export interface KitchenTableButtonProps {
   sourceRef?: string;
   /** Force-show in production too (e.g. for owner-only views). */
   alwaysShow?: boolean;
+  /**
+   * Distance from the bottom of the viewport in pixels. Defaults to 16.
+   * Use a larger value (e.g. 88) when the host app has a bottom nav bar so
+   * the button doesn't overlap nav tap targets.
+   */
+  bottom?: number;
 }
 
 export function KitchenTableButton({
   source,
   sourceRef,
   alwaysShow,
+  bottom = 16,
 }: KitchenTableButtonProps): React.ReactElement | null {
   const resolvedSource = source ?? deriveSource() ?? "unknown";
   const drop = useKitchenTable(resolvedSource);
@@ -97,7 +104,7 @@ export function KitchenTableButton({
     <div
       style={{
         position: "fixed",
-        bottom: 16,
+        bottom,
         right: 16,
         zIndex: 2147483000,
         fontFamily: "system-ui, sans-serif",
