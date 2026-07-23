@@ -77,8 +77,27 @@ function prepareDirectories(timestamp) {
   console.log("Preparing build directories...");
 
   const staticBuild = path.join(projectRoot, "static-build");
+
+  // Remove only the native build artefacts (timestamped bundle dir, ios/, android/).
+  // static-build/web/ is intentionally preserved here — buildWebExport() deletes and
+  // rebuilds it atomically.  Leaving it intact means the committed web export survives
+  // as a fallback if the native bundle steps fail or time out during a deployment build.
+  const nativeDirsToRemove = [
+    path.join(staticBuild, "ios"),
+    path.join(staticBuild, "android"),
+  ];
+  for (const dir of nativeDirsToRemove) {
+    if (fs.existsSync(dir)) {
+      fs.rmSync(dir, { recursive: true });
+    }
+  }
+  // Remove any existing timestamped bundle dirs (all dirs that look like timestamps).
   if (fs.existsSync(staticBuild)) {
-    fs.rmSync(staticBuild, { recursive: true });
+    for (const entry of fs.readdirSync(staticBuild)) {
+      if (entry !== "web" && entry !== "ios" && entry !== "android") {
+        fs.rmSync(path.join(staticBuild, entry), { recursive: true });
+      }
+    }
   }
 
   const dirs = [
