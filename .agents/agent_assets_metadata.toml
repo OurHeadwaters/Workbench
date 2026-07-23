@@ -185,3 +185,9 @@ id = "iS5oeMRSLMVYBOWGcvoeG"
 uri = "file://exports/codetry-book-data.json"
 type = "unspecified"
 title = "Codetry Book — Structured Data (1.2 MB)"
+
+[[outputs]]
+id = "g5AcKfrkBWCWQ3eU-_9Q2"
+uri = "file://.local/tasks/archaeology-may30-june1-2026.md"
+type = "text"
+title = "Archaeology: May 30–June 1, 2026"
