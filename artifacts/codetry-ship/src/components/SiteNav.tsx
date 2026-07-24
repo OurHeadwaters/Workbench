@@ -11,16 +11,14 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { href: "/",                  label: "The Clearing" },
-  { href: "/home",              label: "The Shore" },
-  { href: "/codetry",           label: "What is Codetry?" },
-  { href: "/services",          label: "The Work" },
-  { href: "/work",              label: "Case Studies" },
-  { href: "/window",            label: "The Window" },
-  { href: "/bio",               label: "About" },
-  { href: "/listen",            label: "Listen" },
-  { href: "/castle",            label: "Crypto Castle" },
-  { href: "/stomping-grounds",  label: "Stomping Grounds" },
+  { href: "/",          label: "The Clearing" },
+  { href: "/home",      label: "The Shore" },
+  { href: "/codetry",   label: "What is Codetry?" },
+  { href: "/services",  label: "The Work" },
+  { href: "/work",      label: "Case Studies" },
+  { href: "/window",    label: "The Window" },
+  { href: "/bio",       label: "About" },
+  { href: "/listen",    label: "Listen" },
 ];
 
 const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[] = [
@@ -33,12 +31,14 @@ const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[
 ];
 
 const EXPLORE_LINKS: { icon: string; name: string; href: string }[] = [
-  { icon: "🌿", name: "Economy",        href: "/economy" },
-  { icon: "🤝", name: "Helping Hands",  href: "/economy/helping-hands" },
-  { icon: "🧭", name: "Odyssey",        href: "/odyssey" },
-  { icon: "🗺️", name: "Map",            href: "/map" },
-  { icon: "🔭", name: "The Legend",     href: "/legend" },
-  { icon: "🌌", name: "Constellation",  href: "/constellation" },
+  { icon: "🌿", name: "Economy",           href: "/economy" },
+  { icon: "🤝", name: "Helping Hands",     href: "/economy/helping-hands" },
+  { icon: "🧭", name: "Odyssey",           href: "/odyssey" },
+  { icon: "🗺️", name: "Map",               href: "/map" },
+  { icon: "🔭", name: "The Legend",        href: "/legend" },
+  { icon: "🌌", name: "Constellation",     href: "/constellation" },
+  { icon: "🏰", name: "Crypto Castle",     href: "/castle" },
+  { icon: "👣", name: "Stomping Grounds",  href: "/stomping-grounds" },
 ];
 
 function isActive(path: string, location: string): boolean {

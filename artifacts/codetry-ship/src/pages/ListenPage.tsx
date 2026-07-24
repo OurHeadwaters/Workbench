@@ -319,7 +319,7 @@ export function ListenPage() {
             className="mt-4 font-serif font-medium"
             style={{ fontSize: "clamp(0.95rem, 2.8vw, 1.1rem)", color: "rgba(244,237,224,0.92)" }}
           >
-            A working community food economy — real numbers, real members, real logistics.
+            A working community food economy — real proof, real members, real logistics.
             Built by someone who already ran one in northwestern Ontario.
           </p>
           <p
@@ -436,7 +436,7 @@ export function ListenPage() {
 
         <p className="mt-6 font-serif text-xl sm:text-2xl leading-snug text-foreground/70 print:hidden">
           Not a co-op pitch. Not a grant application. A working system —
-          three years of real numbers, real members, real logistics — in a
+          three years of real proof, real members, real logistics — in a
           region that the existing food system has never prioritised.
         </p>
 
