@@ -29,8 +29,8 @@ const PC_ZONES: PcZone[] = [
     name: "The Home",
     blurb: "Household sorted. You want to connect with neighbours — buying clubs, food security at street level.",
     guidance:
-      "This is exactly where the 807 Food Co-op started. A handful of households, one shared order. The numbers below show what three years of that looks like in a northern Ontario town.",
-    cta: { label: "See the 807 numbers ↓", href: "#section-outcomes" },
+      "This is exactly where the 807 Food Co-op started. A handful of households, one shared order. Three years later: a living supply chain with dozens of member families, hundreds of fulfilled orders, and a cold route to Dryden on the way.",
+    cta: { label: "How the flywheel works ↓", href: "#section-flywheel" },
     color: "#1f3d2e",
   },
   {
@@ -47,7 +47,7 @@ const PC_ZONES: PcZone[] = [
     name: "The Homestead",
     blurb: "Working homestead. You want to knit it into a supply chain that doesn't depend on chain grocery.",
     guidance:
-      "The cold distribution lane ratified at our May 2026 AGM is the infrastructure you're looking for — a bi-weekly route that moves product without depending on individual vehicle runs. The Headwaters Odyssey teaches the method for organising that in your own region.",
+      "The cold distribution lane is the infrastructure you're looking for — a bi-weekly route that moves product without depending on individual vehicle runs. The Headwaters Odyssey teaches the method for organising that in your own region.",
     cta: { label: "Start the Odyssey →", href: "/odyssey" },
     color: "#c97c2e",
   },
@@ -347,18 +347,18 @@ export function ListenPage() {
             </p>
             <p className="font-serif text-sm sm:text-base leading-relaxed text-foreground/80">
               {BRIDGE_SOURCE === "youtube"
-                ? "That episode was recorded in 2023. A lot has happened — 807 Food Co-op has moved ~$147,000 through a community-owned channel, and a cold distribution route to Dryden was ratified at our May 2026 AGM. The full picture is below."
-                : "Welcome back. The numbers below are current as of 2026 — the co-op has grown since Jack's episode aired."}
+                ? "That episode was recorded in 2023. A lot has happened — 807 Food Co-op has been running its community food channel for three years, and a cold distribution route to Dryden is on the way. The full picture is below."
+                : "Welcome back. The co-op has grown since Jack's episode aired — three years of community-owned supply, still running."}
             </p>
           </div>
         )}
 
         {/* ---- print-only one-liner ---- */}
         <p className="hidden print:block mt-3 font-serif text-base leading-snug">
-          807 Food Co-op is a member-owned food co-operative in Dryden, Ontario — incorporated under the Co-operative Corporations Act, operated by 14+ member businesses, $147,000 moved through a community-owned channel in 27 months.
+          807 Food Co-op is a member-owned food co-operative in Dryden, Ontario — incorporated under the Co-operative Corporations Act, running a community-owned supply channel since 2023.
         </p>
 
-        {/* ---- 807 outcomes block ---- */}
+        {/* ---- 807 proof block ---- */}
         <section className="mt-8 print:hidden" data-testid="section-outcomes">
           <p
             className="font-mono text-[11px] uppercase tracking-[0.22em] mb-5"
@@ -367,138 +367,28 @@ export function ListenPage() {
             proof it works
           </p>
           <div
-            className="rounded-sm border px-6 py-5 space-y-6"
+            className="rounded-sm border px-6 py-5 space-y-4"
             style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--muted))" }}
           >
             <p className="font-serif font-semibold text-lg sm:text-xl leading-snug">
               807 Food Co-op — Dryden, Ontario
             </p>
-
-            {/* Local Line — online orders */}
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-3" style={{ color: "hsl(var(--muted-foreground))" }}>
-                Local Line online orders · Feb 2023 – May 2026
+            <div className="space-y-3 font-serif text-sm sm:text-base leading-relaxed text-foreground/75">
+              <p>
+                Started with a handful of households and a single shared order in early 2023.
+                Three years later it&rsquo;s a working community food channel — member families,
+                local producers, online orders, and in-person market days — all moving through
+                a co-operative that members own, not a parent company.
               </p>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { value: "142",          label: "Households" },
-                  { value: "592",          label: "Orders fulfilled" },
-                  { value: "$43,724.59",   label: "Revenue" },
-                ].map(({ value, label }) => (
-                  <div key={label} className="text-center">
-                    <p
-                      className="font-serif font-semibold leading-none mb-1"
-                      style={{ fontSize: "clamp(1.3rem, 3.8vw, 1.85rem)", color: "hsl(var(--foreground))" }}
-                    >
-                      {value}
-                    </p>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: "hsl(var(--muted-foreground))" }}>
-                      {label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-2 font-mono text-[10px]" style={{ color: "hsl(var(--muted-foreground))" }}>
-                avg order $73.85 · first order Feb 18, 2023
+              <p>
+                Incorporated under Ontario&rsquo;s <em>Co-operative Corporations Act</em>.
+                No VC. No franchise fee. No margin pulled to a head office.
+                Overhead is software and banking — everything else stays in the community.
               </p>
             </div>
-
-            {/* Square POS — in-person */}
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-3" style={{ color: "hsl(var(--muted-foreground))" }}>
-                Square POS in-person (markets + food hub) · 2023–2025
-              </p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm font-serif border-collapse">
-                  <thead>
-                    <tr style={{ borderBottom: "1px solid hsl(var(--card-border))" }}>
-                      <th className="text-left pb-2 font-semibold">Year</th>
-                      <th className="text-right pb-2 font-semibold">Gross</th>
-                      <th className="text-right pb-2 font-semibold">Transactions</th>
-                      <th className="text-right pb-2 font-semibold">Avg</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-foreground/75">
-                    <tr style={{ borderBottom: "1px solid hsl(var(--card-border))" }}>
-                      <td className="py-1.5">2023</td>
-                      <td className="text-right py-1.5">$15,416.96</td>
-                      <td className="text-right py-1.5">510</td>
-                      <td className="text-right py-1.5">$30.23</td>
-                    </tr>
-                    <tr style={{ borderBottom: "1px solid hsl(var(--card-border))" }}>
-                      <td className="py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>2024</td>
-                      <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>$79,327.99</td>
-                      <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>1,707</td>
-                      <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>$46.47</td>
-                    </tr>
-                    <tr>
-                      <td className="pt-1.5">2025</td>
-                      <td className="text-right pt-1.5">$8,951.71</td>
-                      <td className="text-right pt-1.5">239</td>
-                      <td className="text-right pt-1.5">$37.45</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="mt-3 font-serif text-sm leading-relaxed" style={{ color: "hsl(var(--muted-foreground))" }}>
-                The 2024 spike: an NOHFC People &amp; Talent grant funded a coordinator and regular store hours
-                from August 2024 through April 2025. When access and capacity were added, the community
-                showed up. The 2025 drop is the grant period ending — not demand collapsing.
-              </p>
-            </div>
-
-            {/* Combined total */}
-            <div
-              className="rounded-sm px-4 py-3 flex flex-wrap items-center justify-between gap-3"
-              style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--card-border))" }}
-            >
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-                  Combined all-time · 27 months
-                </p>
-                <p className="font-serif font-semibold text-xl sm:text-2xl" style={{ color: "hsl(var(--foreground))" }}>
-                  ~$147,000
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-                  Transactions
-                </p>
-                <p className="font-serif font-semibold text-xl sm:text-2xl" style={{ color: "hsl(var(--foreground))" }}>
-                  ~3,048
-                </p>
-              </div>
-            </div>
-
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/40">
               807foodcoop.ca · parrsjars.ca
             </p>
-          </div>
-        </section>
-
-        {/* ---- what ownership actually means ---- */}
-        <section className="mt-6 print:hidden" data-testid="section-ownership">
-          <div
-            className="rounded-sm border px-6 py-5 space-y-4"
-            style={{ borderColor: "hsl(var(--card-border))" }}
-          >
-            <p className="font-mono text-[11px] uppercase tracking-[0.22em]" style={{ color: "hsl(var(--accent))" }}>
-              what ownership actually means
-            </p>
-            <p className="font-serif font-semibold text-base sm:text-lg leading-snug">
-              No VC. No franchise fee. No margin pulled to a head office.
-            </p>
-            <div className="space-y-2 font-serif text-sm sm:text-base leading-relaxed text-foreground/75">
-              <p>
-                Platform costs: ~$2,500/yr (Local Line SaaS) + ~$20/mo banking. That&rsquo;s the whole overhead stack.
-              </p>
-              <p>
-                Incorporated under Ontario&rsquo;s <em>Co-operative Corporations Act</em>. Members own it — not investors, not a parent organization, not a vendor.
-              </p>
-              <p>
-                <strong style={{ color: "hsl(var(--foreground))" }}>14+ active member businesses</strong> confirmed as of the May 2026 AGM.
-              </p>
-            </div>
           </div>
         </section>
 

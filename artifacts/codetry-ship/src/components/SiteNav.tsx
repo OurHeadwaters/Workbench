@@ -93,7 +93,7 @@ export function SiteNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const onDarkHero = location === "/";
+  const onDarkHero = true;
 
   useEffect(() => {
     setOpen(false);

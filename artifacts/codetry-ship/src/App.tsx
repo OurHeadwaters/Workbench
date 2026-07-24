@@ -23,6 +23,8 @@ import { OdysseyPage } from "@/pages/OdysseyPage";
 import { StoryPage } from "@/pages/StoryPage";
 import { FoundingStoriesPage } from "@/pages/FoundingStoriesPage";
 import { SiteNav } from "@/components/SiteNav";
+import { GrainOverlay } from "@/components/AmbientBackground";
+import { Starfield } from "@/components/Starfield";
 import { getStoredOwnerToken } from "@/lib/api";
 import { EconomyPage } from "@/pages/EconomyPage";
 import { EconomyJoinPage } from "@/pages/EconomyJoinPage";
@@ -199,6 +201,8 @@ function App() {
           <NavShell />
           <Router />
           <GlobalWidgets />
+          <GrainOverlay opacity={0.018} />
+          <Starfield />
         </WouterRouter>
         <Toaster />
       </TooltipProvider>
