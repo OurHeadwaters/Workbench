@@ -9,6 +9,7 @@
     "flush-deadhead-backlog": "tsx src/flushDeadheadBacklog.ts",
     "notify-github-sync-failure": "tsx src/notifyGithubSyncFailure.ts",
     "notify-book-export-failure": "tsx src/notifyBookExportFailure.ts",
+    "smoke-test-notify": "tsx src/smokeTestNotify.ts",
     "tsx": "tsx",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
