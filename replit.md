@@ -191,6 +191,20 @@ Implemented May 25 2026. Closes Decision 3 (Arc stays sovereign) + Decision 4 (T
 
 ---
 
+## Secrets Reference
+
+All secrets are set in the Replit Secrets panel (not in code). The script `scripts/src/notifyGithubSyncFailure.ts` will log a clear warning at runtime if a required secret is missing, so silent fallbacks are visible in logs.
+
+| Secret | Used by | Effect if missing |
+|---|---|---|
+| `FOUNDER_EMAIL` | `scripts/src/notifyGithubSyncFailure.ts` | Logs a warning and falls back to `headwaters@ourheadwaters.ca` |
+| `KIT_WEBHOOK_SECRET` | `artifacts/api-server/src/routes/kits.ts` | Webhook endpoint returns 401 |
+| `GITHUB_TOKEN` | post-merge GitHub mirror script | Mirror push fails; alert email is sent |
+
+To change the sync-failure alert recipient: open the Replit Secrets panel, find `FOUNDER_EMAIL`, and update the value — no code edit needed.
+
+---
+
 ## Strategic Decisions
 
 Documented May 25, 2026. Decided by Bobbie Parr at the Kitchen Table with full seat deliberation.

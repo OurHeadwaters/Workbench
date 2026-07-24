@@ -1,6 +1,14 @@
 import { ReplitConnectors } from "@replit/connectors-sdk";
 
-const TO = process.env.FOUNDER_EMAIL ?? "headwaters@ourheadwaters.ca";
+const founderEmail = process.env.FOUNDER_EMAIL;
+if (!founderEmail) {
+  console.warn(
+    "WARNING: FOUNDER_EMAIL secret is not set. " +
+    "Falling back to hardcoded address headwaters@ourheadwaters.ca. " +
+    "Set the FOUNDER_EMAIL secret in the Replit Secrets panel to override."
+  );
+}
+const TO = founderEmail ?? "headwaters@ourheadwaters.ca";
 const SUBJECT = "[WARN] GitHub mirror sync failed";
 
 const errorDetail = process.argv[2] ?? "(no detail provided)";
