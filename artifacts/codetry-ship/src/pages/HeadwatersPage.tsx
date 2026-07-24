@@ -317,26 +317,93 @@ export function HeadwatersPage() {
             style={{ width: "100%", maxWidth: 1400, display: "block" }}
             preserveAspectRatio="xMidYMax meet"
           >
-            {/* Back legs (slightly lighter for depth) */}
-            <rect x="168" y="68" width="22" height="152" rx="3" fill="rgba(8,18,12,0.70)" />
-            <rect x="1010" y="68" width="22" height="152" rx="3" fill="rgba(8,18,12,0.70)" />
-            {/* Lower shelf */}
-            <rect x="152" y="148" width="896" height="14" rx="3" fill="rgba(8,18,12,0.82)" />
-            {/* Front legs */}
-            <rect x="140" y="76" width="26" height="144" rx="3" fill="rgba(6,14,10,0.95)" />
-            <rect x="1034" y="76" width="26" height="144" rx="3" fill="rgba(6,14,10,0.95)" />
-            {/* Bench apron (front face below top) */}
-            <rect x="128" y="76" width="944" height="28" rx="2" fill="rgba(6,14,10,0.88)" />
-            {/* Work surface — thick top plank */}
-            <rect x="112" y="44" width="976" height="36" rx="4" fill="rgba(6,14,10,0.98)" />
-            {/* Wood grain lines on top surface */}
-            <line x1="112" y1="56" x2="1088" y2="56" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-            <line x1="112" y1="65" x2="1088" y2="65" stroke="rgba(255,255,255,0.025)" strokeWidth="1" />
-            {/* Leg vise (left side detail) */}
-            <rect x="92" y="58" width="24" height="52" rx="2" fill="rgba(6,14,10,0.90)" />
-            <rect x="86" y="72" width="10" height="8" rx="1" fill="rgba(6,14,10,0.95)" />
-            {/* Tool well / back rail */}
-            <rect x="1068" y="44" width="20" height="36" rx="2" fill="rgba(4,12,8,0.95)" />
+            <defs>
+              {/* Repeating diamond — beadwork-style pattern for apron */}
+              <pattern id="wb-diamond" x="0" y="0" width="24" height="28" patternUnits="userSpaceOnUse">
+                <polygon points="12,3 21,9 12,15 3,9" fill="none" stroke="rgba(100,58,14,0.42)" strokeWidth="1.1" />
+                <circle cx="12" cy="9" r="1.8" fill="rgba(115,68,20,0.38)" />
+              </pattern>
+              {/* Sinuous water lines — Headwaters watershed motif */}
+              <pattern id="wb-water" x="0" y="0" width="110" height="36" patternUnits="userSpaceOnUse">
+                <path d="M0,11 Q27,5 55,11 Q82,17 110,11" fill="none" stroke="rgba(100,58,14,0.22)" strokeWidth="1.1" strokeLinecap="round" />
+                <path d="M0,25 Q27,19 55,25 Q82,31 110,25" fill="none" stroke="rgba(100,58,14,0.16)" strokeWidth="1" strokeLinecap="round" />
+              </pattern>
+              {/* Clip for apron region */}
+              <clipPath id="apron-clip">
+                <rect x="128" y="76" width="944" height="28" rx="2" />
+              </clipPath>
+              {/* Clip for surface region */}
+              <clipPath id="surface-clip">
+                <rect x="112" y="44" width="976" height="36" rx="4" />
+              </clipPath>
+            </defs>
+
+            {/* ── Back legs ─────────────────────────────────────────────── */}
+            <rect x="170" y="70" width="20" height="150" rx="3" fill="rgba(158,126,72,0.88)" />
+            <rect x="1010" y="70" width="20" height="150" rx="3" fill="rgba(158,126,72,0.88)" />
+
+            {/* ── Lower shelf ───────────────────────────────────────────── */}
+            <rect x="154" y="150" width="892" height="13" rx="3" fill="rgba(172,138,84,0.92)" />
+            {/* shelf edge highlight */}
+            <rect x="154" y="150" width="892" height="2" rx="1" fill="rgba(210,178,120,0.40)" />
+
+            {/* ── Front legs ────────────────────────────────────────────── */}
+            <rect x="140" y="76" width="26" height="144" rx="3" fill="rgba(168,132,78,0.97)" />
+            <rect x="1034" y="76" width="26" height="144" rx="3" fill="rgba(168,132,78,0.97)" />
+            {/* leg inner face shadow */}
+            <rect x="158" y="76" width="8" height="144" rx="2" fill="rgba(120,88,40,0.18)" />
+            <rect x="1034" y="76" width="8" height="144" rx="2" fill="rgba(120,88,40,0.18)" />
+
+            {/* ── Bench apron — dark cream base ─────────────────────────── */}
+            <rect x="128" y="76" width="944" height="28" rx="2" fill="rgba(182,148,94,0.97)" />
+            {/* Diamond bead pattern overlaid */}
+            <rect x="128" y="76" width="944" height="28" fill="url(#wb-diamond)" clipPath="url(#apron-clip)" />
+            {/* Anishinaabe double-curve: two opposing wave bands */}
+            <path
+              d="M140,84 Q195,78 250,84 Q305,90 360,84 Q415,78 470,84 Q525,90 580,84 Q635,78 690,84 Q745,90 800,84 Q855,78 910,84 Q965,90 1020,84 Q1058,80 1072,84"
+              fill="none" stroke="rgba(100,55,10,0.52)" strokeWidth="1.6" strokeLinecap="round"
+            />
+            <path
+              d="M140,96 Q195,102 250,96 Q305,90 360,96 Q415,102 470,96 Q525,90 580,96 Q635,102 690,96 Q745,90 800,96 Q855,102 910,96 Q965,90 1020,96 Q1058,100 1072,96"
+              fill="none" stroke="rgba(100,55,10,0.42)" strokeWidth="1.3" strokeLinecap="round"
+            />
+            {/* Apron top edge line */}
+            <line x1="128" y1="77" x2="1072" y2="77" stroke="rgba(220,188,130,0.45)" strokeWidth="1" />
+
+            {/* ── Work surface — thick top plank, dark cream ────────────── */}
+            <rect x="112" y="44" width="976" height="36" rx="4" fill="rgba(196,162,104,0.97)" />
+            {/* Water-line pattern on surface */}
+            <rect x="112" y="44" width="976" height="36" fill="url(#wb-water)" clipPath="url(#surface-clip)" />
+            {/* Surface top highlight edge */}
+            <rect x="112" y="44" width="976" height="3" rx="2" fill="rgba(228,198,148,0.55)" />
+            {/* Wood grain shadows */}
+            <line x1="200" y1="46" x2="200" y2="78" stroke="rgba(110,68,18,0.10)" strokeWidth="1" />
+            <line x1="420" y1="46" x2="420" y2="78" stroke="rgba(110,68,18,0.08)" strokeWidth="1" />
+            <line x1="640" y1="46" x2="640" y2="78" stroke="rgba(110,68,18,0.09)" strokeWidth="1" />
+            <line x1="860" y1="46" x2="860" y2="78" stroke="rgba(110,68,18,0.08)" strokeWidth="1" />
+
+            {/* ── Centre medallion — four-direction mark ────────────────── */}
+            <g transform="translate(600,62)">
+              <circle cx="0" cy="0" r="9" fill="none" stroke="rgba(100,55,10,0.38)" strokeWidth="1.4" />
+              <circle cx="0" cy="0" r="4" fill="none" stroke="rgba(100,55,10,0.32)" strokeWidth="1" />
+              <circle cx="0" cy="0" r="1.8" fill="rgba(115,65,15,0.48)" />
+              <line x1="-18" y1="0" x2="-10" y2="0" stroke="rgba(100,55,10,0.38)" strokeWidth="1.2" strokeLinecap="round" />
+              <line x1="10"  y1="0" x2="18"  y2="0" stroke="rgba(100,55,10,0.38)" strokeWidth="1.2" strokeLinecap="round" />
+              <line x1="0" y1="-18" x2="0" y2="-10" stroke="rgba(100,55,10,0.38)" strokeWidth="1.2" strokeLinecap="round" />
+              <line x1="0" y1="10"  x2="0" y2="18"  stroke="rgba(100,55,10,0.38)" strokeWidth="1.2" strokeLinecap="round" />
+            </g>
+            {/* Small feather marks left and right of medallion */}
+            <path d="M520,58 Q528,54 534,62 Q528,60 520,58Z" fill="rgba(100,55,10,0.28)" />
+            <path d="M680,58 Q672,54 666,62 Q672,60 680,58Z" fill="rgba(100,55,10,0.28)" />
+
+            {/* ── Leg vise (left detail) ────────────────────────────────── */}
+            <rect x="92" y="58" width="24" height="52" rx="2" fill="rgba(162,126,74,0.95)" />
+            <rect x="86" y="72" width="10" height="8" rx="1" fill="rgba(140,108,58,0.97)" />
+            {/* vise carved mark */}
+            <circle cx="104" cy="84" r="3.5" fill="none" stroke="rgba(100,55,10,0.35)" strokeWidth="1" />
+
+            {/* ── Tool well / back rail ─────────────────────────────────── */}
+            <rect x="1068" y="44" width="20" height="36" rx="2" fill="rgba(160,124,72,0.97)" />
           </svg>
         </div>
       </section>
