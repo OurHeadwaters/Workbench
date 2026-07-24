@@ -1,5 +1,5 @@
 # Headwaters: How a Community Runs Its Own Economy
-*Full content snapshot — exported 2026-06-29*
+*Full content snapshot — exported 2026-07-24*
 *Constellation version: 0.5.7 (last updated 2026-05-05)*
 
 ---
@@ -5275,6 +5275,107 @@ He didn't know yet what came next. That was all right. He was here now. The cree
 *That was a beginning.*
 
 **Author note:** Some people have to leave to find out that what they were looking for was not a place. The leaving is not a mistake — it is part of the knowing. You cannot understand that the freedom was always yours until you have spent real time looking for it somewhere else and come home with empty hands. The empty hands are not a failure. They are what you bring back when you are finally ready to receive what was here the whole time.
+
+## The Boy Who Swallowed the Stars
+*A Quantum Adventure for Big Thinkers and Their Families*
+
+> At almost twelve, Zander's brain was a blazing supernova of ideas — rockets made of laughter, time machines powered by dreams, questions so big they made the ceiling feel too small.
+
+Once upon a time, in a cozy house on Orbit Lane, lived a boy named Zander Starburst.
+
+At almost twelve, Zander's brain was a blazing supernova of ideas. Rockets made of laughter. Time machines powered by dreams. Questions so big they made the ceiling feel too small.
+
+*"What happens to my energy when I die?" he asked one Tuesday.*
+
+*"Can thoughts travel faster than light?" he wondered on Wednesday.*
+
+Zander's ideas burst out with enormous, wonderful energy.
+
+His mom, Captain Gravity, loved him more than the whole Milky Way. She made sure he was developing well, eating healthy food, and that wild ideas didn't accidentally launch anyone into outer space. She kept the world steady and safe.
+
+But sometimes Zander's ideas got so big and fast that Captain Gravity's eyes would widen. She would listen for a little while, and then the gravity between them would get heavy for them both — the kind of heavy that ends in everyone feeling squished.
+
+---
+
+Then one afternoon a small, sparkly creature appeared on the windowsill.
+
+He had the tail of a squirrel, the eyes of someone who had read everything twice, and a tiny chalkboard under his arm that read: PROFESSOR QUARK — Quantum Squirrel, at your service.
+
+*"I have been watching your household," said Professor Quark, flipping his tail importantly. "You have a superposition problem. Both of you are right at the same time. Neither of you can tell."*
+
+*"What do we do?" said Zander.*
+
+*"Three things," said Professor Quark. "Very small. Very powerful. Shall I?"*
+
+Captain Gravity pulled up a chair. Zander sat on the floor. Professor Quark cleared his throat.
+
+---
+
+The first thing was the Wonder Bins.
+
+A special set of stackable bins where every idea goes — the wild ones, the scary ones, the too-big-for-now ones. Mom can add her thoughts too. The bins collapse when they aren't being used and stack neatly on top of each other. Each bin has a transparent envelope label so they can slip in a short project description or title. Nothing gets crushed. Everything stays possible and clearly named.
+
+---
+
+The second thing was Quantum Table Time.
+
+Fifteen minutes every day where Zander gets to shine like a full star, and Mom gets to share her gravity wisdom — with no interruptions. They simply listen and say: What I heard is…
+
+At any point in the day when they aren't seeing eye to eye, either one can stop the discussion and say: Put it on the Quantum Table. Zander is responsible for building his case privately and bringing it to their daily Quantum Table Time. If a decision isn't made in that time, it gets gently bumped to the next day's.
+
+---
+
+The third thing was the Strategic Collapse Menu.
+
+When it's time to decide, they don't collapse into a boring YES or NO. They pick from:
+
+*Tiny Safe Test Version*
+
+*Mix-Master Version (best of both ideas)*
+
+*Keep Wondering Longer*
+
+*Transform-It Twist!*
+
+*"Nothing collapses until you choose how," said Professor Quark. "That is the quantum way."*
+
+---
+
+The next afternoon, Zander put his Indoor Sky City with Trampoline Clouds idea into the Wonder Bins. Mom added her worries about safety and mess. Then they did their first Quantum Table Time.
+
+For the first time in weeks, no one got squished.
+
+Together they chose a Tiny Safe Test Version: a pillow fort with glow-stick stars and one small trampoline.
+
+It was ridiculous. It was glorious. Zander laughed so hard he almost floated.
+
+---
+
+Even the biggest questions — the ones about energy and death and light — went into the Wonder Bins now. Sometimes Mom added a thought. Sometimes they sat with them at Quantum Table Time and just named what they didn't know yet.
+
+That turned out to be enough. More than enough.
+
+Their new words spread through the house like starlight:
+
+*"Superposition time!" or "Put it on the Quantum Table!"*
+
+And instead of becoming a black hole, Zander and Captain Gravity became a double star system — two bright, strong lights orbiting each other, sharing energy instead of stealing it.
+
+---
+
+Zander still had enormous ideas.
+
+Mom still kept him safe.
+
+But now their love had room to grow without collapsing.
+
+And somewhere in the quantum playground, Professor Quark the Quantum Squirrel gave a satisfied little flip of his sparkly tail.
+
+---
+
+*The End… (or one of many wonderful possible beginnings!)*
+
+**Author note:** Every big idea needs a safe place to land. The Wonder Bins, the Quantum Table, the Strategic Collapse Menu — these aren't just for children. Any two people trying to share a life without crushing each other's light could use a system for holding ideas gently. The pillow fort was the point all along.
 
 
 ---

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "exportedAt": "2026-06-29T19:19:08.850Z",
+    "exportedAt": "2026-07-24T11:46:08.014Z",
     "constellationVersion": "0.5.7",
     "constellationLastUpdated": "2026-05-05",
     "description": "Index of per-section JSON exports. Import only the section(s) you need."
@@ -19,7 +19,7 @@
     {
       "filename": "codetry-book-tales.json",
       "section": "tales",
-      "recordCount": 8
+      "recordCount": 9
     },
     {
       "filename": "codetry-book-pioneer-path.json",
