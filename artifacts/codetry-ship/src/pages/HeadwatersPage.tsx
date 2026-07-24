@@ -272,7 +272,7 @@ export function HeadwatersPage() {
               textShadow: "0 2px 40px rgba(0,0,0,0.8)",
             }}
           >
-            The Clearing
+            Workbench
           </h1>
 
           <p
@@ -284,8 +284,8 @@ export function HeadwatersPage() {
               maxWidth: 520,
             }}
           >
-            Where a community economy finds its footing. The origin story, the
-            watershed map, and the tools — all in one place.
+            Where the work gets done. The origin story, the watershed map,
+            and the tools — all at one table.
           </p>
 
           {/* Scroll cue */}
@@ -295,6 +295,49 @@ export function HeadwatersPage() {
               Scroll
             </span>
           </div>
+        </div>
+
+        {/* Workbench silhouette — grounds the hero */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 2,
+            pointerEvents: "none",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <svg
+            viewBox="0 0 1200 220"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ width: "100%", maxWidth: 1400, display: "block" }}
+            preserveAspectRatio="xMidYMax meet"
+          >
+            {/* Back legs (slightly lighter for depth) */}
+            <rect x="168" y="68" width="22" height="152" rx="3" fill="rgba(8,18,12,0.70)" />
+            <rect x="1010" y="68" width="22" height="152" rx="3" fill="rgba(8,18,12,0.70)" />
+            {/* Lower shelf */}
+            <rect x="152" y="148" width="896" height="14" rx="3" fill="rgba(8,18,12,0.82)" />
+            {/* Front legs */}
+            <rect x="140" y="76" width="26" height="144" rx="3" fill="rgba(6,14,10,0.95)" />
+            <rect x="1034" y="76" width="26" height="144" rx="3" fill="rgba(6,14,10,0.95)" />
+            {/* Bench apron (front face below top) */}
+            <rect x="128" y="76" width="944" height="28" rx="2" fill="rgba(6,14,10,0.88)" />
+            {/* Work surface — thick top plank */}
+            <rect x="112" y="44" width="976" height="36" rx="4" fill="rgba(6,14,10,0.98)" />
+            {/* Wood grain lines on top surface */}
+            <line x1="112" y1="56" x2="1088" y2="56" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+            <line x1="112" y1="65" x2="1088" y2="65" stroke="rgba(255,255,255,0.025)" strokeWidth="1" />
+            {/* Leg vise (left side detail) */}
+            <rect x="92" y="58" width="24" height="52" rx="2" fill="rgba(6,14,10,0.90)" />
+            <rect x="86" y="72" width="10" height="8" rx="1" fill="rgba(6,14,10,0.95)" />
+            {/* Tool well / back rail */}
+            <rect x="1068" y="44" width="20" height="36" rx="2" fill="rgba(4,12,8,0.95)" />
+          </svg>
         </div>
       </section>
 
@@ -572,93 +615,7 @@ export function HeadwatersPage() {
         <h2 style={sectionHeading}>How Headwaters came to be</h2>
         <hr style={rule} />
 
-        {/* Chapter 1 — Doom Crowd */}
-        <div style={{ paddingTop: 40, marginBottom: 52 }}>
-          <p
-            style={{
-              fontFamily: "monospace",
-              fontSize: 9,
-              letterSpacing: "0.24em",
-              textTransform: "uppercase",
-              color: "rgba(56,189,248,0.42)",
-              marginBottom: 12,
-            }}
-          >
-            Chapter I
-          </p>
-          <h3
-            style={{
-              fontSize: "clamp(1.15rem, 3vw, 1.45rem)",
-              fontWeight: 700,
-              color: "#f0e8d8",
-              marginBottom: 16,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            The Doom Crowd
-          </h3>
-          <p style={{ ...bodyText, marginBottom: 16 }}>
-            It started in the forums — prepper forums, collapse prep communities, permaculture lists.
-            A period of genuine alarm. What do you do when you believe the systems holding everything
-            together are going to fail? You start learning to grow food. You start learning your
-            neighbours' names. You start thinking about what resilience actually looks like when
-            the grid goes down.
-          </p>
-          <p style={{ ...bodyText, marginBottom: 0 }}>
-            The early Headwaters instinct came from that place: not paranoia, but preparation.
-            Build the systems you want to exist before you need them. Don't wait for crisis.
-            Let the crisis be the teacher, not the architect.
-          </p>
-        </div>
-
-        <hr style={rule} />
-
-        {/* Chapter 2 — Ron Paul Pivot */}
-        <div style={{ paddingTop: 40, marginBottom: 52 }}>
-          <p
-            style={{
-              fontFamily: "monospace",
-              fontSize: 9,
-              letterSpacing: "0.24em",
-              textTransform: "uppercase",
-              color: "rgba(56,189,248,0.42)",
-              marginBottom: 12,
-            }}
-          >
-            Chapter II
-          </p>
-          <h3
-            style={{
-              fontSize: "clamp(1.15rem, 3vw, 1.45rem)",
-              fontWeight: 700,
-              color: "#f0e8d8",
-              marginBottom: 16,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            The Ron Paul Pivot
-          </h3>
-          <p style={{ ...bodyText, marginBottom: 16 }}>
-            The doom crowd had a libertarian current running through it — sound money, hard
-            money, get-out-of-the-system thinking. For a moment that current pulled hard.
-            The appeal was real: distrust of institutions, distrust of centralized control,
-            the idea that community self-determination could be built outside of captured systems.
-          </p>
-          <p style={{ ...bodyText, marginBottom: 16 }}>
-            But the Ron Paul moment broke on the same reef it always does: it had no theory
-            of community. No account of how people with different capacities build something
-            together. It was an ideology of exit, not of construction.
-          </p>
-          <p style={{ ...bodyText, marginBottom: 0 }}>
-            The Headwaters turn came from recognizing that the <em>critique</em> of centralized
-            systems was right, but the answer wasn't individual exit — it was community infrastructure.
-            You don't leave the watershed. You learn to steward it.
-          </p>
-        </div>
-
-        <hr style={rule} />
-
-        {/* Chapter 3 — Kitchen Table */}
+        {/* Chapter 1 — Kitchen Table */}
         <div style={{ paddingTop: 40 }}>
           <p
             style={{
@@ -670,7 +627,7 @@ export function HeadwatersPage() {
               marginBottom: 12,
             }}
           >
-            Chapter III
+            Chapter I
           </p>
           <h3
             style={{
@@ -1033,7 +990,7 @@ export function HeadwatersPage() {
             margin: 0,
           }}
         >
-          ourheadwaters.ca · The Clearing · Northwestern Ontario · Treaty 3
+          ourheadwaters.ca · Workbench · Northwestern Ontario · Treaty 3
         </p>
         <a
           href={`${BASE}home`}

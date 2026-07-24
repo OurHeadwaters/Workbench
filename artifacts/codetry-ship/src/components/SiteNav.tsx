@@ -11,7 +11,7 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { href: "/",          label: "The Clearing" },
+  { href: "/",          label: "Workbench" },
   { href: "/home",      label: "The Shore" },
   { href: "/codetry",   label: "What is Codetry?" },
   { href: "/services",  label: "The Work" },
