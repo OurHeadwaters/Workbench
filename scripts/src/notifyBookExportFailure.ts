@@ -1,7 +1,7 @@
 import { ReplitConnectors } from "@replit/connectors-sdk";
 
 const TO = process.env.FOUNDER_EMAIL ?? "headwaters@ourheadwaters.ca";
-const SUBJECT = "⚠️ Book export failed after handbook data change";
+const SUBJECT = "[WARN] Book export failed after handbook data change";
 
 const errorDetail = process.argv[2] ?? "(no detail provided)";
 

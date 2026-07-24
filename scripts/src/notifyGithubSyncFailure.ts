@@ -1,7 +1,7 @@
 import { ReplitConnectors } from "@replit/connectors-sdk";
 
 const TO = process.env.FOUNDER_EMAIL ?? "headwaters@ourheadwaters.ca";
-const SUBJECT = "⚠️ GitHub mirror sync failed";
+const SUBJECT = "[WARN] GitHub mirror sync failed";
 
 const errorDetail = process.argv[2] ?? "(no detail provided)";
 
