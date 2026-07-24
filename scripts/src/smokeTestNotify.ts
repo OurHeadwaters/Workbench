@@ -11,7 +11,7 @@ console.log(`  FOUNDER_EMAIL env var : ${configured ? "SET" : "not set (using fa
 console.log(`  Sending test email to : ${TO}`);
 console.log("─────────────────────────────────────────\n");
 
-const SUBJECT = "✅ Headwaters alert smoke test";
+const SUBJECT = "[OK] Headwaters alert smoke test";
 
 const body = [
   "This is a smoke-test email from the Headwaters post-merge notification system.",
