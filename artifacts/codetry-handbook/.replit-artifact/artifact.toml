@@ -24,6 +24,7 @@ args = ["pnpm", "--filter", "@workspace/codetry-handbook", "run", "build"]
 
 [services.production.build.env]
 NODE_ENV = "production"
+BASE_PATH = "/codetry-handbook/"
 
 [services.production.run]
 args = ["node", "artifacts/codetry-handbook/server/serve.js"]
