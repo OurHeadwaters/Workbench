@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
-import { ExternalLink, ChevronRight, ChevronLeft, Plus, Minus, Edit2, Check } from "lucide-react";
-import { BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, FONT_DISPLAY } from "@/lib/theme";
+import { ExternalLink, ChevronRight, Plus, Minus, Edit2, Check, ChevronDown, ChevronUp } from "lucide-react";
+import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, GREEN, RED, FONT_DISPLAY } from "@/lib/theme";
 
 const SPRINT_START = new Date("2026-07-25T00:00:00");
 const SPRINT_END   = new Date("2026-10-23T00:00:00");
@@ -26,6 +26,9 @@ const LS = {
   todayFocus:   "sprint-today-focus",
 };
 
+const Z3_COLOR = "#A07BC0";
+const Z0_COLOR = "#C8933A";
+
 function load<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
@@ -49,68 +52,110 @@ function sprintDay(): number {
   return Math.min(90, Math.max(1, Math.ceil(diff / 86_400_000)));
 }
 
-const SURF2 = "#1A1714";
-
 function EditableText({
-  value, onChange, placeholder, large = false,
+  value, onChange, placeholder, large = false, autoFocus = false
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder: string;
   large?: boolean;
+  autoFocus?: boolean;
 }) {
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(autoFocus || (!value && large));
   const [draft, setDraft] = useState(value);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.setSelectionRange(draft.length, draft.length);
+    }
+  }, [editing]);
 
   const commit = () => {
-    onChange(draft.trim() || value);
+    onChange(draft.trim());
     setEditing(false);
   };
 
   if (editing) {
     return (
-      <div className="flex items-start gap-2">
+      <div className="relative z-10 w-full animate-in fade-in duration-200">
         <textarea
-          autoFocus
-          className="flex-1 rounded-lg px-3 py-2 resize-none outline-none"
+          ref={inputRef}
+          className="w-full rounded-2xl px-5 py-4 resize-none outline-none tap-feedback"
           style={{
-            backgroundColor: SURF2,
-            border: `1px solid ${BORDER_STRONG}`,
+            backgroundColor: "rgba(0,0,0,0.4)",
+            border: `1px solid ${large ? AMBER : BORDER_STRONG}`,
             color: TEXT,
-            fontSize: large ? 18 : 14,
+            fontSize: large ? 32 : 16,
             fontFamily: large ? FONT_DISPLAY : undefined,
-            minHeight: large ? 64 : 52,
+            minHeight: large ? 120 : 80,
+            lineHeight: 1.1,
+            boxShadow: large ? `0 0 20px rgba(200,146,58,0.1)` : 'none'
           }}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); commit(); } }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              commit();
+            }
+            if (e.key === "Escape") {
+              setDraft(value);
+              setEditing(false);
+            }
+          }}
+          onBlur={commit}
+          placeholder={placeholder}
         />
-        <button
-          onClick={commit}
-          className="mt-1 w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-          style={{ backgroundColor: AMBER }}
-        >
-          <Check size={16} color="#0B0905" />
-        </button>
+        <div className="absolute right-4 bottom-4 flex gap-2">
+          <button
+            onMouseDown={(e) => { e.preventDefault(); commit(); }}
+            className="w-8 h-8 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors tap-feedback"
+          >
+            <Check size={16} color={TEXT} />
+          </button>
+        </div>
       </div>
     );
   }
 
+  const isEmpty = !value.trim();
+
   return (
     <button
       onClick={() => { setDraft(value); setEditing(true); }}
-      className="w-full text-left rounded-lg px-3 py-2 flex items-start gap-2 group"
+      className="w-full text-left rounded-2xl px-5 py-4 flex items-start gap-4 group tap-feedback relative z-10"
       style={{
-        backgroundColor: SURF2,
-        border: `1px solid ${BORDER}`,
-        color: value === placeholder ? TEXT_2 : TEXT,
-        fontSize: large ? 18 : 14,
-        fontFamily: large ? FONT_DISPLAY : undefined,
-        minHeight: large ? 64 : 52,
+        backgroundColor: isEmpty ? "transparent" : "rgba(0,0,0,0.2)",
+        border: `1px solid ${isEmpty ? (large ? "rgba(200,146,58,0.3)" : BORDER) : BORDER}`,
+        minHeight: large ? 120 : 80,
+        transition: "all 0.2s ease"
       }}
     >
-      <span className="flex-1 leading-snug">{value || placeholder}</span>
-      <Edit2 size={13} className="shrink-0 mt-0.5 opacity-30 group-hover:opacity-60 transition-opacity" />
+      <div className="flex-1">
+        {isEmpty ? (
+          <span style={{ 
+            color: large ? AMBER : TEXT_2, 
+            fontSize: large ? 24 : 16, 
+            fontFamily: large ? FONT_DISPLAY : undefined,
+            opacity: 0.7 
+          }}>
+            {placeholder}
+          </span>
+        ) : (
+          <span style={{ 
+            color: TEXT, 
+            fontSize: large ? 32 : 16, 
+            fontFamily: large ? FONT_DISPLAY : undefined,
+            lineHeight: 1.1,
+            display: "block"
+          }}>
+            {value}
+          </span>
+        )}
+      </div>
+      <Edit2 size={16} className={`shrink-0 mt-2 transition-opacity ${isEmpty ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`} color={TEXT_3} />
     </button>
   );
 }
@@ -124,38 +169,73 @@ function Counter({
   goal?: number;
   sublabel?: string;
 }) {
+  const [pulse, setPulse] = useState(false);
+
+  const handleInc = () => {
+    onChange(value + 1);
+    setPulse(true);
+    setTimeout(() => setPulse(false), 300);
+  };
+
+  const handleDec = () => {
+    onChange(Math.max(0, value - 1));
+    setPulse(true);
+    setTimeout(() => setPulse(false), 300);
+  };
+
   return (
-    <div className="flex items-center gap-3">
-      <button
-        onClick={() => onChange(Math.max(0, value - 1))}
-        className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-        style={{ backgroundColor: SURF2, border: `1px solid ${BORDER}` }}
-      >
-        <Minus size={15} style={{ color: TEXT_2 }} />
-      </button>
-      <div className="flex-1">
+    <div className="flex items-center justify-between">
+      <div>
         <div className="flex items-baseline gap-2">
-          <span style={{ color: TEXT, fontFamily: FONT_DISPLAY, fontSize: 28, lineHeight: 1 }}>{value}</span>
+          <span 
+            className="transition-transform duration-200"
+            style={{ 
+              color: TEXT, 
+              fontFamily: FONT_DISPLAY, 
+              fontSize: 36, 
+              lineHeight: 1,
+              transform: pulse ? "scale(1.1)" : "scale(1)",
+              display: "inline-block"
+            }}
+          >
+            {value}
+          </span>
           {goal && (
-            <span style={{ color: TEXT_2, fontSize: 13 }}>/ {goal} goal</span>
+            <span style={{ color: TEXT_2, fontSize: 14 }}>/ {goal} {label}</span>
           )}
         </div>
-        <p style={{ color: TEXT_2, fontSize: 12 }}>{sublabel ?? label}</p>
+        <p style={{ color: TEXT_3, fontSize: 12, marginTop: 4 }}>{sublabel ?? label}</p>
       </div>
-      <button
-        onClick={() => onChange(value + 1)}
-        className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-        style={{ backgroundColor: "rgba(200,146,58,0.15)", border: `1px solid rgba(200,146,58,0.35)` }}
-      >
-        <Plus size={15} style={{ color: AMBER }} />
-      </button>
+      
+      <div className="flex gap-2">
+        <button
+          onClick={handleDec}
+          className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 tap-feedback"
+          style={{ backgroundColor: SURFACE_2, border: `1px solid ${BORDER}` }}
+        >
+          <Minus size={18} style={{ color: TEXT_2 }} />
+        </button>
+        <button
+          onClick={handleInc}
+          className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 tap-feedback relative"
+          style={{ 
+            backgroundColor: "rgba(200,146,58,0.1)", 
+            border: `1px solid rgba(200,146,58,0.3)` 
+          }}
+        >
+          <Plus size={18} style={{ color: AMBER }} />
+          {pulse && (
+            <span className="absolute inset-0 rounded-full animate-ping" style={{ backgroundColor: "rgba(200,146,58,0.4)" }} />
+          )}
+        </button>
+      </div>
     </div>
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function SectionLabel({ children, color = AMBER }: { children: React.ReactNode, color?: string }) {
   return (
-    <p style={{ fontFamily: "monospace", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: AMBER, marginBottom: 10 }}>
+    <p style={{ fontFamily: "monospace", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color, marginBottom: 12 }}>
       {children}
     </p>
   );
@@ -164,10 +244,96 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
     <div
-      className="rounded-2xl p-4"
-      style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, ...style }}
+      className="rounded-3xl p-5 relative overflow-hidden"
+      style={{ backgroundColor: "rgba(20, 18, 16, 0.6)", backdropFilter: "blur(8px)", border: `1px solid ${BORDER}`, ...style }}
     >
-      {children}
+      <div className="relative z-10">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ConstellationArc({ stage, onAdvance }: { stage: number; onAdvance: () => void }) {
+  const [pulsing, setPulse] = useState(false);
+
+  const handleAdvance = () => {
+    if (stage < STAGES.length - 1) {
+      setPulse(true);
+      setTimeout(() => {
+        onAdvance();
+        setPulse(false);
+      }, 400);
+    }
+  };
+
+  return (
+    <div className="py-6 my-2 relative">
+      <div className="flex justify-between items-center relative z-10 px-2">
+        {STAGES.map((s, i) => {
+          const done    = i < stage;
+          const current = i === stage;
+          const future  = i > stage;
+          
+          // Calculate an arc curve (parabola)
+          const mid = (STAGES.length - 1) / 2;
+          const distFromMid = Math.abs(i - mid);
+          const yOffset = distFromMid * distFromMid * 1.5; // simple curve
+
+          return (
+            <div key={i} className="relative flex flex-col items-center group" style={{ transform: `translateY(${yOffset}px)` }}>
+              {/* Connecting line to previous node */}
+              {i > 0 && (
+                <div 
+                  className="absolute right-[50%] top-[8px] h-[1px] w-[calc(100%+16px)] -z-10 origin-right"
+                  style={{
+                    background: done || current ? `linear-gradient(90deg, ${AMBER} 0%, transparent 100%)` : BORDER,
+                    opacity: done ? 0.5 : current ? 0.3 : 0.1,
+                  }}
+                />
+              )}
+              
+              <div
+                className={`w-4 h-4 rounded-full transition-all duration-500 flex items-center justify-center
+                  ${current ? 'constellation-node-current' : ''}
+                  ${pulsing && current ? 'scale-150' : 'scale-100'}
+                `}
+                style={{
+                  backgroundColor: done ? AMBER : current ? Z3_COLOR : "transparent",
+                  border: done ? "none" : current ? `2px solid ${Z3_COLOR}` : `1px solid ${BORDER_STRONG}`,
+                  boxShadow: done ? `0 0 10px ${AMBER}` : current ? `0 0 15px ${Z3_COLOR}` : "none",
+                }}
+              />
+              
+              {/* Tooltip on hover */}
+              <div className="absolute top-6 w-32 text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <span className="bg-black/80 text-[10px] px-2 py-1 rounded backdrop-blur text-white border border-white/10 shadow-xl">
+                  {s.replace(" ← you are here", "")}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      
+      <div className="mt-12 text-center">
+        <p style={{ color: TEXT_2, fontSize: 13, marginBottom: 8, fontStyle: "italic" }}>
+          Current: <span style={{ color: Z3_COLOR, fontWeight: 500 }}>{STAGES[stage].replace(" ← you are here", "")}</span>
+        </p>
+        <button
+          onClick={handleAdvance}
+          disabled={stage >= STAGES.length - 1}
+          className="tap-feedback rounded-full px-6 py-2.5 text-sm font-medium transition-all"
+          style={{ 
+            backgroundColor: stage >= STAGES.length - 1 ? SURFACE : `rgba(160,123,192,0.15)`, 
+            border: `1px solid ${stage >= STAGES.length - 1 ? BORDER : `rgba(160,123,192,0.3)`}`, 
+            color: stage >= STAGES.length - 1 ? TEXT_3 : Z3_COLOR,
+            opacity: stage >= STAGES.length - 1 ? 0.5 : 1
+          }}
+        >
+          {stage >= STAGES.length - 1 ? "Completed" : "Advance Stage"}
+        </button>
+      </div>
     </div>
   );
 }
@@ -178,6 +344,8 @@ export function SprintPage() {
   const [goodbyeSales, setGoodbyeSales] = useState(() => load(LS.goodbyeSales, 0));
   const [printConv, setPrintConv]       = useState(() => load(LS.printConv, 0));
   const [todayFocus, setTodayFocus]     = useState(() => load(LS.todayFocus, ""));
+  
+  const [showPricing, setShowPricing] = useState(false);
 
   useEffect(() => { save(LS.stage, stage); }, [stage]);
   useEffect(() => { save(LS.nextAction, nextAction); }, [nextAction]);
@@ -188,242 +356,165 @@ export function SprintPage() {
   const day  = sprintDay();
   const daysLeft = daysRemaining();
   const pct  = Math.round((day / 90) * 100);
+  
+  const isUrgent = daysLeft <= 14;
 
   return (
-    <div
-      className="min-h-dvh pb-32 px-4 pt-6 max-w-lg mx-auto"
-      style={{ backgroundColor: BG, color: TEXT }}
-    >
-      {/* ── Sprint header ───────────────────────────────────────────── */}
-      <div className="flex items-start justify-between mb-5">
+    <div className="min-h-dvh pb-32 px-4 pt-8 max-w-lg mx-auto relative" style={{ zIndex: 1 }}>
+      
+      {/* ── Sprint header & River ───────────────────────────────────────────── */}
+      <div className="flex items-end justify-between mb-8">
         <div>
-          <p style={{ fontFamily: "monospace", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: TEXT_2 }}>
-            90-Day Revenue Sprint
+          <p style={{ fontFamily: "monospace", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: TEXT_2, marginBottom: 4 }}>
+            Revenue Sprint
           </p>
-          <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 26, fontWeight: 700, lineHeight: 1.1, color: TEXT, margin: "4px 0 0" }}>
-            Day {day} of 90
+          <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 32, fontWeight: 800, lineHeight: 1, color: TEXT }}>
+            Day {day}
           </h1>
         </div>
-        <div
-          className="rounded-xl px-3 py-2 text-right shrink-0"
-          style={{ backgroundColor: daysLeft <= 14 ? "rgba(239,68,68,0.10)" : "rgba(200,146,58,0.08)", border: `1px solid ${daysLeft <= 14 ? "rgba(239,68,68,0.25)" : "rgba(200,146,58,0.22)"}` }}
-        >
-          <p style={{ fontFamily: FONT_DISPLAY, fontSize: 22, fontWeight: 700, color: daysLeft <= 14 ? "#EF4444" : AMBER, lineHeight: 1 }}>
+        
+        <div className="text-right">
+          <span style={{ 
+            fontFamily: FONT_DISPLAY, 
+            fontSize: 28, 
+            fontWeight: 700, 
+            color: isUrgent ? RED : TEXT,
+            opacity: isUrgent ? 1 : 0.9 
+          }}>
             {daysLeft}
-          </p>
-          <p style={{ fontSize: 10, color: TEXT_2, letterSpacing: "0.12em", textTransform: "uppercase" }}>days left</p>
+          </span>
+          <span style={{ fontSize: 12, color: TEXT_3, letterSpacing: "0.1em", textTransform: "uppercase", marginLeft: 4 }}>left</span>
         </div>
       </div>
 
-      {/* Progress bar */}
-      <div className="mb-6 rounded-full overflow-hidden h-1.5" style={{ backgroundColor: SURFACE }}>
+      {/* Progress River */}
+      <div className="mb-12 rounded-full overflow-hidden h-2 relative" style={{ backgroundColor: "rgba(255,255,255,0.05)" }}>
         <div
-          className="h-full rounded-full transition-all"
-          style={{ width: `${pct}%`, backgroundColor: AMBER }}
+          className="h-full rounded-full transition-all duration-1000 ease-out slow-river"
+          style={{ width: `${pct}%` }}
         />
       </div>
 
       {/* ── Today's single focus ────────────────────────────────────── */}
-      <div className="mb-5">
-        <SectionLabel>Today's one move</SectionLabel>
+      <div className="mb-12 relative">
+        <div className="lantern-glow" />
+        <SectionLabel>Today's One Move</SectionLabel>
         <EditableText
           value={todayFocus}
           onChange={setTodayFocus}
-          placeholder="What is the single revenue action for today?"
+          placeholder="Declare the single revenue action for today."
           large
         />
+        <div className="h-px w-full mt-8 watershed-shimmer" />
       </div>
 
       {/* ── Track 1: GTA Landlord ───────────────────────────────────── */}
-      <div className="mb-4">
-        <SectionLabel>Track 1 · Gatehouse — GTA Landlord</SectionLabel>
-        <Card>
-          {/* Deal value */}
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p style={{ fontFamily: FONT_DISPLAY, fontSize: 20, fontWeight: 700, color: AMBER }}>$28,000</p>
-              <p style={{ fontSize: 12, color: TEXT_2 }}>one-time + $3,000/mo recurring</p>
-            </div>
-            <div
-              className="rounded-lg px-3 py-1.5 text-right"
-              style={{ backgroundColor: "rgba(200,146,58,0.08)", border: `1px solid rgba(200,146,58,0.20)` }}
-            >
-              <p style={{ fontSize: 11, color: AMBER, fontFamily: "monospace", letterSpacing: "0.12em" }}>1,500 TENANTS</p>
-              <p style={{ fontSize: 10, color: TEXT_2 }}>at $2.00/mo steward</p>
-            </div>
-          </div>
+      <div className="mb-8">
+        <SectionLabel color={Z3_COLOR}>Track 1 · Gatehouse (GTA Landlord)</SectionLabel>
+        <Card style={{ borderColor: `rgba(160,123,192,0.2)` }}>
+          
+          <ConstellationArc 
+            stage={stage} 
+            onAdvance={() => setStage(Math.min(STAGES.length - 1, stage + 1))} 
+          />
 
-          {/* Stage ladder */}
-          <div className="mb-4">
-            <p style={{ fontSize: 11, color: TEXT_2, marginBottom: 8, letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "monospace" }}>Deal stage</p>
-            <div className="space-y-1">
-              {STAGES.map((s, i) => {
-                const done    = i < stage;
-                const current = i === stage;
-                const future  = i > stage;
-                return (
-                  <button
-                    key={i}
-                    onClick={() => setStage(i)}
-                    className="w-full text-left flex items-center gap-3 rounded-lg px-3 py-2 transition-colors"
-                    style={{
-                      backgroundColor: current ? "rgba(200,146,58,0.10)" : "transparent",
-                      border: current ? `1px solid rgba(200,146,58,0.30)` : "1px solid transparent",
-                    }}
-                  >
-                    <span
-                      className="w-5 h-5 rounded-full shrink-0 flex items-center justify-center text-[10px]"
-                      style={{
-                        backgroundColor: done ? AMBER : current ? "rgba(200,146,58,0.20)" : "rgba(237,232,213,0.06)",
-                        border: done ? "none" : current ? `1.5px solid ${AMBER}` : `1px solid ${BORDER_STRONG}`,
-                        color: done ? BG : current ? AMBER : TEXT_2,
-                        fontWeight: 700,
-                      }}
-                    >
-                      {done ? "✓" : i + 1}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 13,
-                        color: done ? TEXT_2 : current ? TEXT : TEXT_2,
-                        fontWeight: current ? 600 : 400,
-                        textDecoration: done ? "line-through" : undefined,
-                      }}
-                    >
-                      {s}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={() => setStage(Math.max(0, stage - 1))}
-                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs transition-colors"
-                style={{ backgroundColor: SURF2, border: `1px solid ${BORDER}`, color: TEXT_2 }}
-              >
-                <ChevronLeft size={12} /> Back
-              </button>
-              <button
-                onClick={() => setStage(Math.min(STAGES.length - 1, stage + 1))}
-                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
-                style={{ backgroundColor: "rgba(200,146,58,0.12)", border: `1px solid rgba(200,146,58,0.30)`, color: AMBER }}
-              >
-                Advance stage <ChevronRight size={12} />
-              </button>
-            </div>
-          </div>
-
-          {/* Next action */}
-          <div>
-            <p style={{ fontSize: 11, color: TEXT_2, marginBottom: 6, letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "monospace" }}>Next action</p>
+          <div className="mt-8 mb-6">
+            <p style={{ fontSize: 11, color: TEXT_3, marginBottom: 8, letterSpacing: "0.15em", textTransform: "uppercase", fontFamily: "monospace" }}>Next Action</p>
             <EditableText
               value={nextAction}
               onChange={setNextAction}
-              placeholder="What happens before the next meeting?"
+              placeholder="What happens before the next stage?"
             />
           </div>
 
-          {/* Modules reminder */}
-          <div className="mt-4 rounded-xl p-3" style={{ backgroundColor: SURF2 }}>
-            <p style={{ fontSize: 10, color: TEXT_2, fontFamily: "monospace", letterSpacing: "0.16em", textTransform: "uppercase", marginBottom: 6 }}>Modules on offer</p>
-            <div className="grid grid-cols-2 gap-1 text-xs" style={{ color: TEXT_2 }}>
-              {[
-                ["Base $1.25/m", "tracker + impact"],
-                ["Steward $2.00/m", "+ matchmaker"],
-                ["Full $2.50/m", "+ moments + beacon"],
-              ].map(([tier, desc]) => (
-                <div key={tier} className="col-span-1">
-                  <span style={{ color: TEXT, fontWeight: 500 }}>{tier}</span>
-                  <span style={{ color: TEXT_2 }}> · {desc}</span>
-                </div>
-              ))}
+          {/* Deal Value & Pricing Fold */}
+          <div className="mt-6 pt-6" style={{ borderTop: `1px solid ${BORDER}` }}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p style={{ fontFamily: FONT_DISPLAY, fontSize: 24, fontWeight: 700, color: Z3_COLOR }}>$28,000</p>
+                <p style={{ fontSize: 13, color: TEXT_2 }}>one-time + $3k/mo</p>
+              </div>
+              <button 
+                onClick={() => setShowPricing(!showPricing)}
+                className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full tap-feedback"
+                style={{ backgroundColor: "rgba(255,255,255,0.05)", color: TEXT_2 }}
+              >
+                Pricing {showPricing ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+              </button>
             </div>
+            
+            {showPricing && (
+              <div className="animate-in fade-in slide-in-from-top-2 duration-200 mt-4 bg-black/40 rounded-xl p-4">
+                <p style={{ fontSize: 11, color: Z3_COLOR, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 8 }}>1,500 TENANTS</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between"><span className="text-white/60">Base $1.25/m</span><span className="text-white/40">tracker + impact</span></div>
+                  <div className="flex justify-between"><span className="text-white">Steward $2.00/m</span><span className="text-white/40">+ matchmaker</span></div>
+                  <div className="flex justify-between"><span className="text-white/60">Full $2.50/m</span><span className="text-white/40">+ moments + beacon</span></div>
+                </div>
+              </div>
+            )}
           </div>
         </Card>
       </div>
 
       {/* ── Track 2: Goodbye Kit ────────────────────────────────────── */}
-      <div className="mb-4">
-        <SectionLabel>Track 2 · Goodbye Kit — Individual</SectionLabel>
-        <Card>
+      <div className="mb-8">
+        <SectionLabel color={Z0_COLOR}>Track 2 · Goodbye Kit (Individual)</SectionLabel>
+        <Card style={{ borderColor: `rgba(200,146,58,0.2)` }}>
           <Counter
             value={goodbyeSales}
             onChange={setGoodbyeSales}
             label="sales"
             goal={10}
-            sublabel={`sales · target 5–10 while Gatehouse closes`}
+            sublabel="Target: 5–10 while Gatehouse closes"
           />
-          <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${BORDER}` }}>
+          <div className="mt-6 pt-4 flex justify-between items-center" style={{ borderTop: `1px solid ${BORDER}` }}>
+            <p style={{ fontSize: 11, color: TEXT_3 }}>Stripe live · License IDs stamped</p>
             <a
               href="https://codetry.ca/goodbye/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm transition-opacity hover:opacity-80"
-              style={{ color: AMBER }}
+              className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors hover:bg-white/10"
+              style={{ color: Z0_COLOR, backgroundColor: "rgba(200,146,58,0.1)" }}
             >
-              codetry.ca/goodbye/ <ExternalLink size={13} />
+              codetry.ca <ExternalLink size={10} />
             </a>
-            <p style={{ fontSize: 11, color: TEXT_2, marginTop: 4 }}>Stripe live · license IDs stamped</p>
           </div>
         </Card>
       </div>
 
       {/* ── Track 3: Print Suite ────────────────────────────────────── */}
-      <div className="mb-6">
-        <SectionLabel>Track 3 · Print Suite — Free → Paid</SectionLabel>
-        <Card>
+      <div className="mb-12">
+        <SectionLabel color={Z0_COLOR}>Track 3 · Print Suite (Free → Paid)</SectionLabel>
+        <Card style={{ borderColor: `rgba(200,146,58,0.2)` }}>
           <Counter
             value={printConv}
             onChange={setPrintConv}
             label="conversions"
-            sublabel="paid doc conversions from free users"
+            sublabel="Paid doc conversions from free users"
           />
-          <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${BORDER}` }}>
+          <div className="mt-6 pt-4 flex justify-between items-center" style={{ borderTop: `1px solid ${BORDER}` }}>
+            <p style={{ fontSize: 11, color: TEXT_3 }}>13 sheets · Stripe live</p>
             <a
               href="https://codetry.ca/suite/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm transition-opacity hover:opacity-80"
-              style={{ color: AMBER }}
+              className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors hover:bg-white/10"
+              style={{ color: Z0_COLOR, backgroundColor: "rgba(200,146,58,0.1)" }}
             >
-              codetry.ca/suite/ <ExternalLink size={13} />
+              codetry.ca <ExternalLink size={10} />
             </a>
-            <p style={{ fontSize: 11, color: TEXT_2, marginTop: 4 }}>13 sheets · Stripe live · license IDs stamped</p>
           </div>
         </Card>
       </div>
 
-      {/* ── Doctrine lockout reminder ───────────────────────────────── */}
-      <div
-        className="rounded-2xl px-4 py-3 text-center mb-2"
-        style={{ backgroundColor: SURF2, border: `1px solid ${BORDER}` }}
-      >
-        <p style={{ fontSize: 12, color: TEXT_2, fontStyle: "italic" }}>
+      {/* ── Footer ───────────────────────────────── */}
+      <div className="text-center mt-16 mb-8 opacity-40">
+        <p style={{ fontSize: 13, color: TEXT, fontStyle: "italic", fontFamily: FONT_DISPLAY }}>
           Everything else is doctrine. Doctrine waits.
-        </p>
-        <p style={{ fontSize: 11, color: TEXT_2, marginTop: 2 }}>
-          Gatehouse → Goodbye Kit → Print Suite. In that order.
         </p>
       </div>
 
-      {/* ── Links to deeper tools ───────────────────────────────────── */}
-      <div className="flex gap-2 mt-4">
-        {[
-          { label: "This Week", href: "/this-week" },
-          { label: "Inbox",     href: "/" },
-          { label: "Table",     href: "/table" },
-        ].map(({ label, href }) => (
-          <Link
-            key={href}
-            href={href}
-            className="flex-1 rounded-xl py-2.5 text-center text-xs transition-colors"
-            style={{ backgroundColor: SURF2, border: `1px solid ${BORDER}`, color: TEXT_2 }}
-          >
-            {label}
-          </Link>
-        ))}
-      </div>
     </div>
   );
 }
