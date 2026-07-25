@@ -1,0 +1,32 @@
+**Connecting multiple Gmail accounts to a Replit-hosted app for triage carries several real risks.** The screenshot shows a custom “Gmail inbox setup” that pulls threads into a unified “Morning Triage” / “Today” list via Replit integrations, environment secrets (e.g. `GMAIL_CONN_ACC_BOBBIE_PERSONAL`), and OAuth-style connections that start with `conn_google-mail_`.
+
+### Main risks
+
+1. **Credential / token exposure**  
+   Replit stores connection IDs and secrets in the project’s Secrets / environment variables. Anyone with edit access to the Replit project (or a leaked `.env` / secret) can read those tokens. If the tokens grant full Gmail access (read, send, modify), an attacker can read all mail, send as you, or delete messages across every connected account.
+2. **Broad OAuth scopes**  
+   Typical Gmail integrations request scopes such as `https://mail.google.com/` or `gmail.modify` / `gmail.readonly`. Once granted, the app (and anyone who compromises it) can access the entire mailbox history, not just recent triage threads. “Needs reconnection” states in the screenshot indicate tokens can expire or be revoked, but until then they remain powerful.
+3. **Replit platform risks**
+- Shared or public Repls, accidental “Publish” of secrets, or compromised collaborator accounts can leak the connections.
+- Replit’s own infrastructure or a supply-chain issue in the Gmail integration could expose tokens.
+- Restarting the API server (as the UI instructs) does not magically isolate the secrets.
+4. **Account takeover & lateral movement**  
+   A single compromised connection can be used to pivot: read password-reset emails, 2FA codes, invoices, supplier communications, etc., across personal (`bobbiepepin@gmail.com`) and business accounts (`parrsjars@…`). The more accounts you link, the larger the blast radius.
+5. **Data residency & compliance**  
+   Email content (including personal, financial, or customer data) is processed and possibly cached by the Replit app. This may violate privacy expectations, GDPR/CCPA requirements, or internal policies if the app stores or logs message bodies.
+6. **Operational / reliability risks**  
+   Rate limits, quota exhaustion, or Google flagging “suspicious” third-party access can lock accounts. A buggy triage script could mark important mail as read, archive it, or send unintended replies.
+7. **Phishing / social-engineering surface**  
+   The setup UI itself could be mimicked; an attacker who gains temporary access to the Replit project can add their own connection or exfiltrate existing ones.
+
+### Practical mitigations (if you still proceed)
+
+- Use the **least-privilege scopes** possible (prefer `gmail.readonly` over full modify/send if triage only needs to surface threads).
+- Store secrets only in Replit Secrets (never hard-code) and rotate them after any suspected exposure.
+- Prefer a dedicated triage service account or Google Workspace domain-wide delegation with tight filters rather than personal accounts.
+- Enable Google account alerts for new third-party access and regularly audit connected apps.
+- Keep the Replit project private, limit collaborators, and avoid deploying the API publicly without authentication.
+- Consider a more hardened host (or self-hosted OAuth proxy) if the data is sensitive.
+- Test with a throwaway Gmail account first.
+
+In short: linking every Gmail account multiplies the value of any single compromise. Treat the Replit secrets and the OAuth tokens with the same care you would give the accounts’ passwords themselves. If the app is only for personal triage and the project stays private with minimal scopes, the risk is manageable; for business-critical mail it is substantially higher.
