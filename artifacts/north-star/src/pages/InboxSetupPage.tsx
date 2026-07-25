@@ -219,7 +219,7 @@ export function InboxSetupPage() {
               const entry = accountStatuses[acc.id];
               const { icon, label, color, needsAction } = getStatusBadge(entry, !!acc.isAlias);
               const showReconnect = expandedReconnect[acc.id];
-              const envVar = entry?.envVar ?? "";
+              const envVar = entry?.envVar || ACCOUNT_AUDIT_ENV_VARS[acc.id] || "";
 
               return (
                 <div key={acc.id} className="px-4 py-3" style={{ borderBottom: `1px solid ${BORDER}` }}>
