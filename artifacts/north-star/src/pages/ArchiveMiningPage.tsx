@@ -211,7 +211,7 @@ function SearchTab() {
   const [dateTo, setDateTo] = useState("");
   const [threads, setThreads] = useState<ArchiveThread[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<"scope" | "unavailable" | null>(null);
+  const [error, setError] = useState<"scope" | "unauthorized" | "unavailable" | null>(null);
   const [taggingThread, setTaggingThread] = useState<ArchiveThread | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -257,6 +257,11 @@ function SearchTab() {
 
     try {
       const r = await fetch(`${BASE_API}/inbox/archive?${params.toString()}`, { headers: ownerHeaders() });
+      if (r.status === 401) {
+        setError("unauthorized");
+        setLoading(false);
+        return;
+      }
       if (r.status === 403) {
         setError("scope");
         setLoading(false);
@@ -385,6 +390,21 @@ function SearchTab() {
           </div>
         )}
       </div>
+
+      {error === "unauthorized" && (
+        <div 
+          className="rounded-xl border px-4 py-3 flex items-start gap-3"
+          style={{ backgroundColor: RED, borderColor: "rgba(239,68,68,0.3)" }}
+        >
+          <AlertTriangle size={15} className="mt-0.5 shrink-0" style={{ color: TEXT }} />
+          <div>
+            <p className="text-sm font-medium" style={{ color: TEXT }}>Not authorised</p>
+            <p className="text-xs mt-0.5" style={{ color: TEXT_2 }}>
+              Owner token missing or invalid. Sign in as the owner to search the archive.
+            </p>
+          </div>
+        </div>
+      )}
 
       {error === "scope" && (
         <div 
