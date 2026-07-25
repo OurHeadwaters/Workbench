@@ -239,13 +239,13 @@ describe("MorningTriage — unauthorized (no ownerToken in localStorage)", () =>
     });
   });
 
-  it("shows a visible error message instead of a blank panel when 401 is received", async () => {
+  it("shows a visible 'Not authorised' error instead of a blank panel when 401 is received", async () => {
     stubFetch(() => makeResponse(401, { error: "Unauthorized" }));
 
     render(<MorningTriage />);
 
     await waitFor(() => {
-      expect(screen.getByText(/Morning Triage unavailable/i)).toBeInTheDocument();
+      expect(screen.getByText(/Not authorised/i)).toBeInTheDocument();
     });
   });
 });
