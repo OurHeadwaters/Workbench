@@ -178,7 +178,7 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
   }, [inbox.enabled, enabledAccounts.length, loadThreads]);
 
   if (!inbox.enabled) return null;
-  if (!loading && threads.length === 0 && globalError !== "scope") return null;
+  if (!loading && threads.length === 0 && globalError === null) return null;
 
   if (globalError === "scope") {
     return (
@@ -188,6 +188,20 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
           <p className="text-sm font-medium text-[#92400E]">Gmail read access needed</p>
           <p className="text-xs text-[#78350F] mt-0.5">
             The connected Gmail account only has add-on permissions. To enable Morning Triage, the Gmail connection needs the <strong>gmail.readonly</strong> scope — reconnect it in the Replit integrations panel with broader access.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (globalError === "unavailable") {
+    return (
+      <div className="rounded-xl border border-[rgba(237,232,213,0.15)] bg-[#141210] px-4 py-3 mb-4 flex items-start gap-3">
+        <Inbox size={16} className="text-[rgba(237,232,213,0.4)] mt-0.5 shrink-0" />
+        <div>
+          <p className="text-sm font-medium text-[rgba(237,232,213,0.7)]">Morning Triage unavailable</p>
+          <p className="text-xs text-[rgba(237,232,213,0.45)] mt-0.5">
+            Could not reach the inbox — check that the owner token is set in your browser and the API server is running.
           </p>
         </div>
       </div>
