@@ -231,6 +231,8 @@ function SearchTab() {
       if (r.ok) {
         const data: { body: string } = await r.json();
         setBodyCache((prev) => ({ ...prev, [t.id]: data.body }));
+      } else if (r.status === 401) {
+        setBodyCache((prev) => ({ ...prev, [t.id]: "__UNAUTHORIZED__" }));
       } else {
         setBodyCache((prev) => ({ ...prev, [t.id]: "" }));
       }
@@ -500,6 +502,10 @@ function SearchTab() {
                           <Loader2 size={12} className="animate-spin" />
                           Loading preview…
                         </div>
+                      ) : body === "__UNAUTHORIZED__" ? (
+                        <p className="text-xs italic" style={{ color: "#f87171" }}>
+                          Not authorised — sign in with an owner token to read message bodies.
+                        </p>
                       ) : body ? (
                         <p className="text-xs whitespace-pre-wrap leading-relaxed font-mono" style={{ color: TEXT_2 }}>
                           {body}
