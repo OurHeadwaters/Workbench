@@ -60,6 +60,7 @@ export function KitsPage() {
   const [failureCount, setFailureCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState(false);
   const [publishingId, setPublishingId] = useState<string | null>(null);
   const [publishMsg, setPublishMsg] = useState<Record<string, string>>({});
   const [extendingToken, setExtendingToken] = useState<string | null>(null);
@@ -75,6 +76,7 @@ export function KitsPage() {
 
   async function fetchKits() {
     setLoading(true);
+    setAuthError(false);
     try {
       const [pubRes, draftRes, tokensRes, failuresRes] = await Promise.all([
         fetch("/api/kits/list"),
@@ -86,6 +88,12 @@ export function KitsPage() {
       if (!pubRes.ok) throw new Error("Failed to load published kits");
       const pubData = (await pubRes.json()) as { kits: Kit[] };
       setKits(pubData.kits ?? []);
+
+      const ownerRes = [draftRes, tokensRes, failuresRes].find((r) => r?.status === 401);
+      if (ownerRes) {
+        setAuthError(true);
+        return;
+      }
 
       if (draftRes?.ok) {
         const draftData = (await draftRes.json()) as { kits: Kit[] };
@@ -119,6 +127,10 @@ export function KitsPage() {
         method: "POST",
         headers: { "Content-Type": "application/json", ...ownerHeaders() },
       });
+      if (res.status === 401) {
+        setPublishMsg((prev) => ({ ...prev, [id]: "Not authorised — owner token required" }));
+        return;
+      }
       const data = (await res.json()) as { ok?: boolean; error?: string; kit?: Kit };
       if (data.ok) {
         setPublishMsg((prev) => ({ ...prev, [id]: "Published!" }));
@@ -140,6 +152,10 @@ export function KitsPage() {
         method: "POST",
         headers: { "Content-Type": "application/json", ...ownerHeaders() },
       });
+      if (res.status === 401) {
+        setExtendMsg((prev) => ({ ...prev, [token]: "Not authorised — owner token required" }));
+        return;
+      }
       const data = (await res.json()) as {
         ok?: boolean;
         error?: string;
@@ -179,6 +195,11 @@ export function KitsPage() {
 
         {loading && (
           <div className="text-sm" style={{ color: TEXT_3 }}>Loading kits…</div>
+        )}
+        {authError && (
+          <div className="border rounded-xl p-4 text-sm mb-6" style={{ backgroundColor: "rgba(220,38,38,0.08)", borderColor: BORDER_STRONG, color: TEXT }}>
+            <span className="font-medium">Not authorised</span> — the owner token was rejected. Verify the token stored under <code>ownerToken</code> in your browser and reload.
+          </div>
         )}
         {error && (
           <div className="border rounded-xl p-4 text-sm mb-6" style={{ backgroundColor: RED, color: "#FFF", borderColor: BORDER_STRONG }}>

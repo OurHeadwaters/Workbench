@@ -72,8 +72,16 @@ export function SettingsPage() {
   useEffect(() => {
     if (!isOwner) return;
     fetch(`${API}/api/settings/notify-email`, { headers: ownerHeaders() })
-      .then((r) => r.json())
-      .then((data: { email: string | null; source: "db" | "env" | "unset" }) => {
+      .then((r) => {
+        if (r.status === 401) {
+          setNotifyEmailError("Not authorised — owner token required");
+          return null;
+        }
+        if (!r.ok) return null;
+        return r.json() as Promise<{ email: string | null; source: "db" | "env" | "unset" }>;
+      })
+      .then((data) => {
+        if (!data) return;
         setNotifyEmail(data.email ?? "");
         setNotifyEmailSource(data.source);
       })

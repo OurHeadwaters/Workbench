@@ -611,6 +611,10 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false, tableMo
           headers: ownerHeaders(),
           body: JSON.stringify({ taskIds: toApprove, tier: "green" }),
         });
+        if (res.status === 401 || res.status === 403) {
+          setAuthBlocked(true);
+          return;
+        }
         if (res.ok) {
           setPendingIds((prev) => { const next = new Set(prev); toApprove.forEach((id) => next.add(id)); return next; });
           setAcceptedTitles((prev) => { const next = new Set(prev); approvedList.forEach((t) => next.add(t.title)); return next; });
@@ -634,6 +638,11 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false, tableMo
         headers: ownerHeaders(),
         body: JSON.stringify({ taskIds, tier }),
       });
+      if (res.status === 401 || res.status === 403) {
+        setAuthBlocked(true);
+        setApproving(null);
+        return;
+      }
       if (!res.ok) {
         const j = await res.json().catch(() => ({})) as { error?: string };
         throw new Error(j.error ?? `Approve failed: ${res.status}`);
@@ -663,6 +672,10 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false, tableMo
       headers: ownerHeaders(),
       body: JSON.stringify({ taskIds }),
     });
+    if (res.status === 401 || res.status === 403) {
+      setAuthBlocked(true);
+      return;
+    }
     if (res.ok) {
       // Look up titles before removing from reverse map (needed for acceptedTitles removal)
       const unapprovedTitles = taskIds
@@ -692,6 +705,10 @@ export function TaskAutopilot({ onOpenDeliberation, defaultOpen = false, tableMo
       headers: ownerHeaders(),
       body: JSON.stringify({ taskIds, tier, dryRun: true }),
     });
+    if (res.status === 401 || res.status === 403) {
+      setAuthBlocked(true);
+      return;
+    }
     if (res.ok) {
       const j = await res.json() as { taskIds: string[]; wouldApprove: number };
       setDryRunResult(j);
@@ -1110,6 +1127,15 @@ ${seatName}, this task needs your voice before it can move to PENDING. What is y
               pulling={aquiferPulling}
               onClose={() => setAquiferSettingsOpen(false)}
             />
+          )}
+
+          {authBlocked && (
+            <div className="mb-4 px-4 py-3 rounded-sm border border-[#5C1A1A] bg-[#1E0A0A] text-[12px] text-[#FCA5A5] flex items-start gap-3">
+              <span className="flex-1">
+                <span className="font-medium">Not authorised</span> — the owner token was rejected. Set a valid token under <code>ownerToken</code> in your browser's local storage and reload.
+              </span>
+              <button onClick={() => setAuthBlocked(false)} className="text-[#5C5046] hover:text-[#FCA5A5] flex-shrink-0">×</button>
+            </div>
           )}
 
           {error && !authBlocked && (

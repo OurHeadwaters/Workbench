@@ -45,6 +45,10 @@ function ownerHeaders(): HeadersInit {
     : { "Content-Type": "application/json" };
 }
 
+class UnauthorizedError extends Error {
+  constructor() { super("unauthorized"); }
+}
+
 async function fetchArchiveFromServer(): Promise<Archive | null> {
   const token = getOwnerToken();
   if (!token) return null;
@@ -52,23 +56,28 @@ async function fetchArchiveFromServer(): Promise<Archive | null> {
     const res = await fetch(`${API}/api/north-star/archive`, {
       headers: ownerHeaders(),
     });
+    if (res.status === 401) throw new UnauthorizedError();
     if (!res.ok) return null;
     const data = await res.json() as { archive: Archive };
     return data.archive ?? null;
-  } catch {
+  } catch (err) {
+    if (err instanceof UnauthorizedError) throw err;
     return null;
   }
 }
 
-async function pushArchiveToServer(archive: Archive): Promise<void> {
+async function pushArchiveToServer(archive: Archive, onUnauthorized?: () => void): Promise<void> {
   const token = getOwnerToken();
   if (!token) return;
   try {
-    await fetch(`${API}/api/north-star/archive`, {
+    const res = await fetch(`${API}/api/north-star/archive`, {
       method: "PUT",
       headers: ownerHeaders(),
       body: JSON.stringify({ archive }),
     });
+    if (res.status === 401) {
+      onUnauthorized?.();
+    }
   } catch {
     // fire-and-forget; localStorage is the fallback
   }
@@ -125,11 +134,11 @@ function loadArchive(): Archive {
   }
 }
 
-function saveArchive(archive: Archive) {
+function saveArchive(archive: Archive, onUnauthorized?: () => void) {
   try {
     localStorage.setItem(LS_ARCHIVE_KEY, JSON.stringify(archive));
   } catch { /* ignore */ }
-  pushArchiveToServer(archive);
+  pushArchiveToServer(archive, onUnauthorized);
 }
 
 function mergeArchives(local: Archive, server: Archive): Archive {
@@ -200,6 +209,7 @@ export function ThisWeekPage() {
   const [openWeeks, setOpenWeeks]   = useState<Set<string>>(new Set());
   const [undoState, setUndoState]   = useState<UndoState | null>(null);
   const [syncing, setSyncing]       = useState(false);
+  const [authError, setAuthError]   = useState<string | null>(null);
   const undoTimerRef                = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef                    = useRef<HTMLInputElement>(null);
 
@@ -211,13 +221,19 @@ export function ThisWeekPage() {
     const localArchive = loadArchive();
     setArchive(localArchive);
 
+    const onUnauth = () => setAuthError("Not authorised — the owner token was rejected when syncing the archive. Check the token stored under ownerToken in your browser.");
+
     fetchArchiveFromServer().then((serverArchive) => {
       if (!serverArchive) return;
       const merged = mergeArchives(localArchive, serverArchive);
       const changed = JSON.stringify(merged) !== JSON.stringify(localArchive);
       if (changed) {
-        saveArchive(merged);
+        saveArchive(merged, onUnauth);
         setArchive(merged);
+      }
+    }).catch((err) => {
+      if (err instanceof UnauthorizedError) {
+        setAuthError("Not authorised — the owner token was rejected when syncing the archive. Check the token stored under ownerToken in your browser.");
       }
     });
   }, []);
@@ -278,7 +294,7 @@ export function ThisWeekPage() {
     const updated = { ...archive };
     delete updated[weekKey];
     setArchive(updated);
-    saveArchive(updated);
+    saveArchive(updated, () => setAuthError("Not authorised — the owner token was rejected. Check the token stored under ownerToken in your browser."));
 
     setOpenWeeks((prev) => {
       const next = new Set(prev);
@@ -298,7 +314,7 @@ export function ThisWeekPage() {
     if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
 
     const restored = { ...loadArchive(), [undoState.weekKey]: undoState.weekItems };
-    saveArchive(restored);
+    saveArchive(restored, () => setAuthError("Not authorised — the owner token was rejected. Check the token stored under ownerToken in your browser."));
     setArchive(restored);
     setUndoState(null);
   }
@@ -310,12 +326,17 @@ export function ThisWeekPage() {
 
   async function handleExport() {
     setSyncing(true);
+    setAuthError(null);
     try {
       const token = getOwnerToken();
       if (token) {
         const res = await fetch(`${API}/api/north-star/archive/export`, {
           headers: ownerHeaders(),
         });
+        if (res.status === 401) {
+          setAuthError("Not authorised — the owner token was rejected. Check the token stored under ownerToken in your browser.");
+          return;
+        }
         if (res.ok) {
           const blob = await res.blob();
           const filename = `north-star-archive-${new Date().toISOString().slice(0, 10)}.json`;
@@ -368,6 +389,21 @@ export function ThisWeekPage() {
       </div>
 
       <div className="max-w-xl mx-auto px-4 pt-5 space-y-4">
+
+        {/* Auth error banner */}
+        {authError && (
+          <div
+            className="flex items-start gap-3 rounded-xl px-4 py-3"
+            style={{
+              backgroundColor: "rgba(220,38,38,0.08)",
+              border: "1px solid rgba(220,38,38,0.2)",
+            }}
+          >
+            <p className="text-sm" style={{ color: "#FCA5A5" }}>
+              <span className="font-medium">Not authorised — </span>{authError}
+            </p>
+          </div>
+        )}
 
         {/* Weekly-reset notice */}
         {cleared > 0 && (

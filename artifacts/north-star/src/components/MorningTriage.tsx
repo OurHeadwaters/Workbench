@@ -74,7 +74,7 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
   const [threads, setThreads] = useState<EnrichedEmailThread[]>([]);
   const [accountStatuses, setAccountStatuses] = useState<Record<string, AccountStatus>>({});
   const [loading, setLoading] = useState(false);
-  const [globalError, setGlobalError] = useState<"unavailable" | "scope" | null>(null);
+  const [globalError, setGlobalError] = useState<"unavailable" | "scope" | "unauthorized" | null>(null);
   const [expanded, setExpanded] = useState(true);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
   const relativeTime = useRelativeTime(lastRefreshedAt);
@@ -113,6 +113,11 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
 
     fetch(`${BASE_API}/inbox/threads/all?${params.toString()}`, { headers: ownerHeaders() })
       .then(async (r) => {
+        if (r.status === 401) {
+          if (showSpinner) setGlobalError("unauthorized");
+          setLoading(false);
+          return;
+        }
         if (r.status === 403) {
           if (showSpinner) setGlobalError("scope");
           setLoading(false);
@@ -179,6 +184,20 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
 
   if (!inbox.enabled) return null;
   if (!loading && threads.length === 0 && globalError === null) return null;
+
+  if (globalError === "unauthorized") {
+    return (
+      <div className="rounded-xl border border-[rgba(237,232,213,0.15)] bg-[#141210] px-4 py-3 mb-4 flex items-start gap-3">
+        <Inbox size={16} className="text-[rgba(237,232,213,0.4)] mt-0.5 shrink-0" />
+        <div>
+          <p className="text-sm font-medium text-[rgba(237,232,213,0.7)]">Not authorised</p>
+          <p className="text-xs text-[rgba(237,232,213,0.45)] mt-0.5">
+            The owner token was rejected. Set a valid token in your browser's local storage under <code>ownerToken</code> and refresh.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (globalError === "scope") {
     return (

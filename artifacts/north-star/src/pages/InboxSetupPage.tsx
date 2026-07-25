@@ -59,6 +59,7 @@ export function InboxSetupPage() {
   const [saved, setSaved] = useState(false);
 
   const [accountStatuses, setAccountStatuses] = useState<Record<string, AccountStatusEntry>>({});
+  const [statusAuthError, setStatusAuthError] = useState(false);
   const [expandedReconnect, setExpandedReconnect] = useState<Record<string, boolean>>({});
   const [copiedEnvVar, setCopiedEnvVar] = useState<string | null>(null);
 
@@ -74,6 +75,13 @@ export function InboxSetupPage() {
 
     fetch(`${BASE_API}/inbox/accounts/status?accountIds=${ids}`, { headers: ownerHeaders() })
       .then(async (r) => {
+        if (r.status === 401) {
+          setStatusAuthError(true);
+          const err: Record<string, AccountStatusEntry> = {};
+          probableAccounts.forEach((a) => { err[a.id] = { status: "unavailable", envVar: "" }; });
+          setAccountStatuses(err);
+          return;
+        }
         if (!r.ok) throw new Error("unavailable");
         const data = await r.json() as Record<string, AccountStatusEntry>;
         setAccountStatuses(data);
@@ -157,6 +165,18 @@ export function InboxSetupPage() {
             Configure which threads surface in Morning Triage. All enabled accounts feed into a single unified list.
           </p>
         </div>
+
+        {statusAuthError && (
+          <div className="rounded-xl px-4 py-3 flex items-start gap-3" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
+            <ShieldCheck size={16} className="mt-0.5 shrink-0" style={{ color: "#FB923C" }} />
+            <div>
+              <p className="text-sm font-medium" style={{ color: TEXT }}>Not authorised</p>
+              <p className="text-xs mt-0.5" style={{ color: TEXT_2 }}>
+                The owner token was rejected when checking account status. Verify the token stored under <code>ownerToken</code> in your browser and refresh.
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="rounded-xl p-4 flex items-center justify-between" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
           <div>
