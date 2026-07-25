@@ -322,6 +322,21 @@ The worked examples in this handbook come from one practitioner's specific conte
 > **Then throw them away. The only correct way to read this book is to come out the other end building something that has nothing to do with a food co-op in Dryden — unless, of course, that is exactly where you are.**
 
 
+### How the discipline began.
+
+
+The work began not with a theory but with a condition: people already stretched past their limits, pulled sideways in a dozen directions at once. The immediate temptation — add more pressure, add more complicated systems — was the wrong answer. What the conditions called for was a model that lets ordinary people make capacity-creating moves consciously, at the kitchen table, in a form that does not break when many tables eventually link together.
+
+
+### The search and the result.
+
+
+> The search began in overload. The result is a repeatable way to restore and expand capacity that stays human-scaled at the table and still works when many tables join.
+
+
+> **That is the through-line: from the original need to the geometry, the primitives, the kits, and the 720° return pass.**
+
+
 **Tool: [Word Walk](/word-walk)** — Five codetry words a day, one deliberate choice at a time. Use it to build vocabulary as you read — not before, not after.
 
 
