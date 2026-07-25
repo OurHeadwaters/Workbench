@@ -1,5 +1,2 @@
-- [Vitest fs mock limitation](vitest-fs-mock.md) — vi.mock("fs") does NOT intercept routes using `import fs from "fs"` in this project's vitest/Node config; manage real files directly instead.
-- [Stripe webhook test strategy](stripe-webhook-testing.md) — use real HMAC-SHA256 signatures instead of mocking constructEvent; add stripeProcessedEventsTable to the db mock for DB-backed idempotency.
-- [Workbench shelf architecture](workbench-shelf.md) — k-pizza + hinterland are the shelf reference builds; see WORKBENCH_BRIEF.md for full vision
-- [k-pizza import quirks](k-pizza-client.md) — k-pizza uses @workspace/k-pizza-client-react (not api-client-react); gord-widget needs named import not default
-- [North Star dark theme migration](north-star-dark-theme.md) — canonical theme tokens, light-theme leftover hex codes to grep for, and pages still deferred
+- [Handbook sync rule](handbook-sync.md) — after any handbook.ts edit, must run sync-chapters + export-book or typecheck fails
+- [Gatehouse revenue sprint](gatehouse-sprint.md) — North Star Sprint tab at /sprint, 90-day cashflow focus, three tracks, July 25–Oct 23 2026

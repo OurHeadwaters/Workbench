@@ -1,27 +1,37 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Inbox, CheckSquare, Zap, Lock, MoreHorizontal, X, Sunrise, Map, Sprout, Star, Package, BookOpen, Settings } from "lucide-react";
+import { Inbox, CheckSquare, Zap, Lock, MoreHorizontal, X, Sunrise, Map, Sprout, Star, Package, BookOpen, Settings, Target } from "lucide-react";
 import { lockKitchenTable, isKitchenTableUnlocked } from "@/lib/lock";
 import { BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, FONT_DISPLAY } from "@/lib/theme";
 
 const TABS = [
   {
+    path: "/sprint",
+    icon: Target,
+    label: "Sprint",
+    match: (p: string) => p.startsWith("/sprint"),
+    amber: true,
+  },
+  {
     path: "/",
     icon: Inbox,
     label: "Inbox",
     match: (p: string) => p === "/" || p === "",
+    amber: false,
   },
   {
     path: "/this-week",
     icon: CheckSquare,
     label: "This Week",
     match: (p: string) => p.startsWith("/this-week"),
+    amber: false,
   },
   {
     path: "/table",
     icon: Zap,
     label: "Table",
     match: (p: string) => p.startsWith("/table") || p.startsWith("/kitchen-table") || p.startsWith("/old-table"),
+    amber: false,
   },
 ];
 
@@ -113,19 +123,22 @@ export function NavBar() {
         }}
       >
         <div className="flex items-stretch max-w-xl mx-auto">
-          {TABS.map(({ path, icon: Icon, label, match }) => {
+          {TABS.map(({ path, icon: Icon, label, match, amber: isAmber }) => {
             const active = match(location);
+            const color = active
+              ? (isAmber ? AMBER : ACTIVE)
+              : (isAmber ? "rgba(200,146,58,0.55)" : INACTIVE);
             return (
               <Link
                 key={path}
                 href={path}
                 className="flex-1 flex flex-col items-center justify-center gap-1 min-h-[64px] text-xs transition-all duration-150 relative"
-                style={{ color: active ? ACTIVE : INACTIVE }}
+                style={{ color }}
               >
                 {active && (
                   <span
                     className="absolute left-3 right-3 top-2 bottom-2 rounded-xl -z-10"
-                    style={{ backgroundColor: "rgba(237,232,213,0.07)" }}
+                    style={{ backgroundColor: isAmber ? "rgba(200,146,58,0.10)" : "rgba(237,232,213,0.07)" }}
                     aria-hidden
                   />
                 )}

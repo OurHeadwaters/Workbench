@@ -1,0 +1,100 @@
+Business Agent Catchup — July 25, 2026
+Paste this before any sprint-planning, dashboard-tuning, or deal-strategy session. Supersedes and extends the July 14 Grok 5-Week Briefing on all commercial / revenue matters. Read this first, then use that one for the philosophy layer if needed.
+
+Who You Are Talking To
+Bobbie Parr. Builder of the Headwaters ecosystem, Northwestern Ontario. Fifteen years of practitioner work in Zone 0–3 before a line of code was written. The system is now 90% functional at the operating-system level (quantum-physics-grounded, 720-degree 7D framework). The immediate reality: no cash in, and the build is ahead of the revenue. The next 90 days are a focused sprint on revenue, not doctrine.
+
+The discipline: practitioner, warm northern, quiet competence. Not a salesperson. Not a scale-or-die builder. Revenue pressure is the coercive field — the gyroscope holds its axis inside it.
+
+The Strategy Since the Last Briefing
+The July 14 briefing named three fast-cash tracks: Gate Setup sessions, Superposition Mini-Kit, Zone 2 contract. Those are still valid but the steward has since identified a higher-leverage primary path.
+
+The new priority: The Gatehouse Engine — Zone 3 B2B — is now the lead revenue track. Instead of selling individual kits to individuals, the strategy is to connect organizations that already have a community to the benefits and membership structure. The landlord, the reserve, the anchor org brings the community. The Gatehouse engine provides the infrastructure. The steward is the pipe.
+
+The key insight: Grant dependency is the leak in most community organization models. A landlord with 1,500 tenants, a band council with 800 members, a credit union with 2,000 account holders — these organizations already have capital flowing AND community trust. They do not need grants. They need a pipe that connects their existing community to co-op membership, peer benefits, and mutual-aid infrastructure. That pipe is the Gatehouse Engine.
+
+The GTA Landlord Deal — Current Status
+What it is: A GTA property company (landlord) connecting with a food co-op. The landlord has ~1,500 tenants. The arrangement makes co-op membership available to tenants as a tenant benefit — the landlord gains community value and retention; the co-op gains members; the tenants gain access to food security and peer resources.
+
+Stage: 2nd meeting. Still in pitch phase. This is the deal to close first. It generates the cash that funds the other two revenue tracks.
+
+Why it's the template: This exact structure scales across housing providers → food co-ops, band offices → member services, anchor orgs (credit unions, health centers, employers) → their membership base. The deal structure repeats; only the community type changes.
+
+The pricing structure:
+
+Tier	Per member / month	What it includes
+Base	$1.25	Tracker + Impact modules
+Steward	$2.00	+ Matchmaker module
+Full	$2.50	+ Moments + Beacon
+GTA Properties reference pricing: $3,000/month recurring + $28,000 one-time setup. This is the canonical number — use it in the pitch.
+
+Revenue math at 1,500 tenants: Base tier = ~$1,875/month recurring + $28k onboarding. Full tier = ~$3,750/month.
+
+The modules:
+
+Module	What it does
+tracker	Member task / contribution tracking
+impact	Credential issuance + monthly impact reports
+matchmaker	Community circle surfacing — connects members to relevant groups
+moments	Team moments / shared milestone records
+beacon	Premium signal layer (never free)
+Naming rule: These are Modules not Kits. "Kit" is reserved for practitioner instruments (Goodbye Kit, Shattered Kit, etc.).
+
+The Three Revenue Tracks — Priority Order
+Track 1 — Gatehouse Engine / GTA Landlord (Close this first)
+
+Stage: 2nd meeting / pitch
+Deal: $3k/mo recurring + $28k one-time for GTA Properties
+What's built: Gatehouse tier engine is live (module-derived tiers, 807 white-label layer, Helping Hands labour exchange, trust tiers, XRPL-linked wallet infrastructure)
+Template: Scales to reserves, anchor orgs, credit unions, food co-ops with existing membership
+Next action: Close the deal. Month 1 = credentials issued. Month 2 = first impact report. Day 91 = discovery call on renewal + expansion.
+Track 2 — Goodbye Kit / Individual (Stripe is live)
+
+Stage: Live, individual purchases working now
+Product: Family lifecycle instrument — Zone 0 / Zone 4 market face
+New: Every purchase generates a unique SL-XXXXXXXX license ID stamped on the printed document footer (IP provenance). New since last briefing.
+Live at: https://codetry.ca/goodbye/
+Next action: Get first 5–10 individual sales while Gatehouse deal is in pitch phase. Parallel, not sequential.
+Track 3 — Print Suite / Individual (Stripe is live for paid docs)
+
+Stage: Live, 13 print sheets, Stripe checkout for paid docs
+New: License IDs stamped on every paid doc footer. RealityCore Sheet 13 added (Decision Matrix mapped to RealityCore formula). New since last briefing.
+Live at: https://codetry.ca/suite/
+Next action: Convert free users to paid docs. The Suite is the funnel entry for individuals who may later become Goodbye Kit or Gatehouse clients.
+What Is Built vs. Still Doctrine
+Live and working today:
+
+System	Revenue relevance
+Helping Hands labour exchange + Trust Tiers (T1–T3)	Gatehouse pitch proof point
+807 white-label community layer	Gatehouse B2B foundation
+Gatehouse tier engine (module-derived tiers)	Core of the B2B product
+XRPL/DID identity foundation (testnet)	Sovereignty architecture proof
+Goodbye Kit + Stripe	Revenue-ready, Track 2
+Print Suite + Stripe + License IDs	Revenue-ready, Track 3
+Sandman nightly health analysis pipeline	B2B pitch data point
+Community Money Machine + Kitchen Table Reports	Steward portal (not B2C)
+Still doctrine only (named but not yet a working mechanism):
+
+White-label deployment automation (separate deployments per Gatehouse client — the sovereignty model requires this; automation unlocks rapid scaling, not yet built)
+Practitioner referral/listing economy
+Life-stage Kit bundles
+Funding Grove instrument applied to a real named project
+Jack Spirko / Freedom Cells outreach (drafts written, not sent)
+The Three Named Pilot Communities
+From the Gatehouse doctrine, three pilots are named:
+
+GTA property company — the deal in pitch phase. The template.
+Survival Podcast Brigade — Jack Spirko's listener network. Outreach draft written, not sent.
+Gather Round Homeschool — Zone 0 homeschool community. Later-stage.
+Close Pilot 1. The others follow the same structure.
+
+What Changed Since July 14 — Things You Won't Know
+RealityCore Sheet 13 added to Print Suite — Appendix C: Eisenhower Decision Matrix mapped to RealityCore formula terms. Now 13 sheets total.
+
+License IDs on every paid document — Format: SL- + first 8 hex chars of SHA-256(Stripe session ID). Stamped in the footer of every printed document. Applies to Goodbye Kit and all paid Print Suite docs.
+
+Sociophysics corpus now in Grok Gate — The four energetic roles (Jiggler, Floor, Eave, Peers), multi-charge field, proof cases, and session findings are now accessible via API. New briefing written.
+
+Gatehouse Engine is now the primary revenue track — The July 14 briefing framed Gate Setup sessions and the Superposition Mini-Kit as fastest-cash paths. Those still work. But the Gatehouse B2B engine is the higher-leverage primary move. The individual Kit tracks are parallel, not primary.
+
+**Pricing doctrine is locked

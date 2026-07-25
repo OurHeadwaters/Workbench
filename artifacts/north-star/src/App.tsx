@@ -34,6 +34,7 @@ import { PractitionerReviewPage } from "@/pages/PractitionerReviewPage";
 import { InboxPage } from "@/pages/InboxPage";
 import { ThisWeekPage } from "@/pages/ThisWeekPage";
 import { TableRoomPage } from "@/pages/TableRoomPage";
+import { SprintPage } from "@/pages/SprintPage";
 import { GordWidget } from "@workspace/gord-widget";
 import { PasswordGate } from "@/components/PasswordGate";
 
@@ -89,6 +90,12 @@ export default function App() {
         <Route path="/onboarding" component={OnboardingPage} />
 
         {/* ── Three rooms — main nav ── */}
+        <Route path="/sprint">
+          <OnboardingGuard>
+            <AppShell><SprintPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
         <Route path="/">
           <OnboardingGuard>
             <AppShell><InboxPage /></AppShell>
