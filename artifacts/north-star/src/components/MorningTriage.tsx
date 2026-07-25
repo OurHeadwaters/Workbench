@@ -18,6 +18,23 @@ type AccountStatus = "ok" | "scope" | "unavailable" | "no-connection";
 const BASE_API = "/api";
 const POLL_INTERVAL_MS = 4 * 60 * 1000;
 
+function getOwnerToken(): string | null {
+  try {
+    return (
+      window.localStorage.getItem("library.ownerToken") ||
+      window.localStorage.getItem("ownerToken") ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
+function ownerHeaders(): Record<string, string> {
+  const token = getOwnerToken();
+  return token ? { "x-library-owner-token": token } : {};
+}
+
 const BADGE_COLORS: Record<string, string> = {
   "acc-bobbie-personal": "bg-[#EDE9FE] text-[#5B21B6]",
   "acc-pj-main":         "bg-[#D1FAE5] text-[#065F46]",
@@ -94,7 +111,7 @@ export function MorningTriage({ alwaysExpanded = false }: { alwaysExpanded?: boo
       accounts.map((a) => `${a.id}:${a.label}`).join(","),
     );
 
-    fetch(`${BASE_API}/inbox/threads/all?${params.toString()}`)
+    fetch(`${BASE_API}/inbox/threads/all?${params.toString()}`, { headers: ownerHeaders() })
       .then(async (r) => {
         if (r.status === 403) {
           if (showSpinner) setGlobalError("scope");

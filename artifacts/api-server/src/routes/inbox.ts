@@ -26,9 +26,16 @@
  *   Returns: Record<accountId, "ok" | "scope" | "unavailable" | "no-connection">
  */
 
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
 import { ReplitConnectors } from "@replit/connectors-sdk";
 import { logger } from "../lib/logger";
+import { isOwnerRequest, OWNER_TOKEN } from "../lib/ownerAuth";
+
+function requireOwner(req: Request, res: Response): boolean {
+  if (!!OWNER_TOKEN && isOwnerRequest(req)) return true;
+  res.status(401).json({ error: "Unauthorized" });
+  return false;
+}
 
 const router: IRouter = Router();
 
@@ -286,6 +293,7 @@ async function probeConnection(connectionId: string): Promise<AccountStatus> {
 // Resolves the account from the server-side registry via optional ?accountId param.
 // Falls back to the primary account (acc-pj-main) if none specified.
 router.get("/threads", async (req, res) => {
+  if (!requireOwner(req, res)) return;
   const keywordsParam = typeof req.query.keywords === "string" ? req.query.keywords : "";
   const sendersParam = typeof req.query.senders === "string" ? req.query.senders : "";
   const labelsParam = typeof req.query.labels === "string" ? req.query.labels : "";
@@ -317,6 +325,7 @@ router.get("/threads", async (req, res) => {
 // Server resolves connections from the trusted registry.
 // Accounts not in the registry or with no connectionId → immediately "no-connection", skipped.
 router.get("/threads/all", async (req, res) => {
+  if (!requireOwner(req, res)) return;
   const keywordsParam = typeof req.query.keywords === "string" ? req.query.keywords : "";
   const sendersParam = typeof req.query.senders === "string" ? req.query.senders : "";
   const labelsParam = typeof req.query.labels === "string" ? req.query.labels : "";
@@ -383,6 +392,7 @@ router.get("/threads/all", async (req, res) => {
 //   status:  "ok" | "scope" | "unavailable" | "no-connection"
 //   envVar:  the environment variable name to set to wire this account
 router.get("/accounts/status", async (req, res) => {
+  if (!requireOwner(req, res)) return;
   const accountIdsParam = typeof req.query.accountIds === "string" ? req.query.accountIds : "";
   const accountIds = accountIdsParam
     ? accountIdsParam.split(",").map((s) => s.trim()).filter(Boolean)
@@ -421,6 +431,7 @@ const PRESET_QUERIES: Record<string, string> = {
 };
 
 router.get("/archive", async (req, res) => {
+  if (!requireOwner(req, res)) return;
   try {
     const connectors = new ReplitConnectors();
     const primaryConnectionId = resolveConnection("acc-pj-main");
@@ -530,6 +541,7 @@ router.get("/archive", async (req, res) => {
 
 // ─── Single thread body (on-demand) ────────────────────────────────────────
 router.get("/thread/:id/body", async (req, res) => {
+  if (!requireOwner(req, res)) return;
   try {
     const connectors = new ReplitConnectors();
     const threadId = req.params.id;

@@ -1,10 +1,38 @@
 import { useState, useEffect } from "react";
-import { Plus, X, Archive, AlertTriangle, CheckCircle2, Link2Off, RefreshCw, Wifi, Copy, Check as CheckIcon } from "lucide-react";
+import { Plus, X, Archive, AlertTriangle, CheckCircle2, Link2Off, RefreshCw, Wifi, Copy, Check as CheckIcon, ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
 import { useStore } from "@/store";
 import type { HatLabel } from "@/types";
 import { cn } from "@/lib/utils";
 import { BG, SURFACE, SURFACE_2, BORDER, TEXT, TEXT_2, TEXT_3, AMBER, GREEN } from "@/lib/theme";
+
+function getOwnerToken(): string | null {
+  try {
+    return (
+      window.localStorage.getItem("library.ownerToken") ||
+      window.localStorage.getItem("ownerToken") ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
+function ownerHeaders(): Record<string, string> {
+  const token = getOwnerToken();
+  return token ? { "x-library-owner-token": token } : {};
+}
+
+const ACCOUNT_AUDIT_ENV_VARS: Record<string, string> = {
+  "acc-bobbie-personal": "GMAIL_CONN_ACC_BOBBIE_PERSONAL",
+  "acc-pj-main":         "GMAIL_CONN_ACC_PJ_MAIN",
+  "acc-pj-orders":       "GMAIL_CONN_ACC_PJ_ORDERS",
+  "acc-pj-info":         "GMAIL_CONN_ACC_PJ_INFO",
+  "acc-xbuckets":        "GMAIL_CONN_ACC_XBUCKETS",
+  "acc-807foodcoop":     "GMAIL_CONN_ACC_807FOODCOOP",
+  "acc-the807foodcoop":  "GMAIL_CONN_ACC_THE807FOODCOOP",
+  "acc-807foodhub":      "GMAIL_CONN_ACC_807FOODHUB",
+};
 
 type LiveStatus = "ok" | "scope" | "unavailable" | "no-connection" | "checking";
 
@@ -44,7 +72,7 @@ export function InboxSetupPage() {
     probableAccounts.forEach((a) => { checking[a.id] = { status: "checking", envVar: "" }; });
     setAccountStatuses(checking);
 
-    fetch(`${BASE_API}/inbox/accounts/status?accountIds=${ids}`)
+    fetch(`${BASE_API}/inbox/accounts/status?accountIds=${ids}`, { headers: ownerHeaders() })
       .then(async (r) => {
         if (!r.ok) throw new Error("unavailable");
         const data = await r.json() as Record<string, AccountStatusEntry>;
@@ -326,6 +354,66 @@ export function InboxSetupPage() {
             <button onClick={addHatLabel} className="px-3 py-2 rounded-lg text-sm min-h-[44px]" style={{ backgroundColor: AMBER, color: BG }}>
               <Plus size={16} />
             </button>
+          </div>
+        </div>
+
+        {/* ── Active connections audit panel ─────────────────────── */}
+        <div className="rounded-xl overflow-hidden" style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}>
+          <div className="px-4 pt-4 pb-3 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={14} style={{ color: TEXT_2 }} />
+              <h2 className="text-base font-medium" style={{ color: TEXT }}>Active connections</h2>
+            </div>
+            <button
+              onClick={fetchStatuses}
+              className="shrink-0 p-2 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+              title="Refresh"
+            >
+              <RefreshCw size={14} style={{ color: TEXT_2 }} />
+            </button>
+          </div>
+
+          <div style={{ borderTop: `1px solid ${BORDER}` }}>
+            {probableAccounts.map((acc) => {
+              const entry = accountStatuses[acc.id];
+              const envVar = entry?.envVar ?? ACCOUNT_AUDIT_ENV_VARS[acc.id] ?? "";
+              const status = entry?.status;
+              const isConnected = status === "ok";
+              const isChecking = status === "checking" || !entry;
+              return (
+                <div key={acc.id} className="px-4 py-2.5 flex items-center justify-between gap-3" style={{ borderBottom: `1px solid ${BORDER}` }}>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium truncate" style={{ color: TEXT }}>{acc.fullName}</p>
+                    <p className="text-[10px] font-mono truncate mt-0.5" style={{ color: TEXT_3 }}>{envVar}</p>
+                  </div>
+                  <span
+                    className="shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full"
+                    style={{
+                      backgroundColor: isChecking ? "transparent" : isConnected ? "rgba(52,211,153,0.12)" : "rgba(251,146,60,0.12)",
+                      color: isChecking ? TEXT_3 : isConnected ? GREEN : "#FB923C",
+                    }}
+                  >
+                    {isChecking ? "Checking…" : isConnected ? "Connected" : status === "no-connection" ? "Not connected" : "Needs reconnection"}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="px-4 py-3" style={{ borderTop: `1px solid ${BORDER}` }}>
+            <p className="text-[11px] leading-relaxed" style={{ color: TEXT_3 }}>
+              All Gmail connections use <strong style={{ color: TEXT_2 }}>read-only</strong> access (gmail.readonly scope). You can audit or revoke any connection at any time via{" "}
+              <a
+                href="https://myaccount.google.com/permissions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2"
+                style={{ color: TEXT_2 }}
+              >
+                Google Account → Third-party access
+              </a>
+              .
+            </p>
           </div>
         </div>
 

@@ -21,6 +21,23 @@ import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AM
 
 const BASE_API = "/api";
 
+function getOwnerToken(): string | null {
+  try {
+    return (
+      window.localStorage.getItem("library.ownerToken") ||
+      window.localStorage.getItem("ownerToken") ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
+function ownerHeaders(): Record<string, string> {
+  const token = getOwnerToken();
+  return token ? { "x-library-owner-token": token } : {};
+}
+
 interface ArchiveThread {
   id: string;
   subject: string;
@@ -210,7 +227,7 @@ function SearchTab() {
     if (bodyCache[t.id] !== undefined) return;
     setLoadingBodyId(t.id);
     try {
-      const r = await fetch(`${BASE_API}/inbox/thread/${t.id}/body`);
+      const r = await fetch(`${BASE_API}/inbox/thread/${t.id}/body`, { headers: ownerHeaders() });
       if (r.ok) {
         const data: { body: string } = await r.json();
         setBodyCache((prev) => ({ ...prev, [t.id]: data.body }));
@@ -239,7 +256,7 @@ function SearchTab() {
     params.set("maxResults", "30");
 
     try {
-      const r = await fetch(`${BASE_API}/inbox/archive?${params.toString()}`);
+      const r = await fetch(`${BASE_API}/inbox/archive?${params.toString()}`, { headers: ownerHeaders() });
       if (r.status === 403) {
         setError("scope");
         setLoading(false);

@@ -1,0 +1,163 @@
+**Here’s the complete hardening plan with exact code changes.** All inbox routes become owner-token protected, the frontend continues to work, and Settings gains a live audit panel + revocation guidance.
+
+### 1. Gate every inbox route with `requireOwner`
+
+**File:** `artifacts/api-server/src/routes/inbox.ts`
+
+Add the import at the top (with the other imports):
+
+```ts
+import { isOwnerRequest, OWNER_TOKEN } from "../lib/ownerAuth";
+```
+
+Then add this small helper (same shape used in `deadhead.ts` / `taskAutopilot.ts`) right after the imports / before the router:
+
+```ts
+function requireOwner(req: Request, res: Response): boolean {
+  if (!isOwnerRequest(req)) {
+    res.status(401).json({ error: "Unauthorized – owner token required" });
+    return false;
+  }
+  return true;
+}
+```
+
+Wrap **every** route handler. Example pattern (apply identically to all five):
+
+```ts
+// /api/inbox/threads
+router.get("/threads", async (req, res) => {
+  if (!requireOwner(req, res)) return;
+  // … existing logic …
+});
+
+// /api/inbox/threads/all
+router.get("/threads/all", async (req, res) => {
+  if (!requireOwner(req, res)) return;
+  // … existing logic …
+});
+
+// /api/inbox/accounts/status
+router.get("/accounts/status", async (req, res) => {
+  if (!requireOwner(req, res)) return;
+  // … existing logic …
+});
+
+// /api/inbox/archive
+router.post("/archive", async (req, res) => {   // or GET if that’s what it is
+  if (!requireOwner(req, res)) return;
+  // … existing logic …
+});
+
+// /api/inbox/thread/:id/body
+router.get("/thread/:id/body", async (req, res) => {
+  if (!requireOwner(req, res)) return;
+  // … existing logic …
+});
+```
+
+After this change, any call without the correct `Authorization: Bearer <OWNER_TOKEN>` (or whatever header `isOwnerRequest` checks) returns **401**.
+
+### 2. Ensure the frontend always sends the owner token
+
+**Files:**
+
+- `artifacts/north-star/src/components/MorningTriage.tsx`
+- `artifacts/north-star/src/pages/InboxSetupPage.tsx`
+
+Search for every `fetch("/api/inbox/…")` (or `fetch(\`/api/inbox/…`)`).
+
+Use the **exact same pattern** already present in `riverSmith`, `taskAutopilot`, or any other protected page. Typical pattern in this codebase is:
+
+```ts
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${OWNER_TOKEN}`,   // or whatever the existing helper exports
+  // … any other headers
+};
+
+const res = await fetch("/api/inbox/threads", { headers });
+// or
+const res = await fetch("/api/inbox/accounts/status", {
+  method: "GET",
+  headers,
+});
+```
+
+If the project already has a small helper (e.g. `ownerFetch` or `getOwnerHeaders()`), reuse it. After the change, Morning Triage and Inbox Setup continue to work because they already possess the token; unauthenticated callers (or the public internet) now get 401.
+
+### 3. Add the “Active connections” audit panel
+
+**File:** `artifacts/north-star/src/pages/InboxSetupPage.tsx`
+
+Below the existing account list (the section that shows Bobbie, Parr’s Jars, etc.), add a new read-only section. It consumes the same `/api/inbox/accounts/status` endpoint that already returns live connection state.
+
+```tsx
+{/* ── Active connections audit ─────────────────────────────── */}
+<section className="mt-8 rounded-xl border border-border bg-card p-4">
+  <h3 className="text-sm font-medium text-muted-foreground mb-3">
+    Active connections (server-side registry)
+  </h3>
+
+  {statusLoading ? (
+    <p className="text-sm text-muted-foreground">Checking…</p>
+  ) : (
+    <ul className="space-y-3">
+      {accountsStatus.map((acct) => (
+        <li
+          key={acct.envVar || acct.email}
+          className="flex items-center justify-between gap-3 text-sm"
+        >
+          <div>
+            <div className="font-medium">{acct.label || acct.email}</div>
+            <div className="text-xs text-muted-foreground font-mono">
+              {acct.envVar /* e.g. GMAIL_CONN_ACC_BOBBIE_PERSONAL */}
+            </div>
+          </div>
+          <span
+            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+              acct.status === "connected"
+                ? "bg-emerald-500/15 text-emerald-400"
+                : "bg-amber-500/15 text-amber-400"
+            }`}
+          >
+            {acct.status === "connected" ? "Connected" : "Not connected"}
+          </span>
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+```
+
+(You already fetch `/api/inbox/accounts/status` for the toggle UI; just reuse that data for the audit panel. If the shape is slightly different, map `label`, `envVar`, and the live `status` field that the endpoint already returns.)
+
+### 4. Scope note + revocation link
+
+Still in `InboxSetupPage.tsx`, place this one-liner (or small info card) near the top of the Gmail accounts section or directly under the new audit panel:
+
+```tsx
+<p className="mt-4 text-xs text-muted-foreground leading-relaxed">
+  All Gmail connections use <strong>read-only</strong> access
+  (gmail.readonly scope). You can audit or revoke any connection at any time in{" "}
+  <a
+    href="https://myaccount.google.com/permissions"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="underline underline-offset-2 hover:text-foreground"
+  >
+    Google Account → Third-party access
+  </a>
+  .
+</p>
+```
+
+### Verification checklist (Done looks like)
+
+- `curl https://your-repl.replit.app/api/inbox/threads` → **401**
+- `curl -H "Authorization: Bearer $OWNER_TOKEN" …` → normal JSON
+- Morning Triage and Inbox Setup pages load and function exactly as before
+- Settings → Inbox Setup now shows the “Active connections” panel with live status badges and the env-var names
+- The read-only scope note + Google permissions link are visible
+
+These four changes close the open-endpoint gap, keep the existing owner-auth pattern consistent across the whole API server, and give you a permanent visual audit surface. No OAuth scopes or connected accounts are altered—exactly as scoped.
