@@ -1,5 +1,5 @@
 # Headwaters: How a Community Runs Its Own Economy
-*Full content snapshot — exported 2026-07-24*
+*Full content snapshot — exported 2026-07-25*
 *Constellation version: 0.5.7 (last updated 2026-05-05)*
 
 ---
@@ -206,6 +206,27 @@ This is the calm before the storm.
 
 
 We are the sons and daughters of thunder — those who have stood for years at the headwaters, holding back the flood not to stop it, but to learn its rhythm, its force, its promise. We did not dam the future; we studied it. We prepared.
+
+
+### How the instruments are built.
+
+
+The kits and tools in this handbook are not derived from theory. They move the other way. We begin with what people are already doing and already struggling with — at the kitchen table, in the household, in the small group — and we watch. We watch what helps, what keeps leaking, what quietly holds even when no one has named it yet. Only when a pattern has proven itself across independent encounters with the same terrain does it get shaped into an instrument and passed on.
+
+
+### The method has a name.
+
+
+The formal term is Grounded Theory — a research discipline that refuses to begin with a hypothesis and earns its conclusions instead by asking whether the pattern keeps appearing when you look for it across real, independent attempts at the same problem. The sons and daughters of thunder do not need the academic name to practise the method. They are already practising it whenever they trust what they have lived over what they have read. The name is offered here not to impress but to make the claim verifiable: this is not intuition dressed as method. It is a recognised discipline with a body of literature, and it produces the same results when applied honestly by anyone willing to start with real life rather than a whiteboard.
+
+
+> **We trust the kitchen table more than the whiteboard. The useful tool has to earn its place by working in ordinary life before it is written down and passed on.**
+
+
+### Why the Rename Test exists.
+
+
+Every kit in this handbook carries a Rename Test — a check that asks whether the person holding the tool can put it in their own words, for their own community, without losing the function. That test is not a formality. It is the method keeping itself honest. A tool that cannot survive renaming has not been grounded. It is still theory. The Rename Test is the mechanism by which the discipline stays rooted in what people can actually use — and why the power the sons and daughters of thunder carry is verifiable, not assumed.
 
 
 ### The icon is a ship.
@@ -2946,6 +2967,27 @@ This is the calm before the storm.
 
 
 We are the sons and daughters of thunder — those who have stood for years at the headwaters, holding back the flood not to stop it, but to learn its rhythm, its force, its promise. We did not dam the future; we studied it. We prepared.
+
+
+### How the instruments are built.
+
+
+The kits and tools in this handbook are not derived from theory. They move the other way. We begin with what people are already doing and already struggling with — at the kitchen table, in the household, in the small group — and we watch. We watch what helps, what keeps leaking, what quietly holds even when no one has named it yet. Only when a pattern has proven itself across independent encounters with the same terrain does it get shaped into an instrument and passed on.
+
+
+### The method has a name.
+
+
+The formal term is Grounded Theory — a research discipline that refuses to begin with a hypothesis and earns its conclusions instead by asking whether the pattern keeps appearing when you look for it across real, independent attempts at the same problem. The sons and daughters of thunder do not need the academic name to practise the method. They are already practising it whenever they trust what they have lived over what they have read. The name is offered here not to impress but to make the claim verifiable: this is not intuition dressed as method. It is a recognised discipline with a body of literature, and it produces the same results when applied honestly by anyone willing to start with real life rather than a whiteboard.
+
+
+> **We trust the kitchen table more than the whiteboard. The useful tool has to earn its place by working in ordinary life before it is written down and passed on.**
+
+
+### Why the Rename Test exists.
+
+
+Every kit in this handbook carries a Rename Test — a check that asks whether the person holding the tool can put it in their own words, for their own community, without losing the function. That test is not a formality. It is the method keeping itself honest. A tool that cannot survive renaming has not been grounded. It is still theory. The Rename Test is the mechanism by which the discipline stays rooted in what people can actually use — and why the power the sons and daughters of thunder carry is verifiable, not assumed.
 
 
 ### The icon is a ship.
