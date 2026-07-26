@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { publishToRelay, RELAY_EVENT_KINDS } from "@/lib/relay-stub";
 
 interface SafetyFlag {
   text: string;
@@ -246,11 +247,24 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
         throw new Error(j.error ?? `HTTP ${res.status}`);
       }
       const data = (await res.json()) as { rawMarkdown: string; id: string; safetyFlagsCount?: number };
-      setBriefing({ id: data.id, rawMarkdown: data.rawMarkdown, generatedAt: new Date().toISOString(), triggeredBy: "manual", safetyFlagsCount: data.safetyFlagsCount });
+      const generatedAt = new Date().toISOString();
+      setBriefing({ id: data.id, rawMarkdown: data.rawMarkdown, generatedAt, triggeredBy: "manual", safetyFlagsCount: data.safetyFlagsCount });
       setArchive([]);
       setFlags([]);
       setFlagsOpen(false);
       setFlagsError(null);
+      void publishToRelay({
+        kind: RELAY_EVENT_KINDS.BRIEFING_ENVELOPE,
+        payload: {
+          briefing_id: data.id,
+          generated_at: generatedAt,
+          triggered_by: "manual",
+          safety_flags_count: data.safetyFlagsCount ?? 0,
+        },
+        z2npub: "z2:local",
+        timestamp: generatedAt,
+        signature: "stub",
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Generation failed.");
     } finally {

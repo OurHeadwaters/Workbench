@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
 import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan } from "./types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
+import { publishToRelay, RELAY_EVENT_KINDS } from "./lib/relay-stub";
 
 const ZONE_COLORS: Record<ZoneId, string> = {
   Z0: "45 60% 32%",
@@ -287,7 +288,7 @@ export const useStore = create<Store>()(
         );
       },
 
-      setTodayPick: (patch) =>
+      setTodayPick: (patch) => {
         set((s) => {
           const key = getTodayKey();
           const existing = s.dailyPicks[key] ?? {
@@ -302,7 +303,25 @@ export const useStore = create<Store>()(
               [key]: { actor_type: "human" as const, ...existing, ...patch },
             },
           };
-        }),
+        });
+        const updated = get().getTodayPick();
+        const { zoneRanking, workbenchPlan } = get();
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.MORNING_MANIFEST,
+          payload: {
+            date: updated.date,
+            constellation_ids: updated.constellationIds,
+            acknowledged_guardrails: updated.acknowledgedGuardrails ?? [],
+            zone_ranking: zoneRanking,
+            burst_windows: workbenchPlan
+              ? { phase: workbenchPlan.phase, windows: workbenchPlan.windows }
+              : null,
+          },
+          z2npub: "z2:local",
+          timestamp: new Date().toISOString(),
+          signature: "stub",
+        });
+      },
 
       addCapture: ({ text, blobId }) =>
         set((s) => {
