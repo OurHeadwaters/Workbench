@@ -335,6 +335,7 @@ export function ParrsJarsHubPage() {
   const [activeModule, setActiveModule] = useState<string>("foundation");
   const [visitedHandouts, setVisitedHandouts] = useState<Set<string>>(new Set());
   const [visitedTitles, setVisitedTitles] = useState<Set<string>>(new Set());
+  const [expiredBannerDismissed, setExpiredBannerDismissed] = useState(false);
 
   // Load visited handouts from localStorage once the token is known
   useEffect(() => {
@@ -404,11 +405,7 @@ export function ParrsJarsHubPage() {
     );
   }
 
-  if (status === "expired") {
-    return <LockedWall reason="expired" />;
-  }
-
-  if (status !== "valid") {
+  if (status !== "valid" && status !== "expired") {
     return <LockedWall />;
   }
 
@@ -467,8 +464,53 @@ export function ParrsJarsHubPage() {
         </p>
       </div>
 
+      {/* Expired access banner */}
+      {status === "expired" && !expiredBannerDismissed && (
+        <div
+          style={{
+            background: "#fff3cd",
+            borderBottom: "1px solid #f0d070",
+            padding: "0.75rem 1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <span style={{ fontSize: "0.95rem" }}>⏱</span>
+            <span style={{ fontSize: "0.84rem", fontWeight: 600, color: "#7a5c00" }}>
+              Your access link expired —{" "}
+              <a
+                href="/kits/resend"
+                style={{ color: "#7a5c00", textDecoration: "underline", fontWeight: 700 }}
+              >
+                re-send it to get back in
+              </a>
+            </span>
+          </div>
+          <button
+            onClick={() => setExpiredBannerDismissed(true)}
+            aria-label="Dismiss"
+            style={{
+              flexShrink: 0,
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "1.1rem",
+              color: "#9a7a20",
+              lineHeight: 1,
+              padding: "0.1rem 0.3rem",
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* Jump back in banner */}
-      {anyVisited && (
+      {status === "valid" && anyVisited && (
         <div
           style={{
             background: allVisited ? FOREST : "#fff8ee",
