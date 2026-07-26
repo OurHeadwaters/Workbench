@@ -538,6 +538,44 @@ export function GuidePage() {
         )}
 
         <div className="space-y-2">
+          <p className="text-xs uppercase tracking-wider font-medium px-1" style={{ color: TEXT_3 }}>Doctrine layer</p>
+          <div
+            className="rounded-xl p-4 space-y-3"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
+          >
+            <p className="text-xs" style={{ color: TEXT_3 }}>
+              Two Zone 5 instruments — the epistemological backbone of Codetry practice.
+            </p>
+            <a
+              href="https://stomping-path-documentation.replit.app/logic/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between rounded-lg px-3 py-3 min-h-[52px] transition-colors"
+              style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}
+            >
+              <div>
+                <p className="text-sm font-medium" style={{ color: TEXT }}>RealityCore</p>
+                <p className="text-xs leading-snug mt-0.5" style={{ color: TEXT_2 }}>The formal test for what is real vs. what is story</p>
+              </div>
+              <ExternalLink size={14} style={{ color: TEXT_3 }} className="shrink-0 ml-3" />
+            </a>
+            <a
+              href="https://stomping-path-documentation.replit.app/logic/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between rounded-lg px-3 py-3 min-h-[52px] transition-colors"
+              style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}
+            >
+              <div>
+                <p className="text-sm font-medium" style={{ color: TEXT }}>Fallacy Map</p>
+                <p className="text-xs leading-snug mt-0.5" style={{ color: TEXT_2 }}>The named catalogue of reasoning errors practitioners catch in the field</p>
+              </div>
+              <ExternalLink size={14} style={{ color: TEXT_3 }} className="shrink-0 ml-3" />
+            </a>
+          </div>
+        </div>
+
+        <div className="space-y-2">
           <p className="text-xs uppercase tracking-wider font-medium px-1" style={{ color: TEXT_3 }}>Practitioner Tools</p>
           <a
             href="/codetry-handbook/"

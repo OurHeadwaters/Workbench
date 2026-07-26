@@ -99,6 +99,18 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
         text:
           "The Standby's two *states* are temporal — the infrastructure is constant; the system moves between resting and activated, and the name has to hold in either. The Gate's two *sides* are contextual — both face the system at once; the name has to hold from either direction. The Standby's principle is *both-states*; the Gate's principle is *both-sides*. Both are now registered as named principles in the manifest. A future primitive may need a third axis (densities? scales? jurisdictions?) and the principles array is open-ended on purpose — the discipline travels, the worked examples accumulate.",
       },
+      { kind: "subhead", text: "The doctrine backbone — evaluating what's real and what's story" },
+      {
+        kind: "para",
+        text:
+          "Before the Gate can pass or refuse a piece of language, the practitioner needs a prior discipline: the ability to separate what is real from what is story, and to catch the reasoning errors that make bad crossings feel justified. Two Zone 5 instruments serve this function. *RealityCore* is the formal test for what is real versus what is story — the practitioner's tool for checking whether a claim about the bright side or the systems side is grounded in fact or is a narrative the speaker has mistaken for one. The *Fallacy Map* is the named catalogue of reasoning errors practitioners catch in the field: the common moves that make a false crossing look honest, a refusal look cowardly, or a substitution look like an equivalent when it is not. Together they are the epistemological backbone the Gate rests on. A Gate operated without them is guessing.",
+      },
+      {
+        kind: "tool",
+        label: "RealityCore & Fallacy Map — Zone 5 doctrine instruments",
+        hint: "The formal test for what is real vs. what is story, and the named catalogue of reasoning errors practitioners catch in the field. Open the Logic artifact before making a Gate decision you are uncertain about.",
+        route: "https://stomping-path-documentation.replit.app/logic/",
+      },
     ],
     crossZoneReads: [
       "Zone 0 (Saltbox + Bright Side) — every form filled out for the school, the doctor, the child welfare office crosses a small gate; the household's word for who-belongs is *kin* or *neighbour*; the form's word is *resident* or *legal guardian*. The household keeps both on the fridge; the form goes out with the systems' word. *Gate Refused (Zone 0 — Parrs Jars, 2020–2022):* the Jarista built a smoked salt blend from freeze-dried local microgreens, hydroponic greens, and farm-sourced onions — a circular economy product whose value proposition was the specific sourcing. The health unit required lab testing for each farm ingredient and recommended switching to commercial ingredients instead. The practitioner crossed with commercial ingredients to meet orders. The product crossed; the story did not. The systems-side form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The bright-side value proposition was Gate Refused: no honest systems-side equivalent existed that could carry the same meaning, so the sourcing story stayed on the bright side and the jar went out with a different recipe. The lesson: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label.",

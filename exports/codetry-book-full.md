@@ -1,5 +1,5 @@
 # Headwaters: How a Community Runs Its Own Economy
-*Full content snapshot — exported 2026-07-25*
+*Full content snapshot — exported 2026-07-26*
 *Constellation version: 0.5.7 (last updated 2026-05-05)*
 
 ---
@@ -1727,6 +1727,15 @@ If the two sides were named separately — *Translator* for the bright-to-system
 
 
 The Standby's two *states* are temporal — the infrastructure is constant; the system moves between resting and activated, and the name has to hold in either. The Gate's two *sides* are contextual — both face the system at once; the name has to hold from either direction. The Standby's principle is *both-states*; the Gate's principle is *both-sides*. Both are now registered as named principles in the manifest. A future primitive may need a third axis (densities? scales? jurisdictions?) and the principles array is open-ended on purpose — the discipline travels, the worked examples accumulate.
+
+
+### The doctrine backbone — evaluating what's real and what's story
+
+
+Before the Gate can pass or refuse a piece of language, the practitioner needs a prior discipline: the ability to separate what is real from what is story, and to catch the reasoning errors that make bad crossings feel justified. Two Zone 5 instruments serve this function. *RealityCore* is the formal test for what is real versus what is story — the practitioner's tool for checking whether a claim about the bright side or the systems side is grounded in fact or is a narrative the speaker has mistaken for one. The *Fallacy Map* is the named catalogue of reasoning errors practitioners catch in the field: the common moves that make a false crossing look honest, a refusal look cowardly, or a substitution look like an equivalent when it is not. Together they are the epistemological backbone the Gate rests on. A Gate operated without them is guessing.
+
+
+**Tool: [RealityCore & Fallacy Map — Zone 5 doctrine instruments](https://stomping-path-documentation.replit.app/logic/)** — The formal test for what is real vs. what is story, and the named catalogue of reasoning errors practitioners catch in the field. Open the Logic artifact before making a Gate decision you are uncertain about.
 
 
 ### Vocabulary
