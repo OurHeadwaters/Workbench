@@ -41,6 +41,13 @@ Entries with a task number are already filed — skip them.
 
 **Agent reminders:** When scoping new features, ask which layer it serves. When copy mentions "subscribers," "free trial funnels," or "self-serve," check against `.local/docs/headwaters-business-strategy.md`. When pricing appears anywhere, ensure it does not undercut the 807 membership value. The co-op platform separation is a "real buyer present" decision — do not propose it proactively. Full strategy doc: `.local/docs/headwaters-business-strategy.md`.
 
+# Domain Configuration
+
+Custom domains for this project are documented in `.local/docs/domain-config.md`. Currently live:
+- `ourheadwaters.ca` → codetry-ship artifact (primary)
+- `ourheadwaters.com` → codetry-ship artifact (alias)
+- `codetry.ca` → **pending** — DNS steps documented in `.local/docs/domain-config.md`
+
 # User Preferences
 
 **Direct links in chat:** Whenever a new page, tool, or file is deployed and accessible via URL, always post the full direct link in the chat so it can be tapped immediately on a phone. Do not describe where to navigate — just give the link.
