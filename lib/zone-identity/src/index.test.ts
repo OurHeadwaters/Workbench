@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { deriveZ2Npub } from "./index.js";
+import { deriveZ2Npub, MIN_NONZERO_BYTES } from "./index.js";
 
 describe("deriveZ2Npub", () => {
   const seedA = new Uint8Array(32).fill(0xaa);
@@ -45,5 +45,45 @@ describe("deriveZ2Npub", () => {
     const seed2 = new Uint8Array([0x02]);
     expect(() => deriveZ2Npub(seed1)).not.toThrow();
     expect(deriveZ2Npub(seed1)).not.toBe(deriveZ2Npub(seed2));
+  });
+
+  describe("low Hamming-weight seed rejection", () => {
+    it("throws for a 32-byte seed with only 1 non-zero byte (1-bit spread)", () => {
+      const sparse = new Uint8Array(32);
+      sparse[0] = 0x01;
+      expect(() => deriveZ2Npub(sparse)).toThrow(/too few non-zero bytes/);
+    });
+
+    it("throws for a 32-byte seed with 2 non-zero bytes", () => {
+      const sparse = new Uint8Array(32);
+      sparse[0] = 0x01;
+      sparse[15] = 0x02;
+      expect(() => deriveZ2Npub(sparse)).toThrow(/too few non-zero bytes/);
+    });
+
+    it("throws for a 32-byte seed with 3 non-zero bytes (one below MIN_NONZERO_BYTES)", () => {
+      const sparse = new Uint8Array(32);
+      sparse[0] = 0x01;
+      sparse[10] = 0x02;
+      sparse[20] = 0x03;
+      expect(() => deriveZ2Npub(sparse)).toThrow(/too few non-zero bytes/);
+    });
+
+    it("accepts a 32-byte seed with exactly MIN_NONZERO_BYTES non-zero bytes", () => {
+      const seed = new Uint8Array(32);
+      for (let i = 0; i < MIN_NONZERO_BYTES; i++) seed[i * 4] = 0xab;
+      expect(() => deriveZ2Npub(seed)).not.toThrow();
+    });
+
+    it("short seeds below MIN_NONZERO_BYTES length are exempt from the Hamming-weight check", () => {
+      const short = new Uint8Array([0x01, 0x00, 0x00]);
+      expect(() => deriveZ2Npub(short)).not.toThrow();
+    });
+
+    it("error message includes actual vs required non-zero byte counts", () => {
+      const sparse = new Uint8Array(32);
+      sparse[7] = 0xff;
+      expect(() => deriveZ2Npub(sparse)).toThrow(/1 of 32/);
+    });
   });
 });

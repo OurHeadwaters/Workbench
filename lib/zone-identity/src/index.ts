@@ -6,6 +6,18 @@ import { hkdfSync } from "node:crypto";
  */
 const DOMAIN_SEPARATOR = "headwaters:zone:Z2:npub";
 
+/**
+ * Minimum number of non-zero bytes a seed must contain before the entropy
+ * floor check kicks in. Only enforced when `seed.length >= MIN_NONZERO_BYTES`
+ * (so short seeds like a single meaningful byte are not falsely rejected).
+ *
+ * Seeds longer than this threshold but with fewer than this many non-zero
+ * bytes have critically low Hamming weight — e.g. `[0x01, 0x00 × 31]` has
+ * essentially 1 byte of entropy spread across 32 bytes and is easily
+ * enumerated.
+ */
+export const MIN_NONZERO_BYTES = 4;
+
 /** bech32 alphabet as specified in BIP-0173 / NIP-19 */
 const BECH32_ALPHABET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 
@@ -102,14 +114,18 @@ function bech32Encode(hrp: string, data: Uint8Array): string {
  * ```
  *
  * @param householdSeed - A secret, high-entropy byte array that represents
- *   the household's root secret material. Must be at least 1 byte and must
- *   not be all zeros. In practice this should be 32+ bytes of random data
- *   (e.g. `crypto.randomBytes(32)`). The seed itself is never stored or
- *   transmitted.
+ *   the household's root secret material. Must be at least 1 byte, must not
+ *   be all zeros, and — when 4 or more bytes long — must contain at least
+ *   {@link MIN_NONZERO_BYTES} non-zero bytes. In practice this should be
+ *   32+ bytes of random data (e.g. `crypto.randomBytes(32)`). The seed
+ *   itself is never stored or transmitted.
  * @returns A bech32-encoded npub string compatible with the Nostr NIP-19
  *   encoding format, suitable for use as a Z2 Workbench relay identity.
  * @throws {Error} if `householdSeed` is zero-length.
  * @throws {Error} if `householdSeed` is an all-zeros array (zero entropy).
+ * @throws {Error} if `householdSeed` is ≥ {@link MIN_NONZERO_BYTES} bytes
+ *   long but contains fewer than {@link MIN_NONZERO_BYTES} non-zero bytes
+ *   (critically low Hamming weight).
  */
 export function deriveZ2Npub(householdSeed: Uint8Array): string {
   if (householdSeed.length === 0) {
@@ -122,6 +138,18 @@ export function deriveZ2Npub(householdSeed: Uint8Array): string {
     throw new Error(
       "deriveZ2Npub: householdSeed must not be all zeros — an all-zero seed has no entropy and would produce a predictable, guessable identity. Generate a safe seed with crypto.randomBytes(32)."
     );
+  }
+
+  if (householdSeed.length >= MIN_NONZERO_BYTES) {
+    const nonZeroCount = householdSeed.reduce(
+      (n, b) => n + (b !== 0 ? 1 : 0),
+      0
+    );
+    if (nonZeroCount < MIN_NONZERO_BYTES) {
+      throw new Error(
+        `deriveZ2Npub: householdSeed has too few non-zero bytes (${nonZeroCount} of ${householdSeed.length}) — seeds with very low Hamming weight are nearly as guessable as an all-zero seed. Use at least ${MIN_NONZERO_BYTES} non-zero bytes, or generate a safe seed with crypto.randomBytes(32).`
+      );
+    }
   }
 
   const keyMaterial = hkdfSync(
