@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { getStoredOwnerToken, setStoredOwnerToken } from "@/lib/api";
 import { AmbientBackground, GrainOverlay, ScrollReveal } from "@/components/AmbientBackground";
+import { ZoneTag } from "@/components/ZoneTag";
 
 const BASE = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
 
@@ -244,12 +245,15 @@ export function WorkbenchPage() {
 
         <header className="mb-14">
           <ScrollReveal>
-            <p
-              className="font-mono text-[10px] uppercase tracking-[0.32em] mb-4"
-              style={{ color: "rgba(212,160,23,0.75)" }}
-            >
-              headwaters · operator
-            </p>
+            <div className="flex items-center gap-3 mb-4">
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.32em]"
+                style={{ color: "rgba(212,160,23,0.75)" }}
+              >
+                headwaters · operator
+              </p>
+              <ZoneTag zone={2} label="The Workbench" />
+            </div>
             <h1
               className="font-serif leading-[1.05] tracking-tight mb-3"
               style={{

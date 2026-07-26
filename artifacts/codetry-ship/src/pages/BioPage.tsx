@@ -1,5 +1,6 @@
 import { Download } from "lucide-react";
 import portrait from "@assets/IMG_7710_1777635285170.jpeg";
+import { ZoneTag } from "@/components/ZoneTag";
 
 function handleDownloadPdf() {
   if (typeof window === "undefined") return;
@@ -49,12 +50,15 @@ export function BioPage() {
               style={{ height: 60, width: "auto", objectFit: "contain", filter: "brightness(1.08)" }}
             />
           </div>
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-4"
-            style={{ color: "rgba(212,160,23,0.8)" }}
-          >
-            practitioner · headwaters
-          </p>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.28em]"
+              style={{ color: "rgba(212,160,23,0.8)" }}
+            >
+              practitioner · headwaters
+            </p>
+            <ZoneTag zone={2} label="The Workbench" />
+          </div>
           <h1
             className="font-serif leading-[1.12] tracking-tight mb-2"
             style={{ fontSize: "clamp(1.8rem, 6vw, 2.4rem)", color: "#f4ede0" }}

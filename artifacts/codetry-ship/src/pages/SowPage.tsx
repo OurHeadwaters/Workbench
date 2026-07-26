@@ -1,4 +1,5 @@
 import { Download } from "lucide-react";
+import { ZoneTag } from "@/components/ZoneTag";
 
 function handleDownloadPdf() {
   if (typeof window === "undefined") return;
@@ -61,10 +62,15 @@ export function SowPage() {
           style={{ borderColor: "hsl(var(--card-border))" }}
         >
           <header className="mb-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.22em] mb-2"
-              style={{ color: "hsl(var(--accent))" }}>
-              Statement of Work
-            </p>
+            <div className="flex items-center gap-3 mb-2">
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em]"
+                style={{ color: "hsl(var(--accent))" }}>
+                Statement of Work
+              </p>
+              <span className="print:hidden">
+                <ZoneTag zone={2} label="The Workbench" />
+              </span>
+            </div>
             <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
               Bobbie Parr — Hourly Engagement
             </h1>

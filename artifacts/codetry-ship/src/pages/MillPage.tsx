@@ -1,4 +1,5 @@
 import { AmbientBackground, GrainOverlay, ScrollReveal } from "@/components/AmbientBackground";
+import { ZoneTag } from "@/components/ZoneTag";
 
 const ZONE2_BLUE = "#1A5FA8";
 const ZONE2_BLUE_DIM = "rgba(26,95,168,0.18)";
@@ -70,12 +71,7 @@ export function MillPage() {
         <header className="mb-14">
           <ScrollReveal>
             <div className="flex items-center gap-3 mb-5">
-              <span
-                className="font-mono text-[9px] uppercase tracking-[0.32em]"
-                style={{ color: `rgba(26,95,168,0.85)` }}
-              >
-                Zone 2
-              </span>
+              <ZoneTag zone={2} label="The Workbench" />
               <div className="h-px flex-1" style={{ background: ZONE2_BLUE_DIM }} />
               <span
                 className="font-mono text-[9px] uppercase tracking-[0.28em]"

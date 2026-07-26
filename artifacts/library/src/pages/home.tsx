@@ -35,7 +35,32 @@ export default function Home() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="relative">
           <div aria-hidden className="pointer-events-none absolute -inset-6 od-topo" style={{ opacity: 0.08 }} />
-          <div className="hw-label mb-3">Northern Food Systems Research Library</div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="hw-label">Northern Food Systems Research Library</div>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.35em",
+                background: "#1A5FA8",
+                color: "#f4ede0",
+                borderRadius: "3px",
+                padding: "0.22em 0.65em",
+                fontSize: "0.67rem",
+                fontFamily: "var(--font-mono, monospace)",
+                fontWeight: 600,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                lineHeight: 1.4,
+                flexShrink: 0,
+              }}
+              aria-label="Zone 2 · Zone 4 — Research Commons"
+            >
+              <span style={{ opacity: 0.72 }}>Zone 2 · Zone 4</span>
+              <span style={{ opacity: 0.35 }}>·</span>
+              <span>Research Commons</span>
+            </span>
+          </div>
           <h1 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-2">Library Overview</h1>
           <p className="text-muted-foreground text-lg">
             Northern Food Systems Research

@@ -75,8 +75,34 @@ export default function Index() {
         }}
       >
         {/* Eagle mark */}
-        <div style={{ marginBottom: "2rem" }}>
+        <div style={{ marginBottom: "1.5rem" }}>
           <EagleMark size={156} />
+        </div>
+
+        {/* Zone tag */}
+        <div style={{ marginBottom: "1.25rem" }}>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.35em",
+              background: "#1A5FA8",
+              color: "#f4ede0",
+              borderRadius: "3px",
+              padding: "0.22em 0.65em",
+              fontSize: "0.67rem",
+              fontFamily: "var(--font-mono, monospace)",
+              fontWeight: 600,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              lineHeight: 1.4,
+            }}
+            aria-label="Zone 2 — The Workbench"
+          >
+            <span style={{ opacity: 0.72 }}>Zone 2</span>
+            <span style={{ opacity: 0.35 }}>·</span>
+            <span>The Workbench</span>
+          </span>
         </div>
 
         {/* Eyebrow */}
