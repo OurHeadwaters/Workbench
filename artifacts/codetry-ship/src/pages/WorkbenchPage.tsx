@@ -19,6 +19,16 @@ interface ToolEntry {
 
 const INTERNAL_TOOLS: ToolEntry[] = [
   {
+    eyebrow: "Operator tools",
+    title: "Operator Cockpit",
+    description: "Configure your branded Headwaters deployment — org identity, active modules, and benefit rules. Demo-ready spec view.",
+    href: "/operator",
+    accent: "#1A5FA8",
+    accentFg: "#f4ede0",
+    testId: "wb-operator-cockpit",
+    icon: "🏛️",
+  },
+  {
     eyebrow: "Zone 2 · production framing",
     title: "The Mill",
     description: "Where raw community intention becomes structured, billable work. Read the engagement, clear the five filter questions, open a scope.",
