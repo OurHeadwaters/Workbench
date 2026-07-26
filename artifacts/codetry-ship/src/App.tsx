@@ -15,6 +15,7 @@ import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
 import { ServicesPage } from "@/pages/ServicesPage";
 import { WorkPage } from "@/pages/WorkPage";
 import { WorkbenchPage } from "@/pages/WorkbenchPage";
+import { MillPage } from "@/pages/MillPage";
 import { OperatorPage } from "@/pages/OperatorPage";
 import { PrivacyPage } from "@/pages/PrivacyPage";
 import { ListenPage } from "@/pages/ListenPage";
@@ -161,6 +162,9 @@ function Router() {
 
       {/* ── Goodbye Kit landing page ── */}
       <Route path="/goodbye" component={GoodbyeKitPage} />
+
+      {/* ── The Mill — Zone 2 production framing ── */}
+      <Route path="/mill" component={MillPage} />
 
       {/* ── Arc login (Clerk sign-in for arc artifact) ── */}
       <Route path="/arc/login" component={ArcLoginPage} />

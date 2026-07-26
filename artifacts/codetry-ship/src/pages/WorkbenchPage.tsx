@@ -19,6 +19,16 @@ interface ToolEntry {
 
 const INTERNAL_TOOLS: ToolEntry[] = [
   {
+    eyebrow: "Zone 2 · production framing",
+    title: "The Mill",
+    description: "Where raw community intention becomes structured, billable work. Read the engagement, clear the five filter questions, open a scope.",
+    href: "/mill",
+    accent: "#1A5FA8",
+    accentFg: "#f4ede0",
+    testId: "wb-mill",
+    icon: "⚙️",
+  },
+  {
     eyebrow: "Knowledge commons",
     title: "Research Library",
     description: "Curated food systems research, producer contacts, and policy documents for northern communities.",
