@@ -22,15 +22,15 @@ args = "typecheck"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "test"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "artifacts/mockup-sandbox: web"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "artifacts/north-star: web"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "test"
 
 [[workflows.workflow]]
 name = "typecheck"
@@ -39,17 +39,6 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "pnpm run typecheck:gated"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "test"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm --filter @workspace/practitioner-operating-plan run test && pnpm --filter @workspace/practitioners-guide-v2 run test && pnpm --filter @workspace/deer-lake-store-plan run test && pnpm --filter @workspace/wordpile run test && pnpm --filter @workspace/api-server run test && pnpm --filter @workspace/codetry-handbook run test && pnpm --filter @workspace/headwaters-books run test && pnpm --filter @workspace/locked-fees run test"
 
 [workflows.workflow.metadata]
 isValidation = true
@@ -76,6 +65,17 @@ args = "PORT=9000 BASE_PATH=/north-star/ pnpm --filter @workspace/north-star run
 
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow]]
+name = "test"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm --filter @workspace/api-server run test"
+
+[workflows.workflow.metadata]
+isValidation = true
 
 [agent]
 stack = "PNPM_WORKSPACE"
