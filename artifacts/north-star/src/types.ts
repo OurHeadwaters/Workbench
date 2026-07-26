@@ -72,6 +72,8 @@ export interface DailyPick {
   eveningNote?: string;
   hoursByZone?: Partial<Record<ZoneId, number>>;
   acknowledgedGuardrails?: string[];
+  /** Discriminates whether this pick was set by a human or an agent. Defaults to "human". */
+  actor_type?: "human" | "agent";
 }
 
 export interface WeeklyReview {
@@ -97,6 +99,8 @@ export interface Capture {
   createdAt: string;
   text?: string;
   blobId?: string;
+  /** Optional zone tag for routing captures into the correct Zone 2 context. */
+  zone?: ZoneId;
 }
 
 export interface HatLabel {

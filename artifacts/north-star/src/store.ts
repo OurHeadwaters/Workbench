@@ -282,6 +282,7 @@ export const useStore = create<Store>()(
             date: key,
             constellationIds: [],
             pickedAt: new Date().toISOString(),
+            actor_type: "human" as const,
           }
         );
       },
@@ -293,9 +294,13 @@ export const useStore = create<Store>()(
             date: key,
             constellationIds: [],
             pickedAt: new Date().toISOString(),
+            actor_type: "human" as const,
           };
           return {
-            dailyPicks: { ...s.dailyPicks, [key]: { ...existing, ...patch } },
+            dailyPicks: {
+              ...s.dailyPicks,
+              [key]: { actor_type: "human" as const, ...existing, ...patch },
+            },
           };
         }),
 
