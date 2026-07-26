@@ -622,6 +622,97 @@ async function postZapriteWebhook(
   });
 }
 
+// ── POST /kits/zaprite-webhook — signature verification ───────────────────────
+
+describe("POST /kits/zaprite-webhook — signature verification", () => {
+  const originalZapriteSecret = process.env.ZAPRITE_WEBHOOK_SECRET;
+
+  beforeEach(() => {
+    process.env.ZAPRITE_WEBHOOK_SECRET = ZAPRITE_SECRET;
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent", messageId: "msg-zaprite-ok" });
+  });
+
+  afterEach(() => {
+    if (originalZapriteSecret === undefined) {
+      delete process.env.ZAPRITE_WEBHOOK_SECRET;
+    } else {
+      process.env.ZAPRITE_WEBHOOK_SECRET = originalZapriteSecret;
+    }
+  });
+
+  it("returns 201 with ok:true when given a correctly-signed payment.completed payload with valid kit_id", async () => {
+    const h = await startHarness({ rawBody: true });
+    try {
+      const r = await postZapriteWebhook(h.base, {
+        type: "payment.completed",
+        data: {
+          id: "zaprite-sig-test-001",
+          customer: { email: "buyer@example.com", name: "Sig Test Buyer" },
+          metadata: { kit_id: FAKE_KIT.id },
+        },
+      });
+      expect(r.status).toBe(201);
+      const body = (await r.json()) as { ok?: boolean; token?: string };
+      expect(body.ok).toBe(true);
+      expect(typeof body.token).toBe("string");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 401 when the x-zaprite-signature header contains a wrong signature", async () => {
+    const h = await startHarness({ rawBody: true });
+    try {
+      const raw = JSON.stringify({
+        type: "payment.completed",
+        data: {
+          id: "zaprite-sig-test-002",
+          customer: { email: "buyer@example.com", name: "Bad Sig Buyer" },
+          metadata: { kit_id: FAKE_KIT.id },
+        },
+      });
+      const r = await fetch(`${h.base}/kits/zaprite-webhook`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-zaprite-signature": "sha256=" + "0".repeat(64),
+        },
+        body: raw,
+      });
+      expect(r.status).toBe(401);
+      const body = (await r.json()) as { error?: string };
+      expect(body.error).toBe("Unauthorized");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 401 when the x-zaprite-signature header is missing entirely", async () => {
+    const h = await startHarness({ rawBody: true });
+    try {
+      const raw = JSON.stringify({
+        type: "payment.completed",
+        data: {
+          id: "zaprite-sig-test-003",
+          customer: { email: "buyer@example.com", name: "No Sig Buyer" },
+          metadata: { kit_id: FAKE_KIT.id },
+        },
+      });
+      const r = await fetch(`${h.base}/kits/zaprite-webhook`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: raw,
+      });
+      expect(r.status).toBe(401);
+      const body = (await r.json()) as { error?: string };
+      expect(body.error).toBe("Unauthorized");
+    } finally {
+      await h.close();
+    }
+  });
+});
+
 describe("fulfillKitPurchase — delivery failure written to kitDeliveryFailuresTable", () => {
   const originalKitSecret = process.env.KIT_WEBHOOK_SECRET;
   const originalZapriteSecret = process.env.ZAPRITE_WEBHOOK_SECRET;

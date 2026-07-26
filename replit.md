@@ -206,6 +206,7 @@ All secrets are set in the Replit Secrets panel (not in code). The script `scrip
 |---|---|---|
 | `FOUNDER_EMAIL` | `scripts/src/notifyGithubSyncFailure.ts` | Logs a warning and falls back to `headwaters@ourheadwaters.ca` |
 | `KIT_WEBHOOK_SECRET` | `artifacts/api-server/src/routes/kits.ts` | Webhook endpoint returns 401 |
+| `ZAPRITE_WEBHOOK_SECRET` | `artifacts/api-server/src/routes/kits.ts` — `validateZapriteSignature` | Zaprite webhook returns 401 for every Bitcoin payment; buyers never receive their kit. Set this to a strong random value and give Zaprite the same value as the `x-zaprite-signature` signing secret in their dashboard. |
 | `GITHUB_TOKEN` | post-merge GitHub mirror script | Mirror push fails; alert email is sent |
 
 To change the sync-failure alert recipient: open the Replit Secrets panel, find `FOUNDER_EMAIL`, and update the value — no code edit needed.
