@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 
 const SECTIONS = [
@@ -105,6 +105,135 @@ function Li({ children }: { children: React.ReactNode }) {
       <span className="flex-shrink-0 mt-0.5" style={{ color: "#5C5046" }}>·</span>
       <span>{children}</span>
     </li>
+  );
+}
+
+// ─── Z2 npub readout ──────────────────────────────────────────────────────────
+
+type NpubState =
+  | { status: "loading" }
+  | { status: "ok"; npub: string }
+  | { status: "unconfigured" }
+  | { status: "error"; message: string };
+
+function Z2NpubReadout() {
+  const [state, setState] = useState<NpubState>({ status: "loading" });
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const token =
+      window.localStorage.getItem("library.ownerToken") ||
+      window.localStorage.getItem("ownerToken") ||
+      "";
+    const headers: Record<string, string> = token
+      ? { "x-library-owner-token": token }
+      : {};
+    fetch("/api/z2/npub", { headers })
+      .then(async (res) => {
+        if (cancelled) return;
+        if (res.status === 503) {
+          setState({ status: "unconfigured" });
+          return;
+        }
+        if (res.status === 401) {
+          setState({ status: "error", message: "Unauthorized — owner token required. Sign in as the system owner first." });
+          return;
+        }
+        if (!res.ok) {
+          setState({ status: "error", message: `Unexpected response: ${res.status}` });
+          return;
+        }
+        const data = await res.json();
+        setState({ status: "ok", npub: data.npub });
+      })
+      .catch((err) => {
+        if (!cancelled) setState({ status: "error", message: err.message ?? "Fetch failed" });
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  function handleCopy() {
+    if (state.status !== "ok") return;
+    navigator.clipboard.writeText(state.npub).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <div
+      className="rounded border my-4 px-4 py-4"
+      style={{ background: "#08100E", borderColor: "#1A3830" }}
+    >
+      <div className="flex items-center gap-2 mb-3">
+        <span
+          className="text-[10px] uppercase tracking-[0.15em] font-bold"
+          style={{ color: "#2D7A60" }}
+        >
+          System Z2 npub
+        </span>
+        <span
+          className="text-[10px] px-1.5 py-0.5 rounded border font-mono"
+          style={{ background: "#0B1A16", borderColor: "#1A3830", color: "#4A6A60" }}
+        >
+          live
+        </span>
+      </div>
+
+      {state.status === "loading" && (
+        <div className="text-[12px]" style={{ color: "#3A5A50" }}>
+          Fetching…
+        </div>
+      )}
+
+      {state.status === "unconfigured" && (
+        <div
+          className="rounded border-l-2 px-3 py-2 text-[12px] leading-relaxed"
+          style={{ background: "#140A0A", borderColor: "#8B3A3A", color: "#B07070" }}
+        >
+          <span className="font-bold" style={{ color: "#DC2626" }}>Not configured — </span>
+          set <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>Z2_HOUSEHOLD_SEED</code> on the API server to derive this instance's Z2 npub.
+        </div>
+      )}
+
+      {state.status === "error" && (
+        <div
+          className="rounded border-l-2 px-3 py-2 text-[12px] leading-relaxed"
+          style={{ background: "#140A0A", borderColor: "#8B3A3A", color: "#B07070" }}
+        >
+          <span className="font-bold" style={{ color: "#DC2626" }}>Error: </span>
+          {state.message}
+        </div>
+      )}
+
+      {state.status === "ok" && (
+        <div className="flex items-center gap-2">
+          <code
+            className="flex-1 min-w-0 text-[11px] font-mono break-all leading-relaxed px-3 py-2 rounded border"
+            style={{ background: "#0A1A14", borderColor: "#1A3830", color: "#4ADE80" }}
+          >
+            {state.npub}
+          </code>
+          <button
+            onClick={handleCopy}
+            className="flex-shrink-0 text-[11px] font-medium px-3 py-2 rounded border transition-all"
+            style={
+              copied
+                ? { background: "#0D2010", borderColor: "#1A4020", color: "#22C55E" }
+                : { background: "#0B1A16", borderColor: "#1A3830", color: "#4A6A60" }
+            }
+            title="Copy to clipboard"
+          >
+            {copied ? "Copied" : "Copy"}
+          </button>
+        </div>
+      )}
+
+      <div className="mt-3 text-[10px] leading-relaxed" style={{ color: "#2D4A40" }}>
+        Read-only · Z2-scoped only · No Z1 identity material returned
+      </div>
+    </div>
   );
 }
 
@@ -386,6 +515,8 @@ function BuzzSection() {
         <Li><strong className="text-[#EAE4DB]">Relay topology:</strong> Subscribes to a Headwaters Nostr relay. Visible to other Z2 participants; the relay stores no Z1 identity.</Li>
         <Li><strong className="text-[#EAE4DB]">Eave Rule compliance:</strong> Given a Z2 npub, no relay query can recover the household name or passphrase.</Li>
       </ul>
+
+      <Z2NpubReadout />
 
       <H3>Task Lifecycle on Buzz</H3>
       <div className="overflow-x-auto my-4">
