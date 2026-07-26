@@ -1,0 +1,47 @@
+**Here’s a clean, ready-to-paste prompt for your Replit agent:**
+
+-----
+
+**Prompt for Replit Agent – Zone 2 Alignment**
+
+You are working inside the Headwaters codebase.
+
+Context:
+
+- Headwaters is a multi-zone community economic system.
+- Zone 2 is the Workbench / “Worn Path” / Transition zone. It focuses on practical digital sovereignty tools, privacy, key custody, Codetry, XRPL payment rails, community tooling, and the bridge between everyday business operations and the agent-enabled layer.
+- We are aligning with the emerging Buzz layer (Nostr-based open collaboration surface where humans and AI agents work together with cryptographic identities and programmable payments).
+
+Task:
+Review the existing North Star business operating app (features, data models, user flows, benefits, and any related files or documentation in the repo).
+
+Then produce a clear alignment document and implementation plan that maps North Star features and benefits into Zone 2, specifically so they sit cleanly on the Buzz / Nostr / agent layer.
+
+Required output structure:
+
+1. **North Star Feature Inventory**  
+   List the core features and the real-world benefits they deliver to a rural or small business operator.
+2. **Zone 2 Mapping**  
+   For each major North Star feature, show:
+- How it belongs in Zone 2 (Workbench / Transition)
+- How it gains leverage from Nostr identities, agent participation, and the existing Headwaters rails (DID bridge, XRPL, Helping Hands, credentials)
+- What changes (if any) are needed so the feature works for both humans and agents
+3. **Buzz-Layer Alignment**  
+   Explain how North Star becomes a natural business-operating surface that agents can interact with inside a Buzz-style environment (task creation, status updates, payments, permissions, audit trail).
+4. **Concrete Implementation Steps for Zone 2**  
+   Prioritized list of code, schema, API, or UI changes required. Keep scope tight and incremental. Flag anything that should wait for the VC schema lock or system npub.
+5. **Benefits Summary (plain language)**  
+   Short section written for a skeptical rural business owner explaining what they gain when North Star runs inside Zone 2 + Buzz layer.
+
+Constraints:
+
+- Stay faithful to the existing Headwaters zone doctrine and the dual-rail (XRPL primary, Lightning optional) approach.
+- Do not propose turning Zone 2 into a full Slack/Buzz clone.
+- Prefer extending what already exists over net-new large builds.
+- Call out any missing information you need from the North Star codebase or docs.
+
+Begin by scanning the repository for all North Star related files, models, and routes, then deliver the alignment document.
+
+-----
+
+Copy and paste that directly to the Replit agent. It gives clear scope, forces inventory-first thinking, and keeps everything anchored in Zone 2 + the Buzz layer.
