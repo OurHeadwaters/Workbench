@@ -89,6 +89,10 @@ function removeStubDirs(): void {
 // Mock all heavy dependencies that app.ts pulls in at load time
 // ---------------------------------------------------------------------------
 
+vi.mock("@workspace/zone-identity", () => ({
+  deriveZ2Npub: () => "npub1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+}));
+
 vi.mock("pino-http", () => ({
   default: () => (_req: unknown, _res: unknown, next: () => void) => next(),
 }));
@@ -131,6 +135,10 @@ vi.mock("./lib/taskAutopilotScheduler", () => ({
 
 vi.mock("./lib/kitTokensCleanup", () => ({
   scheduleKitTokensCleanup: () => {},
+}));
+
+vi.mock("./lib/kitDeliveryRecovery", () => ({
+  runKitDeliveryRecovery: () => Promise.resolve(),
 }));
 
 // The api router: return a real router with /health and /healthz so we can

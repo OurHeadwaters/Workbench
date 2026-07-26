@@ -48,9 +48,10 @@ export function initZ2Identity(): void {
         `Z2_HOUSEHOLD_SEED decoded to only ${seed.length} bytes — minimum 16 bytes required (32+ recommended).`,
       );
     }
-    _cachedNpub = deriveZ2Npub(new Uint8Array(seed));
+    const derived = deriveZ2Npub(new Uint8Array(seed));
+    _cachedNpub = derived;
     logger.info(
-      { npubPrefix: _cachedNpub.slice(0, 12) + "…" },
+      { npubPrefix: derived.slice(0, 12) + "…" },
       "z2-identity: Z2 npub derived and cached",
     );
   } catch (err) {
