@@ -52,6 +52,7 @@ import { CastlePage } from "@/pages/CastlePage";
 import { HelpingHandsPage } from "@/pages/HelpingHandsPage";
 import { ArcLoginPage } from "@/pages/ArcLoginPage";
 import { GoodbyeKitPage } from "@/pages/GoodbyeKitPage";
+import { RequireKitToken } from "@/components/RequireKitToken";
 
 const queryClient = new QueryClient();
 
@@ -150,7 +151,13 @@ function Router() {
 
       {/* ── Parr's Jars Kit ── */}
       <Route path="/parrsjars/kit" component={ParrsJarsKitPage} />
-      <Route path="/parrsjars/hub" component={ParrsJarsHubPage} />
+      <Route path="/parrsjars/hub">
+        {() => (
+          <RequireKitToken kitId="pj-solutions-kit">
+            <ParrsJarsHubPage />
+          </RequireKitToken>
+        )}
+      </Route>
 
       {/* ── Kit access (magic link landing) & re-send flow ── */}
       <Route path="/kits/access/:token" component={KitAccessPage} />

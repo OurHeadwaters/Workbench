@@ -1,3 +1,4 @@
+import { useSearch } from "wouter";
 import { type StoredKitToken } from "@/lib/kitTokens";
 import { useKitAccess } from "@/lib/useKitAccess";
 import { KIT_MODULES, KIT_HANDOUTS } from "@/data/pjSolutionsKit";
@@ -68,9 +69,31 @@ function BuyerBanner({ buyerToken }: { buyerToken: StoredKitToken }) {
 
 export function ParrsJarsKitPage() {
   const { status, storedToken: buyerToken } = useKitAccess(PJ_SOLUTIONS_KIT_ID);
+  const search = useSearch();
+  const params = new URLSearchParams(search);
+  const accessRequired = params.get("reason") === "access-required";
 
   return (
     <div style={{ minHeight: "100vh", background: BLACK, fontFamily: "var(--font-sans, Inter, sans-serif)", color: "white" }}>
+
+      {/* Access-required banner — shown when redirected from the hub without a token */}
+      {accessRequired && (
+        <div
+          style={{
+            background: "#2a1a00",
+            borderBottom: `2px solid ${RUST}`,
+            padding: "0.85rem 1.5rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+          }}
+        >
+          <span style={{ color: RUST, fontSize: "1rem", flexShrink: 0 }}>🔒</span>
+          <span style={{ fontSize: "0.82rem", color: "#e8b89a", lineHeight: 1.5 }}>
+            You need a kit access link to view this page. Purchase the kit below, or re-send your existing access link.
+          </span>
+        </div>
+      )}
 
       {/* Buyer banner */}
       {buyerToken && <BuyerBanner buyerToken={buyerToken} />}
