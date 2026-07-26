@@ -87,18 +87,40 @@ function bech32Encode(hrp: string, data: Uint8Array): string {
  *   this function are cryptographically separated from any other HKDF
  *   derivation in the system.
  *
+ * ## Caller responsibility — seed entropy
+ *
+ * The seed **must** be secret and high-entropy. Low-entropy seeds (e.g. all
+ * zeros) produce a deterministic, guessable Z2 identity that undermines the
+ * entire zone separation model.
+ *
+ * Generate a safe seed with Node's `crypto.randomBytes`:
+ *
+ * ```ts
+ * import { randomBytes } from "node:crypto";
+ * const seed = randomBytes(32); // 256 bits of OS entropy
+ * const npub = deriveZ2Npub(seed);
+ * ```
+ *
  * @param householdSeed - A secret, high-entropy byte array that represents
- *   the household's root secret material. Must be at least 1 byte. In
- *   practice this should be 32+ bytes of random data. The seed itself is
- *   never stored or transmitted.
+ *   the household's root secret material. Must be at least 1 byte and must
+ *   not be all zeros. In practice this should be 32+ bytes of random data
+ *   (e.g. `crypto.randomBytes(32)`). The seed itself is never stored or
+ *   transmitted.
  * @returns A bech32-encoded npub string compatible with the Nostr NIP-19
  *   encoding format, suitable for use as a Z2 Workbench relay identity.
  * @throws {Error} if `householdSeed` is zero-length.
+ * @throws {Error} if `householdSeed` is an all-zeros array (zero entropy).
  */
 export function deriveZ2Npub(householdSeed: Uint8Array): string {
   if (householdSeed.length === 0) {
     throw new Error(
       "deriveZ2Npub: householdSeed must not be empty — a zero-length seed provides no entropy"
+    );
+  }
+
+  if (householdSeed.every((b) => b === 0)) {
+    throw new Error(
+      "deriveZ2Npub: householdSeed must not be all zeros — an all-zero seed has no entropy and would produce a predictable, guessable identity. Generate a safe seed with crypto.randomBytes(32)."
     );
   }
 

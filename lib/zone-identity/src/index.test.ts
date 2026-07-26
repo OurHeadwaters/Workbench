@@ -23,6 +23,18 @@ describe("deriveZ2Npub", () => {
     );
   });
 
+  it("throws for an all-zeros seed (zero entropy)", () => {
+    expect(() => deriveZ2Npub(new Uint8Array(32))).toThrow(
+      /all zeros/
+    );
+  });
+
+  it("throws for a single-byte all-zeros seed", () => {
+    expect(() => deriveZ2Npub(new Uint8Array(1))).toThrow(
+      /all zeros/
+    );
+  });
+
   it("output is a valid bech32 npub string", () => {
     const npub = deriveZ2Npub(seedA);
     expect(npub).toMatch(/^npub1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]+$/);
