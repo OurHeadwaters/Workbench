@@ -1,0 +1,149 @@
+Full-system constellation map + gap analysis
+
+Synthesized from every brief you provided (Zones 0–5 + Aquifer), the original Zone 2 / Buzz alignment document, and the constitutional rules that appear across all layers.
+
+1. The Constellation Map (one view)
+
+                    ZONE 5 — THE EDGE
+                 (long-view creative/technical)
+              /edge  /superposition  /codetry
+              Sandman  Compass  Logic  Print Suite
+                         │
+                         │  (doctrine, credentials, scores)
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    THE AQUIFER (substrate)                   │
+│  Arc portal (/arc) · API Server · Identity · XRPL anchoring │
+│  Community Money Machines · Eave Flows · Kit Studio         │
+│  Ethos Gate · Sealed records · Watershed Ribbon             │
+└─────────────────────────────────────────────────────────────┘
+          ▲               ▲               ▲               ▲
+          │               │               │               │
+   ZONE 0          ZONE 1          ZONE 2          ZONE 3
+   THE HOME        THE SPRING      THE WORN PATH   THE GATEHOUSE
+   (household)     (daily money)   (production)    (trust + benefit)
+   Saltbox         Kitchen Budget  North Star      Naming Gate
+   Kitchen         Headwaters PWA  Sprint          Ethos Engine
+   Family Buckets  (xbuckets)      Codetry Ship    Benefit Engine
+   The Eave        Payday ritual   Stomping Path   Ritual Engine
+   Sandbox         Earn / Bridge   Print Suite     Zone 3 Tasks → VCs
+   North Star*     Household Mode  Hinterland      Translation Engine
+                   White-label     TSP archive     DSP invariants
+                   (CU / Advisor)
+
+North Star currently straddles Z0/Z1/Z2
+
+Trust gradient (constitutional)  
+Zone 0 (highest trust, private household) → Zone 1 (working capital) → Zone 2 (billable work) → Zone 3 (earned standing + benefit distribution) → Zone 4 (content territory / co-op potential) → Zone 5 (frontier, lowest assumed trust).
+
+Capital flow rule  
+Every outward crossing of identity or money requires a named Capital Conversion Gate (ceremony, not silent market transfer).  
+Eave Rule is absolute: no table, FK, join, or stored reference may ever connect a Zone 3 wallet / DID to a Zone 0 or Zone 1 household record.
+
+2. What is solid and already production-ready
+
+| Layer | Strengths |
+|-------|-----------|
+| Aquifer | Live XRPL mainnet sealing, client-signed blobs, Money Machine 4-bucket split, Ethos Gate (mirror not wall), Kit Studio, identity DIDs + Sealed Coordinates, Watershed Ribbon single source of truth. |
+| Zone 0 (Home) | Ten artifacts fully built. Fully local Saltbox (zero infra cost). Eave Rule enforced at query layer. Capital-gate notes at seven crossing points. Calm, pull-based UX consistent. |
+| Zone 1 (Spring) | Full envelope system + Payday ritual, Xaman + WalletConnect, Stripe/Apple/Google funding, Abundance Bridge, Household Mode, three tenant modes (enthusiast/CU/advisor), EN/FR, cinematic tour, B2B lead pipeline. |
+| Zone 2 (Worn Path) | North Star daily hub + Sprint tab, 6 000+ episode archive with zone classification, Kits + Stripe/Zaprite, Brigade, Expert Council, Print Marketing Suite, Codetry Ship public face, kit delivery loop. |
+| Zone 3 (Gatehouse) | Seven engines live and wired. Dual community/regulatory membrane structural. Peer-witnessed task → VC pipeline. Benefit distribution gated by T2/T3 credentials. DSP invariants baked in. Audit trail by default. |
+| Zone 5 (Edge) | Live Sandman nightly scores, Superposition routing + Nostr session hash, Compass, Logic (RealityCore + Fallacy Map), 100+ document Print Suite with two paid instruments. |
+
+3. Critical cross-zone gaps (ordered by impact)
+
+A. Foundational pre-Phase 0 blockers (from original alignment doc + current briefs)
+
+System npub + relay  
+   Still missing. Blocks all Tier 2 Buzz/Nostr work. Must be generated offline, stored as env var, treated like Founding Drift key.
+
+Locked Zone 3 / Headwaters VC schema  
+   Explicitly gated all Tier 3. Still the first decision that must be locked before any badge or credential work proceeds further.
+
+Helping Hands (HH) schema  
+   Flagged as missing. Prerequisite for several Zone 2 steps and any peer-to-peer labour engine.
+
+Household seed / storage model  
+   How Z0 household keys and Z1 wallet seeds are stored and recovered is still unresolved.
+
+B. Identity & Eave Rule surface cracks
+
+Multi-wallet / multi-system switcher does not exist in Zone 1 (Bobbie currently runs three browser sessions).  
+Zone 0 wallet binding and Zone 3 DID derivation both exist, but the full “master DID → context-derived DID → sealed coordinate” path is not yet end-to-end documented or tested against the Eave Rule.  
+Saltbox still uses the old “Hearth” language in places; the rename to “Home” is only applied in Arc framing so far.
+
+C. Economic loop incompleteness
+
+Zone 3 benefit distribution rounds call the trust-credential endpoint, but the full runtime selection logic is still being hardened.  
+Community Money Machines (Aquifer) and Zone 1 buckets and Zone 3 benefit projects are not yet linked by any Eave Flow or sealed record path.  
+The 4-bucket Machine model (House/People/Future/Reserve) exists in Aquifer and is aspirational in Codetry Workbench, but percentages remain steward-only trade secrets and are not yet surfaced as a consistent primitive across zones.
+
+D. Practitioner production gaps (Zone 2)
+
+Kit content gating exists in API but is not enforced in frontend.  
+Zaprite webhook secret not set → real Bitcoin payments not cryptographically verified.  
+/mill framing page does not exist.  
+Consistent “Zone X of 5” wayfinding is missing on most interior pages.  
+Codetry XRPL tools are still ceremonies, not live functional tools.  
+Domain still points at the old Replit URL.
+
+E. White-label & operator readiness
+
+Zone 1 has three tenant modes ready.  
+Zone 3 has a clear 90-day pilot pitch structure.  
+Zone 2 alignment document explicitly prepares for white-label tooling.  
+Missing: a single “operator cockpit” that lets a credit union or property portfolio spin up a branded instance with the correct zone colour, Ethos Gate, and benefit rules already wired.
+
+F. Content & doctrine gaps
+
+Zone 4 (Forest) is the strongest audience identity, yet the practitioner zone system still under-surfaces pathways out of Forest into economics / food / garden.  
+RealityCore and the Fallacy Map live in Zone 5; they are not yet referenced as the formal backbone inside Zone 0 Guide or Zone 2 Handbook.
+
+4. Recommended next actions (priority order)
+
+Immediate (pre-Phase 0)  
+Resolve the eight Missing Information items from the original alignment doc (especially system npub/relay, VC schema lock, HH schema, household seed model).  
+Produce and lock the two foundation artifacts:  
+   Locked Zone 3 / Headwaters VC schema document  
+   System npub generation + secure storage instructions  
+Apply “Home” naming consistently inside Arc (and decide the Saltbox rename schedule).
+
+Short-term (Tier 1)  
+Enforce kit content gating on the frontend.  
+Set ZAPRITE_WEBHOOK_SECRET and verify the Bitcoin path.  
+Build the multi-wallet workspace switcher in Zone 1.  
+Finish hardening the Zone 3 benefit-round selection logic.  
+Add consistent Zone X of 5 wayfinding.
+
+Medium-term  
+Link Community Money Machines ↔ Zone 1 buckets ↔ Zone 3 benefit projects via Eave Flows + sealed records.  
+Surface RealityCore / Fallacy Map as the formal doctrine layer inside North Star Guide and the Handbook.  
+Stand up the first white-label operator cockpit.
+
+Longer horizon  
+Helping Hands peer-to-peer labour engine.  
+Full RLUSD settlement rails.  
+Zone 4 co-op graduation layer (807 Food Co-op as first physical embodiment).
+
+5. Bottom line
+
+The watershed is real and already flowing.  
+Zone 0 is the strongest private foundation.  
+Zone 1 is the most production-ready daily money layer.  
+Zone 2 has the clearest revenue focus (Gatehouse deal + Sprint).  
+Zone 3 has the most sophisticated trust + duality machinery.  
+Zone 5 + Aquifer supply the long-view instruments and the substrate.
+
+The missing pieces are no longer architectural inventions — they are locks, bridges, and enforcements.
+
+The system is ready to move from “many solid parts” to “one coherent watershed that can be handed to a rural operator or a credit union without the founder in the loop.”
+
+Would you like me to:
+
+A. Draft the locked VC schema document next,  
+B. Draft the system npub + secure storage instructions,  
+C. Produce a one-page “operator cockpit” specification, or  
+D. Something else first?
+
+Just tell me the order.
