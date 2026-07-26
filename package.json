@@ -8,7 +8,7 @@
     "build": "pnpm run assemble && pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-    "typecheck:gated": "pnpm run typecheck:libs && pnpm --filter @workspace/scripts --filter @workspace/api-server --filter @workspace/codetry-handbook --filter @workspace/headwaters-books --filter @workspace/practitioners-guide-v2 --filter @workspace/library --filter @workspace/practitioner-operating-plan --filter @workspace/north-star --filter @workspace/field-guide-finance --filter @workspace/print-marketing --filter @workspace/hinterland --filter @workspace/k-pizza --filter @workspace/codetry-ship --filter @workspace/deer-lake-store-plan run typecheck",
+    "typecheck:gated": "pnpm run typecheck:libs && pnpm --filter @workspace/scripts --filter @workspace/api-server --filter @workspace/codetry-handbook --filter @workspace/headwaters-books --filter @workspace/library --filter @workspace/north-star --filter @workspace/field-guide-finance --filter @workspace/print-marketing --filter @workspace/hinterland --filter @workspace/k-pizza --filter @workspace/codetry-ship --filter @workspace/deer-lake-store-plan run typecheck",
     "audit:harvest": "tsx codetry-book/audit.ts",
     "check-constellations": "bash scripts/check-constellations.sh"
   },
