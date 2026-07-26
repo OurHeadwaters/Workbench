@@ -508,8 +508,21 @@ export function SprintPage() {
         </Card>
       </div>
 
+      {/* ── Docs ─────────────────────────────────── */}
+      <div className="mt-12 mb-2 flex justify-center">
+        <Link
+          href="/zone2-alignment"
+          className="flex items-center gap-1.5 text-[11px] px-4 py-2 rounded-full border transition-colors hover:opacity-80"
+          style={{ color: "#6B7AAD", borderColor: "#1E2A4A", background: "#0D1220" }}
+        >
+          <span>⟳</span>
+          Zone 2 / Buzz Alignment — feature inventory &amp; implementation roadmap
+          <ChevronRight size={10} />
+        </Link>
+      </div>
+
       {/* ── Footer ───────────────────────────────── */}
-      <div className="text-center mt-16 mb-8 opacity-40">
+      <div className="text-center mt-8 mb-8 opacity-40">
         <p style={{ fontSize: 13, color: TEXT, fontStyle: "italic", fontFamily: FONT_DISPLAY }}>
           Everything else is doctrine. Doctrine waits.
         </p>
