@@ -38,6 +38,7 @@ import didRouter from "./did";
 import codetryInquiryRouter from "./codetryInquiry";
 import adminRouter from "./admin";
 import northStarArchiveRouter from "./northStarArchive";
+import z2Router from "./z2";
 
 const router: IRouter = Router();
 
@@ -83,5 +84,6 @@ router.use("/did", didRouter);
 router.use("/codetry", codetryInquiryRouter);
 router.use("/admin", adminRouter);
 router.use("/north-star", northStarArchiveRouter);
+router.use("/z2", z2Router);
 
 export default router;

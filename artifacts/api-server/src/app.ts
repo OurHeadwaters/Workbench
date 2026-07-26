@@ -10,6 +10,7 @@ import stripeWebhookRouter from "./routes/stripeWebhook";
 import { logger } from "./lib/logger";
 import { scheduleNightlyBriefing } from "./lib/riverSmithScheduler";
 import { scheduleWeeklyArchive } from "./lib/taskAutopilotScheduler";
+import { initZ2Identity } from "./lib/z2Identity";
 import { scheduleKitTokensCleanup } from "./lib/kitTokensCleanup";
 import { runKitDeliveryRecovery } from "./lib/kitDeliveryRecovery";
 import {
@@ -128,6 +129,7 @@ if (fs.existsSync(codetryShipDist)) {
   });
 }
 
+initZ2Identity();
 scheduleNightlyBriefing();
 scheduleWeeklyArchive();
 scheduleKitTokensCleanup();

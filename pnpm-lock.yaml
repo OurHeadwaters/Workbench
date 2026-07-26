@@ -211,6 +211,9 @@ importers:
       '@workspace/odyssey':
         specifier: workspace:*
         version: link:../../lib/odyssey
+      '@workspace/zone-identity':
+        specifier: workspace:*
+        version: link:../../lib/zone-identity
       cheerio:
         specifier: ^1.2.0
         version: 1.2.0

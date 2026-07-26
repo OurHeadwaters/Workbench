@@ -28,6 +28,7 @@ import {
 import { and, desc, gte, eq, sql, inArray } from "drizzle-orm";
 import { isOwnerRequest, OWNER_TOKEN } from "../lib/ownerAuth";
 import { logger } from "../lib/logger";
+import { getZ2Npub } from "../lib/z2Identity";
 
 const router: IRouter = Router();
 
@@ -154,9 +155,15 @@ export interface RiverSmithStructured {
   forAwareness: string[];
   gordsQuietNote: string;
   safetyFlags: StrippedItem[];
+  /**
+   * The Z2 npub that authored this briefing event.
+   * Present only when Z2_HOUSEHOLD_SEED is configured on this instance.
+   * Never contains a Z1 field — it is a pseudonymous Workbench identity only.
+   */
+  signerNpub: string | null;
 }
 
-function parseRiverMarkdown(md: string): Omit<RiverSmithStructured, "safetyFlags"> {
+function parseRiverMarkdown(md: string): Omit<RiverSmithStructured, "safetyFlags" | "signerNpub"> {
   const lines = md.split("\n");
   let currentSection = "";
   const sections: Record<string, string[]> = {
@@ -698,6 +705,7 @@ Generate the complete River Smith nightly briefing now.`;
   const structuredJson: RiverSmithStructured = {
     ...parsed,
     safetyFlags: digest.strippedItems,
+    signerNpub: getZ2Npub(),
   };
 
   const [row] = await db
