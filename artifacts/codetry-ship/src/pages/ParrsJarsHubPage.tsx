@@ -281,9 +281,7 @@ function LockedWall({ reason }: { reason?: "expired" } = {}) {
             marginBottom: "0.75rem",
           }}
         >
-          {isExpired
-            ? "Your access link has expired."
-            : "Your resource hub is one purchase away."}
+          {isExpired ? "Your access link has expired." : "Your resource hub is one purchase away."}
         </h1>
         <p
           style={{

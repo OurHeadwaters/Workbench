@@ -1,4 +1,5 @@
 import { NeighbourhoodBadge } from "@workspace/zone-store";
+import { ZoneTag } from "@workspace/zone-tag";
 
 const base = import.meta.env.BASE_URL;
 
@@ -81,28 +82,7 @@ export default function Index() {
 
         {/* Zone tag */}
         <div style={{ marginBottom: "1.25rem" }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.35em",
-              background: "#1A5FA8",
-              color: "#f4ede0",
-              borderRadius: "3px",
-              padding: "0.22em 0.65em",
-              fontSize: "0.67rem",
-              fontFamily: "var(--font-mono, monospace)",
-              fontWeight: 600,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              lineHeight: 1.4,
-            }}
-            aria-label="Zone 2 — The Workbench"
-          >
-            <span style={{ opacity: 0.72 }}>Zone 2</span>
-            <span style={{ opacity: 0.35 }}>·</span>
-            <span>The Workbench</span>
-          </span>
+          <ZoneTag zone={2} label="The Workbench" />
         </div>
 
         {/* Eyebrow */}
