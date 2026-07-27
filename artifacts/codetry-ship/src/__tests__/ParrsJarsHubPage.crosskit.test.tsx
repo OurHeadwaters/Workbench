@@ -16,6 +16,11 @@
  *
  * Unlike the hook-level unit tests in useKitAccess.test.ts, this test uses
  * real localStorage and a global fetch stub, rendering the actual page tree.
+ *
+ * The final describe block ("loading window") uses a deferred fetch to freeze
+ * the in-flight state and verify hub content is never mounted before the server
+ * guard resolves — guarding against future fast-path changes that widen the
+ * loading condition.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
@@ -145,5 +150,116 @@ describe("ParrsJarsHubPage — cross-kit token swap is blocked", () => {
     expect(
       localStorage.getItem("headwaters:kit-token:pj-solutions-kit"),
     ).toBeNull();
+  });
+});
+
+// ── Loading-window guard ───────────────────────────────────────────────────────
+
+/**
+ * These tests hold the server fetch in-flight via a deferred promise so we can
+ * inspect the render tree while status === "loading".  Hub content must never
+ * be mounted in that window — not the module nav, not any handout card, not the
+ * LockedWall CTA (which only appears after the guard resolves to "invalid").
+ *
+ * If a future fast-path (e.g. a local-cache optimistic render) is added, these
+ * tests will catch any accidental exposure of gated content before the server
+ * confirms the token.
+ */
+describe("ParrsJarsHubPage — hub content is never mounted during the loading window", () => {
+  /** Resolves a deferred promise from outside — lets us freeze fetch in-flight. */
+  type Deferred<T> = { promise: Promise<T>; resolve: (v: T) => void };
+  function deferred<T>(): Deferred<T> {
+    let resolve!: (v: T) => void;
+    const promise = new Promise<T>((res) => { resolve = res; });
+    return { promise, resolve };
+  }
+
+  beforeEach(() => {
+    // Place the cross-kit token in localStorage so the hook starts a fetch.
+    localStorage.setItem("headwaters:kit-token:pj-solutions-kit", CROSS_KIT_STORED);
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    vi.unstubAllGlobals();
+  });
+
+  it("shows only the loading screen (not hub content) while the fetch is in-flight", async () => {
+    const d = deferred<Response>();
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => d.promise),
+    );
+
+    render(<ParrsJarsHubPage />);
+
+    // The loading spinner should be present immediately.
+    expect(screen.getByText("Checking access…")).toBeInTheDocument();
+
+    // Hub module content must NOT be present while the fetch is pending.
+    expect(screen.queryByText("Get Started")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Eat What You Store & Store What You Eat"),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Foundation")).not.toBeInTheDocument();
+    expect(screen.queryByText("Module 1")).not.toBeInTheDocument();
+
+    // The LockedWall CTA is also absent — it only appears after guard resolution.
+    expect(
+      screen.queryByText("Your resource hub is one purchase away."),
+    ).not.toBeInTheDocument();
+
+    // Resolve the deferred fetch so the component can settle.
+    d.resolve(
+      new Response(JSON.stringify(CROSS_KIT_SERVER_RESPONSE), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    // After resolution the guard fires and LockedWall takes over.
+    await waitFor(() => {
+      expect(
+        screen.getByText("Your resource hub is one purchase away."),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("never mounts hub content at any point from navigation through guard resolution", async () => {
+    const d = deferred<Response>();
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => d.promise),
+    );
+
+    const { container } = render(<ParrsJarsHubPage />);
+
+    // Capture the DOM while the fetch is still pending and assert hub content absent.
+    const loadingSnapshot = container.textContent ?? "";
+    expect(loadingSnapshot).not.toContain("Get Started");
+    expect(loadingSnapshot).not.toContain("Eat What You Store");
+    expect(loadingSnapshot).not.toContain("Foundation");
+
+    // Now resolve with a cross-kit response.
+    d.resolve(
+      new Response(JSON.stringify(CROSS_KIT_SERVER_RESPONSE), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Your resource hub is one purchase away."),
+      ).toBeInTheDocument();
+    });
+
+    // Hub content still absent after the guard has resolved to "invalid".
+    expect(screen.queryByText("Get Started")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Eat What You Store & Store What You Eat"),
+    ).not.toBeInTheDocument();
   });
 });
