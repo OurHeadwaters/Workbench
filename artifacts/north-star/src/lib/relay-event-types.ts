@@ -181,6 +181,29 @@ export interface ImprovementProposalOutcomePayload {
 }
 
 // ---------------------------------------------------------------------------
+// 1011 — LAB_EVENT (Zone 2 — message posted into a lab channel)
+// ---------------------------------------------------------------------------
+
+/**
+ * Emitted whenever an agent or the human operator posts a message into a lab channel.
+ *
+ * EAVE RULE: no Z1 identity fields (name, passphrase, statement) may appear here.
+ * channel_id ties the event to a specific ChannelMeta with category === "lab".
+ */
+export interface LabEventPayload {
+  zone: "Z2";
+  actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
+  /** ID of the lab channel this event belongs to. */
+  channel_id: string;
+  /** Human-readable message text posted into the lab. */
+  text: string;
+  /** ISO datetime when the event was posted. */
+  posted_at: string;
+}
+
+// ---------------------------------------------------------------------------
 // Convenience map: relay kind number → payload interface
 // ---------------------------------------------------------------------------
 export interface RelayPayloadMap {
@@ -195,4 +218,5 @@ export interface RelayPayloadMap {
   1008: ContractMilestonePayload;
   1009: ImprovementProposalPayload;
   1010: ImprovementProposalOutcomePayload;
+  1011: LabEventPayload;
 }

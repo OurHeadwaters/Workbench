@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
-import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition, ImprovementProposal } from "./types";
+import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition, ImprovementProposal, RelayEventSummary } from "./types";
 import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload } from "./lib/relay-event-types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 import { publishToRelay, RELAY_EVENT_KINDS } from "./lib/relay-stub";
@@ -203,7 +203,7 @@ const SEED_TRIGGERS: TriggerDefinition[] = [
   },
 ];
 const INITIAL_STATE: AppState = {
-  schemaVersion: 10,
+  schemaVersion: 11,
   installedAt: new Date().toISOString(),
   onboarding: { completed: false, step: 0 },
   statement: undefined,
@@ -759,10 +759,67 @@ export const useStore = create<Store>()(
           ),
         }));
       },
+
+      createLabChannel: ({ label, durationMinutes = 120, invited_roles }) => {
+        const id = uuidv4();
+        const now = new Date().toISOString();
+        const expiresAt = new Date(Date.now() + durationMinutes * 60_000).toISOString();
+        const channel = {
+          id,
+          label,
+          category: "lab" as const,
+          expiresAt,
+          createdAt: now,
+          createdBy: "human" as const,
+          invited_roles,
+          event_feed: [] as RelayEventSummary[],
+        };
+        set((s) => ({ channels: [...s.channels, channel] }));
+        return id;
+      },
+
+      postLabEvent: (channelId, eventData) => {
+        const s = get();
+        const channel = s.channels.find((c) => c.id === channelId);
+        if (!channel) return;
+        // Reject posts to archived or expired channels
+        if (channel.archivedAt) return;
+        if (channel.expiresAt && new Date(channel.expiresAt).getTime() <= Date.now()) return;
+
+        const now = new Date().toISOString();
+        const newEvent: RelayEventSummary = {
+          id: uuidv4(),
+          timestamp: now,
+          ...eventData,
+        };
+
+        set((s) => ({
+          channels: s.channels.map((ch) =>
+            ch.id === channelId
+              ? { ...ch, event_feed: [...(ch.event_feed ?? []), newEvent] }
+              : ch
+          ),
+        }));
+
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.LAB_EVENT,
+          payload: {
+            zone: "Z2",
+            actor_type: eventData.actor_type,
+            agent_role: eventData.agent_role,
+            channel_id: channelId,
+            text: eventData.text,
+            posted_at: now,
+          },
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+      },
     }),
     {
       name: "north-star:v1",
-      version: 10,
+      version: 11,
       migrate(persistedState: unknown, fromVersion: number) {
         const s = persistedState as Record<string, unknown>;
         if (fromVersion < 5) {
@@ -805,6 +862,16 @@ export const useStore = create<Store>()(
         if (fromVersion < 10) {
           s.triggers = SEED_TRIGGERS;
           s.schemaVersion = 10;
+        }
+        if (fromVersion < 11) {
+          // Backfill lab-specific fields on any existing lab channels
+          const channels = (s.channels as ChannelMeta[]) ?? [];
+          s.channels = channels.map((ch) =>
+            ch.category === "lab"
+              ? { ...ch, invited_roles: ch.invited_roles ?? [], event_feed: ch.event_feed ?? [] }
+              : ch
+          );
+          s.schemaVersion = 11;
         }
         return s as unknown as AppState;
       },

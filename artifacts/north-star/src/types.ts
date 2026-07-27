@@ -265,6 +265,16 @@ export interface StoreActions {
   addProposal: (p: Pick<ImprovementProposal, "agent_role" | "title" | "description" | "affected_surface" | "relay_event_ref">) => ImprovementProposal;
   acceptProposal: (id: string) => void;
   rejectProposal: (id: string) => void;
+  /**
+   * Create a new lab channel with an auto-assigned expiry and a set of invited agent roles.
+   * Returns the new channel's id.
+   */
+  createLabChannel: (opts: { label: string; durationMinutes?: number; invited_roles: AgentRole[] }) => string;
+  /**
+   * Post an event (agent message or human reply) into a lab channel's event_feed.
+   * Ignored if the channel is archived or expired.
+   */
+  postLabEvent: (channelId: string, event: Omit<RelayEventSummary, "id" | "timestamp">) => void;
 }
 
 export type ArchiveContentType =
@@ -290,6 +300,26 @@ export interface ContentBankItem {
 export type HelpingHandsStatus = "open" | "claimed" | "done" | "confirmed";
 export type ChannelCategory = "workbench" | "helping-hands" | "briefing" | "lab" | "main";
 
+/**
+ * RelayEventSummary — a lightweight snapshot of a relay event posted into a lab channel.
+ *
+ * This is stored directly on the channel's event_feed so the LabPage can render
+ * the conversation history without parsing raw localStorage relay events.
+ *
+ * EAVE RULE: no Z1 identity fields (name, passphrase, statement) may appear here.
+ */
+export interface RelayEventSummary {
+  id: string;
+  kind: number;
+  actor_type: "human" | "agent";
+  /** Named role of the agent; omitted for human events. */
+  agent_role?: AgentRole;
+  /** Human-readable message text posted to the lab. */
+  text: string;
+  /** ISO datetime when the event was posted. */
+  timestamp: string;
+}
+
 export interface ChannelMeta {
   id: string;
   label: string;
@@ -300,6 +330,16 @@ export interface ChannelMeta {
   createdBy: DailyPick["actor_type"];
   /** ISO string set when the channel is explicitly archived or has expired */
   archivedAt?: string;
+  /**
+   * Lab-only: the agent roles invited to collaborate in this channel.
+   * Only meaningful for category === "lab".
+   */
+  invited_roles?: AgentRole[];
+  /**
+   * Lab-only: ordered event feed for this channel.
+   * Populated by postLabEvent; used by LabPage to render the conversation.
+   */
+  event_feed?: RelayEventSummary[];
 }
 
 /**

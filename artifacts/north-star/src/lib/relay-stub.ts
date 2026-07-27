@@ -199,4 +199,6 @@ export const RELAY_EVENT_KINDS = {
   IMPROVEMENT_PROPOSAL: 1009,
   /** Zone 2 — emitted when the human operator accepts or rejects a pending improvement proposal */
   IMPROVEMENT_PROPOSAL_OUTCOME: 1010,
+  /** Zone 2 — emitted when an agent or human posts a message into a lab channel */
+  LAB_EVENT: 1011,
 } as const;

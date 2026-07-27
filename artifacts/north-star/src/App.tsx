@@ -37,6 +37,7 @@ import { TableRoomPage } from "@/pages/TableRoomPage";
 import { SprintPage } from "@/pages/SprintPage";
 import { Zone2AlignmentPage } from "@/pages/Zone2AlignmentPage";
 import { ChannelsPage } from "@/pages/ChannelsPage";
+import { LabPage } from "@/pages/LabPage";
 import { HelpingHandsPage } from "@/pages/HelpingHandsPage";
 import { TriggersPage } from "@/pages/TriggersPage";
 import { ProposalsPage } from "@/pages/ProposalsPage";
@@ -261,6 +262,12 @@ export default function App() {
         <Route path="/channels">
           <OnboardingGuard>
             <AppShell><ChannelsPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
+        <Route path="/channels/lab/:id">
+          <OnboardingGuard>
+            <AppShell><LabPage /></AppShell>
           </OnboardingGuard>
         </Route>
 
