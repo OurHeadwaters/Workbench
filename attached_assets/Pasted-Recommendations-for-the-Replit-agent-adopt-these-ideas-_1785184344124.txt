@@ -1,0 +1,57 @@
+Recommendations for the Replit agent – adopt these ideas from the latest Buzz/Nostr demonstration
+
+Prioritise these concrete patterns from @hot_town’s July 27 demo. They map directly onto the Zone 2 / Buzz alignment document and strengthen the low-ops, protocol-first approach.
+
+1. Treat every important North Star output as a signed Nostr event (source of truth)
+Morning manifest (Daily Picks)
+River Smith briefing
+Workbench Plan burst windows
+Zone-gate crossings
+Helping Hands task lifecycle steps (create / claim / complete / confirm)
+Contract milestone attestations
+
+Do not treat the North Star database as the only source of truth. Publish a clean, zone-annotated, Z1-free event and let the relay be the durable record. This matches the demo exactly: the external app publishes → Buzz channel receives → agents act.
+
+2. Implement the “daily job → channel → agent” pattern immediately (Tier 1 + Tier 2)
+Mirror the tweet-dashboard example:
+A scheduled job (or the existing daily-picks / River Smith save path) publishes a structured event.
+A Buzz channel (or Headwaters relay subscription) receives it automatically.
+An agent can be tagged in the resulting thread and already has full context.
+
+Start with the Morning Manifest and River Smith briefing. These two give the highest immediate leverage.
+
+3. Make agents first-class channel members, not bolt-on bots
+Agents get their own npub (or delegated npub).
+They appear in the channel like any other participant.
+They can be @-mentioned, reply in threads, and post status/proof events.
+They inherit the channel’s history as context.
+
+This is the core UX insight from the demo and should shape how River Smith and future Helping Hands agents are modelled.
+
+4. Keep the integration pure protocol – no SDKs or API tokens
+When wiring publishToRelay:
+Sign the event with the Z2 npub (or system npub).
+Push over WebSocket to the relay.
+Do not introduce any Buzz-specific client library beyond basic Nostr event construction and NIP-01 signing.
+
+The demo’s power came from the absence of vendor lock-in. Preserve that.
+
+5. Design event envelopes so agents can act without extra human formatting
+Every published event should already contain:
+Clear kind
+Zone annotation
+actor_type
+Machine-readable payload (not just markdown)
+Optional payment / escrow reference
+
+This lets an agent respond usefully the moment the event lands, exactly as shown when the stats message appeared and the agent was tagged.
+
+6. Prefer subscription + reaction over polling
+Once the relay is live, North Star (and agents) should subscribe to relevant kinds/filters rather than polling. The demo’s daily stats landing in the channel is the model: data arrives where the conversation already is.
+
+Implementation priority for the agent
+Finish the Tier 1 stubs (publishToRelay, morning manifest, river_briefing envelope, actor_type) shaped exactly like the demo’s event model.
+As soon as the system npub and relay URL exist, switch the stub to real publishing and create one dedicated channel that receives the morning manifest + River Smith events.
+Add a simple “tag agent” test flow so a human can mention an agent on the published event and receive a contextual reply.
+
+These six ideas turn the existing alignment document into a living, composable system that behaves like the working example just shown. Adopt them as the default pattern for every new Z2 → Buzz surface.
