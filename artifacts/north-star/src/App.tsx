@@ -39,6 +39,7 @@ import { Zone2AlignmentPage } from "@/pages/Zone2AlignmentPage";
 import { ChannelsPage } from "@/pages/ChannelsPage";
 import { HelpingHandsPage } from "@/pages/HelpingHandsPage";
 import { TriggersPage } from "@/pages/TriggersPage";
+import { ProposalsPage } from "@/pages/ProposalsPage";
 import { GordWidget } from "@workspace/gord-widget";
 import { PasswordGate } from "@/components/PasswordGate";
 import { ScheduleWatcher } from "@/components/ScheduleWatcher";
@@ -272,6 +273,12 @@ export default function App() {
         <Route path="/triggers">
           <OnboardingGuard>
             <AppShell><TriggersPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
+        <Route path="/proposals">
+          <OnboardingGuard>
+            <AppShell><ProposalsPage /></AppShell>
           </OnboardingGuard>
         </Route>
 

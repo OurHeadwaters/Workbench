@@ -143,6 +143,44 @@ export interface ContractMilestonePayload {
 }
 
 // ---------------------------------------------------------------------------
+// 1009 — IMPROVEMENT_PROPOSAL (Zone 2 — agent-authored improvement suggestion)
+// ---------------------------------------------------------------------------
+
+/**
+ * Fired when an agent publishes a new improvement proposal for human review.
+ *
+ * PERMISSION MODEL: agents may propose; only the human operator (owner token)
+ * may accept. No Z1 identity fields are permitted in this payload.
+ */
+export interface ImprovementProposalPayload {
+  zone: "Z2";
+  actor_type: "agent";
+  /** Named role of the agent authoring the proposal. */
+  agent_role: AgentRole;
+  proposal_id: string;
+  title: string;
+  description: string;
+  affected_surface: string;
+  created_at: string; // ISO datetime
+}
+
+// ---------------------------------------------------------------------------
+// 1010 — IMPROVEMENT_PROPOSAL_OUTCOME (Zone 2 — human accept/reject)
+// ---------------------------------------------------------------------------
+
+/**
+ * Fired when the human operator accepts or rejects a pending proposal.
+ * Only the owner token holder may trigger this event.
+ */
+export interface ImprovementProposalOutcomePayload {
+  zone: "Z2";
+  actor_type: "human";
+  proposal_id: string;
+  outcome: "accepted" | "rejected";
+  resolved_at: string; // ISO datetime
+}
+
+// ---------------------------------------------------------------------------
 // Convenience map: relay kind number → payload interface
 // ---------------------------------------------------------------------------
 export interface RelayPayloadMap {
@@ -155,4 +193,6 @@ export interface RelayPayloadMap {
   1006: HelpingHandsCompletePayload;
   1007: HelpingHandsConfirmPayload;
   1008: ContractMilestonePayload;
+  1009: ImprovementProposalPayload;
+  1010: ImprovementProposalOutcomePayload;
 }

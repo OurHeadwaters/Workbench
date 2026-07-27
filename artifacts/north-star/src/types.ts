@@ -218,6 +218,8 @@ export interface AppState {
   helpingHandsTasks: HelpingHandsTask[];
 
   triggers: TriggerDefinition[];
+
+  improvementProposals: ImprovementProposal[];
 }
 
 export interface StoreActions {
@@ -260,6 +262,9 @@ export interface StoreActions {
   setTrigger: (id: string, patch: Partial<TriggerDefinition>) => void;
   fireTrigger: (id: string) => Promise<void>;
   archiveHelpingHandsTask: (id: string) => void;
+  addProposal: (p: Pick<ImprovementProposal, "agent_role" | "title" | "description" | "affected_surface" | "relay_event_ref">) => ImprovementProposal;
+  acceptProposal: (id: string) => void;
+  rejectProposal: (id: string) => void;
 }
 
 export type ArchiveContentType =
@@ -325,6 +330,8 @@ export interface TriggerDefinition {
   last_fired?: string;
   enabled: boolean;
 }
+
+export type ProposalStatus = "proposed" | "accepted" | "rejected";
 export type Store = AppState & StoreActions;
 
 export interface HelpingHandsTask {
@@ -336,4 +343,26 @@ export interface HelpingHandsTask {
   completedAt?: string;
   confirmedAt?: string;
   archivedAt?: string;
+}
+
+/**
+ * ImprovementProposal — a structured improvement suggestion created by an agent.
+ *
+ * PERMISSION MODEL: agents may propose; only the human operator (owner token)
+ * may accept. The Zone 2 / Eave Rule is respected: no Z1 identity fields appear
+ * anywhere in the proposal shape.
+ */
+export interface ImprovementProposal {
+  id: string;
+  agent_role: AgentRole;
+  title: string;
+  description: string;
+  /** The surface or subsystem this proposal would affect (human-readable). */
+  affected_surface: string;
+  /** Optional relay event reference that generated this proposal. */
+  relay_event_ref?: string;
+  status: ProposalStatus;
+  created_at: string; // ISO datetime
+  /** Set when the human accepts or rejects. */
+  resolved_at?: string;
 }

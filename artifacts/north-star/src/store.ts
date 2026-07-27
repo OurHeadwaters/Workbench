@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
-import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition } from "./types";
+import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition, ImprovementProposal } from "./types";
 import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload } from "./lib/relay-event-types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 import { publishToRelay, RELAY_EVENT_KINDS } from "./lib/relay-stub";
@@ -238,6 +238,7 @@ const INITIAL_STATE: AppState = {
   channels: [],
   helpingHandsTasks: [],
   triggers: SEED_TRIGGERS,
+  improvementProposals: [],
 };
 
 export const useStore = create<Store>()(
@@ -585,6 +586,82 @@ export const useStore = create<Store>()(
             t.id === id ? { ...t, last_fired: now } : t
           ),
         }));
+      },
+
+      addProposal: ({ agent_role, title, description, affected_surface, relay_event_ref }) => {
+        const now = new Date().toISOString();
+        const proposal: ImprovementProposal = {
+          id: uuidv4(),
+          agent_role,
+          title,
+          description,
+          affected_surface,
+          relay_event_ref,
+          status: "proposed",
+          created_at: now,
+        };
+        set((s) => ({ improvementProposals: [proposal, ...s.improvementProposals] }));
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.IMPROVEMENT_PROPOSAL,
+          payload: {
+            zone: "Z2",
+            actor_type: "agent",
+            agent_role,
+            proposal_id: proposal.id,
+            title,
+            description,
+            affected_surface,
+            created_at: now,
+          },
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+        return proposal;
+      },
+
+      acceptProposal: (id) => {
+        const now = new Date().toISOString();
+        set((s) => ({
+          improvementProposals: s.improvementProposals.map((p) =>
+            p.id === id ? { ...p, status: "accepted" as const, resolved_at: now } : p,
+          ),
+        }));
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.IMPROVEMENT_PROPOSAL_OUTCOME,
+          payload: {
+            zone: "Z2",
+            actor_type: "human",
+            proposal_id: id,
+            outcome: "accepted",
+            resolved_at: now,
+          },
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+      },
+
+      rejectProposal: (id) => {
+        const now = new Date().toISOString();
+        set((s) => ({
+          improvementProposals: s.improvementProposals.map((p) =>
+            p.id === id ? { ...p, status: "rejected" as const, resolved_at: now } : p,
+          ),
+        }));
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.IMPROVEMENT_PROPOSAL_OUTCOME,
+          payload: {
+            zone: "Z2",
+            actor_type: "human",
+            proposal_id: id,
+            outcome: "rejected",
+            resolved_at: now,
+          },
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
       },
 
       addHelpingHandsTask: ({ title }) => {

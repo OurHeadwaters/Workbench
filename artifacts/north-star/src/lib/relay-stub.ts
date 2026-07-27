@@ -195,4 +195,8 @@ export const RELAY_EVENT_KINDS = {
   HELPING_HANDS_CONFIRM: 1007,
   /** Zone 4 — emitted when a contract milestone is attested as reached by a signing party */
   CONTRACT_MILESTONE: 1008,
+  /** Zone 2 — emitted when an agent publishes a new improvement proposal for human review */
+  IMPROVEMENT_PROPOSAL: 1009,
+  /** Zone 2 — emitted when the human operator accepts or rejects a pending improvement proposal */
+  IMPROVEMENT_PROPOSAL_OUTCOME: 1010,
 } as const;

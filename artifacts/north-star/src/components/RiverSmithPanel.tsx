@@ -11,6 +11,7 @@ import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { publishToRelay, RELAY_EVENT_KINDS } from "@/lib/relay-stub";
 import type { ProofOfWork } from "@/lib/relay-event-types";
+import { useStore } from "@/store";
 
 interface SafetyFlag {
   text: string;
@@ -364,6 +365,33 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
 
   const [proofCard, setProofCard] = useState<{ proof: ProofOfWork; briefingId: string; sentAt: string } | null>(null);
 
+  const addProposal = useStore((s) => s.addProposal);
+  const [proposeOpen, setProposeOpen] = useState(false);
+  const [proposeTitle, setProposeTitle] = useState("");
+  const [proposeDesc, setProposeDesc] = useState("");
+  const [proposeSurface, setProposeSurface] = useState("");
+  const [proposeSuccess, setProposeSuccess] = useState(false);
+  const [proposing, setProposing] = useState(false);
+
+  const handlePropose = () => {
+    if (!proposeTitle.trim() || !proposeDesc.trim() || proposing) return;
+    setProposing(true);
+    addProposal({
+      agent_role: "river-smith",
+      title: proposeTitle.trim(),
+      description: proposeDesc.trim(),
+      affected_surface: proposeSurface.trim() || "North Star",
+      relay_event_ref: briefing?.id,
+    });
+    setProposeTitle("");
+    setProposeDesc("");
+    setProposeSurface("");
+    setProposeOpen(false);
+    setProposeSuccess(true);
+    setProposing(false);
+    setTimeout(() => setProposeSuccess(false), 3500);
+  };
+
   const fetchLatest = useCallback(async () => {
     if (!token) return;
     setLoading(true);
@@ -585,6 +613,20 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
               <span>Archive</span>
               <span className="text-[10px]">{archiveOpen ? "▲" : "▼"}</span>
             </button>
+            {isOwner && (
+              <button
+                onClick={() => { setProposeOpen((o) => !o); setProposeSuccess(false); }}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-2 rounded-sm text-[11px] border transition-colors",
+                  proposeOpen
+                    ? "text-[#C5A96A] border-[#3D3020] bg-[#1E1810]"
+                    : "text-[#5C5046] border-[#1E1A14] bg-[#181512] hover:text-[#8C7B6D]",
+                )}
+              >
+                <span>💡</span>
+                <span>Propose</span>
+              </button>
+            )}
             {briefing && (
               <span className="ml-auto text-[10px] text-[#3D3228] tracking-wide">
                 {formatDate(briefing.generatedAt)}
@@ -594,6 +636,64 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
               </span>
             )}
           </div>
+
+          {/* Propose improvement form */}
+          {proposeOpen && (
+            <div className="border-b border-[#1E1A14] bg-[#0E0C09] px-5 py-4 space-y-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-[#C5A96A] font-bold">
+                New improvement proposal
+              </p>
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={proposeTitle}
+                  onChange={(e) => setProposeTitle(e.target.value)}
+                  placeholder="Title — what should improve?"
+                  maxLength={120}
+                  className="w-full bg-[#181512] border border-[#2A2520] rounded-sm px-3 py-2 text-[13px] text-[#EAE4DB] placeholder-[#4A3D33] focus:outline-none focus:border-[#3D3020]"
+                />
+                <input
+                  type="text"
+                  value={proposeSurface}
+                  onChange={(e) => setProposeSurface(e.target.value)}
+                  placeholder="Affected surface (e.g. Briefing panel, Daily pick…)"
+                  maxLength={80}
+                  className="w-full bg-[#181512] border border-[#2A2520] rounded-sm px-3 py-2 text-[13px] text-[#EAE4DB] placeholder-[#4A3D33] focus:outline-none focus:border-[#3D3020]"
+                />
+                <textarea
+                  value={proposeDesc}
+                  onChange={(e) => setProposeDesc(e.target.value)}
+                  placeholder="Describe the improvement and why it matters…"
+                  rows={3}
+                  maxLength={800}
+                  className="w-full bg-[#181512] border border-[#2A2520] rounded-sm px-3 py-2 text-[13px] text-[#EAE4DB] placeholder-[#4A3D33] focus:outline-none focus:border-[#3D3020] resize-none"
+                />
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handlePropose}
+                  disabled={!proposeTitle.trim() || !proposeDesc.trim() || proposing}
+                  className="px-4 py-2 rounded-sm text-[12px] font-bold uppercase tracking-[0.1em] transition-all bg-[#1E332E] text-[#4A8A7C] border border-[#2A4A43] hover:bg-[#253D38] disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Submit proposal
+                </button>
+                <button
+                  onClick={() => setProposeOpen(false)}
+                  className="px-3 py-2 text-[12px] text-[#5C5046] hover:text-[#8C7B6D] transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Success flash */}
+          {proposeSuccess && (
+            <div className="border-b border-[#1E1A14] px-5 py-3 flex items-center gap-2">
+              <span className="text-[12px] text-[#4A8A7C]">✓</span>
+              <span className="text-[12px] text-[#4A8A7C]">Proposal submitted — review it under More → Proposals</span>
+            </div>
+          )}
 
           {/* Proof card — shown after a successful save */}
           {proofCard && (
