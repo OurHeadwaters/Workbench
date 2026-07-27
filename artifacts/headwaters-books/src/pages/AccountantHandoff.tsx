@@ -11,7 +11,7 @@
  * The reconciliation page has the full internal detail; this page has the handoff brief.
  */
 
-import { Printer, AlertTriangle, CheckSquare, Building2, User, ArrowRight } from "lucide-react";
+import { Printer, AlertTriangle, CheckSquare, Building2, User, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -566,13 +566,152 @@ export default function AccountantHandoff() {
         </div>
       </section>
 
+      {/* § 7 — Filed returns & outcomes */}
+      <section>
+        <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          § 7 — Filed returns &amp; outcomes · prepared by J.P. Butler, CPA · signed Jun 12, 2026
+        </p>
+
+        {/* Filed-by banner */}
+        <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-emerald-900">All 2025 returns filed</p>
+            <p className="text-xs text-emerald-800 mt-0.5">
+              Prepared without audit from information supplied by the taxpayer · J.P. Butler, CPA · Electronic filer Y9686 · Document control Y968625FPB7ZH
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+          {/* Personal T1 */}
+          <div className="rounded-xl border border-blue-200 bg-blue-50 p-5 space-y-3">
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] font-bold text-blue-700">
+              Personal T1 · Bobbie Parr · 2025
+            </p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex justify-between">
+                <span className="text-blue-800/70">Total income (line 15000)</span>
+                <span className="font-mono tabular-nums text-blue-900">$15,281.74</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-blue-800/70">Taxable income (line 26000)</span>
+                <span className="font-mono tabular-nums text-blue-900">$15,281.74</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-blue-800/70">Federal non-ref. credits</span>
+                <span className="font-mono tabular-nums text-blue-900">$2,350.89</span>
+              </div>
+              <div className="flex justify-between border-t border-blue-200 pt-2 font-semibold">
+                <span className="text-blue-900">Refund (line 48400)</span>
+                <span className="font-mono tabular-nums text-emerald-700">$519.38</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 text-[10px] text-blue-700">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+              Filed electronically · T183 signed
+            </div>
+          </div>
+
+          {/* HST */}
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 space-y-3">
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] font-bold text-amber-700">
+              HST Return · Parrs Jars · Jan–Dec 2025
+            </p>
+            <p className="text-[10px] font-mono text-amber-700/70">BN: 730101334 RT 0001</p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex justify-between">
+                <span className="text-amber-800/70">Sales &amp; other revenue (101)</span>
+                <span className="font-mono tabular-nums text-amber-900">$55,875.41</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-amber-800/70">HST collected (103)</span>
+                <span className="font-mono tabular-nums text-amber-900">$6,024.85</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-amber-800/70">ITCs claimed (106)</span>
+                <span className="font-mono tabular-nums text-amber-900">($964.24)</span>
+              </div>
+              <div className="flex justify-between border-t border-amber-200 pt-2 font-semibold">
+                <span className="text-amber-900">Net tax owing (109)</span>
+                <span className="font-mono tabular-nums text-red-700">$5,060.61</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 text-[10px] text-amber-700">
+              <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
+              Remittance of $5,060.61 required
+            </div>
+          </div>
+
+          {/* Corp T2 */}
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 space-y-3">
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] font-bold text-slate-600">
+              Corporate T2 · Headwaters Ontario Corp · 2025
+            </p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex justify-between">
+                <span className="text-slate-600/70">Corporate revenue</span>
+                <span className="font-mono tabular-nums text-slate-700">NIL</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600/70">Corporate expenses</span>
+                <span className="font-mono tabular-nums text-slate-700">NIL</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600/70">Net income</span>
+                <span className="font-mono tabular-nums text-slate-700">NIL</span>
+              </div>
+              <div className="flex justify-between border-t border-slate-200 pt-2 font-semibold">
+                <span className="text-slate-700">Tax owing</span>
+                <span className="font-mono tabular-nums text-slate-700">$0.00</span>
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-500 leading-relaxed">
+              Corp was incorporated ~Nov 2024 and carried no operating activity in 2025. Invoice proceeds received were
+              recorded as Bobbie's shareholder capital contribution — not corporate revenue.
+            </p>
+            <div className="flex items-center gap-1.5 text-[10px] text-slate-600">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+              NIL return — no tax owing
+            </div>
+          </div>
+        </div>
+
+        {/* Parrs Jars 2025 income summary from TB */}
+        <div className="mt-4 rounded-lg border border-border bg-muted/20 p-4">
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-2">
+            Parrs Jars 2025 year-end · from accountant's trial balance (TB)
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+            {[
+              { label: "Operating revenue", value: "($9,530.41)", note: "net of adj." },
+              { label: "Gain on disposal of PPE", value: "($20,253.01)", note: "equipment sold to 807" },
+              { label: "Total expenses", value: "$26,137.90", note: "after adj." },
+              { label: "Net income / (loss)", value: "($3,645.50)", note: "final", highlight: true },
+            ].map((r) => (
+              <div key={r.label} className={`rounded-md p-3 ${r.highlight ? "bg-primary/5 border border-primary/20" : "bg-muted/40"}`}>
+                <p className="text-[10px] text-muted-foreground leading-tight">{r.label}</p>
+                <p className={`text-base font-mono font-semibold mt-1 ${r.highlight ? "text-primary" : ""}`}>{r.value}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{r.note}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-muted-foreground mt-3 italic">
+            Note: Operating revenue reflects winding-down activity only (sales $9,530 + lease income nil).
+            The $20,253 gain on disposal is the net gain from equipment sold to 807 Food Co-op per the accountant's
+            adjusting entries. Net loss of $(3,645.50) flows to Bobbie's T1 as sole proprietor income — consistent
+            with the $15,281.74 total income reported on the filed T1 (other personal income made up the balance).
+          </p>
+        </div>
+      </section>
+
       {/* Footer note */}
-      <div className="rounded-lg border border-border bg-muted/30 p-4 text-xs text-muted-foreground leading-relaxed">
-        <strong className="text-foreground">Do not rely on this document for final decisions.</strong> Several
-        figures are confirmed (invoices, HST, capital contribution decision) but the cost basis of each asset,
-        the exact tax treatment (income vs. capital gain), the 2025 T1 filing status, and the QuickBooks
-        balance sheet items are all pending the reports in §6. This document is a briefing, not a tax return.
-        Last updated {new Date().toLocaleDateString("en-CA")}.
+      <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-xs text-emerald-900 leading-relaxed">
+        <strong>2025 filings complete.</strong> T1 (refund $519.38) and HST return ($5,060.61 owing) filed by
+        J.P. Butler, CPA on Jun 12, 2026. Corporate T2 for Headwaters Ontario Corp: NIL — no tax owing.
+        Parrs Jars 2025 year-end shows a net loss of $(3,645.50) after accountant's adjustments.
+        HST remittance of $5,060.61 to CRA remains outstanding — confirm payment date.
       </div>
     </div>
   );
