@@ -277,10 +277,10 @@ export const solePropCleanupChecklist: ChecklistItem[] = [
   },
   {
     id: "jan-mar-2026",
-    title: "Jan–Mar 2026 statements (if applicable)",
+    title: "Jan–Mar 2026 statements — confirmed sole prop only",
     detail:
-      "Confirm whether digital development costs were incurred on the sole-prop card before Apr 17, 2026. If yes, apply the same extraction method and extend the invoice period.",
-    status: "pending",
+      "Confirmed: no corporate digital development costs on the Alterna card before April 17, 2026. All Collabria charges in Jan–Mar are sole-prop expenses. Invoice period of Apr 17 – Jun 26 2026 is correct and complete — no extension needed.",
+    status: "confirmed",
   },
   {
     id: "bank-reconstruction",
