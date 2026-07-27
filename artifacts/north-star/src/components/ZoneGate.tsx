@@ -48,9 +48,9 @@ export function ZoneGate({ crossing }: ZoneGateProps) {
   const { label, subtitle, accent, pip } = GATE_COPY[crossing];
 
   useEffect(() => {
+    const zone = crossing === "Z1→Z2" ? ("Z2" as const) : ("Z3" as const);
     const crossingDirection =
       crossing === "Z1→Z2" ? ("Z1_to_Z2" as const) : ("Z2_to_Z3" as const);
-    const zone = crossing === "Z1→Z2" ? ("Z2" as const) : ("Z3" as const);
     const crossedAt = new Date().toISOString();
     void publishToRelay({
       kind: RELAY_EVENT_KINDS.GATE_CROSSING,

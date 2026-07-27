@@ -194,6 +194,7 @@ export interface AppState {
   contentBank: ContentBankItem[];
   workbenchPlan?: WorkbenchPlan;
   channels: ChannelMeta[];
+  helpingHandsTasks: HelpingHandsTask[];
 }
 
 export interface StoreActions {
@@ -229,6 +230,10 @@ export interface StoreActions {
   setWorkbenchPlan: (plan: Omit<WorkbenchPlan, "updatedAt">) => void;
   addChannel: (c: Pick<ChannelMeta, "label" | "category" | "expiresAt" | "createdBy">) => void;
   expireChannel: (id: string) => void;
+  addHelpingHandsTask: (t: Pick<HelpingHandsTask, "title">) => void;
+  claimHelpingHandsTask: (id: string) => void;
+  completeHelpingHandsTask: (id: string) => void;
+  confirmHelpingHandsTask: (id: string) => void;
 }
 
 export type ArchiveContentType =
@@ -251,6 +256,7 @@ export interface ContentBankItem {
   taggedAt: string;
 }
 
+export type HelpingHandsStatus = "open" | "claimed" | "done" | "confirmed";
 export type ChannelCategory = "workbench" | "helping-hands" | "briefing" | "lab" | "main";
 
 export interface ChannelMeta {
@@ -266,3 +272,13 @@ export interface ChannelMeta {
 }
 
 export type Store = AppState & StoreActions;
+
+export interface HelpingHandsTask {
+  id: string;
+  title: string;
+  status: HelpingHandsStatus;
+  postedAt: string;
+  claimedAt?: string;
+  completedAt?: string;
+  confirmedAt?: string;
+}

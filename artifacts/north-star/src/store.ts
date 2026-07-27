@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
-import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta } from "./types";
+import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask } from "./types";
+import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload } from "./lib/relay-event-types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 import { publishToRelay, RELAY_EVENT_KINDS } from "./lib/relay-stub";
 
@@ -219,6 +220,7 @@ const INITIAL_STATE: AppState = {
   gmailAccounts: SEED_GMAIL_ACCOUNTS,
   workbenchPlan: undefined,
   channels: [],
+  helpingHandsTasks: [],
 };
 
 export const useStore = create<Store>()(
@@ -458,7 +460,8 @@ export const useStore = create<Store>()(
       removeFromContentBank: (id) =>
         set((s) => ({ contentBank: s.contentBank.filter((x) => x.id !== id) })),
 
-      setWorkbenchPlan: ({ phase, burstMinutes, windows, windowNotes, notes }) =>
+      setWorkbenchPlan: ({ phase, burstMinutes, windows, windowNotes, notes }) => {
+        const now = new Date().toISOString();
         set({
           workbenchPlan: {
             phase,
@@ -466,9 +469,27 @@ export const useStore = create<Store>()(
             windows,
             windowNotes,
             notes,
-            updatedAt: new Date().toISOString(),
+            updatedAt: now,
           },
-        }),
+        });
+        if (burstMinutes !== null && burstMinutes !== undefined) {
+          const burstPayload: WorkbenchPlanBurstPayload = {
+            zone: "Z2",
+            actor_type: "human",
+            phase,
+            burst_minutes: burstMinutes,
+            windows,
+            started_at: now,
+          };
+          void publishToRelay({
+            kind: RELAY_EVENT_KINDS.WORKBENCH_PLAN_BURST,
+            payload: burstPayload,
+            z2npub: "z2:local",
+            timestamp: now,
+            signature: "stub",
+          });
+        }
+      },
 
       addChannel: ({ label, category, expiresAt, createdBy }) =>
         set((s) => ({
@@ -491,6 +512,93 @@ export const useStore = create<Store>()(
             ch.id === id ? { ...ch, archivedAt: new Date().toISOString() } : ch
           ),
         })),
+
+      addHelpingHandsTask: ({ title }) => {
+        const now = new Date().toISOString();
+        const id = uuidv4();
+        const task: HelpingHandsTask = { id, title, status: "open", postedAt: now };
+        set((s) => ({ helpingHandsTasks: [task, ...s.helpingHandsTasks] }));
+        const payload: HelpingHandsCreatePayload = {
+          zone: "Z3",
+          actor_type: "human",
+          task_id: id,
+          title,
+          posted_at: now,
+        };
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.HELPING_HANDS_CREATE,
+          payload,
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+      },
+
+      claimHelpingHandsTask: (id) => {
+        const now = new Date().toISOString();
+        set((s) => ({
+          helpingHandsTasks: s.helpingHandsTasks.map((t) =>
+            t.id === id ? { ...t, status: "claimed" as const, claimedAt: now } : t
+          ),
+        }));
+        const payload: HelpingHandsClaimPayload = {
+          zone: "Z3",
+          actor_type: "human",
+          task_id: id,
+          claimed_at: now,
+        };
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.HELPING_HANDS_CLAIM,
+          payload,
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+      },
+
+      completeHelpingHandsTask: (id) => {
+        const now = new Date().toISOString();
+        set((s) => ({
+          helpingHandsTasks: s.helpingHandsTasks.map((t) =>
+            t.id === id ? { ...t, status: "done" as const, completedAt: now } : t
+          ),
+        }));
+        const payload: HelpingHandsCompletePayload = {
+          zone: "Z3",
+          actor_type: "human",
+          task_id: id,
+          completed_at: now,
+        };
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.HELPING_HANDS_COMPLETE,
+          payload,
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+      },
+
+      confirmHelpingHandsTask: (id) => {
+        const now = new Date().toISOString();
+        set((s) => ({
+          helpingHandsTasks: s.helpingHandsTasks.map((t) =>
+            t.id === id ? { ...t, status: "confirmed" as const, confirmedAt: now } : t
+          ),
+        }));
+        const payload: HelpingHandsConfirmPayload = {
+          zone: "Z3",
+          actor_type: "human",
+          task_id: id,
+          confirmed_at: now,
+        };
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.HELPING_HANDS_CONFIRM,
+          payload,
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+      },
     }),
     {
       name: "north-star:v1",
