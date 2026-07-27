@@ -226,6 +226,7 @@ function HandoutCard({
 const PJ_SOLUTIONS_KIT_ID = "pj-solutions-kit";
 
 function LockedWall({ reason }: { reason?: "expired" } = {}) {
+  const isExpired = reason === "expired";
   return (
     <div
       style={{
@@ -280,7 +281,9 @@ function LockedWall({ reason }: { reason?: "expired" } = {}) {
             marginBottom: "0.75rem",
           }}
         >
-          Your resource hub is one purchase away.
+          {isExpired
+            ? "Your access link has expired."
+            : "Your resource hub is one purchase away."}
         </h1>
         <p
           style={{
@@ -292,7 +295,9 @@ function LockedWall({ reason }: { reason?: "expired" } = {}) {
             margin: "0 auto 2rem",
           }}
         >
-          The Principles to Preservation hub — all 5 modules and 20+ handouts — is available to PJ Solutions Kit buyers. Purchase the kit to get instant access.
+          {isExpired
+            ? "Your PJ Solutions Kit access link has expired. Re-send it to your email to get back in."
+            : "The Principles to Preservation hub — all 5 modules and 20+ handouts — is available to PJ Solutions Kit buyers. Purchase the kit to get instant access."}
         </p>
         <div
           style={{
@@ -302,28 +307,49 @@ function LockedWall({ reason }: { reason?: "expired" } = {}) {
             gap: "0.85rem",
           }}
         >
-          <a
-            href="/parrsjars/kit"
-            style={{
-              display: "inline-block",
-              background: RUST,
-              color: "white",
-              fontWeight: 800,
-              fontSize: "1rem",
-              letterSpacing: "0.04em",
-              padding: "0.85rem 2rem",
-              borderRadius: 6,
-              textDecoration: "none",
-            }}
-          >
-            Get the PJ Solutions Kit — $97 CAD →
-          </a>
-          <a
-            href="/kits/resend"
-            style={{ fontSize: "0.8rem", color: MUTED, textDecoration: "none" }}
-          >
-            Already purchased? Re-send your access link →
-          </a>
+          {isExpired ? (
+            <a
+              href="/kits/resend"
+              style={{
+                display: "inline-block",
+                background: RUST,
+                color: "white",
+                fontWeight: 800,
+                fontSize: "1rem",
+                letterSpacing: "0.04em",
+                padding: "0.85rem 2rem",
+                borderRadius: 6,
+                textDecoration: "none",
+              }}
+            >
+              Re-send my access link →
+            </a>
+          ) : (
+            <>
+              <a
+                href="/parrsjars/kit"
+                style={{
+                  display: "inline-block",
+                  background: RUST,
+                  color: "white",
+                  fontWeight: 800,
+                  fontSize: "1rem",
+                  letterSpacing: "0.04em",
+                  padding: "0.85rem 2rem",
+                  borderRadius: 6,
+                  textDecoration: "none",
+                }}
+              >
+                Get the PJ Solutions Kit — $97 CAD →
+              </a>
+              <a
+                href="/kits/resend"
+                style={{ fontSize: "0.8rem", color: MUTED, textDecoration: "none" }}
+              >
+                Already purchased? Re-send your access link →
+              </a>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -335,7 +361,6 @@ export function ParrsJarsHubPage() {
   const [activeModule, setActiveModule] = useState<string>("foundation");
   const [visitedHandouts, setVisitedHandouts] = useState<Set<string>>(new Set());
   const [visitedTitles, setVisitedTitles] = useState<Set<string>>(new Set());
-  const [expiredBannerDismissed, setExpiredBannerDismissed] = useState(false);
 
   // Load visited handouts from localStorage once the token is known
   useEffect(() => {
@@ -405,7 +430,11 @@ export function ParrsJarsHubPage() {
     );
   }
 
-  if (status !== "valid" && status !== "expired") {
+  if (status === "expired") {
+    return <LockedWall reason="expired" />;
+  }
+
+  if (status !== "valid") {
     return <LockedWall />;
   }
 
@@ -463,51 +492,6 @@ export function ParrsJarsHubPage() {
           All your workshop handouts organized by module. Tap any card to read more about what's on it.
         </p>
       </div>
-
-      {/* Expired access banner */}
-      {status === "expired" && !expiredBannerDismissed && (
-        <div
-          style={{
-            background: "#fff3cd",
-            borderBottom: "1px solid #f0d070",
-            padding: "0.75rem 1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "1rem",
-            flexWrap: "wrap",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-            <span style={{ fontSize: "0.95rem" }}>⏱</span>
-            <span style={{ fontSize: "0.84rem", fontWeight: 600, color: "#7a5c00" }}>
-              Your access link expired —{" "}
-              <a
-                href="/kits/resend"
-                style={{ color: "#7a5c00", textDecoration: "underline", fontWeight: 700 }}
-              >
-                re-send it to get back in
-              </a>
-            </span>
-          </div>
-          <button
-            onClick={() => setExpiredBannerDismissed(true)}
-            aria-label="Dismiss"
-            style={{
-              flexShrink: 0,
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "1.1rem",
-              color: "#9a7a20",
-              lineHeight: 1,
-              padding: "0.1rem 0.3rem",
-            }}
-          >
-            ×
-          </button>
-        </div>
-      )}
 
       {/* Jump back in banner */}
       {status === "valid" && anyVisited && (
