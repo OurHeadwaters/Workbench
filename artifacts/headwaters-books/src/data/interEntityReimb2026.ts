@@ -76,8 +76,8 @@ export const invoiceGroups: InvoiceGroup[] = [
       {
         description: "GoDaddy domains",
         amount: GODADDY_DOMAINS,
-        note: "Multiple domain-related charges — approx. figure pending final statement reconciliation.",
-        status: "estimated",
+        note: "Multiple domain-related charges — confirmed from final July 2026 Alterna Savings statement.",
+        status: "confirmed",
       },
       {
         description: "Runway ML — AI tooling",
@@ -95,8 +95,8 @@ export const invoiceGroups: InvoiceGroup[] = [
         description: "Other clear digital infrastructure / tooling",
         amount: OTHER_DIGITAL,
         note:
-          "Remaining digital charges after Square, Apple, and all physical/food items removed. Approx. figure pending final review.",
-        status: "estimated",
+          "Remaining digital charges after Square, Apple, and all physical/food items removed. Confirmed from final July 2026 Alterna Savings statement.",
+        status: "confirmed",
       },
     ],
     subtotal: OTHER_DIGITAL_SUBTOTAL,
@@ -151,10 +151,9 @@ export const classificationRows: ClassificationRow[] = [
   {
     category: "GoDaddy domains",
     amount: GODADDY_DOMAINS,
-    amountNote: "~",
     entity: "corp",
     reason: "Corporate domain registrations for Corp projects",
-    status: "estimated",
+    status: "confirmed",
   },
   {
     category: "Runway ML (AI tooling)",
@@ -173,10 +172,9 @@ export const classificationRows: ClassificationRow[] = [
   {
     category: "Other digital infrastructure",
     amount: OTHER_DIGITAL,
-    amountNote: "~",
     entity: "corp",
     reason: "Remaining digital charges after sole-prop items removed",
-    status: "estimated",
+    status: "confirmed",
   },
   {
     category: "Square (Square Paid Services)",
@@ -454,9 +452,9 @@ export const executionTracker: ExecPhase[] = [
     steps: [
       {
         id: "invoice-drafted",
-        label: "Invoice REPLIT-DIGITAL-REIMB-2026-001 drafted",
+        label: "Invoice REPLIT-DIGITAL-REIMB-2026-001 drafted — confirmed $21,496.40 CAD",
         detail:
-          "$21,496.40 CAD — Apr 17 – Jun 26 2026. Digital development costs (Replit, GoDaddy, Runway ML, X Corp) paid on the sole-prop Alterna card on behalf of the Corp.",
+          "$21,496.40 CAD (confirmed) — Apr 17 – Jun 26 2026. All line items confirmed from final July 2026 Alterna Savings statement: Replit ($20,642.32), GoDaddy domains ($419.00), Runway ML ($129.92), X Corp ($30.00), Other digital infrastructure ($275.16). Invoice ready to sign and submit.",
         status: "done",
         date: "2026-07-27",
         amount: 21_496.40,

@@ -61,9 +61,8 @@ const LINE_ITEMS = [
   },
   {
     group: "Other Digital Tooling & Domains",
-    desc: "GoDaddy — domain registrations for Corp projects (estimated; pending final statement reconciliation)",
+    desc: "GoDaddy — domain registrations for Corp projects (confirmed from final July 2026 Alterna statement)",
     amount: GODADDY_DOMAINS,
-    estimated: true,
   },
   {
     group: "Other Digital Tooling & Domains",
@@ -77,9 +76,8 @@ const LINE_ITEMS = [
   },
   {
     group: "Other Digital Tooling & Domains",
-    desc: "Other clear digital infrastructure / tooling (estimated; remaining digital charges after sole-prop items removed)",
+    desc: "Other clear digital infrastructure / tooling (confirmed; remaining digital charges after sole-prop items removed — verified from final July 2026 Alterna statement)",
     amount: OTHER_DIGITAL,
-    estimated: true,
   },
 ];
 
@@ -229,14 +227,9 @@ export default function InvoiceReimb2026001() {
             <div key={i} className="grid grid-cols-[1fr_auto] gap-4 py-1.5 border-b border-dashed border-border/50 print:border-black/10 last:border-0">
               <div className="pr-4">
                 <p className="text-xs text-foreground leading-relaxed">{item.desc}</p>
-                {item.estimated && (
-                  <span className="text-[10px] font-mono text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded mt-0.5 inline-block print:bg-transparent">
-                    Estimated — confirm from final statement
-                  </span>
-                )}
               </div>
               <p className="text-sm font-mono tabular-nums text-right shrink-0 pt-0.5">
-                {item.estimated ? "~" : ""}{fmt(item.amount)}
+                {fmt(item.amount)}
               </p>
             </div>
           ))}
@@ -314,9 +307,7 @@ export default function InvoiceReimb2026001() {
       {/* Notes below the invoice — screen only */}
       <div className="mt-6 space-y-2 print:hidden">
         <p className="text-xs text-muted-foreground">
-          <strong>GoDaddy (~{fmt(GODADDY_DOMAINS)}) and Other digital (~{fmt(OTHER_DIGITAL)})</strong> are
-          marked estimated pending final statement reconciliation. Update in{" "}
-          <code className="font-mono text-xs">interEntityReimb2026.ts</code> and reissue once confirmed.
+          <strong>All line items confirmed.</strong> GoDaddy ({fmt(GODADDY_DOMAINS)}) and Other digital ({fmt(OTHER_DIGITAL)}) amounts verified from the final July 2026 Alterna Savings statement. Invoice total {fmt(INVOICE_TOTAL)} CAD is final and ready to sign.
         </p>
         <p className="text-xs text-muted-foreground">
           This invoice is a reimbursement pass-through — no HST is applicable. Confirm with J.P. Butler, CPA
