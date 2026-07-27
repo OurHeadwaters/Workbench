@@ -36,7 +36,7 @@ import { z } from "zod";
 import Stripe from "stripe";
 import { logger } from "../lib/logger";
 import { getKit, KITS } from "../lib/kitsRegistry";
-import { sendKitDeliveryEmail, verifyResendToken } from "../lib/kitsMailer";
+import { sendKitDeliveryEmail, sendKitDeliveryFailureAlert, verifyResendToken } from "../lib/kitsMailer";
 import { runCodetryFilter } from "../lib/codetryFilter";
 import { requireKitOwnerAuth, requireFounderOnlyAuth, FOUNDER_OWNER_ID } from "../lib/kitAuth";
 import { db, kitsTable, practitionerApplicationsTable, kitTokensTable, kitDeliveryFailuresTable, kitWebhookAttemptsTable, kitProgressTable } from "@workspace/db";
@@ -241,6 +241,20 @@ async function fulfillKitPurchase(opts: {
         `${logTag} failed to persist delivery failure record`,
       );
     }
+
+    // Alert the founder so Bitcoin buyers aren't left waiting indefinitely.
+    // Fire-and-forget: alert failure must never block the webhook response.
+    sendKitDeliveryFailureAlert({
+      buyerEmail: buyer_email,
+      kitId: kit_id,
+      purchaseId: purchase_id,
+      deliveryError: mailResult.error,
+    }).catch((alertErr) => {
+      logger.error(
+        { alertErr, kit_id, purchase_id },
+        `${logTag} failed to send delivery failure alert`,
+      );
+    });
   }
 
   return { token, accessUrl: url, expiresAt, mailStatus: mailResult.status };

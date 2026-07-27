@@ -69,6 +69,7 @@ vi.mock("../lib/kitsMailer", async () => {
   return {
     ...actual,
     sendKitDeliveryEmail: vi.fn().mockResolvedValue({ status: "ok" }),
+    sendKitDeliveryFailureAlert: vi.fn().mockResolvedValue(undefined),
   };
 });
 
@@ -113,6 +114,7 @@ import * as kitsMailerModule from "../lib/kitsMailer";
 const tables = dbModule as unknown as { kitTokensTable: FakeTable; kitDeliveryFailuresTable: FakeTable };
 const getKitMock = kitsRegistryModule.getKit as ReturnType<typeof vi.fn>;
 const sendKitDeliveryEmailMock = kitsMailerModule.sendKitDeliveryEmail as ReturnType<typeof vi.fn>;
+const sendKitDeliveryFailureAlertMock = kitsMailerModule.sendKitDeliveryFailureAlert as ReturnType<typeof vi.fn>;
 
 // ── harness ───────────────────────────────────────────────────────────────────
 //
@@ -164,6 +166,8 @@ beforeEach(() => {
   tables.kitTokensTable.__store.length = 0;
   tables.kitDeliveryFailuresTable.__store.length = 0;
   getKitMock.mockReturnValue(null);
+  sendKitDeliveryFailureAlertMock.mockReset();
+  sendKitDeliveryFailureAlertMock.mockResolvedValue(undefined);
 });
 
 // ── tests ─────────────────────────────────────────────────────────────────────
@@ -810,6 +814,108 @@ describe("fulfillKitPurchase — delivery failure written to kitDeliveryFailures
         },
       });
       expect(tables.kitDeliveryFailuresTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── fulfillKitPurchase — founder alert on delivery failure ────────────────────
+//
+// When the kit delivery email fails, sendKitDeliveryFailureAlert must be called
+// so the founder is notified that a Bitcoin buyer is waiting. When email succeeds,
+// the alert must NOT be called.
+
+describe("fulfillKitPurchase — founder alert on delivery failure", () => {
+  const originalKitSecret = process.env.KIT_WEBHOOK_SECRET;
+  const originalZapriteSecret = process.env.ZAPRITE_WEBHOOK_SECRET;
+
+  beforeEach(() => {
+    process.env.KIT_WEBHOOK_SECRET = WEBHOOK_SECRET;
+    process.env.ZAPRITE_WEBHOOK_SECRET = ZAPRITE_SECRET;
+    getKitMock.mockReturnValue(FAKE_KIT);
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "failed", error: "smtp timeout" });
+  });
+
+  afterEach(() => {
+    if (originalKitSecret === undefined) {
+      delete process.env.KIT_WEBHOOK_SECRET;
+    } else {
+      process.env.KIT_WEBHOOK_SECRET = originalKitSecret;
+    }
+    if (originalZapriteSecret === undefined) {
+      delete process.env.ZAPRITE_WEBHOOK_SECRET;
+    } else {
+      process.env.ZAPRITE_WEBHOOK_SECRET = originalZapriteSecret;
+    }
+  });
+
+  it("calls sendKitDeliveryFailureAlert with the correct fields via the Zaprite path", async () => {
+    const h = await startHarness({ rawBody: true });
+    try {
+      const r = await postZapriteWebhook(h.base, {
+        type: "payment.completed",
+        data: {
+          id: "zaprite-alert-001",
+          customer: { email: "sats@example.com", name: "Sats Buyer" },
+          metadata: { kit_id: FAKE_KIT.id },
+        },
+      });
+      expect(r.status).toBe(201);
+
+      // Allow the fire-and-forget alert to settle
+      await new Promise((resolve) => setTimeout(resolve, 20));
+
+      expect(sendKitDeliveryFailureAlertMock).toHaveBeenCalledOnce();
+      const call = sendKitDeliveryFailureAlertMock.mock.calls[0]?.[0] as Record<string, unknown>;
+      expect(call.buyerEmail).toBe("sats@example.com");
+      expect(call.kitId).toBe(FAKE_KIT.id);
+      expect(call.purchaseId).toBe("zaprite-alert-001");
+      expect(call.deliveryError).toBe("smtp timeout");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("calls sendKitDeliveryFailureAlert via the legacy purchase-webhook path too", async () => {
+    const h = await startHarness();
+    try {
+      const r = await postPurchaseWebhook(h.base, {
+        kit_id: FAKE_KIT.id,
+        buyer_email: "buyer@example.com",
+        buyer_name: "Legacy Buyer",
+        purchase_id: "tsp-alert-001",
+      });
+      expect(r.status).toBe(201);
+
+      await new Promise((resolve) => setTimeout(resolve, 20));
+
+      expect(sendKitDeliveryFailureAlertMock).toHaveBeenCalledOnce();
+      const call = sendKitDeliveryFailureAlertMock.mock.calls[0]?.[0] as Record<string, unknown>;
+      expect(call.purchaseId).toBe("tsp-alert-001");
+      expect(call.kitId).toBe(FAKE_KIT.id);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("does NOT call sendKitDeliveryFailureAlert when the delivery email succeeds via Zaprite", async () => {
+    sendKitDeliveryEmailMock.mockResolvedValue({ status: "sent", messageId: "msg-ok" });
+    const h = await startHarness({ rawBody: true });
+    try {
+      const r = await postZapriteWebhook(h.base, {
+        type: "payment.completed",
+        data: {
+          id: "zaprite-alert-002",
+          customer: { email: "happy@example.com", name: "Happy Buyer" },
+          metadata: { kit_id: FAKE_KIT.id },
+        },
+      });
+      expect(r.status).toBe(201);
+
+      await new Promise((resolve) => setTimeout(resolve, 20));
+
+      expect(sendKitDeliveryFailureAlertMock).not.toHaveBeenCalled();
     } finally {
       await h.close();
     }
