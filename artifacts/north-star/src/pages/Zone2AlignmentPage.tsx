@@ -116,7 +116,7 @@ type NpubState =
   | { status: "unconfigured" }
   | { status: "error"; message: string };
 
-function Z2NpubReadout() {
+export function Z2NpubReadout() {
   const [state, setState] = useState<NpubState>({ status: "loading" });
   const [copied, setCopied] = useState(false);
 
