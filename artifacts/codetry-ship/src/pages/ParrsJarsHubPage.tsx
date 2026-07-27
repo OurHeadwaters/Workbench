@@ -225,8 +225,7 @@ function HandoutCard({
 
 const PJ_SOLUTIONS_KIT_ID = "pj-solutions-kit";
 
-function LockedWall({ reason }: { reason?: "expired" } = {}) {
-  const isExpired = reason === "expired";
+function LockedWall() {
   return (
     <div
       style={{
@@ -281,9 +280,7 @@ function LockedWall({ reason }: { reason?: "expired" } = {}) {
             marginBottom: "0.75rem",
           }}
         >
-          {isExpired
-            ? "Your access link has expired."
-            : "Your resource hub is one purchase away."}
+          Your resource hub is one purchase away.
         </h1>
         <p
           style={{
@@ -295,9 +292,7 @@ function LockedWall({ reason }: { reason?: "expired" } = {}) {
             margin: "0 auto 2rem",
           }}
         >
-          {isExpired
-            ? "Your PJ Solutions Kit access link has expired. Re-send it to your email to get back in."
-            : "The Principles to Preservation hub — all 5 modules and 20+ handouts — is available to PJ Solutions Kit buyers. Purchase the kit to get instant access."}
+          The Principles to Preservation hub — all 5 modules and 20+ handouts — is available to PJ Solutions Kit buyers. Purchase the kit to get instant access.
         </p>
         <div
           style={{
@@ -307,49 +302,28 @@ function LockedWall({ reason }: { reason?: "expired" } = {}) {
             gap: "0.85rem",
           }}
         >
-          {isExpired ? (
-            <a
-              href="/kits/resend"
-              style={{
-                display: "inline-block",
-                background: RUST,
-                color: "white",
-                fontWeight: 800,
-                fontSize: "1rem",
-                letterSpacing: "0.04em",
-                padding: "0.85rem 2rem",
-                borderRadius: 6,
-                textDecoration: "none",
-              }}
-            >
-              Re-send my access link →
-            </a>
-          ) : (
-            <>
-              <a
-                href="/parrsjars/kit"
-                style={{
-                  display: "inline-block",
-                  background: RUST,
-                  color: "white",
-                  fontWeight: 800,
-                  fontSize: "1rem",
-                  letterSpacing: "0.04em",
-                  padding: "0.85rem 2rem",
-                  borderRadius: 6,
-                  textDecoration: "none",
-                }}
-              >
-                Get the PJ Solutions Kit — $97 CAD →
-              </a>
-              <a
-                href="/kits/resend"
-                style={{ fontSize: "0.8rem", color: MUTED, textDecoration: "none" }}
-              >
-                Already purchased? Re-send your access link →
-              </a>
-            </>
-          )}
+          <a
+            href="/parrsjars/kit"
+            style={{
+              display: "inline-block",
+              background: RUST,
+              color: "white",
+              fontWeight: 800,
+              fontSize: "1rem",
+              letterSpacing: "0.04em",
+              padding: "0.85rem 2rem",
+              borderRadius: 6,
+              textDecoration: "none",
+            }}
+          >
+            Get the PJ Solutions Kit — $97 CAD →
+          </a>
+          <a
+            href="/kits/resend"
+            style={{ fontSize: "0.8rem", color: MUTED, textDecoration: "none" }}
+          >
+            Already purchased? Re-send your access link →
+          </a>
         </div>
       </div>
     </div>
@@ -431,7 +405,7 @@ export function ParrsJarsHubPage() {
   }
 
   if (status === "expired") {
-    return <LockedWall reason="expired" />;
+    return <LockedWall />;
   }
 
   if (status !== "valid") {
