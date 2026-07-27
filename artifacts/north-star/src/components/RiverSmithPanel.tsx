@@ -24,6 +24,7 @@ interface Briefing {
   rawMarkdown: string;
   triggeredBy: string;
   safetyFlagsCount?: number;
+  proofOfWork?: ProofOfWork | null;
 }
 
 interface ArchiveEntry {
@@ -378,6 +379,12 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = (await res.json()) as Briefing;
       setBriefing(data);
+      // Rehydrate the proof card from the stored value so it survives a reload.
+      if (data.proofOfWork) {
+        setProofCard({ proof: data.proofOfWork, briefingId: data.id, sentAt: data.generatedAt });
+      } else {
+        setProofCard(null);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load briefing.");
     } finally {
@@ -404,14 +411,14 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
         const j = (await res.json()) as { error?: string };
         throw new Error(j.error ?? `HTTP ${res.status}`);
       }
-      const data = (await res.json()) as { rawMarkdown: string; id: string; safetyFlagsCount?: number };
+      const data = (await res.json()) as { rawMarkdown: string; id: string; safetyFlagsCount?: number; proofOfWork?: ProofOfWork };
       const generatedAt = new Date().toISOString();
       const nextFlagsCount = data.safetyFlagsCount ?? 0;
 
-      // Compute proof-of-work before we replace the current briefing
-      const proof = computeProof(briefing, data.rawMarkdown, nextFlagsCount);
+      // Use server-stored proof when available; fall back to local computation.
+      const proof = data.proofOfWork ?? computeProof(briefing, data.rawMarkdown, nextFlagsCount);
 
-      setBriefing({ id: data.id, rawMarkdown: data.rawMarkdown, generatedAt, triggeredBy: "manual", safetyFlagsCount: nextFlagsCount });
+      setBriefing({ id: data.id, rawMarkdown: data.rawMarkdown, generatedAt, triggeredBy: "manual", safetyFlagsCount: nextFlagsCount, proofOfWork: proof });
       setArchive([]);
       setFlags([]);
       setFlagsOpen(false);
@@ -472,6 +479,12 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = (await res.json()) as Briefing;
       setBriefing(data);
+      // Show stored proof card if this archived briefing has one.
+      if (data.proofOfWork) {
+        setProofCard({ proof: data.proofOfWork, briefingId: data.id, sentAt: data.generatedAt });
+      } else {
+        setProofCard(null);
+      }
     } catch {
       // silently ignore
     } finally {

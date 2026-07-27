@@ -33,6 +33,7 @@ export const riverBriefingsTable = pgTable(
       .defaultNow(),
     rawMarkdown: text("raw_markdown").notNull(),
     structuredJson: jsonb("structured_json"),
+    proofOfWork: jsonb("proof_of_work"),
     status: text("status").notNull().default("published"),
     triggeredBy: text("triggered_by").notNull().default("scheduled"),
     emailStatus: text("email_status"),

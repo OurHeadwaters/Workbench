@@ -579,11 +579,94 @@ If there ARE decisions, format each exactly like this:
 ---`;
 }
 
+// ── Server-side proof-of-work helpers ────────────────────────────────────────
+
+interface ProofOfWork {
+  changed_fields: string[];
+  summary: string;
+  previous_snapshot_hash?: string;
+}
+
+/** djb2-variant hash — 8-char hex fingerprint. */
+function simpleHash(str: string): string {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) + h) ^ str.charCodeAt(i);
+    h = h | 0;
+  }
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
+
+function extractSections(md: string): string[] {
+  return md
+    .split("\n")
+    .filter((l) => l.startsWith("## "))
+    .map((l) => l.slice(3).trim());
+}
+
+function computeProof(
+  prevMarkdown: string | null,
+  prevFlagsCount: number,
+  nextMarkdown: string,
+  nextFlagsCount: number,
+): ProofOfWork {
+  if (!prevMarkdown) {
+    return {
+      changed_fields: ["briefing_content"],
+      summary: "First briefing — no previous record to compare.",
+    };
+  }
+
+  const changed: string[] = [];
+  const notes: string[] = [];
+
+  if (prevFlagsCount !== nextFlagsCount) {
+    changed.push("safety_flags_count");
+    const delta = nextFlagsCount - prevFlagsCount;
+    notes.push(
+      `safety flags ${delta > 0 ? "+" : ""}${delta} (${prevFlagsCount} → ${nextFlagsCount})`,
+    );
+  }
+
+  const prevSections = extractSections(prevMarkdown);
+  const nextSections = extractSections(nextMarkdown);
+  const added = nextSections.filter((s) => !prevSections.includes(s));
+  const removed = prevSections.filter((s) => !nextSections.includes(s));
+  if (added.length > 0 || removed.length > 0) {
+    changed.push("sections");
+    if (added.length > 0) notes.push(`+${added.length} section${added.length > 1 ? "s" : ""}: ${added.join(", ")}`);
+    if (removed.length > 0) notes.push(`−${removed.length} section${removed.length > 1 ? "s" : ""}: ${removed.join(", ")}`);
+  }
+
+  const prevLen = prevMarkdown.length;
+  const nextLen = nextMarkdown.length;
+  const pct = prevLen > 0 ? Math.abs(nextLen - prevLen) / prevLen : 1;
+  if (pct > 0.05) {
+    changed.push("content_length");
+    const sign = nextLen > prevLen ? "+" : "−";
+    notes.push(`content ${sign}${Math.round(pct * 100)}% (${prevLen} → ${nextLen} chars)`);
+  }
+
+  if (changed.length === 0) {
+    return {
+      changed_fields: [],
+      summary: "No structural changes detected vs. previous briefing.",
+      previous_snapshot_hash: simpleHash(prevMarkdown),
+    };
+  }
+
+  return {
+    changed_fields: changed,
+    summary: notes.join("; "),
+    previous_snapshot_hash: simpleHash(prevMarkdown),
+  };
+}
+
 // ── Core generator ────────────────────────────────────────────────────────────
 
 export async function generateRiverSmithBriefing(
   triggeredBy: "scheduled" | "manual" = "scheduled",
-): Promise<{ id: string; rawMarkdown: string; structuredJson: RiverSmithStructured }> {
+): Promise<{ id: string; rawMarkdown: string; structuredJson: RiverSmithStructured; proof: ProofOfWork }> {
   const digest = await gatherUniverse();
   const baseURL = process.env.AI_INTEGRATIONS_OPENROUTER_BASE_URL;
   const apiKey = process.env.AI_INTEGRATIONS_OPENROUTER_API_KEY;
@@ -708,11 +791,30 @@ Generate the complete River Smith nightly briefing now.`;
     signerNpub: getZ2Npub(),
   };
 
+  // Fetch the previous briefing so we can compute proof-of-work before inserting.
+  const [prevRow] = await db
+    .select({
+      rawMarkdown: riverBriefingsTable.rawMarkdown,
+      structuredJson: riverBriefingsTable.structuredJson,
+    })
+    .from(riverBriefingsTable)
+    .where(eq(riverBriefingsTable.status, "published"))
+    .orderBy(desc(riverBriefingsTable.generatedAt))
+    .limit(1);
+
+  const prevMarkdown = prevRow?.rawMarkdown ?? null;
+  const prevStructured = prevRow?.structuredJson as RiverSmithStructured | null;
+  const prevFlagsCount = prevStructured?.safetyFlags?.length ?? 0;
+  const nextFlagsCount = structuredJson.safetyFlags.length;
+
+  const proof = computeProof(prevMarkdown, prevFlagsCount, rawMarkdown, nextFlagsCount);
+
   const [row] = await db
     .insert(riverBriefingsTable)
     .values({
       rawMarkdown,
       structuredJson: structuredJson as unknown as Record<string, unknown>,
+      proofOfWork: proof as unknown as Record<string, unknown>,
       status: "published",
       triggeredBy,
     })
@@ -721,7 +823,7 @@ Generate the complete River Smith nightly briefing now.`;
   if (!row) throw new Error("Failed to save briefing to database.");
 
   logger.info({ id: row.id, triggeredBy }, "river-smith: briefing generated");
-  return { id: row.id, rawMarkdown, structuredJson };
+  return { id: row.id, rawMarkdown, structuredJson, proof };
 }
 
 // ── Routes ────────────────────────────────────────────────────────────────────
@@ -740,6 +842,7 @@ router.post("/generate", async (req: Request, res: Response) => {
       rawMarkdown: result.rawMarkdown,
       structuredJson: result.structuredJson,
       safetyFlagsCount: result.structuredJson.safetyFlags.length,
+      proofOfWork: result.proof,
     });
   } catch (err) {
     logger.error({ err }, "river-smith: POST /generate failed");
@@ -775,6 +878,7 @@ router.get("/briefing/latest", async (req: Request, res: Response) => {
     structuredJson: structured,
     triggeredBy: row.triggeredBy,
     safetyFlagsCount: structured?.safetyFlags?.length ?? 0,
+    proofOfWork: (row.proofOfWork as ProofOfWork | null) ?? null,
   });
 });
 
@@ -829,6 +933,7 @@ router.get("/briefing/:id", async (req: Request, res: Response) => {
     structuredJson: structured,
     triggeredBy: row.triggeredBy,
     safetyFlagsCount: structured?.safetyFlags?.length ?? 0,
+    proofOfWork: (row.proofOfWork as ProofOfWork | null) ?? null,
   });
 });
 
