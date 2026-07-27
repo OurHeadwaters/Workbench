@@ -161,6 +161,23 @@ describe("publishToRelay — ring buffer trim", () => {
   });
 });
 
+describe("RELAY_EVENT_KINDS — new constants", () => {
+  it("exports all six new kind constants", () => {
+    expect(typeof RELAY_EVENT_KINDS.WORKBENCH_PLAN_BURST).toBe("number");
+    expect(typeof RELAY_EVENT_KINDS.HELPING_HANDS_CREATE).toBe("number");
+    expect(typeof RELAY_EVENT_KINDS.HELPING_HANDS_CLAIM).toBe("number");
+    expect(typeof RELAY_EVENT_KINDS.HELPING_HANDS_COMPLETE).toBe("number");
+    expect(typeof RELAY_EVENT_KINDS.HELPING_HANDS_CONFIRM).toBe("number");
+    expect(typeof RELAY_EVENT_KINDS.CONTRACT_MILESTONE).toBe("number");
+  });
+
+  it("all kind values are unique — no collisions across the full registry", () => {
+    const values = Object.values(RELAY_EVENT_KINDS);
+    const unique = new Set(values);
+    expect(unique.size).toBe(values.length);
+  });
+});
+
 describe("publishToRelay — Z1 compile-time gate", () => {
   it("accepts a payload with no Z1 fields", async () => {
     await expect(

@@ -120,4 +120,16 @@ export const RELAY_EVENT_KINDS = {
   MORNING_MANIFEST: 1000,
   BRIEFING_ENVELOPE: 1001,
   GATE_CROSSING: 1002,
+  /** Zone 2 — emitted when a Workbench Plan opens a burst window for focused execution */
+  WORKBENCH_PLAN_BURST: 1003,
+  /** Zone 3 — emitted when a new Helping Hands task is posted and available for claiming */
+  HELPING_HANDS_CREATE: 1004,
+  /** Zone 3 — emitted when a member claims an open Helping Hands task */
+  HELPING_HANDS_CLAIM: 1005,
+  /** Zone 3 — emitted when the assignee marks a Helping Hands task done */
+  HELPING_HANDS_COMPLETE: 1006,
+  /** Zone 3 — emitted when the requester confirms satisfactory completion of a Helping Hands task */
+  HELPING_HANDS_CONFIRM: 1007,
+  /** Zone 4 — emitted when a contract milestone is attested as reached by a signing party */
+  CONTRACT_MILESTONE: 1008,
 } as const;
