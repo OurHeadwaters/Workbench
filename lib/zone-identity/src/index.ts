@@ -80,6 +80,20 @@ function bech32Encode(hrp: string, data: Uint8Array): string {
 }
 
 /**
+ * Options accepted by {@link deriveZ2Npub}.
+ */
+export interface DeriveZ2NpubOptions {
+  /**
+   * Override the minimum number of non-zero bytes required when the Hamming-
+   * weight entropy check fires. Defaults to {@link MIN_NONZERO_BYTES}.
+   *
+   * Useful in tests or policy experiments where a tighter or looser threshold
+   * needs to be evaluated without changing the library constant.
+   */
+  minNonZeroBytes?: number;
+}
+
+/**
  * Derives a Zone 2 Workbench identity (npub) from a household seed.
  *
  * ## Eave Rule compliance
@@ -116,18 +130,26 @@ function bech32Encode(hrp: string, data: Uint8Array): string {
  * @param householdSeed - A secret, high-entropy byte array that represents
  *   the household's root secret material. Must be at least 1 byte, must not
  *   be all zeros, and — when 4 or more bytes long — must contain at least
- *   {@link MIN_NONZERO_BYTES} non-zero bytes. In practice this should be
- *   32+ bytes of random data (e.g. `crypto.randomBytes(32)`). The seed
- *   itself is never stored or transmitted.
+ *   `minNonZeroBytes` non-zero bytes (defaults to {@link MIN_NONZERO_BYTES}).
+ *   In practice this should be 32+ bytes of random data (e.g.
+ *   `crypto.randomBytes(32)`). The seed itself is never stored or transmitted.
+ * @param options - Optional configuration.
+ * @param options.minNonZeroBytes - Override the entropy-floor threshold.
+ *   Defaults to {@link MIN_NONZERO_BYTES}.
  * @returns A bech32-encoded npub string compatible with the Nostr NIP-19
  *   encoding format, suitable for use as a Z2 Workbench relay identity.
  * @throws {Error} if `householdSeed` is zero-length.
  * @throws {Error} if `householdSeed` is an all-zeros array (zero entropy).
- * @throws {Error} if `householdSeed` is ≥ {@link MIN_NONZERO_BYTES} bytes
- *   long but contains fewer than {@link MIN_NONZERO_BYTES} non-zero bytes
- *   (critically low Hamming weight).
+ * @throws {Error} if `householdSeed` is ≥ `minNonZeroBytes` bytes long but
+ *   contains fewer than `minNonZeroBytes` non-zero bytes (critically low
+ *   Hamming weight).
  */
-export function deriveZ2Npub(householdSeed: Uint8Array): string {
+export function deriveZ2Npub(
+  householdSeed: Uint8Array,
+  options: DeriveZ2NpubOptions = {}
+): string {
+  const threshold = options.minNonZeroBytes ?? MIN_NONZERO_BYTES;
+
   if (householdSeed.length === 0) {
     throw new Error(
       "deriveZ2Npub: householdSeed must not be empty — a zero-length seed provides no entropy"
@@ -140,14 +162,14 @@ export function deriveZ2Npub(householdSeed: Uint8Array): string {
     );
   }
 
-  if (householdSeed.length >= MIN_NONZERO_BYTES) {
+  if (householdSeed.length >= threshold) {
     const nonZeroCount = householdSeed.reduce(
       (n, b) => n + (b !== 0 ? 1 : 0),
       0
     );
-    if (nonZeroCount < MIN_NONZERO_BYTES) {
+    if (nonZeroCount < threshold) {
       throw new Error(
-        `deriveZ2Npub: householdSeed has too few non-zero bytes (${nonZeroCount} of ${householdSeed.length}) — seeds with very low Hamming weight are nearly as guessable as an all-zero seed. Use at least ${MIN_NONZERO_BYTES} non-zero bytes, or generate a safe seed with crypto.randomBytes(32).`
+        `deriveZ2Npub: householdSeed has too few non-zero bytes (${nonZeroCount} of ${householdSeed.length}) — seeds with very low Hamming weight are nearly as guessable as an all-zero seed. Use at least ${threshold} non-zero bytes, or generate a safe seed with crypto.randomBytes(32).`
       );
     }
   }
