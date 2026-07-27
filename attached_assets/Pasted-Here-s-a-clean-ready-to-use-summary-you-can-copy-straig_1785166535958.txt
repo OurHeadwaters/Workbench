@@ -1,0 +1,50 @@
+Here’s a clean, ready-to-use summary you can copy straight into a spreadsheet, note, or hand to a Replit agent / bookkeeper.
+
+Replit Costs – CAD Totals (from your credit-card statements)
+
+| Category                        | Amount (CAD)   | Notes |
+|---------------------------------|----------------|-------|
+| Replit principal charges        | $20,163.05 | 116 charges extracted from the statements you shared (Apr–Jun 2026) |
+| Foreign transaction fees        | $479.27    | All “FOREIGN TRANSACTION FEE – MERCHANDISE” lines tied to the same periods |
+| GRAND TOTAL to reimburse    | $20,642.32 | This is the number the sole prop invoices the corporation |
+
+These figures are taken directly from the CAD amounts that hit the card (not the USD Replit invoices). I pulled every visible REPLIT, INC. REPLIT.COM CA line and the matching foreign-fee lines across the pages you uploaded.
+
+Ready-to-copy invoice text (sole prop → corporation)
+
+INVOICE
+
+From: [Your Sole Proprietorship Name / Your Name]
+To:   [Your Corporation Name]
+
+Date: [today’s date]
+Invoice #: REPLIT-REIMB-2026-001
+
+Description:
+Reimbursement of Replit development platform costs paid on the sole-proprietorship credit card on behalf of the Corporation, including all foreign-exchange conversion and foreign transaction fees.
+
+Period covered: 17 April 2026 – 26 June 2026
+
+Replit principal charges (CAD):     $20,163.05
+Foreign transaction fees (CAD):       $479.27
+────────────────────────────────────────────
+TOTAL DUE:                          $20,642.32 CAD
+
+Supporting documentation: credit-card statements (Alterna) for the periods listed above + original Replit invoices (RZSJOV- series).
+
+Payment terms: Due on receipt / offset against inter-entity balance.
+
+For a Replit agent or spreadsheet
+You can paste this directly:
+
+Replit CAD Summary (Apr–Jun 2026)
+Principal: 20163.05
+FX Fees: 479.27
+Grand Total: 20642.32
+
+Important notes
+This is based on the statement pages you provided. If you have additional months (July onward) or earlier ones, just add those CAD lines the same way and the total will update.
+The foreign fees are legitimate business costs and travel with the Replit expense.
+Once the corporation records this as a development expense and pays (or offsets) the sole prop, the inter-entity balance is clean.
+
+Want me to adjust the total once you supply any missing statement pages, or format this as a CSV-style list of individual lines? Just say.
