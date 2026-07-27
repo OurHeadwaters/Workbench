@@ -18,13 +18,13 @@
  *           (network error, server 4xx/5xx, 501 not configured), events are
  *           written to localStorage under "ns:relay:events" so no data is lost.
  *
- * The public API (publishToRelay, RELAY_EVENT_KINDS, NostrEvent) is unchanged
- * — no callers need to be updated.
- *
  * EAVE RULE: payloads must never carry Z1 identity fields (name, passphrase,
- * statement). The generic constraint below makes violations a compile-time
- * error rather than a runtime check.
+ * statement). The NoZ1Fields<T> guard makes violations a compile-time error.
+ * Every payload must also satisfy the typed interface for its kind, exported
+ * from relay-event-types.ts (Buzz alignment Rec 5).
  */
+
+import type { RelayPayloadMap } from "./relay-event-types";
 
 export interface NostrEvent {
   kind: number;
@@ -42,6 +42,30 @@ type ForbiddenZ1Keys = "name" | "passphrase" | "statement";
  * attempt to pass Z1 data into a TypeScript compile error.
  */
 type NoZ1Fields<T> = keyof T & ForbiddenZ1Keys extends never ? T : never;
+
+/**
+ * RelayEventEnvelope — discriminated union of all valid event shapes.
+ *
+ * Each member binds a specific kind number to its typed payload interface
+ * (from RelayPayloadMap). Passing an unrecognised kind or a payload that
+ * doesn't match the kind's interface is a compile-time error.
+ *
+ * The NoZ1Fields<P> wrapper is retained as a belt-and-suspenders guard:
+ * even if a payload interface were ever accidentally given a Z1 field, the
+ * call site would still fail to compile.
+ */
+type RelayEnvelopeBase = {
+  z2npub: string;
+  timestamp: string;
+  signature: "stub";
+};
+
+type RelayEventEnvelope = {
+  [K in keyof RelayPayloadMap]: RelayEnvelopeBase & {
+    kind: K;
+    payload: NoZ1Fields<RelayPayloadMap[K]>;
+  };
+}[keyof RelayPayloadMap];
 
 const RELAY_STORAGE_KEY = "ns:relay:events";
 const MAX_STORED_EVENTS = 500;
@@ -103,8 +127,8 @@ function storeLocally(event: NostrEvent): void {
   localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(stored));
 }
 
-export async function publishToRelay<P extends Record<string, unknown>>(
-  event: Omit<NostrEvent, "payload"> & { payload: NoZ1Fields<P> },
+export async function publishToRelay(
+  event: RelayEventEnvelope,
 ): Promise<void> {
   if (typeof window === "undefined") return;
 

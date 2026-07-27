@@ -310,6 +310,8 @@ export const useStore = create<Store>()(
         void publishToRelay({
           kind: RELAY_EVENT_KINDS.MORNING_MANIFEST,
           payload: {
+            zone: "Z2",
+            actor_type: (updated.actor_type ?? "human") as "human" | "agent",
             date: updated.date,
             constellation_ids: updated.constellationIds,
             acknowledged_guardrails: updated.acknowledgedGuardrails ?? [],

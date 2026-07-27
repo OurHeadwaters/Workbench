@@ -256,6 +256,8 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
       void publishToRelay({
         kind: RELAY_EVENT_KINDS.BRIEFING_ENVELOPE,
         payload: {
+          zone: "Z2",
+          actor_type: "human",
           briefing_id: data.id,
           generated_at: generatedAt,
           triggered_by: "manual",
