@@ -413,30 +413,30 @@ export const executionTracker: ExecPhase[] = [
   {
     id: "corp-cleanup",
     phase: "Phase 1",
-    title: "Corp account — confirm what's still in there",
+    title: "Corp account reality — both entities ran through one account",
     steps: [
       {
-        id: "corp-statement",
-        label: "Obtain Headwaters Ontario Corp bank statement",
+        id: "single-account-confirmed",
+        label: "Confirmed: both entities used the single Alterna account (446570)",
         detail:
-          "Full statement from Jul 2025 to now. Need to confirm exactly what went in (Invoice #001057 proceeds + any others) and what remains after the May 7 $12,757.14 transfer back to the Parrs Jars account.",
-        status: "pending",
+          "Parrs Jars (sole prop) and Headwaters Ontario Corp both operated through the same Alterna Savings chequing account. The Jan–Jun 2026 statements on file cover all activity for both entities. There is no separate corporate bank account to reconcile or transfer from.",
+        status: "done",
+        date: "2026-07-27",
       },
       {
-        id: "corp-balance-confirm",
-        label: "Confirm remaining sole-prop balance in corp",
+        id: "interco-journal-only",
+        label: "Intercompany balances are journal-entry only — no physical transfer needed",
         detail:
-          "Current estimate: $17,967 in (Invoice #001057) − $12,757.14 already transferred back = $5,209.86 minimum still in corp. Could be $7,695.86 if Invoice #001062 ($2,486) also landed there. Corp bank statement will confirm.",
-        status: "pending",
-        amount: 5_209.86,
-        amountNote: "min. estimate — ",
+          "Because both entities shared the same account, sole-prop invoice proceeds recorded as capital contributions to the corp (e.g. Invoice #001057) exist only as bookkeeping entries — the cash never moved to a different account. No physical transfer back is required. The intercompany balance clears when the corp pays Invoice REPLIT-DIGITAL-REIMB-2026-001 from its own LOC once it has a dedicated account.",
+        status: "done",
+        date: "2026-07-27",
       },
       {
-        id: "corp-transfer-back",
-        label: "Transfer remaining sole-prop funds out of corp",
+        id: "bookkeeper-classify",
+        label: "Bookkeeper to split Alterna statements into sole-prop vs corp",
         detail:
-          "Transfer the confirmed balance from the Headwaters Ontario Corp account to Bobbie's personal account. Corp books: Dr Shareholder Contributed Capital / Cr Cash. This is a return of the capital contribution — not a dividend or salary.",
-        status: "pending",
+          "The Jan–Jun 2026 Alterna statements need to be split into two ledgers: (1) sole-prop food operations (Gerbers, Rockfront, Huber's, Square sales, Joseph Bernier, etc.) → Parrs Jars books; (2) corp digital costs (Replit, GoDaddy, Runway ML, X Corp) → captured in Invoice REPLIT-DIGITAL-REIMB-2026-001 and recorded in Corp books. Statements are on file — bookkeeper can proceed.",
+        status: "in-progress",
       },
     ],
   },
