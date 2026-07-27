@@ -182,3 +182,102 @@ describe("useKitAccess — expired cross-kit token (410 from server)", () => {
     });
   });
 });
+
+// ── Non-410 server error edge cases ───────────────────────────────────────────
+//
+// Any server error that is NOT a 410 (e.g. 500 Internal Server Error, 401
+// Unauthorized, 403 Forbidden, or a network failure with no HTTP status) must
+// resolve to status "invalid" — not "expired" and not silently "valid".
+// These tests pin the catch-branch behaviour (lines 58–65 of useKitAccess.ts)
+// so that a future change to error-handling priority cannot accidentally map
+// one of these codes to the wrong status.
+
+describe("useKitAccess — non-410 server errors resolve to 'invalid'", () => {
+  const validStored: StoredKitToken = {
+    token: CROSS_KIT_TOKEN,
+    expiresAt: new Date(Date.now() + 86_400_000).toISOString(),
+    buyerName: "Test Buyer",
+  };
+
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("resolves to 'invalid' and data stays null when the server returns 500", async () => {
+    const serverError = Object.assign(new Error("Access check failed (500)"), {
+      status: 500,
+    });
+    vi.mocked(getKitToken).mockReturnValue(validStored);
+    vi.mocked(fetchKitAccess).mockRejectedValue(serverError);
+    vi.mocked(clearKitToken).mockImplementation(() => {});
+
+    const { result } = renderHook(() => useKitAccess("pj-solutions-kit"));
+
+    await waitFor(() => {
+      expect(result.current.status).toBe("invalid");
+    });
+
+    expect(result.current.data).toBeNull();
+  });
+
+  it("calls clearKitToken when a 500 error is thrown", async () => {
+    const serverError = Object.assign(new Error("Access check failed (500)"), {
+      status: 500,
+    });
+    vi.mocked(getKitToken).mockReturnValue(validStored);
+    vi.mocked(fetchKitAccess).mockRejectedValue(serverError);
+    vi.mocked(clearKitToken).mockImplementation(() => {});
+
+    renderHook(() => useKitAccess("pj-solutions-kit"));
+
+    await waitFor(() => {
+      expect(vi.mocked(clearKitToken)).toHaveBeenCalledWith("pj-solutions-kit");
+    });
+  });
+
+  it("resolves to 'invalid' (not 'expired') when the server returns 401", async () => {
+    const authError = Object.assign(new Error("Access check failed (401)"), {
+      status: 401,
+    });
+    vi.mocked(getKitToken).mockReturnValue(validStored);
+    vi.mocked(fetchKitAccess).mockRejectedValue(authError);
+    vi.mocked(clearKitToken).mockImplementation(() => {});
+
+    const { result } = renderHook(() => useKitAccess("pj-solutions-kit"));
+
+    await waitFor(() => {
+      expect(result.current.status).toBe("invalid");
+    });
+
+    expect(result.current.data).toBeNull();
+  });
+
+  it("resolves to 'invalid' when a network failure throws without an HTTP status", async () => {
+    const networkError = new Error("Failed to fetch");
+    // No .status property — simulates a DNS failure or connection refused.
+    vi.mocked(getKitToken).mockReturnValue(validStored);
+    vi.mocked(fetchKitAccess).mockRejectedValue(networkError);
+    vi.mocked(clearKitToken).mockImplementation(() => {});
+
+    const { result } = renderHook(() => useKitAccess("pj-solutions-kit"));
+
+    await waitFor(() => {
+      expect(result.current.status).toBe("invalid");
+    });
+
+    expect(result.current.data).toBeNull();
+  });
+
+  it("calls clearKitToken even when no HTTP status is present on the thrown error", async () => {
+    const networkError = new Error("Failed to fetch");
+    vi.mocked(getKitToken).mockReturnValue(validStored);
+    vi.mocked(fetchKitAccess).mockRejectedValue(networkError);
+    vi.mocked(clearKitToken).mockImplementation(() => {});
+
+    renderHook(() => useKitAccess("pj-solutions-kit"));
+
+    await waitFor(() => {
+      expect(vi.mocked(clearKitToken)).toHaveBeenCalledWith("pj-solutions-kit");
+    });
+  });
+});
