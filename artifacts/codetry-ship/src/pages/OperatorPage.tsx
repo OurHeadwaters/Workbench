@@ -55,6 +55,13 @@ const GATEHOUSE_MODULES: Module[] = [
 const LS_ORG_NAME = "hw:cockpit:orgName";
 const LS_ZONE_COLOR = "hw:cockpit:zoneColor";
 const LS_MODULES = "hw:cockpit:modules";
+const LS_MEMBER_COUNT = "hw:cockpit:memberCount";
+
+const TIER_PRICE: Record<string, number> = {
+  Base: 1.25,
+  Steward: 2.00,
+  Full: 2.50,
+};
 
 function loadModuleState(): Record<string, boolean> {
   try {
@@ -70,6 +77,11 @@ export function OperatorPage() {
   const [orgName, setOrgName] = useState(() => localStorage.getItem(LS_ORG_NAME) ?? "Gatehouse Communities Inc.");
   const [zoneColor, setZoneColor] = useState(() => localStorage.getItem(LS_ZONE_COLOR) ?? ZONE3_BLUE);
   const [modules, setModules] = useState<Record<string, boolean>>(loadModuleState);
+  const [memberCount, setMemberCount] = useState<number>(() => {
+    const raw = localStorage.getItem(LS_MEMBER_COUNT);
+    const parsed = raw ? parseInt(raw, 10) : NaN;
+    return isNaN(parsed) ? 1500 : parsed;
+  });
 
   useEffect(() => {
     localStorage.setItem(LS_ORG_NAME, orgName);
@@ -83,11 +95,30 @@ export function OperatorPage() {
     localStorage.setItem(LS_MODULES, JSON.stringify(modules));
   }, [modules]);
 
+  useEffect(() => {
+    localStorage.setItem(LS_MEMBER_COUNT, String(memberCount));
+  }, [memberCount]);
+
   function toggleModule(id: string) {
     setModules((prev) => ({ ...prev, [id]: !prev[id] }));
   }
 
   const activeCount = Object.values(modules).filter(Boolean).length;
+
+  // MRR: member count × price of highest active tier
+  const highestTierPrice = GATEHOUSE_MODULES.reduce((max, mod) => {
+    if (modules[mod.id]) {
+      const p = TIER_PRICE[mod.tier] ?? 0;
+      return p > max ? p : max;
+    }
+    return max;
+  }, 0);
+  const estimatedMRR = memberCount > 0 ? memberCount * highestTierPrice : 0;
+  const formattedMRR = estimatedMRR.toLocaleString("en-CA", {
+    style: "currency",
+    currency: "CAD",
+    maximumFractionDigits: 0,
+  });
 
   return (
     <main
@@ -391,6 +422,93 @@ export function OperatorPage() {
                 </div>
               );
             })}
+          </div>
+
+          {/* Member count + MRR callout */}
+          <div
+            className="px-6 py-5 space-y-4"
+            style={{ borderTop: "1px solid rgba(26,95,168,0.15)" }}
+          >
+            {/* Member count input */}
+            <div>
+              <label
+                htmlFor="cockpit-member-count"
+                className="block font-mono text-[10px] uppercase tracking-[0.22em] mb-2"
+                style={{ color: "rgba(130,175,230,0.70)" }}
+              >
+                Member count
+              </label>
+              <input
+                id="cockpit-member-count"
+                type="number"
+                min={0}
+                value={memberCount}
+                onChange={(e) => {
+                  const v = parseInt(e.target.value, 10);
+                  setMemberCount(isNaN(v) ? 0 : v);
+                }}
+                className="block w-40 rounded-sm px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2"
+                style={{
+                  background: "rgba(244,237,224,0.06)",
+                  border: "1px solid rgba(26,95,168,0.35)",
+                  color: "#f4ede0",
+                }}
+                data-testid="cockpit-member-count"
+              />
+              <p className="mt-1.5 font-mono text-[9px]" style={{ color: "rgba(244,237,224,0.28)" }}>
+                Defaults to 1,500 — adjust to your deployment size
+              </p>
+            </div>
+
+            {/* Estimated MRR callout */}
+            <div
+              className="flex flex-wrap items-center justify-between gap-3 rounded-sm px-5 py-4"
+              style={{
+                background: highestTierPrice > 0
+                  ? "rgba(26,95,168,0.16)"
+                  : "rgba(244,237,224,0.04)",
+                border: highestTierPrice > 0
+                  ? "1px solid rgba(26,95,168,0.40)"
+                  : "1px solid rgba(244,237,224,0.10)",
+              }}
+              data-testid="cockpit-mrr-callout"
+            >
+              <div>
+                <p
+                  className="font-mono text-[9px] uppercase tracking-[0.22em] mb-1"
+                  style={{ color: "rgba(130,175,230,0.65)" }}
+                >
+                  Estimated MRR
+                </p>
+                <p
+                  className="font-serif text-[22px] leading-none"
+                  style={{
+                    color: highestTierPrice > 0 ? "#f4ede0" : "rgba(244,237,224,0.30)",
+                    fontStyle: "italic",
+                  }}
+                  data-testid="cockpit-mrr-value"
+                >
+                  {highestTierPrice > 0 ? `${formattedMRR} / mo` : "—"}
+                </p>
+              </div>
+              {highestTierPrice > 0 && (
+                <p
+                  className="font-mono text-[10px] leading-snug text-right"
+                  style={{ color: "rgba(130,175,230,0.55)" }}
+                >
+                  {memberCount.toLocaleString()} members<br />
+                  × ${highestTierPrice.toFixed(2)} / mo
+                </p>
+              )}
+              {highestTierPrice === 0 && (
+                <p
+                  className="font-mono text-[10px]"
+                  style={{ color: "rgba(244,237,224,0.28)" }}
+                >
+                  Enable at least one module
+                </p>
+              )}
+            </div>
           </div>
 
           <div
