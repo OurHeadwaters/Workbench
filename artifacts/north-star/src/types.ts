@@ -1,5 +1,18 @@
 export type ZoneId = "Z0" | "Z1" | "Z2" | "Z3" | "Z4" | "Z5";
 
+/**
+ * AgentRole — named persona for an agent actor.
+ *
+ * Each role has a distinct responsibility in the Buzz layer. New roles should
+ * be added here and documented in AGENT_ROLE_REGISTRY in relay-stub.ts.
+ *
+ *   river-smith         — nightly strategic review across the seven dimensions
+ *   critical-challenger — surfaces counter-arguments and risk flags
+ *   r-and-d             — research, discovery, and prototype proposals
+ *   ops                 — stability, operations, and scheduling signals
+ */
+export type AgentRole = "river-smith" | "critical-challenger" | "r-and-d" | "ops";
+
 export interface Constellation {
   id: string;
   slug: string;
@@ -74,6 +87,11 @@ export interface DailyPick {
   acknowledgedGuardrails?: string[];
   /** Discriminates whether this pick was set by a human or an agent. Defaults to "human". */
   actor_type?: "human" | "agent";
+  /**
+   * Named role of the agent that created or last modified this pick.
+   * Only meaningful when actor_type is "agent". Omitted for human-authored picks.
+   */
+  agent_role?: AgentRole;
 }
 
 export interface WeeklyReview {

@@ -10,7 +10,7 @@
  * The NoZ1Fields<T> guard in relay-stub.ts enforces this at compile time.
  */
 
-import type { ZoneId } from "../types";
+import type { AgentRole, ZoneId } from "../types";
 
 // ---------------------------------------------------------------------------
 // 1000 — MORNING_MANIFEST (Zone 2 — Workbench daily pick)
@@ -18,6 +18,8 @@ import type { ZoneId } from "../types";
 export interface MorningManifestPayload {
   zone: "Z2";
   actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
   date: string; // ISO date, e.g. "2026-07-27"
   constellation_ids: string[];
   acknowledged_guardrails: string[];
@@ -31,6 +33,8 @@ export interface MorningManifestPayload {
 export interface BriefingEnvelopePayload {
   zone: "Z2";
   actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
   briefing_id: string;
   generated_at: string; // ISO datetime
   triggered_by: "manual" | "scheduled" | "agent";
@@ -43,7 +47,9 @@ export interface BriefingEnvelopePayload {
 export interface GateCrossingPayload {
   zone: "Z2" | "Z3";
   actor_type: "human" | "agent";
-  crossing_direction: "Z2_to_Z3" | "Z3_to_Z2";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
+  crossing_direction: "Z1_to_Z2" | "Z2_to_Z1" | "Z2_to_Z3" | "Z3_to_Z2";
   context_ref: string; // opaque reference; must not be a Z1-derived identifier
   crossed_at: string; // ISO datetime
 }
@@ -54,6 +60,8 @@ export interface GateCrossingPayload {
 export interface WorkbenchPlanBurstPayload {
   zone: "Z2";
   actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
   phase: string;
   burst_minutes: number | null;
   windows: string; // human-readable window description
@@ -67,6 +75,8 @@ export interface WorkbenchPlanBurstPayload {
 export interface HelpingHandsCreatePayload {
   zone: "Z3";
   actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
   task_id: string;
   title: string;
   posted_at: string; // ISO datetime
@@ -75,6 +85,8 @@ export interface HelpingHandsCreatePayload {
 export interface HelpingHandsClaimPayload {
   zone: "Z3";
   actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
   task_id: string;
   claimed_at: string; // ISO datetime
 }
@@ -82,6 +94,8 @@ export interface HelpingHandsClaimPayload {
 export interface HelpingHandsCompletePayload {
   zone: "Z3";
   actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
   task_id: string;
   completed_at: string; // ISO datetime
 }
@@ -89,6 +103,8 @@ export interface HelpingHandsCompletePayload {
 export interface HelpingHandsConfirmPayload {
   zone: "Z3";
   actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
   task_id: string;
   confirmed_at: string; // ISO datetime
 }
@@ -99,6 +115,8 @@ export interface HelpingHandsConfirmPayload {
 export interface ContractMilestonePayload {
   zone: "Z4";
   actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
   contract_id: string;
   milestone_id: string;
   /** z3npub of the signing party attesting the milestone. */

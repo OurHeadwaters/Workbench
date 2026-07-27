@@ -140,6 +140,45 @@ export async function publishToRelay(
   }
 }
 
+/**
+ * AGENT_ROLE_REGISTRY — canonical list of named agent personas.
+ *
+ * Each entry documents the role's responsibility, a short description for
+ * display in the UI, and a suggested model note so future Helping Hands
+ * agents can pick an appropriate LLM without hard-coding it in-app.
+ *
+ * Roles map to the AgentRole type in types.ts. Add new roles there first,
+ * then document them here.
+ */
+export const AGENT_ROLE_REGISTRY = [
+  {
+    role: "river-smith" as const,
+    name: "River Smith",
+    description: "Nightly strategic review across the seven dimensions (Physical, Biological, Psychological, Quantum, Soul, Collective, Future). The river runs at 11:45 PM; the briefing waits at dawn.",
+    suggestedModelNote: "Needs strong long-context reasoning; optimise for depth over speed.",
+  },
+  {
+    role: "critical-challenger" as const,
+    name: "Critical Challenger",
+    description: "Surfaces counter-arguments, blind spots, and risk flags on any proposed plan or decision. Asks the hard questions the human might avoid.",
+    suggestedModelNote: "Adversarial reasoning; benefits from a model with strong argumentation capability.",
+  },
+  {
+    role: "r-and-d" as const,
+    name: "R&D Lead",
+    description: "Research, discovery, and prototype proposals. Brings external information in and synthesises it against the current constellation context.",
+    suggestedModelNote: "Benefits from web-search access and strong synthesis ability.",
+  },
+  {
+    role: "ops" as const,
+    name: "Stability & Operations",
+    description: "Maintains scheduling signals, monitors burst windows, flags stalled work, and keeps the operational layer running smoothly.",
+    suggestedModelNote: "Needs reliable structured output; optimise for consistency over creativity.",
+  },
+] as const;
+
+export type AgentRoleEntry = (typeof AGENT_ROLE_REGISTRY)[number];
+
 export const RELAY_EVENT_KINDS = {
   MORNING_MANIFEST: 1000,
   BRIEFING_ENVELOPE: 1001,

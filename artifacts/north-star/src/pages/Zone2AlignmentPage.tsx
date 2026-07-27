@@ -610,6 +610,67 @@ function BuzzSection() {
 
       <H3>acknowledgedGuardrails as Machine-Checkable Consent</H3>
       <P>The <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>acknowledgedGuardrails</code> field on <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>DailyPick</code> is already the right shape for a Buzz consent record. The morning manifest event includes the list of acknowledged guardrail IDs. Agents check this list before acting on delegated tasks — if a required guardrail has not been acknowledged for the current day, the agent defers and notifies rather than proceeds. The acknowledgement is signed by the Z2 npub.</P>
+
+      <H3>Agent Role Registry</H3>
+      <P>Each agent has a named <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>AgentRole</code> carried on relay events and <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>DailyPick</code> (when <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>actor_type</code> is <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>"agent"</code>). The role makes events attributable to a specific persona without exposing Z1 identity. New Helping Hands agents register here first.</P>
+      <div className="mt-3 space-y-2">
+        {[
+          {
+            role: "river-smith",
+            name: "River Smith",
+            description: "Nightly strategic review across the seven dimensions. Posts BRIEFING_ENVELOPE events (kind 1001).",
+            status: "active" as const,
+          },
+          {
+            role: "critical-challenger",
+            name: "Critical Challenger",
+            description: "Surfaces counter-arguments, blind spots, and risk flags on proposed plans or decisions.",
+            status: "planned" as const,
+          },
+          {
+            role: "r-and-d",
+            name: "R&D Lead",
+            description: "Research, discovery, and prototype proposals. Synthesises external information against the current constellation context.",
+            status: "planned" as const,
+          },
+          {
+            role: "ops",
+            name: "Stability & Operations",
+            description: "Monitors burst windows, flags stalled work, and keeps the operational scheduling layer running smoothly.",
+            status: "planned" as const,
+          },
+        ].map((entry) => (
+          <div
+            key={entry.role}
+            className="rounded border flex items-start gap-3 px-4 py-3"
+            style={{ background: "#0F0D0B", borderColor: "#1E1A14" }}
+          >
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[13px] font-semibold" style={{ color: "#EAE4DB" }}>{entry.name}</span>
+                <code
+                  className="text-[10px] px-1.5 py-0.5 rounded border font-mono"
+                  style={{ background: "#0A0806", borderColor: "#251E18", color: "#5C5046" }}
+                >
+                  {entry.role}
+                </code>
+                <span
+                  className="text-[10px] px-1.5 py-0.5 rounded border font-mono"
+                  style={
+                    entry.status === "active"
+                      ? { background: "#0D2010", borderColor: "#1A4020", color: "#4ADE80" }
+                      : { background: "#0F0C09", borderColor: "#251E18", color: "#5C5046" }
+                  }
+                >
+                  {entry.status}
+                </span>
+              </div>
+              <div className="text-[12px] leading-relaxed" style={{ color: "#8C7B6D" }}>{entry.description}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <Rule>Role values are string literals defined in <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>AgentRole</code> (types.ts). Every relay payload interface and <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>DailyPick</code> carry an optional <code className="text-[11px] px-1 rounded" style={{ background: "#1A1510", color: "#C4B5FD" }}>agent_role</code> field — omitted for human-authored events. Model selection per role is external config, not in-app logic.</Rule>
     </div>
   );
 }

@@ -48,15 +48,21 @@ export function ZoneGate({ crossing }: ZoneGateProps) {
   const { label, subtitle, accent, pip } = GATE_COPY[crossing];
 
   useEffect(() => {
+    const crossingDirection =
+      crossing === "Z1→Z2" ? ("Z1_to_Z2" as const) : ("Z2_to_Z3" as const);
+    const zone = crossing === "Z1→Z2" ? ("Z2" as const) : ("Z3" as const);
+    const crossedAt = new Date().toISOString();
     void publishToRelay({
       kind: RELAY_EVENT_KINDS.GATE_CROSSING,
       payload: {
-        crossing,
-        z2npub: "z2:local",
-        crossed_at: new Date().toISOString(),
+        zone,
+        actor_type: "human",
+        crossing_direction: crossingDirection,
+        context_ref: "zone-gate",
+        crossed_at: crossedAt,
       },
       z2npub: "z2:local",
-      timestamp: new Date().toISOString(),
+      timestamp: crossedAt,
       signature: "stub",
     });
   }, [crossing]);

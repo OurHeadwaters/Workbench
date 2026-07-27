@@ -257,7 +257,8 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
         kind: RELAY_EVENT_KINDS.BRIEFING_ENVELOPE,
         payload: {
           zone: "Z2",
-          actor_type: "human",
+          actor_type: "agent",
+          agent_role: "river-smith",
           briefing_id: data.id,
           generated_at: generatedAt,
           triggered_by: "manual",
