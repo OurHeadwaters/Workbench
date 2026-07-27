@@ -413,30 +413,37 @@ export const executionTracker: ExecPhase[] = [
   {
     id: "corp-cleanup",
     phase: "Phase 1",
-    title: "Corp account reality — both entities ran through one account",
+    title: "Corp account holds sole-prop money — real cash, not just journal entries",
     steps: [
       {
         id: "single-account-confirmed",
-        label: "Confirmed: both entities used the single Alterna account (446570)",
+        label: "Confirmed: Alterna (446570) is the corporate account",
         detail:
-          "Parrs Jars (sole prop) and Headwaters Ontario Corp both operated through the same Alterna Savings chequing account. The Jan–Jun 2026 statements on file cover all activity for both entities. There is no separate corporate bank account to reconcile or transfer from.",
+          "Alterna Savings account 446570 is legally Headwaters Ontario Corp's account. Parrs Jars (sole prop) revenue — food sales, 807 invoice proceeds, etc. — has been deposited here. The sole prop's money is sitting inside the corporate account. The intercompany imbalance is real cash, not a journal-entry-only situation.",
         status: "done",
         date: "2026-07-27",
       },
       {
-        id: "interco-journal-only",
-        label: "Intercompany balances are journal-entry only — no physical transfer needed",
+        id: "hst-payment",
+        label: "Pay Parrs Jars HST ($5,060.61) from Alterna today",
         detail:
-          "Because both entities shared the same account, sole-prop invoice proceeds recorded as capital contributions to the corp (e.g. Invoice #001057) exist only as bookkeeping entries — the cash never moved to a different account. No physical transfer back is required. The intercompany balance clears when the corp pays Invoice REPLIT-DIGITAL-REIMB-2026-001 from its own LOC once it has a dedicated account.",
-        status: "done",
-        date: "2026-07-27",
+          "HST is Parrs Jars' obligation (BN 730101334 RT 0001, filed for Jan–Dec 2025). Pay directly from the Alterna corp account — corp pays on behalf of sole prop using sole-prop funds already sitting there. Reduces the amount the corp owes back to Bobbie. Bookkeeper entry — Corp: Dr Due to Sole Prop / Cr Cash. Sole prop: Dr HST Payable / Cr Due from Corp. CRA is already running interest — pay today.",
+        status: "in-progress",
+        amount: 5_060.61,
       },
       {
         id: "bookkeeper-classify",
         label: "Bookkeeper to split Alterna statements into sole-prop vs corp",
         detail:
-          "The Jan–Jun 2026 Alterna statements need to be split into two ledgers: (1) sole-prop food operations (Gerbers, Rockfront, Huber's, Square sales, Joseph Bernier, etc.) → Parrs Jars books; (2) corp digital costs (Replit, GoDaddy, Runway ML, X Corp) → captured in Invoice REPLIT-DIGITAL-REIMB-2026-001 and recorded in Corp books. Statements are on file — bookkeeper can proceed.",
+          "The Jan–Jun 2026 Alterna statements need to be split into two ledgers: (1) sole-prop food operations (Gerbers, Rockfront, Huber's, Square sales, Joseph Bernier, 807 Food Co-op food payments, insurance) → Parrs Jars books; (2) corp digital costs (Replit, GoDaddy, Runway ML, X Corp) → captured in Invoice REPLIT-DIGITAL-REIMB-2026-001 → Corp books. Statements are on file — bookkeeper can proceed.",
         status: "in-progress",
+      },
+      {
+        id: "corp-sole-prop-balance",
+        label: "Quantify total sole-prop funds sitting in corp account",
+        detail:
+          "Once the bookkeeper splits the statements, calculate the net amount of sole-prop money that entered the Alterna (corp) account and hasn't yet been returned: sole-prop deposits in (invoice proceeds + food sales) minus sole-prop expenses paid out (HST, insurance, food vendors, accountant fee). This is the amount the corp owes back to Bobbie. It clears when the LOC is drawn and the reimbursement invoice is settled.",
+        status: "pending",
       },
     ],
   },
