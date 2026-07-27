@@ -462,4 +462,30 @@ describe("ParrsJarsHubPage — hub content is never mounted when the server retu
       screen.queryByText("Eat What You Store & Store What You Eat"),
     ).not.toBeInTheDocument();
   });
+
+  it("clears the expired token from localStorage after a 410 response", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify(EXPIRED_SERVER_BODY), {
+            status: 410,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      ),
+    );
+
+    render(<ParrsJarsHubPage />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Your access link has expired."),
+      ).toBeInTheDocument();
+    });
+
+    expect(
+      localStorage.getItem("headwaters:kit-token:pj-solutions-kit"),
+    ).toBeNull();
+  });
 });
