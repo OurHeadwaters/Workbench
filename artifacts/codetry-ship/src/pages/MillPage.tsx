@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AmbientBackground, GrainOverlay, ScrollReveal } from "@/components/AmbientBackground";
 import { ZoneTag } from "@/components/ZoneTag";
 
@@ -56,6 +57,13 @@ const FILTER_QUESTIONS = [
 ];
 
 export function MillPage() {
+  const [checked, setChecked] = useState<boolean[]>(FILTER_QUESTIONS.map(() => false));
+  const allClear = checked.every(Boolean);
+
+  function toggle(i: number) {
+    setChecked((prev) => prev.map((v, idx) => (idx === i ? !v : v)));
+  }
+
   return (
     <main
       className="min-h-screen w-full relative overflow-x-hidden"
@@ -166,30 +174,77 @@ export function MillPage() {
                 <div
                   className="rounded-md overflow-hidden"
                   style={{
-                    background: "rgba(15,28,24,0.75)",
-                    border: "1px solid rgba(244,237,224,0.07)",
+                    background: checked[i]
+                      ? "rgba(26,95,168,0.12)"
+                      : "rgba(15,28,24,0.75)",
+                    border: checked[i]
+                      ? `1px solid ${ZONE2_BLUE_DIM}`
+                      : "1px solid rgba(244,237,224,0.07)",
+                    transition: "background 0.25s ease, border-color 0.25s ease",
                   }}
                 >
-                  <div
-                    className="px-5 py-3 flex items-start gap-3"
+                  <button
+                    type="button"
+                    className="w-full text-left px-5 py-3 flex items-start gap-3"
                     style={{
                       borderBottom: "1px solid rgba(26,95,168,0.18)",
+                      cursor: "pointer",
+                      background: "transparent",
                     }}
+                    onClick={() => toggle(i)}
+                    aria-pressed={checked[i]}
                   >
+                    {/* Checkbox */}
+                    <span
+                      className="shrink-0 mt-0.5"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 18,
+                        height: 18,
+                        borderRadius: 3,
+                        border: `1.5px solid ${checked[i] ? ZONE2_BLUE : "rgba(26,95,168,0.45)"}`,
+                        background: checked[i] ? ZONE2_BLUE : "transparent",
+                        transition: "background 0.2s ease, border-color 0.2s ease",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {checked[i] && (
+                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                          <path
+                            d="M1 3.5L3.8 6.5L9 1"
+                            stroke={CREAM}
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      )}
+                    </span>
+
+                    {/* Question number */}
                     <span
                       className="font-mono text-[11px] shrink-0 mt-0.5"
-                      style={{ color: `rgba(26,95,168,0.75)` }}
+                      style={{ color: checked[i] ? ZONE2_BLUE : "rgba(26,95,168,0.55)" }}
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
+
+                    {/* Question text */}
                     <p
                       className="font-serif text-[15px] leading-snug"
-                      style={{ color: CREAM, fontStyle: "italic" }}
+                      style={{
+                        color: checked[i] ? CREAM : CREAM_DIM,
+                        fontStyle: "italic",
+                        transition: "color 0.2s ease",
+                      }}
                     >
                       {item.q}
                     </p>
-                  </div>
-                  <div className="px-5 py-3 pl-12">
+                  </button>
+
+                  <div className="px-5 py-3" style={{ paddingLeft: "3.25rem" }}>
                     <p
                       className="font-serif text-[13.5px] leading-[1.6]"
                       style={{ color: CREAM_FAINT }}
@@ -200,6 +255,61 @@ export function MillPage() {
                 </div>
               </ScrollReveal>
             ))}
+          </div>
+
+          {/* ── Go / No-go indicator ── */}
+          <div
+            className="mt-6 rounded-md overflow-hidden"
+            style={{
+              border: allClear
+                ? `1px solid ${ZONE2_BLUE}`
+                : "1px solid rgba(244,237,224,0.07)",
+              background: allClear
+                ? "rgba(26,95,168,0.18)"
+                : "rgba(15,28,24,0.5)",
+              transition: "background 0.35s ease, border-color 0.35s ease",
+            }}
+            data-testid="mill-gonogo"
+          >
+            <div className="px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-3">
+                {/* Status dot */}
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    background: allClear ? "#4ade80" : "rgba(244,237,224,0.18)",
+                    boxShadow: allClear ? "0 0 8px rgba(74,222,128,0.6)" : "none",
+                    transition: "background 0.35s ease, box-shadow 0.35s ease",
+                    flexShrink: 0,
+                  }}
+                />
+                <p
+                  className="font-mono text-[11px] uppercase tracking-[0.18em]"
+                  style={{
+                    color: allClear ? CREAM : "rgba(244,237,224,0.32)",
+                    transition: "color 0.35s ease",
+                  }}
+                >
+                  {allClear
+                    ? "Clear to open a scope"
+                    : `${checked.filter(Boolean).length} / ${FILTER_QUESTIONS.length} cleared`}
+                </p>
+              </div>
+
+              {allClear && (
+                <a
+                  href={(import.meta.env.BASE_URL ?? "/").replace(/\/$/, "") + "/sow"}
+                  className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 transition-opacity hover:opacity-70"
+                  style={{ color: CREAM }}
+                  data-testid="mill-gonogo-sow-link"
+                >
+                  Open SOW →
+                </a>
+              )}
+            </div>
           </div>
         </section>
 
