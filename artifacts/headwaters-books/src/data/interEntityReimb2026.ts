@@ -543,6 +543,134 @@ export const executionTracker: ExecPhase[] = [
   },
 ];
 
+// ── Corp account sole-prop balance ────────────────────────────────────────────
+//
+// Alterna Savings account 446570 is legally the corp account.
+// Parrs Jars (sole prop) revenue deposited here + sole-prop expenses paid out of
+// it creates a net amount the corp owes back to Bobbie.
+//
+// Figures marked "pending" require the bookkeeper to split the Jan–Jun statements
+// into sole-prop vs. corp ledgers before they can be confirmed.
+
+export type CorpBalanceDirection = "inflow" | "outflow";
+
+export interface CorpAccountFlowItem {
+  id: string;
+  description: string;
+  /** null = pending bookkeeper reconciliation */
+  amount: number | null;
+  /** e.g. "~" for estimates */
+  amountNote?: string;
+  direction: CorpBalanceDirection;
+  /** Grouping label shown in the UI */
+  category: string;
+  status: ReimbStatus;
+  note: string;
+}
+
+// Confirmed outflows: sole-prop obligations already paid from the corp account.
+// These reduce the amount the corp owes back to Bobbie.
+export const CORP_ACCT_HST_PAYMENT = 5_060.61;
+
+export const corpAccountFlowItems: CorpAccountFlowItem[] = [
+  // ── Inflows — sole-prop money that entered the corp account ─────────────────
+  {
+    id: "inflow-food-sales",
+    description: "Parrs Jars food sales deposited",
+    amount: null,
+    direction: "inflow",
+    category: "Food operations",
+    status: "pending",
+    note:
+      "Jan–Jun 2026 Square POS and cash sales deposited into Alterna 446570. Bookkeeper to extract from statements and Parrs Jars sales records.",
+  },
+  {
+    id: "inflow-807-invoices",
+    description: "807 Food Co-op invoice proceeds",
+    amount: null,
+    direction: "inflow",
+    category: "Food operations",
+    status: "pending",
+    note:
+      "Wholesale invoice payments from 807 Food Co-op deposited into the corp account. Bookkeeper to identify from statements.",
+  },
+  {
+    id: "inflow-other-sole-prop",
+    description: "Other sole-prop deposits",
+    amount: null,
+    direction: "inflow",
+    category: "Other",
+    status: "pending",
+    note:
+      "Any other Parrs Jars revenue deposited into Alterna 446570 during the period. Bookkeeper to flag during statement split.",
+  },
+
+  // ── Outflows — sole-prop expenses already paid out of the corp account ──────
+  {
+    id: "outflow-hst",
+    description: "Parrs Jars HST paid to CRA (BN 730101334 RT 0001, Jan–Dec 2025)",
+    amount: CORP_ACCT_HST_PAYMENT,
+    direction: "outflow",
+    category: "Tax",
+    status: "confirmed",
+    note:
+      "HST filing for Parrs Jars Jan–Dec 2025. Being paid from Alterna corp account using sole-prop funds already sitting there. Corp books: Dr Due to Sole Prop / Cr Cash. Sole prop books: Dr HST Payable / Cr Due from Corp.",
+  },
+  {
+    id: "outflow-insurance",
+    description: "Parrs Jars business insurance",
+    amount: null,
+    direction: "outflow",
+    category: "Insurance",
+    status: "pending",
+    note:
+      "Sole-prop insurance premiums paid from the corp account during Jan–Jun 2026. Bookkeeper to confirm amounts from statements.",
+  },
+  {
+    id: "outflow-food-vendors",
+    description: "Food vendors (Gerbers, Rockfront, Huber's, Joseph Bernier, Uline supplies)",
+    amount: null,
+    direction: "outflow",
+    category: "Food operations",
+    status: "pending",
+    note:
+      "Sole-prop food procurement and supply costs paid from Alterna 446570. Bookkeeper to extract all food/physical supply payments from statements.",
+  },
+  {
+    id: "outflow-accountant",
+    description: "Accountant / bookkeeper fee attributable to sole prop",
+    amount: null,
+    direction: "outflow",
+    category: "Professional fees",
+    status: "pending",
+    note:
+      "Portion of accountant or bookkeeper fees covering Parrs Jars work, paid from the corp account. Bookkeeper to determine split.",
+  },
+];
+
+/** Confirmed outflow total (HST only — others pending) */
+export const CORP_ACCT_CONFIRMED_OUTFLOWS = CORP_ACCT_HST_PAYMENT;
+
+/**
+ * Net balance the corp owes back to Bobbie.
+ * null = cannot compute until pending inflows and outflows are confirmed.
+ * This will be a positive number when more sole-prop money came in than was paid out.
+ */
+export const corpAccountNetBalance: number | null = null; // pending bookkeeper reconciliation
+
+export const corpAccountBalanceMeta = {
+  accountName: "Alterna Savings",
+  accountNumber: "446570",
+  legalOwner: "Headwaters Ontario Corp",
+  economicOwnerNote:
+    "Sole-prop (Parrs Jars) revenue has been depositing here. These are Bobbie's funds held inside the corporate account.",
+  settlementInstrument: INVOICE_NUMBER,
+  settlementInstrumentAmount: INVOICE_TOTAL,
+  lastUpdated: "2026-07-27",
+  statusNote:
+    "Pending bookkeeper splitting Jan–Jun 2026 Alterna statements into sole-prop vs. corp ledgers. The HST payment ($5,060.61) is the only confirmed outflow to date.",
+};
+
 // ── Change log ─────────────────────────────────────────────────────────────────
 
 export interface ReimbChangelogEntry {

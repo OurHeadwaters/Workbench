@@ -26,9 +26,14 @@ import {
   bookkeeperNotes,
   reimbChangelogEntries,
   executionTracker,
+  corpAccountFlowItems,
+  corpAccountNetBalance,
+  corpAccountBalanceMeta,
+  CORP_ACCT_CONFIRMED_OUTFLOWS,
   type ReimbStatus,
   type ChecklistStatus,
   type ExecStatus,
+  type CorpAccountFlowItem,
 } from "@/data/interEntityReimb2026";
 import {
   Table,
@@ -260,6 +265,201 @@ function ExecutionTracker() {
           To update a step: edit the <code className="font-mono">status</code> field in{" "}
           <code className="font-mono">interEntityReimb2026.ts → executionTracker</code> and set{" "}
           <code className="font-mono">date</code> when completed.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── Corp account sole-prop balance ────────────────────────────────────────────
+
+function CorpAccountBalancePanel() {
+  const inflows = corpAccountFlowItems.filter((i) => i.direction === "inflow");
+  const outflows = corpAccountFlowItems.filter((i) => i.direction === "outflow");
+
+  const confirmedOutflowTotal = CORP_ACCT_CONFIRMED_OUTFLOWS;
+  const allInflowsPending = inflows.every((i) => i.amount === null);
+  const netIsKnown = corpAccountNetBalance !== null;
+
+  function FlowRow({ item }: { item: CorpAccountFlowItem }) {
+    const isInflow = item.direction === "inflow";
+    return (
+      <TableRow>
+        <TableCell className="text-sm leading-snug">{item.description}</TableCell>
+        <TableCell className="text-right font-mono text-sm tabular-nums">
+          {item.amount !== null ? (
+            <span className={isInflow ? "text-emerald-700 font-semibold" : "text-foreground"}>
+              {isInflow ? "+" : "−"}{item.amountNote ?? ""}{fmt(item.amount)}
+            </span>
+          ) : (
+            <span className="text-muted-foreground italic text-xs">pending</span>
+          )}
+        </TableCell>
+        <TableCell>
+          <StatusBadge status={item.status} />
+        </TableCell>
+        <TableCell className="text-xs text-muted-foreground leading-relaxed max-w-[260px]">
+          {item.note}
+        </TableCell>
+      </TableRow>
+    );
+  }
+
+  return (
+    <Card className="print:shadow-none border-amber-200 bg-amber-50/30">
+      <CardHeader className="pb-3 border-b border-amber-100">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-700 mb-1">
+              Alterna Savings · Account {corpAccountBalanceMeta.accountNumber} · {corpAccountBalanceMeta.legalOwner}
+            </p>
+            <CardTitle className="text-xl font-serif text-foreground">
+              Sole-prop funds inside the corp account
+            </CardTitle>
+            <CardDescription className="text-sm mt-1 leading-relaxed max-w-2xl">
+              {corpAccountBalanceMeta.economicOwnerNote}
+            </CardDescription>
+          </div>
+          <div className="shrink-0 text-right">
+            {netIsKnown ? (
+              <>
+                <p className="text-3xl font-mono font-bold text-primary tabular-nums">
+                  {fmt(corpAccountNetBalance)}
+                </p>
+                <p className="text-[10px] text-muted-foreground">net owed to Bobbie</p>
+              </>
+            ) : (
+              <>
+                <p className="text-2xl font-mono font-bold text-amber-700 tabular-nums">TBD</p>
+                <p className="text-[10px] text-amber-700/80">pending reconciliation</p>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Status callout */}
+        <div className="mt-3 rounded-md bg-amber-100/60 border border-amber-200 px-3 py-2 text-xs text-amber-900 leading-relaxed">
+          <span className="font-semibold">Status: </span>
+          {corpAccountBalanceMeta.statusNote}
+        </div>
+      </CardHeader>
+
+      <CardContent className="p-0">
+        {/* Inflows */}
+        <div className="border-b border-amber-100">
+          <div className="px-4 pt-4 pb-2 flex items-center gap-2">
+            <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 border text-xs font-medium hover:bg-emerald-100">
+              Sole-prop inflows to corp account
+            </Badge>
+            {allInflowsPending && (
+              <span className="text-[10px] text-muted-foreground italic">
+                — awaiting bookkeeper statement split
+              </span>
+            )}
+          </div>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-emerald-50/60">
+                  <TableHead className="w-[38%]">Description</TableHead>
+                  <TableHead className="text-right w-[14%]">Amount (CAD)</TableHead>
+                  <TableHead className="w-[10%]">Status</TableHead>
+                  <TableHead className="w-[38%]">Notes</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {inflows.map((item) => (
+                  <FlowRow key={item.id} item={item} />
+                ))}
+                <TableRow className="bg-emerald-50 border-t-2 border-emerald-200 font-semibold">
+                  <TableCell className="text-sm font-semibold">Total sole-prop inflows</TableCell>
+                  <TableCell className="text-right font-mono text-sm tabular-nums text-muted-foreground italic">
+                    pending
+                  </TableCell>
+                  <TableCell />
+                  <TableCell />
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* Outflows */}
+        <div className="border-b border-amber-100">
+          <div className="px-4 pt-4 pb-2 flex items-center gap-2">
+            <Badge className="bg-rose-100 text-rose-800 border-rose-200 border text-xs font-medium hover:bg-rose-100">
+              Sole-prop outflows already paid from corp account
+            </Badge>
+            <span className="text-[10px] text-muted-foreground italic">
+              — reduce the amount corp owes back
+            </span>
+          </div>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-rose-50/60">
+                  <TableHead className="w-[38%]">Description</TableHead>
+                  <TableHead className="text-right w-[14%]">Amount (CAD)</TableHead>
+                  <TableHead className="w-[10%]">Status</TableHead>
+                  <TableHead className="w-[38%]">Notes</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {outflows.map((item) => (
+                  <FlowRow key={item.id} item={item} />
+                ))}
+                <TableRow className="bg-rose-50 border-t-2 border-rose-200 font-semibold">
+                  <TableCell className="text-sm font-semibold">
+                    Total confirmed outflows
+                    <span className="font-normal text-muted-foreground ml-1 text-xs">(others pending)</span>
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-sm tabular-nums">
+                    −{fmt(confirmedOutflowTotal)}
+                  </TableCell>
+                  <TableCell />
+                  <TableCell />
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* Net balance */}
+        <div className="flex items-start justify-between gap-4 px-4 py-4 bg-amber-50/60 border-t border-amber-200">
+          <div>
+            <p className="font-bold text-base text-foreground font-serif">
+              Net sole-prop balance — corp owes back to Bobbie
+            </p>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed max-w-xl">
+              Inflows (pending) minus confirmed outflows (
+              {fmt(confirmedOutflowTotal)}). Full net cannot be computed until the bookkeeper
+              splits the Jan–Jun 2026 Alterna statements. Settlement mechanism:{" "}
+              Invoice {corpAccountBalanceMeta.settlementInstrument} (
+              {fmt(corpAccountBalanceMeta.settlementInstrumentAmount)}).
+            </p>
+          </div>
+          <div className="text-right shrink-0">
+            {netIsKnown ? (
+              <p className="font-mono text-2xl font-bold text-primary tabular-nums">
+                {fmt(corpAccountNetBalance)}
+              </p>
+            ) : (
+              <div>
+                <p className="font-mono text-xl font-bold text-amber-700 tabular-nums">TBD</p>
+                <p className="text-[10px] text-amber-700/80 mt-0.5">
+                  Confirmed outflows: {fmt(confirmedOutflowTotal)}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <p className="text-[10px] text-muted-foreground italic px-4 pb-3 pt-1">
+          To update figures: edit <code className="font-mono">corpAccountFlowItems</code> in{" "}
+          <code className="font-mono">interEntityReimb2026.ts</code> and set{" "}
+          <code className="font-mono">amount</code> values as the bookkeeper reconciles each line.
+          Set <code className="font-mono">corpAccountNetBalance</code> to the final computed total
+          once all figures are confirmed.
         </p>
       </CardContent>
     </Card>
@@ -838,6 +1038,9 @@ export default function InterEntityReimb2026() {
 
       {/* Execution tracker */}
       <ExecutionTracker />
+
+      {/* Corp account sole-prop balance */}
+      <CorpAccountBalancePanel />
 
       {/* (b) Invoice block */}
       <InvoiceBlock />
