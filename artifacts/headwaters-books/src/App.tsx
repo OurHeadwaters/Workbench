@@ -27,6 +27,7 @@ import Handlers from "@/pages/Handlers";
 import Users from "@/pages/Users";
 import Reconciliation from "@/pages/Reconciliation";
 import AccountantHandoff from "@/pages/AccountantHandoff";
+import InterEntityReimb2026 from "@/pages/InterEntityReimb2026";
 import Pnl from "@/pages/Pnl";
 import Receipts from "@/pages/Receipts";
 import HHDashboard from "@/pages/HHDashboard";
@@ -191,6 +192,7 @@ function Router() {
       <ProtectedRoute path="/users" component={Users} />
       <ProtectedRoute path="/reconciliation" component={Reconciliation} />
       <ProtectedRoute path="/accountant-handoff" component={AccountantHandoff} />
+      <ProtectedRoute path="/inter-entity-reimbursement" component={InterEntityReimb2026} />
       <ProtectedRoute path="/receipts" component={Receipts} />
       <ProtectedRoute path="/pnl" component={Pnl} />
       <ProtectedRoute path="/helping-hands" component={HHDashboard} />

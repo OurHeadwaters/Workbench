@@ -1,0 +1,87 @@
+Here is everything ready for your bookkeeper.
+
+1. Full Invoice Text (Sole Prop → Corporation)
+
+INVOICE
+
+From: [Your Full Legal Name]  
+      operating as [Sole Proprietorship Name / Trade Name if any]
+
+To:   [Full Legal Name of Corporation]  
+      [Corporation Address]
+
+Invoice Number: REPLIT-DIGITAL-REIMB-2026-001  
+Date: 27 July 2026  
+Due Date: Upon receipt
+
+Description:
+Reimbursement of digital development and tooling costs paid on the sole-proprietorship credit card on behalf of the Corporation during the period 17 April 2026 – 26 June 2026.
+
+These costs relate exclusively to software development platforms, domains, AI tooling, and related digital infrastructure used for the Corporation’s projects.
+
+Breakdown:
+• Replit development platform charges (including all foreign-exchange conversion and foreign transaction fees) …… $20,642.32 CAD  
+• Other digital tooling & domains (GoDaddy, Runway ML, X/Twitter developer tools, and similar) ………………… $854.08 CAD  
+
+TOTAL AMOUNT DUE: $21,496.40 CAD
+
+Supporting documentation attached / available:
+– Alterna Savings credit-card statements for the relevant periods  
+– Original Replit invoices (RZSJOV- series)  
+– Detailed transaction listing
+
+Payment: Please reimburse the sole proprietorship or offset against any inter-entity balance.
+
+Thank you,
+[Your Name]
+
+2. Thorough Breakdown for Bookkeeper  
+(Sole Prop vs Corporation classification – April to June 2026 credit-card activity)
+
+A. Costs that belong to the CORPORATION (to be reimbursed / recorded as Corp expense)
+
+| Category                        | CAD Amount     | Notes / Source |
+|---------------------------------|----------------|--------------|
+| Replit principal charges        | 20,163.05     | All “REPLIT, INC. REPLIT.COM CA” lines |
+| Replit-related Foreign Transaction Fees | 479.27     | All “FOREIGN TRANSACTION FEE – MERCHANDISE” tied to Replit periods |
+| Subtotal Replit             | 20,642.32 | |
+| GoDaddy domains                 | ~419.00       | Multiple domain-related charges |
+| Runway ML (AI tooling)          | 129.92        | Newer tooling – explicitly Corp |
+| X Corp / about.x.com developer tools | 30.00     | |
+| Other clear digital infrastructure / tooling | ~275.16 | Remaining digital after removals |
+| Subtotal Other Digital      | 854.08    | |
+| GRAND TOTAL – CORPORATION   | $21,496.40 | Sole prop invoices Corp for this amount |
+
+These are pure development / digital infrastructure costs for the corporate project.
+
+B. Costs that stay with the SOLE PROPRIETORSHIP
+
+| Category                        | Treatment | Reason |
+|---------------------------------|-----------|------|
+| Square (Square Paid Services)   | Sole Prop | Explicitly sole-prop activity |
+| Apple.com / App Store / iCloud recurring charges | Sole Prop | Recurring personal/business subscriptions belonging to sole prop |
+| Any food-related, jars, physical supplies, Uline (if physical shipping materials), Ant Farms, Vistaprint physical print, etc. | Sole Prop or Personal | Explicitly excluded – not digital development |
+
+C. Recommended Bookkeeping Entries
+
+In Sole Proprietorship books:
+Debit: Due from Corporation (or Accounts Receivable – Intercompany) $21,496.40  
+Credit: Credit-card liability / Expense clearing $21,496.40  
+(or reduce the original expense accounts if they were temporarily coded to sole prop)
+
+In Corporation books:
+Debit: Software Development / Digital Tools / R&D expense $21,496.40  
+Credit: Due to Sole Proprietor (or Accounts Payable – Intercompany) $21,496.40  
+
+When the Corporation actually pays or offsets the amount, clear the intercompany balances on both sides.
+
+Additional notes for the bookkeeper
+All amounts are the actual CAD charged to the sole-prop Alterna credit card (including FX).  
+The Replit USD invoices were used only for reference; the credit-card CAD figures are the source of truth.  
+Foreign transaction fees travel with the underlying digital expense and are included.  
+July 2026 and any earlier/later months can be added later using the same method.  
+Bank account mixing (sole-prop account switched to corp) still needs separate reconstruction; this invoice only addresses the credit-card digital development costs.
+
+You can copy everything above directly to your bookkeeper.  
+
+Would you like a CSV-style transaction list of the major lines, or shall we move on to the next category of mixed expenses?

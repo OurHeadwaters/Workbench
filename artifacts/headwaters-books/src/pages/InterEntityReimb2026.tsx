@@ -1,0 +1,706 @@
+/**
+ * InterEntityReimb2026 — Sole Prop → Headwaters Ontario Corp reimbursement, 2026.
+ *
+ * Invoice REPLIT-DIGITAL-REIMB-2026-001 · Dated 27 July 2026
+ * Period: 17 April 2026 – 26 June 2026
+ * Total: $21,496.40 CAD
+ *
+ * This is a reference/planning page — no database transactions are created here.
+ * It is a distinct situation from the existing Reconciliation (pre-Nov 2024 Parrs Jars era).
+ */
+
+import { useState } from "react";
+import {
+  INVOICE_NUMBER,
+  INVOICE_DATE,
+  INVOICE_PERIOD,
+  INVOICE_TOTAL,
+  REPLIT_SUBTOTAL,
+  OTHER_DIGITAL_SUBTOTAL,
+  invoiceGroups,
+  entityFlowSteps,
+  classificationRows,
+  journalEntries,
+  solePropCleanupChecklist,
+  qbReports2026,
+  bookkeeperNotes,
+  reimbChangelogEntries,
+  type ReimbStatus,
+  type ChecklistStatus,
+} from "@/data/interEntityReimb2026";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  ChevronDown,
+  ChevronRight,
+  Printer,
+  FileText,
+  Clock,
+  ArrowRight,
+  Info,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+// ── Formatters ─────────────────────────────────────────────────────────────────
+
+const fmt = (val: number | null) =>
+  val === null
+    ? "—"
+    : new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD" }).format(val);
+
+// ── StatusBadge — matches Reconciliation page style ──────────────────────────
+
+function StatusBadge({ status }: { status: ReimbStatus }) {
+  if (status === "confirmed") {
+    return (
+      <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-emerald-200 border text-xs font-medium">
+        Confirmed
+      </Badge>
+    );
+  }
+  if (status === "estimated") {
+    return (
+      <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 border-amber-200 border text-xs font-medium">
+        Estimated
+      </Badge>
+    );
+  }
+  return (
+    <Badge className="bg-slate-100 text-slate-600 hover:bg-slate-100 border-slate-300 border text-xs font-medium">
+      Pending
+    </Badge>
+  );
+}
+
+function ChecklistBadge({ status }: { status: ChecklistStatus }) {
+  if (status === "confirmed") {
+    return (
+      <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-emerald-200 border text-xs font-medium">
+        Confirmed
+      </Badge>
+    );
+  }
+  if (status === "pending") {
+    return (
+      <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 border-amber-200 border text-xs font-medium">
+        Pending
+      </Badge>
+    );
+  }
+  return (
+    <Badge className="bg-slate-100 text-slate-500 hover:bg-slate-100 border-slate-300 border text-xs font-medium">
+      Not started
+    </Badge>
+  );
+}
+
+// ── (a) Invoice block ──────────────────────────────────────────────────────────
+
+function InvoiceBlock() {
+  return (
+    <Card className="print:shadow-none print:border-border">
+      {/* Invoice header */}
+      <CardHeader className="pb-3 border-b border-border">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-1">
+              Invoice
+            </p>
+            <CardTitle className="text-xl font-serif">{INVOICE_NUMBER}</CardTitle>
+            <CardDescription className="mt-1">
+              Date:{" "}
+              {new Date(INVOICE_DATE + "T00:00:00").toLocaleDateString("en-CA", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}{" "}
+              · Period: {INVOICE_PERIOD} · Due: Upon receipt
+            </CardDescription>
+          </div>
+          <div className="text-left sm:text-right shrink-0 space-y-1">
+            <p className="text-xs text-muted-foreground">
+              <strong>From:</strong> [Sole Proprietor Legal Name]
+            </p>
+            <p className="text-xs text-muted-foreground">
+              <strong>To:</strong> Headwaters Ontario Corp
+            </p>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+          Reimbursement of digital development and tooling costs paid on the sole-proprietorship
+          Alterna Savings credit card on behalf of the Corporation during the period {INVOICE_PERIOD}.
+          These costs relate exclusively to software development platforms, domains, AI tooling, and
+          related digital infrastructure used for the Corporation's projects.
+        </p>
+      </CardHeader>
+
+      <CardContent className="p-0">
+        {invoiceGroups.map((group) => (
+          <div key={group.id} className="border-b border-border last:border-b-0">
+            <div className="px-4 pt-4 pb-2">
+              <p className="text-sm font-semibold text-foreground">{group.title}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{group.subtitle}</p>
+            </div>
+            <div className="overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/40">
+                    <TableHead className="w-[40%]">Description</TableHead>
+                    <TableHead className="text-right w-[15%]">Amount (CAD)</TableHead>
+                    <TableHead className="w-[35%]">Notes</TableHead>
+                    <TableHead className="w-[10%]">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {group.items.map((item, i) => (
+                    <TableRow key={i}>
+                      <TableCell className="text-sm">{item.description}</TableCell>
+                      <TableCell className="text-right font-mono text-sm tabular-nums">
+                        {fmt(item.amount)}
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground leading-relaxed">
+                        {item.note}
+                      </TableCell>
+                      <TableCell>
+                        <StatusBadge status={item.status} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  <TableRow className="bg-muted/30 font-semibold border-t-2 border-border">
+                    <TableCell className="text-sm font-semibold">
+                      Subtotal — {group.title}
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-sm font-semibold tabular-nums">
+                      {fmt(group.subtotal)}
+                    </TableCell>
+                    <TableCell />
+                    <TableCell />
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        ))}
+
+        {/* Grand total */}
+        <div className="flex items-center justify-between px-4 py-4 bg-primary/5 border-t-2 border-primary/20">
+          <div>
+            <p className="font-bold text-base text-foreground font-serif">
+              TOTAL AMOUNT DUE — Invoice {INVOICE_NUMBER}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Replit ({fmt(REPLIT_SUBTOTAL)}) + Other digital ({fmt(OTHER_DIGITAL_SUBTOTAL)})
+            </p>
+          </div>
+          <p className="font-mono text-2xl font-bold text-primary tabular-nums">
+            {fmt(INVOICE_TOTAL)}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── (c) Entity flow strip ──────────────────────────────────────────────────────
+
+function EntityFlowStrip() {
+  return (
+    <Card className="print:shadow-none print:border-border">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base">Entity flow — how the money moves</CardTitle>
+        <CardDescription className="text-sm">
+          From personal card through both sets of books and back
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap items-start gap-y-3 gap-x-0">
+          {entityFlowSteps.map((step, i) => (
+            <div key={step.id} className="flex items-start gap-0">
+              <div className="flex flex-col items-center">
+                <div
+                  className={`rounded-lg px-3 py-2 text-center min-w-[120px] max-w-[160px] border ${
+                    step.id === "invoice"
+                      ? "bg-primary/10 border-primary/30"
+                      : "bg-muted/50 border-border"
+                  }`}
+                >
+                  <p
+                    className={`text-xs font-semibold leading-tight ${
+                      step.id === "invoice" ? "text-primary" : "text-foreground"
+                    }`}
+                  >
+                    {step.label}
+                  </p>
+                  {step.sublabel && (
+                    <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                      {step.sublabel}
+                    </p>
+                  )}
+                </div>
+              </div>
+              {i < entityFlowSteps.length - 1 && (
+                <div className="flex items-center self-center px-1.5">
+                  <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── (d) Corp vs. sole-prop classification table ────────────────────────────────
+
+function ClassificationTable() {
+  const corpRows = classificationRows.filter((r) => r.entity === "corp");
+  const solePropRows = classificationRows.filter((r) => r.entity === "sole-prop");
+
+  return (
+    <Card className="print:shadow-none print:border-border">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base font-serif">Corp vs. Sole Prop — charge classification</CardTitle>
+        <CardDescription className="text-sm">
+          Which Apr–Jun 2026 card charges go to the Corp (digital dev) and which stay with the sole prop
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="p-0">
+        {/* Corp section */}
+        <div className="border-t border-border">
+          <div className="px-4 pt-3 pb-1">
+            <Badge className="bg-blue-100 text-blue-800 border-blue-200 border text-xs font-medium hover:bg-blue-100">
+              Corporation — invoiced back
+            </Badge>
+          </div>
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/40">
+                <TableHead className="w-[30%]">Category</TableHead>
+                <TableHead className="text-right w-[15%]">Amount (CAD)</TableHead>
+                <TableHead className="w-[45%]">Reason</TableHead>
+                <TableHead className="w-[10%]">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {corpRows.map((row, i) => (
+                <TableRow key={i}>
+                  <TableCell className="text-sm">{row.category}</TableCell>
+                  <TableCell className="text-right font-mono text-sm tabular-nums">
+                    {row.amount !== null
+                      ? `${row.amountNote ?? ""}${fmt(row.amount)}`
+                      : "—"}
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground leading-relaxed">
+                    {row.reason}
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge status={row.status} />
+                  </TableCell>
+                </TableRow>
+              ))}
+              <TableRow className="bg-blue-50 font-semibold border-t-2 border-blue-200">
+                <TableCell className="text-sm font-semibold">Corp total (invoiced)</TableCell>
+                <TableCell className="text-right font-mono text-sm font-semibold tabular-nums">
+                  {fmt(INVOICE_TOTAL)}
+                </TableCell>
+                <TableCell />
+                <TableCell />
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Sole prop section */}
+        <div className="border-t border-border">
+          <div className="px-4 pt-3 pb-1">
+            <Badge className="bg-slate-100 text-slate-700 border-slate-300 border text-xs font-medium hover:bg-slate-100">
+              Sole Proprietorship — stays with sole prop
+            </Badge>
+          </div>
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/40">
+                <TableHead className="w-[30%]">Category</TableHead>
+                <TableHead className="text-right w-[15%]">Amount</TableHead>
+                <TableHead className="w-[45%]">Reason</TableHead>
+                <TableHead className="w-[10%]">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {solePropRows.map((row, i) => (
+                <TableRow key={i}>
+                  <TableCell className="text-sm">{row.category}</TableCell>
+                  <TableCell className="text-right font-mono text-sm tabular-nums text-muted-foreground">
+                    Not invoiced
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground leading-relaxed">
+                    {row.reason}
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge status={row.status} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── (e) Bookkeeper journal entries ────────────────────────────────────────────
+
+function JournalEntriesPanel() {
+  const solePropEntry = journalEntries.find((e) => e.entity === "sole-prop")!;
+  const corpEntry = journalEntries.find((e) => e.id === "corp-entry")!;
+  const clearingEntry = journalEntries.find((e) => e.id === "clearing-entry")!;
+
+  function EntryCard({ entry }: { entry: typeof journalEntries[number] }) {
+    return (
+      <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-3">
+        <div>
+          <p className="text-xs font-mono uppercase tracking-[0.16em] text-muted-foreground">
+            {entry.entity === "sole-prop" ? "Sole Proprietorship" : "Headwaters Ontario Corp"}
+          </p>
+          <p className="font-semibold text-sm text-foreground mt-0.5">{entry.label}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{entry.description}</p>
+        </div>
+        <div className="rounded-md bg-card border border-border px-3 py-2 font-mono text-xs space-y-1">
+          {entry.lines.map((line, i) => (
+            <div key={i} className="flex justify-between items-baseline gap-4">
+              <span
+                className={`${
+                  line.side === "debit" ? "font-semibold text-foreground" : "pl-6 text-muted-foreground"
+                }`}
+              >
+                {line.side === "debit" ? "Dr" : "Cr"} {line.account}
+              </span>
+              <span className="tabular-nums shrink-0">
+                {typeof line.amount === "number" ? fmt(line.amount) : line.amount}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground leading-relaxed">{entry.note}</p>
+      </div>
+    );
+  }
+
+  return (
+    <Card className="print:shadow-none print:border-border">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base font-serif">Bookkeeper journal entries</CardTitle>
+        <CardDescription className="text-sm">
+          Double-entry on both sides of the invoice, plus the clearing entry when Corp pays
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <EntryCard entry={solePropEntry} />
+          <EntryCard entry={corpEntry} />
+        </div>
+        <div className="pt-2 border-t border-border">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">
+            Clearing entry — when Corp LOC pays
+          </p>
+          <EntryCard entry={clearingEntry} />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── (f) Sole-prop Jan–Jul 2026 cleanup checklist ──────────────────────────────
+
+function CleanupChecklist() {
+  return (
+    <Card className="print:shadow-none print:border-border">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base font-serif">Sole-prop Jan–Jul 2026 cleanup checklist</CardTitle>
+        <CardDescription className="text-sm">
+          Status of each month/topic in the sole-prop cleanup
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {solePropCleanupChecklist.map((item) => (
+          <div
+            key={item.id}
+            className="flex items-start gap-3 p-3 rounded-md border border-border bg-muted/20"
+          >
+            <div className="mt-0.5 shrink-0">
+              <ChecklistBadge status={item.status} />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground">{item.title}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{item.detail}</p>
+            </div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── (g) Collapsible QB reports ────────────────────────────────────────────────
+
+function QBReportsCollapsible({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  return (
+    <Collapsible open={open} onOpenChange={onOpenChange} className="print:block">
+      <Card className="print:shadow-none">
+        <CollapsibleTrigger asChild>
+          <CardHeader className="cursor-pointer hover:bg-muted/30 transition-colors rounded-t-lg print:cursor-default print:pointer-events-none">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <FileText className="w-5 h-5 text-muted-foreground" />
+                <div>
+                  <CardTitle className="text-base">QuickBooks to-do</CardTitle>
+                  <CardDescription className="text-sm">
+                    Reports needed to close the Jan–Jul 2026 period — {qbReports2026.length} items
+                  </CardDescription>
+                </div>
+              </div>
+              <span className="print:hidden">
+                {open ? (
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                )}
+              </span>
+            </div>
+          </CardHeader>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <CardContent className="pt-0">
+            <div className="border-t border-border pt-4 space-y-3">
+              {qbReports2026.map((report, i) => (
+                <div
+                  key={report.id}
+                  className="flex items-start gap-4 p-3 rounded-md border border-border bg-muted/20"
+                >
+                  <div className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center shrink-0 mt-0.5">
+                    {i + 1}
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="font-medium text-sm text-foreground">
+                      {report.name}{" "}
+                      <span className="font-normal text-muted-foreground">— {report.dateRange}</span>
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{report.purpose}</p>
+                  </div>
+                </div>
+              ))}
+              <p className="text-xs text-muted-foreground pt-2 italic">
+                In QuickBooks: Reports → Custom Reports → paste date range → Export as Excel or PDF →
+                share with bookkeeper.
+              </p>
+            </div>
+          </CardContent>
+        </CollapsibleContent>
+        {/* Always visible in print */}
+        <div className="hidden print:block">
+          <CardContent className="pt-0">
+            <div className="border-t border-border pt-4 space-y-3">
+              {qbReports2026.map((report, i) => (
+                <div key={report.id} className="flex items-start gap-3">
+                  <span className="font-semibold text-sm">{i + 1}.</span>
+                  <div>
+                    <span className="font-medium text-sm">{report.name}</span>
+                    <span className="text-sm text-muted-foreground"> — {report.dateRange}</span>
+                    <p className="text-xs text-muted-foreground mt-0.5">{report.purpose}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </div>
+      </Card>
+    </Collapsible>
+  );
+}
+
+// ── (h) Bookkeeper notes callout ──────────────────────────────────────────────
+
+function BookkeeperNotesCallout() {
+  return (
+    <Alert className="border-blue-200 bg-blue-50 print:border-border print:bg-transparent">
+      <Info className="h-4 w-4 text-blue-600" />
+      <AlertDescription className="space-y-3 mt-1">
+        <p className="font-semibold text-blue-900">Bookkeeper key rules</p>
+        <div className="space-y-3">
+          {bookkeeperNotes.map((note) => (
+            <div key={note.id}>
+              <p className="text-sm font-medium text-blue-900">{note.heading}</p>
+              <p className="text-xs text-blue-800 leading-relaxed mt-0.5">{note.body}</p>
+            </div>
+          ))}
+        </div>
+      </AlertDescription>
+    </Alert>
+  );
+}
+
+// ── (i) Change log ────────────────────────────────────────────────────────────
+
+function ChangeLog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  return (
+    <Collapsible open={open} onOpenChange={onOpenChange} className="print:block">
+      <Card className="print:shadow-none">
+        <CollapsibleTrigger asChild>
+          <CardHeader className="cursor-pointer hover:bg-muted/30 transition-colors rounded-t-lg print:cursor-default print:pointer-events-none">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Clock className="w-5 h-5 text-muted-foreground" />
+                <div>
+                  <CardTitle className="text-base">Change history</CardTitle>
+                  <CardDescription className="text-sm">
+                    Audit trail of what changed and when — {reimbChangelogEntries.length} entries
+                  </CardDescription>
+                </div>
+              </div>
+              <span className="print:hidden">
+                {open ? (
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                )}
+              </span>
+            </div>
+          </CardHeader>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="print:hidden">
+          <CardContent className="pt-0">
+            <div className="border-t border-border pt-4 space-y-3">
+              {reimbChangelogEntries.map((entry, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-4 p-3 rounded-md border border-border bg-muted/20"
+                >
+                  <time
+                    dateTime={entry.date}
+                    className="shrink-0 font-mono text-xs text-muted-foreground bg-muted px-2 py-1 rounded mt-0.5 whitespace-nowrap"
+                  >
+                    {new Date(entry.date + "T00:00:00").toLocaleDateString("en-CA", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <p className="text-sm text-foreground leading-relaxed">{entry.description}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </CollapsibleContent>
+        {/* Always visible in print */}
+        <div className="hidden print:block">
+          <CardContent className="pt-0">
+            <div className="border-t border-border pt-4 space-y-3">
+              {reimbChangelogEntries.map((entry, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <time
+                    dateTime={entry.date}
+                    className="shrink-0 font-mono text-xs font-semibold whitespace-nowrap mt-0.5"
+                  >
+                    {new Date(entry.date + "T00:00:00").toLocaleDateString("en-CA", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <p className="text-xs text-foreground leading-relaxed">{entry.description}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </div>
+      </Card>
+    </Collapsible>
+  );
+}
+
+// ── Main page ─────────────────────────────────────────────────────────────────
+
+export default function InterEntityReimb2026() {
+  const [qbOpen, setQbOpen] = useState(false);
+  const [changelogOpen, setChangelogOpen] = useState(false);
+
+  return (
+    <div className="space-y-8 pb-16 print:pb-4">
+      {/* (a) Page header with Print button — hidden in print */}
+      <div className="flex justify-between items-start print:hidden">
+        <div>
+          <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-1">
+            Sole Prop → Corp · Inter-entity reimbursement
+          </p>
+          <h1 className="text-3xl font-serif font-bold text-foreground">2026 Reimbursement</h1>
+          <p className="text-muted-foreground mt-2 max-w-2xl text-sm leading-relaxed">
+            Invoice {INVOICE_NUMBER} · {INVOICE_PERIOD} · Digital development costs paid on the
+            sole-prop Alterna card on behalf of Headwaters Ontario Corp.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => window.print()}
+          className="flex items-center gap-2 shrink-0"
+        >
+          <Printer className="w-4 h-4" />
+          Print / PDF
+        </Button>
+      </div>
+
+      {/* Print-only header */}
+      <div className="hidden print:block">
+        <h1 className="text-2xl font-serif font-bold">
+          2026 Reimbursement — Headwaters Books
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Invoice {INVOICE_NUMBER} · Sole Proprietorship → Headwaters Ontario Corp · {INVOICE_PERIOD}
+        </p>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          Printed {new Date().toLocaleDateString("en-CA")}
+        </p>
+      </div>
+
+      {/* (b) Invoice block */}
+      <InvoiceBlock />
+
+      {/* (c) Entity flow strip */}
+      <EntityFlowStrip />
+
+      {/* (d) Corp vs. sole-prop classification table */}
+      <ClassificationTable />
+
+      {/* (e) Bookkeeper journal entries */}
+      <JournalEntriesPanel />
+
+      {/* (f) Sole-prop Jan–Jul 2026 cleanup checklist */}
+      <CleanupChecklist />
+
+      {/* (g) QuickBooks to-do — collapsible */}
+      <QBReportsCollapsible open={qbOpen} onOpenChange={setQbOpen} />
+
+      {/* (h) Bookkeeper notes callout */}
+      <BookkeeperNotesCallout />
+
+      {/* (i) Change log — collapsible */}
+      <ChangeLog open={changelogOpen} onOpenChange={setChangelogOpen} />
+    </div>
+  );
+}
