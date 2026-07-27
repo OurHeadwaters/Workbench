@@ -1,0 +1,39 @@
+Helping Hands Schema — Formal Decision Doc
+
+What & Why
+
+The Helping Hands labour-for-benefits engine exists in code but has no single locked reference document. Multiple Zone 2 and Zone 3 tasks are queued that build on top of it. Without a frozen schema doc, each task risks extending or interpreting the data model in a slightly different direction, creating drift that becomes expensive to reconcile later.
+
+This task produces docs/helping-hands-schema.md — the canonical, frozen data model for the peer-to-peer task engine. Once agreed, no structural change to HH may proceed without updating this document in the same commit.
+
+Done looks like
+
+docs/helping-hands-schema.md exists and covers:
+All DB table(s) used by the HH engine, column by column (types, nullability, constraints, what each column means)
+Task lifecycle: open → accepted → completed → recorded (+ cancelled terminal), including who may trigger each transition and what server-side checks enforce it
+The two membrane rules (poster ≠ acceptor; witness ≠ worker) — named as invariants that must never be relaxed, with the rationale
+Trust Tier derivation: exactly what query/logic produces T1 / T2 / T3 from witnessed-task history, since tiers are never stored
+Credit hours: how the creditHours numeric column maps to benefit credit; why node-postgres returns it as a string; what downstream consumers must expect
+What is intentionally NOT in the schema (e.g. stored trust tier, stored credit balance — these are derived)
+Named gaps and known follow-up items (slash review queue, VC issuance trigger thresholds, cross-community task portability)
+The new doc is added to docs/doctrine-index.md in the same change
+No DB schema or code changes — decision document only
+Out of scope
+
+Any new DB columns, API routes, or UI changes
+The Sandman pipeline's read of HH data (already documented in docs/technical-conventions.md)
+VC issuance on task completion (depends on Blocker 2 being closed, named as a gap)
+Slash review queue implementation
+Steps
+
+Audit the existing HH surface — read artifacts/api-server/src/routes/helping-hands.ts, the relevant Drizzle schema file(s), and the OpenAPI spec entries for HH endpoints to produce a complete picture of what is already built.
+Write docs/helping-hands-schema.md — one document covering tables, lifecycle, membrane rules, trust-tier derivation logic, credit-hours type note, and named gaps. Use the same voice and format as docs/zone3-vc-schema.md (pre-Phase 0 decision doc style).
+Add the entry to docs/doctrine-index.md — one-line summary following the existing index format.
+Relevant files
+
+artifacts/api-server/src/routes/helping-hands.ts
+lib/api-spec/openapi.yaml
+docs/technical-conventions.md:327-345
+docs/zone3-vc-schema.md
+docs/doctrine-index.md
+lib/db/src/schema/index.ts
