@@ -1,3 +1,5 @@
+import { ZoneTag } from "@/components/ZoneTag";
+
 function FeatureRow({
   label,
   description,
@@ -20,10 +22,13 @@ export function BrightSidePage() {
       <div className="mx-auto max-w-[60rem] px-6 sm:px-10 py-12 sm:py-16">
 
         <header className="mb-12 sm:mb-16 max-w-2xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] mb-3"
-            style={{ color: "hsl(var(--accent))" }}>
-            Bright Side · Residential Care
-          </p>
+          <div className="flex items-center gap-3 mb-3">
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] m-0"
+              style={{ color: "hsl(var(--accent))" }}>
+              Bright Side · Residential Care
+            </p>
+            <ZoneTag zone={0} label="Saltbox" />
+          </div>
           <h1 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight leading-tight text-foreground mb-5">
             Your staff already knows what a good shift looks like.<br />
             The clipboard doesn't.

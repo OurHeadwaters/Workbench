@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { WatershedRibbon } from "@/components/WatershedRibbon";
 import { GrainOverlay } from "@/components/AmbientBackground";
+import { ZoneTag } from "@/components/ZoneTag";
 
 interface Station {
   id: string;
@@ -127,12 +128,15 @@ export function StompingGroundsPage() {
         <div
           className="relative z-10 mx-auto max-w-[42rem] px-6 sm:px-8 pt-16 pb-14 text-center flex flex-col items-center"
         >
-          <p
-            className="font-mono text-[8px] uppercase tracking-[0.32em] mb-5"
-            style={{ color: "rgba(212,160,23,0.50)" }}
-          >
-            Crypto Castle · Stomping Grounds
-          </p>
+          <div className="flex items-center justify-center gap-3 mb-5">
+            <p
+              className="font-mono text-[8px] uppercase tracking-[0.32em] m-0"
+              style={{ color: "rgba(212,160,23,0.50)" }}
+            >
+              Crypto Castle · Stomping Grounds
+            </p>
+            <ZoneTag zone={5} label="The Edge" />
+          </div>
 
           <h1
             className="font-serif leading-[1.1] tracking-tight mb-5"

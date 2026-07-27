@@ -1,3 +1,5 @@
+import { ZoneTag } from "@/components/ZoneTag";
+
 export function AquiferPage() {
   const BASE = import.meta.env.BASE_URL;
 
@@ -18,19 +20,22 @@ export function AquiferPage() {
         }}
       >
         <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px" }}>
-          <p
-            style={{
-              fontFamily: "monospace",
-              fontSize: 9,
-              fontWeight: 700,
-              letterSpacing: "0.34em",
-              textTransform: "uppercase",
-              color: "rgba(56,189,248,0.55)",
-              marginBottom: 14,
-            }}
-          >
-            Headwaters
-          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+            <p
+              style={{
+                fontFamily: "monospace",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.34em",
+                textTransform: "uppercase",
+                color: "rgba(56,189,248,0.55)",
+                margin: 0,
+              }}
+            >
+              Headwaters
+            </p>
+            <ZoneTag zone="Aquifer" label="Identity Infrastructure" />
+          </div>
           <h1
             style={{
               fontSize: "clamp(1.8rem, 5vw, 2.8rem)",
