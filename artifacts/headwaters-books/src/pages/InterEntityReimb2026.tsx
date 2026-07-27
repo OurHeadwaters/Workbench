@@ -25,8 +25,10 @@ import {
   qbReports2026,
   bookkeeperNotes,
   reimbChangelogEntries,
+  executionTracker,
   type ReimbStatus,
   type ChecklistStatus,
+  type ExecStatus,
 } from "@/data/interEntityReimb2026";
 import {
   Table,
@@ -52,6 +54,10 @@ import {
   Clock,
   ArrowRight,
   Info,
+  CheckCircle2,
+  Circle,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -105,6 +111,158 @@ function ChecklistBadge({ status }: { status: ChecklistStatus }) {
     <Badge className="bg-slate-100 text-slate-500 hover:bg-slate-100 border-slate-300 border text-xs font-medium">
       Not started
     </Badge>
+  );
+}
+
+// ── Execution tracker ─────────────────────────────────────────────────────────
+
+const EXEC_STATUS_CONFIG: Record<ExecStatus, {
+  icon: typeof CheckCircle2;
+  label: string;
+  iconClass: string;
+  rowClass: string;
+  badgeClass: string;
+}> = {
+  done: {
+    icon: CheckCircle2,
+    label: "Done",
+    iconClass: "text-emerald-600",
+    rowClass: "bg-emerald-50/50 border-emerald-100",
+    badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-200",
+  },
+  "in-progress": {
+    icon: Loader2,
+    label: "In progress",
+    iconClass: "text-blue-500",
+    rowClass: "bg-blue-50/50 border-blue-100",
+    badgeClass: "bg-blue-100 text-blue-800 border-blue-200",
+  },
+  pending: {
+    icon: Circle,
+    label: "Pending",
+    iconClass: "text-slate-300",
+    rowClass: "bg-muted/20 border-border",
+    badgeClass: "bg-slate-100 text-slate-600 border-slate-200",
+  },
+  blocked: {
+    icon: AlertCircle,
+    label: "Blocked",
+    iconClass: "text-red-500",
+    rowClass: "bg-red-50/50 border-red-100",
+    badgeClass: "bg-red-100 text-red-800 border-red-200",
+  },
+};
+
+function ExecStatusBadge({ status }: { status: ExecStatus }) {
+  const cfg = EXEC_STATUS_CONFIG[status];
+  return (
+    <span className={`inline-flex items-center gap-1 text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded border ${cfg.badgeClass}`}>
+      {status === "in-progress" && <cfg.icon className={`h-2.5 w-2.5 ${cfg.iconClass} animate-spin`} />}
+      {cfg.label}
+    </span>
+  );
+}
+
+function ExecutionTracker() {
+  const totalSteps = executionTracker.flatMap((p) => p.steps).length;
+  const doneSteps = executionTracker.flatMap((p) => p.steps).filter((s) => s.status === "done").length;
+  const inProgressSteps = executionTracker.flatMap((p) => p.steps).filter((s) => s.status === "in-progress").length;
+  const pct = Math.round((doneSteps / totalSteps) * 100);
+
+  return (
+    <Card className="print:shadow-none border-primary/20">
+      <CardHeader className="pb-3 border-b border-border">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-1">
+              Execution tracker · live status
+            </p>
+            <CardTitle className="text-lg font-serif">Corp cleanup → LOC → new account</CardTitle>
+            <CardDescription className="text-sm mt-1">
+              {doneSteps} of {totalSteps} steps complete · {inProgressSteps} in progress
+            </CardDescription>
+          </div>
+          <div className="shrink-0 text-right">
+            <p className="text-3xl font-mono font-bold text-primary">{pct}%</p>
+            <p className="text-[10px] text-muted-foreground">complete</p>
+          </div>
+        </div>
+        {/* Progress bar */}
+        <div className="mt-3 h-2 w-full rounded-full bg-muted overflow-hidden">
+          <div
+            className="h-full rounded-full bg-primary transition-all"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+      </CardHeader>
+
+      <CardContent className="pt-5 space-y-6">
+        {executionTracker.map((phase) => {
+          const phaseDone = phase.steps.filter((s) => s.status === "done").length;
+          return (
+            <div key={phase.id}>
+              {/* Phase header */}
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-primary bg-primary/10 px-2 py-0.5 rounded">
+                  {phase.phase}
+                </span>
+                <p className="text-sm font-semibold text-foreground">{phase.title}</p>
+                <span className="ml-auto text-[10px] text-muted-foreground font-mono shrink-0">
+                  {phaseDone}/{phase.steps.length}
+                </span>
+              </div>
+
+              {/* Steps */}
+              <div className="space-y-2 pl-1">
+                {phase.steps.map((step, i) => {
+                  const cfg = EXEC_STATUS_CONFIG[step.status];
+                  const Icon = cfg.icon;
+                  return (
+                    <div
+                      key={step.id}
+                      className={`flex items-start gap-3 rounded-lg border px-3 py-3 ${cfg.rowClass}`}
+                    >
+                      {/* Step number / icon */}
+                      <div className="flex flex-col items-center gap-0.5 shrink-0 mt-0.5">
+                        <Icon
+                          className={`h-4 w-4 ${cfg.iconClass} ${step.status === "in-progress" ? "animate-spin" : ""}`}
+                        />
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                          <p className={`text-sm font-medium leading-tight ${step.status === "done" ? "line-through text-muted-foreground" : "text-foreground"}`}>
+                            {step.label}
+                          </p>
+                          <ExecStatusBadge status={step.status} />
+                          {step.amount !== undefined && (
+                            <span className="text-[10px] font-mono text-muted-foreground">
+                              {step.amountNote ?? ""}{fmt(step.amount)}
+                            </span>
+                          )}
+                          {step.date && (
+                            <span className="text-[10px] font-mono text-emerald-700">
+                              {new Date(step.date + "T00:00:00").toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" })}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{step.detail}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+
+        <p className="text-[10px] text-muted-foreground italic border-t border-border pt-3">
+          To update a step: edit the <code className="font-mono">status</code> field in{" "}
+          <code className="font-mono">interEntityReimb2026.ts → executionTracker</code> and set{" "}
+          <code className="font-mono">date</code> when completed.
+        </p>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -677,6 +835,9 @@ export default function InterEntityReimb2026() {
           Printed {new Date().toLocaleDateString("en-CA")}
         </p>
       </div>
+
+      {/* Execution tracker */}
+      <ExecutionTracker />
 
       {/* (b) Invoice block */}
       <InvoiceBlock />

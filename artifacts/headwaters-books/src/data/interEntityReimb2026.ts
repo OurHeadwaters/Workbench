@@ -386,6 +386,156 @@ export const bookkeeperNotes: BookkeeperNote[] = [
   },
 ];
 
+// ── Execution tracker ──────────────────────────────────────────────────────────
+// Three phases: corp cleanup → LOC + invoice → sole prop bridge.
+// Update statuses here as each step completes.
+
+export type ExecStatus = "done" | "in-progress" | "pending" | "blocked";
+
+export interface ExecStep {
+  id: string;
+  label: string;
+  detail: string;
+  status: ExecStatus;
+  date?: string;       // ISO date when completed, e.g. "2026-07-31"
+  amount?: number;     // if a dollar amount is relevant to the step
+  amountNote?: string; // qualifier like "minimum estimate"
+}
+
+export interface ExecPhase {
+  id: string;
+  phase: string;
+  title: string;
+  steps: ExecStep[];
+}
+
+export const executionTracker: ExecPhase[] = [
+  {
+    id: "corp-cleanup",
+    phase: "Phase 1",
+    title: "Corp account — confirm what's still in there",
+    steps: [
+      {
+        id: "corp-statement",
+        label: "Obtain Headwaters Ontario Corp bank statement",
+        detail:
+          "Full statement from Jul 2025 to now. Need to confirm exactly what went in (Invoice #001057 proceeds + any others) and what remains after the May 7 $12,757.14 transfer back to the Parrs Jars account.",
+        status: "pending",
+      },
+      {
+        id: "corp-balance-confirm",
+        label: "Confirm remaining sole-prop balance in corp",
+        detail:
+          "Current estimate: $17,967 in (Invoice #001057) − $12,757.14 already transferred back = $5,209.86 minimum still in corp. Could be $7,695.86 if Invoice #001062 ($2,486) also landed there. Corp bank statement will confirm.",
+        status: "pending",
+        amount: 5_209.86,
+        amountNote: "min. estimate — ",
+      },
+      {
+        id: "corp-transfer-back",
+        label: "Transfer remaining sole-prop funds out of corp",
+        detail:
+          "Transfer the confirmed balance from the Headwaters Ontario Corp account to Bobbie's personal account. Corp books: Dr Shareholder Contributed Capital / Cr Cash. This is a return of the capital contribution — not a dividend or salary.",
+        status: "pending",
+      },
+    ],
+  },
+  {
+    id: "loc-invoice",
+    phase: "Phase 2",
+    title: "LOC approval + invoice settlement",
+    steps: [
+      {
+        id: "invoice-drafted",
+        label: "Invoice REPLIT-DIGITAL-REIMB-2026-001 drafted",
+        detail:
+          "$21,496.40 CAD — Apr 17 – Jun 26 2026. Digital development costs (Replit, GoDaddy, Runway ML, X Corp) paid on the sole-prop Alterna card on behalf of the Corp.",
+        status: "done",
+        date: "2026-07-27",
+        amount: 21_496.40,
+      },
+      {
+        id: "loc-applied",
+        label: "Corporate LOC application submitted",
+        detail:
+          "Application in progress with lender. LOC will fund corp operations and settle the reimbursement invoice. Confirm lender and application date when known.",
+        status: "in-progress",
+      },
+      {
+        id: "loc-approved",
+        label: "Corporate LOC approved",
+        detail:
+          "Once approved, draw is authorized. Corp books on draw: Dr Cash / Cr Line of Credit. Record the approved limit and draw terms.",
+        status: "pending",
+      },
+      {
+        id: "loc-drawn",
+        label: "Corp draws on LOC",
+        detail:
+          "Draw amount to cover Invoice REPLIT-DIGITAL-REIMB-2026-001 ($21,496.40) plus operating float. Corp account now has cash to settle the payable.",
+        status: "pending",
+      },
+      {
+        id: "invoice-paid",
+        label: "Corp pays Invoice REPLIT-DIGITAL-REIMB-2026-001",
+        detail:
+          "$21,496.40 transferred from corp account to Bobbie's personal account (or new sole-prop account if already open). Corp: Dr Due to Sole Proprietor / Cr Cash. Sole prop: Dr Cash / Cr Due from Corporation. Both intercompany balances zero out.",
+        status: "pending",
+        amount: 21_496.40,
+      },
+      {
+        id: "interco-zeroed",
+        label: "Intercompany balances confirmed at $0",
+        detail:
+          "Bookkeeper confirms: $0 in Due from Corporation (sole-prop A/R) and $0 in Due to Sole Proprietor (corp A/P). Personal LOC that carried the digital costs is now retired.",
+        status: "pending",
+      },
+    ],
+  },
+  {
+    id: "sole-prop-bridge",
+    phase: "Phase 3",
+    title: "Sole prop account transition",
+    steps: [
+      {
+        id: "alterna-last-day",
+        label: "Alterna account 446570 — last day Jul 31, 2026",
+        detail:
+          "No transactions to be put through this account after July 31. Confirm current balance and transfer any remaining float to personal account.",
+        status: "in-progress",
+      },
+      {
+        id: "jul-statement",
+        label: "Final July 2026 Alterna statement obtained",
+        detail:
+          "Get the closing statement for the full month of July. Reconcile to zero or to the transferred-out balance. Bookkeeper needs this to close the bank account in the sole-prop books.",
+        status: "pending",
+      },
+      {
+        id: "personal-bridge-tracking",
+        label: "Sole-prop transactions tracked through personal account",
+        detail:
+          "Aug 1 onward: log every sole-prop income and expense going through the personal account — date, vendor/customer, amount, category. A running note or spreadsheet is enough. Bookkeeper needs this list to code entries correctly without hunting through mixed personal statements.",
+        status: "pending",
+      },
+      {
+        id: "new-account-opened",
+        label: "New dedicated sole-prop account opened",
+        detail:
+          "Date TBD. Once open, route all new sole-prop activity here immediately. Confirm account details (institution, account number) and record opening balance.",
+        status: "pending",
+      },
+      {
+        id: "cutover-entry",
+        label: "Cutover journal entry recorded",
+        detail:
+          "Bookkeeper records the clean cutover: Dr New Sole-Prop Bank / Cr Personal Account (for any float transferred in). Opening balance of new account confirmed and reconciled.",
+        status: "pending",
+      },
+    ],
+  },
+];
+
 // ── Change log ─────────────────────────────────────────────────────────────────
 
 export interface ReimbChangelogEntry {
