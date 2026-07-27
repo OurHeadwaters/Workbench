@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Inbox, CheckSquare, Zap, Lock, MoreHorizontal, X, Sunrise, Map, Sprout, Star, Package, BookOpen, Settings, Target, Hash, HandHelping, Lightbulb } from "lucide-react";
 import { lockKitchenTable, isKitchenTableUnlocked } from "@/lib/lock";
 import { BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, FONT_DISPLAY } from "@/lib/theme";
+import { useStore } from "@/store";
 
 const TABS = [
   {
@@ -54,6 +55,8 @@ const INACTIVE = TEXT_2;
 
 function MoreSheet({ onClose }: { onClose: () => void }) {
   const [location] = useLocation();
+  const improvementProposals = useStore((s) => s.improvementProposals);
+  const pendingProposalCount = improvementProposals.filter((p) => p.status === "proposed").length;
   return (
     <div
       className="fixed inset-0 z-[60] flex flex-col justify-end"
@@ -80,6 +83,7 @@ function MoreSheet({ onClose }: { onClose: () => void }) {
         <div className="px-3 pb-4 space-y-1">
           {MORE_LINKS.map(({ path, icon: Icon, label, desc }) => {
             const active = location.startsWith(path);
+            const badgeCount = path === "/proposals" ? pendingProposalCount : 0;
             return (
               <Link
                 key={path}
@@ -94,10 +98,19 @@ function MoreSheet({ onClose }: { onClose: () => void }) {
                 >
                   <Icon size={17} style={{ color: active ? AMBER : TEXT }} />
                 </span>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium" style={{ color: TEXT }}>{label}</p>
                   <p className="text-xs truncate" style={{ color: INACTIVE }}>{desc}</p>
                 </div>
+                {badgeCount > 0 && (
+                  <span
+                    className="shrink-0 min-w-[20px] h-5 rounded-full flex items-center justify-center text-[11px] font-semibold px-1.5"
+                    style={{ backgroundColor: "rgba(200,146,58,0.22)", color: AMBER }}
+                    aria-label={`${badgeCount} pending proposal${badgeCount !== 1 ? "s" : ""}`}
+                  >
+                    {badgeCount}
+                  </span>
+                )}
               </Link>
             );
           })}
