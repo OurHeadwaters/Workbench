@@ -24,8 +24,8 @@ const ENTITIES = {
     name: "Parrs Jars",
     type: "Sole Proprietorship",
     owner: "Bobbie (personal)",
-    period: "Full history — active until ~Nov 2024 transition",
-    note: "Owned all equipment listed below. All four invoices issued under this entity. Income from sales is Bobbie's personal income (T1), not corporate income.",
+    period: "Alterna account 446570 active through Jul 31, 2026 — then closed",
+    note: "Owned all equipment listed below. All four invoices issued under this entity. Income from sales is Bobbie's personal income (T1), not corporate income. After July 31, 2026 no further transactions will flow through the Alterna account (446570). Sole prop activity will temporarily use Bobbie's personal account until a dedicated new account is opened.",
   },
   corp: {
     name: "Headwaters Ontario Corp",
@@ -461,6 +461,8 @@ export default function AccountantHandoff() {
               `In Headwaters corporate books: record Bobbie's capital contribution of ${fmt(CORP_CAPITAL_CONTRIBUTION)} (Invoices #001057, #001062, #001066 proceeds). Dr Cash, Cr Shareholder Contributed Capital.`,
               "Record $9,995 trailer upgrades as a liability in Parrs Jars books until delivered to 807 Food Co-op or refunded. Do not recognize as income.",
               "Confirm HST remittance on all four invoices under Parrs Jars HST account. Total HST collected: " + fmt(3_957.85 + 2_067.00 + 286.00 + 58.50) + ". Confirm CRA remittance matches.",
+              "Obtain the final July 2026 bank statement for Alterna account 446570 (Parrs Jars). This is the closing statement — reconcile to a nil or transferred-out balance as of July 31, 2026.",
+              "After July 31, 2026: Parrs Jars sole prop activity moves to Bobbie's personal bank account temporarily. Flag all sole-prop transactions in the personal account statements (income, vendor payments, insurance) separately from personal living expenses. A new dedicated sole-prop account will be opened — at that point, do a clean cutover entry.",
             ].map((item, i) => (
               <li key={i} className="flex items-start gap-3 text-sm">
                 <span className="w-5 h-5 rounded border border-border flex-shrink-0 mt-0.5" />
