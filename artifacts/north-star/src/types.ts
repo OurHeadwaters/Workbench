@@ -77,6 +77,14 @@ export interface Contract {
   createdAt: string;
 }
 
+export interface ContractMilestone {
+  id: string;
+  contractId: string;
+  description: string;
+  /** z3npub of the signing party attesting this milestone. */
+  attestedBy: string;
+  attestedAt: string; // ISO datetime
+}
 export interface DailyPick {
   date: string;
   constellationIds: string[];
@@ -162,6 +170,7 @@ export interface AppState {
   zoneRanking: ZoneId[];
   constellations: Constellation[];
   contracts: Contract[];
+  contractMilestones: ContractMilestone[];
   dailyPicks: Record<string, DailyPick>;
   weeklyReviews: WeeklyReview[];
   seasonalReviews: SeasonalReview[];
@@ -197,6 +206,7 @@ export interface StoreActions {
   addContract: (c: Omit<Contract, "id" | "createdAt">) => void;
   updateContract: (id: string, patch: Partial<Contract>) => void;
   removeContract: (id: string) => void;
+  attestMilestone: (milestone: Omit<ContractMilestone, "id" | "attestedAt">) => void;
   setZoneRanking: (z: ZoneId[]) => void;
   getTodayPick: () => DailyPick;
   setTodayPick: (patch: Partial<DailyPick>) => void;

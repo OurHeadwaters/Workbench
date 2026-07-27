@@ -198,6 +198,7 @@ const INITIAL_STATE: AppState = {
     colorVar: ZONE_COLORS[c.zone],
   })),
   contracts: [],
+  contractMilestones: [],
   dailyPicks: {},
   weeklyReviews: [],
   seasonalReviews: [],
@@ -274,6 +275,32 @@ export const useStore = create<Store>()(
 
       removeContract: (id) =>
         set((s) => ({ contracts: s.contracts.filter((c) => c.id !== id) })),
+
+      attestMilestone: ({ contractId, description, attestedBy }) => {
+        const now = new Date().toISOString();
+        const milestoneId = uuidv4();
+        set((s) => ({
+          contractMilestones: [
+            ...s.contractMilestones,
+            { id: milestoneId, contractId, description, attestedBy, attestedAt: now },
+          ],
+        }));
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.CONTRACT_MILESTONE,
+          payload: {
+            zone: "Z4",
+            actor_type: "human",
+            contract_id: contractId,
+            milestone_id: milestoneId,
+            attested_by: attestedBy,
+            attested_at: now,
+            description,
+          },
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+      },
 
       setZoneRanking: (zoneRanking) => set({ zoneRanking }),
 
