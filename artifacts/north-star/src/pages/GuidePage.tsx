@@ -547,7 +547,7 @@ export function GuidePage() {
               Two Zone 5 instruments — the epistemological backbone of Codetry practice.
             </p>
             <a
-              href="https://stomping-path-documentation.replit.app/logic/"
+              href="https://stomping-path-documentation.replit.app/logic/#reality-core"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-between rounded-lg px-3 py-3 min-h-[52px] transition-colors"
@@ -560,7 +560,7 @@ export function GuidePage() {
               <ExternalLink size={14} style={{ color: TEXT_3 }} className="shrink-0 ml-3" />
             </a>
             <a
-              href="https://stomping-path-documentation.replit.app/logic/"
+              href="https://stomping-path-documentation.replit.app/logic/#fallacy-map"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-between rounded-lg px-3 py-3 min-h-[52px] transition-colors"

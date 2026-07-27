@@ -1,5 +1,5 @@
 # Headwaters: How a Community Runs Its Own Economy
-*Full content snapshot — exported 2026-07-26*
+*Full content snapshot — exported 2026-07-27*
 *Constellation version: 0.5.7 (last updated 2026-05-05)*
 
 ---
@@ -1735,7 +1735,10 @@ The Standby's two *states* are temporal — the infrastructure is constant; the 
 Before the Gate can pass or refuse a piece of language, the practitioner needs a prior discipline: the ability to separate what is real from what is story, and to catch the reasoning errors that make bad crossings feel justified. Two Zone 5 instruments serve this function. *RealityCore* is the formal test for what is real versus what is story — the practitioner's tool for checking whether a claim about the bright side or the systems side is grounded in fact or is a narrative the speaker has mistaken for one. The *Fallacy Map* is the named catalogue of reasoning errors practitioners catch in the field: the common moves that make a false crossing look honest, a refusal look cowardly, or a substitution look like an equivalent when it is not. Together they are the epistemological backbone the Gate rests on. A Gate operated without them is guessing.
 
 
-**Tool: [RealityCore & Fallacy Map — Zone 5 doctrine instruments](https://stomping-path-documentation.replit.app/logic/)** — The formal test for what is real vs. what is story, and the named catalogue of reasoning errors practitioners catch in the field. Open the Logic artifact before making a Gate decision you are uncertain about.
+**Tool: [RealityCore — Zone 5 doctrine instrument](https://stomping-path-documentation.replit.app/logic/#reality-core)** — The formal test for what is real vs. what is story. Open this before making a Gate decision you are uncertain about.
+
+
+**Tool: [Fallacy Map — Zone 5 doctrine instrument](https://stomping-path-documentation.replit.app/logic/#fallacy-map)** — The named catalogue of reasoning errors practitioners catch in the field — the common moves that make a false crossing look honest, a refusal look cowardly, or a substitution look like an equivalent when it is not.
 
 
 ### Vocabulary

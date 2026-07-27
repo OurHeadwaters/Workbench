@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+}
+
+:root {
+  --background: 25 22% 8%; /* Very dark espresso */
+  --foreground: 35 25% 82%; /* Warm parchment */
+  
+  --border: 25 20% 18%; /* Dark brown border */
+  --input: 25 20% 18%;
+  --ring: 15 65% 45%;
+  
+  --primary: 15 65% 45%; /* Deep rust / candlelight orange */
+  --primary-foreground: 35 25% 82%;
+  
+  --muted: 25 15% 15%;
+  --muted-foreground: 35 15% 55%;
+
+  --app-font-sans: 'Crimson Pro', serif;
+  --app-font-serif: 'Playfair Display', serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: hsl(var(--background));
+}
+
+body {
+  @apply font-sans antialiased bg-background text-foreground min-h-[100dvh];
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+  background-attachment: fixed;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 30%, transparent 20%, rgba(10, 5, 0, 0.4) 100%);
+  z-index: 50;
+}
+
+.drop-cap::first-letter {
+  @apply float-left text-6xl md:text-7xl font-serif font-bold text-primary mr-4 mt-2 leading-none;
+}
+
+.ornament {
+  @apply flex items-center justify-center relative w-full my-16;
+}
+
+.ornament::before {
+  content: '';
+  @apply absolute w-full h-[1px] bg-border;
+}
+
+.ornament-icon {
+  @apply relative bg-background px-6 text-primary z-10;
+}
+
+::selection {
+  background: hsl(var(--primary) / 0.3);
+  color: hsl(var(--primary-foreground));
+}

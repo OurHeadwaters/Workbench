@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "exportedAt": "2026-07-26T18:35:52.322Z",
+    "exportedAt": "2026-07-27T13:33:14.362Z",
     "section": "chapters"
   },
   "PARTS": [
@@ -2316,9 +2316,15 @@
             },
             {
               "kind": "tool",
-              "label": "RealityCore & Fallacy Map — Zone 5 doctrine instruments",
-              "hint": "The formal test for what is real vs. what is story, and the named catalogue of reasoning errors practitioners catch in the field. Open the Logic artifact before making a Gate decision you are uncertain about.",
-              "route": "https://stomping-path-documentation.replit.app/logic/"
+              "label": "RealityCore — Zone 5 doctrine instrument",
+              "hint": "The formal test for what is real vs. what is story. Open this before making a Gate decision you are uncertain about.",
+              "route": "https://stomping-path-documentation.replit.app/logic/#reality-core"
+            },
+            {
+              "kind": "tool",
+              "label": "Fallacy Map — Zone 5 doctrine instrument",
+              "hint": "The named catalogue of reasoning errors practitioners catch in the field — the common moves that make a false crossing look honest, a refusal look cowardly, or a substitution look like an equivalent when it is not.",
+              "route": "https://stomping-path-documentation.replit.app/logic/#fallacy-map"
             },
             {
               "kind": "subhead",
@@ -8614,9 +8620,15 @@
         },
         {
           "kind": "tool",
-          "label": "RealityCore & Fallacy Map — Zone 5 doctrine instruments",
-          "hint": "The formal test for what is real vs. what is story, and the named catalogue of reasoning errors practitioners catch in the field. Open the Logic artifact before making a Gate decision you are uncertain about.",
-          "route": "https://stomping-path-documentation.replit.app/logic/"
+          "label": "RealityCore — Zone 5 doctrine instrument",
+          "hint": "The formal test for what is real vs. what is story. Open this before making a Gate decision you are uncertain about.",
+          "route": "https://stomping-path-documentation.replit.app/logic/#reality-core"
+        },
+        {
+          "kind": "tool",
+          "label": "Fallacy Map — Zone 5 doctrine instrument",
+          "hint": "The named catalogue of reasoning errors practitioners catch in the field — the common moves that make a false crossing look honest, a refusal look cowardly, or a substitution look like an equivalent when it is not.",
+          "route": "https://stomping-path-documentation.replit.app/logic/#fallacy-map"
         },
         {
           "kind": "subhead",

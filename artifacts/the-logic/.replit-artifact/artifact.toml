@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/logic/"
+title = "The Logic — Zone 5 Doctrine Instruments"
+version = "1.0.0"
+id = "artifacts/the-logic"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/logic/" ]
+localPort = 21608
+
+[services.development]
+run = "pnpm --filter @workspace/the-logic run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/the-logic", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/the-logic/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21608"
+BASE_PATH = "/logic/"
