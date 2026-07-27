@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Inbox, CheckSquare, Zap, Lock, MoreHorizontal, X, Sunrise, Map, Sprout, Star, Package, BookOpen, Settings, Target, Hash } from "lucide-react";
+import { Inbox, CheckSquare, Zap, Lock, MoreHorizontal, X, Sunrise, Map, Sprout, Star, Package, BookOpen, Settings, Target, Hash, HandHelping } from "lucide-react";
 import { lockKitchenTable, isKitchenTableUnlocked } from "@/lib/lock";
 import { BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, FONT_DISPLAY } from "@/lib/theme";
 
@@ -43,6 +43,7 @@ const MORE_LINKS = [
   { path: "/kits", icon: Package, label: "Kits", desc: "The five sellable kits" },
   { path: "/guide", icon: BookOpen, label: "Guide", desc: "How North Star works" },
   { path: "/channels", icon: Hash, label: "Channels", desc: "Ephemeral and categorized channels" },
+  { path: "/helping-hands", icon: HandHelping, label: "Helping Hands", desc: "Post and claim community tasks" },
   { path: "/settings", icon: Settings, label: "Settings", desc: "Statement, backup, inbox setup" },
 ];
 
