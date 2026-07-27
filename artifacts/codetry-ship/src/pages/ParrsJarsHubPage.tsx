@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useKitAccess } from "@/lib/useKitAccess";
-import { getVisitedHandouts, markHandoutVisited, getVisitedModules, markModuleVisited } from "@/lib/kitTokens";
+import { getVisitedHandouts, markHandoutVisited, getVisitedModules, markModuleVisited, syncKitProgress } from "@/lib/kitTokens";
 import getStartedImg from "@assets/IMG_1184_1780775510410.PNG";
 import foodAuditImg from "@assets/IMG_1130_1780775510411.PNG";
 import inPersonChecklistImg from "@assets/IMG_1187_1780775510410.PNG";
@@ -225,7 +225,8 @@ function HandoutCard({
 
 const PJ_SOLUTIONS_KIT_ID = "pj-solutions-kit";
 
-function LockedWall() {
+function LockedWall({ reason }: { reason?: "expired" } = {}) {
+  const isExpired = reason === "expired";
   return (
     <div
       style={{
@@ -280,7 +281,9 @@ function LockedWall() {
             marginBottom: "0.75rem",
           }}
         >
-          Your resource hub is one purchase away.
+          {isExpired
+            ? "Your access link has expired."
+            : "Your resource hub is one purchase away."}
         </h1>
         <p
           style={{
@@ -292,7 +295,9 @@ function LockedWall() {
             margin: "0 auto 2rem",
           }}
         >
-          The Principles to Preservation hub — all 5 modules and 20+ handouts — is available to PJ Solutions Kit buyers. Purchase the kit to get instant access.
+          {isExpired
+            ? "Your PJ Solutions Kit access link has expired. Re-send it to your email to get back in."
+            : "The Principles to Preservation hub — all 5 modules and 20+ handouts — is available to PJ Solutions Kit buyers. Purchase the kit to get instant access."}
         </p>
         <div
           style={{
@@ -302,28 +307,49 @@ function LockedWall() {
             gap: "0.85rem",
           }}
         >
-          <a
-            href="/parrsjars/kit"
-            style={{
-              display: "inline-block",
-              background: RUST,
-              color: "white",
-              fontWeight: 800,
-              fontSize: "1rem",
-              letterSpacing: "0.04em",
-              padding: "0.85rem 2rem",
-              borderRadius: 6,
-              textDecoration: "none",
-            }}
-          >
-            Get the PJ Solutions Kit — $97 CAD →
-          </a>
-          <a
-            href="/kits/resend"
-            style={{ fontSize: "0.8rem", color: MUTED, textDecoration: "none" }}
-          >
-            Already purchased? Re-send your access link →
-          </a>
+          {isExpired ? (
+            <a
+              href="/kits/resend"
+              style={{
+                display: "inline-block",
+                background: RUST,
+                color: "white",
+                fontWeight: 800,
+                fontSize: "1rem",
+                letterSpacing: "0.04em",
+                padding: "0.85rem 2rem",
+                borderRadius: 6,
+                textDecoration: "none",
+              }}
+            >
+              Re-send my access link →
+            </a>
+          ) : (
+            <>
+              <a
+                href="/parrsjars/kit"
+                style={{
+                  display: "inline-block",
+                  background: RUST,
+                  color: "white",
+                  fontWeight: 800,
+                  fontSize: "1rem",
+                  letterSpacing: "0.04em",
+                  padding: "0.85rem 2rem",
+                  borderRadius: 6,
+                  textDecoration: "none",
+                }}
+              >
+                Get the PJ Solutions Kit — $97 CAD →
+              </a>
+              <a
+                href="/kits/resend"
+                style={{ fontSize: "0.8rem", color: MUTED, textDecoration: "none" }}
+              >
+                Already purchased? Re-send your access link →
+              </a>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -331,24 +357,32 @@ function LockedWall() {
 }
 
 export function ParrsJarsHubPage() {
-  const { status, storedToken } = useKitAccess(PJ_SOLUTIONS_KIT_ID);
+  const { status, storedToken, serverProgress } = useKitAccess(PJ_SOLUTIONS_KIT_ID);
   const [activeModule, setActiveModule] = useState<string>("foundation");
   const [visitedHandouts, setVisitedHandouts] = useState<Set<string>>(new Set());
   const [visitedTitles, setVisitedTitles] = useState<Set<string>>(new Set());
 
-  // Load visited handouts from localStorage once the token is known
+  // Seed visited state from the union of localStorage and server-side progress.
+  // Server progress arrives after the token validates, so this effect fires once
+  // serverProgress is non-null.  Using the union means items seen on any device
+  // or browser are always reflected here.
   useEffect(() => {
-    if (storedToken) {
-      setVisitedHandouts(getVisitedHandouts(storedToken.token));
-    }
-  }, [storedToken]);
+    if (!storedToken || serverProgress === null) return;
+    const token = storedToken.token;
 
-  // Load visited module titles for the "Jump back in" banner
-  useEffect(() => {
-    if (status === "valid" && storedToken) {
-      setVisitedTitles(getVisitedModules(storedToken.token));
-    }
-  }, [status, storedToken]);
+    // Handouts: union of localStorage + server
+    const localHandouts = getVisitedHandouts(token);
+    const merged = new Set([...localHandouts, ...serverProgress.visitedHandouts]);
+    setVisitedHandouts(merged);
+    // Write merged back to localStorage so the server data is persisted locally too
+    merged.forEach((key) => markHandoutVisited(token, key));
+
+    // Modules: union of localStorage + server
+    const localModules = getVisitedModules(token);
+    const mergedModules = new Set([...localModules, ...serverProgress.visitedModules]);
+    setVisitedTitles(mergedModules);
+    mergedModules.forEach((title) => markModuleVisited(token, title));
+  }, [storedToken, serverProgress]);
 
   const handleModuleSwitch = useCallback(
     (moduleId: string) => {
@@ -358,6 +392,7 @@ export function ParrsJarsHubPage() {
       if (!mod) return;
       markModuleVisited(storedToken.token, mod.title);
       setVisitedTitles((prev) => new Set([...prev, mod.title]));
+      syncKitProgress(storedToken.token, { visitedModules: [mod.title] });
     },
     [storedToken]
   );
@@ -373,6 +408,7 @@ export function ParrsJarsHubPage() {
       if (prev.has(mod.title)) return prev;
       return new Set([...prev, mod.title]);
     });
+    syncKitProgress(storedToken.token, { visitedModules: [mod.title] });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, storedToken]); // intentionally only on mount/token-ready, not every switch
 
@@ -381,6 +417,7 @@ export function ParrsJarsHubPage() {
       if (!storedToken) return;
       markHandoutVisited(storedToken.token, handoutKey);
       setVisitedHandouts((prev) => new Set([...prev, handoutKey]));
+      syncKitProgress(storedToken.token, { visitedHandouts: [handoutKey] });
     },
     [storedToken]
   );
@@ -405,7 +442,7 @@ export function ParrsJarsHubPage() {
   }
 
   if (status === "expired") {
-    return <LockedWall />;
+    return <LockedWall reason="expired" />;
   }
 
   if (status !== "valid") {

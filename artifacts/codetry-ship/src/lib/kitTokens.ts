@@ -105,6 +105,44 @@ export function markHandoutVisited(token: string, handoutKey: string): void {
   }
 }
 
+// ── Server-side progress sync ─────────────────────────────────────────────────
+
+export interface KitProgressResult {
+  visitedModules: string[];
+  visitedHandouts: string[];
+}
+
+/**
+ * Fetch the buyer's server-side progress for a given token.
+ * Returns empty arrays if the request fails (graceful degradation to localStorage).
+ */
+export async function fetchKitProgress(token: string): Promise<KitProgressResult> {
+  try {
+    const res = await fetch(`/api/kits/access/${token}/progress`);
+    if (!res.ok) return { visitedModules: [], visitedHandouts: [] };
+    return (await res.json()) as KitProgressResult;
+  } catch {
+    return { visitedModules: [], visitedHandouts: [] };
+  }
+}
+
+/**
+ * Push newly visited modules/handouts to the server.
+ * Fire-and-forget — failures are silent so the UI is never blocked.
+ */
+export function syncKitProgress(
+  token: string,
+  data: { visitedModules?: string[]; visitedHandouts?: string[] },
+): void {
+  fetch(`/api/kits/access/${token}/progress`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(data),
+  }).catch(() => {
+    // best-effort, non-blocking
+  });
+}
+
 // ── API fetch helpers ──────────────────────────────────────────────────────────
 
 export interface KitAccessResult {

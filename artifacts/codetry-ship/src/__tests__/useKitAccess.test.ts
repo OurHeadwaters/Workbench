@@ -20,6 +20,10 @@ vi.mock("@/lib/kitTokens", () => ({
   getKitToken: vi.fn(),
   clearKitToken: vi.fn(),
   fetchKitAccess: vi.fn(),
+  // fetchKitProgress is called by useKitAccess after a successful validation;
+  // default to returning empty progress so hook tests that focus on access
+  // status are not affected by progress fetching.
+  fetchKitProgress: vi.fn().mockResolvedValue({ visitedModules: [], visitedHandouts: [] }),
 }));
 
 import {

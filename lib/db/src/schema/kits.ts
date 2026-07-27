@@ -151,3 +151,20 @@ export type KitDeliveryFailureRow = typeof kitDeliveryFailuresTable.$inferSelect
 export type KitDeliveryFailureInsert = typeof kitDeliveryFailuresTable.$inferInsert;
 export type KitWebhookAttemptRow = typeof kitWebhookAttemptsTable.$inferSelect;
 export type KitWebhookAttemptInsert = typeof kitWebhookAttemptsTable.$inferInsert;
+
+// Server-side progress for kit buyers.  Keyed by purchase_id so progress
+// survives token re-issues (same buyer, new access link → same record).
+export const kitProgressTable = pgTable(
+  "kit_progress",
+  {
+    purchaseId: text("purchase_id").primaryKey(),
+    visitedModules: text("visited_modules").array().notNull().default([]),
+    visitedHandouts: text("visited_handouts").array().notNull().default([]),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+);
+
+export type KitProgressRow = typeof kitProgressTable.$inferSelect;
+export type KitProgressInsert = typeof kitProgressTable.$inferInsert;

@@ -39,8 +39,8 @@ import { getKit, KITS } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, verifyResendToken } from "../lib/kitsMailer";
 import { runCodetryFilter } from "../lib/codetryFilter";
 import { requireKitOwnerAuth, requireFounderOnlyAuth, FOUNDER_OWNER_ID } from "../lib/kitAuth";
-import { db, kitsTable, practitionerApplicationsTable, kitTokensTable, kitDeliveryFailuresTable, kitWebhookAttemptsTable } from "@workspace/db";
-import { eq, and, gt, desc, isNull } from "drizzle-orm";
+import { db, kitsTable, practitionerApplicationsTable, kitTokensTable, kitDeliveryFailuresTable, kitWebhookAttemptsTable, kitProgressTable } from "@workspace/db";
+import { eq, and, gt, desc, isNull, sql } from "drizzle-orm";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { clerkClient } from "@clerk/express";
 
@@ -849,6 +849,114 @@ router.get("/access/:token", accessRateLimit, async (req: Request, res: Response
     purchase_id: record.purchaseId,
     expires_at: record.expiresAt.toISOString(),
   });
+});
+
+// ── GET /kits/access/:token/progress ─────────────────────────────────────────
+//
+// Returns the buyer's server-side visited progress for this purchase.
+// Keyed by purchase_id so a new token issued for the same purchase returns
+// the same progress record on any device.
+//
+// Rate-limited together with the main access endpoint.
+
+router.get("/access/:token/progress", accessRateLimit, async (req: Request, res: Response) => {
+  const raw = req.params["token"];
+  const token = Array.isArray(raw) ? (raw[0] ?? "") : (raw ?? "");
+  if (!token || token.length > 128) {
+    res.status(400).json({ error: "Invalid token" });
+    return;
+  }
+
+  const [record] = await db
+    .select()
+    .from(kitTokensTable)
+    .where(eq(kitTokensTable.token, token))
+    .limit(1);
+
+  if (!record) {
+    res.status(404).json({ error: "Token not found" });
+    return;
+  }
+  if (new Date() > record.expiresAt) {
+    res.status(410).json({ error: "Token expired", expired_at: record.expiresAt.toISOString() });
+    return;
+  }
+
+  const [progress] = await db
+    .select()
+    .from(kitProgressTable)
+    .where(eq(kitProgressTable.purchaseId, record.purchaseId))
+    .limit(1);
+
+  res.json({
+    ok: true,
+    visitedModules: progress?.visitedModules ?? [],
+    visitedHandouts: progress?.visitedHandouts ?? [],
+  });
+});
+
+// ── POST /kits/access/:token/progress ─────────────────────────────────────────
+//
+// Merges the supplied visited modules/handouts into the buyer's server-side
+// progress record.  Additive only — items are never removed.
+
+const progressSchema = z.object({
+  visitedModules: z.array(z.string()).optional().default([]),
+  visitedHandouts: z.array(z.string()).optional().default([]),
+});
+
+router.post("/access/:token/progress", accessRateLimit, async (req: Request, res: Response) => {
+  const raw = req.params["token"];
+  const token = Array.isArray(raw) ? (raw[0] ?? "") : (raw ?? "");
+  if (!token || token.length > 128) {
+    res.status(400).json({ error: "Invalid token" });
+    return;
+  }
+
+  const parsed = progressSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid body", details: parsed.error.flatten() });
+    return;
+  }
+  const { visitedModules: incoming_modules, visitedHandouts: incoming_handouts } = parsed.data;
+
+  const [record] = await db
+    .select()
+    .from(kitTokensTable)
+    .where(eq(kitTokensTable.token, token))
+    .limit(1);
+
+  if (!record) {
+    res.status(404).json({ error: "Token not found" });
+    return;
+  }
+  if (new Date() > record.expiresAt) {
+    res.status(410).json({ error: "Token expired", expired_at: record.expiresAt.toISOString() });
+    return;
+  }
+
+  // Atomic single-statement upsert — no separate read.
+  // The ARRAY(SELECT DISTINCT unnest(existing || incoming)) in the conflict
+  // clause runs inside Postgres atomically, so two simultaneous progress
+  // updates for the same purchase_id cannot overwrite each other.
+  await db
+    .insert(kitProgressTable)
+    .values({
+      purchaseId: record.purchaseId,
+      visitedModules: incoming_modules,
+      visitedHandouts: incoming_handouts,
+      updatedAt: new Date(),
+    })
+    .onConflictDoUpdate({
+      target: kitProgressTable.purchaseId,
+      set: {
+        visitedModules: sql`ARRAY(SELECT DISTINCT unnest(kit_progress.visited_modules || ${incoming_modules}::text[]))`,
+        visitedHandouts: sql`ARRAY(SELECT DISTINCT unnest(kit_progress.visited_handouts || ${incoming_handouts}::text[]))`,
+        updatedAt: sql`now()`,
+      },
+    });
+
+  res.json({ ok: true });
 });
 
 // ── GET /kits/handout ─────────────────────────────────────────────────────────

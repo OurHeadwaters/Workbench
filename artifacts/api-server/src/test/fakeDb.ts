@@ -211,6 +211,17 @@ function sqlTpl(strings?: TemplateStringsArray, ...vals: unknown[]) {
     }
   }
 
+  // ARRAY(SELECT DISTINCT unnest(table.col || ${incoming}::text[]))
+  // Recognise any template where the static parts contain ARRAY/DISTINCT/UNNEST
+  // and the single interpolated value is an array.  Used by the kit progress
+  // atomic upsert to merge visited-module and visited-handout arrays in-place.
+  if (strings && strings.length === 2 && vals.length === 1 && Array.isArray(vals[0])) {
+    const s0 = strings[0]!.toUpperCase();
+    if (s0.includes("ARRAY") && s0.includes("DISTINCT") && s0.includes("UNNEST")) {
+      return { kind: "sql_array_merge" as const, incoming: vals[0] as unknown[] };
+    }
+  }
+
   return { kind: "raw" } as const;
 }
 
@@ -730,6 +741,12 @@ function resolveSqlExprsInPatch(patch: Row, row: Row): Row {
         const newCount = current + (v.delta ?? 0);
         const threshold = v.threshold ?? 0;
         out[k] = newCount >= threshold ? true : Boolean(row[v.flagCol.__c]);
+      } else if (v.kind === "sql_array_merge") {
+        // Merge the incoming array with the existing column value, deduplicated.
+        // Mirrors the Postgres ARRAY(SELECT DISTINCT unnest(existing || incoming)) semantic.
+        const existingArr = Array.isArray(row[k]) ? (row[k] as unknown[]) : [];
+        const incomingArr = (v as { incoming: unknown[] }).incoming;
+        out[k] = Array.from(new Set([...existingArr, ...incomingArr]));
       } else if (v.kind === "raw") {
         // Approximate sql`now()` / other raw expressions as current Date.
         out[k] = new Date();
