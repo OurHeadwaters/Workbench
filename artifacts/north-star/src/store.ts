@@ -673,6 +673,15 @@ export const useStore = create<Store>()(
           signature: "stub",
         });
       },
+
+      archiveHelpingHandsTask: (id) => {
+        const now = new Date().toISOString();
+        set((s) => ({
+          helpingHandsTasks: s.helpingHandsTasks.map((t) =>
+            t.id === id ? { ...t, archivedAt: now } : t
+          ),
+        }));
+      },
     }),
     {
       name: "north-star:v1",

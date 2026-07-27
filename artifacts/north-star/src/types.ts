@@ -259,6 +259,7 @@ export interface StoreActions {
   confirmHelpingHandsTask: (id: string) => void;
   setTrigger: (id: string, patch: Partial<TriggerDefinition>) => void;
   fireTrigger: (id: string) => Promise<void>;
+  archiveHelpingHandsTask: (id: string) => void;
 }
 
 export type ArchiveContentType =
@@ -334,4 +335,5 @@ export interface HelpingHandsTask {
   claimedAt?: string;
   completedAt?: string;
   confirmedAt?: string;
+  archivedAt?: string;
 }

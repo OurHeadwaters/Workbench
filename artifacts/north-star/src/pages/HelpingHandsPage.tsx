@@ -4,7 +4,7 @@ import type { HelpingHandsTask, HelpingHandsStatus } from "@/types";
 import {
   BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, AMBER_WASH, FONT_DISPLAY,
 } from "@/lib/theme";
-import { Plus, X, HandHelping, CheckCheck, Check, Users } from "lucide-react";
+import { Plus, X, HandHelping, CheckCheck, Check, Users, Archive, ChevronDown, ChevronRight } from "lucide-react";
 
 // ── Status badge ────────────────────────────────────────────────────────────
 
@@ -120,6 +120,7 @@ function TaskRow({ task }: { task: HelpingHandsTask }) {
   const claim    = useStore((s) => s.claimHelpingHandsTask);
   const complete = useStore((s) => s.completeHelpingHandsTask);
   const confirm  = useStore((s) => s.confirmHelpingHandsTask);
+  const archive  = useStore((s) => s.archiveHelpingHandsTask);
 
   return (
     <div
@@ -178,6 +179,16 @@ function TaskRow({ task }: { task: HelpingHandsTask }) {
             Confirm
           </button>
         )}
+        {task.status === "confirmed" && (
+          <button
+            onClick={() => archive(task.id)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
+            style={{ backgroundColor: "rgba(160,160,160,0.10)", color: TEXT_2 }}
+          >
+            <Archive size={12} />
+            Dismiss
+          </button>
+        )}
       </div>
     </div>
   );
@@ -190,13 +201,20 @@ const STATUS_ORDER: HelpingHandsStatus[] = ["open", "claimed", "done", "confirme
 export function HelpingHandsPage() {
   const tasks  = useStore((s) => s.helpingHandsTasks);
   const [addOpen, setAddOpen] = useState(false);
+  const [archivedOpen, setArchivedOpen] = useState(false);
 
-  const sorted = [...tasks].sort((a, b) => {
-    const ai = STATUS_ORDER.indexOf(a.status);
-    const bi = STATUS_ORDER.indexOf(b.status);
-    if (ai !== bi) return ai - bi;
-    return new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime();
-  });
+  const active = [...tasks]
+    .filter((t) => !t.archivedAt)
+    .sort((a, b) => {
+      const ai = STATUS_ORDER.indexOf(a.status);
+      const bi = STATUS_ORDER.indexOf(b.status);
+      if (ai !== bi) return ai - bi;
+      return new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime();
+    });
+
+  const archived = [...tasks]
+    .filter((t) => !!t.archivedAt)
+    .sort((a, b) => new Date(b.archivedAt!).getTime() - new Date(a.archivedAt!).getTime());
 
   return (
     <div className="min-h-dvh pb-32" style={{ backgroundColor: BG }}>
@@ -225,15 +243,41 @@ export function HelpingHandsPage() {
       </div>
 
       <div className="px-4 pt-4 space-y-3">
-        {sorted.length === 0 && (
+        {active.length === 0 && archived.length === 0 && (
           <p className="text-sm text-center pt-12" style={{ color: TEXT_2 }}>
             No tasks yet. Post one to get started.
           </p>
         )}
-        {sorted.map((task) => (
+        {active.length === 0 && archived.length > 0 && (
+          <p className="text-sm text-center pt-8" style={{ color: TEXT_2 }}>
+            All tasks have been completed.
+          </p>
+        )}
+        {active.map((task) => (
           <TaskRow key={task.id} task={task} />
         ))}
       </div>
+
+      {/* Archived / completed section */}
+      {archived.length > 0 && (
+        <div className="px-4 pt-6">
+          <button
+            onClick={() => setArchivedOpen((o) => !o)}
+            className="flex items-center gap-2 text-xs font-medium mb-3"
+            style={{ color: TEXT_2 }}
+          >
+            {archivedOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+            Completed ({archived.length})
+          </button>
+          {archivedOpen && (
+            <div className="space-y-3 opacity-60">
+              {archived.map((task) => (
+                <TaskRow key={task.id} task={task} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {addOpen && <AddTaskForm onClose={() => setAddOpen(false)} />}
     </div>
