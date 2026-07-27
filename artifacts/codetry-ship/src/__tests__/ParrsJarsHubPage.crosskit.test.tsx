@@ -363,9 +363,10 @@ describe("ParrsJarsHubPage — hub content is never mounted when there is no sto
 /**
  * When the server returns HTTP 410 for a stored token, fetchKitAccess throws a
  * KitAccessError with status 410 and useKitAccess sets status to "expired".
- * LockedWall renders with reason="expired" (headline: "Your access link has
- * expired.").  Hub content must be absent both during the in-flight window AND
- * after the expired guard resolves.
+ * LockedWall renders the generic wall ("Your resource hub is one purchase
+ * away.") — the expired and invalid branches share the same wall since task
+ * #2548 removed the expired-specific variant.  Hub content must be absent
+ * both during the in-flight window AND after the expired guard resolves.
  *
  * The deferred-promise pattern freezes the fetch mid-flight so we can assert
  * the loading screen is shown before the 410 arrives.
@@ -399,12 +400,9 @@ describe("ParrsJarsHubPage — hub content is never mounted when the server retu
     expect(screen.queryByText("Foundation")).not.toBeInTheDocument();
     expect(screen.queryByText("Module 1")).not.toBeInTheDocument();
 
-    // Neither the generic LockedWall CTA nor the expired headline is visible yet.
+    // The LockedWall is not yet visible while the fetch is in-flight.
     expect(
       screen.queryByText("Your resource hub is one purchase away."),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText("Your access link has expired."),
     ).not.toBeInTheDocument();
 
     // Resolve the deferred fetch with a 410 — fetchKitAccess throws KitAccessError(410).
@@ -415,10 +413,12 @@ describe("ParrsJarsHubPage — hub content is never mounted when the server retu
       }),
     );
 
-    // After resolution the "expired" branch renders LockedWall with reason="expired".
+    // After resolution the "expired" branch renders the generic LockedWall
+    // (expired and invalid share the same wall since task #2548 removed the
+    // expired-specific variant).
     await waitFor(() => {
       expect(
-        screen.getByText("Your access link has expired."),
+        screen.getByText("Your resource hub is one purchase away."),
       ).toBeInTheDocument();
     });
 
@@ -452,7 +452,7 @@ describe("ParrsJarsHubPage — hub content is never mounted when the server retu
 
     await waitFor(() => {
       expect(
-        screen.getByText("Your access link has expired."),
+        screen.getByText("Your resource hub is one purchase away."),
       ).toBeInTheDocument();
     });
 
@@ -480,7 +480,7 @@ describe("ParrsJarsHubPage — hub content is never mounted when the server retu
 
     await waitFor(() => {
       expect(
-        screen.getByText("Your access link has expired."),
+        screen.getByText("Your resource hub is one purchase away."),
       ).toBeInTheDocument();
     });
 
