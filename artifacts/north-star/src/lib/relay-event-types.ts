@@ -30,6 +30,21 @@ export interface MorningManifestPayload {
 // ---------------------------------------------------------------------------
 // 1001 — BRIEFING_ENVELOPE (Zone 2 — RiverSmith AI briefing)
 // ---------------------------------------------------------------------------
+
+/**
+ * Structured proof-of-work block attached to a briefing save event.
+ * Captures what changed vs. the previous briefing so human reviewers can
+ * verify the agent's work at a glance without reading the full diff.
+ */
+export interface ProofOfWork {
+  /** Names of the fields/sections that differ from the previous briefing. */
+  changed_fields: string[];
+  /** One-sentence human-readable summary of what changed. */
+  summary: string;
+  /** Short hash of the previous briefing's markdown content, for audit trails. */
+  previous_snapshot_hash?: string;
+}
+
 export interface BriefingEnvelopePayload {
   zone: "Z2";
   actor_type: "human" | "agent";
@@ -39,6 +54,8 @@ export interface BriefingEnvelopePayload {
   generated_at: string; // ISO datetime
   triggered_by: "manual" | "scheduled" | "agent";
   safety_flags_count: number;
+  /** Structured record of what changed vs. the previous briefing. */
+  proof_of_work?: ProofOfWork;
 }
 
 // ---------------------------------------------------------------------------

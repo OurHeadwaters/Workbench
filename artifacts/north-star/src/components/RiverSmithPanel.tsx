@@ -10,6 +10,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { publishToRelay, RELAY_EVENT_KINDS } from "@/lib/relay-stub";
+import type { ProofOfWork } from "@/lib/relay-event-types";
 
 interface SafetyFlag {
   text: string;
@@ -50,6 +51,161 @@ function formatDate(iso: string): string {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+// ── Proof-of-work helpers ─────────────────────────────────────────────────────
+
+/** djb2-variant hash of a string — produces an 8-char hex fingerprint. */
+function simpleHash(str: string): string {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) + h) ^ str.charCodeAt(i);
+    h = h | 0; // keep 32-bit
+  }
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
+
+/** Extract section headings (##) from River Smith markdown. */
+function extractSections(md: string): string[] {
+  return md
+    .split("\n")
+    .filter((l) => l.startsWith("## "))
+    .map((l) => l.slice(3).trim());
+}
+
+/** Compute a ProofOfWork block describing what changed vs. the previous briefing. */
+function computeProof(
+  prev: Briefing | null,
+  nextMarkdown: string,
+  nextFlagsCount: number,
+): ProofOfWork {
+  if (!prev) {
+    return {
+      changed_fields: ["briefing_content"],
+      summary: "First briefing — no previous record to compare.",
+    };
+  }
+
+  const changed: string[] = [];
+  const notes: string[] = [];
+
+  // Flag count diff
+  const prevFlags = prev.safetyFlagsCount ?? 0;
+  if (prevFlags !== nextFlagsCount) {
+    changed.push("safety_flags_count");
+    const delta = nextFlagsCount - prevFlags;
+    notes.push(
+      `safety flags ${delta > 0 ? "+" : ""}${delta} (${prevFlags} → ${nextFlagsCount})`,
+    );
+  }
+
+  // Section headings diff
+  const prevSections = extractSections(prev.rawMarkdown);
+  const nextSections = extractSections(nextMarkdown);
+  const added = nextSections.filter((s) => !prevSections.includes(s));
+  const removed = prevSections.filter((s) => !nextSections.includes(s));
+  if (added.length > 0 || removed.length > 0) {
+    changed.push("sections");
+    if (added.length > 0) notes.push(`+${added.length} section${added.length > 1 ? "s" : ""}: ${added.join(", ")}`);
+    if (removed.length > 0) notes.push(`−${removed.length} section${removed.length > 1 ? "s" : ""}: ${removed.join(", ")}`);
+  }
+
+  // Content length diff (flag if > 5% change)
+  const prevLen = prev.rawMarkdown.length;
+  const nextLen = nextMarkdown.length;
+  const pct = prevLen > 0 ? Math.abs(nextLen - prevLen) / prevLen : 1;
+  if (pct > 0.05) {
+    changed.push("content_length");
+    const sign = nextLen > prevLen ? "+" : "−";
+    notes.push(`content ${sign}${Math.round(pct * 100)}% (${prevLen} → ${nextLen} chars)`);
+  }
+
+  if (changed.length === 0) {
+    return {
+      changed_fields: [],
+      summary: "No structural changes detected vs. previous briefing.",
+      previous_snapshot_hash: simpleHash(prev.rawMarkdown),
+    };
+  }
+
+  return {
+    changed_fields: changed,
+    summary: notes.join("; "),
+    previous_snapshot_hash: simpleHash(prev.rawMarkdown),
+  };
+}
+
+// ── Proof card component ──────────────────────────────────────────────────────
+
+interface ProofCardProps {
+  proof: ProofOfWork;
+  briefingId: string;
+  sentAt: string;
+}
+
+function ProofCard({ proof, briefingId, sentAt }: ProofCardProps) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border border-[#1E332E] bg-[#0C1410] rounded-sm">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center gap-2 px-4 py-2.5 text-left hover:bg-[#0F1A14] transition-colors"
+      >
+        <span className="text-[11px]">✓</span>
+        <span className="text-[11px] text-[#4A8A7C] font-semibold tracking-wide flex-1">
+          What was sent
+        </span>
+        {proof.changed_fields.length > 0 && (
+          <span className="text-[10px] text-[#2A6A5C] bg-[#0D1F1C] border border-[#1A3A33] rounded px-1.5 py-0.5">
+            {proof.changed_fields.length} change{proof.changed_fields.length !== 1 ? "s" : ""}
+          </span>
+        )}
+        <span className="text-[10px] text-[#2A4A43] ml-1">{open ? "▲" : "▼"}</span>
+      </button>
+
+      {open && (
+        <div className="border-t border-[#1A2E28] px-4 py-3 space-y-3">
+          {/* Summary */}
+          <p className="text-[12px] text-[#8C7B6D] leading-relaxed">{proof.summary}</p>
+
+          {/* Changed fields */}
+          {proof.changed_fields.length > 0 && (
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.12em] text-[#3A5A52] font-bold mb-1.5">
+                Changed fields
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {proof.changed_fields.map((f) => (
+                  <span
+                    key={f}
+                    className="text-[10px] font-mono text-[#4A8A7C] bg-[#0D1F1C] border border-[#1A3A33] rounded px-1.5 py-0.5"
+                  >
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Meta row */}
+          <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1 border-t border-[#1A2E28]">
+            <span className="text-[10px] font-mono text-[#3A5A52]">
+              id: {briefingId.slice(0, 12)}…
+            </span>
+            {proof.previous_snapshot_hash && (
+              <span className="text-[10px] font-mono text-[#3A5A52]">
+                prev: {proof.previous_snapshot_hash}
+              </span>
+            )}
+            <span className="text-[10px] text-[#3A5A52] ml-auto">
+              {new Date(sentAt).toLocaleTimeString("en-CA", { hour: "2-digit", minute: "2-digit" })}
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ── Lightweight markdown renderer ─────────────────────────────────────────────
@@ -205,6 +361,8 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
   const [flagsLoading, setFlagsLoading] = useState(false);
   const [flagsError, setFlagsError] = useState<string | null>(null);
 
+  const [proofCard, setProofCard] = useState<{ proof: ProofOfWork; briefingId: string; sentAt: string } | null>(null);
+
   const fetchLatest = useCallback(async () => {
     if (!token) return;
     setLoading(true);
@@ -248,11 +406,18 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
       }
       const data = (await res.json()) as { rawMarkdown: string; id: string; safetyFlagsCount?: number };
       const generatedAt = new Date().toISOString();
-      setBriefing({ id: data.id, rawMarkdown: data.rawMarkdown, generatedAt, triggeredBy: "manual", safetyFlagsCount: data.safetyFlagsCount });
+      const nextFlagsCount = data.safetyFlagsCount ?? 0;
+
+      // Compute proof-of-work before we replace the current briefing
+      const proof = computeProof(briefing, data.rawMarkdown, nextFlagsCount);
+
+      setBriefing({ id: data.id, rawMarkdown: data.rawMarkdown, generatedAt, triggeredBy: "manual", safetyFlagsCount: nextFlagsCount });
       setArchive([]);
       setFlags([]);
       setFlagsOpen(false);
       setFlagsError(null);
+      setProofCard({ proof, briefingId: data.id, sentAt: generatedAt });
+
       void publishToRelay({
         kind: RELAY_EVENT_KINDS.BRIEFING_ENVELOPE,
         payload: {
@@ -262,7 +427,8 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
           briefing_id: data.id,
           generated_at: generatedAt,
           triggered_by: "manual",
-          safety_flags_count: data.safetyFlagsCount ?? 0,
+          safety_flags_count: nextFlagsCount,
+          proof_of_work: proof,
         },
         z2npub: "z2:local",
         timestamp: generatedAt,
@@ -415,6 +581,17 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
               </span>
             )}
           </div>
+
+          {/* Proof card — shown after a successful save */}
+          {proofCard && (
+            <div className="px-4 py-3 border-b border-[#1E1A14]">
+              <ProofCard
+                proof={proofCard.proof}
+                briefingId={proofCard.briefingId}
+                sentAt={proofCard.sentAt}
+              />
+            </div>
+          )}
 
           {/* Flagged items toggle */}
           {briefing && (briefing.safetyFlagsCount ?? 0) > 0 && (
