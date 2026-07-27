@@ -36,6 +36,7 @@ import { ThisWeekPage } from "@/pages/ThisWeekPage";
 import { TableRoomPage } from "@/pages/TableRoomPage";
 import { SprintPage } from "@/pages/SprintPage";
 import { Zone2AlignmentPage } from "@/pages/Zone2AlignmentPage";
+import { ChannelsPage } from "@/pages/ChannelsPage";
 import { GordWidget } from "@workspace/gord-widget";
 import { PasswordGate } from "@/components/PasswordGate";
 
@@ -250,6 +251,12 @@ export default function App() {
         <Route path="/zone2-alignment">
           <OnboardingGuard>
             <AppShell><Zone2AlignmentPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
+        <Route path="/channels">
+          <OnboardingGuard>
+            <AppShell><ChannelsPage /></AppShell>
           </OnboardingGuard>
         </Route>
 

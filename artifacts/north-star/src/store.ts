@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
-import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan } from "./types";
+import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta } from "./types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 import { publishToRelay, RELAY_EVENT_KINDS } from "./lib/relay-stub";
 
@@ -186,7 +186,7 @@ const SEED_GMAIL_ACCOUNTS: GmailAccount[] = [
 ];
 
 const INITIAL_STATE: AppState = {
-  schemaVersion: 8,
+  schemaVersion: 9,
   installedAt: new Date().toISOString(),
   onboarding: { completed: false, step: 0 },
   statement: undefined,
@@ -217,6 +217,7 @@ const INITIAL_STATE: AppState = {
   },
   gmailAccounts: SEED_GMAIL_ACCOUNTS,
   workbenchPlan: undefined,
+  channels: [],
 };
 
 export const useStore = create<Store>()(
@@ -439,10 +440,32 @@ export const useStore = create<Store>()(
             updatedAt: new Date().toISOString(),
           },
         }),
+
+      addChannel: ({ label, category, expiresAt, createdBy }) =>
+        set((s) => ({
+          channels: [
+            ...s.channels,
+            {
+              id: uuidv4(),
+              label,
+              category,
+              expiresAt,
+              createdAt: new Date().toISOString(),
+              createdBy,
+            },
+          ],
+        })),
+
+      expireChannel: (id) =>
+        set((s) => ({
+          channels: s.channels.map((ch) =>
+            ch.id === id ? { ...ch, archivedAt: new Date().toISOString() } : ch
+          ),
+        })),
     }),
     {
       name: "north-star:v1",
-      version: 8,
+      version: 9,
       migrate(persistedState: unknown, fromVersion: number) {
         const s = persistedState as Record<string, unknown>;
         if (fromVersion < 5) {
@@ -477,6 +500,10 @@ export const useStore = create<Store>()(
         if (fromVersion < 8) {
           s.workbenchPlan = undefined;
           s.schemaVersion = 8;
+        }
+        if (fromVersion < 9) {
+          s.channels = [];
+          s.schemaVersion = 9;
         }
         return s as unknown as AppState;
       },

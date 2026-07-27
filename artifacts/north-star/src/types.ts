@@ -166,6 +166,7 @@ export interface AppState {
   lastBackedUpAt?: string;
   contentBank: ContentBankItem[];
   workbenchPlan?: WorkbenchPlan;
+  channels: ChannelMeta[];
 }
 
 export interface StoreActions {
@@ -198,6 +199,8 @@ export interface StoreActions {
   updateContentBankItem: (id: string, patch: Partial<ContentBankItem>) => void;
   removeFromContentBank: (id: string) => void;
   setWorkbenchPlan: (plan: Omit<WorkbenchPlan, "updatedAt">) => void;
+  addChannel: (c: Pick<ChannelMeta, "label" | "category" | "expiresAt" | "createdBy">) => void;
+  expireChannel: (id: string) => void;
 }
 
 export type ArchiveContentType =
@@ -218,6 +221,20 @@ export interface ContentBankItem {
   contentType: ArchiveContentType;
   notes: string;
   taggedAt: string;
+}
+
+export type ChannelCategory = "workbench" | "helping-hands" | "briefing" | "lab" | "main";
+
+export interface ChannelMeta {
+  id: string;
+  label: string;
+  category: ChannelCategory;
+  /** ISO string — if present the channel is ephemeral and auto-expires at this time */
+  expiresAt?: string;
+  createdAt: string;
+  createdBy: DailyPick["actor_type"];
+  /** ISO string set when the channel is explicitly archived or has expired */
+  archivedAt?: string;
 }
 
 export type Store = AppState & StoreActions;
