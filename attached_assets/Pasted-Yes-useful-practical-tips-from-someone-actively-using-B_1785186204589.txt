@@ -1,0 +1,46 @@
+Yes — useful practical tips from someone actively using Buzz daily.
+
+@pavlenex posted a ~14.5-minute video of Buzz tips and tricks (his own + community). Key themes with timestamps:
+
+00:59** Multi-agent orchestration + avoiding model bias (running specialized agents with different models/roles)
+02:19** Agents recording short videos to show teammates what they did
+03:40** Avoiding duplicate work / wasted engineering time
+05:50** Agent-powered reporting
+06:50–08:40** Community patterns: specialized agent teams, turning PMs into devs (and vice-versa), triggers/schedules/workflows, crawling X for feedback + bug triage
+08:40** Temporary / ephemeral channels
+09:43** Channel categorization
+11:10** Cultural note: Buzz pulls people out of lonely single-agent chats into a shared playground
+13:05** Agents can fix and contribute code back to Buzz itself
+
+Recommendations for the Replit agent — adopt these specifically
+
+Specialized multi-agent roles instead of one generic agent  
+   Create distinct agent personas with clear jobs (e.g. “R&D Lead”, “Critical Challenger”, “Morale/Support”, “Stability & Operations”). Assign different models where it helps reduce bias. This maps cleanly onto River Smith + future Helping Hands agents and the Task Autopilot GREEN/AMBER/RED flow.
+
+Proof-of-work as visual artifacts  
+   When an agent completes a task, prefer short video recordings, annotated screenshots, or structured diffs over pure text. Makes human review faster and builds trust — especially valuable for rural operators who want to see what happened.
+
+Temporary / ephemeral channels for focused work  
+   Support short-lived channels that auto-expire (30 min, 2 h, end-of-day). Use them for one-off agent bursts, spike investigations, or “lab” sessions so the main channels stay clean.
+
+Channel categorization + clear naming  
+   Add simple category/metadata support early so Workbench channels, Helping Hands task channels, River Smith briefings, and agent labs stay organized as volume grows.
+
+Agents as first-class contributors that can improve the system  
+   Design the permission model so trusted agents can open PRs or post structured improvement proposals back into the Headwaters/Buzz surface (with human confirmation). The “agent fixes Buzz itself” pattern is powerful and aligns with the open, compounding nature of Nostr events.
+
+Triggers, schedules, and lightweight workflows  
+   Expose simple schedule/trigger primitives (daily morning manifest, end-of-day review, “when task reaches Confirm → notify”) so agents can run unattended without constant human prompting.
+
+Shared multi-agent “lab” channels  
+   Default pattern: one channel where several specialized agents + humans collaborate on a problem (as seen in the Dexter-lab examples). This is more effective than isolated agent sessions and matches the “shared playground” energy Pavlenex highlights.
+
+These are higher-leverage than generic “add more AI” ideas. They keep the system feeling like a coordinated team rather than a collection of lonely chatbots, stay faithful to the Zone 2 / Eave Rule constraints, and directly improve the agent experience we already planned for North Star and Helping Hands.
+
+Priority order for the agent:  
+Specialized roles + actor_type  
+Visual proof artifacts  
+Temporary channels + basic categorization  
+Schedule/trigger hooks for manifests and briefings  
+
+Everything else can follow once the event publishing path is live.
