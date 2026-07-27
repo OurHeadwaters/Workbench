@@ -129,3 +129,56 @@ describe("useKitAccess — cross-kit token rejection", () => {
     expect(result.current.data?.kit.id).toBe("pj-solutions-kit");
   });
 });
+
+// ── Expired cross-kit token edge case ─────────────────────────────────────────
+//
+// When a token is both expired (server 410) AND stored under the wrong kitId,
+// the server error is thrown before the cross-kit guard runs, so the catch
+// branch (lines 58–65 of useKitAccess.ts) takes over.  The intended behaviour
+// is status "expired" — not "invalid" — because the server's authoritative
+// rejection (410 Gone) is the primary signal.  These tests pin that behaviour
+// so a future refactor of error-handling order cannot accidentally let such a
+// token slip through under a different status.
+
+describe("useKitAccess — expired cross-kit token (410 from server)", () => {
+  /** An error shaped like the internal KitAccessError (status 410). */
+  const expiredCrossKitError = Object.assign(
+    new Error("Access check failed (410)"),
+    { status: 410 },
+  );
+
+  /** Stored token is keyed to pj-solutions-kit but was issued for economy-kit. */
+  const crossKitStored: StoredKitToken = {
+    token: CROSS_KIT_TOKEN,
+    expiresAt: new Date(Date.now() - 1000).toISOString(), // already past
+    buyerName: "Test Buyer",
+  };
+
+  beforeEach(() => {
+    vi.mocked(getKitToken).mockReturnValue(crossKitStored);
+    vi.mocked(fetchKitAccess).mockRejectedValue(expiredCrossKitError);
+    vi.mocked(clearKitToken).mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("resolves to status 'expired' when the server returns 410 for a cross-kit token", async () => {
+    const { result } = renderHook(() => useKitAccess("pj-solutions-kit"));
+
+    await waitFor(() => {
+      expect(result.current.status).toBe("expired");
+    });
+
+    expect(result.current.data).toBeNull();
+  });
+
+  it("still calls clearKitToken when the 410 path is taken for a cross-kit token", async () => {
+    renderHook(() => useKitAccess("pj-solutions-kit"));
+
+    await waitFor(() => {
+      expect(vi.mocked(clearKitToken)).toHaveBeenCalledWith("pj-solutions-kit");
+    });
+  });
+});
