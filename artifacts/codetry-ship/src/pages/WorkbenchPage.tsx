@@ -81,6 +81,31 @@ const INTERNAL_TOOLS: ToolEntry[] = [
   },
 ];
 
+const DOCTRINE_TOOLS: ToolEntry[] = [
+  {
+    eyebrow: "Doctrine · logic layer",
+    title: "RealityCore",
+    description: "The named doctrine instrument for grounding decisions in observable fact — cuts through assumption before a scope opens.",
+    href: "https://stomping-path-documentation.replit.app/logic/",
+    accent: "#3b2a6e",
+    accentFg: "#f4ede0",
+    external: true,
+    testId: "wb-realitycore",
+    icon: "🧭",
+  },
+  {
+    eyebrow: "Doctrine · logic layer",
+    title: "Fallacy Map",
+    description: "Named catalogue of the reasoning traps that stall community projects — reference it when an argument feels off but you can't say why.",
+    href: "https://stomping-path-documentation.replit.app/logic/",
+    accent: "#4a2040",
+    accentFg: "#f4ede0",
+    external: true,
+    testId: "wb-fallacy-map",
+    icon: "🗺️",
+  },
+];
+
 const EXTERNAL_TOOLS: ToolEntry[] = [
   {
     eyebrow: "Operations",
@@ -288,6 +313,30 @@ export function WorkbenchPage() {
 
           <div className="space-y-3">
             {INTERNAL_TOOLS.map((tool, i) => (
+              <ShelfItem key={tool.testId} tool={tool} delay={i * 60} />
+            ))}
+          </div>
+        </section>
+
+        <div
+          className="my-10 h-px"
+          style={{ background: "linear-gradient(to right, transparent, rgba(244,237,224,0.12), transparent)" }}
+        />
+
+        {/* Doctrine shelf */}
+        <section className="mb-14" data-testid="workbench-doctrine">
+          <ScrollReveal>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-px flex-1" style={{ background: "rgba(139,100,200,0.22)" }} />
+              <p className="font-mono text-[9px] uppercase tracking-[0.28em]" style={{ color: "rgba(139,100,200,0.65)" }}>
+                doctrine
+              </p>
+              <div className="h-px flex-1" style={{ background: "rgba(139,100,200,0.22)" }} />
+            </div>
+          </ScrollReveal>
+
+          <div className="space-y-3">
+            {DOCTRINE_TOOLS.map((tool, i) => (
               <ShelfItem key={tool.testId} tool={tool} delay={i * 60} />
             ))}
           </div>
