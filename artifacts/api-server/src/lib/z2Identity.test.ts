@@ -23,6 +23,10 @@ vi.mock("./logger", () => ({
 const BECH32_CHARS = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 
 vi.mock("@workspace/zone-identity", () => ({
+  createHouseholdSeed(): Uint8Array {
+    // deterministic stand-in — real impl uses crypto.randomBytes(32)
+    return new Uint8Array(32).fill(0xcc);
+  },
   deriveZ2Npub(seed: Uint8Array): string {
     if (seed.length === 0) {
       throw new Error("zero-length seed");

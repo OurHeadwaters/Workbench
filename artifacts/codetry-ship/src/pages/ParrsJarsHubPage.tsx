@@ -287,7 +287,6 @@ function LockedWall() {
             color: "#aaa",
             lineHeight: 1.7,
             fontSize: "0.9rem",
-            marginBottom: "2rem",
             maxWidth: 420,
             margin: "0 auto 2rem",
           }}

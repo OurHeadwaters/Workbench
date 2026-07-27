@@ -1,8 +1,35 @@
 import { describe, it, expect } from "vitest";
-import { deriveZ2Npub, MIN_NONZERO_BYTES, DeriveZ2NpubOptions } from "./index.js";
+import { createHouseholdSeed, deriveZ2Npub, MIN_NONZERO_BYTES, DeriveZ2NpubOptions } from "./index.js";
 
 // Ensure the options type is exported (compile-time check only)
 type _OptionsCheck = DeriveZ2NpubOptions;
+
+describe("createHouseholdSeed", () => {
+  it("returns a Uint8Array of exactly 32 bytes", () => {
+    const seed = createHouseholdSeed();
+    expect(seed).toBeInstanceOf(Uint8Array);
+    expect(seed.length).toBe(32);
+  });
+
+  it("produces a seed that deriveZ2Npub accepts without throwing", () => {
+    const seed = createHouseholdSeed();
+    expect(() => deriveZ2Npub(seed)).not.toThrow();
+  });
+
+  it("produces a valid bech32 npub when passed to deriveZ2Npub", () => {
+    const npub = deriveZ2Npub(createHouseholdSeed());
+    expect(npub).toMatch(/^npub1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]+$/);
+  });
+
+  it("returns different seeds on successive calls (randomness)", () => {
+    const a = createHouseholdSeed();
+    const b = createHouseholdSeed();
+    // Two independent 256-bit random draws colliding is astronomically unlikely
+    expect(Buffer.from(a).toString("hex")).not.toBe(
+      Buffer.from(b).toString("hex")
+    );
+  });
+});
 
 describe("deriveZ2Npub", () => {
   const seedA = new Uint8Array(32).fill(0xaa);

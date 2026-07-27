@@ -1,4 +1,4 @@
-import { hkdfSync } from "node:crypto";
+import { hkdfSync, randomBytes } from "node:crypto";
 
 /**
  * HKDF-SHA256 domain separator for Zone 2 npub derivation.
@@ -91,6 +91,31 @@ export interface DeriveZ2NpubOptions {
    * needs to be evaluated without changing the library constant.
    */
   minNonZeroBytes?: number;
+}
+
+/**
+ * Creates a cryptographically secure 32-byte household seed using
+ * `crypto.randomBytes(32)`.
+ *
+ * This is the **only documented path** for generating a new household seed.
+ * Do not construct seeds by converting integers, sequential IDs, or any other
+ * low-entropy value to a byte array — such seeds may pass the Hamming-weight
+ * guard in {@link deriveZ2Npub} while still being guessable if the integer
+ * space is small.
+ *
+ * ```ts
+ * import { createHouseholdSeed, deriveZ2Npub } from "@workspace/zone-identity";
+ *
+ * const seed = createHouseholdSeed();          // 256 bits of OS entropy
+ * const npub = deriveZ2Npub(seed);             // one-way Z2 identity
+ * // persist seed securely (e.g. as hex in an environment secret)
+ * ```
+ *
+ * @returns A `Uint8Array` of exactly 32 random bytes suitable for use as a
+ *   `householdSeed` in {@link deriveZ2Npub}.
+ */
+export function createHouseholdSeed(): Uint8Array {
+  return new Uint8Array(randomBytes(32));
 }
 
 /**
