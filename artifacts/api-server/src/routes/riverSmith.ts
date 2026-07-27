@@ -678,7 +678,7 @@ Generate the complete River Smith nightly briefing now.`;
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "x-ai/grok-3",
+      model: "x-ai/grok-4.3",
       max_tokens: 2048,
       messages: [
         { role: "system", content: buildSystemPrompt() },
