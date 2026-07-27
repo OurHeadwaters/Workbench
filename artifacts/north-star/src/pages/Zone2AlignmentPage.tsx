@@ -696,11 +696,6 @@ function StepsSection() {
           title: "Implement agent task-completion event",
           detail: "A signed Nostr event from an agent's npub triggers the XRPL escrow release path. Completion event must reference the task ID, include a completion proof hash, and be signed by the delegated npub. North Star verifies: (a) valid signature, (b) agent holds completion-scope grant for this task, (c) a human Confirm event is present before escrow release fires.",
         },
-        {
-          n: 10,
-          title: "Publish zone-gate crossing events from ZoneGate.tsx",
-          detail: "On render of a gate crossing, emit a crossing event via publishToRelay. Payload: { kind: TBD_GATE_CROSSING, crossing: \"Z1→Z2\" | \"Z2→Z3\", z2npub: string, crossed_at: ISO }. No Z1 data. No constellation list. Agents observe, never emit.",
-        },
       ].map((step) => (
         <div key={step.n} className="rounded border mb-3" style={{ background: "#100C00", borderColor: "#3A2800" }}>
           <div className="flex items-start gap-3 px-4 py-3">
@@ -712,6 +707,18 @@ function StepsSection() {
           </div>
         </div>
       ))}
+
+      {/* Step 10 — complete */}
+      <div className="rounded border mb-3" style={{ background: "#0A100A", borderColor: "#1A4020" }}>
+        <div className="flex items-start gap-3 px-4 py-3">
+          <span className="text-[11px] font-mono font-bold flex-shrink-0 mt-0.5" style={{ color: "#22C55E" }}>#10</span>
+          <div>
+            <div className="text-[13px] font-semibold mb-1" style={{ color: "#EAE4DB" }}>Publish zone-gate crossing events from ZoneGate.tsx</div>
+            <div className="text-[12px] leading-relaxed mb-2" style={{ color: "#7C8C7C" }}>{"On render of a gate crossing, emit a crossing event via publishToRelay. Payload: { crossing: \"Z1→Z2\" | \"Z2→Z3\", z2npub: string, crossed_at: ISO }. No Z1 data. No constellation list. Agents observe, never emit."}</div>
+            <div className="text-[11px]" style={{ color: "#4A6A4A" }}>Eave check: ✅ Payload carries crossing direction and crossed_at only — no Z1 identity fields. NoZ1Fields&lt;T&gt; constraint enforced at compile time.</div>
+          </div>
+        </div>
+      </div>
 
       <H3>Tier 3 — Wait for VC schema lock</H3>
       {[

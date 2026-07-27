@@ -12,7 +12,13 @@
  * This component renders that visible moment inside the constellation picker:
  *   Z1→Z2: "A session context change that establishes 'I am now working as a practitioner'"
  *   Z2→Z3: "A credential presented at the crossing but not stored inside the operational record"
+ *
+ * Relay: emits GATE_CROSSING (kind 1002) on mount so agents can observe zone transitions.
+ * Payload carries crossing direction and z2npub only — zero Z1 fields.
  */
+
+import { useEffect } from "react";
+import { publishToRelay, RELAY_EVENT_KINDS } from "@/lib/relay-stub";
 
 interface ZoneGateProps {
   crossing: "Z1→Z2" | "Z2→Z3";
@@ -40,6 +46,20 @@ const GATE_COPY: Record<
 
 export function ZoneGate({ crossing }: ZoneGateProps) {
   const { label, subtitle, accent, pip } = GATE_COPY[crossing];
+
+  useEffect(() => {
+    void publishToRelay({
+      kind: RELAY_EVENT_KINDS.GATE_CROSSING,
+      payload: {
+        crossing,
+        z2npub: "z2:local",
+        crossed_at: new Date().toISOString(),
+      },
+      z2npub: "z2:local",
+      timestamp: new Date().toISOString(),
+      signature: "stub",
+    });
+  }, [crossing]);
 
   return (
     <div
