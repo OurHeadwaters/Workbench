@@ -23,6 +23,9 @@
     },
     {
       "path": "./lib/zone-identity"
+    },
+    {
+      "path": "./lib/zone-tag"
     }
   ]
 }

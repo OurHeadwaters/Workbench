@@ -30,6 +30,10 @@ const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[
   { icon: "🚢", name: "Crew Manifest",         href: "/", comingSoon: true },
 ];
 
+const PRODUCTION_TOOLS: { icon: string; name: string; href: string }[] = [
+  { icon: "⚙️", name: "The Mill", href: "/mill" },
+];
+
 const EXPLORE_LINKS: { icon: string; name: string; href: string }[] = [
   { icon: "🌿", name: "Economy",           href: "/economy" },
   { icon: "🤝", name: "Helping Hands",     href: "/economy/helping-hands" },
@@ -71,7 +75,8 @@ export function SiteNav() {
 
   const toolsRouteActive =
     EXPLORE_LINKS.some((l) => isExploreActive(l.href, location)) ||
-    TOOLS.some((t) => t.href !== "/" && isActive(t.href, location));
+    TOOLS.some((t) => t.href !== "/" && isActive(t.href, location)) ||
+    PRODUCTION_TOOLS.some((t) => isActive(t.href, location));
 
   useEffect(() => {
     function syncAuth() {
@@ -316,7 +321,7 @@ export function SiteNav() {
                       : "0 8px 24px rgba(10,22,14,0.12)",
                   }}
                   role="menu"
-                  aria-label={`Tools menu, ${TOOLS.length + EXPLORE_LINKS.length} items`}
+                  aria-label={`Tools menu, ${TOOLS.length + PRODUCTION_TOOLS.length + EXPLORE_LINKS.length} items`}
                   onKeyDown={handleToolsMenuKeyDown}
                   data-testid="nav-tools-dropdown"
                 >
@@ -388,6 +393,58 @@ export function SiteNav() {
                     className="px-4 pt-1 pb-2 font-mono text-[8px] uppercase tracking-[0.22em]"
                     style={{ color: dark ? "rgba(212,160,23,0.55)" : "hsl(var(--muted-foreground))", opacity: 0.8 }}
                   >
+                    Production
+                  </p>
+                  {PRODUCTION_TOOLS.map(({ icon, name, href }, i) => {
+                    const active = isActive(href, location);
+                    return (
+                    <a
+                      key={name}
+                      ref={(el) => { toolItemRefs.current[TOOLS.length + i] = el; }}
+                      href={href}
+                      className="flex items-center gap-3 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all"
+                      style={{
+                        color: active
+                          ? (dark ? "#d4a017" : "hsl(var(--foreground))")
+                          : (dark ? "rgba(244,237,224,0.82)" : "hsl(var(--foreground))"),
+                        borderLeft: `2px solid ${active ? "#d4a017" : "transparent"}`,
+                        background: active ? (dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))") : "transparent",
+                      }}
+                      role="menuitem"
+                      tabIndex={-1}
+                      aria-current={active ? "page" : undefined}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.borderLeftColor = "#d4a017";
+                        (e.currentTarget as HTMLElement).style.color = dark ? "#f4ede0" : "hsl(var(--foreground))";
+                        (e.currentTarget as HTMLElement).style.background = dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))";
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderLeftColor = active ? "#d4a017" : "transparent";
+                        el.style.background = active ? (dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))") : "transparent";
+                        el.style.color = active
+                          ? (dark ? "#d4a017" : "hsl(var(--foreground))")
+                          : (dark ? "rgba(244,237,224,0.82)" : "hsl(var(--foreground))");
+                      }}
+                      data-testid={`nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                    >
+                      <span className="text-base leading-none shrink-0">{icon}</span>
+                      <span className="flex-1">{name}</span>
+                    </a>
+                    );
+                  })}
+                  <div
+                    className="mx-4 my-1.5"
+                    style={{
+                      height: "1px",
+                      background: dark ? "rgba(212,160,23,0.12)" : "hsl(var(--card-border))",
+                    }}
+                    role="separator"
+                  />
+                  <p
+                    className="px-4 pt-1 pb-2 font-mono text-[8px] uppercase tracking-[0.22em]"
+                    style={{ color: dark ? "rgba(212,160,23,0.55)" : "hsl(var(--muted-foreground))", opacity: 0.8 }}
+                  >
                     Explore
                   </p>
                   {EXPLORE_LINKS.map(({ icon, name, href }, i) => {
@@ -395,7 +452,7 @@ export function SiteNav() {
                     return (
                     <a
                       key={name}
-                      ref={(el) => { toolItemRefs.current[TOOLS.length + i] = el; }}
+                      ref={(el) => { toolItemRefs.current[TOOLS.length + PRODUCTION_TOOLS.length + i] = el; }}
                       href={`${base}${href}`}
                       className="flex items-center gap-3 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all"
                       style={{
@@ -574,7 +631,7 @@ export function SiteNav() {
               <div
                 id="mobile-tools-menu"
                 role="menu"
-                aria-label={`Tools menu, ${TOOLS.length + EXPLORE_LINKS.length} items`}
+                aria-label={`Tools menu, ${TOOLS.length + PRODUCTION_TOOLS.length + EXPLORE_LINKS.length} items`}
                 className="border-t"
                 style={{ borderColor: dark ? "rgba(212,160,23,0.12)" : "hsl(var(--card-border))" }}
               >
@@ -608,6 +665,43 @@ export function SiteNav() {
                         Soon
                       </span>
                     )}
+                  </a>
+                  );
+                })}
+                <div
+                  className="mx-5 my-1"
+                  style={{
+                    height: "1px",
+                    background: dark ? "rgba(212,160,23,0.12)" : "hsl(var(--card-border))",
+                  }}
+                  role="separator"
+                />
+                <p
+                  className="px-5 pt-2 pb-1.5 font-mono text-[8px] uppercase tracking-[0.22em]"
+                  style={{ color: dark ? "rgba(212,160,23,0.55)" : "hsl(var(--muted-foreground))", opacity: 0.8 }}
+                >
+                  Production
+                </p>
+                {PRODUCTION_TOOLS.map(({ icon, name, href }) => {
+                  const active = isActive(href, location);
+                  return (
+                  <a
+                    key={name}
+                    href={href}
+                    className="flex items-center gap-3 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors border-l-2"
+                    style={{
+                      color: active
+                        ? (dark ? "#d4a017" : "hsl(var(--foreground))")
+                        : (dark ? "rgba(244,237,224,0.75)" : "hsl(var(--foreground))"),
+                      borderLeftColor: active ? "#d4a017" : "transparent",
+                      background: active ? (dark ? "rgba(212,160,23,0.06)" : "hsl(var(--muted))") : "transparent",
+                    }}
+                    role="menuitem"
+                    aria-current={active ? "page" : undefined}
+                    data-testid={`mobile-nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                  >
+                    <span className="text-base leading-none shrink-0">{icon}</span>
+                    <span className="flex-1">{name}</span>
                   </a>
                   );
                 })}

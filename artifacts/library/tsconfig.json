@@ -23,6 +23,9 @@
     },
     {
       "path": "../../lib/why-stores-fail"
+    },
+    {
+      "path": "../../lib/zone-tag"
     }
   ]
 }
