@@ -3,11 +3,12 @@
 // Two modes: /debrief (morning) and /debrief/evening (evening dump).
 // Saves by date key in localStorage — same pattern as captures.
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { useLocation, Link } from "wouter";
 import { ChevronLeft, Moon, Sun } from "lucide-react";
 import { BG, SURFACE, SURFACE_2, BORDER, BORDER_STRONG, TEXT, TEXT_2, TEXT_3, AMBER, FONT_DISPLAY } from "@/lib/theme";
+import { useStore } from "@/store";
 
 function todayKey() {
   return format(new Date(), "yyyy-MM-dd");
@@ -57,12 +58,27 @@ export function DebriefPage() {
   });
 
   const [saved, setSaved] = useState(false);
+  const fireTrigger = useStore((s) => s.fireTrigger);
+  const triggers = useStore((s) => s.triggers);
+
+  // Debounce ref: fires the "on-debrief-save" condition triggers once after
+  // the user stops typing for 2 seconds, not on every keystroke.
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const triggersRef = useRef(triggers);
+  triggersRef.current = triggers;
+  const fireRef = useRef(fireTrigger);
+  fireRef.current = fireTrigger;
 
   useEffect(() => {
     const data = load();
     setText(isEvening ? (data[key]?.evening ?? "") : (data[key]?.morning ?? ""));
     setSaved(false);
+    // Cancel any pending debounced fire when switching modes or days
+    if (debounceRef.current) clearTimeout(debounceRef.current);
   }, [isEvening, key]);
+
+  // Cancel pending debounced fire on unmount
+  useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
 
   function handleChange(val: string) {
     setText(val);
@@ -75,6 +91,18 @@ export function DebriefPage() {
     };
     save(data);
     setSaved(true);
+
+    // Debounce: fire "on-debrief-save" triggers once after 2s of inactivity,
+    // not on every keystroke.
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const debriefTriggers = triggersRef.current.filter(
+        (t) => t.enabled && t.condition === "on-debrief-save"
+      );
+      for (const t of debriefTriggers) {
+        void fireRef.current(t.id);
+      }
+    }, 2000);
   }
 
   const prompts = isEvening ? EVENING_PROMPTS : MORNING_PROMPTS;

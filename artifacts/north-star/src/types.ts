@@ -155,33 +155,48 @@ export interface WorkbenchPlan {
 
 export interface AppState {
   schemaVersion: number;
+
   installedAt: string;
+
   onboarding: {
     completed: boolean;
     completedAt?: string;
     step?: number;
   };
+
   statement?: {
     who: string;
     why: string;
     noFly: string;
     updatedAt: string;
   };
+
   zoneRanking: ZoneId[];
+
   constellations: Constellation[];
+
   contracts: Contract[];
+
   contractMilestones: ContractMilestone[];
+
   dailyPicks: Record<string, DailyPick>;
+
   weeklyReviews: WeeklyReview[];
+
   seasonalReviews: SeasonalReview[];
+
   guide: {
     lastSectionByChapter: Record<string, string>;
     lastOpenedAt?: string;
     bookmarkChapterId?: string;
   };
+
   captures: Capture[];
+
   dismissedNudges: Record<string, string>;
+
   pendingReplies: Record<string, { deferredCount: number; lastDeferred?: string; doneAt?: string }>;
+
   inbox: {
     keywords: string[];
     senders: string[];
@@ -189,12 +204,20 @@ export interface AppState {
     hatLabels: HatLabel[];
     lastSavedAt?: string;
   };
+
   gmailAccounts: GmailAccount[];
+
   lastBackedUpAt?: string;
+
   contentBank: ContentBankItem[];
+
   workbenchPlan?: WorkbenchPlan;
+
   channels: ChannelMeta[];
+
   helpingHandsTasks: HelpingHandsTask[];
+
+  triggers: TriggerDefinition[];
 }
 
 export interface StoreActions {
@@ -234,6 +257,8 @@ export interface StoreActions {
   claimHelpingHandsTask: (id: string) => void;
   completeHelpingHandsTask: (id: string) => void;
   confirmHelpingHandsTask: (id: string) => void;
+  setTrigger: (id: string, patch: Partial<TriggerDefinition>) => void;
+  fireTrigger: (id: string) => Promise<void>;
 }
 
 export type ArchiveContentType =
@@ -271,6 +296,34 @@ export interface ChannelMeta {
   archivedAt?: string;
 }
 
+/**
+ * TriggerDefinition — a named hook that fires a relay event either on a
+ * schedule (client-side interval check against `schedule`) or on a named
+ * condition string. Payloads are always constructed from Z2-safe store state.
+ *
+ * EAVE RULE: No Z1 identity fields may appear in any constructed payload.
+ */
+export interface TriggerDefinition {
+  /** Stable identifier, e.g. "morning-manifest-daily" */
+  id: string;
+  /** Human-readable label shown in the registry UI */
+  name: string;
+  /** Relay event kind number this trigger emits */
+  kind: number;
+  /**
+   * Cron-lite schedule string — "HH:MM" (24-hour) for a daily time trigger.
+   * The client checks within a ±5-minute window once per minute.
+   */
+  schedule?: string;
+  /**
+   * Named condition string for event-driven triggers, e.g. "on-debrief-save".
+   * Conditions are matched by the caller; no automatic evaluation happens here.
+   */
+  condition?: string;
+  /** ISO datetime of the last successful fire; undefined if never fired */
+  last_fired?: string;
+  enabled: boolean;
+}
 export type Store = AppState & StoreActions;
 
 export interface HelpingHandsTask {

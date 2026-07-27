@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
-import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask } from "./types";
+import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition } from "./types";
 import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload } from "./lib/relay-event-types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 import { publishToRelay, RELAY_EVENT_KINDS } from "./lib/relay-stub";
@@ -186,8 +186,24 @@ const SEED_GMAIL_ACCOUNTS: GmailAccount[] = [
   },
 ];
 
+const SEED_TRIGGERS: TriggerDefinition[] = [
+  {
+    id: "morning-manifest-daily",
+    name: "Morning Manifest — Daily",
+    kind: 1000,
+    schedule: "06:00",
+    enabled: true,
+  },
+  {
+    id: "end-of-day-review",
+    name: "End-of-Day Review",
+    kind: 1001,
+    condition: "on-debrief-save",
+    enabled: true,
+  },
+];
 const INITIAL_STATE: AppState = {
-  schemaVersion: 9,
+  schemaVersion: 10,
   installedAt: new Date().toISOString(),
   onboarding: { completed: false, step: 0 },
   statement: undefined,
@@ -221,6 +237,7 @@ const INITIAL_STATE: AppState = {
   workbenchPlan: undefined,
   channels: [],
   helpingHandsTasks: [],
+  triggers: SEED_TRIGGERS,
 };
 
 export const useStore = create<Store>()(
@@ -513,6 +530,63 @@ export const useStore = create<Store>()(
           ),
         })),
 
+      setTrigger: (id, patch) =>
+        set((s) => ({
+          triggers: s.triggers.map((t) => (t.id === id ? { ...t, ...patch } : t)),
+        })),
+
+      fireTrigger: async (id) => {
+        const s = get();
+        const trigger = s.triggers.find((t) => t.id === id);
+        if (!trigger || !trigger.enabled) return;
+
+        const now = new Date().toISOString();
+
+        if (trigger.kind === RELAY_EVENT_KINDS.MORNING_MANIFEST) {
+          const todayPick = s.getTodayPick();
+          await publishToRelay({
+            kind: RELAY_EVENT_KINDS.MORNING_MANIFEST,
+            payload: {
+              zone: "Z2",
+              actor_type: "agent",
+              agent_role: "ops",
+              date: todayPick.date,
+              constellation_ids: todayPick.constellationIds,
+              acknowledged_guardrails: todayPick.acknowledgedGuardrails ?? [],
+              zone_ranking: s.zoneRanking,
+              burst_windows: s.workbenchPlan
+                ? { phase: s.workbenchPlan.phase, windows: s.workbenchPlan.windows }
+                : null,
+            },
+            z2npub: "z2:local",
+            timestamp: now,
+            signature: "stub",
+          });
+        } else if (trigger.kind === RELAY_EVENT_KINDS.BRIEFING_ENVELOPE) {
+          await publishToRelay({
+            kind: RELAY_EVENT_KINDS.BRIEFING_ENVELOPE,
+            payload: {
+              zone: "Z2",
+              actor_type: "agent",
+              agent_role: "river-smith",
+              briefing_id: uuidv4(),
+              generated_at: now,
+              triggered_by: "scheduled",
+              safety_flags_count: 0,
+            },
+            z2npub: "z2:local",
+            timestamp: now,
+            signature: "stub",
+          });
+        }
+
+        set((s) => ({
+          triggers: s.triggers.map((t) =>
+            t.id === id ? { ...t, last_fired: now } : t
+          ),
+        }));
+      },
+
       addHelpingHandsTask: ({ title }) => {
         const now = new Date().toISOString();
         const id = uuidv4();
@@ -602,7 +676,7 @@ export const useStore = create<Store>()(
     }),
     {
       name: "north-star:v1",
-      version: 9,
+      version: 10,
       migrate(persistedState: unknown, fromVersion: number) {
         const s = persistedState as Record<string, unknown>;
         if (fromVersion < 5) {
@@ -641,6 +715,10 @@ export const useStore = create<Store>()(
         if (fromVersion < 9) {
           s.channels = [];
           s.schemaVersion = 9;
+        }
+        if (fromVersion < 10) {
+          s.triggers = SEED_TRIGGERS;
+          s.schemaVersion = 10;
         }
         return s as unknown as AppState;
       },

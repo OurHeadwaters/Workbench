@@ -38,8 +38,10 @@ import { SprintPage } from "@/pages/SprintPage";
 import { Zone2AlignmentPage } from "@/pages/Zone2AlignmentPage";
 import { ChannelsPage } from "@/pages/ChannelsPage";
 import { HelpingHandsPage } from "@/pages/HelpingHandsPage";
+import { TriggersPage } from "@/pages/TriggersPage";
 import { GordWidget } from "@workspace/gord-widget";
 import { PasswordGate } from "@/components/PasswordGate";
+import { ScheduleWatcher } from "@/components/ScheduleWatcher";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -267,11 +269,18 @@ export default function App() {
           </OnboardingGuard>
         </Route>
 
+        <Route path="/triggers">
+          <OnboardingGuard>
+            <AppShell><TriggersPage /></AppShell>
+          </OnboardingGuard>
+        </Route>
+
         <Route><Redirect to="/" /></Route>
       </Switch>
     </WouterRouter>
     <KitchenTableButton bottom={88} />
     <GordWidget founderMode={isOwner} />
+    <ScheduleWatcher />
     </ZoneStoreProvider>
     </PasswordGate>
   );
