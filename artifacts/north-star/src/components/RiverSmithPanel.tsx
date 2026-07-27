@@ -214,7 +214,36 @@ function ProofCard({ proof, briefingId, sentAt }: ProofCardProps) {
 // Handles the fixed River Smith output format:
 //   ## heading, ### heading, **bold**, - bullets, *italic*, blank lines
 
-function RiverMarkdown({ text }: { text: string }) {
+/**
+ * Split markdown into a preamble + sections keyed by their ## heading.
+ * Each section's body is the raw markdown lines between that heading and the next one.
+ */
+function splitSections(md: string): { heading: string; body: string }[] {
+  const lines = md.split("\n");
+  const sections: { heading: string; body: string }[] = [];
+  let current: { heading: string; bodyLines: string[] } | null = null;
+
+  for (const line of lines) {
+    if (line.startsWith("## ")) {
+      if (current) {
+        sections.push({ heading: current.heading, body: current.bodyLines.join("\n").trim() });
+      }
+      current = { heading: line.slice(3).trim(), bodyLines: [] };
+    } else if (current) {
+      current.bodyLines.push(line);
+    }
+  }
+  if (current) {
+    sections.push({ heading: current.heading, body: current.bodyLines.join("\n").trim() });
+  }
+  return sections;
+}
+
+function RiverMarkdown({ text, onPropose }: { text: string; onPropose?: (heading: string, body: string) => void }) {
+  const sectionBodies = onPropose
+    ? Object.fromEntries(splitSections(text).map((s) => [s.heading, s.body]))
+    : {};
+
   const lines = text.split("\n");
   const elements: React.ReactNode[] = [];
   let i = 0;
@@ -223,9 +252,22 @@ function RiverMarkdown({ text }: { text: string }) {
     const line = lines[i] ?? "";
 
     if (line.startsWith("## ")) {
+      const heading = line.slice(3).trim();
       elements.push(
-        <h2 key={i} className="text-[17px] font-serif text-[#EAE4DB] tracking-wide mt-4 mb-1 flex items-center gap-2">
-          {inlineMarkdown(line.slice(3))}
+        <h2
+          key={i}
+          className="group text-[17px] font-serif text-[#EAE4DB] tracking-wide mt-4 mb-1 flex items-center gap-2"
+        >
+          <span>{inlineMarkdown(heading)}</span>
+          {onPropose && (
+            <button
+              onClick={() => onPropose(heading, sectionBodies[heading] ?? "")}
+              title={`Pre-fill proposal from "${heading}"`}
+              className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity flex-shrink-0 text-[10px] text-[#4A8A7C] border border-[#2A4A43] bg-[#0D1F1C] hover:bg-[#1A3A33] rounded px-1.5 py-0.5 font-sans font-semibold tracking-[0.08em] leading-none"
+            >
+              → Propose
+            </button>
+          )}
         </h2>,
       );
     } else if (line.startsWith("### ")) {
@@ -372,6 +414,14 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
   const [proposeSurface, setProposeSurface] = useState("");
   const [proposeSuccess, setProposeSuccess] = useState(false);
   const [proposing, setProposing] = useState(false);
+
+  const handleProposeFromSection = (heading: string, body: string) => {
+    setProposeTitle(heading);
+    setProposeDesc(body);
+    setProposeSurface(heading);
+    setProposeOpen(true);
+    setProposeSuccess(false);
+  };
 
   const handlePropose = () => {
     if (!proposeTitle.trim() || !proposeDesc.trim() || proposing) return;
@@ -828,7 +878,10 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
           {/* Briefing content */}
           {briefing && !loading && (
             <div className="px-5 py-5 max-h-[60dvh] overflow-y-auto">
-              <RiverMarkdown text={briefing.rawMarkdown} />
+              <RiverMarkdown
+                text={briefing.rawMarkdown}
+                onPropose={isOwner ? handleProposeFromSection : undefined}
+              />
             </div>
           )}
         </div>
