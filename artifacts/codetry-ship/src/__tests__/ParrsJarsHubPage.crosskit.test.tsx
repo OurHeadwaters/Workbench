@@ -17,15 +17,26 @@
  * Unlike the hook-level unit tests in useKitAccess.test.ts, this test uses
  * real localStorage and a global fetch stub, rendering the actual page tree.
  *
- * The final describe block ("loading window") uses a deferred fetch to freeze
- * the in-flight state and verify hub content is never mounted before the server
- * guard resolves — guarding against future fast-path changes that widen the
- * loading condition.
+ * The final describe blocks use a deferred fetch to freeze the in-flight state
+ * and verify hub content is never mounted before the server guard resolves —
+ * guarding against future fast-path changes that widen the loading condition.
+ * This covers three branches: cross-kit token, no token at all (status "none"),
+ * and an expired token (status "expired" via server 410).
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { ParrsJarsHubPage } from "@/pages/ParrsJarsHubPage";
+
+// ── Shared helper ──────────────────────────────────────────────────────────────
+
+/** Resolves a deferred promise from outside — lets us freeze fetch in-flight. */
+type Deferred<T> = { promise: Promise<T>; resolve: (v: T) => void };
+function deferred<T>(): Deferred<T> {
+  let resolve!: (v: T) => void;
+  const promise = new Promise<T>((res) => { resolve = res; });
+  return { promise, resolve };
+}
 
 // ── Test data ─────────────────────────────────────────────────────────────────
 
@@ -51,6 +62,23 @@ const CROSS_KIT_SERVER_RESPONSE = {
   buyer_name: "Cross Kit Test Buyer",
   purchase_id: "purchase-cross-001",
   expires_at: new Date(Date.now() + 86_400_000 * 30).toISOString(),
+};
+
+/**
+ * A superficially valid token stored under the correct kit key.
+ * The server will respond with 410 (expired) for the expired-path tests.
+ */
+const EXPIRED_TOKEN = "expiredtoken" + "0".repeat(52); // 64-char token
+const EXPIRED_TOKEN_STORED = JSON.stringify({
+  token: EXPIRED_TOKEN,
+  expiresAt: new Date(Date.now() + 86_400_000 * 30).toISOString(),
+  buyerName: "Expired Buyer",
+});
+
+/** 410 body returned by fetchKitAccess when the server considers the token expired */
+const EXPIRED_SERVER_BODY = {
+  error: "token_expired",
+  expired_at: "2026-01-01T00:00:00Z",
 };
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
@@ -153,7 +181,7 @@ describe("ParrsJarsHubPage — cross-kit token swap is blocked", () => {
   });
 });
 
-// ── Loading-window guard ───────────────────────────────────────────────────────
+// ── Loading-window guard (cross-kit) ───────────────────────────────────────────
 
 /**
  * These tests hold the server fetch in-flight via a deferred promise so we can
@@ -166,14 +194,6 @@ describe("ParrsJarsHubPage — cross-kit token swap is blocked", () => {
  * confirms the token.
  */
 describe("ParrsJarsHubPage — hub content is never mounted during the loading window", () => {
-  /** Resolves a deferred promise from outside — lets us freeze fetch in-flight. */
-  type Deferred<T> = { promise: Promise<T>; resolve: (v: T) => void };
-  function deferred<T>(): Deferred<T> {
-    let resolve!: (v: T) => void;
-    const promise = new Promise<T>((res) => { resolve = res; });
-    return { promise, resolve };
-  }
-
   beforeEach(() => {
     // Place the cross-kit token in localStorage so the hook starts a fetch.
     localStorage.setItem("headwaters:kit-token:pj-solutions-kit", CROSS_KIT_STORED);
@@ -257,6 +277,186 @@ describe("ParrsJarsHubPage — hub content is never mounted during the loading w
     });
 
     // Hub content still absent after the guard has resolved to "invalid".
+    expect(screen.queryByText("Get Started")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Eat What You Store & Store What You Eat"),
+    ).not.toBeInTheDocument();
+  });
+});
+
+// ── No-token guard (status === "none") ────────────────────────────────────────
+
+/**
+ * When localStorage holds no token at all the hook skips the fetch entirely and
+ * sets status to "none" inside its useEffect.  The initial synchronous render
+ * always lands in "loading" (the hook's default state), so hub content must be
+ * absent during that window just as it is during an in-flight fetch.
+ *
+ * These tests confirm that the "none" fast-path (no network round-trip) cannot
+ * short-circuit the loading guard and leak hub content.
+ */
+describe("ParrsJarsHubPage — hub content is never mounted when there is no stored token", () => {
+  beforeEach(() => {
+    localStorage.clear(); // no token at all
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    vi.unstubAllGlobals();
+  });
+
+  it("never shows hub content before or after the hook settles to none with no stored token", async () => {
+    render(<ParrsJarsHubPage />);
+
+    // With no token the hook skips the network round-trip and resolves to
+    // "none" inside its first useEffect pass.  React 18's act() batching in
+    // jsdom flushes that effect synchronously, so the loading window may have
+    // already closed by the time assertions run.  What matters is that hub
+    // content is never mounted — not during loading, not after settlement.
+    expect(screen.queryByText("Get Started")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Eat What You Store & Store What You Eat"),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Foundation")).not.toBeInTheDocument();
+    expect(screen.queryByText("Module 1")).not.toBeInTheDocument();
+
+    // After the effect settles, LockedWall takes over (not hub content).
+    await waitFor(() => {
+      expect(
+        screen.getByText("Your resource hub is one purchase away."),
+      ).toBeInTheDocument();
+    });
+
+    // Hub module content still absent after settlement.
+    expect(screen.queryByText("Get Started")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Eat What You Store & Store What You Eat"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("never mounts hub content at any point from navigation through settlement with no token", async () => {
+    const { container } = render(<ParrsJarsHubPage />);
+
+    // DOM snapshot while still in the loading window (hook not yet settled).
+    const loadingSnapshot = container.textContent ?? "";
+    expect(loadingSnapshot).not.toContain("Get Started");
+    expect(loadingSnapshot).not.toContain("Eat What You Store");
+    expect(loadingSnapshot).not.toContain("Foundation");
+
+    // Wait for the hook to settle to "none".
+    await waitFor(() => {
+      expect(
+        screen.getByText("Your resource hub is one purchase away."),
+      ).toBeInTheDocument();
+    });
+
+    // Hub content still absent after settlement.
+    expect(screen.queryByText("Get Started")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Eat What You Store & Store What You Eat"),
+    ).not.toBeInTheDocument();
+  });
+});
+
+// ── Expired-token guard (status === "expired", server 410) ────────────────────
+
+/**
+ * When the server returns HTTP 410 for a stored token, fetchKitAccess throws a
+ * KitAccessError with status 410 and useKitAccess sets status to "expired".
+ * LockedWall renders with reason="expired" (headline: "Your access link has
+ * expired.").  Hub content must be absent both during the in-flight window AND
+ * after the expired guard resolves.
+ *
+ * The deferred-promise pattern freezes the fetch mid-flight so we can assert
+ * the loading screen is shown before the 410 arrives.
+ */
+describe("ParrsJarsHubPage — hub content is never mounted when the server returns 410 (expired)", () => {
+  beforeEach(() => {
+    // Place a superficially valid token; the server will say it is expired.
+    localStorage.setItem("headwaters:kit-token:pj-solutions-kit", EXPIRED_TOKEN_STORED);
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    vi.unstubAllGlobals();
+  });
+
+  it("shows only the loading screen (not hub content) while the 410 fetch is in-flight", async () => {
+    const d = deferred<Response>();
+
+    vi.stubGlobal("fetch", vi.fn(() => d.promise));
+
+    render(<ParrsJarsHubPage />);
+
+    // Loading spinner present immediately.
+    expect(screen.getByText("Checking access…")).toBeInTheDocument();
+
+    // Hub content absent while fetch is pending.
+    expect(screen.queryByText("Get Started")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Eat What You Store & Store What You Eat"),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Foundation")).not.toBeInTheDocument();
+    expect(screen.queryByText("Module 1")).not.toBeInTheDocument();
+
+    // Neither the generic LockedWall CTA nor the expired headline is visible yet.
+    expect(
+      screen.queryByText("Your resource hub is one purchase away."),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Your access link has expired."),
+    ).not.toBeInTheDocument();
+
+    // Resolve the deferred fetch with a 410 — fetchKitAccess throws KitAccessError(410).
+    d.resolve(
+      new Response(JSON.stringify(EXPIRED_SERVER_BODY), {
+        status: 410,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    // After resolution the "expired" branch renders LockedWall with reason="expired".
+    await waitFor(() => {
+      expect(
+        screen.getByText("Your access link has expired."),
+      ).toBeInTheDocument();
+    });
+
+    // Hub content still absent after expiry resolution.
+    expect(screen.queryByText("Get Started")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Eat What You Store & Store What You Eat"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("never mounts hub content at any point from navigation through 410 guard resolution", async () => {
+    const d = deferred<Response>();
+
+    vi.stubGlobal("fetch", vi.fn(() => d.promise));
+
+    const { container } = render(<ParrsJarsHubPage />);
+
+    // DOM snapshot while the 410 fetch is still in-flight.
+    const loadingSnapshot = container.textContent ?? "";
+    expect(loadingSnapshot).not.toContain("Get Started");
+    expect(loadingSnapshot).not.toContain("Eat What You Store");
+    expect(loadingSnapshot).not.toContain("Foundation");
+
+    // Resolve with 410.
+    d.resolve(
+      new Response(JSON.stringify(EXPIRED_SERVER_BODY), {
+        status: 410,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Your access link has expired."),
+      ).toBeInTheDocument();
+    });
+
+    // Hub content still absent after the guard has resolved to "expired".
     expect(screen.queryByText("Get Started")).not.toBeInTheDocument();
     expect(
       screen.queryByText("Eat What You Store & Store What You Eat"),
