@@ -113,6 +113,7 @@ function Li({ children }: { children: React.ReactNode }) {
 type NpubState =
   | { status: "loading" }
   | { status: "ok"; npub: string }
+  | { status: "token_not_configured" }
   | { status: "unconfigured" }
   | { status: "error"; message: string };
 
@@ -132,12 +133,18 @@ export function Z2NpubReadout() {
     fetch("/api/z2/npub", { headers })
       .then(async (res) => {
         if (cancelled) return;
+        // 412 = LIBRARY_OWNER_TOKEN env var not set on the server
+        if (res.status === 412) {
+          setState({ status: "token_not_configured" });
+          return;
+        }
+        // 503 = Z2_HOUSEHOLD_SEED env var not set on the server
         if (res.status === 503) {
           setState({ status: "unconfigured" });
           return;
         }
         if (res.status === 401) {
-          setState({ status: "error", message: "Unauthorized — owner token required. Sign in as the system owner first." });
+          setState({ status: "error", message: "Access denied — check that the owner token in your browser matches LIBRARY_OWNER_TOKEN on the API server." });
           return;
         }
         if (!res.ok) {
@@ -184,6 +191,16 @@ export function Z2NpubReadout() {
       {state.status === "loading" && (
         <div className="text-[12px]" style={{ color: "#3A5A50" }}>
           Fetching…
+        </div>
+      )}
+
+      {state.status === "token_not_configured" && (
+        <div
+          className="rounded border-l-2 px-3 py-2 text-[12px] leading-relaxed"
+          style={{ background: "#0E0E14", borderColor: "#3A3A8B", color: "#8B8BB0" }}
+        >
+          <span className="font-bold" style={{ color: "#8B8BDC" }}>Owner token not set — </span>
+          add <code className="text-[11px] px-1 rounded" style={{ background: "#12121A", color: "#C4B5FD" }}>LIBRARY_OWNER_TOKEN</code> to the API server environment to protect and expose this endpoint.
         </div>
       )}
 
