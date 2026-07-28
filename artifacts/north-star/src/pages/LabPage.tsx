@@ -51,6 +51,48 @@ function roleLabel(role: string | undefined): string {
   return entry ? entry.name : role;
 }
 
+// ── TypingBubble ───────────────────────────────────────────────────────────
+
+function TypingBubble({ role }: { role: string }) {
+  return (
+    <div className="flex gap-2.5 flex-row">
+      {/* Avatar */}
+      <div
+        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+        style={{ backgroundColor: "rgba(100,180,120,0.15)" }}
+      >
+        <Bot size={14} style={{ color: "#7ecf8e" }} />
+      </div>
+
+      {/* Bubble */}
+      <div className="flex flex-col gap-1 max-w-[75%] items-start">
+        <span className="text-[10px] font-medium px-1" style={{ color: TEXT_2 }}>
+          {roleLabel(role)}
+        </span>
+        <div
+          className="rounded-2xl px-4 py-3 flex items-center gap-1"
+          style={{
+            backgroundColor: "rgba(237,232,213,0.07)",
+            border: `1px solid ${BORDER}`,
+          }}
+        >
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="w-1.5 h-1.5 rounded-full"
+              style={{
+                backgroundColor: "#7ecf8e",
+                opacity: 0.7,
+                animation: `typing-dot 1.2s ease-in-out ${i * 0.2}s infinite`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── EventBubble ────────────────────────────────────────────────────────────
 
 function EventBubble({ ev }: { ev: RelayEventSummary }) {
@@ -179,12 +221,12 @@ export function LabPage() {
     return map;
   }, [feed]);
 
-  // Scroll to bottom of feed when new events arrive
+  // Scroll to bottom of feed when new events arrive or typing bubble appears
   useEffect(() => {
     if (feedRef.current) {
       feedRef.current.scrollTop = feedRef.current.scrollHeight;
     }
-  }, [feed.length]);
+  }, [feed.length, askingRole]);
 
   function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -346,6 +388,7 @@ export function LabPage() {
           {feed.map((ev) => (
             <EventBubble key={ev.id} ev={ev} />
           ))}
+          {askingRole && <TypingBubble role={askingRole} />}
         </div>
 
         {/* By-role breakdown (shown when there's content from multiple roles) */}
