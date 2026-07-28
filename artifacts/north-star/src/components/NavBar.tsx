@@ -124,6 +124,8 @@ export function NavBar() {
   const [location] = useLocation();
   const unlocked = isKitchenTableUnlocked();
   const [moreOpen, setMoreOpen] = useState(false);
+  const improvementProposals = useStore((s) => s.improvementProposals);
+  const pendingProposalCount = improvementProposals.filter((p) => p.status === "proposed").length;
 
   const inMore = MORE_LINKS.some((l) => location.startsWith(l.path));
 
@@ -184,7 +186,16 @@ export function NavBar() {
                 aria-hidden
               />
             )}
-            <MoreHorizontal size={inMore ? 22 : 20} strokeWidth={inMore ? 2.2 : 1.5} />
+            <span className="relative inline-flex">
+              <MoreHorizontal size={inMore ? 22 : 20} strokeWidth={inMore ? 2.2 : 1.5} />
+              {pendingProposalCount > 0 && (
+                <span
+                  className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full"
+                  style={{ backgroundColor: AMBER }}
+                  aria-label={`${pendingProposalCount} pending proposal${pendingProposalCount !== 1 ? "s" : ""}`}
+                />
+              )}
+            </span>
             <span className="text-[11px] tracking-wide" style={{ fontWeight: inMore ? 600 : 400 }}>
               More
             </span>
