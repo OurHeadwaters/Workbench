@@ -257,7 +257,76 @@ test.describe("Lab channel", () => {
     ).toBeVisible({ timeout: 5_000 });
   });
 
-  // ── 6. Archived lab is read-only ──────────────────────────────────────────
+  // ── 6. Clock-drift guard: handleSend blocks posts on expired lab ──────────
+  //
+  // Scenario: the useNow poll interval is set very long (60 s) so the UI does
+  // NOT flip to read-only immediately after expiry.  The lab expires 1 second
+  // after the page loads.  We wait 1.5 s (lab is now past expiresAt on the
+  // real clock) and then try to submit a reply.
+  // handleSend must check Date.now() directly and refuse the post — no new
+  // event should appear in the feed.
+  test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
+    const channelId = `drift-guard-${Date.now()}`;
+    // Lab expires 1 second from now
+    const expiresAt = new Date(Date.now() + 1_000).toISOString();
+
+    await page.addInitScript(
+      ({ id, label, expires, seed }: { id: string; label: string; expires: string; seed: string }) => {
+        localStorage.setItem("north-star:unlocked", "1");
+        // Use a very long poll interval so the UI never flips read-only on its own
+        localStorage.setItem("north-star:now-interval", "60000");
+
+        let storeData: { state: Record<string, unknown>; version: number };
+        try {
+          const raw = localStorage.getItem("north-star:v1");
+          storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
+        } catch {
+          storeData = JSON.parse(seed);
+        }
+
+        (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
+
+        const channels = (storeData.state.channels as unknown[]) ?? [];
+        channels.push({
+          id,
+          label,
+          category: "lab",
+          expiresAt: expires,
+          createdAt: new Date().toISOString(),
+          createdBy: "human",
+          invited_roles: [],
+          event_feed: [],
+        });
+        storeData.state.channels = channels;
+        localStorage.setItem("north-star:v1", JSON.stringify(storeData));
+      },
+      { id: channelId, label: "drift-guard-lab", expires: expiresAt, seed: SEED_STORE },
+    );
+
+    await page.goto(`channels/lab/${channelId}`);
+    await expect(page.locator("h1")).toContainText("drift-guard-lab", { timeout: 10_000 });
+
+    // 1. Textarea is visible (lab has not expired yet, useNow sees it as live)
+    await expect(page.getByPlaceholder("Reply to the lab…")).toBeVisible({ timeout: 5_000 });
+
+    // 2. Wait 1.5 s so the real clock is past expiresAt, but the 60-second
+    //    useNow poll has NOT ticked — the UI still shows the textarea.
+    await page.waitForTimeout(1_500);
+
+    // 3. Textarea is still rendered (stale useNow hasn't flipped isReadOnly yet)
+    await expect(page.getByPlaceholder("Reply to the lab…")).toBeVisible({ timeout: 3_000 });
+
+    // 4. Type a message and submit — this fires handleSend with a stale isReadOnly
+    const driftMessage = "This should be blocked by the real-time guard";
+    await page.getByPlaceholder("Reply to the lab…").fill(driftMessage);
+    await page.getByRole("button", { name: "Send" }).click();
+
+    // 5. The message must NOT appear in the feed — postLabEvent was suppressed
+    await page.waitForTimeout(500);
+    await expect(page.getByText(driftMessage)).not.toBeVisible({ timeout: 3_000 });
+  });
+
+  // ── 7. Archived lab is read-only ──────────────────────────────────────────
   test("archived lab blocks new posts and shows read-only state", async ({ page }) => {
     // Create a lab
     await page.goto("channels");

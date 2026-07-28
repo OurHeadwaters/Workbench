@@ -184,7 +184,13 @@ export function LabPage() {
 
   function handleSend(e: React.FormEvent) {
     e.preventDefault();
-    if (!reply.trim() || isReadOnly || !channelId) return;
+    // Re-check expiry against the real-time clock so a stale useNow poll tick
+    // cannot let a reply slip through after the lab has actually expired.
+    const realTimeExpired = channel?.expiresAt
+      ? new Date(channel.expiresAt).getTime() <= Date.now()
+      : false;
+    const realTimeReadOnly = !!(channel?.archivedAt) || realTimeExpired;
+    if (!reply.trim() || realTimeReadOnly || !channelId) return;
     postLabEvent(channelId, {
       kind: 1011,
       actor_type: "human",
