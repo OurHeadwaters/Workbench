@@ -219,6 +219,118 @@ describe("confirmHelpingHandsTask — HELPING_HANDS_CONFIRM relay event", () => 
 });
 
 // ---------------------------------------------------------------------------
+// acceptProposal — IMPROVEMENT_PROPOSAL_OUTCOME (accepted)
+// ---------------------------------------------------------------------------
+
+describe("acceptProposal — IMPROVEMENT_PROPOSAL_OUTCOME relay event", () => {
+  beforeEach(() => {
+    // Seed one proposal so the action has something to resolve
+    useStore.setState({
+      improvementProposals: [
+        {
+          id: "prop-accept-1",
+          agent_role: "river-smith",
+          title: "Test proposal",
+          description: "A proposal for testing",
+          affected_surface: "Dashboard",
+          status: "proposed",
+          created_at: new Date().toISOString(),
+        },
+      ],
+    });
+  });
+
+  it("fires IMPROVEMENT_PROPOSAL_OUTCOME with correct kind", () => {
+    useStore.getState().acceptProposal("prop-accept-1");
+
+    expect(spy).toHaveBeenCalledOnce();
+    const call = spy.mock.calls[0][0] as Record<string, unknown>;
+    expect(call.kind).toBe(RELAY_EVENT_KINDS.IMPROVEMENT_PROPOSAL_OUTCOME);
+  });
+
+  it("payload carries actor_type 'human', outcome 'accepted', and matching proposal_id", () => {
+    useStore.getState().acceptProposal("prop-accept-1");
+
+    const payload = (spy.mock.calls[0][0] as Record<string, unknown>)
+      .payload as Record<string, unknown>;
+
+    expect(payload.zone).toBe("Z2");
+    expect(payload.actor_type).toBe("human");
+    expect(payload.outcome).toBe("accepted");
+    expect(payload.proposal_id).toBe("prop-accept-1");
+    expect(typeof payload.resolved_at).toBe("string");
+  });
+
+  it("carries correct envelope fields (z2npub, signature, timestamp)", () => {
+    useStore.getState().acceptProposal("prop-accept-1");
+
+    const call = spy.mock.calls[0][0] as Record<string, unknown>;
+    expect(call.z2npub).toBe("z2:local");
+    expect(call.signature).toBe("stub");
+    expect(typeof call.timestamp).toBe("string");
+  });
+
+  it("updates the proposal status to 'accepted' in the store", () => {
+    useStore.getState().acceptProposal("prop-accept-1");
+
+    const proposals = useStore.getState().improvementProposals;
+    expect(proposals[0].status).toBe("accepted");
+    expect(typeof proposals[0].resolved_at).toBe("string");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// rejectProposal — IMPROVEMENT_PROPOSAL_OUTCOME (rejected)
+// ---------------------------------------------------------------------------
+
+describe("rejectProposal — IMPROVEMENT_PROPOSAL_OUTCOME relay event", () => {
+  beforeEach(() => {
+    useStore.setState({
+      improvementProposals: [
+        {
+          id: "prop-reject-1",
+          agent_role: "critical-challenger",
+          title: "Test rejection proposal",
+          description: "A proposal to be rejected",
+          affected_surface: "Settings",
+          status: "proposed",
+          created_at: new Date().toISOString(),
+        },
+      ],
+    });
+  });
+
+  it("fires IMPROVEMENT_PROPOSAL_OUTCOME with correct kind", () => {
+    useStore.getState().rejectProposal("prop-reject-1");
+
+    expect(spy).toHaveBeenCalledOnce();
+    const call = spy.mock.calls[0][0] as Record<string, unknown>;
+    expect(call.kind).toBe(RELAY_EVENT_KINDS.IMPROVEMENT_PROPOSAL_OUTCOME);
+  });
+
+  it("payload carries actor_type 'human', outcome 'rejected', and matching proposal_id", () => {
+    useStore.getState().rejectProposal("prop-reject-1");
+
+    const payload = (spy.mock.calls[0][0] as Record<string, unknown>)
+      .payload as Record<string, unknown>;
+
+    expect(payload.zone).toBe("Z2");
+    expect(payload.actor_type).toBe("human");
+    expect(payload.outcome).toBe("rejected");
+    expect(payload.proposal_id).toBe("prop-reject-1");
+    expect(typeof payload.resolved_at).toBe("string");
+  });
+
+  it("updates the proposal status to 'rejected' in the store", () => {
+    useStore.getState().rejectProposal("prop-reject-1");
+
+    const proposals = useStore.getState().improvementProposals;
+    expect(proposals[0].status).toBe("rejected");
+    expect(typeof proposals[0].resolved_at).toBe("string");
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Full lifecycle — one task passes through all four stages
 // ---------------------------------------------------------------------------
 
