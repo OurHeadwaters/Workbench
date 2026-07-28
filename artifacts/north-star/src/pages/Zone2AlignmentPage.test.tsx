@@ -233,7 +233,7 @@ describe("Z2NpubReadout — error state (unexpected status)", () => {
     expect(screen.queryByRole("button", { name: /copy/i })).not.toBeInTheDocument();
   });
 
-  it("shows the 'Unauthorized' message when the API returns 401", async () => {
+  it("shows the 'Access denied' message when the API returns 401", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() => Promise.resolve(makeResponse(401, { error: "Unauthorized" }))),
@@ -242,7 +242,9 @@ describe("Z2NpubReadout — error state (unexpected status)", () => {
     render(<Z2NpubReadout />);
 
     await waitFor(() => {
-      expect(screen.getByText(/unauthorized/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Access denied — check that the owner token/i),
+      ).toBeInTheDocument();
     });
   });
 });
