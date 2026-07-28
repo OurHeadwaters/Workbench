@@ -326,7 +326,79 @@ test.describe("Lab channel", () => {
     await expect(page.getByText(driftMessage)).not.toBeVisible({ timeout: 3_000 });
   });
 
-  // ── 7. Archived lab is read-only ──────────────────────────────────────────
+  // ── 7. Clock-drift guard: handleAskAgent blocks posts on expired lab ───────
+  //
+  // Scenario: the useNow poll interval is set very long (60 s) so the UI does
+  // NOT flip to read-only immediately after expiry.  The lab expires 1 second
+  // after the page loads and has an invited agent role so the Ask-agent button
+  // is visible.  We wait 1.5 s (lab is now past expiresAt on the real clock)
+  // and then click the Ask-agent button.
+  // handleAskAgent must check Date.now() directly and refuse to post — no
+  // agent event should appear in the feed.
+  test("handleAskAgent does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
+    const channelId = `agent-drift-guard-${Date.now()}`;
+    // Lab expires 1 second from now
+    const expiresAt = new Date(Date.now() + 1_000).toISOString();
+
+    await page.addInitScript(
+      ({ id, label, expires, seed }: { id: string; label: string; expires: string; seed: string }) => {
+        localStorage.setItem("north-star:unlocked", "1");
+        // Use a very long poll interval so the UI never flips read-only on its own
+        localStorage.setItem("north-star:now-interval", "60000");
+
+        let storeData: { state: Record<string, unknown>; version: number };
+        try {
+          const raw = localStorage.getItem("north-star:v1");
+          storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
+        } catch {
+          storeData = JSON.parse(seed);
+        }
+
+        (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
+
+        const channels = (storeData.state.channels as unknown[]) ?? [];
+        channels.push({
+          id,
+          label,
+          category: "lab",
+          expiresAt: expires,
+          createdAt: new Date().toISOString(),
+          createdBy: "human",
+          invited_roles: ["river-smith"],
+          event_feed: [],
+        });
+        storeData.state.channels = channels;
+        localStorage.setItem("north-star:v1", JSON.stringify(storeData));
+      },
+      { id: channelId, label: "agent-drift-guard-lab", expires: expiresAt, seed: SEED_STORE },
+    );
+
+    await page.goto(`channels/lab/${channelId}`);
+    await expect(page.locator("h1")).toContainText("agent-drift-guard-lab", { timeout: 10_000 });
+
+    // 1. Ask-agent button is visible before expiry (lab has not expired yet)
+    const askBtn = page.getByRole("button", { name: /ask river smith/i });
+    await expect(askBtn).toBeVisible({ timeout: 5_000 });
+
+    // 2. Wait 1.5 s so the real clock is past expiresAt, but the 60-second
+    //    useNow poll has NOT ticked — the UI still renders the ask-agent button.
+    await page.waitForTimeout(1_500);
+
+    // 3. Ask-agent button is still rendered (stale useNow hasn't flipped isReadOnly yet)
+    await expect(askBtn).toBeVisible({ timeout: 3_000 });
+
+    // 4. Click the Ask-agent button — handleAskAgent fires with a stale isReadOnly
+    await askBtn.click();
+
+    // 5. No agent event should appear in the feed (postLabEvent was suppressed).
+    //    Wait a generous window that covers the 800 ms thinking delay plus margins.
+    await page.waitForTimeout(1_200);
+    // generateAgentStub("river-smith", …) always includes "constellation signals".
+    // If postLabEvent fired, that text would be visible; it must not be.
+    await expect(page.getByText(/constellation signals/i)).not.toBeVisible({ timeout: 3_000 });
+  });
+
+  // ── 8. Archived lab is read-only ──────────────────────────────────────────
   test("archived lab blocks new posts and shows read-only state", async ({ page }) => {
     // Create a lab
     await page.goto("channels");

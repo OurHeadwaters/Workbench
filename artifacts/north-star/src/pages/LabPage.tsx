@@ -200,12 +200,26 @@ export function LabPage() {
   }
 
   function handleAskAgent(role: (typeof invitedRoles)[number]) {
-    if (isReadOnly || !channelId || askingRole) return;
+    // Re-check expiry against the real-time clock so a stale useNow poll tick
+    // cannot let an agent-ask slip through after the lab has actually expired.
+    const realTimeExpired = channel?.expiresAt
+      ? new Date(channel.expiresAt).getTime() <= Date.now()
+      : false;
+    const realTimeReadOnly = !!(channel?.archivedAt) || realTimeExpired;
+    if (realTimeReadOnly || !channelId || askingRole) return;
     setAskingRole(role);
     const recentMessages = feed.slice(-3).map((ev) => ev.text);
     const label = channel?.label ?? "";
     // Brief simulated thinking delay before the response appears
     setTimeout(() => {
+      // Re-check in case the lab expired during the thinking delay.
+      const expiredNow = channel?.expiresAt
+        ? new Date(channel.expiresAt).getTime() <= Date.now()
+        : false;
+      if (!!(channel?.archivedAt) || expiredNow) {
+        setAskingRole(null);
+        return;
+      }
       postLabEvent(channelId, {
         kind: 1011,
         actor_type: "agent",
