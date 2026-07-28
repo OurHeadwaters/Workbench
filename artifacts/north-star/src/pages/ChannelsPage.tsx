@@ -458,7 +458,14 @@ function ChannelRow({ ch, now, onExpire, onClick }: ChannelRowProps) {
 export function ChannelsPage() {
   const channels = useStore((s) => s.channels);
   const expireChannel = useStore((s) => s.expireChannel);
-  const now = useNow();
+  const nowIntervalMs = (() => {
+    const override = typeof localStorage !== "undefined"
+      ? localStorage.getItem("north-star:now-interval")
+      : null;
+    const parsed = override ? parseInt(override, 10) : NaN;
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 10_000;
+  })();
+  const now = useNow(nowIntervalMs);
   const [addOpen, setAddOpen] = useState(false);
   const [labOpen, setLabOpen] = useState(false);
   const [, navigate] = useLocation();
