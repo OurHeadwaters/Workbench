@@ -498,6 +498,41 @@ test.describe("Lab channel", () => {
     await expect(page.getByText(/constellation signals/i)).toHaveCount(1, { timeout: 5_000 });
   });
 
+  // ── 11. Send-button double-click guard ───────────────────────────────────
+  //
+  // Scenario: the user fills the textarea and clicks the Send button twice in
+  // rapid succession before React has re-rendered (clearing the textarea value
+  // and releasing sendingRef).  The sendingRef guard in handleSend must block
+  // the second invocation so only one human bubble appears in the feed.
+  test("clicking Send twice rapidly produces only one message bubble", async ({ page }) => {
+    await page.goto("channels");
+    await page.getByRole("button", { name: /start lab/i }).click();
+    await page.getByPlaceholder("e.g. deer-lake-spike").fill(`send-double-click-${Date.now()}`);
+    await page.getByRole("button", { name: "Open Lab" }).click();
+    await expect(page).toHaveURL(/\/channels\/lab\/[a-z0-9-]+/, { timeout: 10_000 });
+
+    const messageText = `send-double-${Date.now()}`;
+    await page.getByPlaceholder("Reply to the lab…").fill(messageText);
+
+    const sendBtn = page.getByRole("button", { name: "Send" });
+    await expect(sendBtn).toBeVisible({ timeout: 5_000 });
+
+    // Dispatch two clicks in rapid succession using dispatchEvent so both fire
+    // synchronously before React's state update re-render clears the textarea
+    // value and releases sendingRef.
+    await sendBtn.dispatchEvent("click");
+    await sendBtn.dispatchEvent("click");
+
+    // Give React time to flush queued updates.
+    await page.waitForTimeout(500);
+
+    // Exactly one human bubble for that text should appear in the feed.
+    await expect(page.getByText(messageText)).toHaveCount(1, { timeout: 5_000 });
+
+    // Textarea must have been cleared after the first (and only) send.
+    await expect(page.getByPlaceholder("Reply to the lab…")).toHaveValue("", { timeout: 3_000 });
+  });
+
   // ── 8. Archived lab is read-only ──────────────────────────────────────────
   test("archived lab blocks new posts and shows read-only state", async ({ page }) => {
     // Create a lab
