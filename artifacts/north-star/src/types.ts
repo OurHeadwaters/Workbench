@@ -262,6 +262,7 @@ export interface StoreActions {
   setTrigger: (id: string, patch: Partial<TriggerDefinition>) => void;
   fireTrigger: (id: string) => Promise<void>;
   archiveHelpingHandsTask: (id: string) => void;
+  restoreHelpingHandsTask: (id: string) => void;
   addProposal: (p: Pick<ImprovementProposal, "agent_role" | "title" | "description" | "affected_surface" | "relay_event_ref">) => ImprovementProposal;
   acceptProposal: (id: string) => void;
   rejectProposal: (id: string) => void;

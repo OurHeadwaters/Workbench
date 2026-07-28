@@ -4,7 +4,7 @@ import type { HelpingHandsTask, HelpingHandsStatus } from "@/types";
 import {
   BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, AMBER_WASH, FONT_DISPLAY,
 } from "@/lib/theme";
-import { Plus, X, HandHelping, CheckCheck, Check, Users, Archive, ChevronDown, ChevronRight } from "lucide-react";
+import { Plus, X, HandHelping, CheckCheck, Check, Users, Archive, ChevronDown, ChevronRight, RotateCcw } from "lucide-react";
 
 // ── Status badge ────────────────────────────────────────────────────────────
 
@@ -121,6 +121,7 @@ function TaskRow({ task }: { task: HelpingHandsTask }) {
   const complete = useStore((s) => s.completeHelpingHandsTask);
   const confirm  = useStore((s) => s.confirmHelpingHandsTask);
   const archive  = useStore((s) => s.archiveHelpingHandsTask);
+  const restore  = useStore((s) => s.restoreHelpingHandsTask);
 
   return (
     <div
@@ -179,7 +180,7 @@ function TaskRow({ task }: { task: HelpingHandsTask }) {
             Confirm
           </button>
         )}
-        {task.status === "confirmed" && (
+        {task.status === "confirmed" && !task.archivedAt && (
           <button
             onClick={() => archive(task.id)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
@@ -187,6 +188,16 @@ function TaskRow({ task }: { task: HelpingHandsTask }) {
           >
             <Archive size={12} />
             Dismiss
+          </button>
+        )}
+        {task.archivedAt && (
+          <button
+            onClick={() => restore(task.id)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
+            style={{ backgroundColor: "rgba(200,146,58,0.10)", color: AMBER }}
+          >
+            <RotateCcw size={12} />
+            Restore
           </button>
         )}
       </div>

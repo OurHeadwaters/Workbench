@@ -761,6 +761,14 @@ export const useStore = create<Store>()(
         }));
       },
 
+      restoreHelpingHandsTask: (id) => {
+        set((s) => ({
+          helpingHandsTasks: s.helpingHandsTasks.map((t) =>
+            t.id === id ? { ...t, archivedAt: undefined } : t
+          ),
+        }));
+      },
+
       createLabChannel: ({ label, durationMinutes = 120, invited_roles }) => {
         const id = uuidv4();
         const now = new Date().toISOString();
