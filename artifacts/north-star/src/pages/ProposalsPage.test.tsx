@@ -4,9 +4,15 @@
  * Verifies the owner-token permission gate on the Proposals page:
  * - No token → "Owner token required" notice is shown, Accept/Reject buttons absent
  * - Valid token → Accept and Reject buttons are rendered for pending proposals
+ *
+ * Also verifies the two-click confirm guard:
+ * - Clicking Accept opens the confirm dialog but does NOT call acceptProposal
+ * - Clicking Confirm after Accept calls acceptProposal exactly once
+ * - Clicking Cancel after Accept leaves the proposal untouched
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
@@ -124,5 +130,53 @@ describe("ProposalsPage — library.ownerToken key", () => {
     expect(screen.getByRole("button", { name: /accept/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /reject/i })).toBeInTheDocument();
     expect(screen.queryByText(/owner token required/i)).not.toBeInTheDocument();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Two-click confirm guard
+// ---------------------------------------------------------------------------
+
+describe("ProposalsPage — two-click confirm guard for Accept", () => {
+  beforeEach(() => {
+    localStorage.setItem("ownerToken", "test-owner-token-abc");
+  });
+
+  it("clicking Accept does NOT call acceptProposal (opens confirm dialog instead)", async () => {
+    const user = userEvent.setup();
+    render(<ProposalsPage />);
+
+    await user.click(screen.getByRole("button", { name: /^accept$/i }));
+
+    // acceptProposal must not have been called
+    expect(mockAcceptProposal).not.toHaveBeenCalled();
+
+    // The confirm dialog should now be visible
+    expect(screen.getByRole("button", { name: /confirm/i })).toBeInTheDocument();
+  });
+
+  it("clicking Confirm after Accept calls acceptProposal exactly once", async () => {
+    const user = userEvent.setup();
+    render(<ProposalsPage />);
+
+    await user.click(screen.getByRole("button", { name: /^accept$/i }));
+    await user.click(screen.getByRole("button", { name: /confirm/i }));
+
+    expect(mockAcceptProposal).toHaveBeenCalledTimes(1);
+    expect(mockAcceptProposal).toHaveBeenCalledWith(PENDING_PROPOSAL.id);
+  });
+
+  it("clicking Cancel after Accept leaves the proposal in 'proposed' state (acceptProposal not called)", async () => {
+    const user = userEvent.setup();
+    render(<ProposalsPage />);
+
+    await user.click(screen.getByRole("button", { name: /^accept$/i }));
+    await user.click(screen.getByRole("button", { name: /cancel/i }));
+
+    // acceptProposal must still not have been called
+    expect(mockAcceptProposal).not.toHaveBeenCalled();
+
+    // Confirm dialog should be dismissed; Accept button should be back
+    expect(screen.getByRole("button", { name: /^accept$/i })).toBeInTheDocument();
   });
 });
