@@ -7,7 +7,7 @@
  * - Renders markdown using a simple in-house parser (no dep needed)
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { publishToRelay, RELAY_EVENT_KINDS } from "@/lib/relay-stub";
 import type { ProofOfWork } from "@/lib/relay-event-types";
@@ -414,6 +414,7 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
   const [proposeSurface, setProposeSurface] = useState("");
   const [proposeSuccess, setProposeSuccess] = useState(false);
   const [proposing, setProposing] = useState(false);
+  const proposeFormRef = useRef<HTMLDivElement>(null);
 
   const handleProposeFromSection = (heading: string, body: string) => {
     setProposeTitle(heading);
@@ -421,6 +422,10 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
     setProposeSurface(heading);
     setProposeOpen(true);
     setProposeSuccess(false);
+    // Scroll the form into view after React has rendered it.
+    setTimeout(() => {
+      proposeFormRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 0);
   };
 
   const handlePropose = () => {
@@ -690,7 +695,7 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
 
           {/* Propose improvement form */}
           {proposeOpen && (
-            <div className="border-b border-[#1E1A14] bg-[#0E0C09] px-5 py-4 space-y-3">
+            <div ref={proposeFormRef} className="border-b border-[#1E1A14] bg-[#0E0C09] px-5 py-4 space-y-3">
               <p className="text-[11px] uppercase tracking-[0.14em] text-[#C5A96A] font-bold">
                 New improvement proposal
               </p>

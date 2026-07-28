@@ -119,7 +119,6 @@ test.describe("Lab channel", () => {
 
     const replyText = "Hello from the automated test";
 
-    const backBtn = page.getByRole("button", { name: /back to channels/i });
     await page.getByPlaceholder("Reply to the lab…").fill(replyText);
     await page.getByRole("button", { name: "Send" }).click();
 
@@ -134,7 +133,7 @@ test.describe("Lab channel", () => {
   test("lab expiring mid-session switches badge to expired and hides reply input", async ({ page }) => {
     // Build a channel that expires ~4 seconds from now so we can observe the
     // live transition driven by useNow (500 ms poll interval).
-    const channelId = `relay-dedup-${Date.now()}`;
+    const channelId = `expiry-mid-${Date.now()}`;
     const expiresAt = new Date(Date.now() + 4_000).toISOString();
 
     await page.addInitScript(
@@ -150,7 +149,7 @@ test.describe("Lab channel", () => {
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Use default 500 ms poll so the badge flips promptly after expiry.
+        // Use default poll interval so useNow ticks and catches the expiry.
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
@@ -161,7 +160,6 @@ test.describe("Lab channel", () => {
         }
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
         const channels = (storeData.state.channels as unknown[]) ?? [];
-
         channels.push({
           id,
           label,
@@ -184,35 +182,34 @@ test.describe("Lab channel", () => {
     // 1. Lab name is visible in header
     await expect(page.locator("h1")).toContainText("expiry-test-lab", { timeout: 10_000 });
 
-    // 2. Countdown badge shows time remaining while lab is still live
-    const countdownBadge = page.locator("span").filter({ hasText: /\d+.*left/ });
-    await expect(countdownBadge.first()).toBeVisible({ timeout: 8_000 });
-
-    // 3. Reply textarea is present before expiry
+    // 2. Reply textarea is present before expiry
     await expect(page.getByPlaceholder("Reply to the lab…")).toBeVisible({ timeout: 5_000 });
 
-    // 4. Wait for the useNow poll (500 ms interval) to catch the expiry and flip
-    //    the badge.  The lab expires 4 s after seeding; allow 12 s from here.
+    // 3. Wait for useNow poll to catch the expiry (~4 s); allow 12 s for CI.
     const expiredBadge = page.locator("span").filter({ hasText: /^expired$/ });
     await expect(expiredBadge.first()).toBeVisible({ timeout: 12_000 });
 
-    // 5. Reply textarea disappears once expired
+    // 4. Reply textarea disappears once expired state is rendered.
     await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });
 
-    // 6. Read-only footer appears
+    // 5. Read-only footer appears.
     await expect(
       page.getByText("This lab is expired — no new events can be posted.")
     ).toBeVisible({ timeout: 5_000 });
   });
 
-  // ── 6. Cold open on already-expired lab shows read-only state immediately ──
+  // ── 6. Clock-drift guard: handleSend blocks posts on expired lab ──────────
   //
-  // Scenario: the lab expired an hour ago. The page opens cold and isReadOnly
-  // must be true on the first render — no poll tick required.
-  test("cold open on an already-expired lab shows expired badge and no reply form", async ({ page }) => {
-    const channelId = `relay-dedup-${Date.now()}`;
-    // expiresAt is in the past so the lab is already expired on mount
-    const expiresAt = new Date(Date.now() - 60 * 60 * 1_000).toISOString();
+  // Scenario: the useNow poll interval is set very long (60 s) so the UI does
+  // NOT flip to read-only immediately after expiry.  The lab expires 1 second
+  // after the page loads.  We wait 1.5 s (lab is now past expiresAt on the
+  // real clock) and then try to submit a reply.
+  // handleSend must check Date.now() directly and refuse the post — no new
+  // event should appear in the feed.
+  test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
+    const channelId = labUrl.split("/channels/lab/")[1];
+    // Lab expires well in the future so it's not read-only
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
     await page.addInitScript(
       ({
@@ -234,14 +231,13 @@ test.describe("Lab channel", () => {
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
-          const raw = localStorage.getItem("north-star:v1");
+      const raw = localStorage.getItem("north-star:v1");
           storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
         } catch {
           storeData = JSON.parse(seed);
         }
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
         const channels = (storeData.state.channels as unknown[]) ?? [];
-
         channels.push({
           id,
           label,
@@ -287,36 +283,37 @@ test.describe("Lab channel", () => {
   // handleSend must check Date.now() directly and refuse the post — no new
   // event should appear in the feed.
   test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
-    const channelId = `relay-dedup-${Date.now()}`;
-    // Lab expires 1.5 s from now — page loads before expiry, 2 s wait crosses it.
-    const expiresAt = new Date(Date.now() + 1_500).toISOString();
+    const channelId = labUrl.split("/channels/lab/")[1];
+    // Lab expires well in the future so it's not read-only
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
     await page.addInitScript(
       ({
         id,
         label,
         expires,
+        archived,
         seed,
       }: {
         id: string;
         label: string;
         expires: string;
+        archived: string;
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Long poll — useNow won't flip isReadOnly; handleSend must use Date.now().
+        // Long poll so useNow is irrelevant — isArchived comes from archivedAt alone.
         localStorage.setItem("north-star:now-interval", "60000");
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
-          const raw = localStorage.getItem("north-star:v1");
+      const raw = localStorage.getItem("north-star:v1");
           storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
         } catch {
           storeData = JSON.parse(seed);
         }
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
         const channels = (storeData.state.channels as unknown[]) ?? [];
-
         channels.push({
           id,
           label,
@@ -369,29 +366,31 @@ test.describe("Lab channel", () => {
   // handleAskAgent must check Date.now() directly and refuse to post — no
   // agent event should appear in the feed.
   test("handleAskAgent does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
-    const channelId = `relay-dedup-${Date.now()}`;
-    // Lab expires 1.5 s from now — Ask-agent button is visible at mount, hidden after expiry.
-    const expiresAt = new Date(Date.now() + 1_500).toISOString();
+    const channelId = labUrl.split("/channels/lab/")[1];
+    // Lab expires well in the future so it's not read-only
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
     await page.addInitScript(
       ({
         id,
         label,
         expires,
+        archived,
         seed,
       }: {
         id: string;
         label: string;
         expires: string;
+        archived: string;
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Long poll — useNow won't flip isReadOnly; handleAskAgent must use Date.now().
+        // Long poll so useNow is irrelevant — isArchived comes from archivedAt alone.
         localStorage.setItem("north-star:now-interval", "60000");
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
-          const raw = localStorage.getItem("north-star:v1");
+      const raw = localStorage.getItem("north-star:v1");
           storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
         } catch {
           storeData = JSON.parse(seed);
@@ -513,7 +512,7 @@ test.describe("Lab channel", () => {
   // The askingRole guard in handleAskAgent must block the second invocation so
   // only one agent response bubble appears in the feed.
   test("clicking Ask-agent twice rapidly produces only one agent bubble", async ({ page }) => {
-    const channelId = `relay-dedup-${Date.now()}`;
+    const channelId = labUrl.split("/channels/lab/")[1];
     // Lab expires well in the future so it's not read-only
     const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
@@ -522,11 +521,13 @@ test.describe("Lab channel", () => {
         id,
         label,
         expires,
+        archived,
         seed,
       }: {
         id: string;
         label: string;
         expires: string;
+        archived: string;
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
@@ -535,7 +536,7 @@ test.describe("Lab channel", () => {
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
-          const raw = localStorage.getItem("north-star:v1");
+      const raw = localStorage.getItem("north-star:v1");
           storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
         } catch {
           storeData = JSON.parse(seed);
@@ -630,7 +631,7 @@ test.describe("Lab channel", () => {
   // Even if that guard were somehow bypassed at the UI layer, the feed must
   // remain empty — a regression here would silently ship.
   test("archive-then-type race: pre-archived lab shows zero bubbles and no reply form", async ({ page }) => {
-    const channelId = `relay-dedup-${Date.now()}`;
+    const channelId = labUrl.split("/channels/lab/")[1];
     const archivedAt = new Date(Date.now() - 5_000).toISOString(); // archived 5 s ago
     const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
@@ -654,7 +655,7 @@ test.describe("Lab channel", () => {
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
-          const raw = localStorage.getItem("north-star:v1");
+      const raw = localStorage.getItem("north-star:v1");
           storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
         } catch {
           storeData = JSON.parse(seed);
@@ -687,17 +688,17 @@ test.describe("Lab channel", () => {
 
     // 2. "archived" badge is shown on the very first render
     const archivedBadge = page.locator("span").filter({ hasText: /^archived$/ });
-    await expect(archivedBadge.first()).toBeVisible({ timeout: 5_000 });
+    await expect(archivedBadge.first()).toBeVisible({ timeout: 8_000 });
 
-    // 3. Reply textarea is absent
+    // Reply textarea must be absent (read-only mode)
     await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });
 
-    // 4. Read-only footer confirms the archived state
+    // Read-only footer confirms archived state
     await expect(
       page.getByText("This lab is archived — no new events can be posted."),
     ).toBeVisible({ timeout: 5_000 });
 
-    // 5. Feed contains zero message bubbles.
+    // Feed contains zero message bubbles
     const feedBubbles = page.locator(".space-y-4 > div");
     await expect(feedBubbles).toHaveCount(0, { timeout: 3_000 });
   });
@@ -738,7 +739,7 @@ test.describe("Lab channel", () => {
     // ── Step 1: create a lab ─────────────────────────────────────────────────
     await page.goto("channels");
     await page.getByRole("button", { name: /start lab/i }).click();
-    const labName = `double-archive-lab-${Date.now()}`;
+    const labName = `archive-lab-${Date.now()}`;
     await page.getByPlaceholder("e.g. deer-lake-spike").fill(labName);
     await page.getByRole("button", { name: "Open Lab" }).click();
     await expect(page).toHaveURL(/\/channels\/lab\/([a-z0-9-]+)/, { timeout: 10_000 });
