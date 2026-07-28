@@ -446,6 +446,7 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
     if (!token) return;
     setLoading(true);
     setError(null);
+    setProofCard(null);
     try {
       const res = await fetch("/api/river-smith/briefing/latest", {
         headers: { "x-library-owner-token": token },
