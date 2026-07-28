@@ -201,6 +201,12 @@ export interface LabEventPayload {
   text: string;
   /** ISO datetime when the event was posted. */
   posted_at: string;
+  /**
+   * Stable identity of the corresponding RelayEventSummary written into the
+   * channel's event_feed.  Stored here so the rehydration reconciler can skip
+   * events that are already present, using the event id as the dedup key.
+   */
+  event_id?: string;
 }
 
 // ---------------------------------------------------------------------------

@@ -4,7 +4,8 @@ import { v4 as uuidv4 } from "./lib/uuid";
 import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition, ImprovementProposal, RelayEventSummary } from "./types";
 import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload } from "./lib/relay-event-types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
-import { publishToRelay, RELAY_EVENT_KINDS } from "./lib/relay-stub";
+import { publishToRelay, RELAY_EVENT_KINDS, RELAY_STORAGE_KEY } from "./lib/relay-stub";
+import type { LabEventPayload } from "./lib/relay-event-types";
 
 const ZONE_COLORS: Record<ZoneId, string> = {
   Z0: "45 60% 32%",
@@ -810,6 +811,9 @@ export const useStore = create<Store>()(
             channel_id: channelId,
             text: eventData.text,
             posted_at: now,
+            // Carry the RelayEventSummary id so the rehydration reconciler can
+            // skip events already present in the channel's event_feed.
+            event_id: newEvent.id,
           },
           z2npub: "z2:local",
           timestamp: now,
@@ -874,6 +878,82 @@ export const useStore = create<Store>()(
           s.schemaVersion = 11;
         }
         return s as unknown as AppState;
+      },
+
+      /**
+       * onRehydrateStorage — runs after every store hydration from localStorage.
+       *
+       * If the browser closed (or hard-refreshed) after publishToRelay wrote an
+       * event to ns:relay:events but before Zustand flushed the updated channel
+       * event_feed to its own storage key, those events would be silently lost.
+       * This hook reconciles any kind-1011 entries from the relay fallback buffer
+       * back into the matching channel's event_feed, using event_id for dedup.
+       */
+      onRehydrateStorage: () => (_state, error) => {
+        if (error || typeof window === "undefined") return;
+        try {
+          const raw = localStorage.getItem(RELAY_STORAGE_KEY);
+          if (!raw) return;
+          const stored = JSON.parse(raw) as Array<{
+            kind: number;
+            payload: unknown;
+            timestamp: string;
+          }>;
+          const labEvents = stored.filter(
+            (e) => e.kind === RELAY_EVENT_KINDS.LAB_EVENT,
+          );
+          if (labEvents.length === 0) return;
+
+          useStore.setState((s) => {
+            let changed = false;
+            const channels = s.channels.map((ch) => {
+              const relayForChannel = labEvents.filter(
+                (e) =>
+                  (e.payload as LabEventPayload).channel_id === ch.id,
+              );
+              if (relayForChannel.length === 0) return ch;
+
+              const feed = ch.event_feed ?? [];
+              const existingIds = new Set(feed.map((ev) => ev.id));
+              // Secondary dedup key for legacy events that pre-date event_id:
+              // "timestamp|text" combination.
+              const existingKeys = new Set(
+                feed.map((ev) => `${ev.timestamp}|${ev.text}`),
+              );
+
+              const toAdd: import("./types").RelayEventSummary[] = [];
+              for (const e of relayForChannel) {
+                const p = e.payload as LabEventPayload;
+                const eid = p.event_id;
+                const key = `${p.posted_at}|${p.text}`;
+                if (eid && existingIds.has(eid)) continue;
+                if (!eid && existingKeys.has(key)) continue;
+                const newId = eid ?? uuidv4();
+                toAdd.push({
+                  id: newId,
+                  kind: RELAY_EVENT_KINDS.LAB_EVENT,
+                  actor_type: p.actor_type,
+                  agent_role: p.agent_role,
+                  text: p.text,
+                  timestamp: p.posted_at,
+                });
+                existingIds.add(newId);
+                existingKeys.add(key);
+              }
+
+              if (toAdd.length === 0) return ch;
+              changed = true;
+              const merged = [...feed, ...toAdd].sort((a, b) =>
+                a.timestamp.localeCompare(b.timestamp),
+              );
+              return { ...ch, event_feed: merged };
+            });
+
+            return changed ? { channels } : s;
+          });
+        } catch {
+          // Never crash on reconciliation — it is strictly additive.
+        }
       },
     }
   )

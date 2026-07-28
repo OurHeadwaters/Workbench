@@ -67,7 +67,7 @@ type RelayEventEnvelope = {
   };
 }[keyof RelayPayloadMap];
 
-const RELAY_STORAGE_KEY = "ns:relay:events";
+export const RELAY_STORAGE_KEY = "ns:relay:events";
 const MAX_STORED_EVENTS = 500;
 
 const RELAY_PUBLISH_URL: string | undefined =
