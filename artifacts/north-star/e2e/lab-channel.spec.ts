@@ -567,6 +567,97 @@ test.describe("Lab channel", () => {
     await expect(page.getByPlaceholder("Reply to the lab…")).toHaveValue("", { timeout: 3_000 });
   });
 
+  // ── 12. Archive-then-type race: handleSend blocks post to a pre-archived lab ──
+  //
+  // Scenario: the lab is seeded with archivedAt already set in the store so
+  // isReadOnly is true on the very first render.  The reply form is therefore
+  // never mounted.  The test verifies:
+  //   (a) the "archived" badge appears immediately on mount (no poll needed),
+  //   (b) the reply textarea is absent (UI guard),
+  //   (c) the feed contains zero bubbles — no message can slip through.
+  //
+  // This guards the realTimeReadOnly check inside handleSend:
+  //   const realTimeReadOnly = !!(channel?.archivedAt) || realTimeExpired;
+  //   if (!reply.trim() || realTimeReadOnly || !channelId) return;
+  // Even if that guard were somehow bypassed at the UI layer, the feed must
+  // remain empty — a regression here would silently ship.
+  test("archive-then-type race: pre-archived lab shows zero bubbles and no reply form", async ({ page }) => {
+    const channelId = `archive-race-${Date.now()}`;
+    const archivedAt = new Date(Date.now() - 5_000).toISOString(); // archived 5 s ago
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString(); // not expired
+
+    await page.addInitScript(
+      ({
+        id,
+        label,
+        expires,
+        archived,
+        seed,
+      }: {
+        id: string;
+        label: string;
+        expires: string;
+        archived: string;
+        seed: string;
+      }) => {
+        localStorage.setItem("north-star:unlocked", "1");
+        // Long poll so useNow is irrelevant — isArchived comes from archivedAt alone.
+        localStorage.setItem("north-star:now-interval", "60000");
+
+        let storeData: { state: Record<string, unknown>; version: number };
+        try {
+          const raw = localStorage.getItem("north-star:v1");
+          storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
+        } catch {
+          storeData = JSON.parse(seed);
+        }
+
+        (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
+
+        const channels = (storeData.state.channels as unknown[]) ?? [];
+        channels.push({
+          id,
+          label,
+          category: "lab",
+          expiresAt: expires,
+          archivedAt: archived, // ← already archived before the page loads
+          createdAt: new Date(Date.now() - 30 * 60 * 1_000).toISOString(),
+          createdBy: "human",
+          invited_roles: [],
+          event_feed: [],
+        });
+        storeData.state.channels = channels;
+        localStorage.setItem("north-star:v1", JSON.stringify(storeData));
+      },
+      { id: channelId, label: "archive-race-lab", expires: expiresAt, archived: archivedAt, seed: SEED_STORE },
+    );
+
+    // Navigate directly into the already-archived lab
+    await page.goto(`channels/lab/${channelId}`);
+
+    // 1. Lab name visible in header
+    await expect(page.locator("h1")).toContainText("archive-race-lab", { timeout: 10_000 });
+
+    // 2. "archived" badge is shown on the very first render — isArchived = !!(channel.archivedAt)
+    const archivedBadge = page.locator("span").filter({ hasText: /^archived$/ });
+    await expect(archivedBadge.first()).toBeVisible({ timeout: 5_000 });
+
+    // 3. Reply textarea is absent — isReadOnly prevents the form from mounting
+    await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });
+
+    // 4. Read-only footer confirms the archived state
+    await expect(
+      page.getByText("This lab is archived — no new events can be posted."),
+    ).toBeVisible({ timeout: 5_000 });
+
+    // 5. Feed contains zero message bubbles.
+    //    EventBubble renders a <div class="flex gap-2.5 …">; the chronological
+    //    feed wrapper is <div class="space-y-4">.
+    //    A bypass of handleSend's realTimeReadOnly guard would show a bubble here.
+    const feedBubbles = page.locator(".space-y-4 > div");
+    await expect(feedBubbles).toHaveCount(0, { timeout: 3_000 });
+  });
+
   // ── 8. Archived lab is read-only ──────────────────────────────────────────
   test("archived lab blocks new posts and shows read-only state", async ({ page }) => {
     // Create a lab
