@@ -134,27 +134,31 @@ test.describe("Lab channel", () => {
   test("lab expiring mid-session switches badge to expired and hides reply input", async ({ page }) => {
     // Build a channel that expires ~1 second from now so we can observe the
     // live transition driven by useNow (500 ms poll interval).
-    const channelId = `expiry-mid-session-${Date.now()}`;
-    // Expires in 8 s — long enough for the page to load and the countdown badge to
-    // appear, but short enough that the 500 ms poll flips the badge to "expired"
-    // well within the test's assertion timeout.
-    const expiresAt = new Date(Date.now() + 8_000).toISOString();
+    const channelId = `relay-dedup-${Date.now()}`;
+    // Lab expires well in the future so it's not read-only
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    const now = new Date().toISOString();
+
+    const now = new Date().toISOString();
 
     await page.addInitScript(
       ({
         id,
         label,
         expires,
+        archived,
         seed,
       }: {
         id: string;
         label: string;
         expires: string;
+        archived: string;
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // 500 ms poll so the UI flips to expired shortly after the 1 s expiry.
-        localStorage.setItem("north-star:now-interval", "500");
+        // Long poll so useNow is irrelevant — isArchived comes from archivedAt alone.
+        localStorage.setItem("north-star:now-interval", "60000");
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
@@ -163,10 +167,20 @@ test.describe("Lab channel", () => {
         } catch {
           storeData = JSON.parse(seed);
         }
-
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
-
         const channels = (storeData.state.channels as unknown[]) ?? [];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
         channels.push({
           id,
           label,
@@ -200,7 +214,7 @@ test.describe("Lab channel", () => {
     //    the badge.  The lab expires 8 s after the initScript runs; allow up to
     //    12 s from this point so clock skew and CI slowness don't cause flakes.
     const expiredBadge = page.locator("span").filter({ hasText: /^expired$/ });
-    await expect(expiredBadge.first()).toBeVisible({ timeout: 12_000 });
+    await expect(expiredBadge.first()).toBeVisible({ timeout: 5_000 });
 
     // 3. Reply textarea is absent from the start (isReadOnly is true on mount).
     await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });
@@ -211,7 +225,7 @@ test.describe("Lab channel", () => {
     ).toBeVisible({ timeout: 5_000 });
   });
 
-  // ── 6. Cold open on a lab seeded with archivedAt: shows expired badge, no reply ──
+  // ── 6. Clock-drift guard: handleSend blocks posts on expired lab ──────────
   //
   // Scenario: the useNow poll interval is set very long (60 s) so the UI does
   // NOT flip to read-only immediately after expiry.  The lab expires 1 second
@@ -219,24 +233,30 @@ test.describe("Lab channel", () => {
   // real clock) and then try to submit a reply.
   // handleSend must check Date.now() directly and refuse the post — no new
   // event should appear in the feed.
-  test("cold open on a lab seeded as archived shows expired badge and no reply input on first render", async ({ page }) => {
-    const channelId = `cold-expired-${Date.now()}`;
-    const expiresAt = new Date(Date.now() - 60 * 60 * 1_000).toISOString(); // already expired 1 h ago
+  test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
+    const channelId = `relay-dedup-${Date.now()}`;
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    const now = new Date().toISOString();
+
+    const now = new Date().toISOString();
 
     await page.addInitScript(
       ({
         id,
         label,
         expires,
+        archived,
         seed,
       }: {
         id: string;
         label: string;
         expires: string;
+        archived: string;
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Long poll — isReadOnly derives from expiresAt being in the past, not from a poll tick.
+        // Long poll so useNow is irrelevant — isArchived comes from archivedAt alone.
         localStorage.setItem("north-star:now-interval", "60000");
 
         let storeData: { state: Record<string, unknown>; version: number };
@@ -246,10 +266,20 @@ test.describe("Lab channel", () => {
         } catch {
           storeData = JSON.parse(seed);
         }
-
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
-
         const channels = (storeData.state.channels as unknown[]) ?? [];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
         channels.push({
           id,
           label,
@@ -295,27 +325,31 @@ test.describe("Lab channel", () => {
   // handleSend must check Date.now() directly and refuse the post — no new
   // event should appear in the feed.
   test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
-    const channelId = `drift-guard-send-${Date.now()}`;
+    const channelId = `relay-dedup-${Date.now()}`;
+    // Lab expires well in the future so it's not read-only
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    const now = new Date().toISOString();
+
+    const now = new Date().toISOString();
 
     await page.addInitScript(
       ({
         id,
         label,
+        expires,
+        archived,
         seed,
       }: {
         id: string;
         label: string;
+        expires: string;
+        archived: string;
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Long poll keeps isReadOnly stale so the textarea stays visible after expiry.
+        // Long poll so useNow is irrelevant — isArchived comes from archivedAt alone.
         localStorage.setItem("north-star:now-interval", "60000");
-
-        // Compute expiresAt here (browser time) so it is 1.5 s from when the
-        // page actually mounts — not from when the test runner constructed the args.
-        // useNow initialises with Date.now() so the lab must not be expired yet on
-        // first render; 1.5 s gives enough headroom even on slow CI.
-        const expiresAt = new Date(Date.now() + 1_500).toISOString();
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
@@ -324,10 +358,20 @@ test.describe("Lab channel", () => {
         } catch {
           storeData = JSON.parse(seed);
         }
-
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
-
         const channels = (storeData.state.channels as unknown[]) ?? [];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
         channels.push({
           id,
           label,
@@ -380,24 +424,31 @@ test.describe("Lab channel", () => {
   // handleAskAgent must check Date.now() directly and refuse to post — no
   // agent event should appear in the feed.
   test("handleAskAgent does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
-    const channelId = `drift-guard-agent-${Date.now()}`;
+    const channelId = `relay-dedup-${Date.now()}`;
+    // Lab expires well in the future so it's not read-only
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    const now = new Date().toISOString();
+
+    const now = new Date().toISOString();
 
     await page.addInitScript(
       ({
         id,
         label,
+        expires,
+        archived,
         seed,
       }: {
         id: string;
         label: string;
+        expires: string;
+        archived: string;
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Long poll keeps isReadOnly stale so the ask-agent button stays visible after expiry.
+        // Long poll so useNow is irrelevant — isArchived comes from archivedAt alone.
         localStorage.setItem("north-star:now-interval", "60000");
-
-        // Compute expiresAt in browser time (same reasoning as the handleSend test above).
-        const expiresAt = new Date(Date.now() + 1_500).toISOString();
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
@@ -406,15 +457,25 @@ test.describe("Lab channel", () => {
         } catch {
           storeData = JSON.parse(seed);
         }
-
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
-
         const channels = (storeData.state.channels as unknown[]) ?? [];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
         channels.push({
           id,
           label,
           category: "lab",
-          expiresAt,
+          expiresAt: expires,
           createdAt: new Date().toISOString(),
           createdBy: "human",
           invited_roles: ["river-smith"],
@@ -423,13 +484,13 @@ test.describe("Lab channel", () => {
         storeData.state.channels = channels;
         localStorage.setItem("north-star:v1", JSON.stringify(storeData));
       },
-      { id: channelId, label: "double-click-lab", seed: SEED_STORE },
+      { id: channelId, label: "double-click-lab", expires: expiresAt, seed: SEED_STORE },
     );
 
     await page.goto(`channels/lab/${channelId}`);
     await expect(page.locator("h1")).toContainText("double-click-lab", { timeout: 10_000 });
 
-    // Ask-agent button is visible (lab not yet expired)
+    // Ask-agent button is visible
     const askBtn = page.getByRole("button", { name: /ask river smith/i });
     await expect(askBtn).toBeVisible({ timeout: 5_000 });
 
@@ -524,9 +585,13 @@ test.describe("Lab channel", () => {
   // The askingRole guard in handleAskAgent must block the second invocation so
   // only one agent response bubble appears in the feed.
   test("clicking Ask-agent twice rapidly produces only one agent bubble", async ({ page }) => {
-    const channelId = `archive-race-${Date.now()}`;
+    const channelId = `relay-dedup-${Date.now()}`;
     // Lab expires well in the future so it's not read-only
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString(); // not expired
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    const now = new Date().toISOString();
+
+    const now = new Date().toISOString();
 
     await page.addInitScript(
       ({
@@ -553,10 +618,20 @@ test.describe("Lab channel", () => {
         } catch {
           storeData = JSON.parse(seed);
         }
-
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
-
         const channels = (storeData.state.channels as unknown[]) ?? [];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
         channels.push({
           id,
           label,
@@ -644,9 +719,13 @@ test.describe("Lab channel", () => {
   // Even if that guard were somehow bypassed at the UI layer, the feed must
   // remain empty — a regression here would silently ship.
   test("archive-then-type race: pre-archived lab shows zero bubbles and no reply form", async ({ page }) => {
-    const channelId = `archive-race-${Date.now()}`;
+    const channelId = `relay-dedup-${Date.now()}`;
     const archivedAt = new Date(Date.now() - 5_000).toISOString(); // archived 5 s ago
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString(); // not expired
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    const now = new Date().toISOString();
+
+    const now = new Date().toISOString();
 
     await page.addInitScript(
       ({
@@ -673,10 +752,20 @@ test.describe("Lab channel", () => {
         } catch {
           storeData = JSON.parse(seed);
         }
-
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
-
         const channels = (storeData.state.channels as unknown[]) ?? [];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
+
+        const relayEvents = [{
+          kind: 1011,
+          payload: { zone: "Z2", actor_type: "human", channel_id: id, text, posted_at: ts, event_id: eid },
+          z2npub: "z2:local", timestamp: ts, signature: "stub",
+        }];
         channels.push({
           id,
           label,
@@ -700,11 +789,11 @@ test.describe("Lab channel", () => {
     // 1. Lab name visible in header
     await expect(page.locator("h1")).toContainText("archive-race-lab", { timeout: 10_000 });
 
-    // 2. "archived" badge is shown on the very first render — isArchived = !!(channel.archivedAt)
+    // 2. "archived" badge is shown on the very first render
     const archivedBadge = page.locator("span").filter({ hasText: /^archived$/ });
     await expect(archivedBadge.first()).toBeVisible({ timeout: 5_000 });
 
-    // 3. Reply textarea is absent — isReadOnly prevents the form from mounting
+    // 3. Reply textarea is absent
     await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });
 
     // 4. Read-only footer confirms the archived state
@@ -713,9 +802,6 @@ test.describe("Lab channel", () => {
     ).toBeVisible({ timeout: 5_000 });
 
     // 5. Feed contains zero message bubbles.
-    //    EventBubble renders a <div class="flex gap-2.5 …">; the chronological
-    //    feed wrapper is <div class="space-y-4">.
-    //    A bypass of handleSend's realTimeReadOnly guard would show a bubble here.
     const feedBubbles = page.locator(".space-y-4 > div");
     await expect(feedBubbles).toHaveCount(0, { timeout: 3_000 });
   });
@@ -780,3 +866,15 @@ test.describe("Lab channel", () => {
     ).toBeVisible({ timeout: 5_000 });
   });
 });
+
+    const eventId2 = `evt-replay-2-${Date.now()}`;
+
+    const msg1 = `relay-replay-msg-1-${Date.now()}`;
+
+    const dedupMsg = `relay-dedup-msg-${Date.now()}`;
+
+    const eventId1 = `evt-replay-1-${Date.now()}`;
+
+    const eventId = `evt-dedup-${Date.now()}`;
+
+    const msg2 = `relay-replay-msg-2-${Date.now()}`;

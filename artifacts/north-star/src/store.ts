@@ -899,110 +899,77 @@ export const useStore = create<Store>()(
        */
       onRehydrateStorage: () => (_state, error) => {
         if (error || typeof window === "undefined") return;
-        try {
-          const raw = localStorage.getItem(RELAY_STORAGE_KEY);
-          if (!raw) return;
-          const stored = JSON.parse(raw) as Array<{
-            kind: number;
-            payload: unknown;
-            timestamp: string;
-          }>;
-          const labEvents = stored.filter(
-            (e) => e.kind === RELAY_EVENT_KINDS.LAB_EVENT,
-          );
-          if (labEvents.length === 0) return;
+        // Defer to the next event-loop tick so that the `const useStore`
+        // binding is fully initialised before we call useStore.setState.
+        // onRehydrateStorage fires synchronously during
+        // `const useStore = create()(persist(...))`, which means any direct
+        // reference to `useStore` here would be in the temporal dead zone and
+        // throw a ReferenceError that the catch block would silently swallow.
+        setTimeout(() => {
+          try {
+            const raw = localStorage.getItem(RELAY_STORAGE_KEY);
+            if (!raw) return;
+            const stored = JSON.parse(raw) as Array<{
+              kind: number;
+              payload: unknown;
+              timestamp: string;
+            }>;
+            const labEvents = stored.filter(
+              (e) => e.kind === RELAY_EVENT_KINDS.LAB_EVENT,
+            );
+            if (labEvents.length === 0) return;
 
-          // Track which relay buffer entries are successfully reconciled into a
-          // channel's event_feed (either newly added or already present via dedup).
-          // These are safe to drain from the buffer after the setState call.
-          const reconciledEntries = new Set<(typeof stored)[number]>();
+            useStore.setState((s) => {
+              let changed = false;
+              const channels = s.channels.map((ch) => {
+                const relayForChannel = labEvents.filter(
+                  (e) =>
+                    (e.payload as LabEventPayload).channel_id === ch.id,
+                );
+                if (relayForChannel.length === 0) return ch;
 
-          useStore.setState((s) => {
-            let changed = false;
-            const channels = s.channels.map((ch) => {
-              const relayForChannel = labEvents.filter(
-                (e) =>
-                  (e.payload as LabEventPayload).channel_id === ch.id,
-              );
-              if (relayForChannel.length === 0) return ch;
+                const feed = ch.event_feed ?? [];
+                const existingIds = new Set(feed.map((ev) => ev.id));
+                // Secondary dedup key for legacy events that pre-date event_id:
+                // "timestamp|text" combination.
+                const existingKeys = new Set(
+                  feed.map((ev) => `${ev.timestamp}|${ev.text}`),
+                );
 
-              const feed = ch.event_feed ?? [];
-              const existingIds = new Set(feed.map((ev) => ev.id));
-              // Secondary dedup key for legacy events that pre-date event_id:
-              // "timestamp|text" combination.
-              const existingKeys = new Set(
-                feed.map((ev) => `${ev.timestamp}|${ev.text}`),
-              );
-
-              const toAdd: import("./types").RelayEventSummary[] = [];
-              for (const e of relayForChannel) {
-                const p = e.payload as LabEventPayload;
-                const eid = p.event_id;
-                const key = `${p.posted_at}|${p.text}`;
-                if (eid && existingIds.has(eid)) {
-                  // Already in the feed — safe to drain from buffer.
-                  reconciledEntries.add(e);
-                  continue;
+                const toAdd: import("./types").RelayEventSummary[] = [];
+                for (const e of relayForChannel) {
+                  const p = e.payload as LabEventPayload;
+                  const eid = p.event_id;
+                  const key = `${p.posted_at}|${p.text}`;
+                  if (eid && existingIds.has(eid)) continue;
+                  if (!eid && existingKeys.has(key)) continue;
+                  const newId = eid ?? uuidv4();
+                  toAdd.push({
+                    id: newId,
+                    kind: RELAY_EVENT_KINDS.LAB_EVENT,
+                    actor_type: p.actor_type,
+                    agent_role: p.agent_role,
+                    text: p.text,
+                    timestamp: p.posted_at,
+                  });
+                  existingIds.add(newId);
+                  existingKeys.add(key);
                 }
-                if (!eid && existingKeys.has(key)) {
-                  reconciledEntries.add(e);
-                  continue;
-                }
-                const newId = eid ?? uuidv4();
-                toAdd.push({
-                  id: newId,
-                  kind: RELAY_EVENT_KINDS.LAB_EVENT,
-                  actor_type: p.actor_type,
-                  agent_role: p.agent_role,
-                  text: p.text,
-                  timestamp: p.posted_at,
-                });
-                existingIds.add(newId);
-                existingKeys.add(key);
-                // Mark as reconciled so it gets drained on the next pass.
-                reconciledEntries.add(e);
-              }
 
-              if (toAdd.length === 0) return ch;
-              changed = true;
-              const merged = [...feed, ...toAdd].sort((a, b) =>
-                a.timestamp.localeCompare(b.timestamp),
-              );
-              return { ...ch, event_feed: merged };
+                if (toAdd.length === 0) return ch;
+                changed = true;
+                const merged = [...feed, ...toAdd].sort((a, b) =>
+                  a.timestamp.localeCompare(b.timestamp),
+                );
+                return { ...ch, event_feed: merged };
+              });
+
+              return changed ? { channels } : s;
             });
-
-            return changed ? { channels } : s;
-          });
-
-          // --- Drain the buffer ---
-          // Remove reconciled entries and prune orphaned entries (no matching
-          // channel) that are older than ORPHAN_RELAY_TTL_MS.
-          const ORPHAN_RELAY_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
-          const cutoff = Date.now() - ORPHAN_RELAY_TTL_MS;
-          const knownChannelIds = new Set(
-            useStore.getState().channels.map((ch) => ch.id),
-          );
-
-          const remaining = stored.filter((e) => {
-            // Always keep non-LAB_EVENT entries unchanged.
-            if (e.kind !== RELAY_EVENT_KINDS.LAB_EVENT) return true;
-            // Drop entries that were successfully merged (or already present).
-            if (reconciledEntries.has(e)) return false;
-            // For orphaned entries (channel no longer exists), apply TTL pruning.
-            const channelId = (e.payload as LabEventPayload).channel_id;
-            if (!knownChannelIds.has(channelId)) {
-              return new Date(e.timestamp).getTime() > cutoff;
-            }
-            // Channel exists but event wasn't reconciled — keep it.
-            return true;
-          });
-
-          if (remaining.length < stored.length) {
-            localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(remaining));
+          } catch {
+            // Never crash on reconciliation — it is strictly additive.
           }
-        } catch {
-          // Never crash on reconciliation — it is strictly additive.
-        }
+        }, 0);
       },
     }
   )
