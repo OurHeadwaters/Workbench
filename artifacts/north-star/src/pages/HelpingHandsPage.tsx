@@ -1,12 +1,10 @@
-import { useState } from "react";
 import { useStore } from "@/store";
-import type { HelpingHandsTask, HelpingHandsStatus } from "@/types";
-import {
   BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, AMBER_WASH, FONT_DISPLAY,
 } from "@/lib/theme";
 import { Plus, X, HandHelping, CheckCheck, Check, Users, Archive, ChevronDown, ChevronRight, RotateCcw } from "lucide-react";
 
 // ── Status badge ────────────────────────────────────────────────────────────
+import { useState, useEffect } from "react";
 
 const STATUS_LABEL: Record<HelpingHandsStatus, string> = {
   open:      "Open",
@@ -210,9 +208,30 @@ function TaskRow({ task }: { task: HelpingHandsTask }) {
 const STATUS_ORDER: HelpingHandsStatus[] = ["open", "claimed", "done", "confirmed"];
 
 export function HelpingHandsPage() {
-  const tasks  = useStore((s) => s.helpingHandsTasks);
+  const tasks   = useStore((s) => s.helpingHandsTasks);
+  const archive = useStore((s) => s.archiveHelpingHandsTask);
   const [addOpen, setAddOpen] = useState(false);
   const [archivedOpen, setArchivedOpen] = useState(false);
+
+  // Auto-archive confirmed tasks that have been sitting for longer than the threshold.
+  useEffect(() => {
+    function runAutoArchive() {
+      const now = Date.now();
+      tasks
+        .filter(
+          (t) =>
+            !t.archivedAt &&
+            t.status === "confirmed" &&
+            t.confirmedAt &&
+            now - new Date(t.confirmedAt).getTime() >= AUTO_ARCHIVE_AFTER_MS,
+        )
+        .forEach((t) => archive(t.id));
+    }
+
+    runAutoArchive();
+    const timer = setInterval(runAutoArchive, AUTO_ARCHIVE_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, [tasks, archive]);
 
   const active = [...tasks]
     .filter((t) => !t.archivedAt)
@@ -294,3 +313,9 @@ export function HelpingHandsPage() {
     </div>
   );
 }
+
+/** Confirmed tasks older than this are auto-archived. Change to adjust the window. */
+const AUTO_ARCHIVE_AFTER_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+/** How often the page re-checks while mounted. */
+const AUTO_ARCHIVE_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
