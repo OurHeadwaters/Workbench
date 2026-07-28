@@ -403,6 +403,40 @@ test.describe("Lab channel", () => {
     await expect(page.getByText(/constellation signals/i)).not.toBeVisible({ timeout: 3_000 });
   });
 
+  // ── 8. Empty-textarea guard: clicking Send does not create a bubble ───────
+  //
+  // Scenario: the textarea is empty (reply.trim() === ""). The Send button
+  // carries disabled={!reply.trim()} and handleSend returns early when reply is
+  // empty. We dispatch a programmatic click on the disabled button to verify
+  // that neither guard can be bypassed — zero bubbles must appear in the feed.
+  test("clicking Send with an empty textarea does not add any bubble to the feed", async ({ page }) => {
+    await page.goto("channels");
+    await page.getByRole("button", { name: /start lab/i }).click();
+    await page.getByPlaceholder("e.g. deer-lake-spike").fill(`empty-send-guard-${Date.now()}`);
+    await page.getByRole("button", { name: "Open Lab" }).click();
+    await expect(page).toHaveURL(/\/channels\/lab\/[a-z0-9-]+/, { timeout: 10_000 });
+
+    // Textarea must be empty (default state)
+    const textarea = page.getByPlaceholder("Reply to the lab…");
+    await expect(textarea).toHaveValue("", { timeout: 5_000 });
+
+    // Use dispatchEvent to bypass the HTML disabled attribute and hit handleSend
+    const sendBtn = page.getByRole("button", { name: "Send" });
+    await sendBtn.dispatchEvent("click");
+
+    // Also try submitting the form directly via keyboard path
+    await textarea.press("Enter");
+
+    // Give React time to flush any queued updates
+    await page.waitForTimeout(500);
+
+    // No bubble (EventBubble div) should have appeared in the feed
+    // EventBubble renders a <div> with flex gap-2.5; the feed wrapper has
+    // class "space-y-4". Check that the feed contains no bubbles at all.
+    const feedBubbles = page.locator(".space-y-4 > div");
+    await expect(feedBubbles).toHaveCount(0, { timeout: 3_000 });
+  });
+
   // ── 9. Enter-key double-send guard ────────────────────────────────────────
   //
   // Scenario: the user types a message and presses Enter twice in rapid
