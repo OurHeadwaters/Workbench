@@ -4,7 +4,25 @@ import { useStore } from "@/store";
 import type { RelayEventSummary } from "@/types";
 import { AGENT_ROLE_REGISTRY } from "@/lib/relay-stub";
 import { BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, FONT_DISPLAY } from "@/lib/theme";
-import { Clock, Archive, Send, ChevronLeft, Beaker, Bot, User } from "lucide-react";
+import { Clock, Archive, Send, ChevronLeft, Beaker, Bot, User, Loader2 } from "lucide-react";
+
+// ── stub response generator ────────────────────────────────────────────────
+
+function generateAgentStub(role: string, labLabel: string, recentMessages: string[]): string {
+  const context = recentMessages.slice(-2).join(" … ");
+  switch (role) {
+    case "river-smith":
+      return `Reviewing constellation signals for "${labLabel}".${context ? ` Building on: "${context}".` : ""} Across the seven dimensions, the Biological and Collective layers warrant the most attention right now. Will synthesise a full briefing at 11:45 PM.`;
+    case "critical-challenger":
+      return `Challenging the framing on "${labLabel}".${context ? ` On "${context}" —` : ""} Three questions the group may be avoiding: (1) What breaks first when this scales? (2) Who bears the downside if the assumption is wrong? (3) What does the 90-day exit look like if it stalls?`;
+    case "r-and-d":
+      return `R&D scan for "${labLabel}" complete.${context ? ` Building on "${context}" —` : ""} Found three analogous patterns in adjacent systems worth synthesising into a prototype proposal. Will draft a concept note for the next session.`;
+    case "ops":
+      return `Ops check on "${labLabel}".${context ? ` Tracking: "${context}".` : ""} Scheduling signals look stable — no burst windows blocked. One stalled item flagged for review. Recommend the group sets a 48-hour decision deadline to keep momentum.`;
+    default:
+      return `Processing request for "${labLabel}"…`;
+  }
+}
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
@@ -128,6 +146,7 @@ export function LabPage() {
 
   const now = useNow();
   const [reply, setReply] = useState("");
+  const [askingRole, setAskingRole] = useState<string | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
 
   const isExpired = channel?.expiresAt
@@ -165,6 +184,23 @@ export function LabPage() {
       text: reply.trim(),
     });
     setReply("");
+  }
+
+  function handleAskAgent(role: (typeof invitedRoles)[number]) {
+    if (isReadOnly || !channelId || askingRole) return;
+    setAskingRole(role);
+    const recentMessages = feed.slice(-3).map((ev) => ev.text);
+    const label = channel?.label ?? "";
+    // Brief simulated thinking delay before the response appears
+    setTimeout(() => {
+      postLabEvent(channelId, {
+        kind: 1011,
+        actor_type: "agent",
+        agent_role: role,
+        text: generateAgentStub(role, label, recentMessages),
+      });
+      setAskingRole(null);
+    }, 800);
   }
 
   if (!channel) {
@@ -288,6 +324,40 @@ export function LabPage() {
           className="fixed bottom-[64px] left-0 right-0 px-4 pb-3 pt-2"
           style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}
         >
+          {/* Ask-agent buttons */}
+          {invitedRoles.length > 0 && (
+            <div className="flex flex-wrap gap-2 max-w-xl mx-auto mb-2">
+              {invitedRoles.map((role) => {
+                const entry = AGENT_ROLE_REGISTRY.find((r) => r.role === role);
+                const label = entry ? entry.name : role;
+                const isThinking = askingRole === role;
+                const isDisabled = askingRole !== null;
+                return (
+                  <button
+                    key={role}
+                    onClick={() => handleAskAgent(role)}
+                    disabled={isDisabled}
+                    aria-label={`Ask ${label}`}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-opacity"
+                    style={{
+                      backgroundColor: "rgba(100,180,120,0.12)",
+                      border: `1px solid rgba(100,180,120,0.28)`,
+                      color: "#7ecf8e",
+                      opacity: isDisabled && !isThinking ? 0.4 : 1,
+                    }}
+                  >
+                    {isThinking ? (
+                      <Loader2 size={11} className="animate-spin" />
+                    ) : (
+                      <Bot size={11} />
+                    )}
+                    {isThinking ? `${label} thinking…` : `Ask ${label}`}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
           <form onSubmit={handleSend} className="flex items-end gap-2 max-w-xl mx-auto">
             <textarea
               value={reply}
