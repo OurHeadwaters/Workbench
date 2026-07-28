@@ -198,15 +198,12 @@ test.describe("Lab channel", () => {
     ).toBeVisible({ timeout: 5_000 });
   });
 
-  // ── 6. Clock-drift guard: handleSend blocks posts on expired lab ──────────
+  // ── 5. Cold open on an already-expired lab ────────────────────────────────
   //
-  // Scenario: the useNow poll interval is set very long (60 s) so the UI does
-  // NOT flip to read-only immediately after expiry.  The lab expires 1 second
-  // after the page loads.  We wait 1.5 s (lab is now past expiresAt on the
-  // real clock) and then try to submit a reply.
-  // handleSend must check Date.now() directly and refuse the post — no new
-  // event should appear in the feed.
-  test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
+  // Scenario: the lab's expiresAt is in the past on the very first render.
+  // The "expired" badge and read-only footer must appear immediately without
+  // waiting for a useNow poll tick, and the reply textarea must be absent.
+  test("cold open on an already-expired lab shows expired badge and hides reply input", async ({ page }) => {
     const channelId = `agent-drift-guard-${Date.now()}`;
     const expiresAt = new Date(Date.now() + 1_000).toISOString();
 
@@ -406,6 +403,38 @@ test.describe("Lab channel", () => {
     await expect(page.getByText(/constellation signals/i)).not.toBeVisible({ timeout: 3_000 });
   });
 
+  // ── 9. Enter-key double-send guard ────────────────────────────────────────
+  //
+  // Scenario: the user types a message and presses Enter twice in rapid
+  // succession before React has re-rendered (clearing the textarea value).
+  // The sendingRef guard in handleSend must block the second submission so
+  // only one bubble for that text appears in the feed.
+  test("pressing Enter twice rapidly does not duplicate the message", async ({ page }) => {
+    await page.goto("channels");
+    await page.getByRole("button", { name: /start lab/i }).click();
+    await page.getByPlaceholder("e.g. deer-lake-spike").fill(`enter-guard-lab-${Date.now()}`);
+    await page.getByRole("button", { name: "Open Lab" }).click();
+    await expect(page).toHaveURL(/\/channels\/lab\/[a-z0-9-]+/, { timeout: 10_000 });
+
+    const messageText = `enter-double-send-${Date.now()}`;
+    const textarea = page.getByPlaceholder("Reply to the lab…");
+    await textarea.fill(messageText);
+
+    // Dispatch two Enter keydowns in rapid succession — both fire synchronously
+    // before React's state update re-render clears the textarea value.
+    await textarea.press("Enter");
+    await textarea.press("Enter");
+
+    // Give React time to flush any queued updates.
+    await page.waitForTimeout(500);
+
+    // Exactly one bubble for that text should appear in the feed.
+    await expect(page.getByText(messageText)).toHaveCount(1, { timeout: 5_000 });
+
+    // Textarea must have been cleared after the first (and only) send.
+    await expect(textarea).toHaveValue("", { timeout: 3_000 });
+  });
+
   // ── 8. Archived lab is read-only ──────────────────────────────────────────
   test("archived lab blocks new posts and shows read-only state", async ({ page }) => {
     // Create a lab
@@ -441,5 +470,3 @@ test.describe("Lab channel", () => {
     ).toBeVisible({ timeout: 5_000 });
   });
 });
-
-    const sendBtn = page.getByRole("button", { name: "Send" });
