@@ -40,6 +40,7 @@ import adminRouter from "./admin";
 import northStarArchiveRouter from "./northStarArchive";
 import northStarRelayRouter from "./northStarRelay";
 import northStarLabAgentRouter from "./northStarLabAgent";
+import northStarProposalsRouter from "./northStarProposals";
 import z2Router from "./z2";
 
 const router: IRouter = Router();
@@ -88,6 +89,7 @@ router.use("/admin", adminRouter);
 router.use("/north-star", northStarArchiveRouter);
 router.use("/north-star", northStarRelayRouter);
 router.use("/north-star", northStarLabAgentRouter);
+router.use("/north-star", northStarProposalsRouter);
 router.use("/z2", z2Router);
 
 export default router;

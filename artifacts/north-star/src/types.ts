@@ -264,8 +264,8 @@ export interface StoreActions {
   archiveHelpingHandsTask: (id: string) => void;
   restoreHelpingHandsTask: (id: string) => void;
   addProposal: (p: Pick<ImprovementProposal, "agent_role" | "title" | "description" | "affected_surface" | "relay_event_ref">) => ImprovementProposal;
-  acceptProposal: (id: string) => void;
-  rejectProposal: (id: string) => void;
+  acceptProposal: (id: string) => Promise<{ ok: true } | { ok: false; error: string }>;
+  rejectProposal: (id: string) => Promise<{ ok: true } | { ok: false; error: string }>;
   /**
    * Create a new lab channel with an auto-assigned expiry and a set of invited agent roles.
    * Returns the new channel's id.

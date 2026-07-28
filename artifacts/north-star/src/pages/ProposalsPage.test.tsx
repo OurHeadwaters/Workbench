@@ -14,8 +14,8 @@ import "@testing-library/jest-dom";
 // Store mock — provide a minimal set of state fields the component reads
 // ---------------------------------------------------------------------------
 
-const mockAcceptProposal = vi.fn();
-const mockRejectProposal = vi.fn();
+const mockAcceptProposal = vi.fn().mockResolvedValue({ ok: true });
+const mockRejectProposal = vi.fn().mockResolvedValue({ ok: true });
 
 const PENDING_PROPOSAL = {
   id: "prop-test-1",

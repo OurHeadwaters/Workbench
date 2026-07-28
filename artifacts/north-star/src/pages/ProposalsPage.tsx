@@ -64,11 +64,14 @@ export function ProposalsPage() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState<"accept" | "reject" | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [outcomeError, setOutcomeError] = useState<string | null>(null);
 
   const pending = proposals.filter((p) => p.status === "proposed");
   const resolved = proposals.filter((p) => p.status !== "proposed");
 
   const startConfirm = (id: string, action: "accept" | "reject") => {
+    setOutcomeError(null);
     setConfirmingId(id);
     setConfirmAction(action);
   };
@@ -76,12 +79,21 @@ export function ProposalsPage() {
   const cancelConfirm = () => {
     setConfirmingId(null);
     setConfirmAction(null);
+    setOutcomeError(null);
   };
 
-  const executeConfirm = () => {
+  const executeConfirm = async () => {
     if (!confirmingId || !confirmAction) return;
-    if (confirmAction === "accept") acceptProposal(confirmingId);
-    else rejectProposal(confirmingId);
+    setSubmitting(true);
+    setOutcomeError(null);
+    const result = confirmAction === "accept"
+      ? await acceptProposal(confirmingId)
+      : await rejectProposal(confirmingId);
+    setSubmitting(false);
+    if (!result.ok) {
+      setOutcomeError(result.error);
+      return;
+    }
     setConfirmingId(null);
     setConfirmAction(null);
   };
@@ -231,34 +243,47 @@ export function ProposalsPage() {
                             </button>
                           </>
                         ) : (
-                          <div className="flex items-center gap-3 w-full">
-                            <p className="text-sm flex-1" style={{ color: TEXT_2 }}>
-                              {confirmAction === "accept"
-                                ? "Accept this proposal?"
-                                : "Reject this proposal?"}
-                            </p>
-                            <button
-                              onClick={executeConfirm}
-                              className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-                              style={{
-                                backgroundColor:
-                                  confirmAction === "accept"
-                                    ? "rgba(74,138,124,0.25)"
-                                    : "rgba(122,74,58,0.25)",
-                                color:
-                                  confirmAction === "accept" ? "#4A8A7C" : "#8C4A3A",
-                                border: `1px solid ${confirmAction === "accept" ? "rgba(74,138,124,0.4)" : "rgba(122,74,58,0.4)"}`,
-                              }}
-                            >
-                              Confirm
-                            </button>
-                            <button
-                              onClick={cancelConfirm}
-                              className="px-3 py-2 rounded-lg text-sm transition-colors"
-                              style={{ color: TEXT_2 }}
-                            >
-                              Cancel
-                            </button>
+                          <div className="flex flex-col gap-2 w-full">
+                            <div className="flex items-center gap-3 w-full">
+                              <p className="text-sm flex-1" style={{ color: TEXT_2 }}>
+                                {confirmAction === "accept"
+                                  ? "Accept this proposal?"
+                                  : "Reject this proposal?"}
+                              </p>
+                              <button
+                                onClick={() => void executeConfirm()}
+                                disabled={submitting}
+                                className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
+                                style={{
+                                  backgroundColor:
+                                    confirmAction === "accept"
+                                      ? "rgba(74,138,124,0.25)"
+                                      : "rgba(122,74,58,0.25)",
+                                  color:
+                                    confirmAction === "accept" ? "#4A8A7C" : "#8C4A3A",
+                                  border: `1px solid ${confirmAction === "accept" ? "rgba(74,138,124,0.4)" : "rgba(122,74,58,0.4)"}`,
+                                }}
+                              >
+                                {submitting ? "…" : "Confirm"}
+                              </button>
+                              <button
+                                onClick={cancelConfirm}
+                                disabled={submitting}
+                                className="px-3 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
+                                style={{ color: TEXT_2 }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                            {outcomeError && (
+                              <p
+                                className="text-xs px-1"
+                                style={{ color: "#C05050" }}
+                                role="alert"
+                              >
+                                ⚠ {outcomeError}
+                              </p>
+                            )}
                           </div>
                         )}
                       </div>

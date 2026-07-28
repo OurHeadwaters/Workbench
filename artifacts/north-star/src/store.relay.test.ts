@@ -33,6 +33,18 @@ const {
 
 const spy = relayStub.publishToRelay as ReturnType<typeof vi.fn>;
 
+// Stub fetch globally so acceptProposal/rejectProposal's server gate
+// resolves immediately with 200 in all relay tests. Individual tests that
+// need a different response can override this with vi.stubGlobal.
+vi.stubGlobal(
+  "fetch",
+  vi.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve({ ok: true }),
+  }),
+);
+
 beforeEach(() => {
   spy.mockClear();
   // Reset the store's workbenchPlan and helpingHandsTasks between tests
@@ -247,16 +259,16 @@ describe("acceptProposal — IMPROVEMENT_PROPOSAL_OUTCOME relay event", () => {
     });
   });
 
-  it("fires IMPROVEMENT_PROPOSAL_OUTCOME with correct kind", () => {
-    useStore.getState().acceptProposal("prop-accept-1");
+  it("fires IMPROVEMENT_PROPOSAL_OUTCOME with correct kind", async () => {
+    await useStore.getState().acceptProposal("prop-accept-1");
 
     expect(spy).toHaveBeenCalledOnce();
     const call = spy.mock.calls[0][0] as Record<string, unknown>;
     expect(call.kind).toBe(RELAY_EVENT_KINDS.IMPROVEMENT_PROPOSAL_OUTCOME);
   });
 
-  it("payload carries actor_type 'human', outcome 'accepted', and matching proposal_id", () => {
-    useStore.getState().acceptProposal("prop-accept-1");
+  it("payload carries actor_type 'human', outcome 'accepted', and matching proposal_id", async () => {
+    await useStore.getState().acceptProposal("prop-accept-1");
 
     const payload = (spy.mock.calls[0][0] as Record<string, unknown>)
       .payload as Record<string, unknown>;
@@ -268,8 +280,8 @@ describe("acceptProposal — IMPROVEMENT_PROPOSAL_OUTCOME relay event", () => {
     expect(typeof payload.resolved_at).toBe("string");
   });
 
-  it("carries correct envelope fields (z2npub, signature, timestamp)", () => {
-    useStore.getState().acceptProposal("prop-accept-1");
+  it("carries correct envelope fields (z2npub, signature, timestamp)", async () => {
+    await useStore.getState().acceptProposal("prop-accept-1");
 
     const call = spy.mock.calls[0][0] as Record<string, unknown>;
     expect(call.z2npub).toBe("z2:local");
@@ -277,8 +289,8 @@ describe("acceptProposal — IMPROVEMENT_PROPOSAL_OUTCOME relay event", () => {
     expect(typeof call.timestamp).toBe("string");
   });
 
-  it("updates the proposal status to 'accepted' in the store", () => {
-    useStore.getState().acceptProposal("prop-accept-1");
+  it("updates the proposal status to 'accepted' in the store", async () => {
+    await useStore.getState().acceptProposal("prop-accept-1");
 
     const proposals = useStore.getState().improvementProposals;
     expect(proposals[0].status).toBe("accepted");
@@ -307,16 +319,16 @@ describe("rejectProposal — IMPROVEMENT_PROPOSAL_OUTCOME relay event", () => {
     });
   });
 
-  it("fires IMPROVEMENT_PROPOSAL_OUTCOME with correct kind", () => {
-    useStore.getState().rejectProposal("prop-reject-1");
+  it("fires IMPROVEMENT_PROPOSAL_OUTCOME with correct kind", async () => {
+    await useStore.getState().rejectProposal("prop-reject-1");
 
     expect(spy).toHaveBeenCalledOnce();
     const call = spy.mock.calls[0][0] as Record<string, unknown>;
     expect(call.kind).toBe(RELAY_EVENT_KINDS.IMPROVEMENT_PROPOSAL_OUTCOME);
   });
 
-  it("payload carries actor_type 'human', outcome 'rejected', and matching proposal_id", () => {
-    useStore.getState().rejectProposal("prop-reject-1");
+  it("payload carries actor_type 'human', outcome 'rejected', and matching proposal_id", async () => {
+    await useStore.getState().rejectProposal("prop-reject-1");
 
     const payload = (spy.mock.calls[0][0] as Record<string, unknown>)
       .payload as Record<string, unknown>;
@@ -328,8 +340,8 @@ describe("rejectProposal — IMPROVEMENT_PROPOSAL_OUTCOME relay event", () => {
     expect(typeof payload.resolved_at).toBe("string");
   });
 
-  it("updates the proposal status to 'rejected' in the store", () => {
-    useStore.getState().rejectProposal("prop-reject-1");
+  it("updates the proposal status to 'rejected' in the store", async () => {
+    await useStore.getState().rejectProposal("prop-reject-1");
 
     const proposals = useStore.getState().improvementProposals;
     expect(proposals[0].status).toBe("rejected");

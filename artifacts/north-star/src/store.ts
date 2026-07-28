@@ -621,7 +621,28 @@ export const useStore = create<Store>()(
         return proposal;
       },
 
-      acceptProposal: (id) => {
+      acceptProposal: async (id) => {
+        const token =
+          (typeof window !== "undefined" &&
+            (window.localStorage.getItem("library.ownerToken") ||
+              window.localStorage.getItem("ownerToken"))) ||
+          null;
+        try {
+          const res = await fetch("/api/north-star/proposals/" + id + "/outcome", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(token ? { "x-library-owner-token": token } : {}),
+            },
+            body: JSON.stringify({ outcome: "accepted" }),
+          });
+          if (!res.ok) {
+            const body = (await res.json().catch(() => ({}))) as { error?: string };
+            return { ok: false as const, error: body.error ?? `Server returned ${res.status}` };
+          }
+        } catch (err) {
+          return { ok: false as const, error: err instanceof Error ? err.message : "Network error" };
+        }
         const now = new Date().toISOString();
         set((s) => ({
           improvementProposals: s.improvementProposals.map((p) =>
@@ -641,9 +662,31 @@ export const useStore = create<Store>()(
           timestamp: now,
           signature: "stub",
         });
+        return { ok: true as const };
       },
 
-      rejectProposal: (id) => {
+      rejectProposal: async (id) => {
+        const token =
+          (typeof window !== "undefined" &&
+            (window.localStorage.getItem("library.ownerToken") ||
+              window.localStorage.getItem("ownerToken"))) ||
+          null;
+        try {
+          const res = await fetch("/api/north-star/proposals/" + id + "/outcome", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(token ? { "x-library-owner-token": token } : {}),
+            },
+            body: JSON.stringify({ outcome: "rejected" }),
+          });
+          if (!res.ok) {
+            const body = (await res.json().catch(() => ({}))) as { error?: string };
+            return { ok: false as const, error: body.error ?? `Server returned ${res.status}` };
+          }
+        } catch (err) {
+          return { ok: false as const, error: err instanceof Error ? err.message : "Network error" };
+        }
         const now = new Date().toISOString();
         set((s) => ({
           improvementProposals: s.improvementProposals.map((p) =>
@@ -663,6 +706,7 @@ export const useStore = create<Store>()(
           timestamp: now,
           signature: "stub",
         });
+        return { ok: true as const };
       },
 
       addHelpingHandsTask: ({ title }) => {
