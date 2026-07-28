@@ -197,7 +197,65 @@ test.describe("Lab channel", () => {
     ).toBeVisible({ timeout: 5_000 });
   });
 
-  // ── 5. Archived lab is read-only ──────────────────────────────────────────
+  // ── 5. Cold-open on already-expired lab shows expired state immediately ───
+  test("cold-open on a lab whose expiresAt is already past shows expired badge immediately", async ({ page }) => {
+    // Seed a channel whose expiresAt is one hour in the past — it was already
+    // expired before the user ever opened the page.
+    const channelId = `cold-expired-${Date.now()}`;
+    const expiresAt = new Date(Date.now() - 60 * 60 * 1_000).toISOString(); // 1 hour ago
+
+    await page.addInitScript(
+      ({ id, label, expires, seed }: { id: string; label: string; expires: string; seed: string }) => {
+        localStorage.setItem("north-star:unlocked", "1");
+
+        let storeData: { state: Record<string, unknown>; version: number };
+        try {
+          const raw = localStorage.getItem("north-star:v1");
+          storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
+        } catch {
+          storeData = JSON.parse(seed);
+        }
+
+        (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
+
+        const channels = (storeData.state.channels as unknown[]) ?? [];
+        channels.push({
+          id,
+          label,
+          category: "lab",
+          expiresAt: expires,
+          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1_000).toISOString(), // created 2 hours ago
+          createdBy: "human",
+          invited_roles: [],
+          event_feed: [],
+        });
+        storeData.state.channels = channels;
+        localStorage.setItem("north-star:v1", JSON.stringify(storeData));
+      },
+      { id: channelId, label: "cold-expired-lab", expires: expiresAt, seed: SEED_STORE },
+    );
+
+    // Navigate directly to the lab page — this is a cold open on an already-expired lab.
+    await page.goto(`channels/lab/${channelId}`);
+
+    // 1. Lab name is visible in header
+    await expect(page.locator("h1")).toContainText("cold-expired-lab", { timeout: 10_000 });
+
+    // 2. "expired" badge is shown on the very first render — no poll tick needed.
+    //    The badge text is exactly "expired" (not a countdown like "2h left").
+    const expiredBadge = page.locator("span").filter({ hasText: /^expired$/ });
+    await expect(expiredBadge.first()).toBeVisible({ timeout: 5_000 });
+
+    // 3. Reply textarea is absent from the start (isReadOnly is true on mount).
+    await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });
+
+    // 4. Read-only footer is present on first render.
+    await expect(
+      page.getByText("This lab is expired — no new events can be posted.")
+    ).toBeVisible({ timeout: 5_000 });
+  });
+
+  // ── 6. Archived lab is read-only ──────────────────────────────────────────
   test("archived lab blocks new posts and shows read-only state", async ({ page }) => {
     // Create a lab
     await page.goto("channels");
