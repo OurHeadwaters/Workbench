@@ -39,6 +39,7 @@ import codetryInquiryRouter from "./codetryInquiry";
 import adminRouter from "./admin";
 import northStarArchiveRouter from "./northStarArchive";
 import northStarRelayRouter from "./northStarRelay";
+import northStarLabAgentRouter from "./northStarLabAgent";
 import z2Router from "./z2";
 
 const router: IRouter = Router();
@@ -86,6 +87,7 @@ router.use("/codetry", codetryInquiryRouter);
 router.use("/admin", adminRouter);
 router.use("/north-star", northStarArchiveRouter);
 router.use("/north-star", northStarRelayRouter);
+router.use("/north-star", northStarLabAgentRouter);
 router.use("/z2", z2Router);
 
 export default router;

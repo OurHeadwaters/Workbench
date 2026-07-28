@@ -254,7 +254,7 @@ export function LabPage() {
     setTimeout(() => { sendingRef.current = false; }, 0);
   }
 
-  function handleAskAgent(role: (typeof invitedRoles)[number]) {
+  async function handleAskAgent(role: (typeof invitedRoles)[number]) {
     // Re-check expiry against the real-time clock so a stale useNow poll tick
     // cannot let an agent-ask slip through after the lab has actually expired.
     const realTimeExpired = channel?.expiresAt
@@ -263,7 +263,9 @@ export function LabPage() {
     const realTimeReadOnly = !!(channel?.archivedAt) || realTimeExpired;
     if (realTimeReadOnly || !channelId || askingRole) return;
 
-    // Capture and clear the reply textarea so it acts as an optional prompt.
+    // Capture and clear the reply textarea so it acts as an optional prompt
+    // sent to the agent. If set, it's posted as a human event first so it
+    // appears in the feed before the agent's reply.
     const prompt = reply.trim();
     if (prompt) {
       postLabEvent(channelId, {
@@ -275,11 +277,28 @@ export function LabPage() {
     }
 
     setAskingRole(role);
-    const recentMessages = feed.slice(-3).map((ev) => ev.text);
+    // Capture recent messages (including the prompt just posted, if any)
+    const recentMessages = [
+      ...feed.slice(-5).map((ev) => ev.text),
+      ...(prompt ? [prompt] : []),
+    ];
     const label = channel?.label ?? "";
-    // Brief simulated thinking delay before the response appears
-    setTimeout(() => {
-      // Re-check in case the lab expired during the thinking delay.
+
+    try {
+      const ownerToken =
+        window.localStorage.getItem("library.ownerToken") ||
+        window.localStorage.getItem("ownerToken") ||
+        "";
+      const res = await fetch("/api/north-star/lab/ask-agent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(ownerToken ? { "x-library-owner-token": ownerToken } : {}),
+        },
+        body: JSON.stringify({ role, labLabel: label, recentMessages }),
+      });
+
+      // Re-check in case the lab expired or was archived while the AI was thinking.
       const expiredNow = channel?.expiresAt
         ? new Date(channel.expiresAt).getTime() <= Date.now()
         : false;
@@ -287,14 +306,38 @@ export function LabPage() {
         setAskingRole(null);
         return;
       }
+
+      let text: string;
+      if (res.ok) {
+        const data = (await res.json()) as { text?: string };
+        text = data.text?.trim() || generateAgentStub(role, label, recentMessages, prompt || undefined);
+      } else {
+        // API unavailable or AI not configured — fall back to stub silently.
+        text = generateAgentStub(role, label, recentMessages, prompt || undefined);
+      }
+
       postLabEvent(channelId, {
         kind: 1011,
         actor_type: "agent",
         agent_role: role,
-        text: generateAgentStub(role, label, recentMessages, prompt || undefined),
+        text,
       });
+    } catch {
+      // Network error — fall back to stub so the feed always gets a response.
+      const expiredNow = channel?.expiresAt
+        ? new Date(channel.expiresAt).getTime() <= Date.now()
+        : false;
+      if (!(channel?.archivedAt) && !expiredNow) {
+        postLabEvent(channelId, {
+          kind: 1011,
+          actor_type: "agent",
+          agent_role: role,
+          text: generateAgentStub(role, label, recentMessages, prompt || undefined),
+        });
+      }
+    } finally {
       setAskingRole(null);
-    }, 800);
+    }
   }
 
   if (!channel) {
