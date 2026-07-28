@@ -435,6 +435,69 @@ test.describe("Lab channel", () => {
     await expect(textarea).toHaveValue("", { timeout: 3_000 });
   });
 
+  // ── 10. Ask-agent double-click guard ─────────────────────────────────────
+  //
+  // Scenario: the user clicks an Ask-agent button twice in rapid succession
+  // before React has re-rendered (setting askingRole and disabling the button).
+  // The askingRole guard in handleAskAgent must block the second invocation so
+  // only one agent response bubble appears in the feed.
+  test("clicking Ask-agent twice rapidly produces only one agent bubble", async ({ page }) => {
+    const channelId = `ask-agent-double-click-${Date.now()}`;
+    // Lab expires well in the future so it's not read-only
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    await page.addInitScript(
+      ({ id, label, expires, seed }: { id: string; label: string; expires: string; seed: string }) => {
+        localStorage.setItem("north-star:unlocked", "1");
+
+        let storeData: { state: Record<string, unknown>; version: number };
+        try {
+          const raw = localStorage.getItem("north-star:v1");
+          storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
+        } catch {
+          storeData = JSON.parse(seed);
+        }
+
+        (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
+
+        const channels = (storeData.state.channels as unknown[]) ?? [];
+        channels.push({
+          id,
+          label,
+          category: "lab",
+          expiresAt: expires,
+          createdAt: new Date().toISOString(),
+          createdBy: "human",
+          invited_roles: ["river-smith"],
+          event_feed: [],
+        });
+        storeData.state.channels = channels;
+        localStorage.setItem("north-star:v1", JSON.stringify(storeData));
+      },
+      { id: channelId, label: "double-click-lab", expires: expiresAt, seed: SEED_STORE },
+    );
+
+    await page.goto(`channels/lab/${channelId}`);
+    await expect(page.locator("h1")).toContainText("double-click-lab", { timeout: 10_000 });
+
+    // Ask-agent button is visible
+    const askBtn = page.getByRole("button", { name: /ask river smith/i });
+    await expect(askBtn).toBeVisible({ timeout: 5_000 });
+
+    // Click twice in rapid succession using dispatchEvent so both fire before
+    // React re-renders (which would disable the button via askingRole state).
+    await askBtn.dispatchEvent("click");
+    await askBtn.dispatchEvent("click");
+
+    // Wait long enough for both the thinking delay (800 ms) and any queued
+    // state updates to settle.
+    await page.waitForTimeout(1_500);
+
+    // Exactly one agent bubble should appear — "constellation signals" is always
+    // present in the river-smith stub response.
+    await expect(page.getByText(/constellation signals/i)).toHaveCount(1, { timeout: 5_000 });
+  });
+
   // ── 8. Archived lab is read-only ──────────────────────────────────────────
   test("archived lab blocks new posts and shows read-only state", async ({ page }) => {
     // Create a lab
