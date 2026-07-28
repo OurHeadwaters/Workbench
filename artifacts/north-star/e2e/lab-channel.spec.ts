@@ -84,7 +84,7 @@ test.describe("Lab channel", () => {
     await page.getByRole("button", { name: /start lab/i }).click();
     await expect(page.getByRole("heading", { name: "Start Lab" })).toBeVisible({ timeout: 8_000 });
 
-    const labName = `test-lab-${Date.now()}`;
+    const labName = `archive-lab-${Date.now()}`;
     await page.getByPlaceholder("e.g. deer-lake-spike").fill(labName);
     await page.getByRole("button", { name: "Open Lab" }).click();
 
@@ -118,6 +118,8 @@ test.describe("Lab channel", () => {
     await expect(page).toHaveURL(/\/channels\/lab\/[a-z0-9-]+/, { timeout: 10_000 });
 
     const replyText = "Hello from the automated test";
+
+    const backBtn = page.getByRole("button", { name: /back to channels/i });
     await page.getByPlaceholder("Reply to the lab…").fill(replyText);
     await page.getByRole("button", { name: "Send" }).click();
 

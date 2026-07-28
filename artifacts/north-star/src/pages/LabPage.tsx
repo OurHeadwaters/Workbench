@@ -205,8 +205,17 @@ export function LabPage() {
 
   if (!channel) {
     return (
-      <div className="min-h-dvh flex items-center justify-center" style={{ backgroundColor: BG }}>
+      <div className="min-h-dvh flex flex-col items-center justify-center gap-4" style={{ backgroundColor: BG }}>
         <p className="text-sm" style={{ color: TEXT_2 }}>Lab channel not found.</p>
+        <button
+          onClick={() => navigate("/channels")}
+          className="flex items-center gap-1 text-sm px-3 py-2 rounded"
+          style={{ color: AMBER, border: `1px solid ${BORDER}` }}
+          aria-label="Back to Channels"
+        >
+          <ChevronLeft size={16} />
+          Back to Channels
+        </button>
       </div>
     );
   }
