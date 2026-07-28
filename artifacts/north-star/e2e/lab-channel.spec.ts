@@ -140,6 +140,8 @@ test.describe("Lab channel", () => {
     await page.addInitScript(
       ({ id, label, expires, seed }: { id: string; label: string; expires: string; seed: string }) => {
         localStorage.setItem("north-star:unlocked", "1");
+        // Shorten the useNow poll interval so the expiry flip is fast in tests.
+        localStorage.setItem("north-star:now-interval", "500");
 
         // Start from a clean seeded store and splice our channel in.
         let storeData: { state: Record<string, unknown>; version: number };
@@ -182,11 +184,11 @@ test.describe("Lab channel", () => {
     // 3. Reply textarea is present before expiry
     await expect(page.getByPlaceholder("Reply to the lab…")).toBeVisible({ timeout: 5_000 });
 
-    // 4. Wait past expiry (3 s) and past the next useNow poll tick (≤ 10 s).
-    //    Playwright's fake-timers aren't available for a real server, so we
-    //    wait for the DOM to reflect the change — up to 15 s total.
+    // 4. Wait past expiry (3 s) and past the next useNow poll tick (≤ 500 ms).
+    //    localStorage["north-star:now-interval"] = "500" is set above so the
+    //    hook polls every 500 ms instead of every 10 s, making this fast.
     const expiredBadge = page.locator("span").filter({ hasText: /^expired$/ });
-    await expect(expiredBadge.first()).toBeVisible({ timeout: 15_000 });
+    await expect(expiredBadge.first()).toBeVisible({ timeout: 6_000 });
 
     // 5. Reply textarea disappears (no page reload)
     await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });

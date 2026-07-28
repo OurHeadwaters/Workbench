@@ -144,7 +144,14 @@ export function LabPage() {
   const channel = useStore((s) => s.channels.find((c) => c.id === channelId));
   const postLabEvent = useStore((s) => s.postLabEvent);
 
-  const now = useNow();
+  const nowIntervalMs = (() => {
+    const override = typeof localStorage !== "undefined"
+      ? localStorage.getItem("north-star:now-interval")
+      : null;
+    const parsed = override ? parseInt(override, 10) : NaN;
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 10_000;
+  })();
+  const now = useNow(nowIntervalMs);
   const [reply, setReply] = useState("");
   const [askingRole, setAskingRole] = useState<string | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
