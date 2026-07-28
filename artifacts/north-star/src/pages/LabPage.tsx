@@ -8,19 +8,20 @@ import { Clock, Archive, Send, ChevronLeft, Beaker, Bot, User, Loader2 } from "l
 
 // ── stub response generator ────────────────────────────────────────────────
 
-function generateAgentStub(role: string, labLabel: string, recentMessages: string[]): string {
+function generateAgentStub(role: string, labLabel: string, recentMessages: string[], prompt?: string): string {
   const context = recentMessages.slice(-2).join(" … ");
+  const q = prompt ? ` On the question: "${prompt}" —` : "";
   switch (role) {
     case "river-smith":
-      return `Reviewing constellation signals for "${labLabel}".${context ? ` Building on: "${context}".` : ""} Across the seven dimensions, the Biological and Collective layers warrant the most attention right now. Will synthesise a full briefing at 11:45 PM.`;
+      return `Reviewing constellation signals for "${labLabel}".${q}${!q && context ? ` Building on: "${context}".` : ""} Across the seven dimensions, the Biological and Collective layers warrant the most attention right now. Will synthesise a full briefing at 11:45 PM.`;
     case "critical-challenger":
-      return `Challenging the framing on "${labLabel}".${context ? ` On "${context}" —` : ""} Three questions the group may be avoiding: (1) What breaks first when this scales? (2) Who bears the downside if the assumption is wrong? (3) What does the 90-day exit look like if it stalls?`;
+      return `Challenging the framing on "${labLabel}".${q}${!q && context ? ` On "${context}" —` : ""} Three questions the group may be avoiding: (1) What breaks first when this scales? (2) Who bears the downside if the assumption is wrong? (3) What does the 90-day exit look like if it stalls?`;
     case "r-and-d":
-      return `R&D scan for "${labLabel}" complete.${context ? ` Building on "${context}" —` : ""} Found three analogous patterns in adjacent systems worth synthesising into a prototype proposal. Will draft a concept note for the next session.`;
+      return `R&D scan for "${labLabel}" complete.${q}${!q && context ? ` Building on "${context}" —` : ""} Found three analogous patterns in adjacent systems worth synthesising into a prototype proposal. Will draft a concept note for the next session.`;
     case "ops":
-      return `Ops check on "${labLabel}".${context ? ` Tracking: "${context}".` : ""} Scheduling signals look stable — no burst windows blocked. One stalled item flagged for review. Recommend the group sets a 48-hour decision deadline to keep momentum.`;
+      return `Ops check on "${labLabel}".${q}${!q && context ? ` Tracking: "${context}".` : ""} Scheduling signals look stable — no burst windows blocked. One stalled item flagged for review. Recommend the group sets a 48-hour decision deadline to keep momentum.`;
     default:
-      return `Processing request for "${labLabel}"…`;
+      return `Processing request for "${labLabel}"…${q}`;
   }
 }
 
@@ -261,6 +262,18 @@ export function LabPage() {
       : false;
     const realTimeReadOnly = !!(channel?.archivedAt) || realTimeExpired;
     if (realTimeReadOnly || !channelId || askingRole) return;
+
+    // Capture and clear the reply textarea so it acts as an optional prompt.
+    const prompt = reply.trim();
+    if (prompt) {
+      postLabEvent(channelId, {
+        kind: 1011,
+        actor_type: "human",
+        text: prompt,
+      });
+      setReply("");
+    }
+
     setAskingRole(role);
     const recentMessages = feed.slice(-3).map((ev) => ev.text);
     const label = channel?.label ?? "";
@@ -278,7 +291,7 @@ export function LabPage() {
         kind: 1011,
         actor_type: "agent",
         agent_role: role,
-        text: generateAgentStub(role, label, recentMessages),
+        text: generateAgentStub(role, label, recentMessages, prompt || undefined),
       });
       setAskingRole(null);
     }, 800);
