@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
 import { AmbientBackground, GrainOverlay } from "@/components/AmbientBackground";
 
@@ -81,6 +81,30 @@ function loadModuleState(): Record<string, boolean> {
     if (raw) return JSON.parse(raw);
   } catch {}
   return { base: true, steward: false, moments: false, beacon: false };
+}
+
+/** Parse config from URL search params, falling back to localStorage defaults. */
+function readInitialConfig() {
+  const params = new URLSearchParams(window.location.search);
+  const org = params.get("org");
+  const color = params.get("color");
+  const mods = params.get("mods");
+
+  const orgName = org
+    ? decodeURIComponent(org)
+    : (localStorage.getItem(LS_ORG_NAME) ?? "Gatehouse Communities Inc.");
+
+  const zoneColor = color ? `#${color}` : (localStorage.getItem(LS_ZONE_COLOR) ?? ZONE3_BLUE);
+
+  let modules: Record<string, boolean>;
+  if (mods !== null) {
+    const active = new Set(mods ? mods.split(",") : []);
+    modules = Object.fromEntries(GATEHOUSE_MODULES.map((m) => [m.id, active.has(m.id)]));
+  } else {
+    modules = loadModuleState();
+  }
+
+  return { orgName, zoneColor, modules };
 }
 
 /** Lightens a hex colour by mixing it toward white at the given ratio (0–1). */
@@ -249,14 +273,29 @@ function MemberPreview({ orgName, zoneColor, modules }: MemberPreviewProps) {
 export function OperatorPage() {
   const [, navigate] = useLocation();
 
-  const [orgName, setOrgName] = useState(() => localStorage.getItem(LS_ORG_NAME) ?? "Gatehouse Communities Inc.");
-  const [zoneColor, setZoneColor] = useState(() => localStorage.getItem(LS_ZONE_COLOR) ?? ZONE3_BLUE);
-  const [modules, setModules] = useState<Record<string, boolean>>(loadModuleState);
+  const [orgName, setOrgName] = useState(() => readInitialConfig().orgName);
+  const [zoneColor, setZoneColor] = useState(() => readInitialConfig().zoneColor);
+  const [modules, setModules] = useState<Record<string, boolean>>(() => readInitialConfig().modules);
   const [memberCount, setMemberCount] = useState<number>(() => {
     const raw = localStorage.getItem(LS_MEMBER_COUNT);
     const parsed = raw ? parseInt(raw, 10) : NaN;
     return isNaN(parsed) ? 1500 : parsed;
   });
+
+  const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
+
+  const copyPreviewLink = useCallback(() => {
+    const params = new URLSearchParams();
+    params.set("org", encodeURIComponent(orgName));
+    params.set("color", zoneColor.replace("#", ""));
+    const activeMods = GATEHOUSE_MODULES.filter((m) => modules[m.id]).map((m) => m.id);
+    params.set("mods", activeMods.join(","));
+    const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopyState("copied");
+      setTimeout(() => setCopyState("idle"), 2000);
+    });
+  }, [orgName, zoneColor, modules]);
 
   useEffect(() => {
     localStorage.setItem(LS_ORG_NAME, orgName);
@@ -835,9 +874,28 @@ export function OperatorPage() {
               modules={modules}
             />
 
+            {/* Copy preview link */}
+            <button
+              onClick={copyPreviewLink}
+              className="mt-4 w-full flex items-center justify-center gap-2 rounded-sm px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.18em] transition-all"
+              style={{
+                background: copyState === "copied"
+                  ? "rgba(26,95,168,0.30)"
+                  : "rgba(26,95,168,0.14)",
+                border: `1px solid rgba(26,95,168,${copyState === "copied" ? "0.55" : "0.30"})`,
+                color: copyState === "copied"
+                  ? "rgba(130,175,230,1)"
+                  : "rgba(130,175,230,0.75)",
+              }}
+              data-testid="cockpit-copy-link"
+            >
+              <span aria-hidden>{copyState === "copied" ? "✓" : "🔗"}</span>
+              {copyState === "copied" ? "Link copied" : "Copy preview link"}
+            </button>
+
             {/* Hint */}
             <p
-              className="mt-4 font-mono text-[9px] uppercase tracking-[0.18em] text-center"
+              className="mt-3 font-mono text-[9px] uppercase tracking-[0.18em] text-center"
               style={{ color: "rgba(244,237,224,0.20)" }}
             >
               Simulated member screen · not a live account
