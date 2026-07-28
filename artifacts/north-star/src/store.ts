@@ -904,6 +904,11 @@ export const useStore = create<Store>()(
           );
           if (labEvents.length === 0) return;
 
+          // Track which relay buffer entries are successfully reconciled into a
+          // channel's event_feed (either newly added or already present via dedup).
+          // These are safe to drain from the buffer after the setState call.
+          const reconciledEntries = new Set<(typeof stored)[number]>();
+
           useStore.setState((s) => {
             let changed = false;
             const channels = s.channels.map((ch) => {
@@ -926,8 +931,15 @@ export const useStore = create<Store>()(
                 const p = e.payload as LabEventPayload;
                 const eid = p.event_id;
                 const key = `${p.posted_at}|${p.text}`;
-                if (eid && existingIds.has(eid)) continue;
-                if (!eid && existingKeys.has(key)) continue;
+                if (eid && existingIds.has(eid)) {
+                  // Already in the feed — safe to drain from buffer.
+                  reconciledEntries.add(e);
+                  continue;
+                }
+                if (!eid && existingKeys.has(key)) {
+                  reconciledEntries.add(e);
+                  continue;
+                }
                 const newId = eid ?? uuidv4();
                 toAdd.push({
                   id: newId,
@@ -939,6 +951,8 @@ export const useStore = create<Store>()(
                 });
                 existingIds.add(newId);
                 existingKeys.add(key);
+                // Mark as reconciled so it gets drained on the next pass.
+                reconciledEntries.add(e);
               }
 
               if (toAdd.length === 0) return ch;
@@ -951,6 +965,33 @@ export const useStore = create<Store>()(
 
             return changed ? { channels } : s;
           });
+
+          // --- Drain the buffer ---
+          // Remove reconciled entries and prune orphaned entries (no matching
+          // channel) that are older than ORPHAN_RELAY_TTL_MS.
+          const ORPHAN_RELAY_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+          const cutoff = Date.now() - ORPHAN_RELAY_TTL_MS;
+          const knownChannelIds = new Set(
+            useStore.getState().channels.map((ch) => ch.id),
+          );
+
+          const remaining = stored.filter((e) => {
+            // Always keep non-LAB_EVENT entries unchanged.
+            if (e.kind !== RELAY_EVENT_KINDS.LAB_EVENT) return true;
+            // Drop entries that were successfully merged (or already present).
+            if (reconciledEntries.has(e)) return false;
+            // For orphaned entries (channel no longer exists), apply TTL pruning.
+            const channelId = (e.payload as LabEventPayload).channel_id;
+            if (!knownChannelIds.has(channelId)) {
+              return new Date(e.timestamp).getTime() > cutoff;
+            }
+            // Channel exists but event wasn't reconciled — keep it.
+            return true;
+          });
+
+          if (remaining.length < stored.length) {
+            localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(remaining));
+          }
         } catch {
           // Never crash on reconciliation — it is strictly additive.
         }
