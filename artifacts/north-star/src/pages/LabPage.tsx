@@ -155,6 +155,10 @@ export function LabPage() {
   const [reply, setReply] = useState("");
   const [askingRole, setAskingRole] = useState<string | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
+  // In-flight guard: prevents a second submit before the first state update
+  // re-renders the component (React batches setState, so reply still holds the
+  // old value in the same event loop tick).
+  const sendingRef = useRef(false);
 
   const isExpired = channel?.expiresAt
     ? new Date(channel.expiresAt).getTime() <= now
@@ -184,6 +188,10 @@ export function LabPage() {
 
   function handleSend(e: React.FormEvent) {
     e.preventDefault();
+    // Guard against double-submit: React batches state updates, so reply still
+    // holds its previous value if the user clicks Send (or presses Enter) twice
+    // before the first re-render clears it.
+    if (sendingRef.current) return;
     // Re-check expiry against the real-time clock so a stale useNow poll tick
     // cannot let a reply slip through after the lab has actually expired.
     const realTimeExpired = channel?.expiresAt
@@ -191,12 +199,16 @@ export function LabPage() {
       : false;
     const realTimeReadOnly = !!(channel?.archivedAt) || realTimeExpired;
     if (!reply.trim() || realTimeReadOnly || !channelId) return;
+    sendingRef.current = true;
     postLabEvent(channelId, {
       kind: 1011,
       actor_type: "human",
       text: reply.trim(),
     });
     setReply("");
+    // Release the lock after the current event loop tick so the state update
+    // has been enqueued and any further synchronous clicks are still blocked.
+    setTimeout(() => { sendingRef.current = false; }, 0);
   }
 
   function handleAskAgent(role: (typeof invitedRoles)[number]) {

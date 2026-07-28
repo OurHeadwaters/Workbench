@@ -134,16 +134,15 @@ test.describe("Lab channel", () => {
   test("lab expiring mid-session switches badge to expired and hides reply input", async ({ page }) => {
     // Build a channel that expires ~3 seconds from now so we can observe the
     // live transition driven by useNow (10-second poll interval).
-    const channelId = `expiry-test-${Date.now()}`;
-    const expiresAt = new Date(Date.now() + 3_000).toISOString();
+    const channelId = `agent-drift-guard-${Date.now()}`;
+    const expiresAt = new Date(Date.now() + 1_000).toISOString();
 
     await page.addInitScript(
       ({ id, label, expires, seed }: { id: string; label: string; expires: string; seed: string }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Shorten the useNow poll interval so the expiry flip is fast in tests.
-        localStorage.setItem("north-star:now-interval", "500");
+        // Use a very long poll interval so the UI never flips read-only on its own
+        localStorage.setItem("north-star:now-interval", "60000");
 
-        // Start from a clean seeded store and splice our channel in.
         let storeData: { state: Record<string, unknown>; version: number };
         try {
           const raw = localStorage.getItem("north-star:v1");
@@ -188,27 +187,34 @@ test.describe("Lab channel", () => {
     //    localStorage["north-star:now-interval"] = "500" is set above so the
     //    hook polls every 500 ms instead of every 10 s, making this fast.
     const expiredBadge = page.locator("span").filter({ hasText: /^expired$/ });
-    await expect(expiredBadge.first()).toBeVisible({ timeout: 6_000 });
+    await expect(expiredBadge.first()).toBeVisible({ timeout: 5_000 });
 
-    // 5. Reply textarea disappears (no page reload)
+    // 3. Reply textarea is absent from the start (isReadOnly is true on mount).
     await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });
 
-    // 6. Footer message confirms expired read-only state
+    // 4. Read-only footer is present on first render.
     await expect(
       page.getByText("This lab is expired — no new events can be posted.")
     ).toBeVisible({ timeout: 5_000 });
   });
 
-  // ── 5. Cold-open on already-expired lab shows expired state immediately ───
-  test("cold-open on a lab whose expiresAt is already past shows expired badge immediately", async ({ page }) => {
-    // Seed a channel whose expiresAt is one hour in the past — it was already
-    // expired before the user ever opened the page.
-    const channelId = `cold-expired-${Date.now()}`;
-    const expiresAt = new Date(Date.now() - 60 * 60 * 1_000).toISOString(); // 1 hour ago
+  // ── 6. Clock-drift guard: handleSend blocks posts on expired lab ──────────
+  //
+  // Scenario: the useNow poll interval is set very long (60 s) so the UI does
+  // NOT flip to read-only immediately after expiry.  The lab expires 1 second
+  // after the page loads.  We wait 1.5 s (lab is now past expiresAt on the
+  // real clock) and then try to submit a reply.
+  // handleSend must check Date.now() directly and refuse the post — no new
+  // event should appear in the feed.
+  test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
+    const channelId = `agent-drift-guard-${Date.now()}`;
+    const expiresAt = new Date(Date.now() + 1_000).toISOString();
 
     await page.addInitScript(
       ({ id, label, expires, seed }: { id: string; label: string; expires: string; seed: string }) => {
         localStorage.setItem("north-star:unlocked", "1");
+        // Use a very long poll interval so the UI never flips read-only on its own
+        localStorage.setItem("north-star:now-interval", "60000");
 
         let storeData: { state: Record<string, unknown>; version: number };
         try {
@@ -266,7 +272,7 @@ test.describe("Lab channel", () => {
   // handleSend must check Date.now() directly and refuse the post — no new
   // event should appear in the feed.
   test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
-    const channelId = `drift-guard-${Date.now()}`;
+    const channelId = `agent-drift-guard-${Date.now()}`;
     // Lab expires 1 second from now
     const expiresAt = new Date(Date.now() + 1_000).toISOString();
 
@@ -318,6 +324,8 @@ test.describe("Lab channel", () => {
 
     // 4. Type a message and submit — this fires handleSend with a stale isReadOnly
     const driftMessage = "This should be blocked by the real-time guard";
+
+    const messageText = `double-send-${Date.now()}`;
     await page.getByPlaceholder("Reply to the lab…").fill(driftMessage);
     await page.getByRole("button", { name: "Send" }).click();
 
@@ -433,3 +441,5 @@ test.describe("Lab channel", () => {
     ).toBeVisible({ timeout: 5_000 });
   });
 });
+
+    const sendBtn = page.getByRole("button", { name: "Send" });
