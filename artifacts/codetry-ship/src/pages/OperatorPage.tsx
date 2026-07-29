@@ -75,9 +75,20 @@ const TIER_PRICE: Record<string, number> = {
   Full: 2.50,
 };
 
+/** Returns true if localStorage is readable and writable (false in some private/incognito contexts). */
+function isLocalStorageAvailable(): boolean {
+  try {
+    const probe = "__hw_ls_probe__";
+    localStorage.setItem(probe, "1");
+    localStorage.removeItem(probe);
+    return true;
+  } catch {
+    return false;
+  }
+}
 function loadModuleState(): Record<string, boolean> {
   try {
-    const raw = localStorage.getItem(LS_MODULES);
+    const raw = safeGetItem(LS_MODULES);
     if (raw) return JSON.parse(raw);
   } catch {}
   return { base: true, steward: false, moments: false, beacon: false };
@@ -92,9 +103,9 @@ function readInitialConfig() {
 
   const orgName = org
     ? decodeURIComponent(org)
-    : (localStorage.getItem(LS_ORG_NAME) ?? "Gatehouse Communities Inc.");
+    : (safeGetItem(LS_ORG_NAME) ?? "Gatehouse Communities Inc.");
 
-  const zoneColor = color ? `#${color}` : (localStorage.getItem(LS_ZONE_COLOR) ?? ZONE3_BLUE);
+  const zoneColor = color ? `#${color}` : (safeGetItem(LS_ZONE_COLOR) ?? ZONE3_BLUE);
 
   let modules: Record<string, boolean>;
   if (mods !== null) {
@@ -316,10 +327,12 @@ export function OperatorPage() {
   const [zoneColor, setZoneColor] = useState(() => readInitialConfig().zoneColor);
   const [modules, setModules] = useState<Record<string, boolean>>(() => readInitialConfig().modules);
   const [memberCount, setMemberCount] = useState<number>(() => {
-    const raw = localStorage.getItem(LS_MEMBER_COUNT);
+    const raw = safeGetItem(LS_MEMBER_COUNT);
     const parsed = raw ? parseInt(raw, 10) : NaN;
     return isNaN(parsed) ? 1500 : parsed;
   });
+
+  const [storageUnavailable] = useState<boolean>(!LOCAL_STORAGE_OK);
 
   const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
 
@@ -337,19 +350,19 @@ export function OperatorPage() {
   }, [orgName, zoneColor, modules]);
 
   useEffect(() => {
-    localStorage.setItem(LS_ORG_NAME, orgName);
+    safeSetItem(LS_ORG_NAME, orgName);
   }, [orgName]);
 
   useEffect(() => {
-    localStorage.setItem(LS_ZONE_COLOR, zoneColor);
+    safeSetItem(LS_ZONE_COLOR, zoneColor);
   }, [zoneColor]);
 
   useEffect(() => {
-    localStorage.setItem(LS_MODULES, JSON.stringify(modules));
+    safeSetItem(LS_MODULES, JSON.stringify(modules));
   }, [modules]);
 
   useEffect(() => {
-    localStorage.setItem(LS_MEMBER_COUNT, String(memberCount));
+    safeSetItem(LS_MEMBER_COUNT, String(memberCount));
   }, [memberCount]);
 
   function toggleModule(id: string) {
@@ -399,7 +412,7 @@ export function OperatorPage() {
 
         {/* Read-only banner */}
         <div
-          className="mb-10 flex items-center gap-3 rounded-sm px-4 py-3 max-w-[52rem]"
+          className="mb-4 flex items-center gap-3 rounded-sm px-4 py-3 max-w-[52rem]"
           style={{
             background: "rgba(26,95,168,0.12)",
             border: `1px solid rgba(26,95,168,0.35)`,
@@ -418,6 +431,31 @@ export function OperatorPage() {
             Read-only preview — this is a spec / demo configuration surface, not a live admin panel
           </p>
         </div>
+
+        {/* Private-browsing storage warning */}
+        {storageUnavailable && (
+          <div
+            className="mb-10 flex items-center gap-3 rounded-sm px-4 py-3 max-w-[52rem]"
+            style={{
+              background: "rgba(184,90,62,0.12)",
+              border: "1px solid rgba(184,90,62,0.40)",
+            }}
+            role="status"
+            aria-live="polite"
+            data-testid="cockpit-storage-warning"
+          >
+            <span className="shrink-0 text-base" aria-hidden>🔒</span>
+            <p
+              className="font-mono text-[11px] uppercase tracking-[0.22em]"
+              style={{ color: "rgba(230,160,130,0.90)" }}
+            >
+              Settings won't be saved in private browsing mode
+            </p>
+          </div>
+        )}
+
+        {/* Spacer when no storage warning */}
+        {!storageUnavailable && <div className="mb-6" />}
 
         {/* Page header */}
         <header className="mb-12 max-w-[52rem]">
@@ -1012,3 +1050,23 @@ export function OperatorPage() {
     </main>
   );
 }
+
+function safeGetItem(key: string): string | null {
+  if (!LOCAL_STORAGE_OK) return null;
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSetItem(key: string, value: string): void {
+  if (!LOCAL_STORAGE_OK) return;
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    console.warn("[Cockpit] localStorage write failed:", e);
+  }
+}
+
+const LOCAL_STORAGE_OK = isLocalStorageAvailable();
