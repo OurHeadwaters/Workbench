@@ -39,6 +39,7 @@ vi.mock("wouter", async (importOriginal) => {
 /* ── Helpers ── */
 
 const LS_ORG_NAME = "hw:cockpit:orgName";
+const LS_ZONE_COLOR = "hw:cockpit:zoneColor";
 const LS_MODULES = "hw:cockpit:modules";
 
 function mountCockpit() {
@@ -161,5 +162,54 @@ describe("Operator Cockpit — localStorage persistence across reload", () => {
     expect(
       JSON.parse(localStorage.getItem("hw:cockpit:modules") ?? "{}")
     ).toMatchObject({ steward: true });
+  });
+
+  it("persists a non-default zone-colour swatch after remount (simulated reload)", () => {
+    // Zone 3 blue (#1A5FA8) is the default. We select Zone 1 green instead.
+    const ZONE1_HEX = "2E6B45";
+    const ZONE3_HEX = "1A5FA8";
+
+    mountCockpit();
+
+    // Default swatch should be Zone 3 (aria-checked="true").
+    expect(screen.getByTestId(`cockpit-swatch-${ZONE3_HEX}`)).toHaveAttribute(
+      "aria-checked",
+      "true"
+    );
+    expect(screen.getByTestId(`cockpit-swatch-${ZONE1_HEX}`)).toHaveAttribute(
+      "aria-checked",
+      "false"
+    );
+
+    // Click the Zone 1 swatch.
+    fireEvent.click(screen.getByTestId(`cockpit-swatch-${ZONE1_HEX}`));
+
+    // localStorage should be updated immediately.
+    expect(localStorage.getItem(LS_ZONE_COLOR)).toBe(`#${ZONE1_HEX}`);
+
+    // Simulate reload: unmount then remount.
+    cleanup();
+    mountCockpit();
+
+    // After remount, Zone 1 should be selected and Zone 3 should not.
+    expect(screen.getByTestId(`cockpit-swatch-${ZONE1_HEX}`)).toHaveAttribute(
+      "aria-checked",
+      "true"
+    );
+    expect(screen.getByTestId(`cockpit-swatch-${ZONE3_HEX}`)).toHaveAttribute(
+      "aria-checked",
+      "false"
+    );
+  });
+
+  it("uses the exact key hw:cockpit:zoneColor so a rename is caught immediately", () => {
+    mountCockpit();
+
+    // Click a non-default swatch — Zone 2 amber.
+    const ZONE2_HEX = "C97C2E";
+    fireEvent.click(screen.getByTestId(`cockpit-swatch-${ZONE2_HEX}`));
+
+    // The stored value must use this exact key name.
+    expect(localStorage.getItem("hw:cockpit:zoneColor")).toBe(`#${ZONE2_HEX}`);
   });
 });
