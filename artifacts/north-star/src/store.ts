@@ -298,6 +298,12 @@ export const useStore = create<Store>()(
         set((s) => ({ contracts: s.contracts.filter((c) => c.id !== id) })),
 
       attestMilestone: ({ contractId, description, attestedBy }) => {
+        if (!attestedBy || !attestedBy.trim()) {
+          throw new Error("attestMilestone: attestedBy (z3npub) must not be blank");
+        }
+        if (!description || !description.trim()) {
+          throw new Error("attestMilestone: description must not be blank");
+        }
         const now = new Date().toISOString();
         const milestoneId = uuidv4();
         set((s) => ({

@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { publishToRelay, RELAY_EVENT_KINDS } from "./relay-stub";
 import type { NostrEvent } from "./relay-stub";
+import { useStore } from "../store";
 
 const STORAGE_KEY = "ns:relay:events";
 
@@ -222,5 +223,137 @@ describe("publishToRelay — Z1 compile-time gate", () => {
       timestamp: "2026-07-26T08:00:00.000Z",
       signature: "stub",
     });
+  });
+});
+
+describe("attestMilestone — validation guards", () => {
+  it("throws when attestedBy is empty", () => {
+    const { attestMilestone } = useStore.getState();
+    expect(() =>
+      attestMilestone({ contractId: "c-1", description: "Delivery confirmed", attestedBy: "" })
+    ).toThrow("attestedBy");
+    expect(readStored()).toHaveLength(0);
+  });
+
+  it("throws when attestedBy is blank whitespace", () => {
+    const { attestMilestone } = useStore.getState();
+    expect(() =>
+      attestMilestone({ contractId: "c-1", description: "Delivery confirmed", attestedBy: "   " })
+    ).toThrow("attestedBy");
+    expect(readStored()).toHaveLength(0);
+  });
+
+  it("throws when description is empty", () => {
+    const { attestMilestone } = useStore.getState();
+    expect(() =>
+      attestMilestone({ contractId: "c-1", description: "", attestedBy: "z3npub1abc" })
+    ).toThrow("description");
+    expect(readStored()).toHaveLength(0);
+  });
+
+  it("throws when description is blank whitespace", () => {
+    const { attestMilestone } = useStore.getState();
+    expect(() =>
+      attestMilestone({ contractId: "c-1", description: "   ", attestedBy: "z3npub1abc" })
+    ).toThrow("description");
+    expect(readStored()).toHaveLength(0);
+  });
+
+  it("does not publish to relay when attestedBy is missing", () => {
+    const { attestMilestone } = useStore.getState();
+    try {
+      attestMilestone({ contractId: "c-1", description: "Phase done", attestedBy: "" });
+    } catch {
+      // expected
+    }
+    expect(readStored()).toHaveLength(0);
+  });
+
+  it("does not publish to relay when description is missing", () => {
+    const { attestMilestone } = useStore.getState();
+    try {
+      attestMilestone({ contractId: "c-1", description: "", attestedBy: "z3npub1abc" });
+    } catch {
+      // expected
+    }
+    expect(readStored()).toHaveLength(0);
+  });
+});
+
+describe("attestMilestone — CONTRACT_MILESTONE relay event payload", () => {
+  it("writes a CONTRACT_MILESTONE event to the relay when inputs are valid", async () => {
+    const { attestMilestone } = useStore.getState();
+    attestMilestone({
+      contractId: "c-42",
+      description: "Phase 1 complete",
+      attestedBy: "z3npub1abc",
+    });
+
+    // publishToRelay is fire-and-forget; yield so the microtask queue drains
+    await Promise.resolve();
+
+    const stored = readStored();
+    expect(stored).toHaveLength(1);
+    expect(stored[0].kind).toBe(RELAY_EVENT_KINDS.CONTRACT_MILESTONE);
+  });
+
+  it("payload contains all required ContractMilestonePayload fields", async () => {
+    const { attestMilestone } = useStore.getState();
+    attestMilestone({
+      contractId: "c-99",
+      description: "Delivery accepted by council",
+      attestedBy: "z3npub1xyz",
+    });
+
+    await Promise.resolve();
+
+    const stored = readStored();
+    const p = stored[0].payload as Record<string, unknown>;
+    expect(p.zone).toBe("Z4");
+    expect(p.actor_type).toBe("human");
+    expect(p.contract_id).toBe("c-99");
+    expect(typeof p.milestone_id).toBe("string");
+    expect((p.milestone_id as string).length).toBeGreaterThan(0);
+    expect(p.attested_by).toBe("z3npub1xyz");
+    expect(typeof p.attested_at).toBe("string");
+    expect((p.attested_at as string).length).toBeGreaterThan(0);
+    expect(p.description).toBe("Delivery accepted by council");
+  });
+
+  it("attested_by in payload matches the z3npub passed in", async () => {
+    const { attestMilestone } = useStore.getState();
+    attestMilestone({
+      contractId: "c-7",
+      description: "Milestone signed off",
+      attestedBy: "z3npub1signer",
+    });
+
+    await Promise.resolve();
+
+    const stored = readStored();
+    const p = stored[0].payload as Record<string, unknown>;
+    expect(p.attested_by).toBe("z3npub1signer");
+  });
+
+  it("each attestation gets a unique milestone_id", async () => {
+    const { attestMilestone } = useStore.getState();
+    attestMilestone({
+      contractId: "c-10",
+      description: "First milestone",
+      attestedBy: "z3npub1a",
+    });
+    attestMilestone({
+      contractId: "c-10",
+      description: "Second milestone",
+      attestedBy: "z3npub1a",
+    });
+
+    await Promise.resolve();
+
+    const stored = readStored();
+    expect(stored).toHaveLength(2);
+    const id1 = (stored[0].payload as Record<string, unknown>).milestone_id;
+    const id2 = (stored[1].payload as Record<string, unknown>).milestone_id;
+    expect(id1).not.toBe(id2);
   });
 });
