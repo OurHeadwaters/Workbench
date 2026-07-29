@@ -71,7 +71,7 @@ export default function Home() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <a
-          href="https://stomping-path-documentation.replit.app/logic/"
+          href="https://stomping-path-documentation.replit.app/logic/#reality-core"
           target="_blank"
           rel="noopener noreferrer"
         >
