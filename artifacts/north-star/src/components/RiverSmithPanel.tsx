@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { publishToRelay, RELAY_EVENT_KINDS } from "@/lib/relay-stub";
+import { publishToRelay, RELAY_EVENT_KINDS, getZ2Npub } from "@/lib/relay-stub";
 import type { ProofOfWork } from "@/lib/relay-event-types";
 import { useStore } from "@/store";
 
@@ -521,7 +521,7 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
           safety_flags_count: nextFlagsCount,
           proof_of_work: proof,
         },
-        z2npub: "z2:local",
+        z2npub: getZ2Npub(),
         timestamp: generatedAt,
         signature: "stub",
       });

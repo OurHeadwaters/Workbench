@@ -18,7 +18,7 @@
  */
 
 import { useEffect } from "react";
-import { publishToRelay, RELAY_EVENT_KINDS } from "@/lib/relay-stub";
+import { publishToRelay, RELAY_EVENT_KINDS, getZ2Npub } from "@/lib/relay-stub";
 
 interface ZoneGateProps {
   crossing: "Z1→Z2" | "Z2→Z3";
@@ -61,7 +61,7 @@ export function ZoneGate({ crossing }: ZoneGateProps) {
         context_ref: "zone-gate",
         crossed_at: crossedAt,
       },
-      z2npub: "z2:local",
+      z2npub: getZ2Npub(),
       timestamp: crossedAt,
       signature: "stub",
     });

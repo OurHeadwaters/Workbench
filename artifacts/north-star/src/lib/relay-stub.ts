@@ -68,6 +68,17 @@ type RelayEventEnvelope = {
 }[keyof RelayPayloadMap];
 
 export const RELAY_STORAGE_KEY = "ns:relay:events";
+
+/**
+ * getZ2Npub — returns the system Z2 npub for relay attribution.
+ *
+ * Reads VITE_Z2_NPUB from the Vite environment (set once the system npub is
+ * registered on the relay). Falls back to "z2:local" so existing behaviour is
+ * preserved when the variable is absent.
+ */
+export function getZ2Npub(): string {
+  return (import.meta.env.VITE_Z2_NPUB as string | undefined) || "z2:local";
+}
 const MAX_STORED_EVENTS = 500;
 
 const RELAY_PUBLISH_URL: string | undefined =

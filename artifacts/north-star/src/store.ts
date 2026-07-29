@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "./lib/uuid";
 import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition, ImprovementProposal, RelayEventSummary } from "./types";
 import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload, ChannelOpenPayload, ChannelClosePayload } from "./lib/relay-event-types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
-import { publishToRelay, RELAY_EVENT_KINDS, RELAY_STORAGE_KEY } from "./lib/relay-stub";
+import { publishToRelay, RELAY_EVENT_KINDS, RELAY_STORAGE_KEY, getZ2Npub } from "./lib/relay-stub";
 import type { LabEventPayload } from "./lib/relay-event-types";
 
 const ZONE_COLORS: Record<ZoneId, string> = {
@@ -323,7 +323,7 @@ export const useStore = create<Store>()(
             attested_at: now,
             description,
           },
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: now,
           signature: "stub",
         });
@@ -374,7 +374,7 @@ export const useStore = create<Store>()(
               ? { phase: workbenchPlan.phase, windows: workbenchPlan.windows }
               : null,
           },
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: new Date().toISOString(),
           signature: "stub",
         });
@@ -509,7 +509,7 @@ export const useStore = create<Store>()(
           void publishToRelay({
             kind: RELAY_EVENT_KINDS.WORKBENCH_PLAN_BURST,
             payload: burstPayload,
-            z2npub: "z2:local",
+            z2npub: getZ2Npub(),
             timestamp: now,
             signature: "stub",
           });
@@ -605,7 +605,7 @@ export const useStore = create<Store>()(
                 ? { phase: s.workbenchPlan.phase, windows: s.workbenchPlan.windows }
                 : null,
             },
-            z2npub: "z2:local",
+            z2npub: getZ2Npub(),
             timestamp: now,
             signature: "stub",
           });
@@ -621,7 +621,7 @@ export const useStore = create<Store>()(
               triggered_by: "scheduled",
               safety_flags_count: 0,
             },
-            z2npub: "z2:local",
+            z2npub: getZ2Npub(),
             timestamp: now,
             signature: "stub",
           });
@@ -659,7 +659,7 @@ export const useStore = create<Store>()(
             affected_surface,
             created_at: now,
           },
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: now,
           signature: "stub",
         });
@@ -703,7 +703,7 @@ export const useStore = create<Store>()(
             outcome: "accepted",
             resolved_at: now,
           },
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: now,
           signature: "stub",
         });
@@ -747,7 +747,7 @@ export const useStore = create<Store>()(
             outcome: "rejected",
             resolved_at: now,
           },
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: now,
           signature: "stub",
         });
@@ -769,7 +769,7 @@ export const useStore = create<Store>()(
         void publishToRelay({
           kind: RELAY_EVENT_KINDS.HELPING_HANDS_CREATE,
           payload,
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: now,
           signature: "stub",
         });
@@ -791,7 +791,7 @@ export const useStore = create<Store>()(
         void publishToRelay({
           kind: RELAY_EVENT_KINDS.HELPING_HANDS_CLAIM,
           payload,
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: now,
           signature: "stub",
         });
@@ -813,7 +813,7 @@ export const useStore = create<Store>()(
         void publishToRelay({
           kind: RELAY_EVENT_KINDS.HELPING_HANDS_COMPLETE,
           payload,
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: now,
           signature: "stub",
         });
@@ -835,7 +835,7 @@ export const useStore = create<Store>()(
         void publishToRelay({
           kind: RELAY_EVENT_KINDS.HELPING_HANDS_CONFIRM,
           payload,
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: now,
           signature: "stub",
         });
@@ -912,7 +912,7 @@ export const useStore = create<Store>()(
             // skip events already present in the channel's event_feed.
             event_id: newEvent.id,
           },
-          z2npub: "z2:local",
+          z2npub: getZ2Npub(),
           timestamp: now,
           signature: "stub",
         });

@@ -19,6 +19,7 @@ import "@testing-library/jest-dom";
 
 vi.mock("@/lib/relay-stub", () => ({
   publishToRelay: vi.fn().mockResolvedValue(undefined),
+  getZ2Npub: () => "z2:local",
   RELAY_EVENT_KINDS: {
     MORNING_MANIFEST: 1000,
     BRIEFING_ENVELOPE: 1001,

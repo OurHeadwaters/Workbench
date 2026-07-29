@@ -60,7 +60,7 @@ describe("WorkbenchPage — Doctrine shelf", () => {
     expect(card).toBeInTheDocument();
     expect(card).toHaveAttribute(
       "href",
-      "https://stomping-path-documentation.replit.app/logic/"
+      "https://stomping-path-documentation.replit.app/logic/#reality-core"
     );
   });
 
@@ -70,7 +70,7 @@ describe("WorkbenchPage — Doctrine shelf", () => {
     expect(card).toBeInTheDocument();
     expect(card).toHaveAttribute(
       "href",
-      "https://stomping-path-documentation.replit.app/logic/"
+      "https://stomping-path-documentation.replit.app/logic/#fallacy-map"
     );
   });
 
