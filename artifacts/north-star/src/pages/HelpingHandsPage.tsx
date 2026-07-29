@@ -1,11 +1,10 @@
 import { useStore } from "@/store";
-import { HelpingHandsStatus, HelpingHandsTask } from "@/types";
+import type { HelpingHandsStatus, HelpingHandsTask } from "@/types";
 import {
   BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, AMBER_WASH, FONT_DISPLAY,
 } from "@/lib/theme";
 import { Plus, X, HandHelping, CheckCheck, Check, Users, Archive, ChevronDown, ChevronRight, RotateCcw } from "lucide-react";
 import { useState, useEffect } from "react";
-import type { HelpingHandsStatus, HelpingHandsTask } from "@/types";
 
 // ── Status badge ────────────────────────────────────────────────────────────
 
