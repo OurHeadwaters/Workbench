@@ -335,6 +335,7 @@ export function OperatorPage() {
   const [storageUnavailable] = useState<boolean>(!LOCAL_STORAGE_OK);
 
   const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
+  const [mrrCopyState, setMrrCopyState] = useState<"idle" | "copied">("idle");
 
   const copyPreviewLink = useCallback(() => {
     const params = new URLSearchParams();
@@ -398,6 +399,17 @@ export function OperatorPage() {
   const formattedMRR = hasRange
     ? `${formatCAD(minMRR)}–${formatCAD(maxMRR)}`
     : formatCAD(maxMRR);
+
+  const copyMRR = useCallback(() => {
+    const breakdown = hasRange
+      ? `${memberCount.toLocaleString()} members × $${lowestTierPrice.toFixed(2)}–$${highestTierPrice.toFixed(2)}`
+      : `${memberCount.toLocaleString()} members × $${highestTierPrice.toFixed(2)}`;
+    const text = `Estimated MRR: ${formattedMRR} / mo (${breakdown})`;
+    navigator.clipboard.writeText(text).then(() => {
+      setMrrCopyState("copied");
+      setTimeout(() => setMrrCopyState("idle"), 1500);
+    });
+  }, [hasRange, memberCount, lowestTierPrice, highestTierPrice, formattedMRR]);
 
   return (
     <main
@@ -790,17 +802,50 @@ export function OperatorPage() {
                     >
                       Estimated MRR
                     </p>
-                    <p
-                      className="font-serif leading-none"
-                      style={{
-                        fontSize: hasRange ? "clamp(1.1rem, 3.5vw, 1.35rem)" : "1.375rem",
-                        color: highestTierPrice > 0 ? "#f4ede0" : "rgba(244,237,224,0.30)",
-                        fontStyle: "italic",
-                      }}
-                      data-testid="cockpit-mrr-value"
-                    >
-                      {highestTierPrice > 0 ? `${formattedMRR} / mo` : "—"}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p
+                        className="font-serif leading-none"
+                        style={{
+                          fontSize: hasRange ? "clamp(1.1rem, 3.5vw, 1.35rem)" : "1.375rem",
+                          color: highestTierPrice > 0 ? "#f4ede0" : "rgba(244,237,224,0.30)",
+                          fontStyle: "italic",
+                        }}
+                        data-testid="cockpit-mrr-value"
+                      >
+                        {highestTierPrice > 0 ? `${formattedMRR} / mo` : "—"}
+                      </p>
+                      {highestTierPrice > 0 && (
+                        <button
+                          onClick={copyMRR}
+                          aria-label={mrrCopyState === "copied" ? "Copied" : "Copy MRR estimate"}
+                          title={mrrCopyState === "copied" ? "Copied!" : "Copy to clipboard"}
+                          className="shrink-0 flex items-center justify-center w-6 h-6 rounded-sm transition-all"
+                          style={{
+                            background: mrrCopyState === "copied"
+                              ? "rgba(26,95,168,0.35)"
+                              : "rgba(26,95,168,0.15)",
+                            border: `1px solid rgba(26,95,168,${mrrCopyState === "copied" ? "0.55" : "0.30"})`,
+                            color: mrrCopyState === "copied"
+                              ? "rgba(130,175,230,1)"
+                              : "rgba(130,175,230,0.60)",
+                          }}
+                          data-testid="cockpit-mrr-copy"
+                        >
+                          <span className="text-[11px]" aria-hidden>
+                            {mrrCopyState === "copied" ? "✓" : "⎘"}
+                          </span>
+                        </button>
+                      )}
+                    </div>
+                    {mrrCopyState === "copied" && (
+                      <p
+                        className="font-mono text-[9px] mt-1"
+                        style={{ color: "rgba(130,175,230,0.75)" }}
+                        aria-live="polite"
+                      >
+                        Copied
+                      </p>
+                    )}
                   </div>
                   {highestTierPrice > 0 && (
                     <p
