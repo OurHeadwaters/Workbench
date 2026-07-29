@@ -295,7 +295,7 @@ export function LabPage() {
           "Content-Type": "application/json",
           ...(ownerToken ? { "x-library-owner-token": ownerToken } : {}),
         },
-        body: JSON.stringify({ role, labLabel: label, recentMessages }),
+        body: JSON.stringify({ role, labLabel: label, recentMessages, prompt: prompt || undefined }),
       });
 
       // Re-check in case the lab expired or was archived while the AI was thinking.

@@ -74,6 +74,7 @@ interface AskAgentBody {
   role: AgentRole;
   labLabel: string;
   recentMessages: string[];
+  prompt?: string;
 }
 
 router.post("/lab/ask-agent", async (req: Request, res: Response) => {
@@ -89,7 +90,7 @@ router.post("/lab/ask-agent", async (req: Request, res: Response) => {
     return;
   }
 
-  const { role, labLabel, recentMessages } = req.body as Partial<AskAgentBody>;
+  const { role, labLabel, recentMessages, prompt } = req.body as Partial<AskAgentBody>;
 
   // ── Input validation & bounds ─────────────────────────────────────────────
   if (!role || typeof labLabel !== "string") {
@@ -123,12 +124,16 @@ router.post("/lab/ask-agent", async (req: Request, res: Response) => {
   }
 
   // Build user message from lab context
+  const safePrompt = typeof prompt === "string" ? prompt.slice(0, MAX_MESSAGE_LEN).trim() : "";
   const contextLines: string[] = [`Lab: "${safeLabel}"`];
   if (safeMessages.length > 0) {
     contextLines.push("Recent conversation:");
     for (const msg of safeMessages) {
       if (msg.trim()) contextLines.push(`  - ${msg.trim()}`);
     }
+  }
+  if (safePrompt) {
+    contextLines.push(`\nOperator question: ${safePrompt}`);
   }
   const userContent = contextLines.join("\n");
 
