@@ -102,7 +102,7 @@ function readInitialConfig() {
   const mods = params.get("mods");
 
   const orgName = org
-    ? decodeURIComponent(org)
+    ? org
     : (safeGetItem(LS_ORG_NAME) ?? "Gatehouse Communities Inc.");
 
   const zoneColor = color ? `#${color}` : (safeGetItem(LS_ZONE_COLOR) ?? ZONE3_BLUE);
@@ -338,7 +338,7 @@ export function OperatorPage() {
 
   const copyPreviewLink = useCallback(() => {
     const params = new URLSearchParams();
-    params.set("org", encodeURIComponent(orgName));
+    params.set("org", orgName);
     params.set("color", zoneColor.replace("#", ""));
     const activeMods = GATEHOUSE_MODULES.filter((m) => modules[m.id]).map((m) => m.id);
     params.set("mods", activeMods.join(","));

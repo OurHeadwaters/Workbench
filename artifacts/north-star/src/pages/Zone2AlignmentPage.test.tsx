@@ -45,11 +45,11 @@ describe("Z2NpubReadout — ok state (200)", () => {
     render(<Z2NpubReadout />);
 
     await waitFor(() => {
-      expect(screen.getByText(npub)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /copy/i })).toBeInTheDocument();
     });
   });
 
-  it("renders the Copy button in the ok state", async () => {
+  it("copies the npub to the clipboard when the Copy button is clicked", async () => {
     const npub = "npub1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq8nmew";
 
     vi.stubGlobal(
@@ -113,7 +113,7 @@ describe("Z2NpubReadout — ok state (200)", () => {
 
     const fetchMock = vi.fn(() =>
       Promise.resolve(
-        makeResponse(200, { npub: "npub1aaaa" }),
+        makeResponse(200, { npub: "npub1dddd" }),
       ),
     );
     vi.stubGlobal("fetch", fetchMock);
@@ -128,6 +128,69 @@ describe("Z2NpubReadout — ok state (200)", () => {
     const [, init] = firstCall;
     const headers = (init?.headers ?? {}) as Record<string, string>;
     expect(headers["x-library-owner-token"]).toBe("tok-abc123");
+  });
+
+  it("sends a token stored under library.ownerToken as x-library-owner-token header", async () => {
+    localStorage.setItem("library.ownerToken", "tok-primary-key");
+
+    const fetchMock = vi.fn(() =>
+      Promise.resolve(makeResponse(200, { npub: "npub1bbbb" })),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<Z2NpubReadout />);
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalled();
+    });
+
+    const firstCall = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    const [, init] = firstCall;
+    const headers = (init?.headers ?? {}) as Record<string, string>;
+    expect(headers["x-library-owner-token"]).toBe("tok-primary-key");
+  });
+
+  it("uses the ownerToken fallback only when library.ownerToken is absent", async () => {
+    // Only the legacy key is set — primary key must not be present
+    localStorage.setItem("ownerToken", "tok-legacy");
+
+    const fetchMock = vi.fn(() =>
+      Promise.resolve(makeResponse(200, { npub: "npub1cccc" })),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<Z2NpubReadout />);
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalled();
+    });
+
+    const firstCall = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    const [, init] = firstCall;
+    const headers = (init?.headers ?? {}) as Record<string, string>;
+    expect(headers["x-library-owner-token"]).toBe("tok-legacy");
+  });
+
+  it("prefers library.ownerToken over ownerToken when both are present", async () => {
+    localStorage.setItem("library.ownerToken", "tok-primary");
+    localStorage.setItem("ownerToken", "tok-legacy");
+
+    const fetchMock = vi.fn(() =>
+      Promise.resolve(makeResponse(200, { npub: "npub1dddd" })),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<Z2NpubReadout />);
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalled();
+    });
+
+    const firstCall = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    const [, init] = firstCall;
+    const headers = (init?.headers ?? {}) as Record<string, string>;
+    expect(headers["x-library-owner-token"]).toBe("tok-primary");
+    expect(headers["x-library-owner-token"]).not.toBe("tok-legacy");
   });
 });
 

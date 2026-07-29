@@ -5,6 +5,7 @@ import {
 } from "@/lib/theme";
 import { Plus, X, HandHelping, CheckCheck, Check, Users, Archive, ChevronDown, ChevronRight, RotateCcw } from "lucide-react";
 import { useState, useEffect } from "react";
+import type { HelpingHandsStatus, HelpingHandsTask } from "@/types";
 
 // ── Status badge ────────────────────────────────────────────────────────────
 
