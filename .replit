@@ -32,6 +32,10 @@ args = "artifacts/north-star: web"
 task = "workflow.run"
 args = "test"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "api-server-build"
+
 [[workflows.workflow]]
 name = "typecheck"
 author = "agent"
@@ -73,6 +77,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "pnpm --filter @workspace/api-server run test"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "api-server-build"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm install && pnpm --filter @workspace/api-server run build"
 
 [workflows.workflow.metadata]
 isValidation = true

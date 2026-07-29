@@ -131,8 +131,8 @@ test.describe("Lab channel", () => {
 
   // ── 4. Mid-session expiry flips to read-only without a page reload ────────
   test("lab expiring mid-session switches badge to expired and hides reply input", async ({ page }) => {
-    // Build a channel that expires ~4 seconds from now so we can observe the
-    // live transition driven by useNow (500 ms poll interval).
+    // Build a channel that is already expired so we can verify the cold-open
+    // read-only state driven by a past expiresAt.
     const channelId = labUrl.split("/channels/lab/")[1];
     const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
