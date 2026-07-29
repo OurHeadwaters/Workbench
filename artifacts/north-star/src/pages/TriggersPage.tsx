@@ -45,6 +45,28 @@ function TriggerCard({ trigger }: { trigger: TriggerDefinition }) {
   const [firedAt, setFiredAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Schedule editing
+  const [editingTime, setEditingTime] = useState(false);
+  const [draftTime, setDraftTime] = useState(trigger.schedule ?? "");
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  function handleSaveTime() {
+    const trimmed = draftTime.trim();
+    if (!/^\d{2}:\d{2}$/.test(trimmed)) {
+      setSaveError("Enter a valid time (HH:MM, 24-hour)");
+      return;
+    }
+    setSaveError(null);
+    setTrigger(trigger.id, { schedule: trimmed });
+    setEditingTime(false);
+  }
+
+  function handleCancelEdit() {
+    setDraftTime(trigger.schedule ?? "");
+    setSaveError(null);
+    setEditingTime(false);
+  }
+
   async function handleFire() {
     if (firing) return;
     setFiring(true);
@@ -110,15 +132,52 @@ function TriggerCard({ trigger }: { trigger: TriggerDefinition }) {
           {kindLabel(trigger.kind)}
         </span>
 
-        {/* Schedule badge */}
-        {isScheduled && (
-          <span
-            className="inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-mono"
+        {/* Schedule badge — tap to edit */}
+        {isScheduled && !editingTime && (
+          <button
+            onClick={() => { setDraftTime(trigger.schedule ?? ""); setEditingTime(true); setSaveError(null); }}
+            className="inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-mono transition-opacity hover:opacity-80"
             style={{ backgroundColor: "#0D1F1C", color: "#4A8A7C", border: "1px solid #1A3A33" }}
+            title="Edit schedule time"
           >
             <Clock size={9} />
             {trigger.schedule}
-          </span>
+            <span style={{ color: "#2A5A53", fontSize: "9px" }}>✎</span>
+          </button>
+        )}
+
+        {/* Inline time editor */}
+        {isScheduled && editingTime && (
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <input
+              type="time"
+              value={draftTime}
+              onChange={(e) => { setDraftTime(e.target.value); setSaveError(null); }}
+              onKeyDown={(e) => { if (e.key === "Enter") handleSaveTime(); if (e.key === "Escape") handleCancelEdit(); }}
+              className="rounded-lg px-2 py-0.5 text-[11px] font-mono"
+              style={{
+                backgroundColor: "#0D1F1C",
+                color: "#4A8A7C",
+                border: `1px solid ${saveError ? "#C5603A" : "#2A5A53"}`,
+                outline: "none",
+              }}
+              autoFocus
+            />
+            <button
+              onClick={handleSaveTime}
+              className="rounded-lg px-2 py-0.5 text-[10px] font-semibold"
+              style={{ backgroundColor: "#1E332E", color: "#4A8A7C", border: "1px solid #2A4A43" }}
+            >
+              Save
+            </button>
+            <button
+              onClick={handleCancelEdit}
+              className="rounded-lg px-2 py-0.5 text-[10px]"
+              style={{ backgroundColor: SURFACE_2, color: TEXT_3, border: `1px solid ${BORDER}` }}
+            >
+              Cancel
+            </button>
+          </div>
         )}
 
         {/* Condition badge */}
@@ -132,6 +191,13 @@ function TriggerCard({ trigger }: { trigger: TriggerDefinition }) {
           </span>
         )}
       </div>
+
+      {/* Schedule save error */}
+      {saveError && (
+        <p className="text-[11px] rounded-lg px-3 py-2" style={{ backgroundColor: "#1A0E0A", color: "#C5603A", border: "1px solid #3A1A0A" }}>
+          ⚠ {saveError}
+        </p>
+      )}
 
       {/* Last-fired row */}
       <div className="flex items-center justify-between">
