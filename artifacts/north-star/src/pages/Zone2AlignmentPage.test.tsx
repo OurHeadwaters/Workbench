@@ -45,11 +45,11 @@ describe("Z2NpubReadout — ok state (200)", () => {
     render(<Z2NpubReadout />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /copy/i })).toBeInTheDocument();
+      expect(screen.getByText(npub)).toBeInTheDocument();
     });
   });
 
-  it("copies the npub to the clipboard when the Copy button is clicked", async () => {
+  it("renders the Copy button in the ok state", async () => {
     const npub = "npub1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq8nmew";
 
     vi.stubGlobal(
@@ -242,7 +242,9 @@ describe("Z2NpubReadout — error state (unexpected status)", () => {
     render(<Z2NpubReadout />);
 
     await waitFor(() => {
-      expect(screen.getByText(/access denied/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Access denied — check that the owner token/i),
+      ).toBeInTheDocument();
     });
   });
 });
