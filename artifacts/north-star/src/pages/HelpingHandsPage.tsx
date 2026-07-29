@@ -4,11 +4,9 @@ import {
   BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, AMBER_WASH, FONT_DISPLAY,
 } from "@/lib/theme";
 import { Plus, X, HandHelping, CheckCheck, Check, Users, Archive, ChevronDown, ChevronRight, RotateCcw } from "lucide-react";
-import type { HelpingHandsTask, HelpingHandsStatus } from "@/types";
-import type { HelpingHandsStatus, HelpingHandsTask } from "@/types";
+import { useState, useEffect } from "react";
 
 // ── Status badge ────────────────────────────────────────────────────────────
-import { useState, useEffect } from "react";
 
 const STATUS_LABEL: Record<HelpingHandsStatus, string> = {
   open:      "Open",

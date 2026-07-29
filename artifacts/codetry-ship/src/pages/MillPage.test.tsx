@@ -7,7 +7,7 @@
  *   - Ticking only four boxes leaves the banner in the "X / 5 cleared" state
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MillPage } from "@/pages/MillPage";
 

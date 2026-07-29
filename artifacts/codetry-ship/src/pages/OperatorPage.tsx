@@ -319,20 +319,33 @@ export function OperatorPage() {
 
   const activeCount = Object.values(modules).filter(Boolean).length;
 
-  // MRR: member count × price of highest active tier
-  const highestTierPrice = GATEHOUSE_MODULES.reduce((max, mod) => {
+  // MRR: member count × tier price(s) of active modules
+  // Collect the distinct tier prices across active modules
+  const activeTierPrices = GATEHOUSE_MODULES.reduce<number[]>((acc, mod) => {
     if (modules[mod.id]) {
       const p = TIER_PRICE[mod.tier] ?? 0;
-      return p > max ? p : max;
+      if (!acc.includes(p)) acc.push(p);
     }
-    return max;
-  }, 0);
-  const estimatedMRR = memberCount > 0 ? memberCount * highestTierPrice : 0;
-  const formattedMRR = estimatedMRR.toLocaleString("en-CA", {
-    style: "currency",
-    currency: "CAD",
-    maximumFractionDigits: 0,
-  });
+    return acc;
+  }, []);
+  const lowestTierPrice = activeTierPrices.length > 0 ? Math.min(...activeTierPrices) : 0;
+  const highestTierPrice = activeTierPrices.length > 0 ? Math.max(...activeTierPrices) : 0;
+  const hasRange = activeTierPrices.length > 1 && lowestTierPrice !== highestTierPrice;
+
+  function formatCAD(amount: number) {
+    return amount.toLocaleString("en-CA", {
+      style: "currency",
+      currency: "CAD",
+      maximumFractionDigits: 0,
+    });
+  }
+
+  const minMRR = memberCount > 0 ? memberCount * lowestTierPrice : 0;
+  const maxMRR = memberCount > 0 ? memberCount * highestTierPrice : 0;
+
+  const formattedMRR = hasRange
+    ? `${formatCAD(minMRR)}–${formatCAD(maxMRR)}`
+    : formatCAD(maxMRR);
 
   return (
     <main
@@ -701,8 +714,9 @@ export function OperatorPage() {
                       Estimated MRR
                     </p>
                     <p
-                      className="font-serif text-[22px] leading-none"
+                      className="font-serif leading-none"
                       style={{
+                        fontSize: hasRange ? "clamp(1.1rem, 3.5vw, 1.35rem)" : "1.375rem",
                         color: highestTierPrice > 0 ? "#f4ede0" : "rgba(244,237,224,0.30)",
                         fontStyle: "italic",
                       }}
@@ -717,7 +731,9 @@ export function OperatorPage() {
                       style={{ color: "rgba(130,175,230,0.55)" }}
                     >
                       {memberCount.toLocaleString()} members<br />
-                      × ${highestTierPrice.toFixed(2)} / mo
+                      {hasRange
+                        ? `× $${lowestTierPrice.toFixed(2)}–$${highestTierPrice.toFixed(2)} / mo`
+                        : `× $${highestTierPrice.toFixed(2)} / mo`}
                     </p>
                   )}
                   {highestTierPrice === 0 && (
