@@ -57,7 +57,7 @@ beforeEach(() => {
 // ---------------------------------------------------------------------------
 
 describe("setWorkbenchPlan — burst relay event", () => {
-  it("fires WORKBENCH_PLAN_BURST when burst_minutes is a non-null number", () => {
+  it("fires WORKBENCH_PLAN_BURST then CHANNEL_OPEN when burst_minutes is a non-null number", () => {
     useStore.getState().setWorkbenchPlan({
       phase: "Phase 1",
       burstMinutes: 45,
@@ -66,18 +66,31 @@ describe("setWorkbenchPlan — burst relay event", () => {
       notes: "",
     });
 
-    expect(spy).toHaveBeenCalledOnce();
+    // Two events: WORKBENCH_PLAN_BURST (human-initiated) + CHANNEL_OPEN (agent auto-open)
+    expect(spy).toHaveBeenCalledTimes(2);
 
-    const call = spy.mock.calls[0][0] as Record<string, unknown>;
-    expect(call.kind).toBe(RELAY_EVENT_KINDS.WORKBENCH_PLAN_BURST);
+    const burstCall = spy.mock.calls[0][0] as Record<string, unknown>;
+    expect(burstCall.kind).toBe(RELAY_EVENT_KINDS.WORKBENCH_PLAN_BURST);
 
-    const payload = call.payload as Record<string, unknown>;
-    expect(payload.zone).toBe("Z2");
-    expect(payload.actor_type).toBe("human");
-    expect(payload.phase).toBe("Phase 1");
-    expect(payload.burst_minutes).toBe(45);
-    expect(payload.windows).toBe("9–10 am");
-    expect(typeof payload.started_at).toBe("string");
+    const burstPayload = burstCall.payload as Record<string, unknown>;
+    expect(burstPayload.zone).toBe("Z2");
+    expect(burstPayload.actor_type).toBe("human");
+    expect(burstPayload.phase).toBe("Phase 1");
+    expect(burstPayload.burst_minutes).toBe(45);
+    expect(burstPayload.windows).toBe("9–10 am");
+    expect(typeof burstPayload.started_at).toBe("string");
+
+    const openCall = spy.mock.calls[1][0] as Record<string, unknown>;
+    expect(openCall.kind).toBe(RELAY_EVENT_KINDS.CHANNEL_OPEN);
+
+    const openPayload = openCall.payload as Record<string, unknown>;
+    expect(openPayload.zone).toBe("Z2");
+    expect(openPayload.actor_type).toBe("agent");
+    expect(openPayload.label).toBe("Burst — Phase 1");
+    expect(openPayload.category).toBe("workbench");
+    expect(typeof openPayload.channel_id).toBe("string");
+    expect(typeof openPayload.opened_at).toBe("string");
+    expect(typeof openPayload.expires_at).toBe("string");
   });
 
   it("does NOT fire when burst_minutes is null", () => {
@@ -104,7 +117,7 @@ describe("setWorkbenchPlan — burst relay event", () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it("carries the correct envelope fields (z2npub, signature, timestamp)", () => {
+  it("WORKBENCH_PLAN_BURST carries the correct envelope fields (z2npub, signature, timestamp)", () => {
     useStore.getState().setWorkbenchPlan({
       phase: "Phase 2",
       burstMinutes: 30,
@@ -117,6 +130,125 @@ describe("setWorkbenchPlan — burst relay event", () => {
     expect(call.z2npub).toBe("z2:local");
     expect(call.signature).toBe("stub");
     expect(typeof call.timestamp).toBe("string");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// addChannel — CHANNEL_OPEN
+// ---------------------------------------------------------------------------
+
+describe("addChannel — CHANNEL_OPEN relay event", () => {
+  beforeEach(() => {
+    useStore.setState({ channels: [] });
+  });
+
+  it("fires CHANNEL_OPEN with the correct kind", () => {
+    useStore.getState().addChannel({
+      label: "Morning Burst",
+      category: "workbench",
+      expiresAt: new Date(Date.now() + 60 * 60_000).toISOString(),
+      createdBy: "agent",
+    });
+
+    expect(spy).toHaveBeenCalledOnce();
+    const call = spy.mock.calls[0][0] as Record<string, unknown>;
+    expect(call.kind).toBe(RELAY_EVENT_KINDS.CHANNEL_OPEN);
+  });
+
+  it("payload carries zone Z2, actor_type, label, category, channel_id, opened_at", () => {
+    const expiresAt = new Date(Date.now() + 60 * 60_000).toISOString();
+    useStore.getState().addChannel({
+      label: "Community Lab",
+      category: "lab",
+      expiresAt,
+      createdBy: "human",
+    });
+
+    const payload = (spy.mock.calls[0][0] as Record<string, unknown>)
+      .payload as Record<string, unknown>;
+
+    expect(payload.zone).toBe("Z2");
+    expect(payload.actor_type).toBe("human");
+    expect(payload.label).toBe("Community Lab");
+    expect(payload.category).toBe("lab");
+    expect(typeof payload.channel_id).toBe("string");
+    expect((payload.channel_id as string).length).toBeGreaterThan(0);
+    expect(typeof payload.opened_at).toBe("string");
+    expect(payload.expires_at).toBe(expiresAt);
+  });
+
+  it("channel_id in payload matches the id stored in channels", () => {
+    useStore.getState().addChannel({
+      label: "Ops Check",
+      category: "workbench",
+      createdBy: "agent",
+    });
+
+    const payload = (spy.mock.calls[0][0] as Record<string, unknown>)
+      .payload as Record<string, unknown>;
+
+    const channels = useStore.getState().channels;
+    expect(channels).toHaveLength(1);
+    expect(channels[0].id).toBe(payload.channel_id);
+  });
+
+  it("omits expires_at from the payload when none is supplied", () => {
+    useStore.getState().addChannel({
+      label: "Permanent Channel",
+      category: "main",
+      createdBy: "human",
+    });
+
+    const payload = (spy.mock.calls[0][0] as Record<string, unknown>)
+      .payload as Record<string, unknown>;
+
+    expect(payload.expires_at).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// expireChannel — CHANNEL_CLOSE
+// ---------------------------------------------------------------------------
+
+describe("expireChannel — CHANNEL_CLOSE relay event", () => {
+  beforeEach(() => {
+    useStore.setState({
+      channels: [
+        {
+          id: "ch-close-test",
+          label: "Test Channel",
+          category: "workbench",
+          createdAt: new Date().toISOString(),
+          createdBy: "agent",
+        },
+      ],
+    });
+  });
+
+  it("fires CHANNEL_CLOSE with the correct kind", () => {
+    useStore.getState().expireChannel("ch-close-test");
+
+    expect(spy).toHaveBeenCalledOnce();
+    const call = spy.mock.calls[0][0] as Record<string, unknown>;
+    expect(call.kind).toBe(RELAY_EVENT_KINDS.CHANNEL_CLOSE);
+  });
+
+  it("payload carries zone Z2, channel_id, closed_at", () => {
+    useStore.getState().expireChannel("ch-close-test");
+
+    const payload = (spy.mock.calls[0][0] as Record<string, unknown>)
+      .payload as Record<string, unknown>;
+
+    expect(payload.zone).toBe("Z2");
+    expect(payload.channel_id).toBe("ch-close-test");
+    expect(typeof payload.closed_at).toBe("string");
+  });
+
+  it("sets archivedAt on the channel in the store", () => {
+    useStore.getState().expireChannel("ch-close-test");
+
+    const channel = useStore.getState().channels.find((c) => c.id === "ch-close-test");
+    expect(typeof channel?.archivedAt).toBe("string");
   });
 });
 

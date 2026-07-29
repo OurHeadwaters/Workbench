@@ -201,4 +201,8 @@ export const RELAY_EVENT_KINDS = {
   IMPROVEMENT_PROPOSAL_OUTCOME: 1010,
   /** Zone 2 — emitted when an agent or human posts a message into a lab channel */
   LAB_EVENT: 1011,
+  /** Zone 2 — emitted when a channel is opened (addChannel), including auto-opened burst channels */
+  CHANNEL_OPEN: 1012,
+  /** Zone 2 — emitted when a channel is explicitly archived via expireChannel */
+  CHANNEL_CLOSE: 1013,
 } as const;

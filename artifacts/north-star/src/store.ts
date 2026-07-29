@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
 import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition, ImprovementProposal, RelayEventSummary } from "./types";
-import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload } from "./lib/relay-event-types";
+import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload, ChannelOpenPayload, ChannelClosePayload } from "./lib/relay-event-types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 import { publishToRelay, RELAY_EVENT_KINDS, RELAY_STORAGE_KEY } from "./lib/relay-stub";
 import type { LabEventPayload } from "./lib/relay-event-types";
@@ -513,30 +513,69 @@ export const useStore = create<Store>()(
             timestamp: now,
             signature: "stub",
           });
+          // Auto-open an ephemeral workbench channel for this burst session.
+          // The channel is registered as agent-originated (ops role) because
+          // it is created automatically by the system, not by a direct human
+          // gesture. expireChannel will publish CHANNEL_CLOSE when the burst
+          // ends so the Channels page reflects live agent activity.
+          const expiresAt = new Date(Date.now() + burstMinutes * 60_000).toISOString();
+          get().addChannel({
+            label: `Burst — ${phase}`,
+            category: "workbench",
+            expiresAt,
+            createdBy: "agent",
+          });
         }
       },
 
-      addChannel: ({ label, category, expiresAt, createdBy }) =>
+      addChannel: ({ label, category, expiresAt, createdBy }) => {
+        const id = uuidv4();
+        const now = new Date().toISOString();
         set((s) => ({
           channels: [
             ...s.channels,
-            {
-              id: uuidv4(),
-              label,
-              category,
-              expiresAt,
-              createdAt: new Date().toISOString(),
-              createdBy,
-            },
+            { id, label, category, expiresAt, createdAt: now, createdBy },
           ],
-        })),
+        }));
+        const openPayload: ChannelOpenPayload = {
+          zone: "Z2",
+          actor_type: createdBy ?? "human",
+          channel_id: id,
+          label,
+          category,
+          opened_at: now,
+          ...(expiresAt ? { expires_at: expiresAt } : {}),
+        };
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.CHANNEL_OPEN,
+          payload: openPayload,
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+      },
 
-      expireChannel: (id) =>
+      expireChannel: (id) => {
+        const now = new Date().toISOString();
         set((s) => ({
           channels: s.channels.map((ch) =>
-            ch.id === id ? { ...ch, archivedAt: new Date().toISOString() } : ch
+            ch.id === id ? { ...ch, archivedAt: now } : ch
           ),
-        })),
+        }));
+        const closePayload: ChannelClosePayload = {
+          zone: "Z2",
+          actor_type: "human",
+          channel_id: id,
+          closed_at: now,
+        };
+        void publishToRelay({
+          kind: RELAY_EVENT_KINDS.CHANNEL_CLOSE,
+          payload: closePayload,
+          z2npub: "z2:local",
+          timestamp: now,
+          signature: "stub",
+        });
+      },
 
       setTrigger: (id, patch) =>
         set((s) => ({

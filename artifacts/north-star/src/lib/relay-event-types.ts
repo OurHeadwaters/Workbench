@@ -210,6 +210,53 @@ export interface LabEventPayload {
 }
 
 // ---------------------------------------------------------------------------
+// 1012 — CHANNEL_OPEN (Zone 2 — agent or human opens an ephemeral channel)
+// ---------------------------------------------------------------------------
+
+/**
+ * Emitted when a channel is registered via addChannel (including the automatic
+ * workbench channel opened at burst-session start).
+ *
+ * EAVE RULE: no Z1 identity fields (name, passphrase, statement) may appear here.
+ */
+export interface ChannelOpenPayload {
+  zone: "Z2";
+  actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
+  /** ID of the newly registered channel. */
+  channel_id: string;
+  /** Human-readable label for the channel. */
+  label: string;
+  /** Category of the channel (workbench, lab, helping-hands, etc.). */
+  category: string;
+  /** ISO datetime when the channel was opened. */
+  opened_at: string;
+  /** ISO datetime when the ephemeral channel will auto-expire, if set. */
+  expires_at?: string;
+}
+
+// ---------------------------------------------------------------------------
+// 1013 — CHANNEL_CLOSE (Zone 2 — agent or human closes / archives a channel)
+// ---------------------------------------------------------------------------
+
+/**
+ * Emitted when a channel is explicitly expired via expireChannel.
+ *
+ * EAVE RULE: no Z1 identity fields (name, passphrase, statement) may appear here.
+ */
+export interface ChannelClosePayload {
+  zone: "Z2";
+  actor_type: "human" | "agent";
+  /** Named role of the agent when actor_type is "agent". Omitted for humans. */
+  agent_role?: AgentRole;
+  /** ID of the channel being closed. */
+  channel_id: string;
+  /** ISO datetime when the channel was closed / archived. */
+  closed_at: string;
+}
+
+// ---------------------------------------------------------------------------
 // Convenience map: relay kind number → payload interface
 // ---------------------------------------------------------------------------
 export interface RelayPayloadMap {
@@ -225,4 +272,6 @@ export interface RelayPayloadMap {
   1009: ImprovementProposalPayload;
   1010: ImprovementProposalOutcomePayload;
   1011: LabEventPayload;
+  1012: ChannelOpenPayload;
+  1013: ChannelClosePayload;
 }
