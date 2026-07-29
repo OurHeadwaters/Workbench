@@ -123,10 +123,15 @@ interface MemberPreviewProps {
   orgName: string;
   zoneColor: string;
   modules: Record<string, boolean>;
+  memberCount: number;
 }
 
-function MemberPreview({ orgName, zoneColor, modules }: MemberPreviewProps) {
+function MemberPreview({ orgName, zoneColor, modules, memberCount }: MemberPreviewProps) {
   const activeModules = GATEHOUSE_MODULES.filter((m) => modules[m.id]);
+
+  // Sum of all active module prices
+  const perMemberCost = activeModules.reduce((sum, mod) => sum + (TIER_PRICE[mod.tier] ?? 0), 0);
+  const totalMonthlyCost = memberCount > 0 && perMemberCost > 0 ? memberCount * perMemberCost : 0;
   const zoneName =
     CONSTELLATION_SWATCHES.find((s) => s.value === zoneColor)?.label ?? "Custom";
 
@@ -249,6 +254,40 @@ function MemberPreview({ orgName, zoneColor, modules }: MemberPreviewProps) {
           </ul>
         )}
       </div>
+
+      {/* Cost estimate */}
+      {perMemberCost > 0 && (
+        <div
+          className="px-5 py-4"
+          style={{ borderTop: "1px solid rgba(0,0,0,0.07)", background: "#ede8e0" }}
+          data-testid="member-preview-cost"
+        >
+          <p
+            className="font-mono text-[9px] uppercase tracking-[0.24em] mb-2"
+            style={{ color: "rgba(44,34,24,0.40)" }}
+          >
+            Estimated cost
+          </p>
+          <div className="flex items-baseline justify-between gap-2">
+            <p
+              className="font-serif text-[18px] leading-none"
+              style={{ color: zoneColor, fontStyle: "italic" }}
+              data-testid="member-preview-cost-total"
+            >
+              {totalMonthlyCost > 0
+                ? `~${totalMonthlyCost.toLocaleString("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 })} / mo`
+                : "—"}
+            </p>
+            <p
+              className="font-mono text-[9px] leading-snug text-right shrink-0"
+              style={{ color: "rgba(44,34,24,0.40)" }}
+            >
+              ~${perMemberCost.toFixed(2)} / member / mo<br />
+              × {memberCount.toLocaleString()} members
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <div
@@ -884,10 +923,39 @@ export function OperatorPage() {
               </p>
             </div>
 
+            {/* Member count input for the pitch conversation */}
+            <div className="mb-4">
+              <label
+                htmlFor="preview-member-count"
+                className="block font-mono text-[9px] uppercase tracking-[0.22em] mb-1.5"
+                style={{ color: "rgba(130,175,230,0.55)" }}
+              >
+                Member count
+              </label>
+              <input
+                id="preview-member-count"
+                type="number"
+                min={0}
+                value={memberCount}
+                onChange={(e) => {
+                  const v = parseInt(e.target.value, 10);
+                  setMemberCount(isNaN(v) ? 0 : v);
+                }}
+                className="block w-32 rounded-sm px-3 py-1.5 font-mono text-sm focus:outline-none focus:ring-2"
+                style={{
+                  background: "rgba(244,237,224,0.06)",
+                  border: "1px solid rgba(26,95,168,0.35)",
+                  color: "#f4ede0",
+                }}
+                data-testid="preview-member-count"
+              />
+            </div>
+
             <MemberPreview
               orgName={orgName}
               zoneColor={zoneColor}
               modules={modules}
+              memberCount={memberCount}
             />
 
             {/* Copy preview link */}
