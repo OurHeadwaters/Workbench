@@ -133,82 +133,7 @@ test.describe("Lab channel", () => {
   test("lab expiring mid-session switches badge to expired and hides reply input", async ({ page }) => {
     // Build a channel that expires ~4 seconds from now so we can observe the
     // live transition driven by useNow (500 ms poll interval).
-    const channelId = `expiry-mid-${Date.now()}`;
-    const expiresAt = new Date(Date.now() + 4_000).toISOString();
-
-    await page.addInitScript(
-      ({
-        id,
-        label,
-        expires,
-        seed,
-      }: {
-        id: string;
-        label: string;
-        expires: string;
-        seed: string;
-      }) => {
-        localStorage.setItem("north-star:unlocked", "1");
-        // Use default poll interval so useNow ticks and catches the expiry.
-
-        let storeData: { state: Record<string, unknown>; version: number };
-        try {
-          const raw = localStorage.getItem("north-star:v1");
-          storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
-        } catch {
-          storeData = JSON.parse(seed);
-        }
-        (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
-        const channels = (storeData.state.channels as unknown[]) ?? [];
-        channels.push({
-          id,
-          label,
-          category: "lab",
-          expiresAt: expires,
-          createdAt: new Date().toISOString(),
-          createdBy: "human",
-          invited_roles: [],
-          event_feed: [],
-        });
-        storeData.state.channels = channels;
-        localStorage.setItem("north-star:v1", JSON.stringify(storeData));
-      },
-      { id: channelId, label: "expiry-test-lab", expires: expiresAt, seed: SEED_STORE },
-    );
-
-    // Navigate directly to the lab page (no UI creation flow needed)
-    await page.goto(`channels/lab/${channelId}`);
-
-    // 1. Lab name is visible in header
-    await expect(page.locator("h1")).toContainText("expiry-test-lab", { timeout: 10_000 });
-
-    // 2. Reply textarea is present before expiry
-    await expect(page.getByPlaceholder("Reply to the lab…")).toBeVisible({ timeout: 5_000 });
-
-    // 3. Wait for useNow poll to catch the expiry (~4 s); allow 12 s for CI.
-    const expiredBadge = page.locator("span").filter({ hasText: /^expired$/ });
-    await expect(expiredBadge.first()).toBeVisible({ timeout: 12_000 });
-
-    // 4. Reply textarea disappears once expired state is rendered.
-    await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });
-
-    // 5. Read-only footer appears.
-    await expect(
-      page.getByText("This lab is expired — no new events can be posted.")
-    ).toBeVisible({ timeout: 5_000 });
-  });
-
-  // ── 6. Clock-drift guard: handleSend blocks posts on expired lab ──────────
-  //
-  // Scenario: the useNow poll interval is set very long (60 s) so the UI does
-  // NOT flip to read-only immediately after expiry.  The lab expires 1 second
-  // after the page loads.  We wait 1.5 s (lab is now past expiresAt on the
-  // real clock) and then try to submit a reply.
-  // handleSend must check Date.now() directly and refuse the post — no new
-  // event should appear in the feed.
-  test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
     const channelId = labUrl.split("/channels/lab/")[1];
-    // Lab expires well in the future so it's not read-only
     const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
     await page.addInitScript(
@@ -243,7 +168,7 @@ test.describe("Lab channel", () => {
           label,
           category: "lab",
           expiresAt: expires,
-          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1_000).toISOString(), // created 2 hours ago
+          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1_000).toISOString(),
           createdBy: "human",
           invited_roles: [],
           event_feed: [],
@@ -284,7 +209,83 @@ test.describe("Lab channel", () => {
   // event should appear in the feed.
   test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
     const channelId = labUrl.split("/channels/lab/")[1];
-    // Lab expires well in the future so it's not read-only
+    // Lab expires well in the future so the ask-agent button is live throughout.
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    await page.addInitScript(
+      ({
+        id,
+        label,
+        expires,
+        archived,
+        seed,
+      }: {
+        id: string;
+        label: string;
+        expires: string;
+        archived: string;
+        seed: string;
+      }) => {
+        localStorage.setItem("north-star:unlocked", "1");
+        // Long poll so useNow is irrelevant — isArchived comes from archivedAt alone.
+        localStorage.setItem("north-star:now-interval", "60000");
+
+        let storeData: { state: Record<string, unknown>; version: number };
+        try {
+      const raw = localStorage.getItem("north-star:v1");
+          storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
+        } catch {
+          storeData = JSON.parse(seed);
+        }
+        (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
+        const channels = (storeData.state.channels as unknown[]) ?? [];
+        channels.push({
+          id,
+          label,
+          category: "lab",
+          expiresAt: expires,
+          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1_000).toISOString(),
+          createdBy: "human",
+          invited_roles: [],
+          event_feed: [],
+        });
+        storeData.state.channels = channels;
+        localStorage.setItem("north-star:v1", JSON.stringify(storeData));
+      },
+      { id: channelId, label: "cold-expired-lab", expires: expiresAt, seed: SEED_STORE },
+    );
+
+    // Navigate directly to the lab page — this is a cold open on an already-expired lab.
+    await page.goto(`channels/lab/${channelId}`);
+
+    // 1. Lab name is visible in header
+    await expect(page.locator("h1")).toContainText("cold-expired-lab", { timeout: 10_000 });
+
+    // 2. "expired" badge is shown on the very first render — no poll tick needed.
+    //    The badge text is exactly "expired" (not a countdown like "2h left").
+    const expiredBadge = page.locator("span").filter({ hasText: /^expired$/ });
+    await expect(expiredBadge.first()).toBeVisible({ timeout: 5_000 });
+
+    // 3. Reply textarea is absent from the start (isReadOnly is true on mount).
+    await expect(page.getByPlaceholder("Reply to the lab…")).not.toBeVisible({ timeout: 5_000 });
+
+    // 4. Read-only footer is present on first render.
+    await expect(
+      page.getByText("This lab is expired — no new events can be posted.")
+    ).toBeVisible({ timeout: 5_000 });
+  });
+
+  // ── 6. Clock-drift guard: handleSend blocks posts on expired lab ──────────
+  //
+  // Scenario: the useNow poll interval is set very long (60 s) so the UI does
+  // NOT flip to read-only immediately after expiry.  The lab expires 1 second
+  // after the page loads.  We wait 1.5 s (lab is now past expiresAt on the
+  // real clock) and then try to submit a reply.
+  // handleSend must check Date.now() directly and refuse the post — no new
+  // event should appear in the feed.
+  test("handleSend does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
+    const channelId = labUrl.split("/channels/lab/")[1];
+    // Lab expires well in the future so the ask-agent button is live throughout.
     const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
     await page.addInitScript(
@@ -367,7 +368,7 @@ test.describe("Lab channel", () => {
   // agent event should appear in the feed.
   test("handleAskAgent does not call postLabEvent after real expiry even when useNow poll is stale", async ({ page }) => {
     const channelId = labUrl.split("/channels/lab/")[1];
-    // Lab expires well in the future so it's not read-only
+    // Lab expires well in the future so the ask-agent button is live throughout.
     const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
     await page.addInitScript(
@@ -397,7 +398,6 @@ test.describe("Lab channel", () => {
         }
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
         const channels = (storeData.state.channels as unknown[]) ?? [];
-
         channels.push({
           id,
           label,
@@ -513,7 +513,7 @@ test.describe("Lab channel", () => {
   // only one agent response bubble appears in the feed.
   test("clicking Ask-agent twice rapidly produces only one agent bubble", async ({ page }) => {
     const channelId = labUrl.split("/channels/lab/")[1];
-    // Lab expires well in the future so it's not read-only
+    // Lab expires well in the future so the ask-agent button is live throughout.
     const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
     await page.addInitScript(
@@ -543,7 +543,6 @@ test.describe("Lab channel", () => {
         }
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
         const channels = (storeData.state.channels as unknown[]) ?? [];
-
         channels.push({
           id,
           label,
@@ -662,7 +661,6 @@ test.describe("Lab channel", () => {
         }
         (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
         const channels = (storeData.state.channels as unknown[]) ?? [];
-
         channels.push({
           id,
           label,

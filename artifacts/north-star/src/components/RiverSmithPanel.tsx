@@ -263,7 +263,7 @@ function RiverMarkdown({ text, onPropose }: { text: string; onPropose?: (heading
             <button
               onClick={() => onPropose(heading, sectionBodies[heading] ?? "")}
               title={`Pre-fill proposal from "${heading}"`}
-              className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity flex-shrink-0 text-[10px] text-[#4A8A7C] border border-[#2A4A43] bg-[#0D1F1C] hover:bg-[#1A3A33] rounded px-1.5 py-0.5 font-sans font-semibold tracking-[0.08em] leading-none"
+              className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition-opacity flex-shrink-0 text-[10px] text-[#4A8A7C] border border-[#2A4A43] bg-[#0D1F1C] hover:bg-[#1A3A33] rounded px-1.5 py-0.5 font-sans font-semibold tracking-[0.08em] leading-none"
             >
               → Propose
             </button>
