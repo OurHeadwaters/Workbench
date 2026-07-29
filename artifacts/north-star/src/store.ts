@@ -2,10 +2,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuidv4 } from "./lib/uuid";
 import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition, ImprovementProposal, RelayEventSummary } from "./types";
-import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload, ChannelOpenPayload, ChannelClosePayload } from "./lib/relay-event-types";
+import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload, ChannelOpenPayload, ChannelClosePayload, LabEventPayload } from "./lib/relay-event-types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
 import { publishToRelay, RELAY_EVENT_KINDS, RELAY_STORAGE_KEY, getZ2Npub } from "./lib/relay-stub";
-import type { LabEventPayload } from "./lib/relay-event-types";
 
 const ZONE_COLORS: Record<ZoneId, string> = {
   Z0: "45 60% 32%",
@@ -1101,6 +1100,18 @@ export const useStore = create<Store>()(
 
               return changed ? { channels } : s;
             });
+
+            // Drain the buffer: remove events that were just reconciled (or
+            // were already present as duplicates) and prune stale orphans.
+            // Recent orphaned events (unknown channel_id) are preserved so that
+            // a late channel restore can still replay them.
+            const knownChannelIds = new Set(
+              useStore.getState().channels.map((ch) => ch.id),
+            );
+            const remaining = drainRelayBuffer(stored, knownChannelIds);
+            if (remaining.length !== stored.length) {
+              localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(remaining));
+            }
           } catch {
             // Never crash on reconciliation — it is strictly additive.
           }
@@ -1109,5 +1120,44 @@ export const useStore = create<Store>()(
     }
   )
 );
+
+/** Internal shape of entries stored in the ns:relay:events fallback buffer. */
+export type StoredRelayEvent = { kind: number; payload: unknown; timestamp: string };
+
+/** How long an orphaned relay event survives in the buffer before being pruned. */
+export const RELAY_DRAIN_STALE_MS = 7 * 24 * 60 * 60 * 1000;
+
+/**
+ * drainRelayBuffer — returns the subset of `storedEvents` that should remain
+ * in the ns:relay:events buffer after a rehydration reconciliation pass.
+ *
+ * Rules:
+ * - Non-LAB_EVENT entries are always kept; they are handled by other mechanisms.
+ * - LAB_EVENT entries whose channel_id appears in `knownChannelIds` are removed:
+ *   the reconciler just merged them (or skipped them as duplicates), so there is
+ *   nothing left to replay.
+ * - LAB_EVENT entries for *unknown* channel_ids (orphaned) are kept when they are
+ *   ≤ RELAY_DRAIN_STALE_MS old, so a late channel restore can still pick them up.
+ *   Orphaned entries older than that threshold are pruned.
+ *
+ * @param storedEvents  Raw events read from localStorage.
+ * @param knownChannelIds  Set of channel IDs currently in the Zustand state.
+ * @param nowMs  Current epoch-ms; injectable for deterministic testing.
+ */
+export function drainRelayBuffer(
+  storedEvents: StoredRelayEvent[],
+  knownChannelIds: Set<string>,
+  nowMs: number = Date.now(),
+): StoredRelayEvent[] {
+  return storedEvents.filter((e) => {
+    if (e.kind !== RELAY_EVENT_KINDS.LAB_EVENT) return true;
+    const p = e.payload as LabEventPayload;
+    // Known channel → reconciled or already present → drain immediately.
+    if (knownChannelIds.has(p.channel_id)) return false;
+    // Orphaned entry: keep only if it is still within the staleness window.
+    const ts = new Date(p.posted_at ?? e.timestamp).getTime();
+    return nowMs - ts <= RELAY_DRAIN_STALE_MS;
+  });
+}
 
 export { slugify, ZONE_COLORS };
