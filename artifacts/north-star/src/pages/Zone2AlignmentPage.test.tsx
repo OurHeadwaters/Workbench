@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
@@ -259,5 +259,55 @@ describe("Z2NpubReadout — loading state", () => {
     render(<Z2NpubReadout />);
 
     expect(screen.getByText(/fetching/i)).toBeInTheDocument();
+  });
+});
+
+// ─── timeout path ─────────────────────────────────────────────────────────────
+
+describe("Z2NpubReadout — timeout path", () => {
+  it("transitions to the error state with 'Request timed out' after 9 seconds", async () => {
+    vi.useFakeTimers();
+
+    // Fetch never resolves but rejects with AbortError when the signal fires.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((_url: string, opts: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          if (opts?.signal) {
+            opts.signal.addEventListener("abort", () => {
+              reject(new DOMException("The operation was aborted.", "AbortError"));
+            });
+          }
+        }),
+      ),
+    );
+
+    render(<Z2NpubReadout />);
+
+    // Advance past the 9-second internal timeout so AbortController.abort() fires.
+    await act(async () => {
+      vi.advanceTimersByTime(9001);
+    });
+
+    vi.useRealTimers();
+
+    await waitFor(() => {
+      expect(screen.getByText(/request timed out/i)).toBeInTheDocument();
+    });
+  });
+
+  it("cleanup cancels the timeout so it does not fire after unmount", () => {
+    const clearTimeoutSpy = vi.spyOn(globalThis, "clearTimeout");
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise<Response>(() => {})),
+    );
+
+    const { unmount } = render(<Z2NpubReadout />);
+    unmount();
+
+    // clearTimeout must have been called (at least once) on unmount
+    expect(clearTimeoutSpy).toHaveBeenCalled();
   });
 });

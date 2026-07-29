@@ -122,7 +122,9 @@ export function Z2NpubReadout() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 9000);
+
     const token =
       window.localStorage.getItem("library.ownerToken") ||
       window.localStorage.getItem("ownerToken") ||
@@ -130,9 +132,9 @@ export function Z2NpubReadout() {
     const headers: Record<string, string> = token
       ? { "x-library-owner-token": token }
       : {};
-    fetch("/api/z2/npub", { headers })
+    fetch("/api/z2/npub", { headers, signal: controller.signal })
       .then(async (res) => {
-        if (cancelled) return;
+        if (controller.signal.aborted) return;
         // 412 = LIBRARY_OWNER_TOKEN env var not set on the server
         if (res.status === 412) {
           setState({ status: "token_not_configured" });
@@ -154,10 +156,20 @@ export function Z2NpubReadout() {
         const data = await res.json();
         setState({ status: "ok", npub: data.npub });
       })
-      .catch((err) => {
-        if (!cancelled) setState({ status: "error", message: err.message ?? "Fetch failed" });
+      .catch((err: unknown) => {
+        if (controller.signal.aborted) {
+          setState({ status: "error", message: "Request timed out" });
+          return;
+        }
+        setState({ status: "error", message: err instanceof Error ? (err.message ?? "Fetch failed") : "Fetch failed" });
+      })
+      .finally(() => {
+        clearTimeout(timeoutId);
       });
-    return () => { cancelled = true; };
+    return () => {
+      controller.abort();
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   function handleCopy() {
