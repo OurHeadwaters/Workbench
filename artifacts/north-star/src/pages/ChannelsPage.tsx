@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { useStore } from "@/store";
 import type { ChannelCategory, ChannelMeta } from "@/types";
@@ -458,6 +458,8 @@ function ChannelRow({ ch, now, onExpire, onClick }: ChannelRowProps) {
 export function ChannelsPage() {
   const channels = useStore((s) => s.channels);
   const expireChannel = useStore((s) => s.expireChannel);
+  const clearArchivedChannels = useStore((s) => s.clearArchivedChannels);
+  const sweepExpiredChannels = useStore((s) => s.sweepExpiredChannels);
   const nowIntervalMs = (() => {
     const override = typeof localStorage !== "undefined"
       ? localStorage.getItem("north-star:now-interval")
@@ -470,25 +472,26 @@ export function ChannelsPage() {
   const [labOpen, setLabOpen] = useState(false);
   const [, navigate] = useLocation();
 
-  // Auto-expire any ephemeral channels that have passed their expiry
-  const processed = useMemo(() => {
-    return channels.map((ch) => {
-      if (!ch.archivedAt && ch.expiresAt && new Date(ch.expiresAt).getTime() <= now) {
-        return { ...ch, archivedAt: ch.expiresAt };
-      }
-      return ch;
-    });
-  }, [channels, now]);
+  // Persist archivedAt for any ephemeral channels whose expiry has passed.
+  // This keeps the store canonical so clearArchivedChannels and the cap
+  // apply to the full set of expired channels, not just manually-closed ones.
+  useEffect(() => {
+    const hasExpired = channels.some(
+      (ch) => !ch.archivedAt && ch.expiresAt && new Date(ch.expiresAt).getTime() <= now
+    );
+    if (hasExpired) sweepExpiredChannels(now);
+  }, [now, channels, sweepExpiredChannels]);
 
   const grouped = useMemo(() => {
     const map: Record<ChannelCategory, ChannelMeta[]> = {
       main: [], workbench: [], "helping-hands": [], briefing: [], lab: [],
     };
-    for (const ch of processed) map[ch.category].push(ch);
+    for (const ch of channels) map[ch.category].push(ch);
     return map;
-  }, [processed]);
+  }, [channels]);
 
-  const hasAny = processed.length > 0;
+  const hasAny = channels.length > 0;
+  const archivedCount = channels.filter((ch) => ch.archivedAt).length;
 
   function handleLabCreated(id: string) {
     setLabOpen(false);
@@ -510,6 +513,17 @@ export function ChannelsPage() {
             Channels
           </h1>
           <div className="flex items-center gap-2">
+            {archivedCount > 0 && (
+              <button
+                onClick={() => clearArchivedChannels()}
+                aria-label="Clear archived channels"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                style={{ backgroundColor: "rgba(237,232,213,0.07)", color: TEXT_2 }}
+              >
+                <Archive size={14} />
+                Clear archived ({archivedCount})
+              </button>
+            )}
             <button
               onClick={() => setLabOpen(true)}
               aria-label="Start lab"

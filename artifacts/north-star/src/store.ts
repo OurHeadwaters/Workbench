@@ -242,6 +242,14 @@ const INITIAL_STATE: AppState = {
   improvementProposals: [],
 };
 
+/**
+ * Maximum number of archived / expired channels kept in state.
+ * When this cap is exceeded the oldest archived channels are dropped automatically
+ * inside `addChannel` and `expireChannel`. Users can also flush all archived
+ * channels at once with `clearArchivedChannels`.
+ */
+export const ARCHIVED_CHANNELS_CAP = 50;
+
 export const useStore = create<Store>()(
   persist(
     (set, get) => ({
@@ -531,12 +539,16 @@ export const useStore = create<Store>()(
       addChannel: ({ label, category, expiresAt, createdBy }) => {
         const id = uuidv4();
         const now = new Date().toISOString();
-        set((s) => ({
-          channels: [
-            ...s.channels,
-            { id, label, category, expiresAt, createdAt: now, createdBy },
-          ],
-        }));
+        set((s) => {
+          const newChannel = { id, label, category, expiresAt, createdAt: now, createdBy };
+          // Trim archived channels to cap — keep the ARCHIVED_CHANNELS_CAP most-recent by archivedAt
+          const active = s.channels.filter((ch) => !ch.archivedAt);
+          const archived = s.channels
+            .filter((ch) => ch.archivedAt)
+            .sort((a, b) => b.archivedAt!.localeCompare(a.archivedAt!))
+            .slice(0, ARCHIVED_CHANNELS_CAP);
+          return { channels: [...active, ...archived, newChannel] };
+        });
         const openPayload: ChannelOpenPayload = {
           zone: "Z2",
           actor_type: createdBy ?? "human",
@@ -557,11 +569,18 @@ export const useStore = create<Store>()(
 
       expireChannel: (id) => {
         const now = new Date().toISOString();
-        set((s) => ({
-          channels: s.channels.map((ch) =>
+        set((s) => {
+          const updated = s.channels.map((ch) =>
             ch.id === id ? { ...ch, archivedAt: now } : ch
-          ),
-        }));
+          );
+          // Trim archived channels to cap — keep the ARCHIVED_CHANNELS_CAP most-recent by archivedAt
+          const active = updated.filter((ch) => !ch.archivedAt);
+          const archived = updated
+            .filter((ch) => ch.archivedAt)
+            .sort((a, b) => b.archivedAt!.localeCompare(a.archivedAt!))
+            .slice(0, ARCHIVED_CHANNELS_CAP);
+          return { channels: [...active, ...archived] };
+        });
         const closePayload: ChannelClosePayload = {
           zone: "Z2",
           actor_type: "human",
@@ -576,6 +595,33 @@ export const useStore = create<Store>()(
           signature: "stub",
         });
       },
+
+      clearArchivedChannels: () =>
+        set((s) => ({
+          channels: s.channels.filter((ch) => !ch.archivedAt),
+        })),
+
+      /**
+       * Persist `archivedAt` for every channel whose `expiresAt` has passed.
+       * Call this from the UI whenever the clock ticks so that the stored state
+       * stays in sync with what the user sees — and so `clearArchivedChannels`
+       * and the archive cap cover the full set of expired channels.
+       */
+      sweepExpiredChannels: (nowMs: number) =>
+        set((s) => {
+          const swept = s.channels.map((ch) => {
+            if (!ch.archivedAt && ch.expiresAt && new Date(ch.expiresAt).getTime() <= nowMs) {
+              return { ...ch, archivedAt: ch.expiresAt };
+            }
+            return ch;
+          });
+          const active = swept.filter((ch) => !ch.archivedAt);
+          const archived = swept
+            .filter((ch) => ch.archivedAt)
+            .sort((a, b) => b.archivedAt!.localeCompare(a.archivedAt!))
+            .slice(0, ARCHIVED_CHANNELS_CAP);
+          return { channels: [...active, ...archived] };
+        }),
 
       setTrigger: (id, patch) =>
         set((s) => ({

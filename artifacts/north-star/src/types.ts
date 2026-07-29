@@ -255,6 +255,14 @@ export interface StoreActions {
   setWorkbenchPlan: (plan: Omit<WorkbenchPlan, "updatedAt">) => void;
   addChannel: (c: Pick<ChannelMeta, "label" | "category" | "expiresAt" | "createdBy">) => void;
   expireChannel: (id: string) => void;
+  /** Remove all archived/expired channels from state. The cap (ARCHIVED_CHANNELS_CAP) enforces this automatically, but this lets the user flush on demand. */
+  clearArchivedChannels: () => void;
+  /**
+   * Persist archivedAt for every channel whose expiresAt has passed.
+   * Call from the UI on each clock tick so the stored state matches what the
+   * user sees, and so clearArchivedChannels and the cap cover all expired channels.
+   */
+  sweepExpiredChannels: (nowMs: number) => void;
   addHelpingHandsTask: (t: Pick<HelpingHandsTask, "title">) => void;
   claimHelpingHandsTask: (id: string) => void;
   completeHelpingHandsTask: (id: string) => void;
