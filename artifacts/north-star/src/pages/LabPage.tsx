@@ -56,7 +56,7 @@ function roleLabel(role: string | undefined): string {
 
 function TypingBubble({ role }: { role: string }) {
   return (
-    <div className="flex gap-2.5 flex-row">
+    <div data-testid="typing-bubble" className="flex gap-2.5 flex-row">
       {/* Avatar */}
       <div
         className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5"
