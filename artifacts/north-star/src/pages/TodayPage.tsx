@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { format, parseISO, differenceInDays, startOfISOWeek, getDay } from "date-fns";
-import { AlertTriangle, ExternalLink, Star, Feather, Inbox, ListChecks, Clock, X, ChevronLeft, ChevronRight, Pencil } from "lucide-react";
+import { AlertTriangle, ExternalLink, Star, Feather, Inbox, ListChecks, Clock, X, ChevronLeft, ChevronRight, Pencil, Zap } from "lucide-react";
 import { useStore, getTodayKey, getWeekKey, getSeasonKey } from "@/store";
 import { MorningTriage } from "@/components/MorningTriage";
 import { ZoneBadge } from "@/components/ZoneBadge";
@@ -633,6 +633,49 @@ function NorthStarStatement() {
   );
 }
 
+// ─── Trigger activity strip ─────────────────────────────────────────────
+function formatRelativeShort(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60_000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
+function TriggerActivityStrip() {
+  const triggers = useStore((s) => s.triggers);
+
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+  const recent = triggers.filter(
+    (t) => t.last_fired && new Date(t.last_fired).getTime() >= cutoff
+  );
+
+  if (recent.length === 0) return null;
+
+  return (
+    <Link href="/triggers">
+      <div
+        className="rounded-xl border px-3 py-2.5 flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
+        style={{ backgroundColor: SURFACE, borderColor: BORDER }}
+      >
+        <Zap size={13} style={{ color: AMBER }} className="shrink-0" />
+        <div className="flex-1 min-w-0 flex flex-wrap gap-x-3 gap-y-1">
+          {recent.map((t) => (
+            <span key={t.id} className="text-xs whitespace-nowrap" style={{ color: TEXT_2 }}>
+              <span style={{ color: TEXT }}>{t.name}</span>
+              {" · "}
+              <span style={{ color: TEXT_3 }}>{formatRelativeShort(t.last_fired!)}</span>
+            </span>
+          ))}
+        </div>
+        <ChevronRight size={13} style={{ color: TEXT_3 }} className="shrink-0" />
+      </div>
+    </Link>
+  );
+}
+
 const BASE_API = import.meta.env.VITE_API_URL ?? "/api";
 
 function OdysseySection() {
@@ -714,6 +757,7 @@ export function TodayPage() {
           <div className="space-y-4 min-w-0">
             <BackupNudge />
             <ReviewNudges />
+            <TriggerActivityStrip />
             <LiveMoneyStrip />
 
             {room === "triage" && <TriageRoom />}
