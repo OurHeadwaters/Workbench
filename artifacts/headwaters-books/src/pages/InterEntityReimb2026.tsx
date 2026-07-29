@@ -63,7 +63,9 @@ import {
   Circle,
   Loader2,
   AlertCircle,
+  ExternalLink,
 } from "lucide-react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 
 // ── Formatters ─────────────────────────────────────────────────────────────────
@@ -992,6 +994,49 @@ function ChangeLog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: bo
   );
 }
 
+// ── Invoice index strip ────────────────────────────────────────────────────────
+
+function InvoiceIndexStrip() {
+  const [, setLocation] = useLocation();
+  return (
+    <div className="flex flex-wrap gap-3 print:hidden">
+      {/* Invoice 001 */}
+      <button
+        onClick={() => setLocation("/invoice/reimb-2026-001")}
+        className="flex items-center gap-3 flex-1 min-w-[220px] rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-left hover:bg-emerald-100 transition-colors"
+      >
+        <FileText className="w-4 h-4 text-emerald-700 shrink-0" />
+        <div className="min-w-0">
+          <p className="text-xs font-mono font-semibold text-emerald-900 truncate">
+            REPLIT-DIGITAL-REIMB-2026-001
+          </p>
+          <p className="text-[11px] text-emerald-800 mt-0.5">
+            Apr 17 – Jun 26 2026 · $21,496.40 CAD · Confirmed
+          </p>
+        </div>
+        <ExternalLink className="w-3.5 h-3.5 text-emerald-600 shrink-0 ml-auto" />
+      </button>
+
+      {/* Invoice 002 */}
+      <button
+        onClick={() => setLocation("/invoice/reimb-2026-002")}
+        className="flex items-center gap-3 flex-1 min-w-[220px] rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-left hover:bg-amber-100 transition-colors"
+      >
+        <FileText className="w-4 h-4 text-amber-700 shrink-0" />
+        <div className="min-w-0">
+          <p className="text-xs font-mono font-semibold text-amber-900 truncate">
+            REPLIT-DIGITAL-REIMB-2026-002
+          </p>
+          <p className="text-[11px] text-amber-800 mt-0.5">
+            Jun 27 – Jul 31 2026 · Amounts pending — Jul statement needed
+          </p>
+        </div>
+        <ExternalLink className="w-3.5 h-3.5 text-amber-600 shrink-0 ml-auto" />
+      </button>
+    </div>
+  );
+}
+
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function InterEntityReimb2026() {
@@ -1022,6 +1067,9 @@ export default function InterEntityReimb2026() {
           Print / PDF
         </Button>
       </div>
+
+      {/* Invoice index strip */}
+      <InvoiceIndexStrip />
 
       {/* Print-only header */}
       <div className="hidden print:block">

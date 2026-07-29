@@ -14,6 +14,89 @@ export const INVOICE_NUMBER = "REPLIT-DIGITAL-REIMB-2026-001";
 export const INVOICE_DATE = "2026-07-27";
 export const INVOICE_PERIOD = "17 April 2026 – 26 June 2026";
 
+// ── Invoice 002 constants — Jul 2026 supplemental ─────────────────────────────
+// Period: 27 June 2026 – 31 July 2026
+// Amounts are pending — enter from the final July 2026 Alterna Savings statement
+// using the same extraction method as Invoice 001.
+
+export const INVOICE_NUMBER_002 = "REPLIT-DIGITAL-REIMB-2026-002";
+export const INVOICE_DATE_002 = "2026-07-29";
+export const INVOICE_PERIOD_002 = "27 June 2026 – 31 July 2026";
+
+// Replace these placeholder zeros with confirmed CAD amounts from the
+// July 2026 Alterna Savings statement once it is available.
+export const REPLIT_PRINCIPAL_002 = 0;
+export const REPLIT_FX_FEES_002 = 0;
+export const REPLIT_SUBTOTAL_002 = REPLIT_PRINCIPAL_002 + REPLIT_FX_FEES_002;
+
+export const GODADDY_DOMAINS_002 = 0;
+export const RUNWAY_ML_002 = 0;
+export const X_CORP_DEV_002 = 0;
+export const OTHER_DIGITAL_002 = 0;
+export const OTHER_DIGITAL_SUBTOTAL_002 =
+  GODADDY_DOMAINS_002 + RUNWAY_ML_002 + X_CORP_DEV_002 + OTHER_DIGITAL_002;
+
+export const INVOICE_TOTAL_002 = REPLIT_SUBTOTAL_002 + OTHER_DIGITAL_SUBTOTAL_002;
+
+export const invoiceGroups002: InvoiceGroup[] = [
+  {
+    id: "replit-002",
+    title: "Replit Development Platform",
+    subtitle:
+      'All "REPLIT, INC. REPLIT.COM CA" lines + matching "FOREIGN TRANSACTION FEE – MERCHANDISE" lines — Jun 27 – Jul 31 2026',
+    items: [
+      {
+        description: "Replit principal charges",
+        amount: REPLIT_PRINCIPAL_002,
+        note:
+          "PENDING — enter total CAD card amount from all REPLIT.COM lines on the July 2026 Alterna Savings statement (Jun 27 – Jul 31 2026).",
+        status: "pending",
+      },
+      {
+        description: "Replit-related foreign transaction fees",
+        amount: REPLIT_FX_FEES_002,
+        note:
+          'PENDING — enter total of all "FOREIGN TRANSACTION FEE – MERCHANDISE" lines tied to the Replit charges on the July 2026 statement.',
+        status: "pending",
+      },
+    ],
+    subtotal: REPLIT_SUBTOTAL_002,
+  },
+  {
+    id: "other-digital-002",
+    title: "Other Digital Tooling & Domains",
+    subtitle: "GoDaddy, Runway ML, X Corp, and other clear digital development costs — Jun 27 – Jul 31 2026",
+    items: [
+      {
+        description: "GoDaddy domains",
+        amount: GODADDY_DOMAINS_002,
+        note: "PENDING — enter CAD total of GoDaddy domain-related charges from July 2026 Alterna statement.",
+        status: "pending",
+      },
+      {
+        description: "Runway ML — AI tooling",
+        amount: RUNWAY_ML_002,
+        note: "PENDING — enter CAD total of Runway ML charges from July 2026 Alterna statement.",
+        status: "pending",
+      },
+      {
+        description: "X Corp / about.x.com developer tools",
+        amount: X_CORP_DEV_002,
+        note: "PENDING — enter CAD total of X Corp developer charges from July 2026 Alterna statement.",
+        status: "pending",
+      },
+      {
+        description: "Other clear digital infrastructure / tooling",
+        amount: OTHER_DIGITAL_002,
+        note:
+          "PENDING — enter remaining digital charges after Square, Apple, and all physical/food items are removed from the July 2026 statement.",
+        status: "pending",
+      },
+    ],
+    subtotal: OTHER_DIGITAL_SUBTOTAL_002,
+  },
+];
+
 export const REPLIT_PRINCIPAL = 20_163.05;
 export const REPLIT_FX_FEES = 479.27;
 export const REPLIT_SUBTOTAL = REPLIT_PRINCIPAL + REPLIT_FX_FEES; // 20,642.32
@@ -268,9 +351,9 @@ export const solePropCleanupChecklist: ChecklistItem[] = [
   },
   {
     id: "jul-2026",
-    title: "Jul 2026 statement",
+    title: "Jul 2026 statement — Invoice REPLIT-DIGITAL-REIMB-2026-002",
     detail:
-      "Not yet available. When the Jul 2026 Alterna statement is in hand, apply the same method: pull all REPLIT.COM, GoDaddy, Runway, X Corp lines and total CAD charges. Issue a supplemental invoice or add as a second line group.",
+      "Invoice REPLIT-DIGITAL-REIMB-2026-002 created (period: Jun 27 – Jul 31 2026). Amounts are pending — open interEntityReimb2026.ts and replace the placeholder zeros with confirmed CAD totals from the final July 2026 Alterna Savings statement using the same extraction method as Invoice 001. Mark status fields 'confirmed' when each line is verified.",
     status: "pending",
   },
   {
