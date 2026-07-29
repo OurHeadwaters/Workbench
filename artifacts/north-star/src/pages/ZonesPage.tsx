@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "wouter";
-import { Plus, Pencil, Trash2, Archive, ArchiveRestore, ChevronUp, ChevronDown, GripVertical, Map, ListOrdered, Check, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Pencil, Trash2, Archive, ArchiveRestore, ChevronUp, ChevronDown, GripVertical, Map, ListOrdered, Check, ExternalLink, ChevronLeft, ChevronRight, Flag } from "lucide-react";
 import { useStore } from "@/store";
 import { ZoneBadge } from "@/components/ZoneBadge";
 import { ConstellationForm } from "@/components/ConstellationForm";
@@ -79,6 +79,65 @@ function ContractForm({
           style={{ backgroundColor: AMBER, color: BG }}
         >
           Save
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AttestMilestoneForm({
+  contractId,
+  onSave,
+  onCancel,
+}: {
+  contractId: string;
+  onSave: (description: string, attestedBy: string) => void;
+  onCancel: () => void;
+}) {
+  const [description, setDescription] = useState("");
+  const [attestedBy, setAttestedBy] = useState("");
+
+  function handleSave() {
+    if (!description.trim() || !attestedBy.trim()) return;
+    onSave(description.trim(), attestedBy.trim());
+  }
+
+  return (
+    <div
+      className="rounded-xl p-3 space-y-2 border mt-2"
+      style={{ backgroundColor: "rgba(59,89,152,0.08)", borderColor: "rgba(141,169,230,0.25)" }}
+    >
+      <p className="text-xs font-medium" style={{ color: "#8DA9E6" }}>Attest milestone</p>
+      <input
+        autoFocus
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Milestone description"
+        className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none"
+        style={{ backgroundColor: BG, borderColor: "rgba(141,169,230,0.3)", color: TEXT }}
+      />
+      <input
+        value={attestedBy}
+        onChange={(e) => setAttestedBy(e.target.value)}
+        placeholder="z3npub of attesting party"
+        className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none font-mono"
+        style={{ backgroundColor: BG, borderColor: "rgba(141,169,230,0.3)", color: TEXT }}
+      />
+      <div className="flex gap-2">
+        <button
+          onClick={onCancel}
+          className="flex-1 border rounded-lg py-2 text-xs min-h-[40px]"
+          style={{ borderColor: "rgba(141,169,230,0.3)", color: TEXT_2 }}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSave}
+          disabled={!description.trim() || !attestedBy.trim()}
+          className="flex-1 rounded-lg py-2 text-xs min-h-[40px] disabled:opacity-40"
+          style={{ backgroundColor: "#3B5998", color: "#fff" }}
+        >
+          Attest
         </button>
       </div>
     </div>
@@ -164,6 +223,7 @@ function ArrangeMode({ onExit }: { onExit: () => void }) {
 export function ZonesPage() {
   const constellations = useStore((s) => s.constellations);
   const contracts = useStore((s) => s.contracts);
+  const contractMilestones = useStore((s) => s.contractMilestones);
   const zoneRanking = useStore((s) => s.zoneRanking);
   const addConstellation = useStore((s) => s.addConstellation);
   const updateConstellation = useStore((s) => s.updateConstellation);
@@ -171,6 +231,7 @@ export function ZonesPage() {
   const addContract = useStore((s) => s.addContract);
   const updateContract = useStore((s) => s.updateContract);
   const removeContract = useStore((s) => s.removeContract);
+  const attestMilestone = useStore((s) => s.attestMilestone);
 
   const [arranging, setArranging] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -178,6 +239,7 @@ export function ZonesPage() {
   const [editingConst, setEditingConst] = useState<string | null>(null);
   const [addingContract, setAddingContract] = useState(false);
   const [editingContract, setEditingContract] = useState<string | null>(null);
+  const [attestingContract, setAttestingContract] = useState<string | null>(null);
   const [showParked, setShowParked] = useState(false);
 
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -359,37 +421,83 @@ export function ZonesPage() {
                   </div>
                 ))}
 
-                {zoneContracts.map((ct) => (
-                  <div key={ct.id}>
-                    {editingContract === ct.id ? (
-                      <ContractForm
-                        initial={ct}
-                        constellations={constellations}
-                        onSave={(data) => { updateContract(ct.id, data); setEditingContract(null); }}
-                        onCancel={() => setEditingContract(null)}
-                      />
-                    ) : (
-                      <div 
-                        className="flex rounded-2xl border overflow-hidden" 
-                        style={{ backgroundColor: "rgba(141, 169, 230, 0.05)", borderColor: "rgba(141, 169, 230, 0.15)" }}
-                      >
-                        <div className="w-1.5 self-stretch shrink-0 bg-[#3B5998]" />
-                        <div className="flex-1 min-w-0 p-3 flex items-center gap-2">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium" style={{ color: "#8DA9E6" }}>📋 {ct.name}</p>
-                            <p className="text-xs" style={{ color: "rgba(141, 169, 230, 0.6)" }}>{ct.weeklyHourTarget}h/week</p>
+                {zoneContracts.map((ct) => {
+                  const milestones = contractMilestones.filter((m) => m.contractId === ct.id);
+                  return (
+                    <div key={ct.id}>
+                      {editingContract === ct.id ? (
+                        <ContractForm
+                          initial={ct}
+                          constellations={constellations}
+                          onSave={(data) => { updateContract(ct.id, data); setEditingContract(null); }}
+                          onCancel={() => setEditingContract(null)}
+                        />
+                      ) : (
+                        <div
+                          className="rounded-2xl border overflow-hidden"
+                          style={{ backgroundColor: "rgba(141, 169, 230, 0.05)", borderColor: "rgba(141, 169, 230, 0.15)" }}
+                        >
+                          <div className="flex">
+                            <div className="w-1.5 self-stretch shrink-0 bg-[#3B5998]" />
+                            <div className="flex-1 min-w-0 p-3 flex items-center gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium" style={{ color: "#8DA9E6" }}>📋 {ct.name}</p>
+                                <p className="text-xs" style={{ color: "rgba(141, 169, 230, 0.6)" }}>{ct.weeklyHourTarget}h/week</p>
+                              </div>
+                              <button
+                                onClick={() => setAttestingContract(attestingContract === ct.id ? null : ct.id)}
+                                className="min-h-[44px] min-w-[44px] flex items-center justify-center"
+                                title="Attest milestone"
+                                style={{ color: attestingContract === ct.id ? "#8DA9E6" : "rgba(141,169,230,0.5)" }}
+                              >
+                                <Flag size={14} />
+                              </button>
+                              <button onClick={() => setEditingContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
+                                <Pencil size={14} className="text-[#8DA9E6]" />
+                              </button>
+                              <button onClick={() => removeContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
+                                <Trash2 size={14} className="text-[#8DA9E6]" />
+                              </button>
+                            </div>
                           </div>
-                          <button onClick={() => setEditingContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
-                            <Pencil size={14} className="text-[#8DA9E6]" />
-                          </button>
-                          <button onClick={() => removeContract(ct.id)} className="min-h-[44px] min-w-[44px] flex items-center justify-center">
-                            <Trash2 size={14} className="text-[#8DA9E6]" />
-                          </button>
+
+                          {/* Inline attest form */}
+                          {attestingContract === ct.id && (
+                            <div className="px-3 pb-3">
+                              <AttestMilestoneForm
+                                contractId={ct.id}
+                                onSave={(description, attestedBy) => {
+                                  attestMilestone({ contractId: ct.id, description, attestedBy });
+                                  setAttestingContract(null);
+                                }}
+                                onCancel={() => setAttestingContract(null)}
+                              />
+                            </div>
+                          )}
+
+                          {/* Past milestones */}
+                          {milestones.length > 0 && (
+                            <div className="px-3 pb-3 space-y-1">
+                              <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(141,169,230,0.5)" }}>Milestones</p>
+                              {milestones.map((m) => (
+                                <div
+                                  key={m.id}
+                                  className="rounded-lg px-2.5 py-2 text-xs space-y-0.5"
+                                  style={{ backgroundColor: "rgba(59,89,152,0.12)", border: "1px solid rgba(141,169,230,0.15)" }}
+                                >
+                                  <p style={{ color: "#8DA9E6" }}>{m.description}</p>
+                                  <p className="font-mono truncate" style={{ color: "rgba(141,169,230,0.5)" }}>
+                                    {m.attestedBy} · {new Date(m.attestedAt).toLocaleDateString()}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                      )}
+                    </div>
+                  );
+                })}
 
                 {/* Inline add forms (only render under the active zone) */}
                 {zone === currentZone && addingConst && (
