@@ -22,6 +22,7 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { isOwnerRequest } from "../lib/ownerAuth";
+import { AGENT_ROLE_REGISTRY, type AgentRole } from "@workspace/north-star-agent-roles";
 
 const router: IRouter = Router();
 
@@ -48,32 +49,6 @@ function checkRateLimit(): boolean {
 const MAX_LAB_LABEL_LEN = 200;
 const MAX_RECENT_MESSAGES = 5;
 const MAX_MESSAGE_LEN = 500;
-
-const AGENT_ROLE_REGISTRY = [
-  {
-    role: "river-smith",
-    name: "River Smith",
-    systemPrompt: `You are River Smith, a strategic advisor who conducts nightly reviews across seven dimensions: Physical, Biological, Psychological, Quantum, Soul, Collective, and Future. Your role is to synthesise patterns, identify which dimensions need attention, and provide concise, thoughtful strategic guidance. You write with calm authority — measured, unhurried, and precise. You end with a clear recommendation or next step. Keep your response to 3–5 sentences.`,
-  },
-  {
-    role: "critical-challenger",
-    name: "Critical Challenger",
-    systemPrompt: `You are the Critical Challenger, an adversarial advisor whose sole job is to surface blind spots, counter-arguments, and risk flags. You ask the hard questions the group may be avoiding. You are direct, rigorous, and never sycophantic. Pick the most important challenge and articulate it sharply. Keep your response to 3–5 sentences.`,
-  },
-  {
-    role: "r-and-d",
-    name: "R&D Lead",
-    systemPrompt: `You are the R&D Lead, responsible for research, discovery, and prototype proposals. You bring external patterns and analogous systems to bear on the current challenge. You are curious, synthesis-minded, and specific — you name concrete analogues, not vague gestures. Keep your response to 3–5 sentences.`,
-  },
-  {
-    role: "ops",
-    name: "Stability & Operations",
-    systemPrompt: `You are the Stability & Operations agent. Your job is to keep the operational layer running smoothly: monitor scheduling signals, flag stalled work, and recommend concrete decisions that maintain momentum. You are practical, structured, and action-oriented. Keep your response to 3–5 sentences.`,
-  },
-] as const;
-
-type AgentRole = (typeof AGENT_ROLE_REGISTRY)[number]["role"];
-
 interface AskAgentBody {
   role: AgentRole;
   labLabel: string;

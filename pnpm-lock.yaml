@@ -217,6 +217,9 @@ importers:
       '@workspace/integrations-anthropic-ai':
         specifier: workspace:*
         version: link:../../lib/integrations-anthropic-ai
+      '@workspace/north-star-agent-roles':
+        specifier: workspace:*
+        version: link:../../lib/north-star-agent-roles
       '@workspace/odyssey':
         specifier: workspace:*
         version: link:../../lib/odyssey
@@ -1744,6 +1747,9 @@ importers:
       '@workspace/kitchen-table-client':
         specifier: workspace:*
         version: link:../../lib/kitchen-table-client
+      '@workspace/north-star-agent-roles':
+        specifier: workspace:*
+        version: link:../../lib/north-star-agent-roles
       '@workspace/odyssey':
         specifier: workspace:*
         version: link:../../lib/odyssey
@@ -2387,6 +2393,8 @@ importers:
       react:
         specifier: 'catalog:'
         version: 19.1.0
+
+  lib/north-star-agent-roles: {}
 
   lib/object-storage-web:
     dependencies:
