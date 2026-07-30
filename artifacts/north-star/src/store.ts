@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "./lib/uuid";
 import type { AppState, Store, Constellation, ZoneId, ContentBankItem, GmailAccount, WorkbenchPlan, ChannelMeta, HelpingHandsTask, TriggerDefinition, ImprovementProposal, RelayEventSummary } from "./types";
 import type { WorkbenchPlanBurstPayload, HelpingHandsCreatePayload, HelpingHandsClaimPayload, HelpingHandsCompletePayload, HelpingHandsConfirmPayload, ChannelOpenPayload, ChannelClosePayload, LabEventPayload } from "./lib/relay-event-types";
 import { format, startOfISOWeek, getISOWeek, getYear } from "date-fns";
-import { publishToRelay, RELAY_EVENT_KINDS, RELAY_STORAGE_KEY, getZ2Npub } from "./lib/relay-stub";
+import { publishToRelay, RELAY_EVENT_KINDS, RELAY_STORAGE_KEY, getZ2Npub, startRelayBufferDrainTimer } from "./lib/relay-stub";
 
 const ZONE_COLORS: Record<ZoneId, string> = {
   Z0: "45 60% 32%",
@@ -1033,6 +1033,14 @@ export const useStore = create<Store>()(
        */
       onRehydrateStorage: () => (_state, error) => {
         if (error || typeof window === "undefined") return;
+
+        // Start the background timer that periodically re-attempts delivery of
+        // non-LAB_EVENT entries (MORNING_MANIFEST, WORKBENCH_PLAN_BURST, etc.)
+        // that are sitting in the relay fallback buffer. Safe to call here
+        // because startRelayBufferDrainTimer is idempotent — a second call
+        // while the timer is already running is a no-op.
+        startRelayBufferDrainTimer();
+
         // Defer to the next event-loop tick so that the `const useStore`
         // binding is fully initialised before we call useStore.setState.
         // onRehydrateStorage fires synchronously during

@@ -190,6 +190,137 @@ export const AGENT_ROLE_REGISTRY = [
 
 export type AgentRoleEntry = (typeof AGENT_ROLE_REGISTRY)[number];
 
+const NON_LAB_EVENT_DRAIN_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+
+/** Module-level handle so startRelayBufferDrainTimer is idempotent. */
+let _drainTimerId: ReturnType<typeof setInterval> | null = null;
+
+/**
+ * Single-flight guard: prevents overlapping flush runs.
+ *
+ * sendViaApi calls are async (network round-trips), so a flush initiated by the
+ * 5-minute timer could still be in progress when the next tick fires. Allowing
+ * two runs to overlap would create a write-after-write race: both reads the
+ * same initial buffer snapshot and both writes a "remaining" subset, with the
+ * later write overwriting any successful removals from the earlier one.
+ */
+let _flushInProgress = false;
+
+/**
+ * flushNonLabEvents — attempts to deliver all non-LAB_EVENT entries in the
+ * relay fallback buffer to the API. Successfully delivered entries are removed
+ * from the buffer; entries that fail delivery are left for the next cycle.
+ *
+ * This complements the LAB_EVENT drain in onRehydrateStorage (store.ts): those
+ * events are reconciled into channel state on page load, while non-LAB_EVENT
+ * entries (MORNING_MANIFEST, WORKBENCH_PLAN_BURST, CHANNEL_OPEN, etc.) only
+ * need to reach the relay endpoint once and can then be discarded.
+ *
+ * Race safety: the function is single-flight (concurrent calls are dropped) and
+ * re-reads localStorage after all deliveries complete before writing back, so
+ * events appended to the buffer while deliveries were in flight are never lost.
+ *
+ * Called by the background timer installed by startRelayBufferDrainTimer, and
+ * exported for deterministic unit tests.
+ */
+export async function flushNonLabEvents(): Promise<void> {
+  if (typeof window === "undefined") return;
+  if (!RELAY_PUBLISH_URL) return;
+  const token = getOwnerToken();
+  if (!token) return;
+
+  // Drop concurrent invocations instead of running them in parallel.
+  if (_flushInProgress) return;
+  _flushInProgress = true;
+
+  try {
+    let snapshot: NostrEvent[] = [];
+    try {
+      snapshot = JSON.parse(
+        localStorage.getItem(RELAY_STORAGE_KEY) ?? "[]",
+      ) as NostrEvent[];
+    } catch {
+      return;
+    }
+
+    // LAB_EVENT kind is 1011 — defined later in this file as RELAY_EVENT_KINDS.LAB_EVENT.
+    // Using the literal here to avoid a forward-reference issue at module-init time.
+    const LAB_EVENT_KIND = 1011;
+
+    const nonLab = snapshot.filter((e) => (e.kind as number) !== LAB_EVENT_KIND);
+    if (nonLab.length === 0) return;
+
+    // Attempt delivery sequentially to avoid hammering the API.
+    // Track successfully delivered events by their JSON fingerprint — stable
+    // because these objects are never mutated after being read from storage.
+    const deliveredKeys = new Set<string>();
+    for (const ev of nonLab) {
+      const ok = await sendViaApi(ev);
+      if (ok) deliveredKeys.add(JSON.stringify(ev));
+    }
+
+    if (deliveredKeys.size === 0) return;
+
+    // Re-read the buffer now that deliveries are complete. New events may have
+    // been appended by publishToRelay → storeLocally while we were awaiting
+    // network responses above. Writing a stale "remaining" derived only from
+    // the original snapshot would silently drop those new entries.
+    let current: NostrEvent[] = [];
+    try {
+      current = JSON.parse(
+        localStorage.getItem(RELAY_STORAGE_KEY) ?? "[]",
+      ) as NostrEvent[];
+    } catch {
+      // Fall back to the snapshot if the re-read fails; we still remove
+      // successfully delivered events rather than keeping them indefinitely.
+      current = snapshot;
+    }
+
+    // Remove only the events we confirmed delivered, matched by fingerprint.
+    // Events appended after our snapshot was taken will not match any key in
+    // deliveredKeys and will be preserved.
+    const remaining = current.filter((e) => !deliveredKeys.has(JSON.stringify(e)));
+
+    if (remaining.length !== current.length) {
+      localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(remaining));
+    }
+  } finally {
+    _flushInProgress = false;
+  }
+}
+
+/**
+ * startRelayBufferDrainTimer — installs a periodic background timer that
+ * calls flushNonLabEvents every `intervalMs` milliseconds (default 5 min).
+ *
+ * Safe to call more than once — subsequent calls while a timer is already
+ * running are no-ops. Returns a cleanup function that clears the interval.
+ */
+export function startRelayBufferDrainTimer(
+  intervalMs: number = NON_LAB_EVENT_DRAIN_INTERVAL_MS,
+): () => void {
+  if (typeof window === "undefined") return () => {};
+  if (_drainTimerId !== null) {
+    return () => {
+      if (_drainTimerId !== null) {
+        clearInterval(_drainTimerId);
+        _drainTimerId = null;
+      }
+    };
+  }
+
+  _drainTimerId = setInterval(() => {
+    void flushNonLabEvents();
+  }, intervalMs);
+
+  return () => {
+    if (_drainTimerId !== null) {
+      clearInterval(_drainTimerId);
+      _drainTimerId = null;
+    }
+  };
+}
+
 export const RELAY_EVENT_KINDS = {
   MORNING_MANIFEST: 1000,
   BRIEFING_ENVELOPE: 1001,
