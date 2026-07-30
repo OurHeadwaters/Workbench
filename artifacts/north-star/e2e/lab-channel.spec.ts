@@ -634,6 +634,67 @@ test.describe("Lab channel", () => {
     await expect(page.getByRole("heading", { name: "Channels" })).toBeVisible({ timeout: 8_000 });
   });
 
+  // ── 13a. Guard priority: OnboardingGuard fires before LabPage's not-found ──
+  //
+  // Scenario: the password gate is unlocked but onboarding has never been
+  // completed (north-star:v1 not set, or onboarding.completed is false).
+  // The OnboardingGuard in App.tsx wraps /channels/lab/:id and redirects to
+  // /onboarding before LabPage's own not-found branch can run.
+  //
+  // This test documents the expected guard priority order so a future refactor
+  // that accidentally lets the LabPage not-found UI slip through (bypassing the
+  // onboarding redirect) will be caught immediately.
+  test("OnboardingGuard redirects to onboarding before LabPage not-found renders when onboarding is incomplete", async ({ page }) => {
+    // Seed ONLY the password-gate unlock key — no store state, no completed flag.
+    await page.addInitScript(() => {
+      localStorage.setItem("north-star:unlocked", "1");
+      // Deliberately omit north-star:v1 (onboarding.completed defaults to false).
+      localStorage.removeItem("north-star:v1");
+    });
+
+    // Navigate to an unknown lab ID.  Without completed onboarding the
+    // OnboardingGuard must redirect to /onboarding before LabPage renders.
+    await page.goto("channels/lab/this-id-does-not-exist");
+
+    // The app must redirect to the onboarding page, not show the not-found UI.
+    await expect(page).toHaveURL(/\/onboarding/, { timeout: 10_000 });
+
+    // The not-found message must NOT be visible — LabPage never rendered.
+    await expect(page.getByText("Lab channel not found.")).not.toBeVisible({ timeout: 3_000 });
+  });
+
+  // ── 13b. Full guard stack: not-found back button reachable through both guards ──
+  //
+  // Scenario: the password gate is unlocked AND onboarding is completed, but
+  // the lab ID in the URL does not exist in the local store.  Both the
+  // PasswordGate and the OnboardingGuard must pass through so that LabPage's
+  // own not-found branch can render.  The back affordance must be visible and
+  // functional.
+  //
+  // This is the positive counterpart to 13a — if either guard ever intercepts
+  // the render and hides the back button behind a redirect, this test will fail.
+  test("not-found back button is reachable through the full password-gate and onboarding-guard stack", async ({ page }) => {
+    // Seed unlock key + a minimal store with onboarding completed — bypass both guards.
+    await page.addInitScript((seed: string) => {
+      localStorage.setItem("north-star:unlocked", "1");
+      localStorage.setItem("north-star:v1", seed);
+    }, SEED_STORE);
+
+    await page.goto("channels/lab/guard-stack-unknown-id");
+
+    // LabPage's not-found branch must render (both guards passed through).
+    await expect(page.getByText("Lab channel not found.")).toBeVisible({ timeout: 10_000 });
+
+    // The back affordance must be present.
+    const backBtn = page.getByRole("button", { name: /back to channels/i });
+    await expect(backBtn).toBeVisible({ timeout: 5_000 });
+
+    // Clicking it must navigate to the channels list.
+    await backBtn.click();
+    await expect(page).toHaveURL(/\/channels$/, { timeout: 8_000 });
+    await expect(page.getByRole("heading", { name: "Channels" })).toBeVisible({ timeout: 8_000 });
+  });
+
   // ── 14. Double-archive guard ──────────────────────────────────────────────
   //
   // Scenario: the user clicks Archive on a lab, goes back to ChannelsPage,
