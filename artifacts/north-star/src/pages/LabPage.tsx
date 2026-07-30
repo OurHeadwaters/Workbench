@@ -94,6 +94,47 @@ function TypingBubble({ role }: { role: string }) {
   );
 }
 
+// ── StreamingBubble ────────────────────────────────────────────────────────
+// Shows partial agent text as it arrives over SSE, with a blinking cursor.
+
+function StreamingBubble({ role, text }: { role: string; text: string }) {
+  return (
+    <div data-testid="streaming-bubble" className="flex gap-2.5 flex-row">
+      {/* Avatar */}
+      <div
+        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+        style={{ backgroundColor: "rgba(100,180,120,0.15)" }}
+      >
+        <Bot size={14} style={{ color: "#7ecf8e" }} />
+      </div>
+
+      {/* Bubble */}
+      <div className="flex flex-col gap-1 max-w-[75%] items-start">
+        <span className="text-[10px] font-medium px-1" style={{ color: TEXT_2 }}>
+          {roleLabel(role)}
+        </span>
+        <div
+          className="rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed"
+          style={{
+            backgroundColor: "rgba(237,232,213,0.07)",
+            border: `1px solid ${BORDER}`,
+            color: TEXT,
+          }}
+        >
+          {text}
+          <span
+            className="inline-block w-[2px] h-[1em] ml-[1px] align-text-bottom rounded-sm"
+            style={{
+              backgroundColor: "#7ecf8e",
+              animation: "streaming-cursor 0.8s ease-in-out infinite",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── EventBubble ────────────────────────────────────────────────────────────
 
 function EventBubble({ ev }: { ev: RelayEventSummary }) {
@@ -197,6 +238,9 @@ export function LabPage() {
   const now = useNow(nowIntervalMs);
   const [reply, setReply] = useState("");
   const [askingRole, setAskingRole] = useState<string | null>(null);
+  // streamingText holds partial agent text while SSE tokens are arriving.
+  // Empty string = not yet streaming (typing dots shown); non-empty = live bubble.
+  const [streamingText, setStreamingText] = useState("");
   const feedRef = useRef<HTMLDivElement>(null);
   // In-flight guard: prevents a second submit before the first state update
   // re-renders the component (React batches setState, so reply still holds the
@@ -222,12 +266,12 @@ export function LabPage() {
     return map;
   }, [feed]);
 
-  // Scroll to bottom of feed when new events arrive or typing bubble appears
+  // Scroll to bottom when new events arrive, typing bubble appears, or stream text grows
   useEffect(() => {
     if (feedRef.current) {
       feedRef.current.scrollTop = feedRef.current.scrollHeight;
     }
-  }, [feed.length, askingRole]);
+  }, [feed.length, askingRole, streamingText]);
 
   function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -277,12 +321,31 @@ export function LabPage() {
     }
 
     setAskingRole(role);
+    setStreamingText("");
+
     // Capture recent messages (including the prompt just posted, if any)
     const recentMessages = [
       ...feed.slice(-5).map((ev) => ev.text),
       ...(prompt ? [prompt] : []),
     ];
     const label = channel?.label ?? "";
+
+    // Helper: commit whatever text we have to the feed, or fall back to stub.
+    function commitOrStub(accumulatedText: string) {
+      const expiredNow = channel?.expiresAt
+        ? new Date(channel.expiresAt).getTime() <= Date.now()
+        : false;
+      if (!!(channel?.archivedAt) || expiredNow) return;
+      const text =
+        accumulatedText.trim() ||
+        generateAgentStub(role, label, recentMessages, prompt || undefined);
+      postLabEvent(channelId, {
+        kind: 1011,
+        actor_type: "agent",
+        agent_role: role,
+        text,
+      });
+    }
 
     try {
       const ownerToken =
@@ -298,45 +361,68 @@ export function LabPage() {
         body: JSON.stringify({ role, labLabel: label, recentMessages, prompt: prompt || undefined }),
       });
 
-      // Re-check in case the lab expired or was archived while the AI was thinking.
-      const expiredNow = channel?.expiresAt
-        ? new Date(channel.expiresAt).getTime() <= Date.now()
-        : false;
-      if (!!(channel?.archivedAt) || expiredNow) {
-        setAskingRole(null);
+      // Non-streaming fallback: server not configured or rate-limited.
+      if (!res.ok) {
+        commitOrStub(generateAgentStub(role, label, recentMessages, prompt || undefined));
         return;
       }
 
-      let text: string;
-      if (res.ok) {
-        const data = (await res.json()) as { text?: string };
-        text = data.text?.trim() || generateAgentStub(role, label, recentMessages, prompt || undefined);
-      } else {
-        // API unavailable or AI not configured — fall back to stub silently.
-        text = generateAgentStub(role, label, recentMessages, prompt || undefined);
+      // Consume the SSE stream token by token.
+      const reader = res.body?.getReader();
+      if (!reader) {
+        commitOrStub(generateAgentStub(role, label, recentMessages, prompt || undefined));
+        return;
       }
 
-      postLabEvent(channelId, {
-        kind: 1011,
-        actor_type: "agent",
-        agent_role: role,
-        text,
-      });
+      const decoder = new TextDecoder();
+      let accumulated = "";
+      let buffer = "";
+      let done = false;
+
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+        if (value) buffer += decoder.decode(value, { stream: !readerDone });
+
+        // SSE lines are separated by \n\n
+        const parts = buffer.split("\n\n");
+        // Keep the last (possibly incomplete) part in the buffer
+        buffer = parts.pop() ?? "";
+
+        for (const part of parts) {
+          const line = part.trim();
+          if (!line.startsWith("data:")) continue;
+          const payload = line.slice(5).trim();
+
+          if (payload === "[DONE]") {
+            done = true;
+            break;
+          }
+
+          try {
+            const parsed = JSON.parse(payload) as { token?: string; error?: string };
+            if (parsed.error) {
+              // Server signalled a stream error — commit what we have.
+              done = true;
+              break;
+            }
+            if (typeof parsed.token === "string") {
+              accumulated += parsed.token;
+              setStreamingText(accumulated);
+            }
+          } catch {
+            // Malformed SSE line — skip it.
+          }
+        }
+      }
+
+      commitOrStub(accumulated);
     } catch {
       // Network error — fall back to stub so the feed always gets a response.
-      const expiredNow = channel?.expiresAt
-        ? new Date(channel.expiresAt).getTime() <= Date.now()
-        : false;
-      if (!(channel?.archivedAt) && !expiredNow) {
-        postLabEvent(channelId, {
-          kind: 1011,
-          actor_type: "agent",
-          agent_role: role,
-          text: generateAgentStub(role, label, recentMessages, prompt || undefined),
-        });
-      }
+      commitOrStub(generateAgentStub(role, label, recentMessages, prompt || undefined));
     } finally {
       setAskingRole(null);
+      setStreamingText("");
     }
   }
 
@@ -444,7 +530,11 @@ export function LabPage() {
           {feed.map((ev) => (
             <EventBubble key={ev.id} ev={ev} />
           ))}
-          {askingRole && <TypingBubble role={askingRole} />}
+          {askingRole && streamingText
+            ? <StreamingBubble role={askingRole} text={streamingText} />
+            : askingRole
+              ? <TypingBubble role={askingRole} />
+              : null}
         </div>
 
         {/* By-role breakdown (shown when there's content from multiple roles) */}

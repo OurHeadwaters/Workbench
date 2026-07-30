@@ -10,7 +10,11 @@
  *   password in the frontend; this endpoint is intentionally open so any
  *   lab participant can trigger an agent response.
  *
- *   Returns { text: string } on success.
+ *   Streams the response via SSE (text/event-stream).
+ *   Each token arrives as:  data: {"token":"..."}\n\n
+ *   Stream end is signalled: data: [DONE]\n\n
+ *   Errors are signalled:    data: {"error":"..."}\n\n  followed by stream close.
+ *
  *   Returns 503 when the AI integration is not configured (missing env vars)
  *   so the client can fall back to the local stub without showing an error.
  */
@@ -137,24 +141,38 @@ router.post("/lab/ask-agent", async (req: Request, res: Response) => {
   }
   const userContent = contextLines.join("\n");
 
+  // ── SSE headers ───────────────────────────────────────────────────────────
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no"); // disable nginx buffering if present
+  res.flushHeaders();
+
   try {
-    const message = await anthropic.messages.create({
+    const stream = await anthropic.messages.create({
       model: "claude-opus-4-5",
       max_tokens: 400,
       system: entry.systemPrompt,
       messages: [{ role: "user", content: userContent }],
+      stream: true,
     });
 
-    const text =
-      message.content
-        .filter((b) => b.type === "text")
-        .map((b) => (b as { type: "text"; text: string }).text)
-        .join("") || "";
+    for await (const event of stream) {
+      if (
+        event.type === "content_block_delta" &&
+        event.delta.type === "text_delta" &&
+        event.delta.text
+      ) {
+        res.write(`data: ${JSON.stringify({ token: event.delta.text })}\n\n`);
+      }
+    }
 
-    res.json({ text });
+    res.write("data: [DONE]\n\n");
+    res.end();
   } catch (err) {
-    console.error("[northStarLabAgent] AI call failed:", err);
-    res.status(503).json({ error: "AI call failed" });
+    console.error("[northStarLabAgent] AI stream failed:", err);
+    res.write(`data: ${JSON.stringify({ error: "AI call failed" })}\n\n`);
+    res.end();
   }
 });
 
