@@ -712,6 +712,12 @@ export const useStore = create<Store>()(
       },
 
       acceptProposal: async (id) => {
+        // Guard: a resolved proposal must not be toggled a second time.
+        const current = get().improvementProposals.find((p) => p.id === id);
+        if (current && current.status !== "proposed") {
+          return { ok: false as const, error: "Proposal is already resolved" };
+        }
+
         const token =
           (typeof window !== "undefined" &&
             (window.localStorage.getItem("library.ownerToken") ||
@@ -756,6 +762,12 @@ export const useStore = create<Store>()(
       },
 
       rejectProposal: async (id) => {
+        // Guard: a resolved proposal must not be toggled a second time.
+        const current = get().improvementProposals.find((p) => p.id === id);
+        if (current && current.status !== "proposed") {
+          return { ok: false as const, error: "Proposal is already resolved" };
+        }
+
         const token =
           (typeof window !== "undefined" &&
             (window.localStorage.getItem("library.ownerToken") ||

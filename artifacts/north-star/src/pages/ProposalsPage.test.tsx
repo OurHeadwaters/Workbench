@@ -180,3 +180,62 @@ describe("ProposalsPage — two-click confirm guard for Accept", () => {
     expect(screen.getByRole("button", { name: /^accept$/i })).toBeInTheDocument();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Already-resolved guard — real store logic
+// ---------------------------------------------------------------------------
+
+describe("acceptProposal — already-resolved guard", () => {
+  const REJECTED_ID = "prop-already-rejected";
+
+  let fetchSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    fetchSpy = vi.spyOn(globalThis, "fetch");
+  });
+
+  afterEach(() => {
+    fetchSpy.mockRestore();
+  });
+
+  it("returns { ok: false } without a network call when the proposal is already rejected", async () => {
+    // Import the real store module, bypassing the vi.mock at the top of this file.
+    const { useStore } = await vi.importActual<typeof import("@/store")>("@/store");
+
+    // Seed a rejected proposal directly into the store.
+    useStore.setState((s) => ({
+      improvementProposals: [
+        {
+          id: REJECTED_ID,
+          agent_role: "river-smith",
+          title: "Already rejected proposal",
+          description: "This was rejected before.",
+          affected_surface: "Morning Manifest",
+          status: "rejected" as const,
+          created_at: new Date().toISOString(),
+          resolved_at: new Date().toISOString(),
+        },
+        ...s.improvementProposals,
+      ],
+    }));
+
+    // Call acceptProposal on the already-rejected proposal.
+    const result = await useStore.getState().acceptProposal(REJECTED_ID);
+
+    // The guard must return { ok: false } — no server round-trip.
+    expect(result.ok).toBe(false);
+    expect((result as { ok: false; error: string }).error).toMatch(/already resolved/i);
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    // The proposal status must still be 'rejected', not 'accepted'.
+    const proposal = useStore
+      .getState()
+      .improvementProposals.find((p) => p.id === REJECTED_ID);
+    expect(proposal?.status).toBe("rejected");
+
+    // Cleanup — remove the seeded proposal so it doesn't bleed into other tests.
+    useStore.setState((s) => ({
+      improvementProposals: s.improvementProposals.filter((p) => p.id !== REJECTED_ID),
+    }));
+  });
+});
