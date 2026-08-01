@@ -303,6 +303,9 @@ export function HelpingHandsPage() {
           </button>
           {archivedOpen && (
             <div className="space-y-3 opacity-60">
+              <p className="text-[11px] pb-1" style={{ color: TEXT_2 }}>
+                Stored on this device only — clearing the board won't erase completed history, but wiping your browser storage will.
+              </p>
               {archived.map((task) => (
                 <TaskRow key={task.id} task={task} />
               ))}

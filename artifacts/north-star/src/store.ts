@@ -472,7 +472,15 @@ export const useStore = create<Store>()(
         }
       },
 
-      resetAll: () => set({ ...INITIAL_STATE, installedAt: new Date().toISOString() }),
+      resetAll: () => {
+        // Preserve archived Helping Hands tasks so completed history survives a board reset.
+        const archivedTasks = get().helpingHandsTasks.filter((t) => !!t.archivedAt);
+        set({
+          ...INITIAL_STATE,
+          installedAt: new Date().toISOString(),
+          helpingHandsTasks: archivedTasks,
+        });
+      },
 
       setLastBackedUp: () => set({ lastBackedUpAt: new Date().toISOString() }),
 
