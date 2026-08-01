@@ -918,3 +918,74 @@ describe("drainRelayQueue — no-op when no publish URL is provided", () => {
     expect(remaining).toHaveLength(1);
   });
 });
+
+// ---------------------------------------------------------------------------
+// storeLocally — localStorage.setItem throws QuotaExceededError
+//
+// If localStorage is full or blocked, setItem throws. storeLocally must catch
+// the error, log a console.warn, and NOT re-throw so the caller is unaffected.
+// ---------------------------------------------------------------------------
+
+describe("storeLocally — survives QuotaExceededError on localStorage.setItem", () => {
+  let warnSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    localStorage.clear();
+    warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+    vi.restoreAllMocks();
+  });
+
+  it("does not throw when localStorage.setItem raises QuotaExceededError", async () => {
+    // Simulate a full storage by making setItem always throw.
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new DOMException("QuotaExceededError", "QuotaExceededError");
+    });
+
+    // realPublishToRelay goes straight to storeLocally (no VITE_RELAY_PUBLISH_URL set).
+    await expect(
+      realPublishToRelay({
+        kind: ACTUAL_KINDS.HELPING_HANDS_CREATE,
+        payload: {
+          zone: "Z3",
+          actor_type: "human",
+          task_id: "quota-test-1",
+          title: "Test task",
+          posted_at: new Date().toISOString(),
+        },
+        z2npub: "z2:local",
+        timestamp: new Date().toISOString(),
+        signature: "stub",
+      })
+    ).resolves.toBeUndefined();
+  });
+
+  it("logs a console.warn when localStorage.setItem raises QuotaExceededError", async () => {
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new DOMException("QuotaExceededError", "QuotaExceededError");
+    });
+
+    await realPublishToRelay({
+      kind: ACTUAL_KINDS.CHANNEL_OPEN,
+      payload: {
+        zone: "Z2",
+        actor_type: "agent",
+        label: "Quota warning test",
+        category: "workbench",
+        channel_id: "ch-quota-1",
+        opened_at: new Date().toISOString(),
+      },
+      z2npub: "z2:local",
+      timestamp: new Date().toISOString(),
+      signature: "stub",
+    });
+
+    expect(warnSpy).toHaveBeenCalledOnce();
+    const [msg] = warnSpy.mock.calls[0] as [string, ...unknown[]];
+    expect(msg).toMatch(/storeLocally/);
+    expect(msg).toMatch(/localStorage/);
+  });
+});

@@ -139,7 +139,14 @@ function storeLocally(event: NostrEvent): void {
     stored = stored.slice(stored.length - MAX_STORED_EVENTS);
   }
 
-  localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(stored));
+  try {
+    localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(stored));
+  } catch (err) {
+    console.warn(
+      "[relay-stub] storeLocally: could not write to localStorage (storage may be full or unavailable).",
+      err,
+    );
+  }
 }
 
 export async function publishToRelay(
