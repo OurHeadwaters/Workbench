@@ -36,6 +36,13 @@ import {
   type CorpAccountFlowItem,
 } from "@/data/interEntityReimb2026";
 import {
+  loadOverrides,
+  saveOverride,
+  clearOverride,
+  type TrackerOverrides,
+} from "@/lib/trackerStore";
+import { SignedIn } from "@/lib/clerkGates";
+import {
   Table,
   TableBody,
   TableCell,
@@ -64,6 +71,9 @@ import {
   Loader2,
   AlertCircle,
   ExternalLink,
+  X,
+  CalendarCheck,
+  Undo2,
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -171,10 +181,47 @@ function ExecStatusBadge({ status }: { status: ExecStatus }) {
 }
 
 function ExecutionTracker() {
-  const totalSteps = executionTracker.flatMap((p) => p.steps).length;
-  const doneSteps = executionTracker.flatMap((p) => p.steps).filter((s) => s.status === "done").length;
-  const inProgressSteps = executionTracker.flatMap((p) => p.steps).filter((s) => s.status === "in-progress").length;
+  const [overrides, setOverrides] = useState<TrackerOverrides>(() => loadOverrides());
+  // Which step has its "Mark done" form open
+  const [openForms, setOpenForms] = useState<Record<string, boolean>>({});
+  // Pending date input values per step
+  const [dateInputs, setDateInputs] = useState<Record<string, string>>({});
+
+  // Merge data-file steps with localStorage overrides
+  const phases = executionTracker.map((phase) => ({
+    ...phase,
+    steps: phase.steps.map((step) => {
+      const ov = overrides[step.id];
+      return ov ? { ...step, status: ov.status, date: ov.date ?? step.date } : step;
+    }),
+  }));
+
+  const allSteps = phases.flatMap((p) => p.steps);
+  const totalSteps = allSteps.length;
+  const doneSteps = allSteps.filter((s) => s.status === "done").length;
+  const inProgressSteps = allSteps.filter((s) => s.status === "in-progress").length;
   const pct = Math.round((doneSteps / totalSteps) * 100);
+
+  function toggleForm(stepId: string) {
+    setOpenForms((f) => ({ ...f, [stepId]: !f[stepId] }));
+    // Pre-fill today's date if not yet set
+    setDateInputs((d) => ({
+      ...d,
+      [stepId]: d[stepId] ?? new Date().toISOString().slice(0, 10),
+    }));
+  }
+
+  function handleMarkDone(stepId: string) {
+    const date = dateInputs[stepId] || new Date().toISOString().slice(0, 10);
+    const next = saveOverride(stepId, { status: "done", date });
+    setOverrides(next);
+    setOpenForms((f) => ({ ...f, [stepId]: false }));
+  }
+
+  function handleUndo(stepId: string) {
+    const next = clearOverride(stepId);
+    setOverrides(next);
+  }
 
   return (
     <Card className="print:shadow-none border-primary/20">
@@ -197,14 +244,14 @@ function ExecutionTracker() {
         {/* Progress bar */}
         <div className="mt-3 h-2 w-full rounded-full bg-muted overflow-hidden">
           <div
-            className="h-full rounded-full bg-primary transition-all"
+            className="h-full rounded-full bg-primary transition-all duration-500"
             style={{ width: `${pct}%` }}
           />
         </div>
       </CardHeader>
 
       <CardContent className="pt-5 space-y-6">
-        {executionTracker.map((phase) => {
+        {phases.map((phase) => {
           const phaseDone = phase.steps.filter((s) => s.status === "done").length;
           return (
             <div key={phase.id}>
@@ -221,40 +268,111 @@ function ExecutionTracker() {
 
               {/* Steps */}
               <div className="space-y-2 pl-1">
-                {phase.steps.map((step, i) => {
+                {phase.steps.map((step) => {
                   const cfg = EXEC_STATUS_CONFIG[step.status];
                   const Icon = cfg.icon;
+                  const isDone = step.status === "done";
+                  const hasOverride = Boolean(overrides[step.id]);
+                  const formOpen = Boolean(openForms[step.id]);
+
                   return (
                     <div
                       key={step.id}
-                      className={`flex items-start gap-3 rounded-lg border px-3 py-3 ${cfg.rowClass}`}
+                      className={`rounded-lg border px-3 py-3 ${cfg.rowClass}`}
                     >
-                      {/* Step number / icon */}
-                      <div className="flex flex-col items-center gap-0.5 shrink-0 mt-0.5">
-                        <Icon
-                          className={`h-4 w-4 ${cfg.iconClass} ${step.status === "in-progress" ? "animate-spin" : ""}`}
-                        />
+                      <div className="flex items-start gap-3">
+                        {/* Status icon */}
+                        <div className="shrink-0 mt-0.5">
+                          <Icon
+                            className={`h-4 w-4 ${cfg.iconClass} ${step.status === "in-progress" ? "animate-spin" : ""}`}
+                          />
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                            <p className={`text-sm font-medium leading-tight ${isDone ? "line-through text-muted-foreground" : "text-foreground"}`}>
+                              {step.label}
+                            </p>
+                            <ExecStatusBadge status={step.status} />
+                            {step.amount !== undefined && (
+                              <span className="text-[10px] font-mono text-muted-foreground">
+                                {step.amountNote ?? ""}{fmt(step.amount)}
+                              </span>
+                            )}
+                            {step.date && (
+                              <span className="text-[10px] font-mono text-emerald-700 flex items-center gap-0.5">
+                                <CalendarCheck className="h-2.5 w-2.5" />
+                                {new Date(step.date + "T00:00:00").toLocaleDateString("en-CA", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{step.detail}</p>
+                        </div>
+
+                        {/* Inline controls — visible only to signed-in users, hidden in print */}
+                        <SignedIn>
+                          <div className="shrink-0 flex items-center gap-1.5 print:hidden">
+                            {!isDone && (
+                              <button
+                                onClick={() => toggleForm(step.id)}
+                                className="text-[11px] font-medium text-primary hover:text-primary/80 border border-primary/30 hover:border-primary/60 rounded px-2 py-0.5 transition-colors whitespace-nowrap"
+                                aria-expanded={formOpen}
+                              >
+                                {formOpen ? "Cancel" : "Mark done"}
+                              </button>
+                            )}
+                            {isDone && hasOverride && (
+                              <button
+                                onClick={() => handleUndo(step.id)}
+                                className="text-[11px] font-medium text-muted-foreground hover:text-foreground border border-border hover:border-border/80 rounded px-2 py-0.5 transition-colors flex items-center gap-1 whitespace-nowrap"
+                                title="Revert to original status"
+                              >
+                                <Undo2 className="h-3 w-3" />
+                                Undo
+                              </button>
+                            )}
+                          </div>
+                        </SignedIn>
                       </div>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-2 mb-0.5">
-                          <p className={`text-sm font-medium leading-tight ${step.status === "done" ? "line-through text-muted-foreground" : "text-foreground"}`}>
-                            {step.label}
-                          </p>
-                          <ExecStatusBadge status={step.status} />
-                          {step.amount !== undefined && (
-                            <span className="text-[10px] font-mono text-muted-foreground">
-                              {step.amountNote ?? ""}{fmt(step.amount)}
-                            </span>
-                          )}
-                          {step.date && (
-                            <span className="text-[10px] font-mono text-emerald-700">
-                              {new Date(step.date + "T00:00:00").toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" })}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{step.detail}</p>
-                      </div>
+                      {/* "Mark done" inline form */}
+                      <SignedIn>
+                        {formOpen && !isDone && (
+                          <div className="mt-2 ml-7 flex items-center gap-2 print:hidden">
+                            <label className="text-[11px] text-muted-foreground whitespace-nowrap">
+                              Completion date
+                            </label>
+                            <input
+                              type="date"
+                              value={dateInputs[step.id] ?? ""}
+                              onChange={(e) =>
+                                setDateInputs((d) => ({ ...d, [step.id]: e.target.value }))
+                              }
+                              className="text-xs border border-border rounded px-2 py-0.5 bg-background focus:outline-none focus:ring-1 focus:ring-primary font-mono"
+                              max={new Date().toISOString().slice(0, 10)}
+                            />
+                            <button
+                              onClick={() => handleMarkDone(step.id)}
+                              disabled={!dateInputs[step.id]}
+                              className="text-[11px] font-semibold bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded px-2.5 py-0.5 transition-colors flex items-center gap-1 whitespace-nowrap"
+                            >
+                              <CheckCircle2 className="h-3 w-3" />
+                              Confirm
+                            </button>
+                            <button
+                              onClick={() => setOpenForms((f) => ({ ...f, [step.id]: false }))}
+                              className="text-muted-foreground hover:text-foreground transition-colors"
+                              aria-label="Cancel"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        )}
+                      </SignedIn>
                     </div>
                   );
                 })}
@@ -263,10 +381,9 @@ function ExecutionTracker() {
           );
         })}
 
-        <p className="text-[10px] text-muted-foreground italic border-t border-border pt-3">
-          To update a step: edit the <code className="font-mono">status</code> field in{" "}
-          <code className="font-mono">interEntityReimb2026.ts → executionTracker</code> and set{" "}
-          <code className="font-mono">date</code> when completed.
+        <p className="text-[10px] text-muted-foreground italic border-t border-border pt-3 print:hidden">
+          Sign in to mark steps complete with a date. Progress is saved in your browser and
+          persists between sessions.
         </p>
       </CardContent>
     </Card>
