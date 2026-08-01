@@ -1132,8 +1132,22 @@ export const useStore = create<Store>()(
             if (remaining.length !== stored.length) {
               localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(remaining));
             }
-          } catch {
+          } catch (err) {
             // Never crash on reconciliation — it is strictly additive.
+            // Log enough context so operators can diagnose what went wrong.
+            const bufferedCount = (() => {
+              try {
+                const raw = localStorage.getItem(RELAY_STORAGE_KEY);
+                return raw ? (JSON.parse(raw) as unknown[]).length : 0;
+              } catch {
+                return "unknown";
+              }
+            })();
+            console.warn(
+              "[north-star] onRehydrateStorage reconciliation failed — " +
+                `buffered relay events: ${bufferedCount}, error: ${err instanceof Error ? err.message : String(err)}`,
+              err,
+            );
           }
         }, 0);
       },
