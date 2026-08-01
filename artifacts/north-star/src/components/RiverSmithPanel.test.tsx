@@ -207,6 +207,60 @@ describe("RiverSmithPanel — proof card durability", () => {
     expect(generatePostCount).toBe(1);
   });
 
+  it("Generate button is disabled with a loading label while the request is in-flight, then re-enables after resolve", async () => {
+    localStorage.setItem("ownerToken", "test-owner-token");
+
+    let resolveGenerate!: () => void;
+    const generatePending = new Promise<void>((res) => {
+      resolveGenerate = res;
+    });
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string, init?: RequestInit) => {
+        if ((url as string).includes("/briefing/latest")) {
+          return makeResponse(404, { error: "not found" });
+        }
+        if ((url as string).includes("/generate")) {
+          void init; // suppress unused-var lint
+          await generatePending;
+          return makeResponse(200, generateBody());
+        }
+        return makeResponse(404, {});
+      }),
+    );
+
+    render(<RiverSmithPanel embedded />);
+
+    // Wait for the panel to settle after the initial fetchLatest
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /Generate now/i })).toBeInTheDocument();
+    });
+
+    const btn = screen.getByRole("button", { name: /Generate now/i });
+
+    // Button should be enabled before clicking
+    expect(btn).not.toBeDisabled();
+
+    fireEvent.click(btn);
+
+    // While the response is still pending the same button element must be
+    // disabled and show the loading text (accessible via the span content)
+    await waitFor(() => {
+      expect(btn).toBeDisabled();
+      expect(btn).toHaveTextContent(/Reading the river/i);
+    });
+
+    // Release the server response
+    resolveGenerate();
+
+    // After resolution the button should be re-enabled with its normal label
+    await waitFor(() => {
+      expect(btn).not.toBeDisabled();
+      expect(btn).toHaveTextContent(/Generate now/i);
+    });
+  });
+
   it("proof card changed_fields includes safety_flags_count when count differs from previous briefing", async () => {
     localStorage.setItem("ownerToken", "test-owner-token");
 
