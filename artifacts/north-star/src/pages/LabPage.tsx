@@ -574,7 +574,8 @@ export function LabPage() {
                     key={role}
                     onClick={() => handleAskAgent(role)}
                     disabled={isDisabled}
-                    aria-label={`Ask ${label}`}
+                    aria-label={isThinking ? `${label} thinking…` : `Ask ${label}`}
+                    aria-busy={isThinking}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-opacity"
                     style={{
                       backgroundColor: "rgba(100,180,120,0.12)",
