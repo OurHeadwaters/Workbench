@@ -94,14 +94,17 @@ function getOwnerToken(): string | null {
   );
 }
 
-async function sendViaApi(event: NostrEvent): Promise<boolean> {
-  if (!RELAY_PUBLISH_URL) return false;
+async function sendViaApi(
+  event: NostrEvent,
+  publishUrl: string = RELAY_PUBLISH_URL ?? "",
+): Promise<boolean> {
+  if (!publishUrl) return false;
 
   const token = getOwnerToken();
   if (!token) return false;
 
   try {
-    const res = await fetch(RELAY_PUBLISH_URL, {
+    const res = await fetch(publishUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -249,6 +252,114 @@ export async function flushNonLabEvents(): Promise<void> {
   } finally {
     _flushInProgress = false;
   }
+}
+
+/**
+ * drainRelayQueue — attempts to deliver every event in the ns:relay:events
+ * fallback buffer to the API, removing entries that are successfully delivered.
+ *
+ * Unlike flushNonLabEvents (which handles only non-LAB_EVENT entries on a
+ * periodic timer), this processes the entire queue and is designed to be
+ * called when connectivity is restored (window 'online' event) or on
+ * app load.
+ *
+ * Race safety: re-reads localStorage after all deliveries complete before
+ * writing back, so events appended by publishToRelay during the async loop
+ * are never silently dropped.
+ *
+ * No-ops when:
+ *   - VITE_RELAY_PUBLISH_URL is not configured
+ *   - no owner token is present in localStorage
+ *   - the queue is empty
+ */
+/**
+ * @param _publishUrl  Override the API endpoint URL. Defaults to
+ *   VITE_RELAY_PUBLISH_URL. Exposed so unit tests can inject a value without
+ *   needing a module reset (VITE_* env vars are inlined at transform time and
+ *   cannot be changed by vi.stubEnv after the module is loaded).
+ */
+export async function drainRelayQueue(
+  _publishUrl: string | undefined = RELAY_PUBLISH_URL,
+): Promise<void> {
+  if (typeof window === "undefined") return;
+  if (!_publishUrl) return;
+  const token = getOwnerToken();
+  if (!token) return;
+
+  let snapshot: NostrEvent[] = [];
+  try {
+    snapshot = JSON.parse(
+      localStorage.getItem(RELAY_STORAGE_KEY) ?? "[]",
+    ) as NostrEvent[];
+  } catch {
+    return;
+  }
+
+  if (snapshot.length === 0) return;
+
+  // Attempt delivery sequentially; collect fingerprints of delivered events.
+  const deliveredKeys = new Set<string>();
+  for (const ev of snapshot) {
+    const ok = await sendViaApi(ev, _publishUrl);
+    if (ok) deliveredKeys.add(JSON.stringify(ev));
+  }
+
+  if (deliveredKeys.size === 0) return;
+
+  // Re-read the buffer now that deliveries are complete so that events
+  // appended during the async loop are not silently dropped.
+  let current: NostrEvent[] = [];
+  try {
+    current = JSON.parse(
+      localStorage.getItem(RELAY_STORAGE_KEY) ?? "[]",
+    ) as NostrEvent[];
+  } catch {
+    current = snapshot;
+  }
+
+  const remaining = current.filter(
+    (e) => !deliveredKeys.has(JSON.stringify(e)),
+  );
+  if (remaining.length !== current.length) {
+    localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(remaining));
+  }
+}
+
+/** Module-level guard so registerRelayOnlineDrain is idempotent. */
+let _onlineDrainRegistered = false;
+
+/**
+ * registerRelayOnlineDrain — registers drainRelayQueue to run whenever
+ * the browser fires the window 'online' event (connectivity restored), and
+ * fires it once immediately as an app-load drain.
+ *
+ * Safe to call more than once — duplicate calls while a listener is already
+ * registered are no-ops. Only active when VITE_RELAY_PUBLISH_URL is set.
+ *
+ * Returns a cleanup function that removes the listener and resets the guard
+ * (useful in tests and component teardown).
+ */
+export function registerRelayOnlineDrain(): () => void {
+  if (typeof window === "undefined") return () => {};
+  if (!RELAY_PUBLISH_URL) return () => {};
+  if (_onlineDrainRegistered) {
+    return () => {};
+  }
+
+  _onlineDrainRegistered = true;
+
+  const handler = () => {
+    void drainRelayQueue(RELAY_PUBLISH_URL);
+  };
+  window.addEventListener("online", handler);
+
+  // App-load drain: attempt delivery of anything queued while offline.
+  void drainRelayQueue(RELAY_PUBLISH_URL);
+
+  return () => {
+    window.removeEventListener("online", handler);
+    _onlineDrainRegistered = false;
+  };
 }
 
 /**

@@ -24,9 +24,10 @@ vi.mock("./lib/relay-stub", async (importOriginal) => {
 // Use a dynamic import to ensure module resolution order is respected.
 const { useStore } = await import("./store");
 
-// Import the REAL publishToRelay (bypasses the vi.mock above) for fallback tests.
+// Import the REAL implementations (bypasses the vi.mock above) for fallback and drain tests.
 const {
   publishToRelay: realPublishToRelay,
+  drainRelayQueue: realDrainRelayQueue,
   RELAY_STORAGE_KEY,
   RELAY_EVENT_KINDS: ACTUAL_KINDS,
 } = await vi.importActual<typeof relayStub>("./lib/relay-stub");
@@ -708,5 +709,212 @@ describe("publishToRelay — does NOT write to localStorage when API call succee
 
     const stored = localStorage.getItem(freshRelay.RELAY_STORAGE_KEY);
     expect(stored).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// drainRelayQueue — re-sends queued events when connectivity is restored
+//
+// drainRelayQueue reads VITE_RELAY_PUBLISH_URL at call time (not at module
+// init), so vi.stubEnv is sufficient — no module reset required.
+// realDrainRelayQueue is the actual implementation imported via importActual
+// at the top of this file.
+// ---------------------------------------------------------------------------
+
+// The test URL is passed directly as the optional first argument to
+// drainRelayQueue, bypassing the VITE_* env var that is inlined at transform
+// time and cannot be overridden by vi.stubEnv after module load.
+const TEST_PUBLISH_URL = "http://localhost/api/north-star/relay/publish";
+
+describe("drainRelayQueue — empties the queue on API success", () => {
+  const NOW = new Date().toISOString();
+
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem("ownerToken", "test-owner-token");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: true } as Response),
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("removes all queued events when every API call succeeds", async () => {
+    const seed = [
+      {
+        kind: ACTUAL_KINDS.MORNING_MANIFEST,
+        payload: { date: "2026-07-31" },
+        z2npub: "z2:local",
+        timestamp: NOW,
+        signature: "stub",
+      },
+      {
+        kind: ACTUAL_KINDS.HELPING_HANDS_CREATE,
+        payload: {
+          zone: "Z3",
+          actor_type: "human",
+          task_id: "hh-drain-1",
+          title: "Drain test task",
+          posted_at: NOW,
+        },
+        z2npub: "z2:local",
+        timestamp: NOW,
+        signature: "stub",
+      },
+    ];
+    localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(seed));
+
+    await realDrainRelayQueue(TEST_PUBLISH_URL);
+
+    const remaining = JSON.parse(
+      localStorage.getItem(RELAY_STORAGE_KEY) ?? "[]",
+    ) as unknown[];
+    expect(remaining).toHaveLength(0);
+  });
+
+  it("calls the API once per queued event", async () => {
+    const seed = [
+      {
+        kind: ACTUAL_KINDS.GATE_CROSSING,
+        payload: { crossing: "Z1→Z2", crossed_at: NOW },
+        z2npub: "z2:local",
+        timestamp: NOW,
+        signature: "stub",
+      },
+      {
+        kind: ACTUAL_KINDS.CHANNEL_OPEN,
+        payload: {
+          zone: "Z2",
+          actor_type: "agent",
+          channel_id: "ch-drain-test",
+          label: "Drain channel",
+          category: "workbench",
+          opened_at: NOW,
+        },
+        z2npub: "z2:local",
+        timestamp: NOW,
+        signature: "stub",
+      },
+    ];
+    localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(seed));
+
+    await realDrainRelayQueue(TEST_PUBLISH_URL);
+
+    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("drainRelayQueue — leaves queue intact on API failure", () => {
+  const NOW = new Date().toISOString();
+
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem("ownerToken", "test-owner-token");
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("keeps all queued events when every API call fails (503)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 503 } as Response),
+    );
+
+    const seed = [
+      {
+        kind: ACTUAL_KINDS.MORNING_MANIFEST,
+        payload: { date: "2026-07-31" },
+        z2npub: "z2:local",
+        timestamp: NOW,
+        signature: "stub",
+      },
+      {
+        kind: ACTUAL_KINDS.WORKBENCH_PLAN_BURST,
+        payload: {
+          zone: "Z2",
+          actor_type: "human",
+          phase: "Phase 1",
+          burst_minutes: 30,
+          windows: "9–10 am",
+          started_at: NOW,
+        },
+        z2npub: "z2:local",
+        timestamp: NOW,
+        signature: "stub",
+      },
+    ];
+    localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(seed));
+
+    await realDrainRelayQueue(TEST_PUBLISH_URL);
+
+    const remaining = JSON.parse(
+      localStorage.getItem(RELAY_STORAGE_KEY) ?? "[]",
+    ) as unknown[];
+    expect(remaining).toHaveLength(2);
+  });
+
+  it("keeps queued events when fetch throws a network error", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockRejectedValue(new Error("Network offline")),
+    );
+
+    const seed = [
+      {
+        kind: ACTUAL_KINDS.HELPING_HANDS_CLAIM,
+        payload: {
+          zone: "Z3",
+          actor_type: "human",
+          task_id: "hh-net-err",
+          claimed_at: NOW,
+        },
+        z2npub: "z2:local",
+        timestamp: NOW,
+        signature: "stub",
+      },
+    ];
+    localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(seed));
+
+    await realDrainRelayQueue(TEST_PUBLISH_URL);
+
+    const remaining = JSON.parse(
+      localStorage.getItem(RELAY_STORAGE_KEY) ?? "[]",
+    ) as unknown[];
+    expect(remaining).toHaveLength(1);
+  });
+});
+
+describe("drainRelayQueue — no-op when no publish URL is provided", () => {
+  const NOW = new Date().toISOString();
+
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem("ownerToken", "test-owner-token");
+  });
+
+  it("leaves the queue untouched when called with no URL (undefined)", async () => {
+    const seed = [
+      {
+        kind: ACTUAL_KINDS.MORNING_MANIFEST,
+        payload: { date: "2026-07-31" },
+        z2npub: "z2:local",
+        timestamp: NOW,
+        signature: "stub",
+      },
+    ];
+    localStorage.setItem(RELAY_STORAGE_KEY, JSON.stringify(seed));
+
+    // Call with explicit undefined to simulate the no-URL-configured path.
+    await realDrainRelayQueue(undefined);
+
+    const remaining = JSON.parse(
+      localStorage.getItem(RELAY_STORAGE_KEY) ?? "[]",
+    ) as unknown[];
+    expect(remaining).toHaveLength(1);
   });
 });
