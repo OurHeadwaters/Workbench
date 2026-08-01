@@ -22,6 +22,7 @@ import {
   Award,
   Star,
   Receipt,
+  StickyNote,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -72,6 +73,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/pnl", label: "Reports", icon: TrendingUp, roles: ["owner", "bookkeeper"] },
     { href: "/reconciliation", label: "Reconciliation", icon: GitMerge, roles: ["owner", "bookkeeper"] },
     { href: "/accountant-handoff", label: "Accountant Handoff", icon: FileText, roles: ["owner", "bookkeeper"] },
+    { href: "/ye-notes", label: "YE Notes to Accountant", icon: StickyNote, roles: ["owner", "bookkeeper"] },
     { href: "/inter-entity-reimbursement", label: "2026 Reimbursement", icon: Receipt, roles: ["owner", "bookkeeper"] },
     { href: "/helping-hands", label: "Helping Hands", icon: HandHelping, roles: ["owner", "ops_manager", "bookkeeper", "food_handler"], section: "hr" },
     { href: "/helping-hands/tasks", label: "Tasks", icon: ListTodo, roles: ["owner", "ops_manager", "bookkeeper", "food_handler"], section: "hr" },

@@ -27,6 +27,7 @@ import Handlers from "@/pages/Handlers";
 import Users from "@/pages/Users";
 import Reconciliation from "@/pages/Reconciliation";
 import AccountantHandoff from "@/pages/AccountantHandoff";
+import YEAccountantNotes from "@/pages/YEAccountantNotes";
 import InterEntityReimb2026 from "@/pages/InterEntityReimb2026";
 import InvoiceReimb2026001 from "@/pages/InvoiceReimb2026001";
 import InvoiceReimb2026002 from "@/pages/InvoiceReimb2026002";
@@ -194,6 +195,7 @@ function Router() {
       <ProtectedRoute path="/users" component={Users} />
       <ProtectedRoute path="/reconciliation" component={Reconciliation} />
       <ProtectedRoute path="/accountant-handoff" component={AccountantHandoff} />
+      <ProtectedRoute path="/ye-notes" component={YEAccountantNotes} />
       <ProtectedRoute path="/inter-entity-reimbursement" component={InterEntityReimb2026} />
       <ProtectedRoute path="/invoice/reimb-2026-001" component={InvoiceReimb2026001} />
       <ProtectedRoute path="/invoice/reimb-2026-002" component={InvoiceReimb2026002} />
