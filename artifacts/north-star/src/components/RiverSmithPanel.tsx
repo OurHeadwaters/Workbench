@@ -553,6 +553,7 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
     if (!token) return;
     setArchiveOpen(false);
     setLoading(true);
+    setProofCard(null); // clear stale proof card immediately while the new entry loads
     setFlags([]);
     setFlagsOpen(false);
     setFlagsError(null);
@@ -569,8 +570,11 @@ export function RiverSmithPanel({ defaultOpen = false, embedded = false }: River
       } else {
         setProofCard(null);
       }
-    } catch {
-      // silently ignore
+    } catch (e) {
+      // On failure leave briefing unchanged but ensure proof card is cleared so
+      // it can't show a stale entry's proof alongside whatever is now displayed.
+      setProofCard(null);
+      setError(e instanceof Error ? e.message : "Failed to load archive entry.");
     } finally {
       setLoading(false);
     }
