@@ -9,6 +9,11 @@
  * - Clicking Accept opens the confirm dialog but does NOT call acceptProposal
  * - Clicking Confirm after Accept calls acceptProposal exactly once
  * - Clicking Cancel after Accept leaves the proposal untouched
+ *
+ * Also verifies error-notice dismissal on retry:
+ * - After a failed accept (401) the error notice appears
+ * - Clicking Confirm a second time clears the stale error notice before the new request
+ * - After the successful retry the proposal is marked accepted and the notice is gone
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
@@ -178,6 +183,34 @@ describe("ProposalsPage — two-click confirm guard for Accept", () => {
 
     // Confirm dialog should be dismissed; Accept button should be back
     expect(screen.getByRole("button", { name: /^accept$/i })).toBeInTheDocument();
+  });
+
+  it("clears the error notice when the owner retries after a failed accept", async () => {
+    // First call returns 401-style failure; second call succeeds
+    mockAcceptProposal
+      .mockResolvedValueOnce({ ok: false, error: "Unauthorized (401)" })
+      .mockResolvedValueOnce({ ok: true });
+
+    const user = userEvent.setup();
+    render(<ProposalsPage />);
+
+    // Open the confirm dialog and attempt the first (failing) accept
+    await user.click(screen.getByRole("button", { name: /^accept$/i }));
+    await user.click(screen.getByRole("button", { name: /confirm/i }));
+
+    // The error alert must appear after the 401 response
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(screen.getByText(/unauthorized/i)).toBeInTheDocument();
+
+    // Retry — the Confirm button remains visible after a failure
+    await user.click(screen.getByRole("button", { name: /confirm/i }));
+
+    // Error notice must be gone after the successful retry
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+    // acceptProposal was called twice in total (one failure + one success)
+    expect(mockAcceptProposal).toHaveBeenCalledTimes(2);
+    expect(mockAcceptProposal).toHaveBeenCalledWith(PENDING_PROPOSAL.id);
   });
 });
 
