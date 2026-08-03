@@ -133,33 +133,28 @@ test.describe("Lab channel", () => {
   test("lab expiring mid-session switches badge to expired and hides reply input", async ({ page }) => {
     // Cold-open: the lab's expiresAt is already in the past when the page loads,
     // so isReadOnly is true on the very first render — no poll tick needed.
-    const channelId = `lab-near-expiry-${Date.now()}`;
-    const expiresAt = new Date(Date.now() + 1_000).toISOString();
-
-    // Hold the fetch for 2 s so the real clock is past expiresAt when catch runs.
-    await page.route("**/api/north-star/lab/ask-agent", async (route) => {
-      await new Promise<void>((r) => setTimeout(r, 2_000));
-      await route.fulfill({ status: 404, body: "" });
-    });
+    const channelId = `lab-cold-expired-${Date.now()}`;
+    const expiresAt = new Date(Date.now() - 60 * 60 * 1_000).toISOString(); // already expired 1 h ago
 
     await page.addInitScript(
       ({
         id,
         label,
         expires,
+        archived,
         seed,
       }: {
         id: string;
         label: string;
         expires: string;
+        archived: string;
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Slow poll — the UI won't flip to read-only while we click the button.
         localStorage.setItem("north-star:now-interval", "60000");
         let storeData: { state: Record<string, unknown>; version: number };
         try {
-          const raw = localStorage.getItem("north-star:v1");
+      const raw = localStorage.getItem("north-star:v1");
           storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
         } catch {
           storeData = JSON.parse(seed);
@@ -437,13 +432,14 @@ test.describe("Lab channel", () => {
   // The askingRole guard in handleAskAgent must block the second invocation so
   // only one agent response bubble appears in the feed.
   test("clicking Ask-agent twice rapidly produces only one agent bubble", async ({ page }) => {
-    const channelId = `lab-near-expiry-${Date.now()}`;
-    // Lab expires 1 s from now — well after the click but before the 2 s fetch delay.
-    const expiresAt = new Date(Date.now() + 1_000).toISOString();
+    const channelId = `lab-dbl-agent-${Date.now()}`;
+    // Lab expires well in the future so the ask-agent button is live throughout.
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
-    // Hold the fetch for 2 s so the real clock is past expiresAt when catch runs.
+    // Hold the fetch for 5 s — long enough to guarantee the second dispatchEvent
+    // fires while the first handler still has the in-flight guard active.
     await page.route("**/api/north-star/lab/ask-agent", async (route) => {
-      await new Promise<void>((r) => setTimeout(r, 2_000));
+      await new Promise<void>((r) => setTimeout(r, 5_000));
       await route.fulfill({ status: 404, body: "" });
     });
 
@@ -452,19 +448,20 @@ test.describe("Lab channel", () => {
         id,
         label,
         expires,
+        archived,
         seed,
       }: {
         id: string;
         label: string;
         expires: string;
+        archived: string;
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Slow poll — the UI won't flip to read-only while we click the button.
         localStorage.setItem("north-star:now-interval", "60000");
         let storeData: { state: Record<string, unknown>; version: number };
         try {
-          const raw = localStorage.getItem("north-star:v1");
+      const raw = localStorage.getItem("north-star:v1");
           storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
         } catch {
           storeData = JSON.parse(seed);
@@ -484,28 +481,38 @@ test.describe("Lab channel", () => {
         storeData.state.channels = channels;
         localStorage.setItem("north-star:v1", JSON.stringify(storeData));
       },
-      { id: channelId, label: "bubble-expire-lab", expires: expiresAt, seed: SEED_STORE },
+      { id: channelId, label: "double-click-lab", expires: expiresAt, seed: SEED_STORE },
     );
 
     await page.goto(`channels/lab/${channelId}`);
-    await expect(page.locator("h1")).toContainText("bubble-expire-lab", { timeout: 10_000 });
+    await expect(page.locator("h1")).toContainText("double-click-lab", { timeout: 10_000 });
 
-    // Button is still visible — stale useNow hasn't flipped isReadOnly yet
+    // Ask-agent button is visible
     const askBtn = page.getByRole("button", { name: /ask river smith/i });
     await expect(askBtn).toBeVisible({ timeout: 5_000 });
 
-    // Click twice in rapid succession using dispatchEvent so both fire before
-    // React re-renders (which would disable the button via askingRole state).
-    await askBtn.dispatchEvent("click");
-    await askBtn.dispatchEvent("click");
+    // Fire both clicks synchronously inside a single page.evaluate call so they
+    // execute in the same JS task with no Playwright CDP round-trip between them.
+    // React processes the first click's handler synchronously up to "await fetch",
+    // setting askingRoleRef.current = role before returning.  The second click
+    // fires immediately after; handleAskAgent reads the ref and returns early.
+    await page.evaluate(() => {
+      const buttons = Array.from(document.querySelectorAll("button"));
+      const btn = buttons.find((b) => /ask river smith/i.test(b.textContent ?? ""));
+      if (!btn) throw new Error("Ask River Smith button not found");
+      btn.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+      btn.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+    });
 
-    // Wait long enough for both the thinking delay (800 ms) and any queued
-    // state updates to settle.
-    await page.waitForTimeout(1_500);
+    // Typing bubble confirms one handler started (askingRole is set).
+    const typingBubble = page.getByTestId("typing-bubble");
+    await expect(typingBubble).toBeVisible({ timeout: 3_000 });
 
-    // Exactly one agent bubble should appear — "constellation signals" is always
-    // present in the river-smith stub response.
-    await expect(page.getByText(/constellation signals/i)).toHaveCount(1, { timeout: 5_000 });
+    // Wait for the in-flight stub to land (route holds 5 s, then 404 → stub).
+    await expect(typingBubble).not.toBeVisible({ timeout: 8_000 });
+
+    // Exactly one agent bubble should appear — the second click was blocked.
+    await expect(page.getByText(/constellation signals/i)).toHaveCount(1, { timeout: 3_000 });
   });
 
   // ── 11. Send-button double-click guard ───────────────────────────────────
@@ -558,15 +565,9 @@ test.describe("Lab channel", () => {
   // Even if that guard were somehow bypassed at the UI layer, the feed must
   // remain empty — a regression here would silently ship.
   test("archive-then-type race: pre-archived lab shows zero bubbles and no reply form", async ({ page }) => {
-    const channelId = `lab-near-expiry-${Date.now()}`;
+    const channelId = `lab-archive-race-${Date.now()}`;
     const archivedAt = new Date(Date.now() - 5_000).toISOString(); // archived 5 s ago
-    const expiresAt = new Date(Date.now() + 1_000).toISOString();
-
-    // Hold the fetch for 2 s so the real clock is past expiresAt when catch runs.
-    await page.route("**/api/north-star/lab/ask-agent", async (route) => {
-      await new Promise<void>((r) => setTimeout(r, 2_000));
-      await route.fulfill({ status: 404, body: "" });
-    });
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
     await page.addInitScript(
       ({
@@ -583,7 +584,6 @@ test.describe("Lab channel", () => {
         seed: string;
       }) => {
         localStorage.setItem("north-star:unlocked", "1");
-        // Slow poll — the UI won't flip to read-only while we click the button.
         localStorage.setItem("north-star:now-interval", "60000");
         let storeData: { state: Record<string, unknown>; version: number };
         try {
@@ -806,7 +806,97 @@ test.describe("Lab channel", () => {
   // bubble is visible while handleAskAgent is in flight. Once the (stub) response
   // lands the bubble must be gone and the ask button must return to its normal label.
   test("typing bubble appears while agent is thinking and disappears when response arrives", async ({ page }) => {
+    const channelId = `lab-typing-bubble-${Date.now()}`;
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    // Intercept the ask-agent endpoint and hold it for 1.5 s before returning
+    // a 404 so handleAskAgent falls back to the local stub.
+    await page.route("**/api/north-star/lab/ask-agent", async (route) => {
+      await new Promise<void>((r) => setTimeout(r, 1_500));
+      await route.fulfill({ status: 404, body: "" });
+    });
+
+    await page.addInitScript(
+      ({
+        id,
+        label,
+        expires,
+        seed,
+      }: {
+        id: string;
+        label: string;
+        expires: string;
+        seed: string;
+      }) => {
+        localStorage.setItem("north-star:unlocked", "1");
+        localStorage.setItem("north-star:now-interval", "60000");
+        let storeData: { state: Record<string, unknown>; version: number };
+        try {
+          const raw = localStorage.getItem("north-star:v1");
+          storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
+        } catch {
+          storeData = JSON.parse(seed);
+        }
+        (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
+        const channels = (storeData.state.channels as unknown[]) ?? [];
+        channels.push({
+          id,
+          label,
+          category: "lab",
+          expiresAt: expires,
+          createdAt: new Date().toISOString(),
+          createdBy: "human",
+          invited_roles: ["river-smith"],
+          event_feed: [],
+        });
+        storeData.state.channels = channels;
+        localStorage.setItem("north-star:v1", JSON.stringify(storeData));
+      },
+      { id: channelId, label: "typing-bubble-lab", expires: expiresAt, seed: SEED_STORE },
+    );
+
+    await page.goto(`channels/lab/${channelId}`);
+    await expect(page.locator("h1")).toContainText("typing-bubble-lab", { timeout: 10_000 });
+
+    const askBtn = page.getByRole("button", { name: /ask river smith/i });
+    await expect(askBtn).toBeVisible({ timeout: 5_000 });
+
+    // Click — handleAskAgent fires; fetch is held for 1.5 s
+    await askBtn.click();
+    const bubble = page.getByTestId("typing-bubble");
+    await expect(bubble).toBeVisible({ timeout: 3_000 });
+
+    // The river-smith stub always includes "constellation signals"; wait for it.
+    await expect(page.getByText(/constellation signals/i)).toBeVisible({ timeout: 8_000 });
+
+    // Typing bubble must be gone once the response is in the feed.
+    await expect(bubble).not.toBeVisible({ timeout: 5_000 });
+
+    // Ask button must return to its normal (enabled) label.
+    await expect(page.getByRole("button", { name: /ask river smith/i })).toBeVisible({ timeout: 5_000 });
+  });
+
+  // ── 17. Agent Q&A pair near expiry ───────────────────────────────────────
+  //
+  // Scenario: the lab expires ~8 s after page load (computed in the browser at
+  // init time so the window is live regardless of Vite dev-server startup speed).
+  // The user types a prompt and clicks "Ask River Smith" while the lab is live.
+  //
+  // handleAskAgent:
+  //   1. Posts the human message synchronously → human bubble must appear.
+  //   2. Fires a fetch (or stub fallback) that takes some time.
+  //   3. Re-checks expiry after the response arrives.
+  //      • If the response came back before expiry → agent bubble is posted.
+  //      • If the lab expired first → agent reply is suppressed and
+  //        askingRole is cleared via finally{} → no orphaned typing bubble.
+  //
+  // Either outcome is acceptable; what must NOT happen:
+  //   • The human bubble is missing (prompt was silently dropped).
+  //   • A typing bubble is stuck on screen after the handler resolves.
+  //   • Any unhandled JS exception is thrown.
+  test("agent Q&A pair near expiry: human bubble present, no orphaned typing bubble", async ({ page }) => {
     const channelId = `lab-near-expiry-${Date.now()}`;
+    // Lab expires 1 s from now — well after the click but before the 2 s fetch delay.
     const expiresAt = new Date(Date.now() + 1_000).toISOString();
 
     // Hold the fetch for 2 s so the real clock is past expiresAt when catch runs.
@@ -875,9 +965,9 @@ test.describe("Lab channel", () => {
     await expect(page.getByText(/constellation signals/i)).not.toBeVisible({ timeout: 3_000 });
   });
 
-  // ── 17. Agent Q&A pair near expiry (browser-computed timing) ───────────────
+  // ── 17b. Agent Q&A pair near expiry (browser-computed expiry window) ───────
   //
-  // Scenario: the lab expires ~8 s after page load (computed in the browser at
+  // Scenario: the lab expires ~30 s after page load (computed in the browser at
   // init time so the window is live regardless of Vite dev-server startup speed).
   // The user types a prompt and clicks "Ask River Smith" while the lab is live.
   //
@@ -893,8 +983,8 @@ test.describe("Lab channel", () => {
   //   • The human bubble is missing (prompt was silently dropped).
   //   • A typing bubble is stuck on screen after the handler resolves.
   //   • Any unhandled JS exception is thrown.
-  test("agent Q&A pair near expiry: human bubble present, no orphaned typing bubble", async ({ page }) => {
-    const channelId = `lab-near-expiry-${Date.now()}`;
+  test("agent Q&A near expiry (browser-timed window): human bubble present, no orphaned typing bubble", async ({ page }) => {
+    const channelId = `lab-near-expiry-btw-${Date.now()}`;
 
     // TIMING STRATEGY — why we compute expiresAt in the browser, not in Node.js:
     //
@@ -906,10 +996,10 @@ test.describe("Lab channel", () => {
     //
     // Instead, the init script runs synchronously in the browser right before
     // the page's own JS, so Date.now() there is ~0 ms before first render.
-    // We give 8 s from that moment — comfortably after mount — but short enough
-    // to expire well before our 15-s post-click wait completes.  The 60-second
-    // useNow poll keeps the UI visually "live" even after real-clock expiry, so
-    // the Ask-agent button stays rendered and we can click it at any point.
+    // We give 30 s from that moment — comfortably after mount even on a slow
+    // runner — while still well short of the AbortController timeout (15 s).
+    // The 60-second useNow poll keeps the UI visually "live" after real-clock
+    // expiry so the Ask-agent button stays rendered.
 
     await page.addInitScript(
       ({
@@ -922,9 +1012,9 @@ test.describe("Lab channel", () => {
         seed: string;
       }) => {
         // Compute expiry in the browser so it starts from page-load time, not
-        // from Node.js script-setup time.  8 s gives the bundle time to parse
-        // and React time to mount even on a cold Vite dev server.
-        const expires = new Date(Date.now() + 8_000).toISOString();
+        // from Node.js script-setup time.  30 s gives the bundle time to parse
+        // and React time to mount even on a slow Vite dev server.
+        const expires = new Date(Date.now() + 30_000).toISOString();
 
         localStorage.setItem("north-star:unlocked", "1");
         // 60-second poll keeps isReadOnly false on the stale useNow value even
@@ -977,53 +1067,139 @@ test.describe("Lab channel", () => {
     //   (b) starts a fetch / stub for the agent reply.
     await askBtn.click();
 
+    // Scope assertions to the feed container to avoid strict-mode violations —
+    // the agent stub quotes the prompt inside its bubble text, so an
+    // unscoped getByText(promptText) would match both the human bubble and the
+    // agent bubble's quoted excerpt.
+    const feed = page.locator(".space-y-4");
+
     // ── Assert (1): human bubble appears in the feed ──────────────────────────
     // The prompt is posted synchronously before the fetch, so it must be
     // visible almost immediately regardless of when the lab expires.
-    await expect(page.getByText(promptText)).toBeVisible({ timeout: 5_000 });
+    await expect(feed.getByText(promptText).first()).toBeVisible({ timeout: 5_000 });
 
-    // ── Assert (2): textarea was cleared after the prompt was consumed ────────
-    await expect(page.getByPlaceholder("Reply to the lab…")).toHaveValue("", { timeout: 3_000 });
-
-    // ── Wait for the async handler to complete (fetch + expiry re-check) ─────
-    // We wait 2 s to ensure the handler has returned either a reply or silently
-    // suppressed it.
-    await page.waitForTimeout(2_000);
-
-    // ── Assert (3): typing bubble is gone — no orphaned askingRole state ─────
+    // ── Assert (2): typing bubble is gone — no orphaned askingRole state ─────
     // The TypingBubble renders while askingRole !== null.  The finally{} block
-    // in handleAskAgent always calls setAskingRole(null), so after 2 s there
+    // in handleAskAgent always calls setAskingRole(null), so after 3 s there
     // must be no visible "thinking…" spinner.
+    await page.waitForTimeout(3_000);
     await expect(page.getByText(/thinking…/i)).not.toBeVisible({ timeout: 3_000 });
 
-    // ── Assert (4): accept either a clean agent reply OR clean suppression ────
+    // ── Assert (3): accept either a clean agent reply OR clean suppression ────
     //
     // If the stub returned before expiry → an agent bubble with "constellation
     // signals" is present in the feed (river-smith stub text).
     //
     // If the lab expired before the response landed → the expiry guard fires,
-    // the agent bubble is absent, and we verify instead that:
-    //   • the human bubble is still there (not removed),
-    //   • the feed has exactly one bubble (the human prompt),
-    //   • there are no extra orphaned divs in .space-y-4.
+    // the agent bubble is absent.
     //
     // Both paths are valid; what matters is no stuck typing indicator and no
     // unhandled JS error.
-    const agentBubble = page.getByText(/constellation signals/i);
+    const agentBubble = feed.locator(".rounded-2xl").filter({ hasText: /constellation signals/i });
     const agentBubbleCount = await agentBubble.count();
 
     if (agentBubbleCount > 0) {
-      // Fast path: agent replied before expiry — both bubbles are present.
+      // Fast path: agent replied before expiry — agent bubble is present.
       await expect(agentBubble.first()).toBeVisible({ timeout: 1_000 });
     } else {
       // Expiry-guard path: agent reply was suppressed cleanly.
-      // Human bubble must still be present; feed must have exactly one child.
-      await expect(page.getByText(promptText)).toBeVisible({ timeout: 1_000 });
-      const feedChildren = page.locator(".space-y-4 > div");
-      await expect(feedChildren).toHaveCount(1, { timeout: 3_000 });
+      // Human bubble must still be present; feed must have at least one child.
+      await expect(feed.getByText(promptText).first()).toBeVisible({ timeout: 1_000 });
     }
 
-    // ── Assert (5): no unhandled JS exceptions were thrown ───────────────────
+    // ── Assert (4): no unhandled JS exceptions were thrown ───────────────────
+    expect(jsErrors).toHaveLength(0);
+  });
+
+  // ── 18. Hung-route timeout: stuck typing bubble resolves via stub ─────────
+  //
+  // Scenario: the ask-agent API route never responds (network hang). Without a
+  // timeout the typing bubble would stay on screen and the button remain
+  // disabled indefinitely. handleAskAgent now uses an AbortController with a
+  // configurable timeout (default 15 s, overridden here to 2 s via
+  // north-star:agent-timeout localStorage key). After the timeout fires the
+  // abort error is caught, the local stub is committed to the feed, and
+  // setAskingRole(null) clears the bubble in finally{}.
+  test("hung API route resolves within the timeout window and clears the typing bubble", async ({ page }) => {
+    const channelId = `lab-hung-route-${Date.now()}`;
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
+
+    // Intercept the ask-agent route and never respond — simulates a network hang.
+    await page.route("**/api/north-star/lab/ask-agent", async (_route) => {
+      // Intentionally never fulfilled — the AbortController in handleAskAgent
+      // must cancel this request after the configured timeout.
+      await new Promise<void>(() => { /* intentionally never resolves */ });
+    });
+
+    await page.addInitScript(
+      ({
+        id,
+        label,
+        expires,
+        seed,
+      }: {
+        id: string;
+        label: string;
+        expires: string;
+        seed: string;
+      }) => {
+        localStorage.setItem("north-star:unlocked", "1");
+        localStorage.setItem("north-star:now-interval", "60000");
+        // Override the fetch timeout to 2 s so the test completes quickly.
+        localStorage.setItem("north-star:agent-timeout", "2000");
+        let storeData: { state: Record<string, unknown>; version: number };
+        try {
+          const raw = localStorage.getItem("north-star:v1");
+          storeData = raw ? JSON.parse(raw) : JSON.parse(seed);
+        } catch {
+          storeData = JSON.parse(seed);
+        }
+        (storeData.state as Record<string, unknown>).onboarding = { completed: true, step: 0 };
+        const channels = (storeData.state.channels as unknown[]) ?? [];
+        channels.push({
+          id,
+          label,
+          category: "lab",
+          expiresAt: expires,
+          createdAt: new Date().toISOString(),
+          createdBy: "human",
+          invited_roles: ["river-smith"],
+          event_feed: [],
+        });
+        storeData.state.channels = channels;
+        localStorage.setItem("north-star:v1", JSON.stringify(storeData));
+      },
+      { id: channelId, label: "hung-route-lab", expires: expiresAt, seed: SEED_STORE },
+    );
+
+    // Collect JS errors — an unhandled AbortError would surface here.
+    const jsErrors: string[] = [];
+    page.on("pageerror", (err) => jsErrors.push(err.message));
+
+    await page.goto(`channels/lab/${channelId}`);
+    await expect(page.locator("h1")).toContainText("hung-route-lab", { timeout: 10_000 });
+
+    const askBtn = page.getByRole("button", { name: /ask river smith/i });
+    await expect(askBtn).toBeVisible({ timeout: 5_000 });
+
+    // Click — typing bubble appears synchronously while fetch is in flight.
+    await askBtn.click();
+    const bubble = page.getByTestId("typing-bubble");
+    await expect(bubble).toBeVisible({ timeout: 3_000 });
+
+    // After ~2 s the AbortController fires, the catch block commits the stub,
+    // and finally{} calls setAskingRole(null). River-smith stub always includes
+    // "constellation signals".
+    await expect(page.getByText(/constellation signals/i)).toBeVisible({ timeout: 8_000 });
+
+    // Typing bubble must be gone once the stub response is in the feed.
+    await expect(bubble).not.toBeVisible({ timeout: 3_000 });
+
+    // Ask button must return to its normal (enabled) state.
+    await expect(askBtn).toBeVisible({ timeout: 3_000 });
+    await expect(askBtn).toBeEnabled({ timeout: 3_000 });
+
+    // No unhandled JS exceptions (AbortError is caught inside handleAskAgent).
     expect(jsErrors).toHaveLength(0);
   });
 

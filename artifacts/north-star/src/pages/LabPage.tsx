@@ -246,6 +246,10 @@ export function LabPage() {
   // re-renders the component (React batches setState, so reply still holds the
   // old value in the same event loop tick).
   const sendingRef = useRef(false);
+  // Synchronous ask-agent guard: set immediately when handleAskAgent fires so
+  // rapid re-clicks within the same render cycle are blocked even before
+  // setAskingRole triggers a re-render with the updated state value.
+  const askingRoleRef = useRef<string | null>(null);
 
   const isExpired = channel?.expiresAt
     ? new Date(channel.expiresAt).getTime() <= now
@@ -305,7 +309,10 @@ export function LabPage() {
       ? new Date(channel.expiresAt).getTime() <= Date.now()
       : false;
     const realTimeReadOnly = !!(channel?.archivedAt) || realTimeExpired;
-    if (realTimeReadOnly || !channelId || askingRole) return;
+    if (realTimeReadOnly || !channelId || askingRole || askingRoleRef.current) return;
+    // Set the ref synchronously so any rapid re-click within the same render
+    // cycle is blocked before setAskingRole triggers a new render.
+    askingRoleRef.current = role;
 
     // Capture and clear the reply textarea so it acts as an optional prompt
     // sent to the agent. If set, it's posted as a human event first so it
@@ -347,6 +354,18 @@ export function LabPage() {
       });
     }
 
+    // Timeout: abort after 15 s (or a shorter value set via localStorage for
+    // testing: north-star:agent-timeout).
+    const timeoutMs = (() => {
+      const override = typeof localStorage !== "undefined"
+        ? localStorage.getItem("north-star:agent-timeout")
+        : null;
+      const parsed = override ? parseInt(override, 10) : NaN;
+      return Number.isFinite(parsed) && parsed > 0 ? parsed : 15_000;
+    })();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
     try {
       const ownerToken =
         window.localStorage.getItem("library.ownerToken") ||
@@ -359,6 +378,7 @@ export function LabPage() {
           ...(ownerToken ? { "x-library-owner-token": ownerToken } : {}),
         },
         body: JSON.stringify({ role, labLabel: label, recentMessages, prompt: prompt || undefined }),
+        signal: controller.signal,
       });
 
       // Non-streaming fallback: server not configured or rate-limited.
@@ -418,9 +438,12 @@ export function LabPage() {
 
       commitOrStub(accumulated);
     } catch {
-      // Network error — fall back to stub so the feed always gets a response.
+      // Network error or abort (timeout) — fall back to stub so the feed always
+      // gets a response and the typing bubble is never left stuck.
       commitOrStub(generateAgentStub(role, label, recentMessages, prompt || undefined));
     } finally {
+      clearTimeout(timeoutId);
+      askingRoleRef.current = null;
       setAskingRole(null);
       setStreamingText("");
     }
