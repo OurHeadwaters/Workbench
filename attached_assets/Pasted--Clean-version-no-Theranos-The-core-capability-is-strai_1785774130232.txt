@@ -1,0 +1,33 @@
+**Clean version, no Theranos.**
+
+The core capability is straightforward: turn real, consented records of how someone actually moves through their days into two things on one screen — what happened (cryptographically witnessed) and what class of futures becomes more or less available from here.
+
+### How the stack makes trajectory visible
+
+Most people only get coarse, delayed, or self-reported signals about their own patterns. The architecture changes that:
+
+- **Behavioral signatures instead of vague intention.** Format signatures, care-moment logs, and drift measurements capture actual movement through decisions and priorities, not what someone meant to do. These are timestamped and anchored (XRPL) so the record is tamper-evident and belongs to the person under consent.
+- **RealityCore as the projection layer.** It takes the current state vector (ground coordinates + recent drift rate + coherence) and surfaces the attractor basin the person is in. It does not invent a deterministic future. It shows the continuation path of the current pattern versus the divergence path that remains open from the same starting point. That is the honest “movie”: pattern → accessible futures, not prophecy.
+- **Daily Mirror as the practice surface.** One authenticated view holds both layers side-by-side: the receipt of what was sealed and the horizon that follows from it. No scores, no streaks, no rewards. Just the territory. Opened as a short daily practice, it lets someone hold grounded presence and longer horizon at the same time.
+
+The result is epistemic clarity rather than external control. You see the momentum your actual priorities are already creating (or dissipating). That visibility is what was missing.
+
+### Why this matters for the “sit at home” problem and the AI transition
+
+A large number of people right now are choosing stasis because the link between today’s small choices and any meaningful forward motion feels broken. Job displacement, transition periods, and the sense that systems are moving faster than individual agency all amplify that. When the only feedback available is either nothing or abstract metrics that do not map to a real life, the rational response is often to stay still.
+
+The Mirror reframes the same data as **art of possibility**:
+
+- You see the drift signature of the last period.
+- You see the coherence reading.
+- You see the class of futures that continues if the pattern holds, and the class that opens if it shifts.
+
+That is not a pep talk. It is a legible map of momentum. For someone with a job, it shows whether the daily priorities are compounding into the life they say they want. For someone without one, or in a transition forced by automation, it shows that forward motion is still constructible from the coordinates they actually occupy — not from an idealized résumé or a platform’s definition of productivity.
+
+Purpose and meaning do not require a traditional role. They require evidence that one’s actions still shape the attractor they live inside. When that evidence is personal, consented, and free of scoring pressure, the decision to step back into the world becomes less abstract. The spark is no longer something you have to invent; it is something you can observe accumulating (or leaking) in real time.
+
+### Practical stance
+
+Ship and iterate the Daily Mirror as the daily practice surface. Keep the language modest: observed pattern → accessible futures. Instrument quiet retention and whether people who use it actually shift their own drift over weeks, not days. The holographic or spatial layer (Newfoundland hardware) can come later as an immersion upgrade; the 2D authenticated view is already sufficient to test whether clarity of momentum changes behavior.
+
+This is the product expression that turns the data layer into something people can carry into an uncertain labor market: a mirror that shows the horizon their own choices are already writing.
