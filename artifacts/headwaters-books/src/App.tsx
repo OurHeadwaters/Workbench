@@ -31,6 +31,8 @@ import YEAccountantNotes from "@/pages/YEAccountantNotes";
 import InterEntityReimb2026 from "@/pages/InterEntityReimb2026";
 import InvoiceReimb2026001 from "@/pages/InvoiceReimb2026001";
 import InvoiceReimb2026002 from "@/pages/InvoiceReimb2026002";
+import InvoicePJEquip2026001 from "@/pages/InvoicePJEquip2026001";
+import Invoice807RTO2026001 from "@/pages/Invoice807RTO2026001";
 import Pnl from "@/pages/Pnl";
 import Receipts from "@/pages/Receipts";
 import HHDashboard from "@/pages/HHDashboard";
@@ -199,6 +201,8 @@ function Router() {
       <ProtectedRoute path="/inter-entity-reimbursement" component={InterEntityReimb2026} />
       <ProtectedRoute path="/invoice/reimb-2026-001" component={InvoiceReimb2026001} />
       <ProtectedRoute path="/invoice/reimb-2026-002" component={InvoiceReimb2026002} />
+      <ProtectedRoute path="/invoice/pj-equip-2026-001" component={InvoicePJEquip2026001} />
+      <ProtectedRoute path="/invoice/807-rto-2026-001" component={Invoice807RTO2026001} />
       <ProtectedRoute path="/receipts" component={Receipts} />
       <ProtectedRoute path="/pnl" component={Pnl} />
       <ProtectedRoute path="/helping-hands" component={HHDashboard} />
