@@ -38,8 +38,11 @@ const INVOICE_DATE         = "2026-08-15";
 const MEMBERSHIP_FEE       = 50.00;
 const RTO_MONTHLY          = 125.00;
 const RTO_MONTHS           = 24;
-const RTO_TOTAL            = RTO_MONTHLY * RTO_MONTHS;    // $3,000.00
-const INVOICE_SUBTOTAL     = MEMBERSHIP_FEE + RTO_TOTAL; // $3,050.00
+const RTO_TOTAL            = RTO_MONTHLY * RTO_MONTHS;          // $3,000.00
+const INVOICE_SUBTOTAL     = MEMBERSHIP_FEE + RTO_TOTAL;        // $3,050.00
+const HST_RATE             = 0.13;
+const HST_AMOUNT           = INVOICE_SUBTOTAL * HST_RATE;       // $396.50
+const INVOICE_TOTAL        = INVOICE_SUBTOTAL + HST_AMOUNT;     // $3,446.50
 
 const EQUIPMENT_ASSET_VALUE = 7_000.00;
 
@@ -210,8 +213,8 @@ export default function Invoice807RTO2026001() {
             <span className="font-mono tabular-nums">{fmt(INVOICE_SUBTOTAL)}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">HST — confirm with 807 accountant</span>
-            <span className="font-mono tabular-nums text-amber-600 print:text-black">TBD</span>
+            <span className="text-muted-foreground">HST (13 % — Ontario)</span>
+            <span className="font-mono tabular-nums">{fmt(HST_AMOUNT)}</span>
           </div>
         </div>
 
@@ -219,14 +222,14 @@ export default function Invoice807RTO2026001() {
         <div className="px-8 py-5 flex items-center justify-between bg-primary/5 print:bg-white print:border-t print:border-black">
           <div>
             <p className="text-base font-bold text-foreground" style={{ fontFamily: "var(--font-serif, serif)" }}>
-              Amount Due (excl. HST)
+              Total Amount Due
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Membership {fmt(MEMBERSHIP_FEE)} + Equipment RTO {fmt(RTO_TOTAL)} · HST TBC
+              Membership {fmt(MEMBERSHIP_FEE)} + RTO {fmt(RTO_TOTAL)} + HST {fmt(HST_AMOUNT)}
             </p>
           </div>
           <p className="text-3xl font-bold font-mono tabular-nums text-primary print:text-black">
-            {fmt(INVOICE_SUBTOTAL)}
+            {fmt(INVOICE_TOTAL)}
           </p>
         </div>
 
@@ -253,8 +256,7 @@ export default function Invoice807RTO2026001() {
           <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">Payment instructions</p>
           <p className="text-xs text-muted-foreground leading-relaxed">
             <strong className="text-foreground">Option A — Lump sum (recommended):</strong> Pay{" "}
-            <strong className="text-foreground">{fmt(INVOICE_SUBTOTAL)}</strong> (+ HST if applicable)
-            today. Equipment title transfers immediately. E-transfer or cheque payable to
+            <strong className="text-foreground">{fmt(INVOICE_TOTAL)}</strong> today. Equipment title transfers immediately. E-transfer or cheque payable to
             807 Food Co-operative Inc. Reference: <span className="font-mono">{INVOICE_NUMBER}</span>.
           </p>
           <p className="text-xs text-muted-foreground leading-relaxed">
@@ -300,11 +302,10 @@ export default function Invoice807RTO2026001() {
           <strong>Fill in before printing:</strong> Crooked Arrow's address and authorized representative name.
         </p>
         <p className="text-xs text-muted-foreground">
-          <strong>HST:</strong> Confirm with 807's accountant whether HST applies to the membership and/or RTO payments.
-          If 807 is an HST registrant and these are taxable supplies: {fmt(INVOICE_SUBTOTAL)} × 13% = {fmt(INVOICE_SUBTOTAL * 0.13)} additional.
+          <strong>HST:</strong> 13% confirmed applicable. HST {fmt(HST_AMOUNT)} included in total {fmt(INVOICE_TOTAL)}.
         </p>
         <p className="text-xs text-muted-foreground">
-          <strong>Upfront vs. monthly:</strong> If Crooked Arrow pays {fmt(INVOICE_SUBTOTAL)} today, title transfers
+          <strong>Upfront vs. monthly:</strong> If Crooked Arrow pays {fmt(INVOICE_TOTAL)} today, title transfers
           immediately — no need to track monthly payments. Strongly recommend Option A to keep this clean.
         </p>
         <p className="text-xs text-muted-foreground">
