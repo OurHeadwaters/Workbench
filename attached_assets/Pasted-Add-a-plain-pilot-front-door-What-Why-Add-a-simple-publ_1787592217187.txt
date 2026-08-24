@@ -1,0 +1,24 @@
+Add a plain pilot front door
+What & Why
+Add a simple, public “Work with Headwaters” path to the Headwaters site. The existing Workbench remains a strong ecosystem and relationship surface, but practical care-pilot prospects need a clear explanation of the immediate opportunity, what a pilot involves, and how to begin a conversation.
+
+The public message must center the person supported: Headwaters fills the human-translation gap when a person’s own knowing, meaning, preferences, and ways of communicating are missing from current systems. The layer stays with the person and is used with them; it does not require an organization to replace its tools or change its whole workflow.
+
+Done looks like
+Visitors can find one plain, visible “Work with Headwaters” or “Explore a pilot” route from the public Headwaters experience.
+The route explains who a pilot is for, the representation/meaning gap it addresses, what is tested in the first 90 days, and the roles of Headwaters and the host partner.
+The page says current organizational tools can remain in use, be overlaid, or be set aside where appropriate.
+The page offers one direct, safe next step for a private demonstration or pilot conversation.
+The existing Workbench, ecosystem routes, sign-in, deep links, and authenticated experiences continue to work unchanged.
+The new route is responsive, accessible, visually calm, and substantially simpler than the existing ecosystem front face.
+Out of scope
+Deleting, renaming, or re-architecting the Headwaters ecosystem.
+Replacing existing navigation throughout authenticated or internal surfaces.
+Building the care product itself, a data-collection workflow, or a live participant intake.
+Leading public copy with AI, XRPL, Bubbler, Compass, doctrine, or wider technical architecture.
+Publishing the new route or changing custom-domain configuration.
+Steps
+Create the pilot front door — Add a dedicated public route with a quiet headline, clear explanation of the person-supported representation gap, and one practical call to request a private demonstration.
+Frame the pilot plainly — Explain who the pilot serves, what the first 90 days explore, what Headwaters provides, what a host partner contributes, and what a useful pilot produces. Keep all claims grounded and avoid implying replacement of professional judgement, care plans, or current systems.
+Connect it without overwhelming visitors — Add a restrained public entry point from the current Headwaters/Workbench experience while keeping the broader ecosystem, existing deep links, and authenticated routes intact.
+Polish and verify the public flow — Provide a calm desktop and mobile presentation, unique page metadata, accessible navigation, and a tested route from the public entry point through the demonstration invitation.
