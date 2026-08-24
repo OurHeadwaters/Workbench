@@ -1,0 +1,281 @@
+I need you to simplify the public-facing front page of Headwaters.
+
+Do not delete or dismantle the deeper ecosystem. Do not rewrite the whole application. This is a front-door simplification only.
+
+The current public experience contains too much content, too many concepts, and too many routes for someone who is trying to understand the immediate care opportunity. Make the public front face calm, narrow, and easy to understand.
+
+## Immediate positioning
+
+Headwaters fills a missing human-translation layer.
+
+The central problem is:
+
+The person supported is often not represented in the system.
+
+Their own knowing, meaning, preferences, communication style, and quality-of-life priorities are often missing, flattened, or translated poorly by existing systems.
+
+Headwaters provides a practical layer that stays with the person supported and is used with that person. It helps staff access better person-centred care approaches without requiring an organization to replace its current tools or change its entire internal workflow.
+
+The public site should communicate this in plain language.
+
+## Primary message
+
+Use this as the main positioning:
+
+“Headwaters helps the person supported remain represented.”
+
+Supporting sentence:
+
+“A practical quality-of-life and meaning layer used with the person supported. It helps staff translate the person’s own knowing, preferences, and ways of communicating into something the people around them can use.”
+
+Do not lead with:
+
+- AI
+- XRPL
+- blockchain
+- doctrine
+- Compass
+- Bubbler
+- watershed architecture
+- quantum or holographic concepts
+- multiple products
+- organizational transformation
+- replacing existing care systems
+- staff behaviour change
+- claims about measuring honesty, coherence, or character
+
+Those may remain inside private or authenticated areas, but they should not appear on the public front page.
+
+## Suggested homepage structure
+
+### 1. Small header
+
+Keep the header quiet.
+
+Show:
+
+- Headwaters wordmark
+- One simple navigation item: “How it works”
+- One simple navigation item: “Private demonstration”
+- Sign in, if the existing application requires it
+
+Do not show a large ecosystem navigation menu on the public homepage.
+
+Do not expose every zone, studio, doctrine, research area, or technical subsystem from the front page.
+
+### 2. Hero section
+
+Eyebrow:
+
+“PERSON-SUPPORTED CARE”
+
+Headline:
+
+“Help the person be seen.”
+
+Supporting copy:
+
+“The person supported is often the missing voice in the system. Headwaters adds a quality-of-life and meaning layer that stays with the person and is used with them.”
+
+Primary button:
+
+“See the private demonstration”
+
+Secondary text link:
+
+“Start a care conversation”
+
+The hero should be visually quiet, spacious, and readable. Do not use a carousel, dense navigation, animated ecosystem map, or large technical illustration as the first thing a visitor sees.
+
+### 3. The gap
+
+Heading:
+
+“The gap is not always another tool.”
+
+Copy:
+
+“Most systems can hold plans, tasks, reports, and records. They do not always represent how the person understands their own life, what matters to them, what causes distress, or what helps them participate.”
+
+Second paragraph:
+
+“That missing layer affects quality of life first. It also makes it harder for staff to provide person-centred support when the person’s own meaning is not available in a usable form.”
+
+### 4. How it works
+
+Use three simple steps.
+
+#### 1. Listen with the person
+
+Capture the person’s own words, preferences, meaning, signals, and ways of communicating.
+
+#### 2. Translate the meaning
+
+Turn that understanding into a form that the person, staff, and approved support people can use.
+
+#### 3. Support better action
+
+Help staff access person-centred approaches without requiring them to abandon the tools they already use.
+
+### 5. Existing tools stay available
+
+Heading:
+
+“Fill the gap. Do not force a replacement.”
+
+Copy:
+
+“Headwaters is designed to work around real organizations and real constraints. Current systems can remain in use internally. This layer can sit beside them, overlay them, connect to them, or be set aside where it does not fit.”
+
+Important:
+
+Do not describe Headwaters as replacing staff judgement, replacing care plans, or replacing an organization’s existing software.
+
+The product should be described as something staff use with the person supported.
+
+### 6. Who it is for
+
+Keep this short.
+
+Heading:
+
+“For people and the people supporting them.”
+
+Three short points:
+
+- For people whose own meaning is not fully represented in current systems.
+- For staff who need better access to person-centred approaches.
+- For organizations that need a practical layer without another disruptive system replacement.
+
+Do not use a large verticals grid or list every possible market.
+
+### 7. Private demonstration CTA
+
+Heading:
+
+“See the layer in practice.”
+
+Copy:
+
+“We are preparing a small number of private demonstrations using fictional or consented examples. The demonstration shows how a person’s own meaning can remain represented while staff continue using the tools they already know.”
+
+Button:
+
+“Request a private demonstration”
+
+Optional small note:
+
+“Early-stage work. No claim is made that the system replaces professional judgement, clinical judgement, a care plan, or existing organizational systems.”
+
+### 8. Quiet footer
+
+The footer should contain only:
+
+- Headwaters
+- Privacy
+- Contact
+- Sign in
+- Existing legal/disclaimer links
+
+Do not repeat the entire ecosystem navigation in the footer.
+
+## What to do with the existing ecosystem
+
+Preserve the existing routes, components, research, and authenticated areas.
+
+Do not delete:
+
+- Compass
+- Bubbler
+- technical infrastructure
+- doctrine
+- XRPL work
+- studio areas
+- internal research
+- existing authenticated workflows
+- existing deep links
+- existing data
+
+Instead:
+
+- remove them from the public homepage navigation;
+- remove them from the first-screen experience;
+- keep them available through existing authenticated or private routes;
+- preserve existing deep links;
+- do not break sign-in or internal access;
+- do not rename the underlying application architecture unnecessarily.
+
+The public homepage should act as a quiet front door, not as a map of the entire ecosystem.
+
+## Visual direction
+
+Use:
+
+- generous whitespace;
+- one clear headline;
+- warm, grounded colours;
+- readable body text;
+- restrained motion;
+- accessible contrast;
+- mobile-first layout;
+- short sections;
+- no dense cards or architecture diagrams above the fold.
+
+Avoid:
+
+- dashboard appearance;
+- technical diagrams;
+- multiple competing calls to action;
+- carousels;
+- animated map interfaces;
+- long philosophical explanations;
+- jargon;
+- large lists of products;
+- the feeling that visitors must study the ecosystem before understanding the offer.
+
+## Technical requirements
+
+Before editing, inspect the existing routing and identify the current public home route.
+
+Implement the change only on the public-facing home/front-door experience unless a route is clearly part of that same public flow.
+
+Preserve:
+
+- authentication;
+- existing protected routes;
+- existing deep links;
+- existing data;
+- existing APIs;
+- existing internal navigation for authenticated users;
+- responsive behavior;
+- accessibility;
+- browser back/forward behavior.
+
+Make the new front face easy to revert.
+
+Do not introduce a new framework or replace the existing design system.
+
+Use the project’s existing components, fonts, theme system, and routing conventions where possible.
+
+Add no new external service or API dependency for this change.
+
+## Acceptance criteria
+
+The work is complete when:
+
+1. A new visitor understands the immediate care opportunity within 10 seconds.
+2. The first screen does not present the full Headwaters ecosystem.
+3. The person supported is the subject of the message.
+4. The wording clearly says the layer is used with the person supported.
+5. The wording clearly says existing organizational tools can remain in use.
+6. The page does not imply replacement of staff judgement or existing care plans.
+7. The page does not lead with AI, XRPL, Bubbler, Compass, or technical architecture.
+8. There is one obvious path to request a private demonstration.
+9. Existing protected and internal routes still work.
+10. The page works on mobile and desktop.
+11. No important content is merely hidden behind a broken link.
+12. The public page feels intentionally quiet rather than unfinished.
+
+Use this as the guiding sentence while making decisions:
+
+“Do not reduce the system. Reduce the public claim.”
