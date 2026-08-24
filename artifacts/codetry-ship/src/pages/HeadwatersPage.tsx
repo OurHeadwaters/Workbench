@@ -770,6 +770,45 @@ export function HeadwatersPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
+          PILOT INVITATION
+      ══════════════════════════════════════════════════════════════ */}
+      <section
+        style={{
+          maxWidth: 740,
+          margin: "0 auto",
+          padding: "0 32px 96px",
+          width: "100%",
+          textAlign: "center"
+        }}
+      >
+        <a
+          href={`${BASE}pilot`}
+          style={{
+            display: "inline-block",
+            fontFamily: "monospace",
+            fontSize: 10,
+            textTransform: "uppercase",
+            letterSpacing: "0.2em",
+            color: "rgba(212,195,168,0.45)",
+            textDecoration: "none",
+            borderBottom: "1px solid rgba(212,195,168,0.15)",
+            paddingBottom: 4,
+            transition: "all 0.2s ease"
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "rgba(212,195,168,0.85)";
+            e.currentTarget.style.borderColor = "rgba(212,195,168,0.45)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "rgba(212,195,168,0.45)";
+            e.currentTarget.style.borderColor = "rgba(212,195,168,0.15)";
+          }}
+        >
+          Explore a care pilot
+        </a>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════
           FOOTER
       ══════════════════════════════════════════════════════════════ */}
       <footer

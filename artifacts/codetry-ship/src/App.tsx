@@ -53,6 +53,7 @@ import { HelpingHandsPage } from "@/pages/HelpingHandsPage";
 import { ArcLoginPage } from "@/pages/ArcLoginPage";
 import { GoodbyeKitPage } from "@/pages/GoodbyeKitPage";
 import { RequireKitToken } from "@/components/RequireKitToken";
+import { PilotPage } from "@/pages/PilotPage";
 
 const queryClient = new QueryClient();
 
@@ -169,6 +170,9 @@ function Router() {
 
       {/* ── Goodbye Kit landing page ── */}
       <Route path="/goodbye" component={GoodbyeKitPage} />
+
+      {/* ── Care Pilot ── */}
+      <Route path="/pilot" component={PilotPage} />
 
       {/* ── The Mill — Zone 2 production framing ── */}
       <Route path="/mill" component={MillPage} />
