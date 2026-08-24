@@ -174,8 +174,13 @@ export function PilotPage() {
               This starts as a quiet, safe conversation at a kitchen table. No pitch, no obligations. If you are responsible for a real person and want to explore a pilot, reach out using the path below.
             </p>
             <div className="flex flex-col items-center gap-4">
-              <a href={`${import.meta.env.BASE_URL}listen`} aria-label="Explore a private pilot conversation with Bobbie" className="btn-plaque" style={{ padding: "0.8rem 2rem", fontSize: "0.7rem" }}>
-                Explore a private pilot conversation
+              <a
+                href="mailto:bobbie@ourheadwaters.ca?subject=Headwaters%20care%20pilot%20conversation"
+                aria-label="Email Bobbie to explore a private care pilot conversation"
+                className="btn-plaque"
+                style={{ padding: "0.8rem 2rem", fontSize: "0.7rem" }}
+              >
+                Email Bobbie about a care pilot
               </a>
               <p className="font-mono text-[9px] uppercase tracking-[0.2em] opacity-50" style={{ color: "#f4ede0" }}>
                 Or use the Kitchen Table widget in the corner
