@@ -44,6 +44,7 @@ import { logger } from "../lib/logger";
 import { getKit } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, sendKitDeliveryFailureAlert } from "../lib/kitsMailer";
 import { stampEmailSent } from "../lib/kitDeliveryRecovery";
+import { getStripeWebhookSecret, getUncachableStripeClient } from "../lib/stripeClient";
 import { db, kitTokensTable, stripeProcessedEventsTable, kitDeliveryFailuresTable, kitWebhookAttemptsTable } from "@workspace/db";
 
 const router: IRouter = Router();
@@ -134,17 +135,10 @@ router.post(
   "/webhook",
   express.raw({ type: "application/json" }),
   async (req: Request, res: Response) => {
-    const secret = process.env.STRIPE_WEBHOOK_SECRET;
+    const secret = await getStripeWebhookSecret();
     if (!secret) {
-      logger.warn("[stripe-webhook] STRIPE_WEBHOOK_SECRET not set — rejecting all events");
+      logger.warn("[stripe-webhook] Stripe webhook secret is unavailable — rejecting all events");
       res.status(503).json({ error: "Webhook not configured" });
-      return;
-    }
-
-    const stripeKey = process.env.STRIPE_SECRET_KEY;
-    if (!stripeKey) {
-      logger.warn("[stripe-webhook] STRIPE_SECRET_KEY not set — cannot verify events");
-      res.status(503).json({ error: "Stripe not configured" });
       return;
     }
 
@@ -156,7 +150,7 @@ router.post(
 
     let event: Stripe.Event;
     try {
-      const stripe = new Stripe(stripeKey);
+      const stripe = await getUncachableStripeClient();
       event = stripe.webhooks.constructEvent(req.body as Buffer, sig, secret);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);

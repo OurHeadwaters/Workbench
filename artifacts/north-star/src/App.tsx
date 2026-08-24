@@ -44,6 +44,7 @@ import { ProposalsPage } from "@/pages/ProposalsPage";
 import { GordWidget } from "@workspace/gord-widget";
 import { PasswordGate } from "@/components/PasswordGate";
 import { ScheduleWatcher } from "@/components/ScheduleWatcher";
+import { PublicHomePage } from "@/pages/PublicHomePage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -86,13 +87,12 @@ function AppShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+function ProtectedApp() {
   const isOwner = useIsOwner();
 
   return (
     <PasswordGate>
     <ZoneStoreProvider>
-    <WouterRouter base={BASE}>
       <Switch>
         <Route path="/onboarding" component={OnboardingPage} />
 
@@ -291,11 +291,26 @@ export default function App() {
 
         <Route><Redirect to="/" /></Route>
       </Switch>
-    </WouterRouter>
     <KitchenTableButton bottom={88} />
     <GordWidget founderMode={isOwner} />
     <ScheduleWatcher />
     </ZoneStoreProvider>
     </PasswordGate>
+  );
+}
+
+export default function App() {
+  return (
+    <WouterRouter base={BASE}>
+      <Switch>
+        <Route path="/" component={PublicHomePage} />
+        <Route path="/triage" component={TriageLandingPage} />
+        <Route path="/apply-practitioner" component={PractitionerApplicationPage} />
+        <Route path="/sponsor-intake" component={SponsorIntakePage} />
+        <Route>
+          <ProtectedApp />
+        </Route>
+      </Switch>
+    </WouterRouter>
   );
 }

@@ -136,11 +136,11 @@ export const KITS: Record<string, Kit> = {
   },
   "handbook-kit": {
     id: "handbook-kit",
-    name: "Handbook Kit",
-    tagline: "The Codetry Handbook — offline-first reader.",
+    name: "Headwaters: How a Community Runs Its Own Economy",
+    tagline: "The digital field guide to a community-owned economy.",
     arcNote: null,
     contentNote:
-      "Your kit includes the Codetry Practitioner's Handbook in full, available as an offline-first web reader (installable as a PWA) and printable PDF.",
+      "Your purchase includes the complete digital PDF edition. This is a download-only book: no printed edition, physical product, or shipping is offered.",
   },
   "pj-solutions-kit": {
     id: "pj-solutions-kit",

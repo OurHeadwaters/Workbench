@@ -32,11 +32,14 @@ import { Router, type IRouter, type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
 import { PgExpressRateLimitStore } from "../lib/rateLimit";
 import crypto from "crypto";
+import { createReadStream, existsSync, statSync } from "node:fs";
+import path from "node:path";
 import { z } from "zod";
 import Stripe from "stripe";
 import { logger } from "../lib/logger";
 import { getKit, KITS } from "../lib/kitsRegistry";
 import { sendKitDeliveryEmail, sendKitDeliveryFailureAlert, verifyResendToken } from "../lib/kitsMailer";
+import { getUncachableStripeClient } from "../lib/stripeClient";
 import { runCodetryFilter } from "../lib/codetryFilter";
 import { requireKitOwnerAuth, requireFounderOnlyAuth, FOUNDER_OWNER_ID } from "../lib/kitAuth";
 import { db, kitsTable, practitionerApplicationsTable, kitTokensTable, kitDeliveryFailuresTable, kitWebhookAttemptsTable, kitProgressTable } from "@workspace/db";
@@ -142,17 +145,26 @@ function getStripe(): Stripe | null {
 // ── Token store (legacy purchase webhook, now DB-backed) ──────────────────────
 
 const TOKEN_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+const HANDBOOK_KIT_ID = "handbook-kit";
+const HANDBOOK_PRICE_CENTS = 3_900;
+const HANDBOOK_PDF_PATH = path.resolve(
+  process.cwd(),
+  "artifacts/api-server/public/digital/headwaters-how-a-community-runs-its-own-economy.pdf",
+);
 
 function generateToken(): string {
   return crypto.randomBytes(32).toString("hex");
 }
 
-function accessUrl(token: string): string {
+function accessUrl(token: string, kitId?: string): string {
   const base =
     process.env.API_BASE_URL ??
     (process.env.REPLIT_DEV_DOMAIN
       ? `https://${process.env.REPLIT_DEV_DOMAIN}`
       : "http://localhost:8081");
+  if (kitId === HANDBOOK_KIT_ID) {
+    return `${base}/api/kits/download/${token}`;
+  }
   return `${base}/kits/access/${token}`;
 }
 
@@ -213,7 +225,7 @@ async function fulfillKitPurchase(opts: {
     return { error: "Failed to record purchase. Contact support.", status: 500 };
   }
 
-  const url = accessUrl(token);
+  const url = accessUrl(token, kit_id);
   const mailResult = await sendKitDeliveryEmail({
     to: buyer_email,
     buyerName: buyer_name,
@@ -572,7 +584,7 @@ router.get("/resend", async (req: Request, res: Response) => {
     return;
   }
 
-  const url = accessUrl(record.token);
+  const url = accessUrl(record.token, record.kitId);
   const mailResult = await sendKitDeliveryEmail({
     to: record.buyerEmail,
     buyerName: record.buyerName,
@@ -865,6 +877,51 @@ router.get("/access/:token", accessRateLimit, async (req: Request, res: Response
   });
 });
 
+// ── GET /kits/download/:token ─────────────────────────────────────────────────
+//
+// The book is intentionally a download-only product. Its PDF is never exposed
+// as a public static asset: a current purchase token is required on every
+// download request.
+
+router.get("/download/:token", accessRateLimit, async (req: Request, res: Response): Promise<void> => {
+  const raw = req.params["token"];
+  const token = Array.isArray(raw) ? (raw[0] ?? "") : (raw ?? "");
+  if (!token || token.length > 128) {
+    res.status(400).json({ error: "Invalid token" });
+    return;
+  }
+
+  const [record] = await db
+    .select()
+    .from(kitTokensTable)
+    .where(eq(kitTokensTable.token, token))
+    .limit(1);
+
+  if (!record || record.kitId !== HANDBOOK_KIT_ID) {
+    res.status(404).json({ error: "Download not found" });
+    return;
+  }
+  if (new Date() > record.expiresAt) {
+    res.status(410).json({ error: "Token expired", expired_at: record.expiresAt.toISOString() });
+    return;
+  }
+  if (!existsSync(HANDBOOK_PDF_PATH)) {
+    req.log.error({ file: HANDBOOK_PDF_PATH }, "[kits/download] digital book PDF is missing");
+    res.status(503).json({ error: "The digital edition is temporarily unavailable. Please try again shortly." });
+    return;
+  }
+
+  const stat = statSync(HANDBOOK_PDF_PATH);
+  res.set({
+    "Content-Type": "application/pdf",
+    "Content-Disposition": 'attachment; filename="headwaters-how-a-community-runs-its-own-economy.pdf"',
+    "Content-Length": stat.size,
+    "Cache-Control": "private, no-store",
+    "X-Content-Type-Options": "nosniff",
+  });
+  createReadStream(HANDBOOK_PDF_PATH).pipe(res);
+});
+
 // ── GET /kits/access/:token/progress ─────────────────────────────────────────
 //
 // Returns the buyer's server-side visited progress for this purchase.
@@ -1055,6 +1112,113 @@ router.get("/handout", handoutRateLimit, async (req: Request, res: Response) => 
 router.get("/registry", (_req: Request, res: Response) => {
   res.json({ kits: Object.values(KITS) });
 });
+
+// ── POST /kits/handbook/checkout ──────────────────────────────────────────────
+//
+// Creates a hosted Stripe Checkout session for the one-time CAD digital book.
+// No shipping or physical fulfillment fields are collected. The required
+// handbook-kit metadata is attached to both the session and payment intent so
+// the existing Stripe webhook sends the secure download automatically.
+
+const handbookCheckoutRateLimitStore = new PgExpressRateLimitStore(
+  15 * 60 * 1000,
+  "kits:handbook-checkout",
+);
+
+const handbookCheckoutRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 12,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Too many checkout requests — please try again shortly." },
+  store: handbookCheckoutRateLimitStore,
+});
+
+async function findOrCreateHandbookPrice(stripe: Stripe): Promise<string> {
+  let product: Stripe.Product | undefined;
+
+  try {
+    const found = await stripe.products.search({
+      query: `metadata['kit_id']:'${HANDBOOK_KIT_ID}' AND active:'true'`,
+      limit: 10,
+    });
+    product = found.data[0];
+  } catch {
+    const found = await stripe.products.list({ active: true, limit: 100 });
+    product = found.data.find((item) => item.metadata.kit_id === HANDBOOK_KIT_ID);
+  }
+
+  if (!product) {
+    product = await stripe.products.create({
+      name: "Headwaters: How a Community Runs Its Own Economy",
+      description:
+        "Digital PDF edition. Download-only; no printed edition or shipping.",
+      metadata: { kit_id: HANDBOOK_KIT_ID, delivery: "digital-download" },
+    });
+  }
+
+  const existingPrices = await stripe.prices.list({
+    product: product.id,
+    active: true,
+    type: "one_time",
+    limit: 100,
+  });
+  const existing = existingPrices.data.find(
+    (price) =>
+      price.currency === "cad" &&
+      price.unit_amount === HANDBOOK_PRICE_CENTS &&
+      price.recurring === null,
+  );
+
+  if (existing) return existing.id;
+
+  const price = await stripe.prices.create({
+    product: product.id,
+    currency: "cad",
+    unit_amount: HANDBOOK_PRICE_CENTS,
+    metadata: { kit_id: HANDBOOK_KIT_ID },
+  });
+  return price.id;
+}
+
+function northStarReturnUrl(req: Request, state: "success" | "cancel"): string {
+  const host = req.get("host");
+  if (!host) throw new Error("Could not determine the checkout return address.");
+
+  const url = new URL(`/north-star/?book=${state}`, `${req.protocol}://${host}`);
+  if (state === "success") url.searchParams.set("session_id", "{CHECKOUT_SESSION_ID}");
+  return url.toString();
+}
+
+router.post(
+  "/handbook/checkout",
+  handbookCheckoutRateLimit,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const stripe = await getUncachableStripeClient();
+      const priceId = await findOrCreateHandbookPrice(stripe);
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        customer_creation: "always",
+        billing_address_collection: "auto",
+        line_items: [{ price: priceId, quantity: 1 }],
+        metadata: { kit_id: HANDBOOK_KIT_ID },
+        payment_intent_data: { metadata: { kit_id: HANDBOOK_KIT_ID } },
+        success_url: northStarReturnUrl(req, "success"),
+        cancel_url: northStarReturnUrl(req, "cancel"),
+      });
+
+      if (!session.url) {
+        throw new Error("Stripe did not return a Checkout URL.");
+      }
+
+      res.json({ url: session.url });
+    } catch (err) {
+      req.log.error({ err }, "[kits/handbook/checkout] failed to start checkout");
+      res.status(503).json({ error: "Checkout is temporarily unavailable. Please try again shortly." });
+    }
+  },
+);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Kit Builder Platform routes (DB-backed, owner-only via requireKitOwnerAuth)

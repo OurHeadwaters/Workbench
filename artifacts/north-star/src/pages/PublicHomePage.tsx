@@ -1,8 +1,23 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { BG, SURFACE, BORDER, TEXT, TEXT_2, TEXT_3, AMBER, FONT_DISPLAY } from "@/lib/theme";
 
 export function PublicHomePage() {
+  const [checkoutState, setCheckoutState] = useState<"idle" | "starting" | "error">("idle");
+
+  async function startBookCheckout(): Promise<void> {
+    setCheckoutState("starting");
+    try {
+      const response = await fetch("/api/kits/handbook/checkout", { method: "POST" });
+      const payload = (await response.json()) as { url?: string; error?: string };
+      if (!response.ok || !payload.url) throw new Error(payload.error ?? "Could not start checkout.");
+      window.location.assign(payload.url);
+    } catch {
+      setCheckoutState("error");
+    }
+  }
+
   return (
     <div className="min-h-dvh flex flex-col font-sans selection:bg-amber-900/30 selection:text-amber-100" style={{ backgroundColor: BG, color: TEXT }}>
       {/* Navigation */}
@@ -12,6 +27,7 @@ export function PublicHomePage() {
         </div>
         <nav className="hidden md:flex items-center gap-6 text-sm">
           <a href="#how-it-works" className="p-2 transition-colors hover:text-white" style={{ color: TEXT_2 }}>How it works</a>
+          <a href="#book" className="p-2 transition-colors hover:text-white" style={{ color: TEXT_2 }}>The book</a>
           <a href="#private-demonstration" className="p-2 transition-colors hover:text-white" style={{ color: TEXT_2 }}>Private demonstration</a>
         </nav>
         <Link href="/onboarding" className="p-2 text-sm font-medium transition-colors hover:opacity-80" style={{ color: TEXT }}>
@@ -107,6 +123,53 @@ export function PublicHomePage() {
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Book */}
+        <section id="book" className="w-full px-6 py-24 md:py-32" style={{ borderTop: `1px solid ${BORDER}` }}>
+          <div className="max-w-5xl mx-auto grid md:grid-cols-[minmax(210px,300px)_1fr] gap-12 md:gap-20 items-center">
+            <div className="mx-auto md:mx-0 w-full max-w-[280px]">
+              <img
+                src={`${import.meta.env.BASE_URL}headwaters-book-cover-art.png`}
+                alt="Cover of Headwaters: How a Community Runs Its Own Economy"
+                width={1024}
+                height={1024}
+                loading="lazy"
+                className="w-full rounded-sm shadow-2xl"
+                style={{ boxShadow: "0 20px 50px rgba(0,0,0,.38)" }}
+              />
+            </div>
+            <article>
+              <p className="text-xs uppercase tracking-widest font-medium mb-6" style={{ color: AMBER }}>
+                The book
+              </p>
+              <h2 className="text-3xl md:text-5xl font-normal leading-tight mb-6" style={{ fontFamily: FONT_DISPLAY, color: TEXT }}>
+                How a Community Runs Its Own Economy
+              </h2>
+              <p className="text-lg md:text-xl leading-relaxed mb-5" style={{ color: TEXT_2 }}>
+                A Headwaters field guide for people building work that stays rooted in the community that owns it.
+              </p>
+              <p className="text-base leading-relaxed mb-8 max-w-xl" style={{ color: TEXT_3 }}>
+                Digital PDF edition · immediate secure download by email · no print edition or shipping
+              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => void startBookCheckout()}
+                  disabled={checkoutState === "starting"}
+                  className="px-7 py-4 rounded-full text-base font-medium transition-transform active:scale-95 disabled:cursor-wait disabled:opacity-70"
+                  style={{ backgroundColor: AMBER, color: BG }}
+                >
+                  {checkoutState === "starting" ? "Opening secure checkout…" : "Buy the digital book · $39 CAD"}
+                </button>
+                {checkoutState === "error" && (
+                  <p role="alert" className="text-sm" style={{ color: "#e69a83" }}>
+                    Checkout could not start. Please try again shortly.
+                  </p>
+                )}
+              </div>
+            </article>
           </div>
         </section>
 
