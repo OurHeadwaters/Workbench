@@ -1,0 +1,640 @@
+I created **Task #6821 (Overhaul public offers and intake)** as a full implementation plan.
+
+I also verified that `ourheadwaters.ca` is currently live. Its metadata still positions Headwaters primarily as:
+
+> “Planning, development, and operations support for northern communities.”
+
+The overhaul should preserve that community credibility while making **Codetry-powered AI builds** the clear commercial offer.
+
+## Copy-and-paste prompt for the website agent
+
+```text
+You control the Replit project that serves https://ourheadwaters.ca.
+
+Completely audit and overhaul this website’s public positioning, offers, pricing, customer intake, and quote-generation flow. Do not merely add a section to the existing homepage. Rework the customer journey so a new visitor can understand the offer, choose the right starting point, and receive a useful budgetary quote and grant-planning insert without needing an introductory meeting.
+
+Before changing anything:
+
+1. Confirm this project actually serves ourheadwaters.ca.
+2. Inspect the full application architecture, routes, forms, storage, email, analytics, SEO configuration, privacy pages, deployment configuration, and existing customer flows.
+3. Check existing project tasks to avoid duplicating active work.
+4. Preserve working functionality unless it conflicts with the strategy below.
+5. Verify every public capability claim against what this project and its connected services actually support.
+6. Do not publish, deploy, contact prospects, or send live emails without explicit approval. Build and test the overhaul first.
+
+# STRATEGIC OBJECTIVE
+
+Our Headwaters should become the public consulting and customer-acquisition front door for Codetry-powered AI builds.
+
+The central commercial offer is:
+
+- $28,000 CAD for a commercial or institutional first build
+- $20,000 CAD for an eligible nonprofit, co-operative, or community first build
+
+These should be presented as two versions of the same bounded implementation method—not as unrelated packages.
+
+The website must help organizations prepare a real project and budget for funding opportunities. A qualified prospect should be able to:
+
+1. Understand what Headwaters builds
+2. Select an appropriate customer path
+3. Complete a short, non-sensitive qualification intake
+4. Receive an immediate non-binding budgetary quote
+5. Receive a grant-ready project summary
+6. Download or print the materials
+7. Request formal scope review or optionally book a conversation
+
+A meeting should be optional for early-stage planning, not the price of discovering what the project might cost.
+
+# CORE POSITIONING
+
+Lead in plain language with a proposition similar to:
+
+“AI systems that keep work, context, and authority moving.”
+
+Supporting idea:
+
+“Headwaters builds practical AI-assisted operating systems for organizations that need more capacity without surrendering human authority, community language, private records, or ownership of the resulting infrastructure.”
+
+Codetry is the method behind the work.
+
+Explain Codetry as a disciplined build process:
+
+1. Map how the organization actually speaks and works
+2. Identify who has authority over each decision and record
+3. Define what AI may prepare, retrieve, compare, draft, or flag
+4. Define what AI must never decide or commit
+5. Build one bounded, useful operating layer
+6. Test it with the people doing the work
+7. Train the organization and hand over a usable system
+8. Preserve an exit and data-export path
+
+Do not lead the homepage with the entire watershed, zone system, XRPL, Bubbler, sociophysics, doctrine, or proprietary architecture. These may appear through progressive disclosure after the buyer understands the practical offer.
+
+AI should be prominent, but the message is not “maximum automation.”
+
+The message is:
+
+- AI prepares; people remain responsible
+- Context travels with its source, purpose, uncertainty, and authority
+- Organizations retain their vocabulary and operating knowledge
+- Private information is purpose-limited
+- Corrections and disagreements remain visible
+- Systems should remain usable and leaveable
+- The customer should not become dependent on the consultant to understand their own system
+
+# WHO THE WEBSITE SERVES
+
+Create four clear public paths.
+
+## 1. Commercial and institutional AI builds
+
+For businesses, institutions, operators, and organizations that need a custom AI-assisted workflow.
+
+Starting price: $28,000 CAD.
+
+Possible problems:
+
+- Work is reconstructed from emails, forms, documents, and spreadsheets
+- Staff repeatedly explain the same context
+- Knowledge disappears when a worker leaves
+- AI tools produce drafts without sufficient authority or provenance
+- Existing systems do not communicate
+- A new operating layer is needed without replacing every existing tool
+
+The first build should include:
+
+- Workflow and vocabulary mapping
+- Authority and boundary mapping
+- One bounded AI-assisted operating layer
+- Human review and exception handling
+- Configuration and agreed integrations
+- Testing
+- Team training
+- Launch and handoff plan
+- Initial reporting and outcome framework
+
+Do not imply that unlimited integrations, data migration, security certification, regulated workflows, or ongoing custom development are included in the base price.
+
+## 2. Co-operatives, nonprofits, and communities
+
+Starting price: $20,000 CAD, subject to organizational eligibility and scope confirmation.
+
+Core message:
+
+“Map your organization once. Add the next useful tool as funding becomes available.”
+
+Speak directly to:
+
+- Food co-operatives
+- Housing and worker co-operatives
+- Community benefit organizations
+- Rural and northern organizations
+- First Nations and Indigenous-led organizations
+- Volunteer networks
+- Membership organizations
+- Community development groups
+
+Common problems:
+
+- A small number of people carry most of the work
+- Member or volunteer capacity is difficult to route
+- Contribution is invisible
+- Operational knowledge lives in one person’s spreadsheet
+- Grant reporting becomes a second job
+- Every new funding cycle starts from zero
+- Outside platforms do not reflect the organization’s own language
+- Infrastructure disappears when the grant ends
+
+The promise is not “buy the entire Headwaters ecosystem.”
+
+The promise is:
+
+“A bounded, fundable first implementation that creates one useful operating layer and leaves the organization better prepared for the next funding cycle.”
+
+Potential first-build components include:
+
+- Organizational and vocabulary mapping
+- A Codetry governance or decision ledger
+- One operational root tool
+- Capacity or task routing where appropriate
+- Reporting and evidence structure
+- Configuration and training
+- Launch plan
+- Customer-controlled handoff and export path
+
+Describe future tools as roadmap possibilities, not as included deliverables.
+
+## 3. Care teams and continuity work
+
+Speak to community living organizations, family-support organizations, long-term care, rural care networks, and other care teams.
+
+The core problem is continuity:
+
+- The person or family is repeatedly asked to reconstruct what is already known
+- Meaning and routines are lost between workers or institutions
+- Clinical and administrative records do not carry the whole person
+- Families hold essential context that does not move safely
+- Staff need useful preparation without receiving unrestricted access
+
+Explain Saltbox/private family-held records in plain language before using internal terminology.
+
+Position Headwaters as building private, permissioned continuity tools that can sit alongside existing care plans and systems. Do not imply replacement of regulated clinical systems.
+
+Care work must not be automatically priced when it includes:
+
+- Protected health information
+- Clinical decision-making
+- Guardian or substitute-decision authority
+- Research participants
+- Institutional integrations
+- Regulated records
+- Multi-organization data exchange
+- Outcome or compliance claims
+
+A standard organizational build may begin at $28,000, but expanded care pilots, formal evaluation, and multi-institution work require human scope review. Do not collapse existing $45,000–$65,000 research-pilot concepts into the $28,000 base offer.
+
+Never claim diagnosis, treatment, clinical effectiveness, legal compliance, guaranteed incident reduction, or institutional approval.
+
+## 4. Families and practitioners
+
+Keep this path separate from organizational consulting.
+
+Families should be able to find existing self-serve tools, guided resources, private record instruments, and practitioner materials without believing they need a $20,000 engagement.
+
+Route them toward verified live offerings such as appropriate family tools, printable resources, or guided sessions.
+
+Do not expose private family, child, care, identity, wallet, or consent systems through public marketing forms.
+
+# PUBLIC INFORMATION ARCHITECTURE
+
+Create or overhaul the following surfaces as appropriate to the existing project:
+
+## Homepage
+
+Above the fold:
+
+- Clear AI-build headline
+- One-paragraph practical explanation
+- $28,000 commercial build card
+- $20,000 nonprofit/co-op/community build card
+- Primary CTA: “Build your project and quote”
+- Secondary CTA: “See how Codetry works”
+
+Below:
+
+- Who it is for
+- Problems Headwaters solves
+- The bounded build process
+- Human authority and ownership commitments
+- Selected proof/readiness
+- Care and family pathways
+- FAQ
+- Final quote/intake CTA
+
+A visitor should understand the offer before encountering the full ecosystem metaphor.
+
+## Services
+
+Include:
+
+- Commercial AI Build
+- Community and Nonprofit Capacity Build
+- Care Continuity Pilot
+- Family and Practitioner Tools
+
+For every service show:
+
+- Who it is for
+- Problem addressed
+- What is included
+- What is not included
+- Starting price or scope status
+- Indicative timeline
+- Next action
+
+## Pricing
+
+Publish one reconciled primary pricing model:
+
+- Commercial first build: $28,000 CAD
+- Eligible nonprofit/co-op/community first build: $20,000 CAD
+
+Show transparent base inclusions and exclusions.
+
+Do not lead publicly with unresolved annual licensing, revenue-share, maintenance, per-member, or legacy tier models. These may be discussed in a later formal proposal after they are reconciled.
+
+Custom integrations, substantial migration, regulated data, research design, expanded deployment, custom security, and later modules are separately scoped.
+
+If later-module pricing is retained, verify it before publishing. Do not invent public prices from internal planning figures.
+
+## How We Build
+
+Explain the Codetry method in accessible language:
+
+- Map
+- Bound
+- Build
+- Test
+- Train
+- Hand over
+
+Explain that AI can retrieve, organize, compare, draft, and flag uncertainty, but it does not acquire organizational authority.
+
+## Work / Proof
+
+Use explicit readiness labels:
+
+- Live
+- Available with scoped configuration
+- Pilot
+- Reference deployment
+- Roadmap
+
+The 807 work may be described as a bounded co-operative reference deployment showing how vocabulary, capacity, work, and funder-facing reporting can become more legible without surrendering organizational ownership.
+
+Do not describe 807 as:
+
+- A finished universal platform
+- Proof of deployment at scale
+- An approved Alterna product
+- “Brought to you by Alterna”
+- A guaranteed funding outcome
+
+Do not use partner names, branding, testimonials, or outcome claims unless their public use is verified and authorized.
+
+## Funding Support
+
+Create a page explaining that the website can help an organization prepare a technology project for:
+
+- Grant calendars
+- Board packages
+- Funding conversations
+- Operating plans
+- Partnership discussions
+
+State clearly:
+
+- Headwaters does not determine fund eligibility
+- The generated document is a planning draft
+- The organization must verify every fact
+- Funding is never guaranteed
+- The tool does not submit applications
+- Final budgets and representations remain the applicant’s responsibility
+
+## Intake and Quote Builder
+
+Build a short, progressive form.
+
+Collect only:
+
+- Contact name
+- Work email
+- Organization name
+- Organization type
+- Province/territory and service area
+- Selected offer
+- High-level workflow or capacity problem
+- Intended users
+- Desired outcome
+- Approximate organizational scale
+- Existing systems at a high level
+- Accessibility, language, rural-connectivity, or offline needs
+- Target start period
+- Funding deadline, if any
+- Whether migration, integrations, regulated data, or multiple organizations are involved
+- Permission to contact
+- Separate optional marketing/newsletter consent
+
+Display a strong warning:
+
+“Do not submit patient, resident, child, client, family, financial-account, credential, or other sensitive personal information through this form.”
+
+Do not ask for diagnoses, care notes, names of supported people, passwords, API keys, wallet information, or confidential source records.
+
+# AUTOMATED QUOTE RULES
+
+The quote system must be deterministic and transparent.
+
+Base routing:
+
+- Commercial/institutional standard build: $28,000 CAD
+- Eligible nonprofit/co-operative/community standard build: $20,000 CAD
+- Family/practitioner self-serve path: no organizational quote
+- Care, research, regulated, multi-organization, high-security, major migration, or complex integration scope: base planning estimate may be shown, but formal review is required
+
+The nonprofit/community price is based on self-attestation during intake and remains subject to verification before contract.
+
+Every generated quote must include:
+
+- Customer and organization name
+- Selected offer
+- High-level project objective
+- Base inclusions
+- Explicit exclusions
+- Indicative stages and timeline
+- Budget in Canadian dollars
+- Tax treatment stated as unconfirmed or additional, as appropriate
+- Assumptions
+- Information still required
+- Quote/estimate reference number
+- Creation date
+- Expiry date, preferably 30 days
+- Status: “Non-binding budgetary estimate”
+- A path to request formal scope review
+
+Required disclaimer:
+
+“This document is a non-binding budgetary estimate for planning and funding discussions. It is not a contract, statement of work, legal opinion, determination of grant eligibility, or guarantee of funding. Final scope, price, schedule, taxes, privacy requirements, security requirements, integrations, and organizational eligibility must be confirmed in writing.”
+
+Do not automatically generate a binding statement of work or accept the quote as a contract.
+
+# GRANT-READY PROJECT INSERT
+
+Use the prospect’s verified answers to create a neutral, editable, printable summary containing:
+
+- Project title
+- Organizational context
+- Problem being addressed
+- Project objective
+- Proposed activities
+- Expected outputs
+- Expected capacity outcomes
+- Indicative nine-week timeline
+- Base project budget
+- Customer responsibilities
+- Headwaters responsibilities
+- Assumptions and exclusions
+- Privacy and human-authority boundaries
+- Items requiring applicant verification
+- Optional formal-review request
+
+Never invent:
+
+- Statistics
+- Population counts
+- Partner approval
+- Project history
+- Evidence
+- Eligibility
+- Funding-program alignment
+- Savings
+- Outcomes
+- Community endorsement
+
+If information is missing, mark it as “Applicant to confirm” rather than filling it with generated claims.
+
+# LEAD HANDLING
+
+After quote generation:
+
+- Show the quote and funding insert immediately
+- Offer print and accessible download
+- Email a copy if transactional email is configured safely
+- Store the lead, intake version, estimate, status, and timestamps
+- Assign a reference number
+- Notify the founder through the existing approved channel
+- Let the customer request formal scope review
+- Make scheduling optional
+- Do not add the person to marketing without separate consent
+- Provide a way to ask for correction or deletion
+
+Reuse existing secure, rate-limited lead infrastructure if present. Do not add secrets directly to source code. Use Replit Secrets for any required credentials.
+
+# PRIVACY, SECURITY, AND HUMAN REVIEW
+
+Safe to automate:
+
+- Public educational copy
+- Offer selection
+- Non-sensitive qualification
+- Published base-price calculation
+- Budgetary estimates
+- Grant-planning drafts
+- Completeness checks
+- Transactional acknowledgement
+- Internal lead routing
+- Print/download
+- Optional scheduling
+
+Must receive human review:
+
+- Binding price or contract
+- Custom scope
+- Nonprofit eligibility disputes
+- Final grant narrative or application
+- Clinical or care decisions
+- Guardian/substitute-decision authority
+- Sensitive-data processing
+- Security architecture
+- Data migration
+- Third-party integrations
+- Multi-organization deployment
+- Research design
+- Legal, tax, regulatory, procurement, or compliance claims
+- Automatic rejection or other consequential decisions
+
+Add or verify:
+
+- Server-side validation
+- Rate limiting and abuse controls
+- Output escaping
+- CSRF/session protections where applicable
+- Privacy notice
+- Retention policy
+- Consent records
+- Access control for stored inquiries
+- Deletion/correction process
+- Failure-safe email and persistence behavior
+- No sensitive information in analytics or URLs
+
+Hidden routes, robots directives, metadata, and client-side checks are not security controls.
+
+# SEO STRATEGY
+
+Target accurate, natural search language such as:
+
+- Custom AI systems Canada
+- Responsible AI implementation
+- Human-in-the-loop AI consulting
+- AI workflow automation
+- Nonprofit AI implementation
+- Co-operative digital capacity
+- Community-owned digital infrastructure
+- Grant-ready technology project
+- Private care coordination tools
+- Human-AI trust and oversight
+- Community data sovereignty
+- Northern Ontario software consultant
+- Rural Canadian AI systems
+- AI systems for co-operatives
+- AI-assisted organizational capacity
+
+Do not keyword-stuff or create misleading DND/NORAD pages.
+
+The closed 2026 IDEaS call can inform the vocabulary, but the site must not present it as active or imply a relationship with DND.
+
+Implement and verify:
+
+- Unique titles and descriptions
+- One clear H1 per page
+- Canonical URLs
+- Open Graph and social metadata
+- Sitemap inclusion
+- Crawlable internal links
+- ProfessionalService or Organization structured data
+- Offer structured data where accurate
+- FAQ structured data where appropriate
+- Accessible semantic markup
+- Fast mobile rendering
+- Meaningful alt text
+- Correct redirects and 404 behavior
+
+# CLAIM AND IP BOUNDARIES
+
+Do not publish:
+
+- Proprietary formulas
+- Exact scoring weights or thresholds
+- Trade-secret Gate or Bubbler mechanics
+- Patent drafts
+- Counsel material
+- Confidential business plans
+- Private partner records
+- Private family or care records
+- Security-sensitive architecture
+- Unsupported “first,” “only,” “military-grade,” “battle-tested,” or “guaranteed” claims
+- Unsupported scientific, medical, legal, financial, or savings claims
+- Revenue projections as customer outcomes
+
+Public copy should describe the problem, principles, verified capabilities, engagement structure, and research direction.
+
+# BRAND DIRECTION
+
+Preserve the warm, grounded Headwaters identity, but increase commercial clarity.
+
+The visual and verbal hierarchy should be:
+
+1. Practical problem
+2. Tangible outcome
+3. Fixed starting offer
+4. How the bounded AI build works
+5. Proof and safeguards
+6. Deeper Codetry philosophy
+
+Do not discard the watershed language. Move it to the depth layer rather than making it the price of entry.
+
+Desired tone:
+
+- Calm
+- Concrete
+- Capable
+- Northern and grounded
+- Technically credible
+- Not hype-driven
+- Not corporate-generic
+- Not mystical before the buyer understands the offer
+- Clear about boundaries and uncertainty
+
+# CONVERSION MEASUREMENT
+
+Add privacy-respecting events for:
+
+- Offer viewed
+- Commercial or nonprofit path selected
+- Intake started
+- Intake completed
+- Quote generated
+- Quote downloaded/printed
+- Funding insert generated
+- Formal review requested
+- Optional booking selected
+
+Do not send form answers, contact details, organization-sensitive descriptions, or quote content to analytics.
+
+# REQUIRED TESTING
+
+Test at minimum:
+
+1. Standard commercial quote → $28,000
+2. Standard nonprofit/co-op/community quote → $20,000
+3. Family visitor → self-serve family path, no organizational quote
+4. Care project without sensitive/regulated scope → appropriate starting guidance
+5. Care project with PHI/institutional integration → human review required
+6. Major migration/integration → human review required
+7. Multi-organization deployment → human review required
+8. Research/evaluation request → human review required
+9. Missing required answers
+10. Malicious or oversized input
+11. Duplicate submission
+12. Email failure after successful persistence
+13. Persistence failure
+14. Keyboard-only use
+15. Screen-reader labels and error announcements
+16. Mobile layouts
+17. Print and download output
+18. Quote expiry and reference number
+19. SEO metadata and structured data
+20. Production-domain routes, redirects, sitemap, and canonical URLs
+
+# FINAL DELIVERABLE
+
+Return:
+
+- A summary of the old positioning and new positioning
+- The final information architecture
+- Complete public copy inventory
+- Exact pricing and quote rules implemented
+- Intake schema
+- Grant-insert schema
+- Privacy and human-review boundaries
+- Readiness/claim verification table
+- SEO keyword-to-page map
+- Test results
+- Screenshots of major responsive pages
+- A list of anything still needing founder, counsel, privacy, clinical, partner, or pricing approval
+- A clear statement of whether the overhaul is ready to publish
+
+Build the system so a legitimate prospect can leave with a useful planning estimate and funding insert without talking to the founder—but never confuse frictionless planning with frictionless contracting, sensitive-data intake, or unreviewed grant representations.
+```
+
+The key commercial decision embedded here is: **automate the planning quote, not the legal commitment**. That gives prospects something immediately useful for a grant or board package while protecting you from accidentally promising an unsuitable $20,000 or $28,000 implementation.
