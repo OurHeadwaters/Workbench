@@ -1,0 +1,90 @@
+This is useful—it confirms that the business agent is pushing the public site in a broader direction than a co-op campaign alone.
+
+The attachment is a copy-and-paste prompt, not completed website copy. Its main instruction is:
+
+Make Headwaters’ public consulting offer concrete enough that a visitor can understand the work, choose a starting path, and request a bounded estimate without needing a sales meeting first.
+
+What it adds to the campaign direction
+The primary audiences should now be:
+
+Co-operative boards
+Care teams facing staffing and handoff pressure
+Commercial organizations and nonprofits
+Families as a separate, lighter-touch path
+The co-op campaign remains important, but it should become one audience lane within a broader public offers and intake system.
+
+Strongest insight from the prompt
+The offer needs to sell practical capacity-building, not abstract transformation.
+
+For a co-operative board, the copy should show concrete outputs such as:
+
+A bounded project plan
+Decision-rights map
+Meeting rhythm
+Action tracker
+Decision log
+Member or board onboarding guide
+Policy and procedure index
+Capital-project or service-evaluation framework
+Handoff materials for the next board
+For a care team, it should show:
+
+Shift and handoff maps
+Coverage and escalation workflows
+Supervisor load reduction
+Onboarding and reference tools
+Recurring-task checklists
+Exception and follow-up tracking
+A maintained handoff system
+That is much more credible than leading with “AI,” “ecosystem,” or the full Headwaters architecture.
+
+How the offer structure should work
+The prompt identifies three offers:
+
+Initial implementation
+Additional standard tool
+Custom review
+The public site should explain these clearly, but the primary call to action should probably remain one simple first engagement:
+
+Initial implementation
+A bounded project that defines the problem, brings the right people into the room, builds practical tools, and leaves the organization able to maintain them.
+
+Proposed public starting points:
+
+$20,000 CAD for eligible nonprofit, co-operative, and community work
+$28,000 CAD for commercial organizations
+Additional standard tool
+A later tool added after the organizational map and working context already exist. This is where the “map once, add capacity over time” story belongs.
+
+Custom review
+A human-scoped engagement for integrations, migrations, unusual workflows, regulated contexts, sensitive data, or work that cannot responsibly be quoted from a short intake.
+
+Important boundary
+The care examples are appropriately cautious. They should never imply that Headwaters:
+
+Replaces licensed staff
+Provides medical advice
+Solves staffing shortages by itself
+Makes clinical or regulatory decisions
+Collects patient, resident, child, or family-sensitive details through a public form
+The public promise should be about making existing work more usable under pressure, not automating professional judgment.
+
+This is already covered by an existing project task
+The attached prompt aligns closely with Task #6821 — Overhaul public offers and intake, which is already in the project’s Drafts. I surfaced that task rather than creating a duplicate.
+
+That plan already expands the work to include:
+
+A clearer public front door on ourheadwaters.ca
+$20,000 and $28,000 budgetary quote paths
+Co-op, care, commercial, and family routes
+Non-sensitive self-serve intake
+Printable quotes and grant-ready project inserts
+Accurate readiness labels for live, configurable, pilot, and roadmap capabilities
+Privacy and care-data boundaries
+SEO, accessibility, analytics, and production testing
+A human-review route for custom or sensitive work
+One important architectural point is confirmed there: ourheadwaters.ca is a separate live website/deployment from the codetry.ca artifacts in this repository. Any implementation should first verify the project that actually owns the live site rather than modifying an unrelated artifact here.
+
+So the updated conclusion is:
+
+The co-op campaign should not be a separate broad ecosystem pitch. It should be the first concrete audience path inside a buyer-ready Headwaters consulting site, with practical examples, fixed starting points, self-serve qualification, and a clear human-review boundary.

@@ -726,12 +726,13 @@ export function ServicesPage() {
             style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
           >
             <p className="font-mono text-[13px] uppercase tracking-[0.22em] mb-3" style={{ color: "hsl(var(--accent))" }}>
-              phase fees
+              current quote paths
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {[
-                { label: "Phase 1", value: "$28,000", note: "6–8 weeks. Fixed fee, defined scope, real deliverable. Shorter engagement = reduced invoice." },
-                { label: "Phase 2+", value: "$18,000–$60,000", note: "Typical per-phase range depending on scope and duration. Phase 2 (the main build) commonly runs $52,000–$60,000 over 4–6 months; later phases step down as the community takes ownership. Each phase is confirmed with the community before work begins." },
+                { label: "Initial implementation", value: "$20,000 / $28,000", note: "Starting price for community/nonprofit work / commercial or institutional work. Defined scope, real deliverable." },
+                { label: "Additional standard tool", value: "$8,000 / $12,000", note: "Starting price for community/nonprofit work / commercial or institutional work. Confirmed against the tool and scope." },
+                { label: "Custom review", value: "By review", note: "Expanded, unusual, or still-forming work is scoped with the organization before a fee is proposed." },
                 { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
               ].map(({ label, value, note }) => (
                 <div key={label}>
