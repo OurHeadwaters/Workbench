@@ -1,0 +1,163 @@
+Headwaters Repeatable Co-operative Delivery Playbook
+Status: Canonical internal delivery method
+Owner: Headwaters practitioner / platform owner
+Version date: 30 August 2026
+Applies to: A new white-label co-operative or community organization receiving a bounded Headwaters implementation
+
+This is the operating source of truth for scoping and delivering a co-op engagement. The 807 reference record is in 807-reference-implementation.md, the fillable working forms are in templates/headwaters-coop-delivery-templates.md, and the paper rehearsal is in headwaters-second-coop-dry-run.md.
+
+1. The method in one sentence
+Map the co-operative once, launch one useful operating layer, teach the people who run it, report what changed, and leave a ranked path for the next tool.
+
+The first engagement is a bounded capacity-building project. It is not a requirement to buy every Headwaters product, a transfer of governance to Headwaters, or a promise that every planned connection is already available.
+
+2. Active offer and commercial rules
+These prices are the current Headwaters package for new engagements. They are starting package prices for written scope and should not be changed in a proposal by silently borrowing an older rate card.
+
+Package	Co-op / not-for-profit	Commercial organization	Includes
+Initial implementation	$20,000 CAD one time	$28,000 CAD one time	Discovery; Codetry organizational and vocabulary mapping; governance/ledger setup; Field Guide Finance edition; one selected operational tool; configuration; agreed data/content intake; training; launch acceptance; initial results report; later-tool roadmap
+Each additional standard tool	$8,000 CAD each	$12,000 CAD each	Reuse of the approved map, vocabulary, governance rules, tenant profile, and branding; tool-specific scope, configuration, training, launch check, and update to the roadmap
+Existing-system integration	$4,000–$10,000 CAD, scoped	$4,000–$10,000 CAD, scoped	A defined connection to an existing system, with data mapping, permissions, testing, and recovery plan
+Major migration or custom workflow	Typically $8,000–$15,000 CAD, scoped	Typically $8,000–$15,000 CAD, scoped	Material migration, non-standard workflow, or custom build; requires a separate written scope
+Annual support, hosting, and updates	$3,600–$6,000 CAD annually	$3,600–$6,000 CAD annually	Renewal scope agreed in writing; support, hosting, maintenance, and updates appropriate to the tenant; no per-member charge in this package
+What is included in the initial implementation
+Codetry organizational map: the co-op's purpose, work, decision rights, relationships, information boundaries, vocabulary, and funder-facing language.
+Codetry Vocabulary Ledger and governance setup: a versioned language layer with an approval trail. It does not replace bylaws, financial policies, board resolutions, or legal advice.
+Field Guide Finance: a co-op-specific edition built from reusable finance modules and the co-op's approved language. It covers practical finance rhythms, records, budgets, cash flow, tax/compliance decision points, and funding readiness. It is educational guidance, not accounting or legal advice.
+One selected operational tool: chosen from the readiness matrix after discovery. The first tool must solve a named problem for a named operator group.
+Configuration and intake: approved tenant identity, regional settings, roles, content, operating rhythms, and a bounded source-data handoff.
+Training: role-based sessions plus reference materials and a named tenant operator.
+Launch and initial results: an acceptance check, support path, baseline, and a first report of observable changes. A report may say “not measured yet”; it must not invent impact.
+Later-tool roadmap: a prioritized, fundable sequence showing what the existing map enables and what still requires configuration, integration, migration, approval, or new product work.
+Helping Hands, mobile access, or another companion module may be included where discovery shows a clear fit. It is not silently guaranteed as part of every first implementation.
+
+Payer and funding language
+The payer is named in the scope and budget:
+
+Direct purchase: the co-operative pays Headwaters under the signed scope.
+Co-op grant: the co-operative receives or uses approved grant funding and pays Headwaters for the implementation.
+Sponsor-supported work: a sponsor pays for a defined common resource or an agreed implementation. The sponsor does not acquire the co-op's governance, member data, or tenant administration.
+Field Guide Finance can be provided at no cost to a participating co-op under a common sponsor arrangement while the implementation remains a funded $20,000 or $28,000 project. Never call the implementation “free” because the Field Guide is free to the participant. State who funds the work, what Headwaters is paid to do, and what the co-op receives.
+
+Alterna wording gate
+Alterna is not a confirmed sponsor or partner unless written approval is recorded for the exact use.
+
+Safe before approval: “Designed for co-operative funding conversations, with the 807 deployment serving as a reference case for proposed Alterna-supported work.”
+Safe when describing a proposal: “Proposed with support from Alterna Savings,” only when that proposal is actually submitted or discussed in that context and does not imply approval.
+Do not use “Brought to you by Alterna Savings,” an Alterna logo, an endorsement, or a confirmed sponsorship claim until Alterna has expressly approved the wording and brand use in writing.
+The approval record belongs in the sponsor decision register, not in marketing copy by assumption.
+
+Historical models — do not use as the current offer
+The following remain useful for understanding project history but are superseded for new co-op proposals:
+
+The early stonemason launch card of Discovery $500, Foundation Build $4,500, Training & Handoff $1,500, and Complete Launch Package $6,000 was an accessible early-adopter rate card.
+The estimated Co-op Starter / Market Operator / Full Community Stack subscriptions of $199–$299, $349–$499, and $599–$799 per month were conversation estimates, not the active implementation package.
+Any Gatehouse-style per-member monthly tier, revenue-share, or alternate annual license is a separate historical or legal proposal. It is not to be blended into this package.
+807's founding arrangement is tenant-specific and remains governed by its own approved agreement. It does not set the price or governance rights for a later co-op.
+3. Boundaries and working principles
+Headwaters, the tenant, and the sponsor
+Party	Controls	Does not control
+Headwaters	Platform code, shared infrastructure, release process, implementation method, tenant provisioning, technical security controls, scoped configuration, training materials, and support agreement	The co-op's board decisions, member policy, accounting sign-off, legal interpretation, sponsor approval, or another tenant's data
+Co-op board / authorized tenant sponsor	Purpose, priorities, tenant identity, vocabulary approval, membership and operating policy, who gets tenant-level roles, launch acceptance, data sharing, and roadmap order	Headwaters platform administration, another tenant, shared infrastructure credentials, or unapproved product promises
+Tenant operator(s)	Day-to-day content, schedules, member communications, routine checks, and first-line issue reporting within the granted role	Platform-wide configuration, other tenants, production secrets, or changes to legal/compliance policy
+Funding sponsor	The approved funding purpose, eligible budget framing, sponsor participation, and any approved attribution or brand use	The co-op's governance, private records, platform administration, or the right to approve work outside the funding agreement
+Review boundaries
+Escalate before committing when work touches:
+
+Legal: bylaws, member rights, contracts, privacy promises, data transfer, liability, intellectual property, or an unapproved sponsor relationship.
+Accounting / tax: tax treatment, HST/GST, payroll, remittances, financial statements, restricted funds, or a control that changes the treasurer's responsibilities.
+Security / privacy: new credentials, identity-provider changes, personal or financial data migration, public report links, retention, or cross-tenant access.
+Integration: an external system, payment provider, mailbox, calendar, domain, API, or data import that is not already in the approved standard configuration.
+Custom product work: a new feature, non-standard workflow, or requirement that cannot be met by configuration.
+4. Readiness vocabulary
+Every proposed capability gets one status in the scope and the public-facing material:
+
+Status	Meaning	Proposal language
+Available now	It exists and can be demonstrated without tenant-specific build work.	“Available now; configuration and tenant acceptance still apply.”
+Available with scoped configuration	The platform capability exists, but the tenant needs settings, content, permissions, or a bounded setup.	“Included only when the written scope names the configuration.”
+Pilot only	It works in a bounded reference or test setting but has not earned a general promise.	“Reference/pilot capability; subject to a separate readiness check.”
+Roadmap	It is designed, desired, partial, or planned but not a delivered capability.	“Possible later layer; not part of this launch.”
+Reference readiness matrix
+Capability	Current classification	What must be true before promising it
+Codetry organizational mapping	Available with scoped configuration	A facilitated map is completed, reviewed, and approved by the tenant
+Versioned Vocabulary Ledger	Available with scoped configuration	Tenant admin access, language decisions, provenance, and an approving person are recorded
+Field Guide Finance	Available with scoped configuration	Edition content, source permissions, compliance review, tenant language, and publication approval are complete
+807 Benefits / membership portal pattern	Available with scoped configuration	Tenant config, roles, dues/payment choices, content, and support owner are approved
+Market Mosaic	Available now as a multi-tenant product; tenant setup still required	Tenant market model, coordinator roles, vendor data, and any ordering connection are scoped
+Standby Supplies	Available now as a public guide; regional adaptation is scoped	Climate, local resources, safety review, and tenant publication decision are defined
+807 Garden mobile companion	Pilot only outside the 807 reference deployment	Rebrand, auth, mobile acceptance, store/release plan, and support ownership are approved
+Rootwork creator studio	Pilot only for a new co-op; photo workbench is live in the reference artifact	User group, data boundary, content handoff, and the unconnected source integrations are explicit
+Helping Hands / creditHours support	Available with scoped configuration	The task model, verification responsibility, credit policy, and feature flag are approved; it is not an on-chain payment rail
+XRPL / Codetry Aquifer witnessing	Available with scoped configuration for supported Codetry records	Explicit user ceremony, testnet/production boundary, source record, and verification expectations are documented
+Cross-tenant federation, self-serve onboarding, and platform analytics	Roadmap	A separate product, security, and commercial decision is approved
+5. Delivery gates
+No stage is complete because a meeting happened. The owner records the completion check and links the handoff artifact before the next stage starts.
+
+Gate	Entry criteria	Work and completion check	Accountable owner	Handoff artifact
+0. Qualification	A named co-op has a real operating problem and a plausible funding or payment path	Confirm organization type, decision-maker, region, first problem, desired timing, data sensitivity, and whether the offer fits. Decline or re-scope if the request is “build everything.”	Headwaters	Qualification note and initial risk flags
+1. Discovery and funding plan	A board sponsor or general manager can attend discovery	Document current work, capacity pressure, reporting burden, governance rhythm, member/producer experience, systems, budget source, and a fundable first slice. Name the payer.	Headwaters + tenant sponsor	Discovery brief and funding-plan insert
+2. Organizational mapping	Discovery brief is accepted and the tenant can provide people who know the work	Facilitate Codetry map: purpose, work, decisions, relationships, terms, information boundaries, and proof. Mark each statement as tenant-approved, proposed, or unresolved.	Headwaters facilitates; tenant approves	Approved map, Vocabulary Ledger draft, decision list
+3. Scope lock	Map and first problem are approved enough to choose a tool	Choose exactly one first operational tool. State inclusions, exclusions, source data, training audience, dates, measures, risks, price, payer, and change-control rule. Both parties accept the scope.	Headwaters + tenant sponsor	Signed scope, budget, and acceptance criteria
+4. Tenant configuration decisions	Scope names the tool and the settings it needs	Complete the decision register. Classify every value as platform default, regional default, tenant decision, sponsor decision, or custom work. No 807 value carries forward without an explicit tenant decision.	Headwaters prepares; tenant approves	Tenant configuration sheet and open-decision log
+5. Data and content intake	Tenant has named a data owner and approved the requested fields	Inventory sources, owners, format, sensitivity, retention, permission, transformation, and deletion/return plan. Test a small sample. Reject unnecessary personal data.	Tenant data owner + Headwaters	Intake manifest, sample validation, data handling record
+6. Access and external setup	The tenant has approved roles and technical contacts	Create tenant-level accounts/roles; configure domain, auth, payment, email, calendar, storage, and integrations only when in scope. Verify secrets stay in platform controls and the tenant never receives Headwaters platform-admin access.	Headwaters technical owner	Access matrix, setup checklist, integration test record
+7. Configuration and content build	Approved decisions and accepted sample data are available	Configure the tenant seam or mature tenant path; load approved copy/content; apply regional settings; run role and permission tests; record deviations.	Headwaters	Configured preview, change log, test results
+8. Training and rehearsal	Preview is stable enough for real workflows	Train each role using the tenant's real rhythm. Cover sign-in, daily/weekly work, approval boundaries, data hygiene, issue reporting, and recovery. Each attendee completes one practical task or is marked absent.	Headwaters trains; tenant operator owns attendance	Training plan, attendance/completion record, quick reference
+9. Launch acceptance	Training is complete or exceptions are accepted in writing	Run launch checklist: identity, roles, content, payments/email, privacy, backups/rollback, help route, mobile/browser checks, and first live workflow. Tenant sponsor accepts, defers, or rejects each criterion.	Tenant sponsor accepts; Headwaters records	Signed launch acceptance and support handoff
+10. Initial results report	Launch has a baseline and a defined reporting window	At launch capture baseline, at 30 days gather observable use and operator feedback, and write what changed, what did not, evidence links, caveats, and next decisions. Do not infer financial or social impact from a feature existing.	Headwaters drafts; tenant validates	Initial results report with evidence register
+11. 30/60/90-day follow-up	Launch acceptance is complete and support owner is active	At 30 days stabilize; at 60 days review adoption, burden, data quality, and support; at 90 days decide sustain, adjust, add a standard tool, or pause. Re-rank the roadmap.	Headwaters + tenant operator + sponsor	30/60/90 review notes, updated roadmap, renewal/change quote
+Change control
+Anything that changes the selected tool, data classes, external system, legal/compliance interpretation, delivery date, or price is a scope change. The owner records:
+
+requested change and reason;
+affected decision, data, people, and acceptance check;
+price/timing/security impact;
+approver;
+accepted, deferred, declined, or separately quoted status.
+6. Configuration discipline
+The configuration decision register is the protection against turning 807's choices into platform defaults.
+
+Classification rules
+Platform default: safe reusable behavior or wording maintained by Headwaters for every tenant. It must not contain 807 names, prices, region assumptions, or private policy.
+Regional default: a starting point for a geography or climate. It is proposed, not silently applied. The tenant accepts, edits, or rejects it.
+Tenant decision: the co-op's own name, roles, tiers, vocabulary, schedules, policies, sources, content, or integrations.
+Sponsor decision: funding purpose, reporting format, common Field Guide language, participation, attribution, and brand wording.
+Custom work: anything requiring new code, a non-standard data migration, a new integration, a legal/accounting/security review, or a separate quote.
+Minimum register fields
+decision_id · topic · proposed_value · classification · source/reason · tenant_impact · data_sensitivity · approver · approval_date · status · implementation_reference · review_date
+
+The operator sees tenant-level settings and content. They do not receive access to Headwaters platform administration, shared tenant registry controls, other tenants, production secrets, or deployment credentials.
+
+7. Operations, recovery, and handoff
+Required before launch
+Tenant access: named board sponsor, tenant operator, backup operator, and role matrix; leavers have a removal path.
+Domain and auth: verified domain decision, sign-in test, recovery contact, and a clear note if custom-domain work is not included.
+Payments: the tenant's payment owner, account, settlement expectations, webhook/test result, and accounting review boundary.
+Email: sender/reply-to, test recipient, unsubscribe or notification expectations, and who handles a bounced or misrouted message.
+Source data: minimal fields, consent/permission, import sample, retention, export/return, and deletion plan.
+Support: first-line tenant operator, Headwaters support path, response expectations under the annual support scope, and escalation conditions.
+Rollback: last known accepted configuration, content/data restore or re-import approach, launch pause authority, and communication plan.
+Incident and recovery path
+Tenant operator records the time, user role, screen/workflow, expected behavior, actual behavior, and whether personal or financial data is involved.
+Operator pauses the affected workflow when continuing could duplicate payments, expose data, or corrupt records.
+Headwaters classifies the issue as content/configuration, access, platform defect, integration, security/privacy, or legal/accounting.
+Headwaters restores the last accepted configuration or disables the affected optional layer when safe. No destructive data change is made to “make it work” without tenant approval.
+Escalate security/privacy, legal, accounting, payment, and sponsor-brand issues to the named reviewer.
+Record resolution, user communication, evidence preserved, and whether the roadmap or scope must change.
+Evidence retained after handoff
+Retain the approved map and ledger version, decision register, signed scope, data manifest and permissions, access matrix, configuration/test record, training record, launch acceptance, baseline, results report, sponsor approvals, support/incident log, and roadmap revision. Do not retain raw personal or financial data merely as evidence when an aggregate or redacted record is enough.
+
+8. 30/60/90-day operating rhythm
+Point	Review	Minimum evidence	Decision
+30 days	Can the named operators complete the core workflow? What is confusing or fragile?	Use notes, support questions, completion/adoption counts where available, and one operator interview	Stabilize, clarify, or pause
+60 days	Did the layer reduce the named burden? Is the data/content maintained? Are permissions and support working?	Before/after burden observations, data-quality check, unresolved issues, member/producer feedback where collected	Continue, adjust scope, or prepare next funding step
+90 days	Is the layer worth sustaining and is the next tool now justified?	Results report update, cost/support review, roadmap ranking, tenant and sponsor decision	Renew, add a standard tool, commission custom work, or stop
+9. Paper-ready handoff sequence
+At the end of an engagement, the tenant receives a tenant-facing handoff folder containing:
+
+“What we mapped” — approved organizational map and language decisions.
+“What we launched” — selected tool, settings, roles, and known limits.
+“How to run it” — role quick references, training completion, weekly/monthly rhythm.
+“How to get help” — support owner, incident path, recovery boundary, and renewal terms.
+“What we can add later” — roadmap with funding trigger and separate-scope flags.
+The handoff is about operating the tenant's configured layer. It is not a handoff of Headwaters platform administration or shared infrastructure.

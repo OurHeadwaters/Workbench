@@ -1,0 +1,95 @@
+Headwaters Context Package — Cold-Start Brief
+Read this first. This is the single document a fresh agent (or new contributor) needs to orient in this codebase. It does not repeat detail — it points to the right file for each topic. Start here, then open whatever you need.
+
+What this codebase is
+Headwaters builds and licenses digital infrastructure for food co-operatives and community organizations in Zone 3 — Northwestern Ontario's 807 area code, boreal forest, long winters, and remote communities. This is not a generic SaaS project; the zone is a design constraint baked into every product. 807 Food Co-operative & Hub (Dryden, ON) is the flagship tenant and first licensee. The platform is explicitly multi-tenant so future co-ops can be onboarded without touching core code.
+
+The codebase is a pnpm monorepo with React + Vite frontends, an Express 5 API server, PostgreSQL via Drizzle ORM, Clerk auth, and Square payments. There are currently eight deployed artifacts (seven web + one mobile) sharing a single API server and database. 807 is not the platform vendor — Headwaters is. Contributors reading multi-tenancy code should understand the "tenant seam" exists to serve future Headwaters clients, not future 807 initiatives.
+
+Canonical references
+Ecosystem map
+docs/headwaters-ecosystem-map.md The authoritative single-document reference for:
+
+The full zone circuit (what Zone 3 means and why it matters as a design constraint)
+Complete product inventory with feature lists, artifact paths, preview URLs, and taglines
+Interoperability protocol — which products connect to which, what the connections do, and what is live vs. planned
+Connection status table (June 2026)
+Multi-tenancy model (two patterns: static seam + DB-driven)
+The stonemason / practitioner financial model and its historical context
+The current co-operative delivery method and package ladder
+Brand voice rules and banned words
+Known gaps
+Read this before making architectural decisions or adding new connections between products.
+
+Repeatable co-operative delivery
+docs/headwaters-coop-delivery-playbook.md The canonical implementation method for a new white-label co-op: Codetry organizational mapping, Field Guide Finance, one selected operational tool, configuration, training, launch acceptance, initial results reporting, and a later-tool roadmap. It links to the 807 reference record, reusable templates, and the second-co-op paper rehearsal. The active package is $20,000 CAD for a co-op/not-for-profit first implementation or $28,000 for a commercial organization; older launch and monthly bundle estimates are historical.
+
+Zone 3 financial model
+docs/zone3-financial-model.md Working financial model for the Zone 3 / Constellation platform. Covers the three-layer stonemason structure (Commons / Practitioner / Guild), the 807 proof points, grant positioning, and the business debt question. Its early launch rate card is historical; use the delivery playbook for the active co-op package and pricing.
+
+Platform architecture (technical)
+.local/docs/headwaters-platform-architecture.md Technical reference: artifact inventory with preview paths, shared library structure, the two multi-tenancy patterns (static seam vs. DB-driven Market Mosaic pattern), Clerk auth model, and the recommended architecture path for adding new co-op tenants.
+
+Software bundle context (product + sales)
+.local/headwaters-software-bundle-context.md Product-by-product descriptions framed for a buyer or partner. Covers all seven products, bundle configurations, integration points, tech stack summary, multi-tenancy model, what is not yet built, and positioning language. Use this for any sales, marketing, or partnership conversation.
+
+Co-op network vision
+.local/co-op-network-vision.md Kitchen-table document on the three-layer network model (each co-op's home → discovery → federation), 807's founding role options (pure tenant / co-owner / network anchor), historical platform-fee estimates, and the practical steps to onboard a second co-op. Internal only; the repeatable delivery package is canonical for current proposals.
+
+Operations & setup
+Local setup and admin access
+docs/local-setup.md Step-by-step: hub coordinator first-time setup (phone numbers, PIN), role-based access (admin / treasurer via Clerk private metadata), setting roles in the Clerk dashboard, the one-shot founder admin script, and how to verify access. Read this before touching anything auth-related or before the first Monday digest send.
+
+Run commands
+pnpm dev          # start all artifact servers via workflows
+pnpm build        # build all artifacts
+pnpm typecheck    # full typecheck (libs first, then leaf packages)
+
+Key environment variables
+Variable	Purpose
+VITE_CLERK_PUBLISHABLE_KEY	Required for Deadfall
+DEADHEAD_OWNER_EMAIL	Deadfall founder notifications (optional)
+DEADHEAD_SPOTTER_SECRET	Deadfall spotter magic links (optional)
+HUB_THREAD_PIN	PIN in digest email deep-links — change before first send
+DUES_SNOOZE_EXPIRY_LOOKAHEAD_DAYS	Dues snooze expiry digest lookahead (default 1–2 days)
+Product context packages
+These exist for products with non-obvious scope or design constraints:
+
+Product	Context file
+Codetry (grant articulation tool — not yet built)	.local/codetry-context-package.md
+Codetry Aquifer (identity + XRPL hash-witnessing for Codetry decisions)	docs/codetry-aquifer.md
+Standby Supplies (reconstruction kit — full spec for rebuilding the artifact)	docs/context-packs/standby-supplies.md
+Pilot & growth strategy
+Rootwork pilot avatars
+docs/rootwork/pilot-avatars.md The six pilot personas (art gallery, hairstylist market organizer, abattoir, fishing lodge, soap maker, Tyler / Sioux Lookout), the common pain pattern, the common core of six capabilities, the customization layer per avatar, the expanded Tyler pilot (his mesh, the smallest useful first slice, success markers at 30/60/90 days), and the "Rootwork as product vs. umbrella" decision. Read this before any Rootwork feature work or pilot outreach.
+
+Where things live (quick index)
+Thing	Location
+Frontend app	artifacts/807-benefits
+API server	artifacts/api-server
+Database schema	lib/db/src/schema/
+API contracts (OpenAPI)	lib/api-spec/
+Frontend tenant config seam	artifacts/807-benefits/src/config/tenant.ts
+Backend tenant config seam	artifacts/api-server/src/config/tenant.ts
+Board / email routing config	artifacts/api-server/src/config/board.ts
+Deadfall DB schema	lib/db/src/schema/deadhead.ts
+Deadfall spotter checklist prompts	artifacts/deadhead/src/lib/constants.ts
+Mature multi-tenant DB pattern	lib/db/src/schema/market-mosaic.ts
+Seasonal clock logic	artifacts/807-benefits/src/lib/season.ts
+Stuck items aggregator	artifacts/api-server/src/lib/stuckItems.ts
+Dues snooze expiry digest	artifacts/api-server/src/lib/duesSnoozeExpiryDigest.ts
+Payout import parser	artifacts/api-server/src/lib/payoutImportParser.ts
+UI theme / design tokens	artifacts/807-benefits/src/index.css
+Library content data	artifacts/807-benefits/src/data/library.ts
+AGM guide (static HTML)	artifacts/api-server/public/agm/
+AGM notes API	artifacts/api-server/src/routes/agm-notes.ts
+Gotchas worth knowing cold
+Kitchen Rental — /partners/kitchen-rental silently posts with role: "other", which routes to a specific board email in artifacts/api-server/src/config/board.ts.
+Deadfall naming — Public brand is "Deadfall"; internal code (DB tables, API routes) remains /api/deadhead/*. Do not rename DB tables.
+Deadfall spotter access — Spotters use HMAC magic-link tokens. Spotter links point to /deadfall/spotter/:id. Signed by DEADHEAD_SPOTTER_SECRET or falls back to SESSION_SECRET.
+Deadfall triage sync — Triage mode (/deadfall/triage) syncs with .local/replit-tasks-cache.json via POST /api/deadhead/sync-tasks.
+Multi-tenancy seam — The tenant seam is for future Headwaters licensees, not 807 sub-tenants. 807's board has no authority to configure new co-op tenants.
+Market Mosaic = the target pattern — Its DB-driven multi-tenancy is the mature model. New features should follow it, not the static seam.
+Never use console.log in server code — Use req.log in route handlers and the singleton logger for non-request code.
+Do not run pnpm dev from workspace root — Run artifacts via workflows. Each needs PORT and BASE_PATH env vars wired by the workflow config.
+This context package is maintained alongside the codebase. If you add a major new product, context file, or design decision, add a pointer here.
