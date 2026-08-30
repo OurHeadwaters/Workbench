@@ -2,6 +2,7 @@ import { Redirect } from "wouter";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Circle } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { applyPageMetadata } from "@/lib/seo";
 
 const BASE = import.meta.env.BASE_URL ?? "/";
 
@@ -47,6 +48,7 @@ function trackOfferSelection(
   location: string,
 ) {
   trackEvent("consulting_offer_selected", { offer, location });
+  trackEvent("offer_selected", { offer, location });
 }
 
 function useReveal() {
@@ -94,6 +96,100 @@ function FadeIn({ children, delay = 0, className = "" }: { children: React.React
 }
 
 export function HeadwatersPage() {
+  useEffect(() => {
+    const siteUrl = new URL(BASE, window.location.origin).toString();
+    return applyPageMetadata({
+      title: "Headwaters — Capacity-building consulting",
+      description:
+        "Headwaters helps organizations carry important work through to a usable system with the right delivery capacity, practical tools, and knowledge left behind.",
+      path: BASE,
+      structuredData: {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": `${siteUrl}#organization`,
+            name: "Headwaters",
+            url: siteUrl,
+            description:
+              "Capacity-building consulting for work that needs to keep going.",
+          },
+          {
+            "@type": "Service",
+            "@id": `${siteUrl}#capacity-building-consulting`,
+            name: "Capacity-building consulting",
+            serviceType: "Capacity-building consulting",
+            provider: { "@id": `${siteUrl}#organization` },
+            description:
+              "Bounded consulting engagements that help organizations carry important work through to a usable system with practical tools and knowledge left behind.",
+            offers: [
+              {
+                "@type": "Offer",
+                name: "Initial implementation for co-ops, not-for-profits, and community organizations",
+                price: "20000",
+                priceCurrency: "CAD",
+                description: "Starting price.",
+              },
+              {
+                "@type": "Offer",
+                name: "Initial implementation for commercial organizations",
+                price: "28000",
+                priceCurrency: "CAD",
+                description: "Starting price.",
+              },
+              {
+                "@type": "Offer",
+                name: "Additional standard tool for co-ops, not-for-profits, and community organizations",
+                price: "8000",
+                priceCurrency: "CAD",
+                description: "Starting price.",
+              },
+              {
+                "@type": "Offer",
+                name: "Additional standard tool for commercial organizations",
+                price: "12000",
+                priceCurrency: "CAD",
+                description: "Starting price.",
+              },
+            ],
+          },
+          {
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "What does an initial implementation cost?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Initial implementation starts at $20,000 CAD for co-ops, not-for-profits, and community organizations. Commercial work starts at $28,000 CAD.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Is the quote binding?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "No. The generated quote is budgetary and non-binding. Eligibility, scope, and security are reviewed before a formal commitment.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Who is Headwaters for?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Headwaters works with community organizations, co-ops, nonprofits, and institutions that need practical delivery capacity now and a usable foundation afterward.",
+                },
+              },
+            ],
+          },
+        ],
+      },
+    });
+  }, []);
+
   return (
     <main className="font-sans antialiased bg-[#F7F7F5] text-[#1C1917] selection:bg-[#D4A017] selection:text-[#1C1917]">
       <header className="absolute top-0 w-full z-50 px-6 py-8 flex justify-between items-center">
@@ -471,6 +567,43 @@ export function HeadwatersPage() {
             <p className="text-center text-sm text-[#A8A29E] max-w-2xl mx-auto leading-relaxed">
               All fees are in CAD, exclude HST, and travel and expenses are reviewed separately and reimbursed at cost where applicable.
             </p>
+          </FadeIn>
+        </div>
+      </section>
+
+      <section aria-labelledby="offer-faq-title" className="py-24 md:py-32 bg-[#F7F7F5] border-t border-[#E7E5E4]">
+        <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
+          <FadeIn>
+            <p className="text-xs font-bold tracking-widest uppercase text-[#78716C] mb-6">Before you begin</p>
+            <h2 id="offer-faq-title" className="font-serif text-4xl md:text-5xl leading-tight mb-12">
+              A clear first step.
+            </h2>
+            <div className="divide-y divide-[#E7E5E4] border-y border-[#E7E5E4]">
+              <div className="py-8">
+                <h3 className="font-serif text-2xl mb-3">What does an initial implementation cost?</h3>
+                <p className="text-[#57534E] text-lg leading-relaxed">
+                  Initial implementation starts at $20,000 CAD for co-ops,
+                  not-for-profits, and community organizations. Commercial work
+                  starts at $28,000 CAD.
+                </p>
+              </div>
+              <div className="py-8">
+                <h3 className="font-serif text-2xl mb-3">Is the quote binding?</h3>
+                <p className="text-[#57534E] text-lg leading-relaxed">
+                  No. The generated quote is budgetary and non-binding.
+                  Eligibility, scope, and security are reviewed before a formal
+                  commitment.
+                </p>
+              </div>
+              <div className="py-8">
+                <h3 className="font-serif text-2xl mb-3">Who is Headwaters for?</h3>
+                <p className="text-[#57534E] text-lg leading-relaxed">
+                  Headwaters works with community organizations, co-ops,
+                  nonprofits, and institutions that need practical delivery
+                  capacity now and a usable foundation afterward.
+                </p>
+              </div>
+            </div>
           </FadeIn>
         </div>
       </section>

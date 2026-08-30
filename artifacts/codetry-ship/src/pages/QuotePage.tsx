@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, type ChangeEvent, type FormEvent } from "react";
 import { ApiError, postQuoteIntake, type QuoteIntakePayload, type QuoteOrganizationType, type QuoteOffer } from "@/lib/api";
-import { trackEvent } from "@/lib/analytics";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ArrowRight, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import { trackEvent } from "@/lib/analytics";
+import { applyPageMetadata } from "@/lib/seo";
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -119,6 +120,16 @@ export function QuotePage() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<Awaited<ReturnType<typeof postQuoteIntake>> | null>(null);
 
+  useEffect(() => {
+    const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
+    return applyPageMetadata({
+      title: "Request a budgetary quote | Headwaters",
+      description:
+        "Choose a Headwaters capacity-building path and request a budgetary, non-binding quote. Initial implementation starts at $20,000 CAD for eligible community work and $28,000 CAD for commercial work.",
+      path: `${base}/quote`,
+    });
+  }, []);
+
   const updateField = (key: keyof FormState) => (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -188,11 +199,23 @@ export function QuotePage() {
         accessibilityConnectivityNeeds: clean(form.accessibilityConnectivityNeeds),
         specialRequirements: clean(form.specialRequirements),
       });
+      setResult(response);
+      const funnelData = {
+        offer: form.selectedOffer,
+        organization_type: form.organizationType,
+        quote_mode: response.mode,
+      } as const;
       trackEvent("quote_request_submitted", {
         offer: form.selectedOffer,
         mode: response.mode,
       });
-      setResult(response);
+      trackEvent("quote_intake_completed", funnelData);
+      if (response.mode === "standard") {
+        trackEvent("quote_generated", funnelData);
+        trackEvent("funding_insert_generated", funnelData);
+      } else {
+        trackEvent("formal_review_requested", funnelData);
+      }
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       setSubmitError(
@@ -355,10 +378,14 @@ export function QuotePage() {
                               value={offer.value}
                               checked={isSelected}
                               onChange={(e) => {
-                                const selectedOffer = e.target.value as QuoteOffer;
-                                setForm(f => ({ ...f, selectedOffer }));
+                                const offer = e.target.value as QuoteOffer;
+                                setForm(f => ({ ...f, selectedOffer: offer }));
                                 trackEvent("consulting_offer_selected", {
-                                  offer: selectedOffer,
+                                  offer,
+                                  location: "quote_form",
+                                });
+                                trackEvent("offer_selected", {
+                                  offer,
                                   location: "quote_form",
                                 });
                               }}
@@ -663,6 +690,12 @@ function SuccessState({
             href={result.pdfUrl}
             target="_blank"
             rel="noreferrer"
+            onClick={() =>
+              trackEvent("quote_downloaded", {
+                location: "quote_success",
+                quote_mode: result.mode,
+              })
+            }
             className="bg-[#D4A017] text-[#17211C] px-8 py-3.5 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#F7F7F5] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] flex items-center gap-3"
           >
             Open your quote <ArrowRight className="w-4 h-4" aria-hidden="true" />

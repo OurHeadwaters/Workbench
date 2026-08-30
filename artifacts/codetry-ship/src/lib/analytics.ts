@@ -21,6 +21,6 @@ export function trackEvent(name: string, data?: AnalyticsData): void {
   try {
     window.umami?.track(name, data);
   } catch {
-    // Analytics is optional and must never break the app.
+    // Analytics is optional and must never interrupt a customer flow.
   }
 }
