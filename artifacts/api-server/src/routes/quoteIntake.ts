@@ -5,6 +5,7 @@ import { execFileSync } from "child_process";
 import { checkRateLimit } from "../lib/rateLimit";
 import {
   classifyQuote,
+  calculateTaxCents,
   createQuoteNumber,
   quoteHtml,
   quotePlainText,
@@ -18,6 +19,7 @@ const router: IRouter = Router();
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ORGANIZATION_TYPES = new Set([
   "co-op/not-for-profit",
+  "community organization",
   "commercial/institutional",
   "other",
 ]);
@@ -89,6 +91,19 @@ router.post("/quote-intake", async (req, res) => {
   const desiredTiming = readString(body, "desiredTiming", 200);
   const selectedOffer = readString(body, "selectedOffer", 100);
   const projectDescription = readString(body, "projectDescription", 4000);
+  const desiredOutcome = readString(body, "desiredOutcome", 3000);
+  const intendedUsers = readString(body, "intendedUsers", 1000, false);
+  const approximateScale = readString(body, "approximateScale", 500, false);
+  const currentSystems = readString(body, "currentSystems", 1500, false);
+  const accessibilityConnectivityNeeds = readString(
+    body,
+    "accessibilityConnectivityNeeds",
+    1500,
+    false,
+  );
+  const integrationNeeded = readString(body, "integrationNeeded", 20, false) || "not sure";
+  const sensitiveDataInvolved =
+    readString(body, "sensitiveDataInvolved", 20, false) || "not sure";
   const specialRequirements = readString(body, "specialRequirements", 3000, false);
 
   if (
@@ -104,7 +119,10 @@ router.post("/quote-intake", async (req, res) => {
     !desiredTiming ||
     !selectedOffer ||
     !OFFERS.has(selectedOffer) ||
-    !projectDescription
+    !projectDescription ||
+    !desiredOutcome ||
+    !new Set(["yes", "no", "not sure"]).has(integrationNeeded) ||
+    !new Set(["yes", "no", "not sure"]).has(sensitiveDataInvolved)
   ) {
     res.status(422).json({
       error: "Please complete the required organization and project details.",
@@ -116,13 +134,16 @@ router.post("/quote-intake", async (req, res) => {
     organizationType,
     selectedOffer,
     specialRequirements,
+    integrationNeeded,
+    sensitiveDataInvolved,
   });
   const quoteNumber = createQuoteNumber();
   const validUntil =
     classification.mode === "standard" ? quoteValidUntil() : null;
   const subtotalCents = classification.subtotalCents;
-  const taxCents = subtotalCents === null ? null : 0;
-  const totalCents = subtotalCents;
+  const taxCents = calculateTaxCents(subtotalCents);
+  const totalCents =
+    subtotalCents === null || taxCents === null ? null : subtotalCents + taxCents;
 
   const [row] = await db
     .insert(quoteRequestsTable)
@@ -139,6 +160,13 @@ router.post("/quote-intake", async (req, res) => {
       desiredTiming,
       selectedOffer,
       projectDescription,
+      desiredOutcome,
+      intendedUsers: intendedUsers || null,
+      approximateScale: approximateScale || null,
+      currentSystems: currentSystems || null,
+      accessibilityConnectivityNeeds: accessibilityConnectivityNeeds || null,
+      integrationNeeded,
+      sensitiveDataInvolved,
       specialRequirements: specialRequirements || null,
       mode: classification.mode,
       subtotalCents,
@@ -156,9 +184,7 @@ router.post("/quote-intake", async (req, res) => {
   const absolutePdfUrl = `${origin}${relativePdfUrl}`;
   const customerBody = quotePlainText(row!, absolutePdfUrl);
   const operatorEmail =
-    process.env.HEADWATERS_QUOTE_EMAIL ??
-    process.env.KIT_DELIVERY_ALERT_EMAIL ??
-    "ship@codetry.systems";
+    process.env.HEADWATERS_QUOTE_EMAIL ?? "bobbie@ourheadwaters.ca";
 
   const [customerDelivery, operatorDelivery] = await Promise.all([
     sendQuoteEmail({

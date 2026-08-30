@@ -1,0 +1,85 @@
+Overhaul Public Offers Intake
+What & Why
+Reposition the live Our Headwaters consulting website as the clear public front door for Codetry-led AI builds, community capacity projects, care-continuity work, and family-facing tools. Replace ecosystem-first messaging with a buyer-ready offer that lets commercial organizations receive a $28,000 budgetary quote and eligible nonprofit/co-operative/community organizations receive a $20,000 budgetary quote, while preserving human authority, privacy, grant truthfulness, and the distinction between a planning estimate and a binding contract.
+
+The overhaul should reduce the founder’s pre-sales workload and winter cashflow friction: a qualified prospect should be able to understand the offer, select a starting lane, answer a short non-sensitive intake, and leave with a useful grant/funding insert and non-binding quote without a meeting. The live ourheadwaters.ca site is currently served from a separate website/deployment from this repository’s codetry.ca artifacts; implementation belongs in the Replit project that actually owns that live site. Verify the target project and its current code before editing, and use this plan as the handoff specification rather than modifying an unrelated artifact.
+
+Done looks like
+A first-time visitor understands within seconds that Headwaters builds bounded, practical AI systems that preserve human authority, context, privacy, and organizational ownership
+The homepage presents two primary fixed starting prices: $28,000 for a commercial build and $20,000 for an eligible nonprofit, co-operative, or community build
+Co-ops and communities, care teams, commercial organizations, and families each have a clear path without being forced through the full Codetry ecosystem
+Prospects can complete a short, accessible, mobile-friendly intake without entering client, patient, resident, child, or other sensitive personal information
+Standard-scope prospects receive an immediate, printable and downloadable budgetary quote plus a grant-ready project summary covering the problem, activities, deliverables, timeline, budget, and expected outcomes
+The quote clearly states that it is non-binding, time-limited, exclusive of tax, subject to eligibility/scope/security review, and not a guarantee of grant eligibility or funding
+Non-standard integrations, migrations, clinical workflows, regulated decisions, sensitive-data use, research studies, and expanded care pilots are routed to human review rather than automatically priced
+Submitted inquiries and generated quote records are persisted safely, assigned a reference number, acknowledged to the prospect, and surfaced to the founder without exposing secrets or sensitive data
+Public proof accurately distinguishes live capabilities, configurable capabilities, pilots, reference deployments, and roadmap work
+The 807 story is described as a bounded co-operative reference deployment, not a finished universal platform or approved Alterna product
+Care copy describes private, person/family-held continuity and consent boundaries without making clinical, diagnostic, compliance, outcome, or institutional-approval claims
+Family tools remain a separate low-friction path and are not confused with the $20,000/$28,000 organizational engagement
+Search metadata and page structure target accurate terms such as custom AI systems, responsible AI implementation, nonprofit AI capacity, co-operative digital infrastructure, human-in-the-loop AI, private care coordination, community data sovereignty, grant-ready technology projects, and Northern Ontario software consulting
+The site does not publish trade-secret formulas, exact scoring thresholds, confidential partner information, private care material, counsel drafts, or implementation details that could weaken IP protection
+Canonical URLs, social metadata, structured data, sitemap entries, internal links, analytics events, accessibility, responsive behavior, form validation, anti-abuse controls, and quote calculations are verified before release
+Out of scope
+Automatically submitting a grant or representing that a customer is eligible for a specific fund
+Producing a binding contract, statement of work, legal opinion, tax determination, clinical recommendation, or final security architecture without human review
+Automatically rejecting organizations or making consequential eligibility decisions
+Collecting protected health information, diagnoses, care notes, names of care recipients, child information, wallet secrets, credentials, or detailed confidential records through the public intake
+Promising that every project will be delivered for the base price when integrations, migrations, research, regulated data, multi-organization deployment, or custom security work expand the scope
+Publishing confidential IP, patent strategy, proprietary Codetry formulas, exact Gate/Bubbler mechanics, private partner records, or unverified performance claims
+Rebuilding Codetry’s full authenticated product ecosystem inside the consulting site
+Presenting the closed 2026 DND IDEaS call as an active opportunity or implying government, Alterna, healthcare, university, or research endorsement
+Changing existing authenticated care, family, payment, credential, or grant-workspace authorization boundaries
+Steps
+Verify the live-site project and establish truth sources — Confirm that the working Replit project is the one serving ourheadwaters.ca, inventory its routes, forms, backend capabilities, analytics, email, storage, and deployment configuration, and compare all current public claims against the newest commercial, readiness, privacy, and IP sources before changing copy.
+Reframe the brand around bounded AI builds — Lead with practical AI-assisted systems that move work and context while keeping people and organizations in authority; retain Headwaters warmth and Codetry differentiation, but move watershed vocabulary and technical architecture below the plain-language offer.
+Build the buyer-path information architecture — Create clear paths for commercial AI builds, nonprofit/co-op/community capacity builds, care-continuity pilots, and family tools, supported by pricing, process, proof, FAQ, funding support, and inquiry pages with consistent calls to action.
+Publish one reconciled base offer — Present the $28,000 commercial and $20,000 nonprofit/co-op/community versions as the same bounded first engagement with transparent inclusions, exclusions, indicative nine-week delivery stages, ownership/handoff principles, and separately scoped additions; keep unresolved subscriptions, revenue share, per-member pricing, and maintenance models out of the primary public offer.
+Translate the offer for each audience — Explain how the common build method applies to co-op capacity and reporting, community-owned infrastructure, care-team continuity and private family-held context, organizational workflows, and family self-serve tools without claiming every module is universally production-ready.
+Add accurate proof and readiness labels — Show a concise portfolio with explicit labels such as live, configurable, pilot, reference deployment, and roadmap; use 807 and existing AI-assisted production as evidence only to the extent verified, and avoid unsupported market, savings, scientific, medical, security, or “first/only” claims.
+Create the self-serve qualification intake — Ask only for organization identity, contact information, organization type, high-level workflow problem, intended users, desired outcome, timing/funding deadline, approximate scale, current systems, accessibility/connectivity needs, and whether integrations or sensitive data are involved; warn users not to submit personal care or confidential records.
+Implement deterministic budgetary quoting — Generate the $28,000 or $20,000 base estimate from explicit organization/offer selection, flag nonprofit/co-op/community eligibility as self-attested pending verification, route expanded scope to review, assign a quote reference and expiry, and make all disclaimers visible in the on-screen, printable, downloadable, and emailed versions.
+Generate a grant-ready project insert — Convert verified intake answers into a neutral draft with problem, objective, activities, outputs, indicative timeline, base budget, expected capacity outcomes, assumptions, and applicant-review checklist; require the prospect to verify every fact and clearly state that Headwaters does not determine fund eligibility or submit the application.
+Build a low-touch follow-up path — Persist the lead and quote safely, send an acknowledgement and copy of the estimate/project insert, notify the founder, provide optional booking rather than requiring a call, and allow prospects to request a formal scope review when they are ready.
+Protect privacy, security, and commercial boundaries — Add appropriate consent, retention, privacy, anti-spam, deletion/contact, rate-limit, validation, abuse, access-control, and audit measures; keep sensitive care/family workflows behind their existing authorization systems and treat metadata, robots, redirects, and hidden routes as non-security controls.
+Complete technical SEO and conversion instrumentation — Add accurate titles, descriptions, headings, canonical tags, social cards, sitemap coverage, organization/service/offer/FAQ structured data, internal links, and privacy-respecting funnel events for offer selection, intake completion, quote generation, download, funding-insert generation, and formal-review requests.
+Test the complete customer journey — Verify quote calculations and routing for commercial, nonprofit/co-op/community, care, family, standard, and expanded-scope scenarios; test mobile and keyboard access, validation, duplicate submissions, email/storage failure behavior, printing/downloads, privacy warnings, analytics, SEO output, and production routing.
+Relevant files
+attached_assets/Pasted-You-already-have-most-of-the-substantive-campaign-found_1788048237906.txt
+docs/business-plan.md
+docs/90-day-cashflow-sprint.md
+docs/gatehouse-sales-structure.md
+docs/white-label-foundation-overview.md
+docs/sales-training-ontario-20-archetypes.md
+docs/commercialization-roadmap.md
+docs/ai-continuity-cooperative-coordinator.md
+docs/food-coop-infrastructure-alignment.md
+docs/807-food-handoff-baseline-study.md
+docs/807-food-handoff-aggregate-report.md
+docs/grant-pilot-brief.md
+docs/funding-grove.md
+docs/public-protection-inventory.md
+artifacts/headwaters/src/pages/WorkWithHeadwatersPage.tsx
+artifacts/headwaters/src/pages/ForFamiliesPage.tsx
+artifacts/headwaters/src/pages/CodetryPage.tsx
+artifacts/market/src/App.tsx
+artifacts/api-server/src/routes/market-contact.ts
+artifacts/api-server/src/routes/pilot-inquiries.ts
+artifacts/api-server/src/routes/funding-grove.ts
+Confirmed seller profile and quote terms
+Use these approved operational defaults in the quote flow, with tax status and other settings kept configurable:
+
+Seller display: Headwaters, operated by 1001047300 ONTARIO INC.
+Seller legal name: 1001047300 ONTARIO INC.
+Practitioner title: Founder
+Mailing address: Box 50 Wabigoon, ON P0V 2W0
+Business and quote reply-to email: bobbie@ourheadwaters.ca
+Business phone: 807 220 3654
+HST: not currently registered; display “HST not charged. The seller is not currently registered for HST.” until the setting changes
+Quote validity: 60 days
+Payment: 50% upfront and 50% on delivery
+Public price language: starting at $20,000 CAD for eligible nonprofit/co-operative/community work and $28,000 CAD for commercial work
+Travel: reviewed case by case and separately confirmed where applicable
+Annual support: do not offer in the initial quote flow
+All generated quotes: budgetary and non-binding
+Do not place seller credentials or secrets in source code. Keep HST status, quote validity, payment schedule, travel treatment, and seller display as configurable settings so future business changes do not require a rewrite. Confirm whether the mailing address and phone should appear on public pages or only on generated quotes before publishing them broadly.

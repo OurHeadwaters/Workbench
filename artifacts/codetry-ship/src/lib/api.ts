@@ -166,6 +166,7 @@ export async function postIntake(payload: IntakePayload): Promise<IntakeResult> 
 
 export type QuoteOrganizationType =
   | "co-op/not-for-profit"
+  | "community organization"
   | "commercial/institutional"
   | "other";
 
@@ -187,6 +188,13 @@ export interface QuoteIntakePayload {
   desiredTiming: string;
   selectedOffer: QuoteOffer;
   projectDescription: string;
+  desiredOutcome: string;
+  intendedUsers: string;
+  approximateScale: string;
+  currentSystems: string;
+  accessibilityConnectivityNeeds: string;
+  integrationNeeded: string;
+  sensitiveDataInvolved: string;
   specialRequirements: string;
   website?: string;
 }

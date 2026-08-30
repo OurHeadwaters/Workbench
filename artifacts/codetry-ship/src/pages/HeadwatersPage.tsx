@@ -299,6 +299,23 @@ export function HeadwatersPage() {
             Start where you are. Use what you have. We&apos;ll do what we can.
           </p>
 
+          <p
+            style={{
+              color: "rgba(240,232,216,0.76)",
+              fontFamily: "monospace",
+              fontSize: "clamp(0.68rem, 1.8vw, 0.78rem)",
+              lineHeight: 1.7,
+              letterSpacing: "0.06em",
+              margin: "0 auto 22px",
+              maxWidth: 620,
+              textTransform: "uppercase",
+            }}
+          >
+            Starting at $20,000 CAD for eligible nonprofit, co-operative and community work
+            <br />
+            $28,000 CAD for commercial work
+          </p>
+
           <a
             href={`${BASE}quote`}
             style={{

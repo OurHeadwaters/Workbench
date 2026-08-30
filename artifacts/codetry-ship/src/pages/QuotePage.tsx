@@ -18,6 +18,13 @@ const INITIAL_FORM: FormState = {
   desiredTiming: "",
   selectedOffer: "initial implementation",
   projectDescription: "",
+  desiredOutcome: "",
+  intendedUsers: "",
+  approximateScale: "",
+  currentSystems: "",
+  accessibilityConnectivityNeeds: "",
+  integrationNeeded: "not sure",
+  sensitiveDataInvolved: "not sure",
   specialRequirements: "",
   website: "",
 };
@@ -34,11 +41,6 @@ const OFFERS = [
     copy: "One more practical tool for a community that already has a working foundation.",
   },
   {
-    value: "annual support" as const,
-    title: "Annual support",
-    copy: "A steady yearly rhythm for maintenance, questions, and keeping the work alive.",
-  },
-  {
     value: "needs custom review" as const,
     title: "Needs custom review",
     copy: "For expanded, unusual, or still-forming work that deserves a human look first.",
@@ -47,7 +49,7 @@ const OFFERS = [
 
 const REQUIRED_BY_STEP: Record<number, (keyof FormState)[]> = {
   1: ["contactName", "email", "legalOrganizationName", "organizationAddress"],
-  2: ["projectTitle", "fundingProgram", "desiredTiming", "projectDescription"],
+  2: ["projectTitle", "fundingProgram", "desiredTiming", "projectDescription", "desiredOutcome"],
 };
 
 function clean(value: string) {
@@ -132,6 +134,11 @@ export function QuotePage() {
         fundingProgram: clean(form.fundingProgram),
         desiredTiming: clean(form.desiredTiming),
         projectDescription: clean(form.projectDescription),
+        desiredOutcome: clean(form.desiredOutcome),
+        intendedUsers: clean(form.intendedUsers),
+        approximateScale: clean(form.approximateScale),
+        currentSystems: clean(form.currentSystems),
+        accessibilityConnectivityNeeds: clean(form.accessibilityConnectivityNeeds),
         specialRequirements: clean(form.specialRequirements),
       });
       setResult(response);
@@ -257,9 +264,13 @@ export function QuotePage() {
                           onChange={updateField("organizationType")}
                         >
                           <option value="co-op/not-for-profit">Co-op / not-for-profit</option>
+                          <option value="community organization">Community organization</option>
                           <option value="commercial/institutional">Commercial / institutional</option>
                           <option value="other">Other</option>
                         </select>
+                        <p className="quote-hint">
+                          Eligibility is self-attested here and confirmed during scope review.
+                        </p>
                       </div>
                       <Field
                         id="organizationAddress"
@@ -351,6 +362,65 @@ export function QuotePage() {
                         placeholder="What are you trying to make easier, clearer, or more durable?"
                       />
                       <Field
+                        id="desiredOutcome"
+                        label="Desired outcome"
+                        required
+                        full
+                        textarea
+                        value={form.desiredOutcome}
+                        error={errors.desiredOutcome}
+                        onChange={updateField("desiredOutcome")}
+                        placeholder="What should be working better when this first engagement is complete?"
+                      />
+                      <Field
+                        id="intendedUsers"
+                        label="Who would use this?"
+                        hint="Optional"
+                        value={form.intendedUsers}
+                        onChange={updateField("intendedUsers")}
+                        placeholder="Board, staff, volunteers, members, or other users"
+                      />
+                      <Field
+                        id="approximateScale"
+                        label="Approximate scale"
+                        hint="Optional"
+                        value={form.approximateScale}
+                        onChange={updateField("approximateScale")}
+                        placeholder="For example, 8 operators and 120 members"
+                      />
+                      <Field
+                        id="currentSystems"
+                        label="Current systems"
+                        hint="Optional"
+                        full
+                        value={form.currentSystems}
+                        onChange={updateField("currentSystems")}
+                        placeholder="Spreadsheets, email, a portal, or other tools"
+                      />
+                      <Field
+                        id="accessibilityConnectivityNeeds"
+                        label="Accessibility or connectivity needs"
+                        hint="Optional"
+                        full
+                        value={form.accessibilityConnectivityNeeds}
+                        onChange={updateField("accessibilityConnectivityNeeds")}
+                        placeholder="Low bandwidth, mobile access, language, or other needs"
+                      />
+                      <SelectField
+                        id="integrationNeeded"
+                        label="Will this need an integration?"
+                        value={form.integrationNeeded}
+                        onChange={updateField("integrationNeeded")}
+                        options={[["no", "No"], ["yes", "Yes"], ["not sure", "Not sure"]]}
+                      />
+                      <SelectField
+                        id="sensitiveDataInvolved"
+                        label="Will sensitive data be involved?"
+                        value={form.sensitiveDataInvolved}
+                        onChange={updateField("sensitiveDataInvolved")}
+                        options={[["no", "No"], ["yes", "Yes"], ["not sure", "Not sure"]]}
+                      />
+                      <Field
                         id="specialRequirements"
                         label="Special requirements or notes"
                         hint="Optional"
@@ -358,9 +428,13 @@ export function QuotePage() {
                         textarea
                         value={form.specialRequirements}
                         onChange={updateField("specialRequirements")}
-                        placeholder="Constraints, partners, accessibility needs, or anything we should know."
+                        placeholder="Anything else? Please do not include client, patient, resident, child, care, credential, or confidential records."
                       />
                     </div>
+                    <p className="quote-privacy-note">
+                      Keep this form at a high level. Do not submit names of care recipients,
+                      patient or client details, child information, credentials, or confidential records.
+                    </p>
                   </div>
                 )}
 
@@ -384,6 +458,13 @@ export function QuotePage() {
                         value={OFFERS.find((offer) => offer.value === form.selectedOffer)?.title ?? form.selectedOffer}
                       />
                       <ReviewRow label="Description" value={displayValue(form.projectDescription)} />
+                      <ReviewRow label="Desired outcome" value={displayValue(form.desiredOutcome)} />
+                      <ReviewRow label="Intended users" value={displayValue(form.intendedUsers)} />
+                      <ReviewRow label="Scale" value={displayValue(form.approximateScale)} />
+                      <ReviewRow label="Current systems" value={displayValue(form.currentSystems)} />
+                      <ReviewRow label="Accessibility/connectivity" value={displayValue(form.accessibilityConnectivityNeeds)} />
+                      <ReviewRow label="Integration" value={form.integrationNeeded} />
+                      <ReviewRow label="Sensitive data" value={form.sensitiveDataInvolved} />
                       {form.specialRequirements && (
                         <ReviewRow label="Notes" value={form.specialRequirements} />
                       )}
@@ -509,6 +590,31 @@ function Field({
         />
       )}
       {error && <p className="quote-hint" id={`${id}-error`} role="alert">{error}</p>}
+    </div>
+  );
+}
+
+function SelectField({
+  id,
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  id: keyof FormState;
+  label: string;
+  value: string;
+  onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+  options: [string, string][];
+}) {
+  return (
+    <div className="quote-field">
+      <label htmlFor={id}>{label}</label>
+      <select id={id} value={value} onChange={onChange}>
+        {options.map(([optionValue, optionLabel]) => (
+          <option key={optionValue} value={optionValue}>{optionLabel}</option>
+        ))}
+      </select>
     </div>
   );
 }

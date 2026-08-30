@@ -1108,6 +1108,17 @@ html {
   font-size: .84rem;
   line-height: 1.45;
 }
+.quote-privacy-note {
+  grid-column: 1 / -1;
+  margin: .25rem 0 0;
+  padding: .85rem 1rem;
+  color: #69491d;
+  background: rgba(212,160,23,.1);
+  border-left: 3px solid var(--quote-gold);
+  font-family: var(--app-font-serif);
+  font-size: .82rem;
+  line-height: 1.5;
+}
 .quote-honeypot {
   position: absolute;
   left: -10000px;
