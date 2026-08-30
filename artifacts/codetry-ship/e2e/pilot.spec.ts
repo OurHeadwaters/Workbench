@@ -55,17 +55,41 @@ test.describe("public care pilot invitation", () => {
     await expect(page.getByText("Handoff and Sustainable Growth", { exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Turn a board priority into work the next board can carry." })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Make handoffs and follow-through easier when staffing is tight." })).toBeVisible();
-    await expect(page.getByText("For a business looking to optimize their team workflow", { exact: true })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Turn busy days into success everyone can carry." })).toBeVisible();
+    await expect(page.getByText("For a small business with demand to serve", { exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Use a known bottleneck to earn back the build." })).toBeVisible();
+    await expect(page.getByText(/revenue-first path from interest to purchase/i)).toBeVisible();
+    await expect(page.getByText(/a \$28,000 build is not automatically appropriate for a brand-new business without validated demand/i)).toBeVisible();
+    await expect(page.getByText(/credible payback path/i)).toBeVisible();
     await expect(page.getByRole("heading", { name: "Practical apps for real situations." })).toBeVisible();
     await expect(page.getByText("A decision-rights map, meeting rhythm, and action tracker", { exact: true })).toBeVisible();
     await expect(page.getByText("Shift, coverage, and escalation maps", { exact: true })).toBeVisible();
-    await expect(page.getByText("A workflow map from intake to completion", { exact: true })).toBeVisible();
+    await expect(page.getByText("A revenue-first path from interest to purchase", { exact: true })).toBeVisible();
     await expect(page.getByText("Initial implementation", { exact: true })).toBeVisible();
     await expect(page.getByText("Additional standard tool", { exact: true })).toBeVisible();
     await expect(page.getByText("Custom review", { exact: true })).toBeVisible();
     await expect(page.getByText(/Starting at \$20,000 CAD/)).toBeVisible();
     await expect(page.getByText(/Starting at \$8,000 CAD/)).toBeVisible();
+
+    const coopLink = page.getByTestId("practical-example-link-coop");
+    await expect(coopLink).toHaveAttribute("href", "https://807foodcoop.ca");
+    await expect(coopLink).toHaveAttribute("target", "_blank");
+    await expect(coopLink).toHaveAttribute("rel", /noopener/);
+    await expect(coopLink).toHaveAttribute("rel", /noreferrer/);
+    await expect(coopLink).toHaveAccessibleName(/807 Food Co-op.*opens in a new tab/i);
+
+    const careLink = page.getByTestId("practical-example-link-care");
+    await expect(careLink).toHaveAttribute("href", /\/pilot$/);
+    await expect(careLink).toHaveAttribute("target", "_blank");
+    await expect(careLink).toHaveAttribute("rel", /noopener/);
+    await expect(careLink).toHaveAttribute("rel", /noreferrer/);
+    await expect(careLink).toHaveAccessibleName(/person-centred care continuity pilot.*opens in a new tab/i);
+
+    const businessLink = page.getByTestId("practical-example-link-business");
+    await expect(businessLink).toHaveAttribute("href", "https://parrsjars.ca");
+    await expect(businessLink).toHaveAttribute("target", "_blank");
+    await expect(businessLink).toHaveAttribute("rel", /noopener/);
+    await expect(businessLink).toHaveAttribute("rel", /noreferrer/);
+    await expect(businessLink).toHaveAccessibleName(/Parr's Jars.*small-business example.*opens in a new tab/i);
     await expectNoHorizontalOverflow(page);
 
     await expect(page.getByRole("link", { name: "Privacy" })).toBeVisible();
@@ -254,5 +278,15 @@ test.describe("public care pilot invitation", () => {
         ["offer", "location", "mode", "organization_type", "quote_mode"].includes(key),
       );
     })).toBe(true);
+  });
+
+  test("real-work example paths remain usable on a mobile-width viewport", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+
+    await expect(page.getByTestId("practical-example-link-coop")).toBeVisible();
+    await expect(page.getByTestId("practical-example-link-care")).toBeVisible();
+    await expect(page.getByTestId("practical-example-link-business")).toBeVisible();
+    await expectNoHorizontalOverflow(page);
   });
 });

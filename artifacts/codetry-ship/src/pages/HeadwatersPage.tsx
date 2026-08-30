@@ -1,6 +1,6 @@
 import { Redirect } from "wouter";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Circle } from "lucide-react";
+import { ArrowRight, Circle, ExternalLink } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { applyPageMetadata } from "@/lib/seo";
 
@@ -49,6 +49,13 @@ function trackOfferSelection(
 ) {
   trackEvent("consulting_offer_selected", { offer, location });
   trackEvent("offer_selected", { offer, location });
+}
+
+function trackPracticalExample(
+  example: "co-op" | "care-continuity" | "small-business",
+  destination: string,
+) {
+  trackEvent("homepage_practical_example_clicked", { example, destination });
 }
 
 function useReveal() {
@@ -382,6 +389,18 @@ export function HeadwatersPage() {
                       <p className="text-base text-[#57534E] leading-relaxed mb-8 flex-grow">
                         The board can see what needs a decision, what can move between meetings, and what a new volunteer needs to know without reconstructing the whole project from memory.
                       </p>
+                       <a
+                         href="https://807foodcoop.ca"
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         aria-label="Visit 807 Food Co-op, a co-op powered by Codetry (opens in a new tab)"
+                         onClick={() => trackPracticalExample("co-op", "807foodcoop.ca")}
+                         data-testid="practical-example-link-coop"
+                         className="mb-8 inline-flex w-fit items-center gap-2 text-sm font-medium text-[#1C1917] underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm"
+                       >
+                         See 807 Food Co-op, a co-op powered by Codetry
+                         <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
+                       </a>
                       <div className="bg-[#F5F5F4] p-5 rounded-2xl border border-[#E7E5E4]">
                         <p className="text-sm text-[#78716C] leading-snug">
                           Often a fit for an <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "board_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a>.
@@ -443,6 +462,18 @@ export function HeadwatersPage() {
                       <p className="text-base text-[#57534E] leading-relaxed mb-8 flex-grow">
                         The team has a shared way to see what must happen, what is waiting, and who needs to know. The tools support professional judgement; they do not replace licensed staff or clinical decisions.
                       </p>
+                       <a
+                         href={route("pilot")}
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         aria-label="See the person-centred care continuity pilot, including its meaning layer and first 90 days (opens in a new tab)"
+                         onClick={() => trackPracticalExample("care-continuity", route("pilot"))}
+                         data-testid="practical-example-link-care"
+                         className="mb-8 inline-flex w-fit items-center gap-2 text-sm font-medium text-[#1C1917] underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm"
+                       >
+                         See the person-centred care continuity pilot: its meaning layer and first 90 days
+                         <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
+                       </a>
                       <div className="bg-[#F5F5F4] p-5 rounded-2xl border border-[#E7E5E4]">
                         <p className="text-sm text-[#78716C] leading-relaxed">
                           Often a fit for an <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "care_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a> or a <a href={quoteLink("needs custom review")} onClick={() => trackOfferSelection("needs custom review", "care_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">custom review</a>.
@@ -461,13 +492,13 @@ export function HeadwatersPage() {
                 <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
                   <div className="lg:col-span-4 flex flex-col justify-start">
                     <p className="inline-block bg-[#F5F5F4] text-[#57534E] px-3 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase mb-8 w-fit border border-[#E7E5E4]">
-                      For a business looking to optimize their team workflow
+                       For a small business with demand to serve
                     </p>
                     <h3 className="font-serif text-3xl md:text-4xl leading-[1.15] mb-6 text-[#1C1917]">
-                      Turn busy days into success everyone can carry.
+                       Use a known bottleneck to earn back the build.
                     </h3>
                     <p className="text-[#57534E] leading-relaxed text-lg font-light">
-                      A growing business has capable people but too much work depends on a few individuals, handoffs are unclear, and the team loses time to duplicated effort, scattered information, and work that keeps falling between roles.
+                       Parr&apos;s Jars is the kind of small-business example this work can serve: existing interest is real, but a known conversion or fulfillment bottleneck keeps some of that demand from becoming completed orders. The point is not to add software for its own sake; it is to make the path from interest to purchase easier to see and improve.
                     </p>
                   </div>
 
@@ -483,10 +514,10 @@ export function HeadwatersPage() {
                       </h4>
                       <ul className="space-y-4">
                         {[
-                          "A workflow map from intake to completion",
-                          "Clear roles and handoffs for recurring work",
-                          "Shared checklists, templates, and action tracking",
-                          "A simple operating rhythm the team can maintain"
+                           "A revenue-first path from interest to purchase",
+                           "Workflow support around a known sales or fulfillment bottleneck",
+                           "Measures agreed before building: conversion, completed orders, fulfillment time, or another outcome",
+                           "An operating tool the team can maintain after handoff"
                         ].map((item, i) => (
                           <li key={i} className="flex items-start gap-3 text-base text-[#57534E]">
                             <Circle className="w-2 h-2 mt-2 fill-[#D4A017] text-[#D4A017] shrink-0" aria-hidden="true" />
@@ -502,8 +533,20 @@ export function HeadwatersPage() {
                         What changes
                       </h4>
                       <p className="text-base text-[#57534E] leading-relaxed mb-8 flex-grow">
-                        The team can see what needs to happen, who owns each step, and where work is waiting. People spend less time chasing context and more time moving important work forward.
+                         Before a commercial build begins, we define measurable revenue outcomes and the evidence we will use to judge progress. The investment is weighed against a credible payback path, not a promise: a $28,000 build is not automatically appropriate for a brand-new business without validated demand. It can make sense when existing demand and a solvable bottleneck give the work a reasonable chance to earn its way back.
                       </p>
+                       <a
+                         href="https://parrsjars.ca"
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         aria-label="Visit Parr's Jars, a real small-business example (opens in a new tab)"
+                         onClick={() => trackPracticalExample("small-business", "parrsjars.ca")}
+                         data-testid="practical-example-link-business"
+                         className="mb-8 inline-flex w-fit items-center gap-2 text-sm font-medium text-[#1C1917] underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm"
+                       >
+                         See Parr&apos;s Jars, a real small-business example
+                         <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
+                       </a>
                       <div className="bg-[#F5F5F4] p-5 rounded-2xl border border-[#E7E5E4]">
                         <p className="text-sm text-[#78716C] leading-relaxed">
                           Often a fit for an <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "community_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a> or an <a href={quoteLink("additional standard tool")} onClick={() => trackOfferSelection("additional standard tool", "community_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">add-on tool</a>.

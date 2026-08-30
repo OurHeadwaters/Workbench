@@ -1,7 +1,7 @@
 # Headwaters consulting funnel analytics
 
 The Headwaters front door uses the optional Replit-hosted analytics tracker for
-two privacy-safe custom events. Pageviews remain automatic; the app does not
+three privacy-safe custom events. Pageviews remain automatic; the app does not
 load an analytics script or send form contents to analytics.
 
 ## Events
@@ -9,6 +9,7 @@ load an analytics script or send form contents to analytics.
 | Description | Event name | Properties |
 | --- | --- | --- |
 | A visitor chooses a consulting path from the Headwaters page or changes the path in the quote conversation. | `consulting_offer_selected` | `offer`: `initial implementation`, `additional standard tool`, or `needs custom review`; `location`: the UI placement such as `offers_grid` or `quote_form` |
+| A visitor opens one of the three practical-work examples from the Headwaters page. | `homepage_practical_example_clicked` | `example`: `co-op`, `care-continuity`, or `small-business`; `destination`: the destination hostname or route |
 | The quote intake API accepts a request successfully. | `quote_request_submitted` | `offer`: the submitted path; `mode`: `standard` or `custom` |
 
 These events intentionally exclude names, email addresses, organization names,
