@@ -138,10 +138,14 @@ td, th {
   background: #d8d2c8;
   padding: 2rem 0;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+.letter-page-stage__viewport {
+  flex: 0 0 auto;
 }
 .letter-page-stage__content {
   width: 8.5in;
-  margin: 0 auto;
 }
 .letter-page-stage .page-letter {
   margin-top: 0;
@@ -278,11 +282,10 @@ body.print-preview .page-letter-landscape::before {
   }
   .letter-page-stage {
     padding: 1rem 0;
-    height: calc(var(--page-scale, 1) * 1056px + 32px);
   }
   .letter-page-stage__content {
     transform: scale(var(--page-scale, 1));
-    transform-origin: top center;
+    transform-origin: top left;
   }
 }
 

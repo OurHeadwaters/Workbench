@@ -30,13 +30,16 @@ export function LetterPageStage({ children }: LetterPageStageProps) {
     "--page-scale": scale,
   };
 
-  if (scale < 1) {
-    stageStyle.height = `${LETTER_HEIGHT_PX * scale + MOBILE_GUTTER_PX}px`;
-  }
+  const viewportStyle: CSSProperties = {
+    width: `${LETTER_WIDTH_PX * scale}px`,
+    height: `${LETTER_HEIGHT_PX * scale}px`,
+  };
 
   return (
     <div className="letter-page-stage" style={stageStyle}>
-      {children}
+      <div className="letter-page-stage__viewport" style={viewportStyle}>
+        {children}
+      </div>
     </div>
   );
 }
