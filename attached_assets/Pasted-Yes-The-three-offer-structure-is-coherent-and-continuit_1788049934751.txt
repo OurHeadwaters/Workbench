@@ -1,0 +1,511 @@
+Yes. The three-offer structure is coherent, and continuity is the shared commercial idea:
+
+Co-ops & Organizations — Governance Continuity
+Family Teams — Care Continuity
+Sovereign Ops — AI Continuity
+They are not three unrelated services. They are three applications of the same promise:
+
+Important knowledge, authority, and intent should survive handoffs without being silently rewritten or trapped in one person, institution, or AI platform.
+
+Task #6821 (Overhaul public offers and intake) already covers much of the website handoff, so I surfaced it rather than creating a duplicate. It should be refined around these three offers.
+
+Recommended offer architecture
+1. Co-ops & Organizations
+Public name
+Governance Continuity
+
+Buyer
+Co-operatives
+Nonprofits and community organizations
+Homeschool networks
+Rural and northern organizations
+Member-serving organizations
+Boards coordinating work across staff, volunteers, partners, and funders
+Problem
+The organization’s real operating knowledge is fragmented across:
+
+board minutes;
+spreadsheets;
+email and text threads;
+individual staff members;
+informal community vocabulary;
+grant documents;
+partner systems.
+When a director, coordinator, volunteer, vendor, or funding program changes, the organization must reconstruct what was meant, authorized, promised, and learned.
+
+Promise
+Preserve the decisions, source meaning, operating knowledge, and authority your organization needs to continue when people or systems change.
+
+What the engagement produces
+Governance and workflow map
+Role and authority map
+Vocabulary and translation review
+Refused-actions and prohibited-conversions register
+Critical handoff templates
+Decision and correction history
+Export and succession plan
+Founder/key-person continuity plan
+One bounded digital workflow or organizational implementation
+Training and handover
+Strongest existing proof
+The 807 Food Co-operative work demonstrates:
+
+board-governed workflow boundaries;
+source-preserving handoffs;
+distinction between a planning signal and a commitment;
+human review;
+vocabulary governance;
+corrections and contestations;
+privacy-safe baseline measurement;
+continuity without turning the co-op into a merchant or AI-controlled operation.
+This must be presented as a bounded demonstrator and reference deployment, not proof that a universal organizational continuity platform is complete.
+
+Pricing foundation
+The repository currently supports this public starting structure:
+
+Eligible nonprofit, co-operative, or community engagement: starting around $20,000
+Commercial organization engagement: starting around $28,000
+Expanded pilots, regulated workflows, integrations, migrations, research, and sensitive data: scoped separately
+Pricing conflict to resolve
+Current documents contain different ongoing models:
+
+per-member pricing of approximately $1.25–$2.50/member/month;
+fixed annual licensing that explicitly avoids a per-member levy;
+annual maintenance estimates;
+negotiated white-label licensing.
+These should not all appear publicly at once. Until the governance model is resolved, the safest public framing is:
+
+Starting implementation price, with hosting, maintenance, training, and expanded scope quoted separately.
+
+Do not publicly promise a per-member model yet.
+
+2. Family Teams
+Public name
+Family Team Plan
+
+Continuity category
+Care Continuity
+
+Buyer
+Working parents
+Homeschool families
+Larger families with different child needs
+Families balancing land, household, care, and paid-work responsibilities
+Families frustrated by screen and transition conflict
+Families who want person-centred planning without clinicalizing one another
+Problem
+Most family systems lead with:
+
+behaviors;
+deficits;
+generic schedules;
+one-size-fits-all expectations;
+invisible labour carried by one parent.
+The mother becomes the household’s only continuity system. She holds everyone’s needs, appointments, interests, responsibilities, transitions, and emotional weather in her head.
+
+Promise
+Help every person draft their role, needs, and contribution—then turn the whole family’s input into a daily rhythm that makes the work lighter.
+
+Product method
+The parent facilitates rather than unilaterally defines everyone:
+
+Follow each person
+Ask questions
+Draft their page
+Bring it back for correction
+Identify shared agreements
+Combine the plans into a family rhythm
+Review and revise as capacity changes
+Each person’s plan includes
+What I care about
+What I bring to the team
+What I want to learn
+What restores me
+What overwhelms me
+How I prefer to be invited
+What I can reliably contribute
+What I need help carrying
+How others can tell I need support
+What I want the family to understand
+Household plan includes
+Shared goals
+Meals, sleep, and daily anchors
+Work and appointment constraints
+Homeschool and interest-led threads
+Household and land responsibilities
+Screen and AI agreements
+Support pairings
+Seasonal pressures
+Low-capacity alternatives
+The family’s definition of “enough for today”
+Output
+The system produces a Daily Team Rhythm, not a rigid schedule:
+
+shared anchors;
+individual routes;
+household contributions;
+learning opportunities;
+screen transitions;
+parent-capacity protection;
+minimum viable day;
+fuller options for higher-capacity days;
+short review and correction loop.
+Entry product
+The Family Screen Reset is the correct acquisition wedge.
+
+It should produce the first Family Team Agreement:
+
+what role screens currently serve;
+child-specific transition observations;
+approved, uncertain, and excluded content;
+screen windows and boundaries;
+transition supports;
+low-capacity exceptions;
+what each family member agrees to practise.
+Then it offers the next step:
+
+Build your complete Family Team Plan.
+
+Product ladder
+Free screen-pattern checklist
+Family Screen Reset — low-cost printable/guided product
+Family Team Plan — complete multi-person guided experience
+Daily Team Rhythm — recurring planning and review
+Governed family AI — later capability inside the established plan
+Existing foundations
+Dependent profiles and access zones
+Learning Eave approval history
+Media Shelf
+Media Pattern Audit
+Cultural Concern guided experience
+Family-steward guide backend
+Care companion moments
+Family, Homemaker, Homeschool, and Permaculture doctrine
+Stripe-gated Print Suite infrastructure
+Honest product status
+Built now:
+
+several individual components;
+guided screen reflection;
+media review;
+guardian controls;
+family/care continuity infrastructure.
+Not built yet:
+
+Family Team Plan data model;
+multi-person drafting workflow;
+household goals;
+daily synthesis;
+flexible day generation;
+integrated review loop.
+Marketing must not imply that the complete Family Team Plan is already available.
+
+3. Sovereign Ops
+Public name
+Sovereign Ops
+
+Continuity category
+AI Continuity
+
+Buyer
+Initially:
+
+co-operatives;
+community organizations;
+care organizations;
+rural operators;
+boards evaluating AI use;
+organizations where one coordinator holds too much informal knowledge.
+It should not initially be marketed as generic “AI transformation.”
+
+Problem
+Organizations want the capacity benefits of AI, but ordinary AI adoption can create new continuity failures:
+
+the AI summary replaces the source;
+a possibility becomes a commitment;
+uncertainty disappears;
+authority becomes ambiguous;
+institutional vocabulary overwrites local meaning;
+one provider becomes the organization’s memory;
+nobody can explain what the model changed;
+the organization cannot exit without losing its operating context.
+Promise
+Use AI to prepare work without transferring your organization’s authority, meaning, or memory to the model.
+
+Governing line
+AI prepares. People authorize. The source remains visible.
+
+Appropriate AI functions
+Retrieve
+Compare
+Classify
+Draft
+Identify missing information
+Prepare reviewable packets
+Flag uncertainty
+Summarize exceptions
+Suggest clarification, refusal, deferral, or return to source
+Prohibited authority
+AI must not independently:
+
+authorize payment;
+promise availability;
+confirm a sale;
+make a board decision;
+alter source records;
+infer sensitive characteristics;
+issue an external commitment;
+convert uncertainty into fact;
+become the organization’s final vocabulary authority.
+Deliverable structure
+A Sovereign Ops engagement should produce:
+
+AI authority map
+Approved and prohibited workflows
+Data and source classification
+Human-review lanes
+Handoff-envelope design
+Correction and contestation process
+Retention, revocation, export, and exit plan
+Provider-dependency review
+One bounded pilot workflow
+Baseline and evaluation plan
+Product maturity
+The doctrine and architecture are strong. Several enabling systems are implemented. The reusable generalized offer is not yet fully productized.
+
+The first public offer should therefore be:
+
+A bounded AI-continuity assessment and pilot for one organizational workflow.
+
+Not:
+
+“We will install an autonomous sovereign AI operating system.”
+
+Proof language
+Use the 807 workflow as a demonstrator:
+
+Producer supply signal → aggregate demand signal → collection planning → optional distribution handoff
+
+The AI may prepare and clarify the handoff. It may not turn the producer’s possible supply into inventory, an order, a sale, or a delivery promise.
+
+Shared framework across all three offers
+Each lane uses the same continuity questions:
+
+Origin — Who supplied the information?
+Authority — Who is allowed to decide?
+Purpose — Why is it being used?
+Scope — What is included?
+Recipient — Who may receive it?
+Timing — Is it current, conditional, or expiring?
+Uncertainty — What is missing or contested?
+Review — Who confirms the next step?
+Correction — How can someone challenge or amend it?
+Exit — How can the person or organization revoke, export, or leave?
+The language changes by audience, but the structure remains stable.
+
+Audience	What must survive	Authority remains with
+Co-op/organization	Decisions, vocabulary, responsibilities, handoffs	Board and designated human roles
+Family Team	Individual voice, care knowledge, agreements, daily rhythm	Family members and guardians
+Sovereign Ops	Source, uncertainty, permissions, institutional knowledge	Human principals and governing bodies
+Website structure
+Homepage
+Lead with the shared outcome, not the full ecosystem:
+
+Build continuity that survives change.
+
+Supporting copy:
+
+Headwaters helps organizations and families preserve the knowledge, roles, and boundaries they need to continue—when people change, systems change, or AI enters the work.
+
+Three doors:
+
+For Co-ops & Organizations
+Preserve governance and operating knowledge.
+
+For Family Teams
+Build a plan with everyone, not about everyone.
+
+For AI Operations
+Gain capacity without handing authority to the model.
+
+Co-ops & Organizations page
+Sections:
+
+Continuity problem
+What governance continuity means
+What the engagement produces
+807 bounded case example
+What is built versus configurable
+Starting price
+Qualification intake
+Governance and data boundaries
+Request a budgetary quote
+Family Teams page
+Sections:
+
+The hidden coordination burden
+“Teamwork makes the dream work”
+Individual team pages
+Household synthesis
+Daily Team Rhythm
+Family Screen Reset entry product
+What is available now versus coming next
+Purchase or join the Family Team Plan list
+Sovereign Ops page
+Sections:
+
+AI adoption creates a continuity problem
+AI prepares; people authorize
+Suitable and prohibited workflows
+One-workflow pilot structure
+Governance and provider-exit requirements
+807 demonstrator
+Readiness assessment
+Apply for a pilot
+Shared supporting pages
+How continuity works
+Built, configurable, pilot, and roadmap status
+Privacy and data custody
+Human authority and AI boundaries
+Case studies
+Pricing and qualification
+Founder story
+FAQ
+Intake
+Terms and privacy
+Marketing materials needed
+Shared materials
+One-page company overview
+Three-offer comparison sheet
+Continuity framework explainer
+Founder story
+Built-versus-roadmap evidence sheet
+Privacy and authority commitments
+Frequently asked questions
+Claims and prohibited-language guide
+Governance Continuity
+Co-op/organization one-pager
+Board presentation
+Budgetary quote template
+Grant-ready project insert
+Workflow continuity diagnostic
+807 case-study sheet
+Governance continuity implementation timeline
+Family Team Plan
+Family Screen Reset PDF
+Facebook ad set
+Family Team Plan explainer
+Sample individual team page
+Sample household agreement
+Sample minimum viable day
+Email sequence from Screen Reset to Family Team Plan
+Sovereign Ops
+AI continuity assessment
+Board-governed AI one-pager
+Approved/prohibited AI activity sheet
+Pilot scope template
+AI authority matrix
+Provider-exit checklist
+Baseline and outcome-measurement template
+Projection model the other project needs
+Do not merge the three lanes into one revenue projection. They have different sales cycles and evidence levels.
+
+Governance Continuity inputs
+Qualified leads per quarter
+Intake completion rate
+Formal-scope conversion rate
+Average implementation value
+Deposit percentage
+Delivery capacity
+Average implementation duration
+Annual support or license value
+Renewal rate
+Grant-funded versus directly funded mix
+Use the currently supported $20,000 community / $28,000 commercial starting values, with expanded projects modelled separately.
+
+Family Team inputs
+Ad spend
+Cost per click
+Landing-page conversion
+Family Screen Reset price
+Refund rate
+Email capture rate
+Reset completion rate
+Family Team Plan conversion
+Family Team Plan price
+Recurring Daily Team Rhythm adoption
+Monthly retention
+Support burden per family
+These projections must be presented as scenarios until real sales data exists.
+
+Sovereign Ops inputs
+Assessments sold
+Assessment-to-pilot conversion
+Average pilot value
+Pilot duration
+Number of workflows per pilot
+Expansion rate
+Annual support/license value
+Research or grant contribution
+Security, counsel, and integration costs
+Founder delivery capacity
+Do not count Sovereign Ops as mature recurring revenue until the first bounded external pilot has been completed and measured.
+
+Critical truth and protection rules
+Public material must:
+
+distinguish live, configurable, pilot, and roadmap capabilities;
+never claim that 807 is a complete universal AI platform;
+never call an aggregate signal an order or commitment;
+never imply clinical diagnosis or healthcare approval;
+never imply that Family Team Plan predicts behavior;
+never imply autonomous AI authority;
+keep exact formulas, thresholds, scoring mechanisms, and counsel material private;
+preserve source wording beside translations;
+provide correction, revocation, export, and exit paths;
+avoid publishing confidential partner information;
+avoid unsupported “first,” “only,” scientific, medical, legal, security, or savings claims.
+Canonical source package
+The other project should receive these as its main planning sources:
+
+Umbrella business and projections
+docs/business-plan.md
+docs/90-day-cashflow-sprint.md
+docs/financial-path-to-250k.md
+docs/commercialization-roadmap.md
+docs/headwaters-sovereign-ops-business-plan.md
+Governance Continuity
+docs/gatehouse-sales-structure.md
+docs/white-label-foundation-overview.md
+docs/food-coop-infrastructure-alignment.md
+docs/807-food-handoff-baseline-study.md
+docs/807-food-handoff-aggregate-report.md
+docs/freedom-and-handoff-charter.md
+docs/meaning-sovereignty.md
+Care Continuity
+docs/healthcare-pilot-pitch.md
+docs/grant-pilot-brief.md
+lib/db/src/schema/family-steward-guides.ts
+artifacts/api-server/src/routes/family-steward-guides.ts
+artifacts/arc/src/pages/dependents/index.tsx
+artifacts/arc/src/pages/media-shelf/index.tsx
+artifacts/arc/src/pages/media-pattern-audit/index.tsx
+The Family Team Plan itself is a newly clarified commercial application and should be documented as such rather than presented as an already completed product.
+
+AI Continuity
+docs/ai-continuity-cooperative-coordinator.md
+docs/freedom-and-handoff-charter.md
+docs/meaning-sovereignty.md
+docs/807-food-handoff-baseline-study.md
+Public protection
+docs/public-protection-inventory.md
+That inventory is confidential and should be used as an internal editorial control, not copied into public marketing.
+
+Bottom line
+This should become one company story with three clear doors:
+
+Governance continuity for organizations.
+Care continuity for families.
+AI continuity for sovereign operations.
+
+The Family Screen Reset is the quickest paid entry. Governance Continuity is the strongest current organizational offer. Sovereign Ops is the highest-value future offer, but it must remain a bounded assessment-and-pilot proposition until external proof exists.
