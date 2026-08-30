@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Circle, ExternalLink } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { applyPageMetadata } from "@/lib/seo";
+import { PUBLIC_EXAMPLE_DESTINATIONS } from "@/data/publicExampleDestinations";
 
 const BASE = import.meta.env.BASE_URL ?? "/";
 
@@ -389,12 +390,12 @@ export function HeadwatersPage() {
                       <p className="text-base text-[#57534E] leading-relaxed mb-8 flex-grow">
                         The board can see what needs a decision, what can move between meetings, and what a new volunteer needs to know without reconstructing the whole project from memory.
                       </p>
-                       <a
-                         href="https://807foodcoop.ca"
+                         <a
+                          href={PUBLIC_EXAMPLE_DESTINATIONS.coop.href}
                          target="_blank"
                          rel="noopener noreferrer"
                          aria-label="Visit 807 Food Co-op, a co-op powered by Codetry (opens in a new tab)"
-                         onClick={() => trackPracticalExample("co-op", "807foodcoop.ca")}
+                          onClick={() => trackPracticalExample("co-op", PUBLIC_EXAMPLE_DESTINATIONS.coop.analyticsDestination)}
                          data-testid="practical-example-link-coop"
                          className="mb-8 inline-flex w-fit items-center gap-2 text-sm font-medium text-[#1C1917] underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm"
                        >
@@ -462,12 +463,12 @@ export function HeadwatersPage() {
                       <p className="text-base text-[#57534E] leading-relaxed mb-8 flex-grow">
                         The team has a shared way to see what must happen, what is waiting, and who needs to know. The tools support professional judgement; they do not replace licensed staff or clinical decisions.
                       </p>
-                       <a
-                         href={route("pilot")}
+                        <a
+                          href={route(PUBLIC_EXAMPLE_DESTINATIONS.care.href)}
                          target="_blank"
                          rel="noopener noreferrer"
                          aria-label="See the person-centred care continuity pilot, including its meaning layer and first 90 days (opens in a new tab)"
-                         onClick={() => trackPracticalExample("care-continuity", route("pilot"))}
+                          onClick={() => trackPracticalExample("care-continuity", route(PUBLIC_EXAMPLE_DESTINATIONS.care.href))}
                          data-testid="practical-example-link-care"
                          className="mb-8 inline-flex w-fit items-center gap-2 text-sm font-medium text-[#1C1917] underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm"
                        >
@@ -535,12 +536,12 @@ export function HeadwatersPage() {
                       <p className="text-base text-[#57534E] leading-relaxed mb-8 flex-grow">
                          Before a commercial build begins, we define measurable revenue outcomes and the evidence we will use to judge progress. The investment is weighed against a credible payback path, not a promise: a $28,000 build is not automatically appropriate for a brand-new business without validated demand. It can make sense when existing demand and a solvable bottleneck give the work a reasonable chance to earn its way back.
                       </p>
-                       <a
-                         href="https://parrsjars.ca"
+                        <a
+                          href={PUBLIC_EXAMPLE_DESTINATIONS.business.href}
                          target="_blank"
                          rel="noopener noreferrer"
                          aria-label="Visit Parr's Jars, a real small-business example (opens in a new tab)"
-                         onClick={() => trackPracticalExample("small-business", "parrsjars.ca")}
+                          onClick={() => trackPracticalExample("small-business", PUBLIC_EXAMPLE_DESTINATIONS.business.analyticsDestination)}
                          data-testid="practical-example-link-business"
                          className="mb-8 inline-flex w-fit items-center gap-2 text-sm font-medium text-[#1C1917] underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm"
                        >
