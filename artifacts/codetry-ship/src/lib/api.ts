@@ -162,6 +162,66 @@ export async function postIntake(payload: IntakePayload): Promise<IntakeResult> 
   return (await res.json()) as IntakeResult;
 }
 
+// ----------------------- Headwaters quote intake -----------------------------
+
+export type QuoteOrganizationType =
+  | "co-op/not-for-profit"
+  | "commercial/institutional"
+  | "other";
+
+export type QuoteOffer =
+  | "initial implementation"
+  | "additional standard tool"
+  | "annual support"
+  | "needs custom review";
+
+export interface QuoteIntakePayload {
+  contactName: string;
+  email: string;
+  role: string;
+  legalOrganizationName: string;
+  organizationType: QuoteOrganizationType;
+  organizationAddress: string;
+  projectTitle: string;
+  fundingProgram: string;
+  desiredTiming: string;
+  selectedOffer: QuoteOffer;
+  projectDescription: string;
+  specialRequirements: string;
+  website?: string;
+}
+
+export interface QuoteIntakeResult {
+  ok: true;
+  mode: "standard" | "custom";
+  quoteNumber?: string;
+  pdfUrl?: string;
+  name: string;
+}
+
+export async function postQuoteIntake(
+  payload: QuoteIntakePayload,
+): Promise<QuoteIntakeResult> {
+  const res = await fetch("/api/quote-intake", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    let msg = "We could not receive your request. Please try again.";
+    let retry: number | undefined;
+    try {
+      const body = (await res.json()) as { error?: string; retryAfterSec?: number };
+      if (body.error) msg = body.error;
+      retry = body.retryAfterSec;
+    } catch {
+      // non-JSON body — keep the default message
+    }
+    throw new ApiError(res.status, msg, retry);
+  }
+  return (await res.json()) as QuoteIntakeResult;
+}
+
 // ----------------------- deadhead intake -----------------------
 
 export interface DeadheadItem {

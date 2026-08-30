@@ -1,0 +1,359 @@
+Headwaters Co-operative Delivery Templates
+Use with: headwaters-coop-delivery-playbook.md
+Purpose: Copy each section into a working engagement folder. Bracketed text is a prompt, not a claim. Template rule: This file is tenant-neutral. Do not prefill it with reference-tenant names, member or producer data, bylaws, board decisions, policies, payment settings, operating schedules, financial statements, pricing, founding terms, sponsor arrangements, or private migration records.
+
+1. Qualification and discovery brief
+Organization
+Co-op / organization name: [ ]
+Organization type and legal status: [ ]
+Region, home base, and communities served: [ ]
+Discovery date and attendees: [ ]
+Board sponsor / decision-maker: [ ]
+Day-to-day operator: [ ]
+Funding or payment path: [direct purchase / named grant / sponsor / unresolved]
+Desired launch window: [ ]
+The first problem
+What work is currently carried by too few people? [ ]
+What is being done in spreadsheets, email, paper, or disconnected tools? [ ]
+Who experiences the burden? [ ]
+What would be observably easier after the first layer launches? [ ]
+What must not change? [ ]
+What is deliberately out of scope? [ ]
+Discovery completion check
+[ ] Decision-maker and payer are named.
+[ ] One first problem is stated in plain language.
+[ ] Data sensitivity and legal/accounting/security flags are recorded.
+[ ] A plausible funding or payment route is identified.
+[ ] The organization understands this is a bounded first implementation.
+2. Organizational map and Vocabulary Ledger
+Map
+Area	Tenant-approved description	Evidence/source	Status	Approver
+Purpose	[ ]	[ ]	[approved / proposed / unresolved]	[ ]
+People and roles	[ ]	[ ]	[ ]	[ ]
+Recurring work	[ ]	[ ]	[ ]	[ ]
+Decisions and approval rights	[ ]	[ ]	[ ]	[ ]
+Relationships and dependencies	[ ]	[ ]	[ ]	[ ]
+Information boundaries	[ ]	[ ]	[ ]	[ ]
+Proof the work matters	[ ]	[ ]	[ ]	[ ]
+Unresolved questions	[ ]	[ ]	[ ]	[ ]
+Vocabulary Ledger draft
+Ledger version: [ ]
+Preferred terms: [term → use / avoid]
+Tone: [ ]
+Reading level: [ ]
+Cultural or community framing: [ ]
+Terms requiring legal/accounting review: [ ]
+Terms that must not change financial calculations or compliance facts: [ ]
+Source community / provenance: [ ]
+Tenant approver and date: [ ]
+3. Tenant configuration decision register
+ID	Topic	Proposed value	Classification	Reason/source	Sensitivity	Approver/date	Status
+[ ]	Brand / legal name	[ ]	[platform / regional / tenant / sponsor / custom]	[ ]	[public / internal / restricted]	[ ]	[ ]
+[ ]	Membership or participant labels	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[ ]	Season / operating rhythm	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[ ]	Roles and permissions	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[ ]	Payment / settlement	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[ ]	Email / domain	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[ ]	Sponsor language	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+Rule: A value copied from a reference tenant must be entered here as a proposal and approved by this tenant. “Same as the reference tenant” is not an approval.
+
+4. Selected operational tool scope
+Selected tool and readiness status: [ ]
+Problem it solves: [ ]
+Primary operator(s): [ ]
+People who use the output: [ ]
+Included workflows: [ ]
+Included configuration/content: [ ]
+Data sources and fields: [ ]
+Excluded workflows and features: [ ]
+Integration or migration required? [no / yes — separate scope reference]
+Training audience: [ ]
+Launch date and support owner: [ ]
+Acceptance criteria
+[A named operator can complete the core workflow from start to finish.]
+[The tenant's approved identity, vocabulary, roles, and regional settings appear correctly.]
+[Sensitive data is visible only to the approved roles.]
+[The tenant can export, report, or hand off the agreed record.]
+[The operator knows how to report an issue and pause the workflow safely.]
+5. Data and content intake manifest
+Source	Owner	Fields/content	Permission	Sensitivity	Transform	Retention/return	Sample checked
+[ ]	[ ]	[ ]	[ ]	[public / internal / personal / financial]	[ ]	[ ]	[ ]
+Minimum data needed: [ ]
+Data explicitly not requested: [ ]
+Source permission or attribution: [ ]
+Import validation result: [ ]
+Deletion / return confirmation: [ ]
+Tenant data owner approval: [ ]
+6. Training plan and record
+Plan
+Role	Workflow practiced	Format/date	Trainer	Reference supplied
+[board sponsor]	[approvals, roadmap, escalation]	[ ]	[ ]	[ ]
+[tenant operator]	[daily/weekly core workflow]	[ ]	[ ]	[ ]
+[treasurer / finance role]	[finance guide and review boundary]	[ ]	[ ]	[ ]
+[backup operator]	[recovery and handoff]	[ ]	[ ]	[ ]
+Completion
+Attendees: [ ]
+Completed practical task(s): [ ]
+Questions or unresolved confusion: [ ]
+Absences and make-up plan: [ ]
+Tenant operator accepts the quick reference: [name/date]
+7. Launch acceptance
+Check	Pass condition	Result	Evidence/link	Accepted by/date
+Tenant identity	Approved name, logo, copy, and vocabulary display correctly	[ ]	[ ]	[ ]
+Roles	Each role sees only its allowed work	[ ]	[ ]	[ ]
+Core workflow	Named operator completes the selected workflow	[ ]	[ ]	[ ]
+Data	Sample/source data is correct and minimally scoped	[ ]	[ ]	[ ]
+Email/domain	Agreed messages and sign-in path work	[ ]	[ ]	[ ]
+Payments/integration	Only in-scope external connection passes its test	[ ]	[ ]	[ ]
+Privacy	No unintended public or cross-tenant exposure	[ ]	[ ]	[ ]
+Recovery	Pause, rollback, and support paths are known	[ ]	[ ]	[ ]
+Training	Required operators completed or exceptions accepted	[ ]	[ ]	[ ]
+Launch decision: [accepted / accepted with exceptions / deferred / rejected]
+Exceptions and owner/date: [ ]
+Tenant sponsor acceptance: [name/date]
+Headwaters handoff: [name/date]
+
+8. Initial results report
+Scope and baseline
+Tenant and selected tool: [ ]
+Launch date: [ ]
+Reporting window: [launch to 30 days / other]
+Problem this layer was meant to address: [ ]
+Baseline evidence: [ ]
+Baseline limitations: [ ]
+What changed
+Question	Observation	Evidence	Confidence/limitation
+Did the named operator use the core workflow?	[ ]	[ ]	[ ]
+Did any duplicate/manual work reduce?	[ ]	[ ]	[ ]
+Did member/producer/board visibility improve?	[ ]	[ ]	[ ]
+Did reporting or handoff become clearer?	[ ]	[ ]	[ ]
+What remained hard or unused?	[ ]	[ ]	[ ]
+Report conclusion
+Supported claim: [ ]
+Claim we cannot make yet: [ ]
+Tenant operator quote or observation, if permissioned: [ ]
+30/60/90 next decision: [ ]
+Tenant validation: [name/date]
+9. Later-tool roadmap
+Rank	Candidate layer	Problem it would address	Reuses from first implementation	New work / dependency	Funding trigger	Readiness	Decision
+1	[ ]	[ ]	[map, ledger, roles, brand, data boundary]	[ ]	[ ]	[ ]	[ ]
+2	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+3	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+Mark each candidate as standard additional tool, integration, migration/custom, pilot only, or roadmap. Do not use “later” to hide an unresolved legal, accounting, security, or sponsor decision.
+
+10. Sponsor and approval register
+Claim / decision	Exact wording or scope	Sponsor/tenant role	Written approval needed?	Evidence/date	Status
+Funding payer	[ ]	[ ]	[yes/no]	[ ]	[ ]
+Field Guide access	[ ]	[ ]	[yes/no]	[ ]	[ ]
+Partner/brand attribution	[ ]	[ ]	[yes]	[ ]	[ ]
+Data sharing	[ ]	[ ]	[yes]	[ ]	[ ]
+Results publication	[ ]	[ ]	[yes]	[ ]	[ ]
+11. Qualification note
+Use this short note before a discovery call or internal qualification review. It is not a proposal and does not authorize work.
+
+Organization and fit
+Organization: [ ]
+Legal form and co-operative / not-for-profit / commercial classification: [ ]
+Region and communities served: [ ]
+Contact and role: [ ]
+Why this organization is being considered now: [ ]
+Known first problem, in the organization's own words: [ ]
+Likely first-tool path: [membership / market / producer / grants / finance / preparedness / governance / unresolved]
+Qualification checks
+[ ] A board sponsor or authorized decision-maker is identifiable.
+[ ] A day-to-day operator can be named or recruited.
+[ ] The first problem can be bounded to one operating layer.
+[ ] A payer route exists or is being investigated: [co-op / grant / sponsor / unresolved].
+[ ] Data sensitivity and any legal, accounting, privacy, security, integration, or sponsor-brand review are flagged.
+[ ] The organization understands that this is not a requirement to purchase the entire constellation.
+[ ] No reference-tenant assumption has been copied into the proposed scope.
+Qualification decision
+Decision: [advance to discovery / request more information / not now / separate technical review]
+Decision owner/date: [ ]
+Follow-up and permission/status: [ ]
+12. Funding-plan insert
+Copy this section into a board package, grant calendar, or funding-plan draft. Replace every bracketed item with tenant-approved information before external use.
+
+Project title
+[Co-operative operating capacity: map once, launch one useful layer]
+
+Problem
+[Describe the work currently carried by too few people, the disconnected systems involved, and why member, producer, board, or funder visibility is difficult. Use the co-op's own words.]
+
+Project description
+[Headwaters will facilitate an organizational and vocabulary map, establish a versioned governance/language record, prepare a plain-language finance guide, and configure one operational tool selected by the co-operative. Include agreed data/content intake, role-based training, launch acceptance, an initial results framework, and a later-tool roadmap. State what the co-op retains and what is deliberately excluded.]
+
+Activities
+[ ] Organizational and vocabulary mapping
+[ ] Governance / Vocabulary Ledger setup
+[ ] Field Guide Finance edition and review boundary
+[ ] One selected operational tool: [ ]
+[ ] Helping Hands fit/policy review and configuration, if approved
+[ ] Minimum necessary data and content intake
+[ ] Access setup, role testing, training, rehearsal, and launch acceptance
+[ ] Baseline, initial reporting framework, and later-tool roadmap
+Outputs
+[List the approved map, ledger/version record, configured tool, access record, finance guide, training record, launch acceptance, initial report, and roadmap. Do not call an unbuilt or unapproved capability an output.]
+
+Budget and payer
+Initial implementation: [co-op/not-for-profit $20,000 CAD one time / commercial $28,000 CAD one time / approved separate quote]
+Payer: [co-op / named grant / named sponsor / unresolved]
+Later standard tool(s): [ $8,000 CAD co-op/not-for-profit or $12,000 CAD commercial each, if applicable ]
+Existing-system integration: [$4,000–$10,000 CAD, scoped, if applicable]
+Major migration/custom workflow: [typically $8,000–$15,000 CAD, scoped, if applicable]
+Annual support, hosting, and updates: [$3,600–$6,000 CAD annually, if applicable]
+Budget assumptions and exclusions: [ ]
+Funding language check: A grant or sponsor may pay for the implementation, but funded work is not free work. State who pays Headwaters and what is being purchased. If a partner name or logo appears, attach written approval for the exact use.
+
+Timeline and review
+Planning/configuration window: [ ]
+Proposed launch window: [ ]
+30-day review: [ ]
+60-day review: [ ]
+90-day decision: [ ]
+Dependencies and owner: [ ]
+13. Access matrix
+Record tenant-level access only. Never grant a tenant operator access to Headwaters platform administration, shared tenant registry controls, another tenant, production secrets, or deployment credentials.
+
+Role/person or group	Tenant area/workflow	View	Create/edit	Approve/verify	Export/share	Sensitive data allowed	Start/end or removal date
+[board sponsor]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[tenant operator]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[backup operator]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[treasurer / finance role]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[producer/member role]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+[Headwaters support role]	[minimum support access only]	[ ]	[ ]	[ ]	[ ]	[ ]	[ ]
+Access checks
+[ ] Each role has a named owner.
+[ ] Least-privilege access is applied.
+[ ] Leavers and role changes have a removal path.
+[ ] Sensitive member, producer, financial, or restricted records are identified.
+[ ] Export/share permissions and public-link behavior are approved.
+[ ] Tenant sponsor accepts the matrix: [name/date]
+14. Support and recovery handoff
+Support ownership
+Tenant first-line operator: [ ]
+Backup operator: [ ]
+Headwaters support contact/path: [ ]
+Support scope and response expectations: [ ]
+Hours or availability assumptions: [ ]
+Escalation contact for legal/accounting/privacy/security/payment issues: [ ]
+Renewal/support review date: [ ]
+Safe operating and recovery information
+Last accepted configuration/date: [ ]
+Core workflow that can be paused safely: [ ]
+Who may pause launch or a live workflow: [ ]
+Rollback or restore/re-import approach: [ ]
+Data export/return/deletion instruction: [ ]
+Domain/auth recovery contact: [ ]
+Email sender/reply-to and bounce owner: [ ]
+Payment/integration owner and test evidence: [ ]
+Incident record location: [ ]
+Tenant communication plan if service is paused: [ ]
+Incident handoff record
+Record time, role, screen/workflow, expected behavior, actual behavior, and whether personal or financial data is involved.
+Pause the affected workflow if continuing could duplicate payment, expose data, or corrupt records.
+Classify the issue: [content/configuration / access / platform defect / integration / security/privacy / legal/accounting].
+Escalate to the named reviewer when required; do not change records destructively to make the issue disappear.
+Record resolution, communication, evidence retained, and any scope/roadmap change.
+Handoff acceptance
+Tenant operator received the quick reference: [name/date]
+Board sponsor received support and recovery path: [name/date]
+Headwaters handoff owner: [name/date]
+Open exceptions: [ ]
+15. 30/60/90-day review
+Use one copy per review point. Record observations and evidence, not assumed impact.
+
+Review header
+Tenant: [ ]
+Selected tool/layer: [ ]
+Review point: [30 / 60 / 90] days
+Review date and attendees: [ ]
+Named operator: [ ]
+Original problem statement: [ ]
+Review questions
+Question	Observation	Evidence/link	Limitation or unresolved issue	Owner/next action
+Can the named operator complete the core workflow?	[ ]	[ ]	[ ]	[ ]
+What manual or duplicate work remains?	[ ]	[ ]	[ ]	[ ]
+Can members/producers/directors find the needed information?	[ ]	[ ]	[ ]	[ ]
+Is the data/content maintained and permissioned correctly?	[ ]	[ ]	[ ]	[ ]
+What support, access, or recovery issue appeared?	[ ]	[ ]	[ ]	[ ]
+What was unused, confusing, or fragile?	[ ]	[ ]	[ ]	[ ]
+Decision
+Supported observation: [ ]
+Claim we cannot make yet: [ ]
+Decision: [stabilize / clarify / continue / renew / add standard tool / custom-scope / pause / stop]
+New funding or capacity trigger: [ ]
+Roadmap revision: [ ]
+Tenant validation: [name/date]
+16. Change-control form
+Use this form for any change to the selected tool, data classes, external system, legal/compliance interpretation, delivery date, or price.
+
+Change ID/date: [ ]
+Requested by: [ ]
+Requested change: [ ]
+Reason: [ ]
+Affected scope, workflow, people, and acceptance check: [ ]
+Data/privacy/security impact: [ ]
+Legal/accounting/tax impact: [ ]
+Integration/payment/domain/email impact: [ ]
+Timeline impact: [ ]
+Price impact: [ ]
+Recovery/rollback impact: [ ]
+Classification: [tenant decision / sponsor decision / configuration / integration / migration/custom / new scope]
+Decision: [accepted / accepted with conditions / deferred / declined / separately quoted]
+Approver and date: [ ]
+Updated documents/configuration reference: [ ]
+Communication completed by/date: [ ]
+17. Standard quote and scope template
+This is a starting structure, not a signed agreement. Legal, accounting, privacy, security, payment, and sponsor terms require the appropriate review.
+
+Parties and purpose
+Headwaters contracting entity/contact: [ ]
+Client co-op/organization/legal name: [ ]
+Authorized client signer and role: [ ]
+Project title: [ ]
+Purpose in one sentence: [ ]
+Proposed start and target launch: [ ]
+Selected scope
+First problem: [ ]
+Selected operational tool/layer: [ ]
+Readiness classification: [ ]
+Primary operator(s): [ ]
+Included workflows: [ ]
+Included configuration/content: [ ]
+Included data/content intake: [ ]
+Included training: [ ]
+Launch acceptance checks: [ ]
+Initial results framework/reporting window: [ ]
+Later-tool roadmap: [ ]
+Exclusions and assumptions
+Explicit exclusions: [ ]
+Required client decisions/content/data: [ ]
+Required approvals and reviewers: [ ]
+Domain/auth/email/payment assumptions: [ ]
+Integration/migration/custom work excluded unless separately quoted: [ ]
+Current product-status or pilot limitation: [ ]
+Support/hosting assumptions: [ ]
+Commercial summary
+Line	Basis	Price CAD	Payment timing	Notes
+Initial implementation	[co-op/not-for-profit $20,000 / commercial $28,000 / approved separate quote]	[ ]	[ ]	[ ]
+Additional standard tool	[$8,000 co-op/not-for-profit / $12,000 commercial each]	[ ]	[ ]	[ ]
+Existing-system integration	[$4,000–$10,000 scoped]	[ ]	[ ]	[ ]
+Major migration/custom workflow	[typically $8,000–$15,000 scoped]	[ ]	[ ]	[ ]
+Annual support/hosting/updates	[$3,600–$6,000 annually]	[ ]	[ ]	[ ]
+Other approved line: [ ]	[ ]	[ ]	[ ]	[ ]
+Commercial boundary: These are starting package prices for written scope. There is no automatic per-member charge in this package. A grant or sponsor may be the payer, but funded implementation remains paid project work.
+
+Ownership and handoff
+Client controls: [identity, vocabulary, board decisions, policy, tenant data, launch acceptance, roadmap]
+Headwaters controls: [platform code, shared infrastructure, supported provisioning, technical controls, releases, agreed support]
+Data handling, export/return/deletion: [ ]
+Tenant-level access boundary: [ ]
+Handoff artifacts: [approved map, ledger/version, configuration, access matrix, training, acceptance, results, roadmap]
+Public case-study or partner-brand permission: [ ]
+Acceptance and signatures
+Scope acceptance criteria attached: [yes/no]
+Change-control process accepted: [yes/no]
+Client authorized signer/date: [ ]
+Headwaters signer/date: [ ]
+Open conditions before work begins: [ ]
