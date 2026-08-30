@@ -14,6 +14,7 @@ import {
   verifyQuoteSignature,
 } from "../lib/headwatersQuote";
 import { sendQuoteEmail } from "../lib/quoteMailer";
+import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -29,6 +30,17 @@ const OFFERS = new Set([
   "annual support",
   "needs custom review",
 ]);
+
+type DeliveryStatus = "sent" | "partial" | "failed";
+
+function deliveryStatus(
+  customer: "sent" | "failed",
+  operator: "sent" | "failed",
+): DeliveryStatus {
+  if (customer === "sent" && operator === "sent") return "sent";
+  if (customer === "failed" && operator === "failed") return "failed";
+  return "partial";
+}
 
 function readString(
   body: Record<string, unknown>,
@@ -145,38 +157,51 @@ router.post("/quote-intake", async (req, res) => {
   const totalCents =
     subtotalCents === null || taxCents === null ? null : subtotalCents + taxCents;
 
-  const [row] = await db
-    .insert(quoteRequestsTable)
-    .values({
-      quoteNumber,
-      contactName,
-      email,
-      role: role || null,
-      legalOrganizationName,
-      organizationType,
-      organizationAddress,
-      projectTitle,
-      fundingProgram,
-      desiredTiming,
-      selectedOffer,
-      projectDescription,
-      desiredOutcome,
-      intendedUsers: intendedUsers || null,
-      approximateScale: approximateScale || null,
-      currentSystems: currentSystems || null,
-      accessibilityConnectivityNeeds: accessibilityConnectivityNeeds || null,
-      integrationNeeded,
-      sensitiveDataInvolved,
-      specialRequirements: specialRequirements || null,
-      mode: classification.mode,
-      subtotalCents,
-      taxCents,
-      totalCents,
-      validUntil,
-      sourceIp: ip,
-      userAgent: req.header("user-agent")?.slice(0, 500) ?? null,
-    })
-    .returning();
+  let row: typeof quoteRequestsTable.$inferSelect | undefined;
+  try {
+    [row] = await db
+      .insert(quoteRequestsTable)
+      .values({
+        quoteNumber,
+        contactName,
+        email,
+        role: role || null,
+        legalOrganizationName,
+        organizationType,
+        organizationAddress,
+        projectTitle,
+        fundingProgram,
+        desiredTiming,
+        selectedOffer,
+        projectDescription,
+        desiredOutcome,
+        intendedUsers: intendedUsers || null,
+        approximateScale: approximateScale || null,
+        currentSystems: currentSystems || null,
+        accessibilityConnectivityNeeds: accessibilityConnectivityNeeds || null,
+        integrationNeeded,
+        sensitiveDataInvolved,
+        specialRequirements: specialRequirements || null,
+        mode: classification.mode,
+        subtotalCents,
+        taxCents,
+        totalCents,
+        validUntil,
+        sourceIp: ip,
+        userAgent: req.header("user-agent")?.slice(0, 500) ?? null,
+      })
+      .returning();
+  } catch (error) {
+    logger.error(
+      { error: error instanceof Error ? error.message : String(error), ip },
+      "[quote-intake] request could not be saved",
+    );
+    res.status(503).json({
+      error:
+        "We could not save your request just now. Nothing was lost in this form — please try again.",
+    });
+    return;
+  }
 
   const signature = signQuoteId(row!.id);
   const relativePdfUrl = `/api/quote-intake/${row!.id}/quote.pdf?sig=${signature}`;
@@ -204,15 +229,29 @@ router.post("/quote-intake", async (req, res) => {
     }),
   ]);
 
-  await db
-    .update(quoteRequestsTable)
-    .set({
-      customerDeliveryStatus: customerDelivery.status,
-      customerDeliveryError: customerDelivery.error ?? null,
-      operatorDeliveryStatus: operatorDelivery.status,
-      operatorDeliveryError: operatorDelivery.error ?? null,
-    })
-    .where(eq(quoteRequestsTable.id, row!.id));
+  const overallDeliveryStatus = deliveryStatus(
+    customerDelivery.status,
+    operatorDelivery.status,
+  );
+  try {
+    await db
+      .update(quoteRequestsTable)
+      .set({
+        customerDeliveryStatus: customerDelivery.status,
+        customerDeliveryError: customerDelivery.error ?? null,
+        operatorDeliveryStatus: operatorDelivery.status,
+        operatorDeliveryError: operatorDelivery.error ?? null,
+      })
+      .where(eq(quoteRequestsTable.id, row!.id));
+  } catch (error) {
+    // The request and its quote still exist. Do not turn a successful
+    // submission into a retry that could create a duplicate request merely
+    // because the delivery audit columns could not be updated.
+    logger.error(
+      { error: error instanceof Error ? error.message : String(error), quoteId: row!.id },
+      "[quote-intake] delivery status could not be recorded",
+    );
+  }
 
   res.status(201).json({
     ok: true,
@@ -220,6 +259,7 @@ router.post("/quote-intake", async (req, res) => {
     quoteNumber,
     ...(classification.mode === "standard" ? { pdfUrl: relativePdfUrl } : {}),
     name: contactName,
+    deliveryStatus: overallDeliveryStatus,
   });
 });
 
@@ -238,6 +278,16 @@ router.get("/quote-intake/:id/quote.pdf", async (req, res) => {
     .limit(1);
   if (!row) {
     res.status(404).json({ error: "Quote not found." });
+    return;
+  }
+  if (row.mode !== "standard" || !row.validUntil) {
+    res.status(404).json({ error: "A downloadable quote is not available for this request." });
+    return;
+  }
+  if (row.validUntil.getTime() <= Date.now()) {
+    res.status(410).json({
+      error: "This quote link has expired. Please contact Headwaters for a refreshed copy.",
+    });
     return;
   }
 
@@ -272,6 +322,17 @@ router.get("/quote-intake/:id/quote.pdf", async (req, res) => {
       "Cache-Control": "private, no-store",
     });
     res.send(Buffer.from(pdf));
+  } catch (error) {
+    logger.error(
+      { error: error instanceof Error ? error.message : String(error), quoteId: id },
+      "[quote-intake] PDF generation failed",
+    );
+    if (!res.headersSent) {
+      res.status(503).json({
+        error:
+          "Your request is saved, but the quote PDF could not be prepared. Please try the link again.",
+      });
+    }
   } finally {
     await browser?.close();
   }

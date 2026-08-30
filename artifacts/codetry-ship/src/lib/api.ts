@@ -205,6 +205,7 @@ export interface QuoteIntakeResult {
   quoteNumber?: string;
   pdfUrl?: string;
   name: string;
+  deliveryStatus?: "sent" | "partial" | "failed";
 }
 
 export async function postQuoteIntake(

@@ -2,3 +2,4 @@
 - [Gatehouse revenue sprint](gatehouse-sprint.md) — North Star Sprint tab at /sprint, 90-day cashflow focus, three tracks, July 25–Oct 23 2026
 - [Stripe connection readiness](stripe-connection-readiness.md) — a healthy Stripe connection may still lack server credentials; verify checkout and webhook secrets before enabling sales
 - [Headwaters offer boundary](headwaters-offer-boundary.md) — keep the public root organizational and capacity-focused; route books, learning, care, kits, and member tools through deliberate secondary paths
+- [Multi-step form button identity](multi-step-form-button-identity.md) — give step and submit buttons distinct React keys so one click cannot change type and submit

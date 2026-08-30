@@ -1,5 +1,12 @@
 import { useState, useRef, useEffect, type ChangeEvent, type FormEvent } from "react";
-import { ApiError, postQuoteIntake, type QuoteIntakePayload, type QuoteOrganizationType, type QuoteOffer } from "@/lib/api";
+import {
+  ApiError,
+  postQuoteIntake,
+  type QuoteIntakePayload,
+  type QuoteIntakeResult,
+  type QuoteOrganizationType,
+  type QuoteOffer,
+} from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ArrowRight, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
@@ -118,6 +125,7 @@ export function QuotePage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
   const [result, setResult] = useState<Awaited<ReturnType<typeof postQuoteIntake>> | null>(null);
 
   useEffect(() => {
@@ -158,7 +166,7 @@ export function QuotePage() {
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (submitting) return;
+    if (submittingRef.current) return;
 
     let firstErrorStep = -1;
     let allErrors = {};
@@ -178,6 +186,7 @@ export function QuotePage() {
 
     if (form.website) return;
 
+    submittingRef.current = true;
     setSubmitting(true);
     setSubmitError(null);
     try {
@@ -224,6 +233,7 @@ export function QuotePage() {
           : "We could not send this just now. Your work is still here — please try again.",
       );
     } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
   };
@@ -458,11 +468,11 @@ export function QuotePage() {
                 <div className="flex-grow" />
 
                 {step < 5 ? (
-                  <button type="button" onClick={nextStep} className="bg-[#D4A017] text-[#17211C] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#F7F7F5] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1C18] flex items-center gap-3">
+                  <button key="continue" type="button" onClick={nextStep} className="bg-[#D4A017] text-[#17211C] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#F7F7F5] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1C18] flex items-center gap-3">
                     Continue <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </button>
                 ) : (
-                  <button type="submit" disabled={submitting} className="bg-[#D4A017] text-[#17211C] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#F7F7F5] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1C18] flex items-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed">
+                  <button key="submit" type="submit" disabled={submitting} className="bg-[#D4A017] text-[#17211C] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#F7F7F5] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1C18] flex items-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed">
                     {submitting ? "Sending..." : "Send Request"} <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </button>
                 )}
@@ -653,7 +663,7 @@ function ToggleGroup({
 function SuccessState({
   result,
 }: {
-  result: { ok: true; mode: "standard" | "custom"; quoteNumber?: string; pdfUrl?: string; name: string };
+  result: QuoteIntakeResult;
 }) {
   const custom = result.mode === "custom";
   return (
@@ -682,6 +692,16 @@ function SuccessState({
           <span className="text-sm font-bold tracking-widest uppercase text-[#9CB3A8]">Reference</span>
           <span className="font-mono text-[#D4A017] text-lg">{result.quoteNumber}</span>
         </div>
+      )}
+
+      {result.deliveryStatus && result.deliveryStatus !== "sent" && (
+        <p className="text-base text-[#D4A017] leading-relaxed mb-8" role="status">
+          <strong>Your request is saved.</strong>{" "}
+          We could not complete every email delivery. Keep this reference, and
+          {result.pdfUrl
+            ? " download the quote below while we sort out the email."
+            : " the Headwaters team can still review the request."}
+        </p>
       )}
 
       <div className="flex flex-col sm:flex-row items-center gap-6">
