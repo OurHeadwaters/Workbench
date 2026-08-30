@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, type ChangeEvent, type FormEvent } from "react";
 import { ApiError, postQuoteIntake, type QuoteIntakePayload, type QuoteOrganizationType, type QuoteOffer } from "@/lib/api";
+import { trackEvent } from "@/lib/analytics";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ArrowRight, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
@@ -187,6 +188,10 @@ export function QuotePage() {
         accessibilityConnectivityNeeds: clean(form.accessibilityConnectivityNeeds),
         specialRequirements: clean(form.specialRequirements),
       });
+      trackEvent("quote_request_submitted", {
+        offer: form.selectedOffer,
+        mode: response.mode,
+      });
       setResult(response);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
@@ -349,7 +354,14 @@ export function QuotePage() {
                               name="selectedOffer"
                               value={offer.value}
                               checked={isSelected}
-                              onChange={(e) => setForm(f => ({ ...f, selectedOffer: e.target.value as QuoteOffer }))}
+                              onChange={(e) => {
+                                const selectedOffer = e.target.value as QuoteOffer;
+                                setForm(f => ({ ...f, selectedOffer }));
+                                trackEvent("consulting_offer_selected", {
+                                  offer: selectedOffer,
+                                  location: "quote_form",
+                                });
+                              }}
                               className="sr-only"
                             />
                             <div className="flex justify-between items-start mb-4">

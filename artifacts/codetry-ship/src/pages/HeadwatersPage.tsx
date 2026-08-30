@@ -1,6 +1,7 @@
 import { Redirect } from "wouter";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Circle } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 const BASE = import.meta.env.BASE_URL ?? "/";
 
@@ -39,6 +40,13 @@ const OFFERS = [
 
 function quoteLink(offer: (typeof OFFERS)[number]["value"]) {
   return `${route("quote")}?offer=${encodeURIComponent(offer)}`;
+}
+
+function trackOfferSelection(
+  offer: (typeof OFFERS)[number]["value"],
+  location: string,
+) {
+  trackEvent("consulting_offer_selected", { offer, location });
 }
 
 function useReveal() {
@@ -102,6 +110,7 @@ export function HeadwatersPage() {
           <a href="#offers" className="hidden md:inline-block hover:text-[#57534E] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm p-1">Offers</a>
           <a
             href={quoteLink("initial implementation")}
+            onClick={() => trackOfferSelection("initial implementation", "header")}
             className="bg-[#1C1917] text-[#F7F7F5] px-4 md:px-5 py-2 md:py-2.5 rounded-full hover:bg-[#2F3E35] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F7F5]"
           >
             Request a quote
@@ -123,6 +132,7 @@ export function HeadwatersPage() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                 <a
                   href={quoteLink("initial implementation")}
+                  onClick={() => trackOfferSelection("initial implementation", "hero")}
                   data-testid="quiet-primary-cta"
                   className="inline-flex items-center justify-center gap-3 bg-[#1C1917] text-[#F7F7F5] px-8 py-4 rounded-full text-lg font-medium hover:bg-[#2F3E35] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F7F5]"
                 >
@@ -278,7 +288,7 @@ export function HeadwatersPage() {
                       </p>
                       <div className="bg-[#F5F5F4] p-5 rounded-2xl border border-[#E7E5E4]">
                         <p className="text-sm text-[#78716C] leading-snug">
-                          Often a fit for an <a href={quoteLink("initial implementation")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a>.
+                          Often a fit for an <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "board_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a>.
                         </p>
                       </div>
                     </div>
@@ -339,7 +349,7 @@ export function HeadwatersPage() {
                       </p>
                       <div className="bg-[#F5F5F4] p-5 rounded-2xl border border-[#E7E5E4]">
                         <p className="text-sm text-[#78716C] leading-relaxed">
-                          Often a fit for an <a href={quoteLink("initial implementation")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a> or a <a href={quoteLink("needs custom review")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">custom review</a>.
+                          Often a fit for an <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "care_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a> or a <a href={quoteLink("needs custom review")} onClick={() => trackOfferSelection("needs custom review", "care_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">custom review</a>.
                         </p>
                       </div>
                     </div>
@@ -400,7 +410,7 @@ export function HeadwatersPage() {
                       </p>
                       <div className="bg-[#F5F5F4] p-5 rounded-2xl border border-[#E7E5E4]">
                         <p className="text-sm text-[#78716C] leading-relaxed">
-                          Often a fit for an <a href={quoteLink("initial implementation")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a> or an <a href={quoteLink("additional standard tool")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">add-on tool</a>.
+                          Often a fit for an <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "community_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a> or an <a href={quoteLink("additional standard tool")} onClick={() => trackOfferSelection("additional standard tool", "community_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">add-on tool</a>.
                         </p>
                       </div>
                     </div>
@@ -431,6 +441,7 @@ export function HeadwatersPage() {
               <FadeIn key={offer.value} delay={i * 150} className="h-full">
                 <a
                   href={quoteLink(offer.value)}
+                  onClick={() => trackOfferSelection(offer.value, "offers_grid")}
                   data-testid={`quiet-offer-${offer.number}`}
                   className="group flex flex-col h-full bg-white p-8 md:p-10 rounded-3xl border border-[#E7E5E4] hover:border-[#D4A017] hover:shadow-2xl hover:shadow-[#D4A017]/10 transition-all duration-300 relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35]"
                 >
@@ -478,6 +489,7 @@ export function HeadwatersPage() {
             </p>
             <a
               href={quoteLink("needs custom review")}
+              onClick={() => trackOfferSelection("needs custom review", "fit_cta")}
               className="inline-flex items-center justify-center gap-3 bg-[#D4A017] text-[#17211C] px-8 py-4 rounded-full text-lg font-medium hover:bg-[#F7F7F5] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17211C]"
             >
               Tell us what is in front of you <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
@@ -493,7 +505,7 @@ export function HeadwatersPage() {
             <p className="text-sm">Capacity-building consulting for work that needs to keep going.</p>
           </div>
           <div className="flex items-center gap-8 text-sm font-medium">
-            <a href={quoteLink("initial implementation")} className="hover:text-[#F7F7F5] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] rounded-sm p-1 -m-1">Request a quote</a>
+            <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "footer")} className="hover:text-[#F7F7F5] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] rounded-sm p-1 -m-1">Request a quote</a>
             <a href={route("privacy")} className="hover:text-[#F7F7F5] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] rounded-sm p-1 -m-1">Privacy</a>
           </div>
         </div>
