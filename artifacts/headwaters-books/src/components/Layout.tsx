@@ -23,12 +23,20 @@ import {
   Star,
   Receipt,
   StickyNote,
+  Briefcase,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { data: user, isLoading, isError } = useGetBookkeeperMe();
+  const role = user?.role || "food_handler";
+  const { data: dashboard } = useGetBookkeeperDashboard({
+    query: {
+      enabled: Boolean(role && role !== "food_handler"),
+      queryKey: getGetBookkeeperDashboardQueryKey(),
+    },
+  });
 
   if (isLoading) {
     return (
@@ -55,10 +63,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const role = user.role;
-  const { data: dashboard } = useGetBookkeeperDashboard({
-    query: { enabled: role !== "food_handler", queryKey: getGetBookkeeperDashboardQueryKey() },
-  });
   const receiptsToReview = dashboard?.totals?.receiptsToReview ?? 0;
 
   const navItems = [
@@ -67,6 +71,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/submissions", label: "Submissions", icon: Inbox, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/accounts", label: "Accounts", icon: BookOpen, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/cost-centres", label: "Cost Centres", icon: Building2, roles: ["owner", "ops_manager", "bookkeeper"] },
+    { href: "/engagements", label: "Engagements", icon: Briefcase, roles: ["owner", "ops_manager", "bookkeeper"], section: "codetry" },
     { href: "/handlers", label: "Food Handlers", icon: Bell, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/users", label: "Users", icon: Users, roles: ["owner"] },
     { href: "/receipts", label: "Receipts Queue", icon: ClipboardCheck, roles: ["owner", "ops_manager", "bookkeeper"], badge: receiptsToReview },
@@ -98,8 +103,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {(() => {
             const nodes: React.ReactNode[] = [];
             let shownHHDivider = false;
+            let shownCodetryDivider = false;
             visibleNav.forEach((item) => {
               const isHH = (item as { section?: string }).section === "hr";
+              const isCodetry = (item as { section?: string }).section === "codetry";
+
+              if (isCodetry && !shownCodetryDivider) {
+                shownCodetryDivider = true;
+                nodes.push(
+                  <div key="__codetry-divider" className="pt-3 pb-1">
+                    <p className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">Codetry</p>
+                  </div>
+                );
+              }
+
               if (isHH && !shownHHDivider) {
                 shownHHDivider = true;
                 nodes.push(

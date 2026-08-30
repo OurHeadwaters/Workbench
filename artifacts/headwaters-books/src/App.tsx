@@ -35,6 +35,8 @@ import InvoicePJEquip2026001 from "@/pages/InvoicePJEquip2026001";
 import Invoice807RTO2026001 from "@/pages/Invoice807RTO2026001";
 import Pnl from "@/pages/Pnl";
 import Receipts from "@/pages/Receipts";
+import Engagements from "@/pages/Engagements";
+import EngagementDetail from "@/pages/EngagementDetail";
 import HHDashboard from "@/pages/HHDashboard";
 import HHTasks from "@/pages/HHTasks";
 import HHTaskNew from "@/pages/HHTaskNew";
@@ -204,6 +206,8 @@ function Router() {
       <ProtectedRoute path="/invoice/pj-equip-2026-001" component={InvoicePJEquip2026001} />
       <ProtectedRoute path="/invoice/807-rto-2026-001" component={Invoice807RTO2026001} />
       <ProtectedRoute path="/receipts" component={Receipts} />
+      <ProtectedRoute path="/engagements" component={Engagements} />
+      <ProtectedRoute path="/engagements/:id" component={EngagementDetail} />
       <ProtectedRoute path="/pnl" component={Pnl} />
       <ProtectedRoute path="/helping-hands" component={HHDashboard} />
       <ProtectedRoute path="/helping-hands/tasks/new" component={HHTaskNew} />

@@ -4,6 +4,7 @@ import { seedBookkeeper } from "./lib/bookkeeperSeed";
 import { runExpireOverdue } from "./routes/helpingHands";
 import { pool } from "@workspace/db";
 import { setRateLimitBackend, pruneExpiredRateLimits } from "./lib/rateLimit";
+import { runEngagementOutboundDeliveries } from "./lib/engagementOutbound";
 
 setRateLimitBackend(pool);
 
@@ -82,4 +83,19 @@ app.listen(port, "0.0.0.0", (err) => {
 
   scheduledPruneRateLimits();
   setInterval(scheduledPruneRateLimits, 7 * 60 * 1000); // every 7 minutes
+
+  let outboundRunning = false;
+  async function scheduledOutboundDelivery() {
+    if (outboundRunning) return;
+    outboundRunning = true;
+    try {
+      await runEngagementOutboundDeliveries();
+    } catch (outboundErr) {
+      logger.error({ err: outboundErr }, "engagement outbound delivery failed");
+    } finally {
+      outboundRunning = false;
+    }
+  }
+  scheduledOutboundDelivery();
+  setInterval(scheduledOutboundDelivery, 60 * 1000);
 });

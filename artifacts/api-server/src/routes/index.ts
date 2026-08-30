@@ -43,6 +43,7 @@ import northStarLabAgentRouter from "./northStarLabAgent";
 import northStarProposalsRouter from "./northStarProposals";
 import z2Router from "./z2";
 import quoteIntakeRouter from "./quoteIntake";
+import engagementsRouter from "./engagements";
 
 const router: IRouter = Router();
 
@@ -93,5 +94,6 @@ router.use("/north-star", northStarLabAgentRouter);
 router.use("/north-star", northStarProposalsRouter);
 router.use("/z2", z2Router);
 router.use("/", quoteIntakeRouter);
+router.use("/engagements", engagementsRouter);
 
 export default router;

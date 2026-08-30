@@ -10,6 +10,13 @@ interface StripeCredentials {
  * Connection credentials rotate, so callers must not cache a Stripe client.
  */
 async function getStripeCredentials(): Promise<StripeCredentials> {
+  if (process.env.STRIPE_SECRET_KEY) {
+    return {
+      secretKey: process.env.STRIPE_SECRET_KEY,
+      webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    };
+  }
+
   const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
   const identity = process.env.REPL_IDENTITY
     ? `repl ${process.env.REPL_IDENTITY}`
@@ -59,6 +66,9 @@ export async function getUncachableStripeClient(): Promise<Stripe> {
 }
 
 export async function getStripeWebhookSecret(): Promise<string | null> {
+  if (process.env.STRIPE_WEBHOOK_SECRET) {
+    return process.env.STRIPE_WEBHOOK_SECRET;
+  }
   const { webhookSecret } = await getStripeCredentials();
   return webhookSecret ?? null;
 }

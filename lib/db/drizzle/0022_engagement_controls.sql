@@ -1,0 +1,12 @@
+ALTER TABLE "engagement_organizations" ADD COLUMN IF NOT EXISTS "source_quote_request_id" uuid REFERENCES "quote_requests"("id");
+CREATE TABLE IF NOT EXISTS "engagement_tenant_operators" ("id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,"tenant_opaque_id" text NOT NULL,"bookkeeper_user_id" uuid NOT NULL,"created_at" timestamp with time zone DEFAULT now() NOT NULL);
+CREATE UNIQUE INDEX IF NOT EXISTS "engagement_tenant_operators_unique" ON "engagement_tenant_operators" ("tenant_opaque_id","bookkeeper_user_id");
+CREATE INDEX IF NOT EXISTS "engagement_tenant_operators_user_idx" ON "engagement_tenant_operators" ("bookkeeper_user_id");
+ALTER TABLE "engagements" ADD COLUMN IF NOT EXISTS "quote_snapshot" jsonb NOT NULL DEFAULT '{}'::jsonb;
+ALTER TABLE "engagement_payments" ADD COLUMN IF NOT EXISTS "receiving_account_code" text NOT NULL DEFAULT '';
+CREATE UNIQUE INDEX IF NOT EXISTS "engagement_payments_invoice_reference_idx" ON "engagement_payments" ("invoice_id","reference");
+ALTER TABLE "engagement_posting_requests" ADD COLUMN IF NOT EXISTS "debit_account_code" text;
+ALTER TABLE "engagement_posting_requests" ADD COLUMN IF NOT EXISTS "credit_account_code" text;
+ALTER TABLE "engagement_posting_requests" ADD COLUMN IF NOT EXISTS "cost_centre_code" text;
+ALTER TABLE "engagement_payments" ADD CONSTRAINT "engagement_payments_positive_amount" CHECK ("amount_cents" > 0);
+ALTER TABLE "engagement_invoices" ADD CONSTRAINT "engagement_invoices_positive_amount" CHECK ("amount_cents" > 0);

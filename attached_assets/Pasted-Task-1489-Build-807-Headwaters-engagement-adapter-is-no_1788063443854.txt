@@ -1,0 +1,51 @@
+Task #1489 (Build 807 Headwaters engagement adapter) is now a Draft.
+
+Verified current state
+
+Repository: This pnpm monorepo is the repository serving the 807 platform.
+Production surface: 807foodcoop.ca redirects to /benefits/; the frontend is artifacts/807-benefits, backed by artifacts/api-server.
+Tenant identifier: "807" is the current stable tenant slug across frontend, backend, request middleware, and Codetry. No cross-system immutable UUID exists yet.
+Legal name: Configuration disagrees between “807 Food Co-operative Inc.”, “807 Food Co-operative”, and “807 Food Co-operative & Hub.” The contracting and invoicing entity needs human confirmation.
+Authentication: Clerk is authoritative for people. Admin status and board seats come from Clerk private metadata. Integration credentials are separate server-to-server credentials.
+Live tenant configuration: The tenant and getTenant() accessors are active. Only 807 is deployed; pilot contains demonstration placeholders.
+Existing integration: /api/integrations/benefits-807/* already supports an authenticated 807 Codetry Vocabulary Ledger and shareable reviewer reports.
+Machine access: Codetry Gate provides scoped, revocable, audited, fail-closed access to approved vocabulary data.
+Current systems: PostgreSQL/Drizzle holds operational records; Square handles membership payment links/webhooks; Local Line supplies ordering data; Resend handles transactional email; Clerk handles identity.
+Existing commercial records: Versioned licensing agreements and acknowledgements exist, but there is no general engagement/work-order model covering scope approval, delivery acceptance, exceptions, and payment authorization.
+Background processing: The repository has scheduled workers and several purpose-specific retry/idempotency mechanisms, but no reusable transactional outbox/dead-letter framework for this adapter.
+Staging: Local development and an autoscale production deployment are configured. A formal staging environment and promotion procedure are not documented.
+Accounting boundary: 807 finance records are operationally separate from Headwaters’ books. Only invoice references, status, approved amount summaries, and payment-authority evidence should be mirrored.
+Publication permission: The repository explicitly says permission for 807 names, screenshots, metrics, outcomes, and case-study details is not recorded.
+Decisions still requiring people
+
+807 and Headwaters must confirm:
+
+The exact contracting/invoicing entities and authorized signers.
+Who may request work, approve scope, accept delivery, and authorize payment.
+Whether one person may hold multiple approval powers.
+The immutable cross-system tenant key.
+Allowed inbound and outbound fields.
+Retention, deletion, backup, incident, and revocation requirements.
+Staging and production-promotion ownership.
+Mandatory accessibility, language, mobile, and low-bandwidth standards.
+Exact case-study and brand-use permission.
+No Task #2803 exists in this project snapshot, so Task #1489 captures the adapter work without assuming that external draft is available.
+Legal name: 807 Food Co-operative Inc. NOW THIS IS ALL WHITE LABEL READY FOR 807 first followed by the next co-op and the next team and the next contract? The stuff that 807 needs to approve should be presented in east to understand plain language on the 807 agenda and ensure its present in other on-boarding materials for co-ops to guide them through the process seamlessly.
+Yes—that is now the intended structure.
+
+I updated Task #1489 (Build white-label engagement delivery) to establish:
+
+Canonical legal name: 807 Food Co-operative Inc.
+807 as the first complete implementation, not a hard-coded special case.
+A reusable flow for each subsequent co-op, operating team, and contract.
+Plain-language approval items placed directly on the 807 board agenda.
+Each decision explains what is requested, why it matters, what data is involved, consequences, and the option to approve, reject, defer, or add conditions.
+Approved agenda decisions flow into tenant configuration without duplicate entry.
+The same guidance becomes a reusable onboarding journey for future co-ops.
+A clean second-tenant rehearsal must prove that no 807 names, policies, roles, data, or contract terms leak into another tenant.
+807’s settings remain reference evidence—not defaults. Every later tenant gets an empty decision register and explicitly approves its own identity, vocabulary, roles, data boundaries, acceptance rules, and publication permissions.
+Build the Headwaters-to-tenant engagement flow as a reusable white-label capability, proving it first with 807 Food Co-operative Inc. and making the same guided process ready for the next co-op, team, and contract. Headwaters remains authoritative for quotes, contracts, scope, billing, and its books; each tenant remains authoritative for its operations, people, roles, content, and acceptance decisions.
+The system must translate every decision the tenant needs to make into plain language. For 807, those decisions should appear as board-agenda items inside the existing governance workflow. The same decision prompts, explanations, evidence requirements, and onboarding sequence should then be reusable without carrying forward 807 names, policies, roles, or commercial terms.
+I’m going to reconcile the task plan with the current implementation, then wire the reusable engagement model through schema, API, and the 807 board experience before running focused validation.
+The repository already has tenant branding and governance primitives, but the engagement lifecycle itself is not yet a first-class record. I’m narrowing the implementation around a reusable tenant-scoped engagement workspace: configurable identity/terminology/policies, decision prompts in board governance, approvals feeding configuration, delivery acceptance, and signed event recovery.
+I’m implementing this as a separate engagement boundary rather than extending the 807-only tables. That keeps commercial records out of tenant storage, lets each engagement have its own versioned decisions/configuration, and gives the board a single place to approve the tenant-side consequences.

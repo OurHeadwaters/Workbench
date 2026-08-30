@@ -154,6 +154,15 @@ router.post(
       event = stripe.webhooks.constructEvent(req.body as Buffer, sig, secret);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
+      if (
+        msg.includes("does not have a secret key")
+        || msg.includes("Stripe is not available")
+        || msg.includes("Could not load Stripe connection credentials")
+      ) {
+        logger.warn({ err: msg }, "[stripe-webhook] Stripe client is unavailable");
+        res.status(503).json({ error: "Stripe is not configured" });
+        return;
+      }
       logger.warn({ err: msg }, "[stripe-webhook] signature verification failed");
       res.status(400).json({ error: `Webhook signature verification failed: ${msg}` });
       return;

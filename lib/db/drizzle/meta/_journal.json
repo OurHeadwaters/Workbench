@@ -113,6 +113,48 @@
       "when": 1753574400000,
       "tag": "0019_river_smith_proof_of_work",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1770000000000,
+      "tag": "0020_quote_requests",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1770000001000,
+      "tag": "0021_engagement_lifecycle",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1770000002000,
+      "tag": "0022_engagement_controls",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1770000003000,
+      "tag": "0023_engagement_tenant_integrations",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1770000004000,
+      "tag": "0024_engagement_outbound_delivery",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1770000005000,
+      "tag": "0025_engagement_outbox_leases",
+      "breakpoints": true
     }
   ]
 }
