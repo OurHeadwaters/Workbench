@@ -802,17 +802,17 @@ test.describe("Lab channel", () => {
   // ── 15. Typing bubble appears while agent is thinking and is gone after response ──
   //
   // Scenario: a lab with an invited river-smith role is open. The API route is
-  // intercepted to add a 1.5 s delay, giving a reliable window to assert the
-  // bubble is visible while handleAskAgent is in flight. Once the (stub) response
-  // lands the bubble must be gone and the ask button must return to its normal label.
+  // intercepted to add an 8 s delay, giving a reliable window to assert both the
+  // typing bubble and its slow-response hint. Once the (stub) response lands,
+  // both must be gone and the ask button must return to its normal label.
   test("typing bubble appears while agent is thinking and disappears when response arrives", async ({ page }) => {
     const channelId = `lab-typing-bubble-${Date.now()}`;
     const expiresAt = new Date(Date.now() + 60 * 60 * 1_000).toISOString();
 
-    // Intercept the ask-agent endpoint and hold it for 1.5 s before returning
+    // Intercept the ask-agent endpoint and hold it for 8 s before returning
     // a 404 so handleAskAgent falls back to the local stub.
     await page.route("**/api/north-star/lab/ask-agent", async (route) => {
-      await new Promise<void>((r) => setTimeout(r, 1_500));
+      await new Promise<void>((r) => setTimeout(r, 8_000));
       await route.fulfill({ status: 404, body: "" });
     });
 
@@ -861,16 +861,23 @@ test.describe("Lab channel", () => {
     const askBtn = page.getByRole("button", { name: /ask river smith/i });
     await expect(askBtn).toBeVisible({ timeout: 5_000 });
 
-    // Click — handleAskAgent fires; fetch is held for 1.5 s
+    // Click — handleAskAgent fires; fetch is held for 8 s
     await askBtn.click();
     const bubble = page.getByTestId("typing-bubble");
     await expect(bubble).toBeVisible({ timeout: 3_000 });
+
+    // The production 15 s timeout puts the slow-response hint at 7 s.
+    await expect(page.getByTestId("typing-bubble-hint")).toBeVisible({ timeout: 9_000 });
+    await expect(
+      page.getByRole("button", { name: /river smith taking a moment/i }),
+    ).toBeVisible({ timeout: 3_000 });
 
     // The river-smith stub always includes "constellation signals"; wait for it.
     await expect(page.getByText(/constellation signals/i)).toBeVisible({ timeout: 8_000 });
 
     // Typing bubble must be gone once the response is in the feed.
     await expect(bubble).not.toBeVisible({ timeout: 5_000 });
+    await expect(page.getByTestId("typing-bubble-hint")).not.toBeVisible({ timeout: 3_000 });
 
     // Ask button must return to its normal (enabled) label.
     await expect(page.getByRole("button", { name: /ask river smith/i })).toBeVisible({ timeout: 5_000 });

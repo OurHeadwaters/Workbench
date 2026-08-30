@@ -6,6 +6,9 @@ import { AGENT_ROLE_REGISTRY } from "@/lib/relay-stub";
 import { BG, SURFACE, BORDER, BORDER_STRONG, TEXT, TEXT_2, AMBER, FONT_DISPLAY } from "@/lib/theme";
 import { Clock, Archive, Send, ChevronLeft, Beaker, Bot, User, Loader2 } from "lucide-react";
 
+const AGENT_TIMEOUT_MS = 15_000;
+const AGENT_SLOW_HINT_MS = 7_000;
+
 // ── stub response generator ────────────────────────────────────────────────
 
 function generateAgentStub(role: string, labLabel: string, recentMessages: string[], prompt?: string): string {
@@ -54,7 +57,7 @@ function roleLabel(role: string | undefined): string {
 
 // ── TypingBubble ───────────────────────────────────────────────────────────
 
-function TypingBubble({ role }: { role: string }) {
+function TypingBubble({ role, isTakingLonger }: { role: string; isTakingLonger: boolean }) {
   return (
     <div data-testid="typing-bubble" className="flex gap-2.5 flex-row">
       {/* Avatar */}
@@ -89,6 +92,15 @@ function TypingBubble({ role }: { role: string }) {
             />
           ))}
         </div>
+        {isTakingLonger && (
+          <span
+            data-testid="typing-bubble-hint"
+            className="text-[11px] px-1"
+            style={{ color: TEXT_2 }}
+          >
+            Taking a moment…
+          </span>
+        )}
       </div>
     </div>
   );
@@ -238,6 +250,7 @@ export function LabPage() {
   const now = useNow(nowIntervalMs);
   const [reply, setReply] = useState("");
   const [askingRole, setAskingRole] = useState<string | null>(null);
+  const [isTakingLonger, setIsTakingLonger] = useState(false);
   // streamingText holds partial agent text while SSE tokens are arriving.
   // Empty string = not yet streaming (typing dots shown); non-empty = live bubble.
   const [streamingText, setStreamingText] = useState("");
@@ -328,6 +341,7 @@ export function LabPage() {
     }
 
     setAskingRole(role);
+    setIsTakingLonger(false);
     setStreamingText("");
 
     // Capture recent messages (including the prompt just posted, if any)
@@ -355,14 +369,16 @@ export function LabPage() {
     }
 
     // Timeout: abort after 15 s (or a shorter value set via localStorage for
-    // testing: north-star:agent-timeout).
+    // testing: north-star:agent-timeout). The hint appears after 7 s without
+    // changing the timeout itself.
     const timeoutMs = (() => {
       const override = typeof localStorage !== "undefined"
         ? localStorage.getItem("north-star:agent-timeout")
         : null;
       const parsed = override ? parseInt(override, 10) : NaN;
-      return Number.isFinite(parsed) && parsed > 0 ? parsed : 15_000;
+      return Number.isFinite(parsed) && parsed > 0 ? parsed : AGENT_TIMEOUT_MS;
     })();
+    const slowHintId = setTimeout(() => setIsTakingLonger(true), AGENT_SLOW_HINT_MS);
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -442,9 +458,11 @@ export function LabPage() {
       // gets a response and the typing bubble is never left stuck.
       commitOrStub(generateAgentStub(role, label, recentMessages, prompt || undefined));
     } finally {
+      clearTimeout(slowHintId);
       clearTimeout(timeoutId);
       askingRoleRef.current = null;
       setAskingRole(null);
+      setIsTakingLonger(false);
       setStreamingText("");
     }
   }
@@ -556,7 +574,7 @@ export function LabPage() {
           {askingRole && streamingText
             ? <StreamingBubble role={askingRole} text={streamingText} />
             : askingRole
-              ? <TypingBubble role={askingRole} />
+              ? <TypingBubble role={askingRole} isTakingLonger={isTakingLonger} />
               : null}
         </div>
 
@@ -592,12 +610,15 @@ export function LabPage() {
                 const label = entry ? entry.name : role;
                 const isThinking = askingRole === role;
                 const isDisabled = askingRole !== null;
+                const thinkingLabel = isTakingLonger
+                  ? `${label} taking a moment…`
+                  : `${label} thinking…`;
                 return (
                   <button
                     key={role}
                     onClick={() => handleAskAgent(role)}
                     disabled={isDisabled}
-                    aria-label={isThinking ? `${label} thinking…` : `Ask ${label}`}
+                    aria-label={isThinking ? thinkingLabel : `Ask ${label}`}
                     aria-busy={isThinking}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-opacity"
                     style={{
@@ -612,7 +633,7 @@ export function LabPage() {
                     ) : (
                       <Bot size={11} />
                     )}
-                    {isThinking ? `${label} thinking…` : `Ask ${label}`}
+                    {isThinking ? thinkingLabel : `Ask ${label}`}
                   </button>
                 );
               })}
