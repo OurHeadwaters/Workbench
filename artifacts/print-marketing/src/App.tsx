@@ -84,6 +84,8 @@ import FamilyIncomeOnePager from "@/pages/FamilyIncomeOnePager";
 import LetterKonstantinos from "@/pages/LetterKonstantinos";
 import LetterHinterland from "@/pages/LetterHinterland";
 import PosterWebDev from "@/pages/PosterWebDev";
+import ContinuityOffers from "@/pages/ContinuityOffers";
+import CommunityFundingInsert from "@/pages/CommunityFundingInsert";
 import NotFound from "@/pages/not-found";
 import { PrintEcosystemFooter } from "@/components/PrintEcosystemFooter";
 
@@ -171,6 +173,8 @@ function Router() {
       <Route path="/letter-konstantinos" component={LetterKonstantinos} />
       <Route path="/letter-hinterland" component={LetterHinterland} />
       <Route path="/web-dev-poster" component={PosterWebDev} />
+      <Route path="/continuity-offers" component={ContinuityOffers} />
+      <Route path="/community-funding-insert" component={CommunityFundingInsert} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -185,6 +185,8 @@ const ZONES: Array<{
       { href: "/governance-card", title: "Governance Quick-Reference Card", label: "Community governance", desc: "Decision matrix, quorum rules, voting thresholds, and the full Reserve Raid protocol." },
       { href: "/pace-referral", title: "PACE Referral — NWO Food Businesses", label: "Business Dev", desc: "For PACE to forward to NWO clients — Phase 1 offer, four deliverables." },
       { href: "/gilles-pitch", title: "Gilles Pitch — Two Weeks", label: "Private", desc: "Two-week engagement: capture knowledge, document systems, legacy at Deer Lake." },
+      { href: "/continuity-offers", title: "Continuity Offers — First Conversations", label: "Headwaters · Fall 2026", desc: "Three-offer overview: Governance Continuity, Care Continuity / Family Team Plan, and Sovereign Ops." },
+      { href: "/community-funding-insert", title: "Community Funding Insert — Bounded First Implementation", label: "Grant / Board", desc: "Board-ready $20,000 CAD starting point with stages, outputs, responsibilities, boundaries, and disclaimer." },
     ],
   },
   {

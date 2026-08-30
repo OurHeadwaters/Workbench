@@ -279,6 +279,114 @@ export default function Index() {
             <span style={{ color: "rgba(212,160,23,0.85)", fontSize: "1.1rem", flexShrink: 0 }}>→</span>
           </a>
 
+          {/* Fall continuity offers */}
+          <a
+            href={`${base}continuity-offers`}
+            data-testid="link-continuity-offers"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "1rem",
+              padding: "0.85rem 1.1rem",
+              minHeight: "56px",
+              background: "rgba(212,160,23,0.10)",
+              border: "1px solid rgba(212,160,23,0.35)",
+              borderRadius: "3px",
+              textDecoration: "none",
+              transition: "background 0.18s, border-color 0.18s",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.18)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.6)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.10)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.35)";
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "rgba(244,237,224,0.95)",
+                  fontWeight: 600,
+                  marginBottom: "0.2rem",
+                }}
+              >
+                Continuity offers
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.78rem",
+                  color: "rgba(244,237,224,0.68)",
+                  lineHeight: 1.4,
+                }}
+              >
+                Three bounded first-build conversations for fall planning
+              </div>
+            </div>
+            <span style={{ color: "rgba(212,160,23,0.85)", fontSize: "1.1rem", flexShrink: 0 }}>→</span>
+          </a>
+
+          {/* Community funding insert */}
+          <a
+            href={`${base}community-funding-insert`}
+            data-testid="link-community-funding-insert"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "1rem",
+              padding: "0.85rem 1.1rem",
+              minHeight: "56px",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(212,160,23,0.18)",
+              borderRadius: "3px",
+              textDecoration: "none",
+              transition: "background 0.18s, border-color 0.18s",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,160,23,0.10)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.4)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,160,23,0.18)";
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "rgba(244,237,224,0.92)",
+                  fontWeight: 500,
+                  marginBottom: "0.2rem",
+                }}
+              >
+                Community funding insert
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.78rem",
+                  color: "rgba(244,237,224,0.62)",
+                  lineHeight: 1.4,
+                }}
+              >
+                A $20,000 starting point for a board conversation
+              </div>
+            </div>
+            <span style={{ color: "rgba(212,160,23,0.75)", fontSize: "1.1rem", flexShrink: 0 }}>→</span>
+          </a>
+
           {/* How it all connects */}
           <a
             href={`${base}ecosystem-guide`}
