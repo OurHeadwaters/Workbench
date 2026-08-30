@@ -6,10 +6,16 @@ interface QRCodeStampProps {
   light?: boolean;
   size?: number;
   url?: string;
+  label?: string;
 }
 
-export default function QRCodeStamp({ light = false, size = 72, url = DEFAULT_URL }: QRCodeStampProps) {
-  const label = url.replace(/^https?:\/\//, "");
+export default function QRCodeStamp({
+  light = false,
+  size = 72,
+  url = DEFAULT_URL,
+  label,
+}: QRCodeStampProps) {
+  const displayLabel = label ?? url.replace(/^https?:\/\//, "");
 
   return (
     <div
@@ -35,6 +41,7 @@ export default function QRCodeStamp({ light = false, size = 72, url = DEFAULT_UR
           level="M"
           fgColor="#1f3d2e"
           bgColor="white"
+          aria-label={`QR code for ${url}`}
         />
       </div>
       <span
@@ -47,7 +54,7 @@ export default function QRCodeStamp({ light = false, size = 72, url = DEFAULT_UR
           textAlign: "center",
         }}
       >
-        {label}
+        {displayLabel}
       </span>
     </div>
   );

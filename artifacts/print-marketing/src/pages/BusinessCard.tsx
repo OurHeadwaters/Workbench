@@ -1,9 +1,16 @@
 import { PrintNav } from "../components/PrintNav";
+import QRCodeStamp from "../components/QRCodeStamp";
 
-const EVERGREEN = "#1f3d2e";
-const CREAM = "#f4ede0";
-const RUST = "#b85a3e";
-const MUTED = "#6b7665";
+const EVERGREEN = "#0f1c18";
+const EVERGREEN_MID = "#1b2621";
+const EVERGREEN_LIGHT = "#2f3e35";
+const CREAM = "#f7f7f5";
+const GOLD = "#d4a017";
+const RUST = "#c47a3a";
+const MIST = "#9cb3a8";
+const MUTED = "#6d8176";
+const QUOTE_URL = "https://ourheadwaters.ca/quote?utm_source=business-card";
+const BASE = import.meta.env.BASE_URL;
 
 function Card({ variant }: { variant: "front" | "back" }) {
   const W = "3.5in";
@@ -15,9 +22,9 @@ function Card({ variant }: { variant: "front" | "back" }) {
         style={{
           width: W,
           height: H,
-          background: EVERGREEN,
-          borderRadius: 4,
-          padding: "0.22in 0.28in",
+          background: `linear-gradient(135deg, ${EVERGREEN} 0%, ${EVERGREEN_MID} 100%)`,
+          borderRadius: 2,
+          padding: "0.18in 0.24in",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -26,15 +33,17 @@ function Card({ variant }: { variant: "front" | "back" }) {
           flexShrink: 0,
         }}
       >
-        <div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
           <p
             style={{
               fontFamily: "var(--font-sans)",
-              fontSize: "0.45rem",
-              letterSpacing: "0.22em",
+              fontSize: "0.37rem",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: "rgba(244,237,224,0.55)",
-              marginBottom: "0.12in",
+              color: MIST,
+              marginBottom: "0.08in",
             }}
           >
             Development Services
@@ -42,21 +51,21 @@ function Card({ variant }: { variant: "front" | "back" }) {
           <h1
             style={{
               fontFamily: "var(--font-serif)",
-              fontSize: "1.55rem",
-              fontWeight: 700,
+              fontSize: "1.65rem",
+              fontWeight: 400,
               color: CREAM,
               lineHeight: 1.05,
-              letterSpacing: "-0.01em",
+              letterSpacing: "-0.02em",
             }}
           >
             Headwaters
           </h1>
           <div
             style={{
-              width: "0.55in",
-              height: 1.5,
-              background: RUST,
-              margin: "0.09in 0 0.11in",
+              width: "0.42in",
+              height: 2,
+              background: GOLD,
+              margin: "0.1in 0 0.09in",
             }}
           />
           <p
@@ -64,12 +73,19 @@ function Card({ variant }: { variant: "front" | "back" }) {
               fontFamily: "var(--font-serif)",
               fontSize: "0.6rem",
               fontStyle: "italic",
-              color: "rgba(244,237,224,0.72)",
+              color: "rgba(247,247,245,0.7)",
               lineHeight: 1.4,
             }}
           >
-            Community tools, food systems, operational software
+            Capacity to carry important work through.
           </p>
+          </div>
+          <img
+            src={`${BASE}eagle-mark.svg`}
+            alt=""
+            aria-hidden="true"
+            style={{ width: "0.62in", height: "0.5in", objectFit: "contain", opacity: 0.95 }}
+          />
         </div>
 
         <div>
@@ -77,7 +93,7 @@ function Card({ variant }: { variant: "front" | "back" }) {
             style={{
               fontFamily: "var(--font-serif)",
               fontSize: "0.72rem",
-              fontWeight: 600,
+              fontWeight: 400,
               color: CREAM,
               marginBottom: "0.04in",
             }}
@@ -88,12 +104,13 @@ function Card({ variant }: { variant: "front" | "back" }) {
             style={{
               fontFamily: "var(--font-sans)",
               fontSize: "0.5rem",
+              fontWeight: 700,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "rgba(244,237,224,0.55)",
+              color: MIST,
             }}
           >
-            Practitioner · Dryden, Ontario
+            Development services · Northwestern Ontario
           </p>
         </div>
       </div>
@@ -105,90 +122,73 @@ function Card({ variant }: { variant: "front" | "back" }) {
       style={{
         width: W,
         height: H,
-        background: CREAM,
-        borderRadius: 4,
-        padding: "0.22in 0.28in",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
+        background: EVERGREEN,
+        borderRadius: 2,
+        padding: "0.18in 0.24in",
+        display: "grid",
+        gridTemplateColumns: "1fr auto",
+        alignItems: "center",
+        gap: "0.16in",
         boxSizing: "border-box",
-        boxShadow: "0 2px 16px rgba(0,0,0,0.10)",
-        border: "0.5px solid rgba(31,61,46,0.15)",
+        boxShadow: "0 2px 16px rgba(0,0,0,0.18)",
+        border: `0.5px solid ${EVERGREEN_LIGHT}`,
         flexShrink: 0,
       }}
     >
-      <div>
+      <div style={{ minWidth: 0 }}>
         <p
           style={{
             fontFamily: "var(--font-sans)",
-            fontSize: "0.45rem",
-            letterSpacing: "0.22em",
+            fontSize: "0.4rem",
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: MUTED,
-            marginBottom: "0.12in",
+            color: MIST,
+            marginBottom: "0.08in",
           }}
         >
-          Headwaters Development Services
+          Headwaters
         </p>
         <p
           style={{
             fontFamily: "var(--font-serif)",
-            fontSize: "0.85rem",
-            fontWeight: 600,
-            color: EVERGREEN,
-            marginBottom: "0.03in",
+            fontSize: "1.08rem",
+            fontWeight: 400,
+            color: CREAM,
+            lineHeight: 1.02,
+            marginBottom: "0.08in",
           }}
         >
-          Bobbie Parr
+          How Can<br />We Help?
         </p>
         <p
           style={{
             fontFamily: "var(--font-serif)",
-            fontSize: "0.58rem",
+            fontSize: "0.51rem",
             fontStyle: "italic",
-            color: MUTED,
+            color: "rgba(247,247,245,0.66)",
+            lineHeight: 1.35,
           }}
         >
-          Practitioner
+          Start with the work in front of you.
         </p>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.07in" }}>
-        {[
-          { label: "email", value: "bobbie@ourheadwaters.ca" },
-          { label: "text", value: "807 220 3654 · text preferred" },
-          { label: "web", value: "ourheadwaters.ca" },
-          { label: "base", value: "Dryden, Ontario" },
-        ].map(({ label, value }) => (
-          <div
-            key={label}
-            style={{ display: "flex", alignItems: "baseline", gap: "0.12in" }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.4rem",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: RUST,
-                width: "0.28in",
-                flexShrink: 0,
-              }}
-            >
-              {label}
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.55rem",
-                color: EVERGREEN,
-                letterSpacing: "0.01em",
-              }}
-            >
-              {value}
-            </span>
-          </div>
-        ))}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.04in" }}>
+        <QRCodeStamp url={QUOTE_URL} label="Scan to start" size={72} light />
+        <span
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "0.39rem",
+            color: GOLD,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            fontWeight: 600,
+            textAlign: "center",
+            lineHeight: 1.2,
+          }}
+        >
+          Request a quote
+        </span>
       </div>
     </div>
   );
@@ -202,7 +202,7 @@ export default function BusinessCard() {
         id="pdf-target"
         className="print-page page-letter"
         style={{
-          background: "#e8e2d8",
+            background: "#dfe5e0",
           padding: "2.5rem 1.5rem",
         }}
       >
@@ -243,13 +243,14 @@ export default function BusinessCard() {
               lineHeight: 1.55,
             }}
           >
-            Front (dark) and back (light). Ready to send to print.
+            Front (dark) and back (light). The back invites a conversation and
+            sends people directly to the budgetary quote intake.
           </p>
 
           <div
             className="no-print"
             style={{
-              background: "rgba(31,61,46,0.07)",
+              background: "rgba(15,28,24,0.07)",
               borderRadius: 6,
               padding: "0.9rem 1.1rem",
               marginBottom: "2rem",
@@ -309,19 +310,19 @@ export default function BusinessCard() {
             style={{
               background: "white",
               borderRadius: 8,
-              border: "1px solid rgba(31,61,46,0.12)",
+              border: "1px solid rgba(15,28,24,0.12)",
               padding: "1.1rem 1.3rem",
               fontSize: "0.82rem",
               color: MUTED,
               lineHeight: 1.7,
             }}
           >
-            <strong style={{ color: EVERGREEN, display: "block", marginBottom: "0.3rem" }}>
-              On "text preferred"
+              <strong style={{ color: EVERGREEN, display: "block", marginBottom: "0.3rem" }}>
+                The back is the handoff
             </strong>
-            It signals availability without implying open phone hours. People
-            who need you will text; people who are browsing will leave a message
-            by email. You can always call back on your own schedule.
+              “How Can We Help?” is the invitation. The QR code opens the
+              Headwaters quote funnel at the first useful question, with the
+              business-card source tagged for campaign tracking.
           </div>
         </div>
       </div>

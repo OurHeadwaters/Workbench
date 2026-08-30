@@ -1,24 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 :root {
-  --cream:          #f4ede0;
-  --cream-dark:     #ebe2d0;
-  --evergreen:      #1f3d2e;
-  --evergreen-mid:  #2e5a3f;
-  --evergreen-light:#4a7c61;
-  --rust:           #b85a3e;
-  --rust-dark:      #9a4530;
-  --rust-light:     #d4866a;
+  --cream:          #f7f7f5;
+  --cream-dark:     #e9ece8;
+  --evergreen:      #0f1c18;
+  --evergreen-mid:  #1b2621;
+  --evergreen-light:#2f3e35;
+  --rust:           #c47a3a;
+  --rust-dark:      #a9602d;
+  --rust-light:     #d99a62;
   --firefly-gold:   #d4a017;
-  --ink:            #2b2116;
-  --muted:          #6b7665;
+  --ink:            #17211c;
+  --muted:          #6d8176;
 
   --elevate-1: rgba(0, 0, 0, 0.03);
   --elevate-2: rgba(0, 0, 0, 0.08);
 
-  --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --font-sans:  'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'DM Serif Display', 'Playfair Display', Georgia, serif;
+  --font-sans:  'Plus Jakarta Sans', 'Avenir Next', ui-sans-serif, system-ui, sans-serif;
   --font-mono:  'JetBrains Mono', 'Menlo', 'Consolas', monospace;
 }
 
