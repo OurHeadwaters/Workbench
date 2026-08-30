@@ -1,5 +1,8 @@
 # 807 integration agent questionnaire
 
+For the board-facing explanation and decision record, see
+[`807-connection-faq.md`](./807-connection-faq.md).
+
 ## Current verified response
 
 The 807-side project has confirmed:
