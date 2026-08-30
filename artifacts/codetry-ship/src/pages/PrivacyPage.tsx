@@ -73,13 +73,21 @@ export function PrivacyPage() {
                 style={{ borderColor: "hsl(var(--card-border))" }}
               >
                 <h3 className="font-sans text-sm font-semibold uppercase tracking-wide" style={{ color: "hsl(var(--accent))" }}>
-                  Community Intake form
+                  Community intake and quote forms
                 </h3>
                 <p>
                   The intake form on the homepage asks for your name, email,
                   community, and what you need. We use this to understand who
                   is reaching out and to follow up directly. We also record your
                   IP address and browser type on submission to limit spam.
+                </p>
+                <p>
+                  The quote form also asks for your organization&apos;s legal name
+                  and address, project title, funding program, desired timing,
+                  selected offer, project description, and optional special
+                  requirements. We use this information to prepare and deliver a
+                  budgetary quote or to review a custom request. The submission
+                  and delivery status are retained as part of the business record.
                 </p>
               </div>
 

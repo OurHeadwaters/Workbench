@@ -42,6 +42,7 @@ import northStarRelayRouter from "./northStarRelay";
 import northStarLabAgentRouter from "./northStarLabAgent";
 import northStarProposalsRouter from "./northStarProposals";
 import z2Router from "./z2";
+import quoteIntakeRouter from "./quoteIntake";
 
 const router: IRouter = Router();
 
@@ -91,5 +92,6 @@ router.use("/north-star", northStarRelayRouter);
 router.use("/north-star", northStarLabAgentRouter);
 router.use("/north-star", northStarProposalsRouter);
 router.use("/z2", z2Router);
+router.use("/", quoteIntakeRouter);
 
 export default router;

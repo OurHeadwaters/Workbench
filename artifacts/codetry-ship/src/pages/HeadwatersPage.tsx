@@ -271,7 +271,7 @@ export function HeadwatersPage() {
               textShadow: "0 2px 40px rgba(0,0,0,0.8)",
             }}
           >
-            Workbench
+            Build Capacity That Survives Change.
           </h1>
 
           <p
@@ -283,9 +283,44 @@ export function HeadwatersPage() {
               maxWidth: 520,
             }}
           >
-            Where the work gets done. The origin story, the watershed map,
-            and the tools — all at one table.
+            Operating systems that root knowledge, human authority and practical
+            tools for where you live.
           </p>
+
+          <p
+            style={{
+              color: "rgba(240,232,216,0.88)",
+              fontSize: "clamp(0.95rem, 2.4vw, 1.08rem)",
+              lineHeight: 1.6,
+              margin: "0 auto 24px",
+              maxWidth: 520,
+            }}
+          >
+            Start where you are. Use what you have. We&apos;ll do what we can.
+          </p>
+
+          <a
+            href={`${BASE}quote`}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: 48,
+              padding: "12px 22px",
+              marginBottom: 34,
+              background: "#d4a017",
+              color: "#111c17",
+              textDecoration: "none",
+              fontFamily: "monospace",
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              borderRadius: 2,
+            }}
+          >
+            Request a budgetary quote
+          </a>
 
           {/* Scroll cue */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, opacity: 0.4 }}>
