@@ -1,0 +1,26 @@
+The repo answers the pricing question clearly: $120/business already exists as Producer Premium; it is not a hypothetical new middle tier. The current structure is:
+
+Producer Basic — $50/year: one vote, public producer profile, producer badge, and direct discovery by local households.
+Producer Premium — $120/year: everything in Basic, plus Snap to Shelf photo inventory, sales/payout dashboard, featured marketing rotation, 0% producer-to-producer commission, a Google Doc export of the producer’s own course, and priority event sign-up.
+Coordinator — $300/year: the board’s forecast model already treats this as the higher-value network-organizer role.
+Community / Sustaining / Harvest — $5/$10/$20 monthly: these are household/community support memberships, not business tiers.
+My recommendation is keep $50 and $120, but rename and communicate the $120 tier as “Producer Pro” or “Network Producer,” not as a vague middle tier. At $120/year ($10/month equivalent), it is a credible “operating toolkit” price: the producer gets tools that help them be found, publish inventory, understand payouts, promote themselves, and trade with peers without 807 becoming the merchant or intermediary.
+
+The value proposition should be:
+
+Join for $50 to have a voice and be discoverable. Choose $120 to run your producer presence with the shared tools.
+
+Communicate it in three layers:
+
+Outcome first: “Be easier to find, keep your listings current, and turn local connections into repeat business.”
+Tool proof second: show the real tools already in the repo — public profile/discovery, Snap to Shelf, payout visibility, producer-to-producer at-cost purchasing, featured promotion, course export, and event priority.
+Boundary third: “You keep your customer relationships and transactions. 807 provides the shared discovery, tooling, and cooperative frame; it does not promise to broker every sale.”
+Do not lead with “support the co-op,” because that explains the $50 but not the $120 upgrade. Also avoid promising guaranteed sales, homepage placement on demand, or unlimited administration. Featured marketing should be framed as an eligibility/rotation benefit, and 0% peer commission should be described with its existing scope.
+
+For the 5→100 expansion, the strongest message is not “pay more for a listing.” It is:
+
+The $50 tier gives every business a seat in the network. The $120 tier gives active producers the tools to participate in it.
+
+That lets you recruit beyond farmers: food processors, prepared-food businesses, makers, tradespeople, logistics helpers, and other local businesses can join when they benefit from discovery and connection. Coordinators remain the $300 organizer role, rather than forcing every business into a high-touch package.
+
+One caution: the current public copy says the Premium price is “provisional” and may change by board vote. Keep that governance note until the board formally approves the commercial model.

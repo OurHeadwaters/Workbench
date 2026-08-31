@@ -7,7 +7,7 @@ Year 1 is $20,000 for the Codetry implementation and base build using the organi
 
 Year 2 is $20,000 for an additional Codetry layer plus a new annual strategic plan supporting board and training implementation. The normal $6,000 annual operating fee is waived when the organization has an active annual engagement.
 
-For the 807 example, producer membership is $50 per year and coordinator membership is $300 per year.
+For the 807 example, Producer Basic is $50 per year, Producer Premium is $120 per year, and Coordinator is $300 per year. The $120 tier is an existing operating-toolkit offer, not a hypothetical new tier.
 
 **Why:** This separates first implementation from recurring annual capacity-building work and prevents the one-time build, annual layer, and operating fee from being double-counted.
 
