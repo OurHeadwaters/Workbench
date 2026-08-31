@@ -1,4 +1,5 @@
 import { ReplitConnectors } from "@replit/connectors-sdk";
+import crypto from "crypto";
 import { logger } from "./logger";
 
 export type QuoteMailResult = {
@@ -29,19 +30,49 @@ export function encodeRfc2822(
   subject: string,
   body: string,
   replyTo?: string,
+  bodyHtml?: string,
 ): string {
   assertSafeHeader(to, "To");
   if (replyTo) assertSafeHeader(replyTo, "Reply-To");
-  const raw = [
-    `To: ${to}`,
-    ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
-    `Subject: ${encodeMimeHeader(subject, "Subject")}`,
-    "MIME-Version: 1.0",
-    "Content-Type: text/plain; charset=UTF-8",
-    "Content-Transfer-Encoding: base64",
-    "",
-    wrapBase64(body),
-  ].join("\r\n");
+
+  let raw: string;
+
+  if (bodyHtml) {
+    const boundary = `----=_NextPart_${crypto.randomBytes(16).toString("hex")}`;
+    raw = [
+      `To: ${to}`,
+      ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
+      `Subject: ${encodeMimeHeader(subject, "Subject")}`,
+      "MIME-Version: 1.0",
+      `Content-Type: multipart/alternative; boundary="${boundary}"`,
+      "",
+      `--${boundary}`,
+      "Content-Type: text/plain; charset=UTF-8",
+      "Content-Transfer-Encoding: base64",
+      "",
+      wrapBase64(body),
+      "",
+      `--${boundary}`,
+      "Content-Type: text/html; charset=UTF-8",
+      "Content-Transfer-Encoding: base64",
+      "",
+      wrapBase64(bodyHtml),
+      "",
+      `--${boundary}--`,
+    ].join("\r\n");
+  } else {
+    raw = [
+      `To: ${to}`,
+      ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
+      `Subject: ${encodeMimeHeader(subject, "Subject")}`,
+      "MIME-Version: 1.0",
+      "Content-Type: text/plain; charset=UTF-8",
+      "Content-Transfer-Encoding: base64",
+      "",
+      wrapBase64(body),
+    ].join("\r\n");
+  }
+
   return Buffer.from(raw)
     .toString("base64")
     .replace(/\+/g, "-")
@@ -53,6 +84,7 @@ export async function sendQuoteEmail(opts: {
   to: string;
   subject: string;
   body: string;
+  bodyHtml?: string;
   replyTo?: string;
 }): Promise<QuoteMailResult> {
   try {
@@ -64,7 +96,7 @@ export async function sendQuoteEmail(opts: {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          raw: encodeRfc2822(opts.to, opts.subject, opts.body, opts.replyTo),
+          raw: encodeRfc2822(opts.to, opts.subject, opts.body, opts.replyTo, opts.bodyHtml),
         }),
       },
     );

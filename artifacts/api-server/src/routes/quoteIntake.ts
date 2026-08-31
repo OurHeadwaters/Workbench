@@ -8,6 +8,7 @@ import {
   calculateTaxCents,
   createQuoteNumber,
   quoteHtml,
+  quoteEmailHtml,
   quotePlainText,
   quoteValidUntil,
   signQuoteId,
@@ -219,12 +220,14 @@ router.post("/quote-intake", async (req, res) => {
           ? `${quoteNumber} — Headwaters budgetary quote`
           : `${quoteNumber} — Headwaters received your custom request`,
       body: `Hi ${contactName},\n\n${customerBody}`,
+      bodyHtml: quoteEmailHtml(row!, absolutePdfUrl, contactName),
       replyTo: operatorEmail,
     }),
     sendQuoteEmail({
       to: operatorEmail,
       subject: `${classification.mode === "standard" ? "Quote sent" : "Custom review required"}: ${legalOrganizationName} — ${quoteNumber}`,
       body: customerBody,
+      bodyHtml: quoteEmailHtml(row!, absolutePdfUrl),
       replyTo: email,
     }),
   ]);

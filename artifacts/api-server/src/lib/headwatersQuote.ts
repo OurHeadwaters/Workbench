@@ -199,6 +199,201 @@ export function quotePlainText(row: QuoteRequestRow, pdfUrl: string): string {
     .join("\n");
 }
 
+export function quoteEmailHtml(row: QuoteRequestRow, pdfUrl: string, greetingName?: string | null): string {
+  const standard = row.mode === "standard";
+  const title = standard ? "Budgetary Quote" : "Custom Quote Request";
+
+  const introStandard = `Thank you for requesting a budgetary quote. Based on your inputs, we've prepared a standard projection for <strong>${esc(row.projectTitle)}</strong> at <strong>${esc(row.legalOrganizationName)}</strong>.`;
+  const introCustom = `Thank you for requesting a quote for <strong>${esc(row.projectTitle)}</strong> at <strong>${esc(row.legalOrganizationName)}</strong>. Because your project includes special requirements or scope that falls outside our standard bounds, it needs a human review to give you an accurate assessment.`;
+  const nextStepsStandard = `A downloadable, grant-ready PDF is available below. Review the scope and budget details carefully to ensure they match your funding application.`;
+  const nextStepsCustom = `We will review your request and follow up shortly with questions or a custom scope. No automatic commitment or price has been issued.`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>${esc(title)} ${esc(row.quoteNumber)}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4ede0; font-family: Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #14231d;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f4ede0; width: 100%;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+        <table width="100%" max-width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background-color: #fffdf8; border-top: 6px solid #17392b; box-shadow: 0 4px 12px rgba(23, 57, 43, 0.08);">
+          <tr>
+            <td style="padding: 40px 40px 30px 40px;">
+              <h1 style="margin: 0 0 24px 0; font-family: Georgia, serif; font-size: 28px; color: #17392b; font-weight: bold;">
+                ${standard ? 'Budgetary Quote' : 'Custom Request Received'}
+              </h1>
+              ${greetingName ? `<p style="margin: 0 0 16px 0; font-family: Arial, sans-serif; font-size: 16px; color: #17392b; line-height: 1.5;">Hi ${esc(greetingName)},</p>` : ''}
+              <p style="margin: 0 0 16px 0; font-family: Arial, sans-serif; font-size: 16px; color: #2d4539; line-height: 1.6;">
+                ${standard ? introStandard : introCustom}
+              </p>
+              <p style="margin: 0 0 32px 0; font-family: Arial, sans-serif; font-size: 16px; color: #2d4539; line-height: 1.6;">
+                ${standard ? nextStepsStandard : nextStepsCustom}
+              </p>
+
+              ${standard ? `
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 36px;">
+                <tr>
+                  <td align="center">
+                    <a href="${esc(pdfUrl)}" style="display: inline-block; padding: 14px 28px; background-color: #d4a017; color: #14231d; text-decoration: none; font-family: Arial, sans-serif; font-weight: bold; font-size: 16px; border-radius: 4px;">Download grant-ready quote</a>
+                  </td>
+                </tr>
+              </table>
+              ` : ''}
+
+              <!-- Project Summary Section -->
+              <h2 style="margin: 0 0 16px 0; font-family: Georgia, serif; font-size: 20px; color: #17392b; border-bottom: 1px solid #d8ddd9; padding-bottom: 8px;">Request Summary</h2>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px; font-family: Arial, sans-serif; font-size: 14px; color: #2d4539; line-height: 1.5;">
+                <tr>
+                  <td width="35%" valign="top" style="padding: 10px 0; font-weight: bold; color: #526059;">Reference</td>
+                  <td width="65%" valign="top" style="padding: 10px 0;">${esc(row.quoteNumber)}</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Project</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">${esc(row.projectTitle)}</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Organization</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">
+                    ${esc(row.legalOrganizationName)}<br>
+                    <span style="color: #68736d; font-size: 13px;">${esc(row.organizationType)}</span><br>
+                    <span style="color: #68736d; font-size: 13px;">${esc(row.organizationAddress)}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Contact</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">
+                    ${esc(row.contactName)}${row.role ? ` · <span style="color: #68736d; font-size: 13px;">${esc(row.role)}</span>` : ""}<br>
+                    <a href="mailto:${esc(row.email)}" style="color: #68736d; font-size: 13px; text-decoration: none;">${esc(row.email)}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Funding Program</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">${esc(row.fundingProgram)}</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Timeline</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">${esc(row.desiredTiming)}</td>
+                </tr>
+              </table>
+
+              <!-- Scope Details -->
+              <h2 style="margin: 0 0 16px 0; font-family: Georgia, serif; font-size: 20px; color: #17392b; border-bottom: 1px solid #d8ddd9; padding-bottom: 8px;">Scope &amp; Needs</h2>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px; font-family: Arial, sans-serif; font-size: 14px; color: #2d4539; line-height: 1.5;">
+                <tr>
+                  <td width="35%" valign="top" style="padding: 10px 0; font-weight: bold; color: #526059;">Requested Offer</td>
+                  <td width="65%" valign="top" style="padding: 10px 0;">${esc(row.selectedOffer)}</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Intended Users</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">${esc(row.intendedUsers || "Not provided")}</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Scale</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">${esc(row.approximateScale || "Not provided")}</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Current Systems</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">${esc(row.currentSystems || "Not provided")}</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Access Needs</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">${esc(row.accessibilityConnectivityNeeds || "Not provided")}</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Integrations</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">${esc(row.integrationNeeded || "Not sure")}</td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 10px 0; font-weight: bold; color: #526059; border-top: 1px solid #eef0ef;">Sensitive Data</td>
+                  <td valign="top" style="padding: 10px 0; border-top: 1px solid #eef0ef;">${esc(row.sensitiveDataInvolved || "Not sure")}</td>
+                </tr>
+              </table>
+
+              ${standard ? `
+              <div style="margin-bottom: 32px; font-family: Arial, sans-serif; font-size: 14px; color: #2d4539; line-height: 1.6;">
+                <p style="margin: 0 0 4px 0; font-weight: bold; color: #526059;">Standard Included Scope</p>
+                <p style="margin: 0 0 16px 0;">Organizational and vocabulary mapping; governance and language record; Field Guide Finance; one selected operational layer; agreed data/content intake; role-based training; launch acceptance; an initial results framework; and a later-tool roadmap.</p>
+
+                <p style="margin: 0 0 4px 0; font-weight: bold; color: #526059;">Assumptions and Exclusions</p>
+                <p style="margin: 0;">The client names an authorized decision-maker, operator, payer route, and minimum necessary source information. Integrations, migrations, regulated workflows, sensitive-data expansion, legal/accounting advice, research, travel, and custom product work require a separate written scope.</p>
+              </div>
+              ` : '<div style="margin-bottom: 32px;"></div>'}
+
+              <!-- Project Description & Outcome -->
+              <h2 style="margin: 0 0 16px 0; font-family: Georgia, serif; font-size: 20px; color: #17392b; border-bottom: 1px solid #d8ddd9; padding-bottom: 8px;">Project Details</h2>
+              <div style="margin-bottom: 32px; font-family: Arial, sans-serif; font-size: 14px; color: #2d4539; line-height: 1.6;">
+                <p style="margin: 0 0 4px 0; font-weight: bold; color: #526059;">Description</p>
+                <p style="margin: 0 0 20px 0;">${esc(row.projectDescription).replace(/\n/g, '<br>')}</p>
+
+                <p style="margin: 0 0 4px 0; font-weight: bold; color: #526059;">Desired Outcome</p>
+                <p style="margin: 0 0 20px 0;">${esc(row.desiredOutcome || "To be confirmed with the applicant.")}</p>
+
+                ${row.specialRequirements ? `
+                <p style="margin: 0 0 4px 0; font-weight: bold; color: #526059;">Special Requirements</p>
+                <p style="margin: 0 0 20px 0;">${esc(row.specialRequirements).replace(/\n/g, '<br>')}</p>
+                ` : ''}
+              </div>
+
+              <!-- Commercial Summary -->
+              ${standard ? `
+              <h2 style="margin: 0 0 16px 0; font-family: Georgia, serif; font-size: 20px; color: #17392b; border-bottom: 1px solid #d8ddd9; padding-bottom: 8px;">Commercial Summary</h2>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; font-family: Arial, sans-serif; font-size: 14px; color: #2d4539;">
+                <tr>
+                  <td style="padding: 10px 0; font-weight: bold; color: #526059; border-bottom: 1px solid #eef0ef;">Base budget</td>
+                  <td align="right" style="padding: 10px 0; border-bottom: 1px solid #eef0ef;">${money(row.subtotalCents)}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; font-weight: bold; color: #526059; border-bottom: 1px solid #eef0ef;">${taxDescription()}</td>
+                  <td align="right" style="padding: 10px 0; border-bottom: 1px solid #eef0ef;">${money(row.taxCents)}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 14px 0; font-weight: bold; color: #17392b; font-size: 16px;">Total CAD</td>
+                  <td align="right" style="padding: 14px 0; font-weight: bold; color: #17392b; font-size: 16px;">${money(row.totalCents)}</td>
+                </tr>
+              </table>
+
+              <div style="background-color: #f3ead8; border-left: 4px solid #d4a017; padding: 16px 20px; margin-bottom: 20px; font-family: Arial, sans-serif; font-size: 13px; color: #526059; line-height: 1.5;">
+                <p style="margin: 0 0 8px 0;"><strong>Payment Terms:</strong> ${esc(HEADWATERS_QUOTE_TERMS.payment)}</p>
+                <p style="margin: 0 0 12px 0;"><strong>Travel:</strong> ${esc(HEADWATERS_QUOTE_TERMS.travel)}</p>
+                <p style="margin: 0;">This is a non-binding budgetary quote valid until <strong>${date(row.validUntil)}</strong>. It is subject to eligibility, scope, and security review. Work begins only after both parties approve a written scope.</p>
+              </div>
+              ` : `
+              <div style="background-color: #f3ead8; border-left: 4px solid #d4a017; padding: 16px 20px; margin-bottom: 20px; font-family: Arial, sans-serif; font-size: 13px; color: #526059; line-height: 1.5;">
+                <p style="margin: 0;">This is a custom request under review. No automatic price or formal commitment has been generated. Headwaters will coordinate with you to confirm the best approach.</p>
+              </div>
+              `}
+
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 30px 40px; background-color: #17392b; color: #f4ede0;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.6;">
+                <tr>
+                  <td width="60%" valign="top">
+                    <strong style="color: #fffdf8; font-family: Georgia, serif; font-size: 16px; font-weight: bold; letter-spacing: 0.5px;">${esc(HEADWATERS_SELLER.operatingName)}</strong><br>
+                    <span style="color: #a8b8b0;">Build capacity that survives change.</span>
+                  </td>
+                  <td width="40%" valign="top" align="right" style="color: #a8b8b0;">
+                    ${esc(HEADWATERS_SELLER.practitionerName)}, ${esc(HEADWATERS_SELLER.practitionerTitle)}<br>
+                    ${esc(HEADWATERS_SELLER.mailingAddress)}<br>
+                    <a href="mailto:${esc(HEADWATERS_SELLER.email)}" style="color: #d4a017; text-decoration: none;">${esc(HEADWATERS_SELLER.email)}</a><br>
+                    ${esc(HEADWATERS_SELLER.phone)}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
 export function quoteHtml(row: QuoteRequestRow): string {
   const standard = row.mode === "standard";
   const title = standard ? "Budgetary Quote" : "Custom Quote Request";

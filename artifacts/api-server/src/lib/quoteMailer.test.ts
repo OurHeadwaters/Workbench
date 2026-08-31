@@ -39,4 +39,19 @@ describe("quote email MIME encoding", () => {
       ),
     ).toThrow("Subject contains an invalid line break");
   });
+
+  it("encodes multipart/alternative when html is provided", () => {
+    const raw = encodeRfc2822(
+      "recipient@example.com",
+      "Test HTML",
+      "Plain text body",
+      undefined,
+      "<p>HTML body</p>"
+    );
+    const message = decodeGmailRaw(raw);
+
+    expect(message).toContain("Content-Type: multipart/alternative; boundary=");
+    expect(message).toContain("Content-Type: text/plain; charset=UTF-8");
+    expect(message).toContain("Content-Type: text/html; charset=UTF-8");
+  });
 });
