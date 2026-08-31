@@ -1,5 +1,15 @@
 import crypto from "crypto";
 import type { QuoteRequestRow } from "@workspace/db";
+import {
+  CODETRY_ANNUAL_ENGAGEMENT_INCLUSIONS,
+  CODETRY_ENGAGEMENT_POLICY_STATUS,
+  CODETRY_FUNDING_POLICY,
+  CODETRY_OPERATING_FEE_POLICY,
+  CODETRY_YEAR_1_FEE_CAD,
+  CODETRY_YEAR_1_SCOPE,
+  CODETRY_YEAR_2_FEE_CAD,
+  CODETRY_YEAR_2_SCOPE,
+} from "@workspace/headwaters-pricing";
 
 function configuredDays(value: string | undefined, fallback: number): number {
   const parsed = Number.parseInt(value ?? "", 10);
@@ -32,18 +42,28 @@ export const HEADWATERS_QUOTE_TERMS = {
     "Travel is reviewed case by case and separately confirmed where applicable.",
 };
 
+const ANNUAL_ORGANIZATION_PRICES = (feeCad: number): Record<string, number> => ({
+  "co-op/not-for-profit": feeCad * 100,
+  "community organization": feeCad * 100,
+  "commercial/institutional": feeCad * 100,
+});
+
 const STANDARD_PRICES: Record<string, Record<string, number>> = {
-  "initial implementation": {
-    "co-op/not-for-profit": 2_000_000,
-    "community organization": 2_000_000,
-    "commercial/institutional": 2_800_000,
-  },
-  "additional standard tool": {
-    "co-op/not-for-profit": 800_000,
-    "community organization": 800_000,
-    "commercial/institutional": 1_200_000,
-  },
+  "year 1 codetry engagement": ANNUAL_ORGANIZATION_PRICES(CODETRY_YEAR_1_FEE_CAD),
+  "year 2 codetry engagement": ANNUAL_ORGANIZATION_PRICES(CODETRY_YEAR_2_FEE_CAD),
+  // Keep the former Year 1 value readable for already-open intake links.
+  "initial implementation": ANNUAL_ORGANIZATION_PRICES(CODETRY_YEAR_1_FEE_CAD),
 };
+
+function annualScope(selectedOffer: string): string {
+  return selectedOffer === "year 2 codetry engagement"
+    ? CODETRY_YEAR_2_SCOPE
+    : CODETRY_YEAR_1_SCOPE;
+}
+
+function standardScope(selectedOffer: string): string {
+  return `${annualScope(selectedOffer)} Combined annual inclusions: ${CODETRY_ANNUAL_ENGAGEMENT_INCLUSIONS.join("; ")}. ${CODETRY_OPERATING_FEE_POLICY}`;
+}
 
 export function classifyQuote(input: {
   organizationType: string;
@@ -169,7 +189,7 @@ export function quotePlainText(row: QuoteRequestRow, pdfUrl: string): string {
     standard
       ? [
           "Standard scope:",
-          "Organizational and vocabulary mapping; governance and language record; Field Guide Finance; one selected operational layer; agreed data/content intake; role-based training; launch acceptance; initial results framework; and a later-tool roadmap.",
+          standardScope(row.selectedOffer),
           "",
           "Grant-ready project insert:",
           `Problem: ${row.projectDescription}`,
@@ -180,7 +200,9 @@ export function quotePlainText(row: QuoteRequestRow, pdfUrl: string): string {
           `Base budget: ${money(row.subtotalCents)} CAD, exclusive of applicable taxes and separately scoped additions.`,
           `Expected capacity outcome: ${row.desiredOutcome || "Greater local continuity, clearer authority, and a maintainable operating method."}`,
           "Applicant review: verify every fact, funding-program requirement, eligibility statement, scope assumption, security requirement, and budget before using this draft.",
-          "Headwaters does not determine fund eligibility, guarantee funding, or submit the application.",
+           "Headwaters does not determine fund eligibility, guarantee funding, or submit the application.",
+           CODETRY_FUNDING_POLICY,
+           CODETRY_ENGAGEMENT_POLICY_STATUS,
           "",
           "Excluded unless separately quoted:",
           "Integrations, migrations, regulated workflows, sensitive-data expansion, legal/accounting advice, research, travel, and custom product work.",
@@ -315,7 +337,8 @@ export function quoteEmailHtml(row: QuoteRequestRow, pdfUrl: string, greetingNam
               ${standard ? `
               <div style="margin-bottom: 32px; font-family: Arial, sans-serif; font-size: 14px; color: #2d4539; line-height: 1.6;">
                 <p style="margin: 0 0 4px 0; font-weight: bold; color: #526059;">Standard Included Scope</p>
-                <p style="margin: 0 0 16px 0;">Organizational and vocabulary mapping; governance and language record; Field Guide Finance; one selected operational layer; agreed data/content intake; role-based training; launch acceptance; an initial results framework; and a later-tool roadmap.</p>
+                 <p style="margin: 0 0 8px 0;">${esc(standardScope(row.selectedOffer))}</p>
+                 <p style="margin: 0 0 16px 0;"><strong>Policy status:</strong> ${esc(CODETRY_ENGAGEMENT_POLICY_STATUS)} ${esc(CODETRY_FUNDING_POLICY)}</p>
 
                 <p style="margin: 0 0 4px 0; font-weight: bold; color: #526059;">Assumptions and Exclusions</p>
                 <p style="margin: 0;">The client names an authorized decision-maker, operator, payer route, and minimum necessary source information. Integrations, migrations, regulated workflows, sensitive-data expansion, legal/accounting advice, research, travel, and custom product work require a separate written scope.</p>
@@ -458,11 +481,12 @@ export function quoteHtml(row: QuoteRequestRow): string {
   ${
     standard
       ? `<h2>Included standard scope</h2>
-         <p>Organizational and vocabulary mapping; governance and language record; Field Guide Finance; one selected operational layer; agreed data/content intake; role-based training; launch acceptance; an initial results framework; and a later-tool roadmap.</p>
+          <p>${esc(standardScope(row.selectedOffer))}</p>
+          <p><strong>Policy status:</strong> ${esc(CODETRY_ENGAGEMENT_POLICY_STATUS)} ${esc(CODETRY_FUNDING_POLICY)}</p>
          <h2>Assumptions and exclusions</h2>
          <p>The client names an authorized decision-maker, operator, payer route, and minimum necessary source information. Integrations, migrations, regulated workflows, sensitive-data expansion, legal/accounting advice, research, travel, and custom product work require a separate written scope.</p>
          <p><strong>Payment:</strong> ${esc(HEADWATERS_QUOTE_TERMS.payment)}<br><strong>Travel:</strong> ${esc(HEADWATERS_QUOTE_TERMS.travel)}</p>
-         <div class="notice">This is a non-binding budgetary quote for funding and planning purposes. It is valid until ${date(row.validUntil)}, subject to eligibility, scope, and security review, and is not a guarantee of grant eligibility or funding. Work begins only after both parties approve a written scope, timing, payment schedule, and acceptance criteria.</div>`
+          <div class="notice">This is a non-binding budgetary quote for funding and planning purposes. It is valid until ${date(row.validUntil)}, subject to eligibility, scope, and security review, and is not a guarantee of grant eligibility, an award, or sponsorship. Work begins only after both parties approve a written scope, timing, payment schedule, and acceptance criteria.</div>`
       : `<div class="notice">This request includes work that requires a human scope review. No automatic price, commitment, or final quote has been issued. Headwaters will review the request and reply with the next questions or a custom scope.</div>`
   }
   <footer class="footer"><span>Build capacity that survives change.</span><span>${esc(row.quoteNumber)}</span></footer>
@@ -482,11 +506,12 @@ ${standard ? `
   </section>
   <h2>Problem</h2><p>${esc(row.projectDescription)}</p>
   <h2>Objective</h2><p>${esc(row.desiredOutcome || "Confirm a practical, locally operated improvement with the applicant.")}</p>
-  <h2>Activities</h2><p>Discovery and mapping; configuration; controlled content/data intake; operator training; acceptance; and handoff.</p>
-  <h2>Outputs and deliverables</h2><p>One bounded working system, governance and language record, trained operators, acceptance record, initial results framework, and roadmap.</p>
+   <h2>Engagement scope</h2><p>${esc(annualScope(row.selectedOffer))}</p>
+   <h2>Activities</h2><p>Annual organizational and strategic mapping; versioned Vocabulary Ledger and governance decisions; funder-facing articulation; capacity-building material; configuration; controlled content/data intake; operator training; acceptance; and handoff.</p>
+   <h2>Outputs and deliverables</h2><p>One bounded Codetry feature build, trained operators, acceptance record, initial reporting, and a roadmap for the next funded layer. ${esc(CODETRY_OPERATING_FEE_POLICY)}</p>
   <h2>Indicative timeline and budget</h2><p>Nine weeks, aligned where possible with ${esc(row.desiredTiming)}. Base budget: ${money(row.subtotalCents)} CAD, exclusive of applicable taxes and separately scoped additions.</p>
   <h2>Expected capacity outcome</h2><p>${esc(row.desiredOutcome || "Greater local continuity, clearer authority, and a maintainable operating method.")}</p>
-  <div class="notice"><strong>Applicant review required.</strong> Verify every fact, funding-program requirement, eligibility statement, scope assumption, security requirement, and budget before using this draft. Headwaters does not determine fund eligibility, guarantee funding, or submit the application.</div>
+   <div class="notice"><strong>Applicant review required.</strong> Verify every fact, funding-program requirement, eligibility statement, scope assumption, security requirement, and budget before using this draft. Headwaters does not determine fund eligibility, guarantee funding, or submit the application. ${esc(CODETRY_FUNDING_POLICY)} ${esc(CODETRY_ENGAGEMENT_POLICY_STATUS)}</div>
   <footer class="footer"><span>Draft funding insert · applicant must verify</span><span>${esc(row.quoteNumber)}</span></footer>
 </main>` : ""}
 </body>

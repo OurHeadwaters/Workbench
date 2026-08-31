@@ -116,6 +116,27 @@ describe("SlideFinancials.tsx — financial sketch numbers", () => {
   });
 });
 
+describe("FinancialsRole.tsx — Codetry engagement model", () => {
+  const src = readFileSync(
+    join(import.meta.dirname, "..", "..", "pages", "slides", "FinancialsRole.tsx"),
+    "utf8",
+  );
+
+  it("locks both annual engagements at $20,000", () => {
+    expect(src).toContain("$20,000 / year");
+    expect(src).toContain("Year 1:");
+    expect(src).toContain("Year 2:");
+    expect(src).toContain("new annual strategic plan");
+  });
+
+  it("shows the normal $6,000 fee as $0 only during a qualifying engagement", () => {
+    expect(src).toContain("Normal $6,000 operating fee → $0");
+    expect(src).toContain("qualifying active annual");
+    expect(src).toContain("not added to Year 2");
+    expect(src).not.toContain("$36,000 / yr");
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Slide 03 — Staffing
 // ---------------------------------------------------------------------------

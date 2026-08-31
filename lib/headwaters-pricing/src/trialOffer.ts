@@ -24,6 +24,40 @@
  * "fourteen (14) calendar days" ≡ TRIAL_REFUND_INVOCATION_DAYS, etc.).
  */
 
+/**
+ * Working commercial policy for the annual Codetry engagement.
+ *
+ * This is deliberately separate from the bounded paid trial below. It may be
+ * used for planning and budgetary quotes, but it does not become an approved
+ * client commitment until the commercial decision is formally recorded and
+ * both parties approve a written scope.
+ */
+export const CODETRY_ENGAGEMENT_POLICY_STATUS =
+  "Working commercial policy — pending formal approval.";
+export const CODETRY_YEAR_1_FEE_CAD = 20_000;
+export const CODETRY_YEAR_2_FEE_CAD = 20_000;
+export const CODETRY_OPERATING_FEE_CAD = 6_000;
+export const CODETRY_QUALIFYING_OPERATING_FEE_CAD = 0;
+
+export const CODETRY_YEAR_1_SCOPE =
+  "Year 1 is a $20,000 CAD engagement for Codetry plus the base build using the organization's current strategic plan.";
+export const CODETRY_YEAR_2_SCOPE =
+  "Year 2 is a separate $20,000 CAD engagement for an additional Codetry layer plus a new annual strategic plan supporting board and training implementation.";
+export const CODETRY_OPERATING_FEE_POLICY =
+  "The normal $6,000 CAD annual operating fee is waived only while the organization has an active qualifying annual engagement. During that qualifying period the operating fee is $0 and is not added on top of the Year 1 or Year 2 engagement.";
+export const CODETRY_FUNDING_POLICY =
+  "The annual engagement is proposed grant-supported project work. It is not an award, sponsorship, or unrestricted operating revenue; the payer, eligible costs, restrictions, matching requirements, timing, and reporting obligations must be confirmed in the written scope.";
+
+export const CODETRY_ANNUAL_ENGAGEMENT_INCLUSIONS: readonly string[] = [
+  "Annual organizational and strategic mapping",
+  "Versioned Vocabulary Ledger and governance decisions",
+  "Funder-facing project articulation",
+  "Field Guide Finance or related capacity-building material",
+  "One bounded Codetry feature build",
+  "Configuration, training, launch acceptance, and operating handoff",
+  "Initial reporting and a roadmap for the next funded layer",
+];
+
 export const TRIAL_FEE_USD = 28_000;
 export const TRIAL_INSTALLMENT_USD = 14_000;
 export const TRIAL_DURATION_WEEKS = 8;

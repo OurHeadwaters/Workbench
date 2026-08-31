@@ -28,7 +28,7 @@ const INITIAL_FORM: FormState = {
   projectTitle: "",
   fundingProgram: "",
   desiredTiming: "",
-  selectedOffer: "initial implementation",
+  selectedOffer: "year 1 codetry engagement",
   projectDescription: "",
   desiredOutcome: "",
   intendedUsers: "",
@@ -42,43 +42,42 @@ const INITIAL_FORM: FormState = {
 };
 
 function selectedOfferFromUrl(): QuoteOffer {
-  if (typeof window === "undefined") return "initial implementation";
+  if (typeof window === "undefined") return "year 1 codetry engagement";
   const value = new URLSearchParams(window.location.search).get("offer");
   if (
-    value === "initial implementation" ||
-    value === "additional standard tool" ||
+    value === "year 1 codetry engagement" ||
+    value === "year 2 codetry engagement" ||
     value === "needs custom review"
   ) {
     return value as QuoteOffer;
   }
-  return "initial implementation";
+  return "year 1 codetry engagement";
 }
 
 const OFFERS = [
   {
+    value: "year 1 codetry engagement" as const,
+    title: "Year 1 · Base build",
+    copy: "Codetry plus the base build using your current strategic plan. Includes the annual mapping, governance record, bounded feature build, training, launch acceptance, handoff, initial reporting, and roadmap.",
+  },
+  {
+    value: "year 2 codetry engagement" as const,
+    title: "Year 2 · Additional layer",
+    copy: "A separate engagement for one additional Codetry layer plus a new annual strategic plan supporting board and training implementation, with the same annual delivery and handoff disciplines.",
+  },
+  {
     value: "needs custom review" as const,
-    title: "CodeTry Build",
+    title: "Custom review",
     copy: "For expanded, unusual, or still-forming work that deserves a human look first.",
-  },
-  {
-    value: "initial implementation" as const,
-    title: "Initial Tool",
-    copy: "A grounded first system, configured with your people and ready to be handed off.",
-  },
-  {
-    value: "additional standard tool" as const,
-    title: "Add-on Tools",
-    copy: "One more practical tool for a community that already has a working foundation.",
   },
 ];
 
 function getOfferPricing(offer: string, orgType: string) {
-  const isCommunity = orgType === "co-op/not-for-profit" || orgType === "community organization";
-  if (offer === "initial implementation") {
-    return isCommunity ? "Starting at $20,000 CAD" : "Starting at $28,000 CAD";
-  }
-  if (offer === "additional standard tool") {
-    return isCommunity ? "Starting at $8,000 CAD" : "Starting at $12,000 CAD";
+  if (
+    offer === "year 1 codetry engagement" ||
+    offer === "year 2 codetry engagement"
+  ) {
+    return "$20,000 CAD · normal $6,000 operating fee waived only during a qualifying active annual engagement";
   }
   return "Priced after review";
 }
@@ -133,7 +132,7 @@ export function QuotePage() {
     return applyPageMetadata({
       title: "Request a budgetary quote | Headwaters",
       description:
-        "Choose a Headwaters capacity-building path and request a budgetary, non-binding quote. Initial implementation starts at $20,000 CAD for eligible community work and $28,000 CAD for commercial work.",
+        "Choose Year 1 or Year 2 of the $20,000 CAD Codetry engagement model and request a budgetary, non-binding quote.",
       path: `${base}/quote`,
     });
   }, []);
@@ -423,6 +422,10 @@ export function QuotePage() {
                           </label>
                         );
                       })}
+                    </div>
+                    <div className="mt-8 rounded-2xl border border-[#2F3E35] bg-[#1B2621]/60 p-6 text-sm leading-relaxed text-[#9CB3A8]">
+                      <p className="mb-2"><strong className="text-[#F7F7F5]">Working commercial policy — pending formal approval.</strong> The normal $6,000 CAD annual operating fee is $0 only while an active annual engagement qualifies; it is not added on top of the Year 1 or Year 2 amount.</p>
+                      <p>These are proposed grant-supported project engagements, not a funding award, sponsorship, or unrestricted operating revenue. The written scope must confirm the payer, eligible costs, restrictions, matching requirements, timing, and reporting obligations.</p>
                     </div>
                   </motion.div>
                 )}

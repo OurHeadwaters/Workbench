@@ -26,6 +26,8 @@ const ORGANIZATION_TYPES = new Set([
   "other",
 ]);
 const OFFERS = new Set([
+  "year 1 codetry engagement",
+  "year 2 codetry engagement",
   "initial implementation",
   "additional standard tool",
   "annual support",

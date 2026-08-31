@@ -143,6 +143,21 @@ The board can approve the intended boundaries now and defer technical
 configuration until funding, staffing, and a technical owner are available.
 Alternatively, it can defer the entire decision.
 
+The current commercial model is a **working policy**, not yet an approved
+canonical commitment. For planning, Year 1 is a $20,000 Codetry engagement plus
+the base build using the current strategic plan. Year 2 is a separate $20,000
+engagement for an additional layer plus a new annual strategic plan supporting
+board and training implementation. The normal $6,000 annual operating fee is
+waived only while an active annual engagement qualifies; it is $0 during that
+period and is not added to Year 2.
+
+Those amounts describe proposed grant-supported project work. They do not
+record a funding award, sponsorship, unrestricted 807 operating revenue, or
+permission to publish 807 material. Before any engagement is approved, the
+written scope must name the payer, eligible costs, restrictions, matching
+requirements, timing, and reporting obligations. A commercial decision becomes
+canonical only after it is formally recorded by the authorized parties.
+
 If the board approves boundaries now:
 
 - no connection is turned on automatically;

@@ -14,7 +14,7 @@ async function completeQuoteForm(
   page: Page,
   options: {
     organizationType?: string;
-    selectedOffer?: "initial implementation" | "needs custom review";
+    selectedOffer?: "year 1 codetry engagement" | "year 2 codetry engagement" | "needs custom review";
     integrationNeeded?: string;
     sensitiveDataInvolved?: string;
     specialRequirements?: string;

@@ -171,6 +171,8 @@ export type QuoteOrganizationType =
   | "other";
 
 export type QuoteOffer =
+  | "year 1 codetry engagement"
+  | "year 2 codetry engagement"
   | "initial implementation"
   | "additional standard tool"
   | "annual support"

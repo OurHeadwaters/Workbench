@@ -692,13 +692,13 @@ export function ServicesPage() {
             A trial period, not a contract
           </h2>
           <p className="font-serif text-[16px] italic mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
-            Every engagement starts with a defined phase — a fixed fee, a clear scope, and a real deliverable. No retainer, no open-ended commitment.
+            The annual model uses two separate scoped engagements. Each has a fixed fee, clear deliverables, written acceptance, and an operating handoff.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-10">
             {[
               { step: "1", label: "Send a message", body: "Tell us what your community is trying to build. A sentence or two is enough." },
-              { step: "2", label: "Phase 1", body: "6–8 weeks, fixed fee, bounded scope. You get something real at the end whether or not it continues." },
+              { step: "2", label: "Year 1", body: "$20,000 for Codetry plus the base build using the current strategic plan." },
               { step: "3", label: "Decision point", body: "If the fit is right, the next phase begins. If not, you leave with something useful and no obligation." },
               { step: "4", label: "Continue", body: "Each phase has its own scope, fee, and deliverables. Renewed only if the work calls for it." },
             ].map(({ step, label, body }) => (
@@ -730,10 +730,10 @@ export function ServicesPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {[
-                { label: "Initial implementation", value: "$20,000 / $28,000", note: "Starting price for community/nonprofit work / commercial or institutional work. Defined scope, real deliverable." },
-                { label: "Additional standard tool", value: "$8,000 / $12,000", note: "Starting price for community/nonprofit work / commercial or institutional work. Confirmed against the tool and scope." },
+                { label: "Year 1 · base build", value: "$20,000 CAD", note: "Codetry plus the base build using the organization's current strategic plan." },
+                { label: "Year 2 · additional layer", value: "$20,000 CAD", note: "A separate additional Codetry layer plus a new annual strategic plan supporting board and training implementation." },
                 { label: "Custom review", value: "By review", note: "Expanded, unusual, or still-forming work is scoped with the organization before a fee is proposed." },
-                { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
+                { label: "Operating fee", value: "$6,000 → $0", note: "Normal annual fee; waived only while an active annual engagement qualifies. It is not added on top of Year 1 or Year 2." },
               ].map(({ label, value, note }) => (
                 <div key={label}>
                   <p className="font-mono text-[13px] uppercase tracking-[0.18em] mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>{label}</p>
@@ -742,6 +742,9 @@ export function ServicesPage() {
                 </div>
               ))}
             </div>
+            <p className="font-serif text-[13px] leading-[1.55] mt-5" style={{ color: "hsl(var(--muted-foreground))" }}>
+              Working commercial policy, pending formal approval. The annual engagement is proposed grant-supported project work, not an award, sponsorship, or unrestricted operating revenue. The written scope names the payer and all funding conditions.
+            </p>
             <p
               className="font-mono text-[13px] uppercase tracking-[0.14em] mt-5"
               style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}

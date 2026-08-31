@@ -149,7 +149,7 @@ export function WhatIsCodetryPage() {
                 style={{ color: "hsl(var(--muted-foreground))" }}
               >
                 The discipline behind the practice. A method for building and handing over
-                systems that communities own outright — operator fee, standby model,
+                systems that communities own outright — transparent operating-fee policy, standby model,
                 mutual-credit accounting. Any practitioner anywhere can apply it. The
                 local context changes; the method doesn't.
               </p>
@@ -189,7 +189,7 @@ export function WhatIsCodetryPage() {
             {[
               { label: "Structure", value: "Co-operative — member-owned, not investor-owned" },
               { label: "Geography", value: "Northwestern Ontario reserves and remote communities" },
-              { label: "Operator relationship", value: "Flat operating fee; no equity stake, no royalty" },
+              { label: "Operator relationship", value: "Normal $6,000 annual operating fee; $0 only during a qualifying active annual engagement. No equity stake or royalty." },
               { label: "Handoff standard", value: "Community runs it without a consultant in the room" },
               { label: "Accounts", value: "Open books — every dollar tracked and shared with members" },
             ].map(({ label, value }) => (
@@ -238,8 +238,8 @@ export function WhatIsCodetryPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               {
-                label: "Operator fee",
-                body: "A flat, transparent fee paid to the practitioner for ongoing standby support — no equity, no ownership, no lock-in. The community always holds the keys.",
+                label: "Operating fee",
+                body: "The normal annual fee is $6,000. It is waived only while the organization has an active qualifying $20,000 annual engagement, so it is not added on top of Year 1 or Year 2. No equity, ownership, or lock-in.",
               },
               {
                 label: "Standby model",

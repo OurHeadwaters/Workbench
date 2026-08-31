@@ -69,14 +69,19 @@ export default function FinancialsRole() {
                 style={{ background: "rgba(31,61,46,0.07)" }}
               >
                 <div className="font-mono uppercase tracking-[0.16em] text-[1vw] text-muted mb-[0.3vh]">
-                  Headwaters operating system fee
+                  Codetry annual engagement
                 </div>
                 <div className="font-display text-[1.6vw] text-primary font-semibold leading-tight">
-                  $36,000 / yr
+                  $20,000 / year
                 </div>
                 <div className="text-muted text-[1.05vw] leading-[1.35] mt-[0.3vh]">
-                  Software platform · tech-stack resale · monthly on-site training. Band runs the
-                  store; 807's dad's company runs freight. Headwaters delivers the OS.
+                  Year 1: Codetry + base build using the current strategic plan. Year 2:
+                  separate additional layer + new annual strategic plan for board and training
+                  implementation.
+                </div>
+                <div className="text-muted text-[0.96vw] leading-[1.32] mt-[0.45vh]">
+                  Normal $6,000 operating fee → $0 only during a qualifying active annual
+                  engagement; not added to Year 2.
                 </div>
               </div>
               <div>
@@ -84,8 +89,8 @@ export default function FinancialsRole() {
                   Funding mix
                 </div>
                 <div className="text-text text-[1vw] leading-[1.4]">
-                  FedNor NODP (capex up to 33%) · Community Futures · ISC CCP · LFFC partnership ·
-                  band capital
+                   Proposed grant-supported project work: FedNor NODP · Community Futures · ISC
+                   CCP · LFFC partnership · band capital. No award or sponsorship implied.
                 </div>
               </div>
             </div>

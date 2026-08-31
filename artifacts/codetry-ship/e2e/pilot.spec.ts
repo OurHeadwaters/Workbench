@@ -58,17 +58,17 @@ test.describe("public care pilot invitation", () => {
     await expect(page.getByText("For a small business with demand to serve", { exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Use a known bottleneck to earn back the build." })).toBeVisible();
     await expect(page.getByText(/revenue-first path from interest to purchase/i)).toBeVisible();
-    await expect(page.getByText(/a \$28,000 build is not automatically appropriate for a brand-new business without validated demand/i)).toBeVisible();
+    await expect(page.getByText(/a \$20,000 annual engagement is not automatically appropriate for a brand-new business without validated demand/i)).toBeVisible();
     await expect(page.getByText(/credible payback path/i)).toBeVisible();
     await expect(page.getByRole("heading", { name: "Practical apps for real situations." })).toBeVisible();
     await expect(page.getByText("A decision-rights map, meeting rhythm, and action tracker", { exact: true })).toBeVisible();
     await expect(page.getByText("Shift, coverage, and escalation maps", { exact: true })).toBeVisible();
     await expect(page.getByText("A revenue-first path from interest to purchase", { exact: true })).toBeVisible();
-    await expect(page.getByText("Initial implementation", { exact: true })).toBeVisible();
-    await expect(page.getByText("Additional standard tool", { exact: true })).toBeVisible();
+    await expect(page.getByText("Year 1 · Base build", { exact: true })).toBeVisible();
+    await expect(page.getByText("Year 2 · Additional layer", { exact: true })).toBeVisible();
     await expect(page.getByText("Custom review", { exact: true })).toBeVisible();
-    await expect(page.getByText(/Starting at \$20,000 CAD/)).toBeVisible();
-    await expect(page.getByText(/Starting at \$8,000 CAD/)).toBeVisible();
+    await expect(page.getByText(/\$20,000 CAD/).first()).toBeVisible();
+    await expect(page.getByText(/normal \$6,000 operating fee/i)).toBeVisible();
 
     const coopLink = page.getByTestId("practical-example-link-coop");
     await expect(coopLink).toHaveAttribute("href", "https://807foodcoop.ca");
@@ -121,9 +121,9 @@ test.describe("public care pilot invitation", () => {
     // Step 4: The Match
     await expect(page.getByRole("heading", { name: "Finding the right shape." })).toBeVisible();
     await expect(
-      page.locator('input[name="selectedOffer"][value="additional standard tool"]'),
+      page.locator('input[name="selectedOffer"][value="year 2 codetry engagement"]'),
     ).toBeChecked();
-    await expect(page.getByTestId("quote-selected-offer-price")).toContainText("$8,000 CAD");
+    await expect(page.getByTestId("quote-selected-offer-price")).toContainText("$20,000 CAD");
     await page.getByRole("button", { name: /Continue/i }).click();
 
     // Step 5: The Particulars
@@ -218,7 +218,7 @@ test.describe("public care pilot invitation", () => {
     // Step 4: The Match
     await expect(page.getByRole("heading", { name: "Finding the right shape." })).toBeVisible();
     await expect(
-      page.locator('input[name="selectedOffer"][value="additional standard tool"]'),
+      page.locator('input[name="selectedOffer"][value="year 2 codetry engagement"]'),
     ).toBeChecked();
     await page.getByRole("button", { name: /Continue/i }).click();
 
@@ -234,7 +234,7 @@ test.describe("public care pilot invitation", () => {
     await expect(page.getByText("Q-TEST-001")).toBeVisible();
 
     expect(receivedQuotePayload).toMatchObject({
-      selectedOffer: "additional standard tool",
+      selectedOffer: "year 2 codetry engagement",
       contactName: quotePayload.contactName,
       email: quotePayload.email,
       projectTitle: quotePayload.projectTitle,
@@ -254,14 +254,14 @@ test.describe("public care pilot invitation", () => {
         {
           name: "consulting_offer_selected",
           data: {
-            offer: "additional standard tool",
+            offer: "year 2 codetry engagement",
             location: "offers_grid",
           },
         },
         {
           name: "quote_request_submitted",
           data: {
-            offer: "additional standard tool",
+            offer: "year 2 codetry engagement",
             mode: "standard",
           },
         },

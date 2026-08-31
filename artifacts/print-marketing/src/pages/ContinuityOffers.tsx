@@ -75,9 +75,11 @@ function buildPlainText(): string {
     "A continuity layer for organizations working with AI: source meaning remains visible, people remain responsible, and the organization keeps its vocabulary and way out.",
     "Outputs: bounded AI working layer; human review points; ownership and export path.",
     "",
-    "COMMERCIAL STARTING POINT",
-    "Eligible nonprofit, co-op, or community first build: starts at $20,000 CAD.",
-    "Commercial or institutional first build: starts at $28,000 CAD.",
+    "TWO SEPARATE ANNUAL ENGAGEMENTS — WORKING POLICY",
+    "Year 1: $20,000 CAD for Codetry plus the base build using the current strategic plan.",
+    "Year 2: a separate $20,000 CAD engagement for an additional layer plus a new annual strategic plan supporting board and training implementation.",
+    "The normal $6,000 annual operating fee is waived only during a qualifying active annual engagement; it is $0 during that period and is not added to Year 2.",
+    "Proposed grant-supported project work only; no award, sponsorship, or unrestricted operating revenue is implied.",
     "Expanded care pilots, regulated workflows, integrations, migrations, research, and sensitive data are scoped separately.",
     "",
     "THE WORKING BOUNDARY",
@@ -177,15 +179,16 @@ export function ContinuityOffersPage() {
 
         <section style={{ background: EVERGREEN, color: CREAM, padding: "0.2in 0.23in 0.18in", display: "grid", gridTemplateColumns: "1.03fr 1.27fr", gap: "0.26in", alignItems: "center" }}>
           <div>
-            <p style={{ fontSize: "0.52rem", letterSpacing: "0.15em", textTransform: "uppercase", color: GOLD, margin: "0 0 0.07in", fontWeight: 600 }}>Commercial starting point</p>
+             <p style={{ fontSize: "0.52rem", letterSpacing: "0.15em", textTransform: "uppercase", color: GOLD, margin: "0 0 0.07in", fontWeight: 600 }}>Two separate annual engagements · working policy</p>
             <div style={{ display: "flex", gap: "0.18in", alignItems: "baseline", flexWrap: "wrap" }}>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.25rem", lineHeight: 1, margin: 0 }}>$20,000 <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.55rem", color: "rgba(244,237,224,0.68)" }}>CAD</span></p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.25rem", lineHeight: 1, margin: 0 }}>$28,000 <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.55rem", color: "rgba(244,237,224,0.68)" }}>CAD</span></p>
+               <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", lineHeight: 1, margin: 0 }}>Year 1 · $20,000</p>
+               <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", lineHeight: 1, margin: 0 }}>Year 2 · $20,000</p>
             </div>
-            <p style={{ fontSize: "0.52rem", lineHeight: 1.4, color: "rgba(244,237,224,0.72)", margin: "0.08in 0 0" }}>Eligible nonprofit, co-op, or community first build · commercial or institutional first build</p>
+             <p style={{ fontSize: "0.49rem", lineHeight: 1.36, color: "rgba(244,237,224,0.72)", margin: "0.08in 0 0" }}>Year 1: Codetry + base build using the current strategic plan. Year 2: separate additional layer + new annual strategic plan for board and training implementation.</p>
           </div>
           <div style={{ borderLeft: "1px solid rgba(244,237,224,0.24)", paddingLeft: "0.22in" }}>
-            <p style={{ fontSize: "0.64rem", lineHeight: 1.45, margin: 0 }}>Expanded care pilots, regulated workflows, integrations, migrations, research, and sensitive data are scoped separately.</p>
+             <p style={{ fontSize: "0.59rem", lineHeight: 1.4, margin: 0 }}>Normal $6,000 operating fee → $0 only during a qualifying active annual engagement; not added to Year 2.</p>
+             <p style={{ fontSize: "0.48rem", lineHeight: 1.35, color: "rgba(244,237,224,0.7)", margin: "0.07in 0 0" }}>Proposed grant-supported project work. No award, sponsorship, or unrestricted operating revenue implied.</p>
             <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "0.7rem", lineHeight: 1.35, color: "rgba(244,237,224,0.77)", margin: "0.09in 0 0" }}>AI prepares; people remain responsible.</p>
           </div>
         </section>

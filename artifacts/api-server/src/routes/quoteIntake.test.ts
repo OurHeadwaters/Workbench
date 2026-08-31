@@ -123,7 +123,7 @@ function payload(overrides: Record<string, unknown> = {}) {
     projectTitle: "Community operations system",
     fundingProgram: "Community fund",
     desiredTiming: "Fall 2026",
-    selectedOffer: "initial implementation",
+    selectedOffer: "year 1 codetry engagement",
     projectDescription: "Make operations easier to carry locally.",
     desiredOutcome: "A working system with trained local operators.",
     intendedUsers: "Staff and board",
@@ -179,7 +179,7 @@ describe("POST /quote-intake", () => {
   it.each([
     ["co-op/not-for-profit", 2_000_000],
     ["community organization", 2_000_000],
-    ["commercial/institutional", 2_800_000],
+    ["commercial/institutional", 2_000_000],
   ])("creates the correct standard quote for %s", async (organizationType, subtotalCents) => {
     const harness = await startHarness();
     try {

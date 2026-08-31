@@ -13,22 +13,22 @@ function route(path: string) {
 
 const OFFERS = [
   {
-    value: "initial implementation",
+    value: "year 1 codetry engagement",
     number: "01",
-    title: "Initial implementation",
+    title: "Year 1 · Base build",
     description:
-      "A bounded first engagement to turn an important piece of work into a working system your team can carry forward.",
+      "Codetry plus the base build using the organization's current strategic plan, with annual mapping, governance record, training, launch acceptance, handoff, reporting, and a roadmap.",
     price:
-      "Starting at $20,000 CAD for co-ops, not-for-profits, and community organizations. Commercial work starts at $28,000 CAD.",
+      "$20,000 CAD. Proposed grant-supported project work; written scope confirms payer and funding conditions.",
   },
   {
-    value: "additional standard tool",
+    value: "year 2 codetry engagement",
     number: "02",
-    title: "Additional standard tool",
+    title: "Year 2 · Additional layer",
     description:
-      "One more practical tool for an organization that already has a working foundation and knows what needs to come next.",
+      "A separate engagement for an additional Codetry layer plus a new annual strategic plan supporting board and training implementation.",
     price:
-      "Starting at $8,000 CAD for co-ops, not-for-profits, and community organizations. Commercial work starts at $12,000 CAD.",
+      "$20,000 CAD. The normal $6,000 operating fee is waived only during a qualifying active annual engagement and is not added on top.",
   },
   {
     value: "needs custom review",
@@ -133,31 +133,17 @@ export function HeadwatersPage() {
             offers: [
               {
                 "@type": "Offer",
-                name: "Initial implementation for co-ops, not-for-profits, and community organizations",
+                name: "Year 1 Codetry engagement",
                 price: "20000",
                 priceCurrency: "CAD",
-                description: "Starting price.",
+                description: "Codetry plus the base build using the organization's current strategic plan.",
               },
               {
                 "@type": "Offer",
-                name: "Initial implementation for commercial organizations",
-                price: "28000",
+                name: "Year 2 Codetry engagement",
+                price: "20000",
                 priceCurrency: "CAD",
-                description: "Starting price.",
-              },
-              {
-                "@type": "Offer",
-                name: "Additional standard tool for co-ops, not-for-profits, and community organizations",
-                price: "8000",
-                priceCurrency: "CAD",
-                description: "Starting price.",
-              },
-              {
-                "@type": "Offer",
-                name: "Additional standard tool for commercial organizations",
-                price: "12000",
-                priceCurrency: "CAD",
-                description: "Starting price.",
+                description: "A separate additional Codetry layer plus a new annual strategic plan supporting board and training implementation.",
               },
             ],
           },
@@ -166,11 +152,11 @@ export function HeadwatersPage() {
             mainEntity: [
               {
                 "@type": "Question",
-                name: "What does an initial implementation cost?",
+                name: "What do Year 1 and Year 2 cost?",
                 acceptedAnswer: {
                   "@type": "Answer",
                   text:
-                    "Initial implementation starts at $20,000 CAD for co-ops, not-for-profits, and community organizations. Commercial work starts at $28,000 CAD.",
+                    "Year 1 and Year 2 are separate $20,000 CAD engagements. The normal $6,000 operating fee is waived only during a qualifying active annual engagement and is not added to either engagement.",
                 },
               },
               {
@@ -213,8 +199,8 @@ export function HeadwatersPage() {
           <a href="#approach" className="hidden md:inline-block hover:text-[#57534E] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm p-1">How it works</a>
           <a href="#offers" className="hidden md:inline-block hover:text-[#57534E] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm p-1">Offers</a>
           <a
-            href={quoteLink("initial implementation")}
-            onClick={() => trackOfferSelection("initial implementation", "header")}
+            href={quoteLink("year 1 codetry engagement")}
+            onClick={() => trackOfferSelection("year 1 codetry engagement", "header")}
             className="bg-[#1C1917] text-[#F7F7F5] px-4 md:px-5 py-2 md:py-2.5 rounded-full hover:bg-[#2F3E35] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F7F5]"
           >
             Request a quote
@@ -235,8 +221,8 @@ export function HeadwatersPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                 <a
-                  href={quoteLink("initial implementation")}
-                  onClick={() => trackOfferSelection("initial implementation", "hero")}
+                  href={quoteLink("year 1 codetry engagement")}
+                  onClick={() => trackOfferSelection("year 1 codetry engagement", "hero")}
                   data-testid="quiet-primary-cta"
                   className="inline-flex items-center justify-center gap-3 bg-[#1C1917] text-[#F7F7F5] px-8 py-4 rounded-full text-lg font-medium hover:bg-[#2F3E35] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F7F5]"
                 >
@@ -404,7 +390,7 @@ export function HeadwatersPage() {
                        </a>
                       <div className="bg-[#F5F5F4] p-5 rounded-2xl border border-[#E7E5E4]">
                         <p className="text-sm text-[#78716C] leading-snug">
-                          Often a fit for an <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "board_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a>.
+                          Often a fit for a <a href={quoteLink("year 1 codetry engagement")} onClick={() => trackOfferSelection("year 1 codetry engagement", "board_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">Year 1 base build</a>.
                         </p>
                       </div>
                     </div>
@@ -477,7 +463,7 @@ export function HeadwatersPage() {
                        </a>
                       <div className="bg-[#F5F5F4] p-5 rounded-2xl border border-[#E7E5E4]">
                         <p className="text-sm text-[#78716C] leading-relaxed">
-                          Often a fit for an <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "care_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a> or a <a href={quoteLink("needs custom review")} onClick={() => trackOfferSelection("needs custom review", "care_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">custom review</a>.
+                          Often a fit for a <a href={quoteLink("year 1 codetry engagement")} onClick={() => trackOfferSelection("year 1 codetry engagement", "care_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">Year 1 base build</a> or a <a href={quoteLink("needs custom review")} onClick={() => trackOfferSelection("needs custom review", "care_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">custom review</a>.
                         </p>
                       </div>
                     </div>
@@ -534,7 +520,7 @@ export function HeadwatersPage() {
                         What changes
                       </h4>
                       <p className="text-base text-[#57534E] leading-relaxed mb-8 flex-grow">
-                         Before a commercial build begins, we define measurable revenue outcomes and the evidence we will use to judge progress. The investment is weighed against a credible payback path, not a promise: a $28,000 build is not automatically appropriate for a brand-new business without validated demand. It can make sense when existing demand and a solvable bottleneck give the work a reasonable chance to earn its way back.
+                         Before a commercial build begins, we define measurable revenue outcomes and the evidence we will use to judge progress. The investment is weighed against a credible payback path, not a promise: a $20,000 annual engagement is not automatically appropriate for a brand-new business without validated demand. It can make sense when existing demand and a solvable bottleneck give the work a reasonable chance to earn its way back.
                       </p>
                         <a
                           href={PUBLIC_EXAMPLE_DESTINATIONS.business.href}
@@ -550,7 +536,7 @@ export function HeadwatersPage() {
                        </a>
                       <div className="bg-[#F5F5F4] p-5 rounded-2xl border border-[#E7E5E4]">
                         <p className="text-sm text-[#78716C] leading-relaxed">
-                          Often a fit for an <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "community_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">initial implementation</a> or an <a href={quoteLink("additional standard tool")} onClick={() => trackOfferSelection("additional standard tool", "community_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">add-on tool</a>.
+                           Often a fit for a <a href={quoteLink("year 1 codetry engagement")} onClick={() => trackOfferSelection("year 1 codetry engagement", "community_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">Year 1 base build</a> or a <a href={quoteLink("year 2 codetry engagement")} onClick={() => trackOfferSelection("year 2 codetry engagement", "community_case")} className="text-[#1C1917] font-medium underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">Year 2 additional layer</a>.
                         </p>
                       </div>
                     </div>
@@ -571,7 +557,7 @@ export function HeadwatersPage() {
                 Choose the shape that fits the work.
               </h2>
               <p className="text-xl text-[#57534E] leading-relaxed font-light">
-                Every engagement starts with a defined scope and a real deliverable. No retainer and no open-ended commitment.
+                Year 1 and Year 2 are separate scoped engagements. Each has a defined deliverable and written acceptance boundary.
               </p>
             </div>
           </FadeIn>
@@ -609,7 +595,7 @@ export function HeadwatersPage() {
 
           <FadeIn delay={400}>
             <p className="text-center text-sm text-[#A8A29E] max-w-2xl mx-auto leading-relaxed">
-              All fees are in CAD, exclude HST, and travel and expenses are reviewed separately and reimbursed at cost where applicable.
+              Working commercial policy, pending formal approval. These are proposed grant-supported project engagements, not an award, sponsorship, or unrestricted operating revenue. Fees exclude HST; travel and expenses are reviewed separately.
             </p>
           </FadeIn>
         </div>
@@ -624,11 +610,12 @@ export function HeadwatersPage() {
             </h2>
             <div className="divide-y divide-[#E7E5E4] border-y border-[#E7E5E4]">
               <div className="py-8">
-                <h3 className="font-serif text-2xl mb-3">What does an initial implementation cost?</h3>
+                <h3 className="font-serif text-2xl mb-3">What do Year 1 and Year 2 cost?</h3>
                 <p className="text-[#57534E] text-lg leading-relaxed">
-                  Initial implementation starts at $20,000 CAD for co-ops,
-                  not-for-profits, and community organizations. Commercial work
-                  starts at $28,000 CAD.
+                  Year 1 is $20,000 CAD for Codetry plus the base build using the
+                  current strategic plan. Year 2 is a separate $20,000 CAD
+                  engagement for an additional layer plus a new annual strategic
+                  plan supporting board and training implementation.
                 </p>
               </div>
               <div className="py-8">
@@ -682,7 +669,7 @@ export function HeadwatersPage() {
             <p className="text-sm">Capacity-building consulting for work that needs to keep going.</p>
           </div>
           <div className="flex items-center gap-8 text-sm font-medium">
-            <a href={quoteLink("initial implementation")} onClick={() => trackOfferSelection("initial implementation", "footer")} className="hover:text-[#F7F7F5] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] rounded-sm p-1 -m-1">Request a quote</a>
+            <a href={quoteLink("year 1 codetry engagement")} onClick={() => trackOfferSelection("year 1 codetry engagement", "footer")} className="hover:text-[#F7F7F5] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] rounded-sm p-1 -m-1">Request a quote</a>
             <a href={route("privacy")} className="hover:text-[#F7F7F5] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F7F7F5] rounded-sm p-1 -m-1">Privacy</a>
           </div>
         </div>
