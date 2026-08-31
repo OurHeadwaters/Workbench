@@ -7,19 +7,40 @@ export type QuoteMailResult = {
   messageId?: string;
 };
 
-function encodeRfc2822(
+function assertSafeHeader(value: string, headerName: string): void {
+  if (/[\r\n]/.test(value)) {
+    throw new Error(`${headerName} contains an invalid line break`);
+  }
+}
+
+function encodeMimeHeader(value: string, headerName: string): string {
+  assertSafeHeader(value, headerName);
+  if (/^[\x00-\x7F]*$/.test(value)) return value;
+  return `=?UTF-8?B?${Buffer.from(value, "utf8").toString("base64")}?=`;
+}
+
+function wrapBase64(value: string, width = 76): string {
+  const encoded = Buffer.from(value, "utf8").toString("base64");
+  return encoded.match(new RegExp(`.{1,${width}}`, "g"))?.join("\r\n") ?? "";
+}
+
+export function encodeRfc2822(
   to: string,
   subject: string,
   body: string,
   replyTo?: string,
 ): string {
+  assertSafeHeader(to, "To");
+  if (replyTo) assertSafeHeader(replyTo, "Reply-To");
   const raw = [
     `To: ${to}`,
     ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
-    `Subject: ${subject}`,
+    `Subject: ${encodeMimeHeader(subject, "Subject")}`,
+    "MIME-Version: 1.0",
     "Content-Type: text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding: base64",
     "",
-    body,
+    wrapBase64(body),
   ].join("\r\n");
   return Buffer.from(raw)
     .toString("base64")
