@@ -2,5 +2,6 @@
 - [Gatehouse revenue sprint](gatehouse-sprint.md) — North Star Sprint tab at /sprint, 90-day cashflow focus, three tracks, July 25–Oct 23 2026
 - [Stripe connection readiness](stripe-connection-readiness.md) — a healthy Stripe connection may still lack server credentials; verify checkout and webhook secrets before enabling sales
 - [Headwaters offer boundary](headwaters-offer-boundary.md) — keep the public root organizational and capacity-focused; route books, learning, care, kits, and member tools through deliberate secondary paths
+- [Annual Codetry commercial model](annual-codetry-commercial-model.md) — Year 1 funds the base build; Year 2 funds the next layer plus the annual strategic/training cycle, with the operating fee waived
 - [Multi-step form button identity](multi-step-form-button-identity.md) — give step and submit buttons distinct React keys so one click cannot change type and submit
 - [Artifact release gates](artifact-release-gates.md) — deploy-blocking checks belong in the artifact build; external targets use PLAYWRIGHT_BASE_URL
