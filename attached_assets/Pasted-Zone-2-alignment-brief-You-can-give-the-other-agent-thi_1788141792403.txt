@@ -1,0 +1,50 @@
+Zone 2 alignment brief
+You can give the other agent this:
+
+Align with the 807 Zone 3 pilot model
+
+807 is the first Headwaters reference tenant. Its organizational financial records, board decisions, membership information, treasurer forecast, grant records, and operating assumptions belong in the private 807 Zone 3 context.
+
+Zone 2 may hold Headwaters’ practitioner work: proposal drafts, grant narratives, Codetry planning, delivery checklists, annual CDP/Codetry offer design, implementation notes, and personal work planning. Do not copy raw 807 member, board, ledger, or financial records into Zone 2 unless 807 explicitly approves a specific aggregate or claim.
+
+Financial model
+
+807’s own annual operating cost is approximately $5,000 for accountant/bookkeeping support, printing, insurance, modest advertising, and basic tools. This is intended to be supported by membership dues.
+The annual $20,000 Codetry project plus CDP strategic plan is grant-supported project work. Treat it as restricted or purpose-specific funding until the funder’s award and eligible-cost rules are confirmed.
+Do not treat the $20,000 as unrestricted 807 operating revenue or use it to imply that 807 has $20,000 available for general administration.
+Operating-budget support is a separate funding problem, supported by membership revenue, fundraising, matching funds, and eligible grants.
+For organizations that complete the annual CDP strategic plan and Codetry feature build, Headwaters waives the otherwise applicable annual platform operating fee. For 807, the forecast should show the Headwaters fee as $0 during the qualifying period.
+The older $3,600–$6,000 annual support/hosting/update range is a fallback renewal scenario, not an automatic 807 expense and not an additional charge for an organization participating in the annual CDP/Codetry cycle.
+Funding language
+
+Alterna, the Co-operative Development Foundation of Canada, and the Co-operators program are funding references, not proof of an award or sponsorship.
+Until written approval exists, use language such as: “proposed grant-supported work” or “designed for co-operative funding conversations.”
+Do not use “sponsored by Alterna,” an Alterna logo, or imply endorsement without written approval.
+The payer, grant restrictions, matching requirement, timing, and reporting obligations must be named in the written scope.
+What the annual CDP/Codetry work includes
+
+Annual organizational and strategic mapping
+Versioned Vocabulary Ledger and governance decisions
+Funder-facing project articulation
+Field Guide Finance or related capacity-building material
+A bounded Codetry feature build
+Configuration, training, launch acceptance, and operating handoff
+Initial reporting and a roadmap for the next funded layer
+Handoff boundary
+
+“Handoff” means the co-op receives a configured operating layer, training, runbooks, named operators, support instructions, and ownership of its organizational decisions and records. It does not mean transfer of Headwaters’ shared infrastructure, source code, deployment credentials, production secrets, or platform administration.
+
+Zone crossing rule
+
+Zone 2 can prepare proposals, drafts, budgets, and funding language. A claim becomes part of the 807 Zone 3 record only after 807 approval, with a named approver, source, date, scope, and—where applicable—grant or board evidence. Only approved, minimum-necessary aggregates or claims should cross from 807 to Headwaters’ practitioner context.
+
+The remaining documentation mismatch
+The current canonical Headwaters documents still describe:
+
+$20,000 as a one-time initial implementation, and
+$3,600–$6,000 as annual support/hosting/updates.
+Your new decision is more specific:
+
+$20,000 annually for the CDP strategic plan and Codetry feature build, grant-supported; and
+annual operating fees waived for organizations participating in that cycle.
+I treated your new model as the working policy for the 807 forecast, but the canonical offer and delivery documents still need an explicit commercial-policy update before the Zone 2 agent or any public-facing material presents the annual version as settled.
