@@ -1,0 +1,63 @@
+name: Check Codetry public examples
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codetry-public-links
+  cancel-in-progress: true
+
+jobs:
+  public-links:
+    name: Check public example destinations
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PLAYWRIGHT_BASE_URL: https://codetry.ca
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Check public example destinations
+        id: public-links
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @workspace/codetry-ship run check:public-links 2>&1 | tee public-links-check.log
+
+      - name: Add failed destinations to the run summary
+        if: ${{ failure() }}
+        shell: bash
+        run: |
+          {
+            echo "## Codetry public example link check failed"
+            echo
+            echo "The scheduled check performs direct GET requests only. See the destination and response error below:"
+            echo
+            echo '```text'
+            cat public-links-check.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

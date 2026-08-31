@@ -1,11 +1,23 @@
+import { existsSync } from "node:fs";
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = Number(process.env.CODETRY_SHIP_PORT ?? 4173);
 const configuredBaseURL = process.env.PLAYWRIGHT_BASE_URL;
 const BASE_URL = configuredBaseURL ?? `http://localhost:${PORT}`;
-const systemChromium =
+const configuredChromium =
   process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ??
   "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium";
+const launchOptions = {
+  ...(existsSync(configuredChromium)
+    ? { executablePath: configuredChromium }
+    : {}),
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  env: {
+    ...process.env,
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/tmp/fake-dbus-socket",
+    DBUS_SYSTEM_BUS_ADDRESS: "unix:path=/tmp/fake-dbus-socket",
+  },
+};
 
 export default defineConfig({
   testDir: "./e2e",
@@ -17,15 +29,7 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     trace: "on-first-retry",
-    launchOptions: {
-      executablePath: systemChromium,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      env: {
-        ...process.env,
-        DBUS_SESSION_BUS_ADDRESS: "unix:path=/tmp/fake-dbus-socket",
-        DBUS_SYSTEM_BUS_ADDRESS: "unix:path=/tmp/fake-dbus-socket",
-      },
-    },
+    launchOptions,
   },
   ...(configuredBaseURL
     ? {}
