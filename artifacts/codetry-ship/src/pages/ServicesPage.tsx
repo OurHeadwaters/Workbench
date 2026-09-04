@@ -157,6 +157,15 @@ export function ServicesPage() {
                 color: "hsl(220 20% 32%)",
               },
               {
+                type: "Grant applicants (e.g. OTF)",
+                icon: "📄",
+                tool: "Project Scope & Quote",
+                why: "Get a credible, fixed-fee quote for post-award implementation to include in your grant budget.",
+                href: `${(import.meta.env.BASE_URL ?? "/").replace(/\/$/, "")}/funding/otf-sector-grant`,
+                color: "hsl(14 64% 36%)",
+                testId: "link-services-otf",
+              },
+              {
                 type: "Local producers & band councils",
                 icon: "🌲",
                 tool: "Community Store Plan",
@@ -164,10 +173,11 @@ export function ServicesPage() {
                 href: "#store",
                 color: "hsl(145 18% 32%)",
               },
-            ].map(({ type, icon, tool, why, href, color }) => (
+            ].map(({ type, icon, tool, why, href, color, testId }) => (
               <a
                 key={type}
                 href={href}
+                data-testid={testId}
                 className="block rounded-md border bg-card p-4 transition-opacity hover:opacity-85"
                 style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}`, textDecoration: "none" }}
               >

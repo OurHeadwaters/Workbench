@@ -55,6 +55,7 @@ import { GoodbyeKitPage } from "@/pages/GoodbyeKitPage";
 import { RequireKitToken } from "@/components/RequireKitToken";
 import { PilotPage } from "@/pages/PilotPage";
 import QuotePage from "@/pages/QuotePage";
+import { OtfSectorGrantPage } from "@/pages/OtfSectorGrantPage";
 
 const queryClient = new QueryClient();
 
@@ -175,6 +176,7 @@ function Router() {
       {/* ── Care Pilot ── */}
       <Route path="/pilot" component={PilotPage} />
       <Route path="/quote" component={QuotePage} />
+      <Route path="/funding/otf-sector-grant" component={OtfSectorGrantPage} />
 
       {/* ── The Mill — Zone 2 production framing ── */}
       <Route path="/mill" component={MillPage} />
@@ -187,7 +189,7 @@ function Router() {
   );
 }
 
-const STANDALONE_ROUTES = ["/", "/quote", "/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub", "/kits/resend", "/arc/login", "/goodbye"];
+const STANDALONE_ROUTES = ["/", "/quote", "/funding/otf-sector-grant", "/start", "/headwaters/start", "/headwaters/products", "/headwaters/package", "/parrsjars/kit", "/parrsjars/hub", "/kits/resend", "/arc/login", "/goodbye"];
 
 function NavShell() {
   const [location] = useLocation();

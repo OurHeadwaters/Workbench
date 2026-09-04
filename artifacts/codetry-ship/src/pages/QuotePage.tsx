@@ -54,6 +54,17 @@ function selectedOfferFromUrl(): QuoteOffer {
   return "year 1 codetry engagement";
 }
 
+function getCampaignContext() {
+  if (typeof window === "undefined") return { source: null, intent: null, funding: null, project: null };
+  const search = new URLSearchParams(window.location.search);
+  return {
+    source: search.get("source"),
+    intent: search.get("intent"),
+    funding: search.get("funding"),
+    project: search.get("project"),
+  };
+}
+
 const OFFERS = [
   {
     value: "year 1 codetry engagement" as const,
@@ -116,10 +127,18 @@ const motionProps = {
 };
 
 export function QuotePage() {
-  const [form, setForm] = useState<FormState>(() => ({
-    ...INITIAL_FORM,
-    selectedOffer: selectedOfferFromUrl(),
-  }));
+  const [form, setForm] = useState<FormState>(() => {
+    const context = getCampaignContext();
+    return {
+      ...INITIAL_FORM,
+      selectedOffer: selectedOfferFromUrl(),
+      fundingProgram: context.funding || INITIAL_FORM.fundingProgram,
+      projectTitle: context.project || INITIAL_FORM.projectTitle,
+      projectDescription: context.intent ? `Context: ${context.intent}\n\n` : INITIAL_FORM.projectDescription,
+      specialRequirements: context.source ? `Source: ${context.source}` : INITIAL_FORM.specialRequirements,
+    };
+  });
+  const [needsAppSupport, setNeedsAppSupport] = useState(false);
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -185,6 +204,11 @@ export function QuotePage() {
 
     if (form.website) return;
 
+    const finalSpecialRequirements = [
+      form.specialRequirements,
+      needsAppSupport ? "Note: We would also like to discuss support with the grant application itself." : "",
+    ].filter(Boolean).join("\n\n").trim();
+
     submittingRef.current = true;
     setSubmitting(true);
     setSubmitError(null);
@@ -205,7 +229,7 @@ export function QuotePage() {
         approximateScale: clean(form.approximateScale),
         currentSystems: clean(form.currentSystems),
         accessibilityConnectivityNeeds: clean(form.accessibilityConnectivityNeeds),
-        specialRequirements: clean(form.specialRequirements),
+        specialRequirements: clean(finalSpecialRequirements),
       });
       setResult(response);
       const funnelData = {
@@ -261,6 +285,15 @@ export function QuotePage() {
             <SuccessState result={result} />
           ) : (
             <form onSubmit={submit} noValidate className="w-full">
+              {getCampaignContext().source && getCampaignContext().funding && (
+                <div className="mb-12 p-6 rounded-2xl bg-[#1B2621]/80 border border-[#2F3E35] flex items-start gap-4" data-testid="quote-campaign-context">
+                  <div className="w-6 h-6 rounded-full bg-[#D4A017]/20 flex items-center justify-center shrink-0 text-[#D4A017] text-sm font-bold mt-0.5">✓</div>
+                  <p className="text-sm text-[#9CB3A8] leading-relaxed">
+                    <strong className="text-[#F7F7F5] font-medium block mb-1">Welcome from the {getCampaignContext().source} guide.</strong>
+                    We have pre-filled your funding context below. This quote request is for project scoping and implementation only. If you also need help writing the grant application itself, you can note that in Step 2.
+                  </p>
+                </div>
+              )}
               <div className="opacity-0 absolute -z-10 w-0 h-0 overflow-hidden" aria-hidden="true">
                 <label htmlFor="quote-website">Website</label>
                 <input
@@ -308,6 +341,22 @@ export function QuotePage() {
 
                       <div className="md:col-span-2 mt-4 mb-8">
                         <h3 className="text-xs font-bold tracking-widest uppercase text-[#9CB3A8] border-b border-[#2F3E35] pb-4">Context (Optional)</h3>
+                      </div>
+                      
+                      <div className="md:col-span-2 mb-10">
+                        <label className="flex items-start gap-4 p-5 rounded-xl border border-[#2F3E35] bg-[#1B2621]/40 cursor-pointer hover:border-[#9CB3A8] transition-colors group">
+                          <input 
+                            type="checkbox" 
+                            className="mt-1 w-4 h-4 rounded border-[#9CB3A8] text-[#D4A017] focus:ring-[#D4A017] bg-transparent"
+                            checked={needsAppSupport}
+                            onChange={(e) => setNeedsAppSupport(e.target.checked)}
+                            data-testid="input-needs-app-support"
+                          />
+                          <div className="flex-1">
+                            <span className="block text-sm font-bold tracking-widest uppercase text-[#9CB3A8] mb-1 group-hover:text-[#D4A017] transition-colors">Grant Application Support</span>
+                            <span className="block text-sm text-[#F7F7F5]/80 leading-relaxed font-light">I would also like to discuss support with the grant application itself (pre-award), in addition to the post-award project quote.</span>
+                          </div>
+                        </label>
                       </div>
 
                       <Field id="intendedUsers" label="Who will use this?" hint="Board, staff, volunteers, etc." value={form.intendedUsers} onChange={updateField("intendedUsers")} placeholder="Optional" />
