@@ -8,6 +8,9 @@ export type QuoteMailResult = {
   messageId?: string;
 };
 
+const HEADWATERS_FROM_EMAIL = "bobbie@ourheadwaters.ca";
+const HEADWATERS_FROM_HEADER = `Headwaters <${HEADWATERS_FROM_EMAIL}>`;
+
 function assertSafeHeader(value: string, headerName: string): void {
   if (/[\r\n]/.test(value)) {
     throw new Error(`${headerName} contains an invalid line break`);
@@ -31,15 +34,18 @@ export function encodeRfc2822(
   body: string,
   replyTo?: string,
   bodyHtml?: string,
+  from?: string,
 ): string {
   assertSafeHeader(to, "To");
   if (replyTo) assertSafeHeader(replyTo, "Reply-To");
+  if (from) assertSafeHeader(from, "From");
 
   let raw: string;
 
   if (bodyHtml) {
     const boundary = `----=_NextPart_${crypto.randomBytes(16).toString("hex")}`;
     raw = [
+      ...(from ? [`From: ${from}`] : []),
       `To: ${to}`,
       ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
       `Subject: ${encodeMimeHeader(subject, "Subject")}`,
@@ -62,6 +68,7 @@ export function encodeRfc2822(
     ].join("\r\n");
   } else {
     raw = [
+      ...(from ? [`From: ${from}`] : []),
       `To: ${to}`,
       ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
       `Subject: ${encodeMimeHeader(subject, "Subject")}`,
@@ -89,6 +96,47 @@ export async function sendQuoteEmail(opts: {
 }): Promise<QuoteMailResult> {
   try {
     const connectors = new ReplitConnectors();
+    const sendAsResponse = await connectors.proxy(
+      "google-mail",
+      "/gmail/v1/users/me/settings/sendAs",
+      { method: "GET" },
+    );
+
+    if (!sendAsResponse.ok) {
+      const message = await sendAsResponse.text().catch(() => "upstream error");
+      logger.warn(
+        { status: sendAsResponse.status, error: message.slice(0, 300) },
+        "[quote-mailer] Gmail sender verification failed",
+      );
+      return {
+        status: "failed",
+        error: `gmail sender verification ${sendAsResponse.status}: ${message.slice(0, 300)}`,
+      };
+    }
+
+    const sendAsData = (await sendAsResponse.json().catch(() => ({}))) as {
+      sendAs?: Array<{
+        sendAsEmail?: string;
+        verificationStatus?: string;
+      }>;
+    };
+    const senderAuthorized = sendAsData.sendAs?.some(
+      (entry) =>
+        entry.sendAsEmail?.toLowerCase() === HEADWATERS_FROM_EMAIL &&
+        entry.verificationStatus === "accepted",
+    );
+
+    if (!senderAuthorized) {
+      logger.error(
+        { requiredSender: HEADWATERS_FROM_EMAIL },
+        "[quote-mailer] required Headwaters Gmail sender is not authorized",
+      );
+      return {
+        status: "failed",
+        error: `gmail sender ${HEADWATERS_FROM_EMAIL} is not authorized`,
+      };
+    }
+
     const response = await connectors.proxy(
       "google-mail",
       "/gmail/v1/users/me/messages/send",
@@ -96,7 +144,14 @@ export async function sendQuoteEmail(opts: {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          raw: encodeRfc2822(opts.to, opts.subject, opts.body, opts.replyTo, opts.bodyHtml),
+          raw: encodeRfc2822(
+            opts.to,
+            opts.subject,
+            opts.body,
+            opts.replyTo,
+            opts.bodyHtml,
+            HEADWATERS_FROM_HEADER,
+          ),
         }),
       },
     );

@@ -17,9 +17,12 @@ describe("quote email MIME encoding", () => {
       "HW-20260831-ODDE87 — Headwaters received your custom request",
       "Hi Bobbie,\n\nYour request is in — we’ll review it.",
       "bobbie@ourheadwaters.ca",
+      undefined,
+      "Headwaters <bobbie@ourheadwaters.ca>",
     );
     const message = decodeGmailRaw(raw);
 
+    expect(message).toContain("From: Headwaters <bobbie@ourheadwaters.ca>");
     expect(message).toContain(
       "Subject: =?UTF-8?B?SFctMjAyNjA4MzEtT0RERTg3IOKAlCBIZWFkd2F0ZXJzIHJlY2VpdmVkIHlvdXIgY3VzdG9tIHJlcXVlc3Q=?=",
     );
@@ -38,6 +41,17 @@ describe("quote email MIME encoding", () => {
         "Body",
       ),
     ).toThrow("Subject contains an invalid line break");
+
+    expect(() =>
+      encodeRfc2822(
+        "recipient@example.com",
+        "Subject",
+        "Body",
+        undefined,
+        undefined,
+        "Headwaters <bobbie@ourheadwaters.ca>\r\nBcc: unwanted@example.com",
+      ),
+    ).toThrow("From contains an invalid line break");
   });
 
   it("encodes multipart/alternative when html is provided", () => {
