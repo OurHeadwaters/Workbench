@@ -57,11 +57,14 @@ function selectedOfferFromUrl(): QuoteOffer {
 function getCampaignContext() {
   if (typeof window === "undefined") return { source: null, intent: null, funding: null, project: null };
   const search = new URLSearchParams(window.location.search);
+  const bounded = (value: string | null, maxLength: number) =>
+    value?.trim().slice(0, maxLength) || null;
+
   return {
-    source: search.get("source"),
-    intent: search.get("intent"),
-    funding: search.get("funding"),
-    project: search.get("project"),
+    source: bounded(search.get("source"), 80),
+    intent: bounded(search.get("intent"), 80),
+    funding: bounded(search.get("funding"), 160),
+    project: bounded(search.get("project"), 160),
   };
 }
 
@@ -127,17 +130,16 @@ const motionProps = {
 };
 
 export function QuotePage() {
+  const [campaignContext] = useState(getCampaignContext);
   const [form, setForm] = useState<FormState>(() => {
-    const context = getCampaignContext();
     return {
       ...INITIAL_FORM,
       selectedOffer: selectedOfferFromUrl(),
-      fundingProgram: context.funding || INITIAL_FORM.fundingProgram,
-      projectTitle: context.project || INITIAL_FORM.projectTitle,
-      projectDescription: context.intent ? `Context: ${context.intent}\n\n` : INITIAL_FORM.projectDescription,
-      specialRequirements: context.source ? `Source: ${context.source}` : INITIAL_FORM.specialRequirements,
+      fundingProgram: campaignContext.funding || INITIAL_FORM.fundingProgram,
+      projectTitle: campaignContext.project || INITIAL_FORM.projectTitle,
     };
   });
+  const isOtfCampaign = campaignContext.intent === "otf-sector-grant";
   const [needsAppSupport, setNeedsAppSupport] = useState(false);
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -285,12 +287,12 @@ export function QuotePage() {
             <SuccessState result={result} />
           ) : (
             <form onSubmit={submit} noValidate className="w-full">
-              {getCampaignContext().source && getCampaignContext().funding && (
+              {isOtfCampaign && (
                 <div className="mb-12 p-6 rounded-2xl bg-[#1B2621]/80 border border-[#2F3E35] flex items-start gap-4" data-testid="quote-campaign-context">
                   <div className="w-6 h-6 rounded-full bg-[#D4A017]/20 flex items-center justify-center shrink-0 text-[#D4A017] text-sm font-bold mt-0.5">✓</div>
                   <p className="text-sm text-[#9CB3A8] leading-relaxed">
-                    <strong className="text-[#F7F7F5] font-medium block mb-1">Welcome from the {getCampaignContext().source} guide.</strong>
-                    We have pre-filled your funding context below. This quote request is for project scoping and implementation only. If you also need help writing the grant application itself, you can note that in Step 2.
+                    <strong className="text-[#F7F7F5] font-medium block mb-1">Your OTF funding context is ready.</strong>
+                    Describe the problem you need solved and we will turn it into a non-binding project scope and budgetary quote. Application support is optional.
                   </p>
                 </div>
               )}
@@ -343,21 +345,23 @@ export function QuotePage() {
                         <h3 className="text-xs font-bold tracking-widest uppercase text-[#9CB3A8] border-b border-[#2F3E35] pb-4">Context (Optional)</h3>
                       </div>
                       
-                      <div className="md:col-span-2 mb-10">
-                        <label className="flex items-start gap-4 p-5 rounded-xl border border-[#2F3E35] bg-[#1B2621]/40 cursor-pointer hover:border-[#9CB3A8] transition-colors group">
-                          <input 
-                            type="checkbox" 
-                            className="mt-1 w-4 h-4 rounded border-[#9CB3A8] text-[#D4A017] focus:ring-[#D4A017] bg-transparent"
-                            checked={needsAppSupport}
-                            onChange={(e) => setNeedsAppSupport(e.target.checked)}
-                            data-testid="input-needs-app-support"
-                          />
-                          <div className="flex-1">
-                            <span className="block text-sm font-bold tracking-widest uppercase text-[#9CB3A8] mb-1 group-hover:text-[#D4A017] transition-colors">Grant Application Support</span>
-                            <span className="block text-sm text-[#F7F7F5]/80 leading-relaxed font-light">I would also like to discuss support with the grant application itself (pre-award), in addition to the post-award project quote.</span>
-                          </div>
-                        </label>
-                      </div>
+                      {isOtfCampaign && (
+                        <div className="md:col-span-2 mb-10">
+                          <label className="flex items-start gap-4 p-5 rounded-xl border border-[#2F3E35] bg-[#1B2621]/40 cursor-pointer hover:border-[#9CB3A8] transition-colors group">
+                            <input
+                              type="checkbox"
+                              className="mt-1 w-4 h-4 rounded border-[#9CB3A8] text-[#D4A017] focus:ring-[#D4A017] bg-transparent"
+                              checked={needsAppSupport}
+                              onChange={(e) => setNeedsAppSupport(e.target.checked)}
+                              data-testid="input-needs-app-support"
+                            />
+                            <div className="flex-1">
+                              <span className="block text-sm font-bold tracking-widest uppercase text-[#9CB3A8] mb-1 group-hover:text-[#D4A017] transition-colors">Optional application support</span>
+                              <span className="block text-sm text-[#F7F7F5]/80 leading-relaxed font-light">I also want to discuss help preparing the application. This is separate from the project quote.</span>
+                            </div>
+                          </label>
+                        </div>
+                      )}
 
                       <Field id="intendedUsers" label="Who will use this?" hint="Board, staff, volunteers, etc." value={form.intendedUsers} onChange={updateField("intendedUsers")} placeholder="Optional" />
                       <Field id="approximateScale" label="How big is this?" hint="e.g., 8 operators and 120 members" value={form.approximateScale} onChange={updateField("approximateScale")} placeholder="Optional" />

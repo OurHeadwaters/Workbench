@@ -15,7 +15,7 @@ export function OtfSectorGrantPage() {
     });
   }, []);
 
-  const quoteUrl = `/quote?intent=OTF+grant+application+project+quote&funding=Ontario+Trillium+Foundation+(OTF)&source=OTF+Landing+Page&project=Community+System+Build`;
+  const quoteUrl = "/quote?intent=otf-sector-grant&funding=Ontario+Trillium+Foundation+Sector+Grant&source=otf-sector-grant-page";
 
   return (
     <main className="min-h-[100dvh] bg-[#FBFBF9] text-[#1C1917] font-sans selection:bg-[#D4A017] selection:text-[#1C1917]">
@@ -51,7 +51,7 @@ export function OtfSectorGrantPage() {
               Request a Project Quote <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </Link>
             <a 
-              href="https://otf.ca/" 
+               href="https://otf.ca/our-grants/community-investments-grants/sector-grant"
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-transparent text-[#1C1917] border border-[#E7E5E4] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#F5F5F4] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2"
@@ -73,7 +73,7 @@ export function OtfSectorGrantPage() {
               </div>
               <h2 className="font-serif text-2xl mb-4 text-[#1C1917]">Post-Award Implementation</h2>
               <p className="text-[#57534E] leading-relaxed">
-                We are a practitioner organization that builds community economic infrastructure. The quote we provide is for <strong>post-award execution</strong> — the actual work of building your system, training your team, and handing it off safely. This is a flat-fee, $20,000 CAD base engagement that fits cleanly into grant budget lines.
+                We are a practitioner organization that builds practical capacity infrastructure. The quote covers <strong>future implementation</strong> — building the system, training the team, documenting it, and handing it off safely. Base engagements start at $20,000 CAD; unusual scopes receive a custom review. The applicant remains responsible for confirming budget eligibility with OTF.
               </p>
             </div>
             
@@ -99,8 +99,8 @@ export function OtfSectorGrantPage() {
             <li className="flex items-start gap-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#D4A017] mt-2.5 shrink-0"></span>
               <p className="text-[#57534E] leading-relaxed">
-                <strong className="text-[#1C1917] font-medium block">Current as of Winter 2025</strong>
-                OTF guidelines and cycles change. Always verify current sector eligibility, deadlines, and requirements directly on the <a href="https://otf.ca/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] text-[#1C1917]">official OTF website</a>.
+                 <strong className="text-[#1C1917] font-medium block">Last reviewed September 4, 2026</strong>
+                 OTF guidelines and cycles change. Always verify current sector eligibility, deadlines, and requirements directly on the <a href="https://otf.ca/our-grants/community-investments-grants/sector-grant" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] text-[#1C1917]">official Sector Grant page</a>.
               </p>
             </li>
             <li className="flex items-start gap-4">

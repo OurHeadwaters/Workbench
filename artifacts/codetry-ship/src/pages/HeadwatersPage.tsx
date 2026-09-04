@@ -271,7 +271,7 @@ export function HeadwatersPage() {
                 <p className="text-lg text-[#78716C] leading-relaxed border-l-2 border-[#D4A017] pl-6 py-1 mb-8">
                   Headwaters helps organizations move one bounded piece of work from intention to something people can use, understand, and keep going.
                 </p>
-                
+
                 <div className="bg-[#F5F5F4] border border-[#E7E5E4] rounded-2xl p-6 mb-10" data-testid="headwaters-otf-callout">
                   <h3 className="font-serif text-xl mb-2 text-[#1C1917]">Applying for an OTF grant?</h3>
                   <p className="text-[#57534E] mb-4">Get a credible, fixed-fee project scope and budget quote to include in your application.</p>

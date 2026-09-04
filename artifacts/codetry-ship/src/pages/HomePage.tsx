@@ -1148,7 +1148,7 @@ export function HomePage() {
                   or email directly
                 </a>
               </div>
-              
+
               <div className="mt-8 pt-6 border-t" style={{ borderColor: "rgba(244,237,224,0.1)" }} data-testid="home-otf-callout">
                 <p className="font-serif text-[15px] mb-2" style={{ color: "#f4ede0" }}>Preparing a grant application (e.g. OTF)?</p>
                 <a href={`${(import.meta.env.BASE_URL ?? "/").replace(/\/$/, "")}/funding/otf-sector-grant`} data-testid="link-home-otf" className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80" style={{ color: "#d4a017" }}>
