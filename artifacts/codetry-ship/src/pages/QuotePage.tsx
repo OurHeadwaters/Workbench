@@ -55,7 +55,7 @@ function selectedOfferFromUrl(): QuoteOffer {
 }
 
 function getCampaignContext() {
-  if (typeof window === "undefined") return { source: null, intent: null, funding: null, project: null };
+  if (typeof window === "undefined") return { source: null, intent: null, funding: null, project: null, placement: null };
   const search = new URLSearchParams(window.location.search);
   const bounded = (value: string | null, maxLength: number) =>
     value?.trim().slice(0, maxLength) || null;
@@ -65,9 +65,17 @@ function getCampaignContext() {
     intent: bounded(search.get("intent"), 80),
     funding: bounded(search.get("funding"), 160),
     project: bounded(search.get("project"), 160),
+    placement: bounded(search.get("placement"), 20),
   };
 }
 
+function safeCampaignDimension(
+  value: string | null,
+  knownValues: readonly string[],
+  fallback: string,
+) {
+  return value && knownValues.includes(value) ? value : fallback;
+}
 const OFFERS = [
   {
     value: "year 1 codetry engagement" as const,
@@ -146,7 +154,28 @@ export function QuotePage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
+  const stepRef = useRef(step);
+  const offerRef = useRef(form.selectedOffer);
+  const completedRef = useRef(false);
+  const abandonmentTrackedRef = useRef(false);
   const [result, setResult] = useState<Awaited<ReturnType<typeof postQuoteIntake>> | null>(null);
+  const analyticsContext = {
+    intent: safeCampaignDimension(
+      campaignContext.intent,
+      ["otf-sector-grant"],
+      campaignContext.intent ? "other" : "direct",
+    ),
+    source: safeCampaignDimension(
+      campaignContext.source,
+      ["otf-sector-grant-page"],
+      campaignContext.source ? "other" : "direct",
+    ),
+    placement: safeCampaignDimension(
+      campaignContext.placement,
+      ["hero", "footer"],
+      campaignContext.placement ? "other" : "unknown",
+    ),
+  };
 
   useEffect(() => {
     const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
@@ -156,6 +185,35 @@ export function QuotePage() {
         "Choose Year 1 or Year 2 of the $20,000 CAD Codetry engagement model and request a budgetary, non-binding quote.",
       path: `${base}/quote`,
     });
+  }, []);
+
+  useEffect(() => {
+    stepRef.current = step;
+    offerRef.current = form.selectedOffer;
+  }, [step, form.selectedOffer]);
+
+  useEffect(() => {
+    trackEvent("quote_started", {
+      ...analyticsContext,
+      step: 1,
+      offer: form.selectedOffer,
+    });
+
+    const trackAbandonment = () => {
+      if (completedRef.current || abandonmentTrackedRef.current) return;
+      abandonmentTrackedRef.current = true;
+      trackEvent("quote_abandoned", {
+        ...analyticsContext,
+        step: stepRef.current,
+        offer: offerRef.current,
+      });
+    };
+
+    window.addEventListener("pagehide", trackAbandonment);
+    return () => {
+      window.removeEventListener("pagehide", trackAbandonment);
+      trackAbandonment();
+    };
   }, []);
 
   const updateField = (key: keyof FormState) => (
@@ -170,8 +228,19 @@ export function QuotePage() {
     const nextErrors = validateStep(step, form);
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
+      trackEvent("quote_validation_failed", {
+        ...analyticsContext,
+        step,
+        offer: form.selectedOffer,
+        error_count: Object.keys(nextErrors).length,
+      });
       return;
     }
+    trackEvent("quote_step_completed", {
+      ...analyticsContext,
+      step,
+      offer: form.selectedOffer,
+    });
     setErrors({});
     setStep((current) => Math.min(5, current + 1));
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -201,10 +270,22 @@ export function QuotePage() {
     if (firstErrorStep !== -1) {
       setErrors(allErrors);
       setStep(firstErrorStep);
+      trackEvent("quote_validation_failed", {
+        ...analyticsContext,
+        step: firstErrorStep,
+        offer: form.selectedOffer,
+        error_count: Object.keys(allErrors).length,
+      });
       return;
     }
 
     if (form.website) return;
+
+    trackEvent("quote_step_completed", {
+      ...analyticsContext,
+      step: 5,
+      offer: form.selectedOffer,
+    });
 
     const finalSpecialRequirements = [
       form.specialRequirements,
@@ -233,13 +314,16 @@ export function QuotePage() {
         accessibilityConnectivityNeeds: clean(form.accessibilityConnectivityNeeds),
         specialRequirements: clean(finalSpecialRequirements),
       });
+      completedRef.current = true;
       setResult(response);
       const funnelData = {
+        ...analyticsContext,
         offer: form.selectedOffer,
         organization_type: form.organizationType,
-        quote_mode: response.mode,
+        result_mode: response.mode,
       } as const;
       trackEvent("quote_request_submitted", {
+        ...analyticsContext,
         offer: form.selectedOffer,
         mode: response.mode,
       });
@@ -252,6 +336,12 @@ export function QuotePage() {
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
+      trackEvent("quote_submit_failed", {
+        ...analyticsContext,
+        step: 5,
+        offer: form.selectedOffer,
+        failure_type: error instanceof ApiError ? "api_error" : "unexpected_error",
+      });
       setSubmitError(
         error instanceof ApiError
           ? error.message

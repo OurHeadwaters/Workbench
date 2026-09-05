@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Check, AlertCircle, ExternalLink } from "lucide-react";
 import { applyPageMetadata } from "@/lib/seo";
+import { trackEvent } from "@/lib/analytics";
 
 const BASE = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
 
@@ -15,7 +16,15 @@ export function OtfSectorGrantPage() {
     });
   }, []);
 
-  const quoteUrl = "/quote?intent=otf-sector-grant&funding=Ontario+Trillium+Foundation+Sector+Grant&source=otf-sector-grant-page";
+  const quoteUrl = (placement: "hero" | "footer") =>
+    `/quote?intent=otf-sector-grant&funding=Ontario+Trillium+Foundation+Sector+Grant&source=otf-sector-grant-page&placement=${placement}`;
+  const trackQuoteCta = (placement: "hero" | "footer") => {
+    trackEvent("quote_landing_cta_clicked", {
+      intent: "otf-sector-grant",
+      source: "otf-sector-grant-page",
+      placement,
+    });
+  };
 
   return (
     <main className="min-h-[100dvh] bg-[#FBFBF9] text-[#1C1917] font-sans selection:bg-[#D4A017] selection:text-[#1C1917]">
@@ -44,7 +53,8 @@ export function OtfSectorGrantPage() {
 
           <div className="flex flex-col sm:flex-row gap-4">
             <Link 
-              href={quoteUrl}
+              href={quoteUrl("hero")}
+              onClick={() => trackQuoteCta("hero")}
               className="inline-flex items-center justify-center gap-3 bg-[#1C1917] text-[#F7F7F5] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#2F3E35] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2"
               data-testid="link-otf-quote"
             >
@@ -123,7 +133,8 @@ export function OtfSectorGrantPage() {
             <h3 className="font-serif text-2xl mb-4 text-[#1C1917]">Ready to frame the work?</h3>
             <p className="text-[#57534E] mb-8">Request a non-binding budgetary quote to include in your application planning.</p>
             <Link 
-              href={quoteUrl}
+              href={quoteUrl("footer")}
+              onClick={() => trackQuoteCta("footer")}
               className="inline-flex items-center justify-center gap-3 bg-[#1C1917] text-[#F7F7F5] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#2F3E35] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2"
               data-testid="link-otf-quote-bottom"
             >
