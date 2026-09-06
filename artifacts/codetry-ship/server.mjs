@@ -22,6 +22,8 @@ app.use((req, res, next) => {
 });
 
 const REDIRECTS = [
+  { from: /^\/listen\/?$/, to: 'https://ourheadwaters.ca/' },
+  { from: /^\/tsp\/?$/, to: 'https://ourheadwaters.ca/' },
   { from: /^\/codetry-ship\/?$/, to: '/' },
   { from: /^\/codetry-ship\/(.*)$/, to: (m) => '/' + m[1] },
   { from: /^\/library$/, to: '/library/' },

@@ -1309,7 +1309,6 @@ export function HomePage() {
               {[
                 { label: "What is Codetry?", href: `${import.meta.env.BASE_URL}codetry`, testId: "footer-what-is-codetry-link" },
                 { label: "Privacy", href: "/privacy" },
-                { label: "Listen", href: `${import.meta.env.BASE_URL}listen`, testId: "footer-listen-link" },
                 { label: "Operator", href: `${import.meta.env.BASE_URL}operator`, testId: "footer-operator-link" },
                 { label: "Sign on", href: `${import.meta.env.BASE_URL}sign-on`, testId: "footer-sign-on-link" },
                 { label: "Read the origin", href: `${import.meta.env.BASE_URL}founding-stories`, testId: "footer-origin-link" },

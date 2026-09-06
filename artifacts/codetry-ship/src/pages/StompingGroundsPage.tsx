@@ -22,7 +22,7 @@ const STATIONS: Station[] = [
     body:
       "Every episode of The Survival Podcast that built this path is waiting here. Dig through the audio archive — zone by zone, topic by topic — and surface the ideas that changed the trajectory. The Wisdom Dig is where knowledge turns into conviction.",
     actionLabel: "Enter the archive →",
-    actionHref: "/listen",
+    actionHref: "/castle",
   },
   {
     id: "wishing-well",

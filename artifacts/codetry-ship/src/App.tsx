@@ -6,13 +6,18 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import { SignOnPage } from "@/pages/SignOnPage";
 import { ManifestPage } from "@/pages/ManifestPage";
+import { BioPage } from "@/pages/BioPage";
+import { HomePage } from "@/pages/HomePage";
 import { SowPage } from "@/pages/SowPage";
 import { BrightSidePage } from "@/pages/BrightSidePage";
 import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
+import { ServicesPage } from "@/pages/ServicesPage";
+import { WorkPage } from "@/pages/WorkPage";
 import { WorkbenchPage } from "@/pages/WorkbenchPage";
 import { MillPage } from "@/pages/MillPage";
 import { OperatorPage } from "@/pages/OperatorPage";
 import { PrivacyPage } from "@/pages/PrivacyPage";
+import { TheWindowPage } from "@/pages/TheWindowPage";
 import { OdysseyPage } from "@/pages/OdysseyPage";
 import { StoryPage } from "@/pages/StoryPage";
 import { FoundingStoriesPage } from "@/pages/FoundingStoriesPage";
@@ -73,10 +78,10 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={CodetryHostRoot} />
-      <Route path="/home">{() => <Redirect to="/" />}</Route>
-      <Route path="/bio">{() => <Redirect to="/" />}</Route>
-      <Route path="/services">{() => <Redirect to="/" />}</Route>
-      <Route path="/work">{() => <Redirect to="/" />}</Route>
+      <Route path="/home" component={HomePage} />
+      <Route path="/bio" component={BioPage} />
+      <Route path="/services" component={ServicesPage} />
+      <Route path="/work" component={WorkPage} />
       <Route path="/sign-on" component={SignOnPage} />
       <Route path="/operator" component={OperatorPage} />
       <Route path="/workbench">
@@ -91,7 +96,7 @@ function Router() {
       <Route path="/privacy" component={PrivacyPage} />
       <Route path="/listen">{() => <Redirect to="/" />}</Route>
       <Route path="/tsp">{() => <Redirect to="/" />}</Route>
-      <Route path="/window">{() => <Redirect to="/" />}</Route>
+      <Route path="/window" component={TheWindowPage} />
       <Route path="/odyssey" component={OdysseyPage} />
       <Route path="/story" component={StoryPage} />
       <Route path="/founding-stories" component={FoundingStoriesPage} />
@@ -130,12 +135,12 @@ function Router() {
       <Route path="/headwaters" component={HeadwatersRedirect} />
 
       {/* ── Legacy / stale hyphenated paths → current routes ── */}
-      <Route path="/the-shore">{() => <Redirect to="/" />}</Route>
+      <Route path="/the-shore">{() => <Redirect to="/home" />}</Route>
       <Route path="/what-is-codetry">{() => <Redirect to="/codetry" />}</Route>
-      <Route path="/the-work">{() => <Redirect to="/" />}</Route>
+      <Route path="/the-work">{() => <Redirect to="/services" />}</Route>
       <Route path="/the-clearing">{() => <Redirect to="/" />}</Route>
-      <Route path="/case-studies">{() => <Redirect to="/" />}</Route>
-      <Route path="/the-window">{() => <Redirect to="/" />}</Route>
+      <Route path="/case-studies">{() => <Redirect to="/work" />}</Route>
+      <Route path="/the-window">{() => <Redirect to="/window" />}</Route>
 
       {/* ── Self-serve starter offerings ── */}
       <Route path="/start" component={StarterPage} />
