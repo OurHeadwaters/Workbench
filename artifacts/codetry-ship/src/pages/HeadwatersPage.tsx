@@ -107,9 +107,9 @@ export function HeadwatersPage() {
   useEffect(() => {
     const siteUrl = new URL(BASE, window.location.origin).toString();
     return applyPageMetadata({
-      title: "Headwaters — Capacity-building consulting",
+      title: "Bobbie Parr | Headwaters & Codetry Ontario",
       description:
-        "Headwaters helps organizations carry important work through to a usable system with the right delivery capacity, practical tools, and knowledge left behind.",
+        "Bobbie Parr leads Headwaters in Northwestern Ontario, using Codetry to help organizations build practical systems, delivery capacity, and lasting local ownership.",
       path: BASE,
       structuredData: {
         "@context": "https://schema.org",
@@ -119,8 +119,32 @@ export function HeadwatersPage() {
             "@id": `${siteUrl}#organization`,
             name: "Headwaters",
             url: siteUrl,
+            logo: new URL("favicon.svg", siteUrl).toString(),
+            founder: { "@id": `${siteUrl}#bobbie-parr` },
+            areaServed: {
+              "@type": "AdministrativeArea",
+              name: "Ontario, Canada",
+            },
             description:
-              "Capacity-building consulting for work that needs to keep going.",
+              "A Northwestern Ontario capacity-building practice using Codetry for work that needs to keep going.",
+          },
+          {
+            "@type": "Person",
+            "@id": `${siteUrl}#bobbie-parr`,
+            name: "Bobbie Parr",
+            url: siteUrl,
+            jobTitle: "Headwaters Practitioner",
+            worksFor: { "@id": `${siteUrl}#organization` },
+            homeLocation: {
+              "@type": "AdministrativeArea",
+              name: "Northwestern Ontario, Canada",
+            },
+            knowsAbout: [
+              "Codetry",
+              "Capacity-building consulting",
+              "Community-owned systems",
+              "Organizational implementation",
+            ],
           },
           {
             "@type": "Service",
@@ -210,14 +234,17 @@ export function HeadwatersPage() {
 
       <section aria-labelledby="quiet-hero-title" className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden pt-32 pb-16">
         <div className="container mx-auto px-6 lg:px-12 relative z-10 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div className="lg:col-span-7 max-w-3xl">
+          <div className="order-2 lg:order-1 lg:col-span-7 max-w-3xl">
             <FadeIn>
               <p className="text-xs font-bold tracking-widest uppercase text-[#78716C] mb-6">Capacity-building consulting</p>
+              <p className="text-sm font-medium tracking-wide text-[#57534E] mb-4">
+                Bobbie Parr · Headwaters Practitioner · Northwestern Ontario
+              </p>
               <h1 id="quiet-hero-title" className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] leading-[1.05] tracking-tight mb-8">
                 Important work should not depend on finding more hours.
               </h1>
               <p className="text-xl md:text-2xl text-[#57534E] leading-relaxed mb-10 max-w-2xl font-light">
-                Organizations often know what needs to happen, but lack the time, specialized people, or operating structure to carry it through and keep it running.
+                Through Headwaters and Codetry, organizations move important work into practical systems they can use, own, and keep running.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                 <a
@@ -235,7 +262,7 @@ export function HeadwatersPage() {
             </FadeIn>
           </div>
 
-          <div className="lg:col-span-5 relative w-full h-[50vh] lg:h-[70vh] rounded-3xl overflow-hidden shadow-2xl bg-[#E7E5E4]">
+          <div className="order-1 lg:order-2 lg:col-span-5 relative w-full h-[42vh] min-h-[320px] lg:h-[70vh] rounded-3xl overflow-hidden shadow-2xl bg-[#E7E5E4] mt-8 lg:mt-0">
             <FadeIn delay={200} className="w-full h-full">
                <video
                   autoPlay
