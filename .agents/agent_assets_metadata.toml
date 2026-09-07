@@ -107,87 +107,130 @@ id = "fAkXwaa1zHxK8nTbCpXPq"
 uri = "file://artifacts/practitioner-operating-plan/public/practitioner-operating-plan-onepager.pdf"
 type = "pdf"
 title = "Practitioner Operating Plan — One Page Summary"
+logical_id = "9133be92-0a97-4442-a3d7-cf064ac7e65f"
 
 [[outputs]]
 id = "HxQVk89lC7RngybuL5gwG"
 uri = "file://exports/v3-slide1-cover.jpg"
 type = "image"
 title = "V3 · Slide 1 — Cover (rewrite)"
+logical_id = "cd0ff536-9024-4447-8fe4-cdb62260b648"
 
 [[outputs]]
 id = "NNsGsK3RI4tf8FGwXv--W"
 uri = "file://exports/v3-slide2-slabgrassland.jpg"
 type = "image"
 title = "V3 · Slide 2 — The Slab Cracks. The Grassland Holds. (new)"
+logical_id = "a0cc4a7a-680b-4bc6-b5cf-f1acab994f9a"
 
 [[outputs]]
 id = "G4rBFOF4M8N-rPX4zhueg"
 uri = "file://exports/v3-slide6-closing.jpg"
 type = "image"
 title = "V3 · Slide 6 — Closing (mission anchor + tagline)"
+logical_id = "cdf5dd25-074b-4d4b-b5ed-7f86e972a34d"
 
 [[outputs]]
 id = "iJxfz2zrFkScPw_4HKY2E"
 uri = "file://attached_assets/generated_images/salts-no-bg.png"
 type = "image"
 title = "Salt Display — background removed"
+logical_id = "1d10626e-b264-444c-b6ec-9fa470931bac"
 
 [[outputs]]
 id = "5cHN4knLbc6JcnYW1jvPa"
 uri = "file://.local/codetry-handbook-full.md"
 type = "text"
 title = "Codetry Handbook — Full Content Extraction"
+logical_id = "3b443e66-7ca9-460d-86a5-4103e25b8ad7"
 
 [[outputs]]
 id = "uCVvwD6fbKkovZUucHYm_"
 uri = "file://.local/codetry-handbook-context.md"
 type = "text"
 title = "Handbook Build Context & Decision Log"
+logical_id = "09fe58fa-3fd5-4b5c-88af-e9222eaa6a99"
 
 [[outputs]]
 id = "ezGP0cpYB1wkGTE2xzPdv"
 uri = "file://.local/handbook-how-to-paste.md"
 type = "text"
 title = "How to Paste the Handbook — 8-Chunk Guide"
+logical_id = "104a07eb-ffdc-4c60-8cf7-6797faed308d"
 
 [[outputs]]
 id = "8SHnXpNEXxmiZ9NXmnDD9"
 uri = "file://.local/tasks/reviewer-brief-public-journey.md"
 type = "text"
 title = "Public Journey Reviewer Brief"
+logical_id = "f36eba8e-ce9f-4258-95de-65a7ab0a5fd9"
 
 [[outputs]]
 id = "gwQAn6vMD3OReXipI6ID9"
 uri = "file://.local/tasks/807-numbers-prompt.md"
 type = "text"
 title = "Prompt for 807 Project Agent — Pull Real Numbers"
+logical_id = "f9665d44-3a54-45fe-8a71-901dd76857b3"
 
 [[outputs]]
 id = "d0uCY-DRag7tDEmp3fxdm"
 uri = "file://HEADWATERS_CONTEXT.md"
 type = "text"
 title = "Headwaters Project Context File"
+logical_id = "b8b84ea6-2fcf-41f3-9cd9-1bcd179d2b84"
 
 [[outputs]]
 id = "m7vZ5-u5f4m0OUqh6syz4"
 uri = "file://.local/codetry-headwaters-agent-briefing.md"
 type = "text"
 title = "Codetry / Headwaters — Full Agent Briefing"
+logical_id = "0646a612-d20b-4b7c-8ab2-4a83ba99facc"
 
 [[outputs]]
 id = "B5c9aKYdRwpcbsTCG2W6F"
 uri = "file://exports/codetry-book-full.md"
 type = "text"
 title = "Codetry Book — Full Prose Snapshot (509 KB)"
+logical_id = "30099130-120d-445f-8ae4-111060f27e5c"
 
 [[outputs]]
 id = "iS5oeMRSLMVYBOWGcvoeG"
 uri = "file://exports/codetry-book-data.json"
 type = "unspecified"
 title = "Codetry Book — Structured Data (1.2 MB)"
+logical_id = "d726d1b5-7000-41a4-8c06-ab3b536adde6"
 
 [[outputs]]
 id = "g5AcKfrkBWCWQ3eU-_9Q2"
 uri = "file://.local/tasks/archaeology-may30-june1-2026.md"
 type = "text"
 title = "Archaeology: May 30–June 1, 2026"
+logical_id = "548a6109-4ba3-460a-bc56-f34d6fe9ad52"
+
+[[outputs]]
+id = "HUzlpOgVB6jDR9eQQj6x7"
+uri = "file://exports/childrens-tales-collection/headwaters-childrens-tales.pdf"
+type = "pdf"
+title = "Children’s Tales — Headwaters Collection (PDF)"
+description = "A print-ready 29-page collection of all nine complete children’s tales, with subtitles and author notes."
+logical_id = "7a3f1d52-a801-4360-be83-f3cb4c244328"
+content_hash = "sha256:03523af1610d055835ee178ea6f901fbdf1069b8734358f5833d10301c6a45e4"
+size = 280883
+mtime_ms = 1788739914509
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:77c2ef5e-9483-45bc-b920-da6fc3c7936e/7a3f1d52-a801-4360-be83-f3cb4c244328/e8acfefa-8633-4291-90a6-9d80aff755e8"
+storage_version_token = "1788739930190374"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "P-lxJlRrcYSqGqV4FIK6f"
+uri = "file://exports/childrens-tales-collection/headwaters-childrens-tales.docx"
+type = "word_document"
+title = "Children’s Tales — Headwaters Collection (Word)"
+description = "An editable Word copy of all nine complete children’s tales, with subtitles and author notes."
+logical_id = "dea7eac7-ff74-4018-9b4d-a095c1042fbc"
+content_hash = "sha256:751073a1248c8eac8c59da0b1f7802646a305beba19fb207f3125832bc999803"
+size = 53197
+mtime_ms = 1788739904161
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:77c2ef5e-9483-45bc-b920-da6fc3c7936e/dea7eac7-ff74-4018-9b4d-a095c1042fbc/5ecfa5b1-0fe6-466a-866f-0addc0ded8e2"
+storage_version_token = "1788739930874789"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
