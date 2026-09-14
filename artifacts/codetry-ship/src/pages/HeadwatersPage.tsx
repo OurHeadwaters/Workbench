@@ -243,7 +243,7 @@ export function HeadwatersPage() {
               <h1 id="quiet-hero-title" className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] leading-[1.05] tracking-tight mb-8">
                 Important work should not depend on finding more hours.
               </h1>
-              <p className="text-xl md:text-2xl text-[#57534E] leading-relaxed mb-10 max-w-2xl font-light">
+              <p className="text-xl md:text-2xl text-[#57534E] leading-relaxed mb-10 max-w-2xl font-normal">
                 Through Headwaters and Codetry, organizations move important work into practical systems they can use, own, and keep running.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -292,7 +292,7 @@ export function HeadwatersPage() {
             </div>
             <div className="lg:col-span-7 lg:col-start-6 flex flex-col justify-center">
               <FadeIn delay={150}>
-                <p className="text-xl md:text-2xl text-[#44403C] leading-relaxed mb-10 font-light">
+                <p className="text-xl md:text-2xl text-[#44403C] leading-relaxed mb-10 font-normal">
                   A grant deadline, a new service, a better way to coordinate people, or a system that finally needs to be made usable: the need is often clear. What is missing is the protected capacity to make it real.
                 </p>
                 <p className="text-lg text-[#78716C] leading-relaxed border-l-2 border-[#D4A017] pl-6 py-1 mb-8">
@@ -354,7 +354,7 @@ export function HeadwatersPage() {
               <h2 id="examples-title" className="font-serif text-4xl md:text-5xl leading-[1.15] mb-8 text-[#1C1917]">
                 Practical apps for real situations.
               </h2>
-              <p className="text-xl text-[#57534E] leading-relaxed font-light">
+              <p className="text-xl text-[#57534E] leading-relaxed font-normal">
                 The work changes with the organization. The promise stays concrete: a practical app your people can use, understand, and keep improving when the engagement is over.
               </p>
             </div>
@@ -373,7 +373,7 @@ export function HeadwatersPage() {
                     <h3 className="font-serif text-3xl md:text-4xl leading-[1.15] mb-6 text-[#1C1917]">
                       Turn a board priority into work the next board can carry.
                     </h3>
-                    <p className="text-[#57534E] leading-relaxed text-lg font-light">
+                    <p className="text-[#57534E] leading-relaxed text-lg font-normal">
                       A co-op has an important service, capital project, or member initiative that keeps slipping because decisions are scattered, meetings are overloaded, and too much knowledge lives in a few people&apos;s heads.
                     </p>
                   </div>
@@ -446,7 +446,7 @@ export function HeadwatersPage() {
                     <h3 className="font-serif text-3xl md:text-4xl leading-[1.15] mb-6 text-[#1C1917]">
                       Make handoffs and follow-through easier when staffing is tight.
                     </h3>
-                    <p className="text-[#57534E] leading-relaxed text-lg font-light">
+                    <p className="text-[#57534E] leading-relaxed text-lg font-normal">
                       A residential, home-care, or community-support team is managing vacancies, sick calls, inconsistent shift handoffs, and a coordinator who has become the only place where the work still makes sense.
                     </p>
                   </div>
@@ -519,7 +519,7 @@ export function HeadwatersPage() {
                     <h3 className="font-serif text-3xl md:text-4xl leading-[1.15] mb-6 text-[#1C1917]">
                        Use a known bottleneck to earn back the build.
                     </h3>
-                    <p className="text-[#57534E] leading-relaxed text-lg font-light">
+                    <p className="text-[#57534E] leading-relaxed text-lg font-normal">
                        Parr&apos;s Jars is the kind of small-business example this work can serve: existing interest is real, but a known conversion or fulfillment bottleneck keeps some of that demand from becoming completed orders. The point is not to add software for its own sake; it is to make the path from interest to purchase easier to see and improve.
                     </p>
                   </div>
@@ -591,7 +591,7 @@ export function HeadwatersPage() {
               <h2 id="offers-title" className="font-serif text-4xl md:text-5xl leading-[1.15] mb-8 text-[#1C1917]">
                 Choose the shape that fits the work.
               </h2>
-              <p className="text-xl text-[#57534E] leading-relaxed font-light">
+              <p className="text-xl text-[#57534E] leading-relaxed font-normal">
                 Year 1 and Year 2 are separate scoped engagements. Each has a defined deliverable and written acceptance boundary.
               </p>
             </div>
@@ -612,7 +612,7 @@ export function HeadwatersPage() {
 
                   <div className="relative z-10 flex flex-col h-full">
                     <span className="font-serif text-2xl md:text-3xl mb-6 text-[#1C1917] group-hover:text-[#D4A017] transition-colors">{offer.title}</span>
-                    <span className="text-[#57534E] leading-relaxed mb-10 flex-grow text-base md:text-lg font-light">{offer.description}</span>
+                    <span className="text-[#57534E] leading-relaxed mb-10 flex-grow text-base md:text-lg font-normal">{offer.description}</span>
 
                     <div className="pt-8 border-t border-[#E7E5E4] mb-10">
                       <span className="block text-xs font-bold tracking-widest uppercase text-[#1C1917] mb-3">Pricing</span>
@@ -683,7 +683,7 @@ export function HeadwatersPage() {
             <h2 id="fit-title" className="font-serif text-4xl md:text-5xl leading-[1.15] mb-8">
               For organizations that intend to own what they build.
             </h2>
-            <p className="text-xl text-[#9CB3A8] leading-relaxed mb-12 max-w-2xl mx-auto font-light">
+            <p className="text-xl text-[#9CB3A8] leading-relaxed mb-12 max-w-2xl mx-auto font-normal">
               Headwaters works with community organizations, co-ops, nonprofits, and institutions that need practical delivery capacity now and a usable foundation afterward.
             </p>
             <a
