@@ -147,7 +147,7 @@ export function QuotePage() {
       projectTitle: campaignContext.project || INITIAL_FORM.projectTitle,
     };
   });
-  const isOtfCampaign = campaignContext.intent === "otf-sector-grant";
+  const isGrantWritingCampaign = campaignContext.intent === "grant-writing";
   const [needsAppSupport, setNeedsAppSupport] = useState(false);
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -162,12 +162,12 @@ export function QuotePage() {
   const analyticsContext = {
     intent: safeCampaignDimension(
       campaignContext.intent,
-      ["otf-sector-grant"],
+      ["grant-writing"],
       campaignContext.intent ? "other" : "direct",
     ),
     source: safeCampaignDimension(
       campaignContext.source,
-      ["otf-sector-grant-page"],
+      ["grant-writing-page"],
       campaignContext.source ? "other" : "direct",
     ),
     placement: safeCampaignDimension(
@@ -377,12 +377,12 @@ export function QuotePage() {
             <SuccessState result={result} />
           ) : (
             <form onSubmit={submit} noValidate className="w-full">
-              {isOtfCampaign && (
+              {isGrantWritingCampaign && (
                 <div className="mb-12 p-6 rounded-2xl bg-[#1B2621]/80 border border-[#2F3E35] flex items-start gap-4" data-testid="quote-campaign-context">
                   <div className="w-6 h-6 rounded-full bg-[#D4A017]/20 flex items-center justify-center shrink-0 text-[#D4A017] text-sm font-bold mt-0.5">✓</div>
                   <p className="text-sm text-[#9CB3A8] leading-relaxed">
-                    <strong className="text-[#F7F7F5] font-medium block mb-1">Your OTF funding context is ready.</strong>
-                    Describe the problem you need solved and we will turn it into a non-binding project scope and budgetary quote. Application support is optional.
+                    <strong className="text-[#F7F7F5] font-medium block mb-1">Your grant-writing context is ready.</strong>
+                    Describe the work you want funded. We can discuss application writing, project scope, and a non-binding implementation budget without assuming a particular funding program.
                   </p>
                 </div>
               )}
@@ -435,7 +435,7 @@ export function QuotePage() {
                         <h3 className="text-xs font-bold tracking-widest uppercase text-[#9CB3A8] border-b border-[#2F3E35] pb-4">Context (Optional)</h3>
                       </div>
                       
-                      {isOtfCampaign && (
+                      {isGrantWritingCampaign && (
                         <div className="md:col-span-2 mb-10">
                           <label className="flex items-start gap-4 p-5 rounded-xl border border-[#2F3E35] bg-[#1B2621]/40 cursor-pointer hover:border-[#9CB3A8] transition-colors group">
                             <input

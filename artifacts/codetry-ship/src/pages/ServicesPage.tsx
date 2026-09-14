@@ -157,13 +157,13 @@ export function ServicesPage() {
                 color: "hsl(220 20% 32%)",
               },
               {
-                type: "Grant applicants (e.g. OTF)",
+                type: "Grant applicants",
                 icon: "📄",
                 tool: "Project Scope & Quote",
-                why: "Get a credible, fixed-fee quote for post-award implementation to include in your grant budget.",
-                href: `${(import.meta.env.BASE_URL ?? "/").replace(/\/$/, "")}/funding/otf-sector-grant`,
+                why: "Get help writing the application, scoping the project, and preparing a credible implementation budget.",
+                href: `${(import.meta.env.BASE_URL ?? "/").replace(/\/$/, "")}/funding/grant-writing`,
                 color: "hsl(14 64% 36%)",
-                testId: "link-services-otf",
+                testId: "link-services-grant-writing",
               },
               {
                 type: "Local producers & band councils",

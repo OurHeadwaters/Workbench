@@ -1,27 +1,27 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
-import { ArrowRight, Check, AlertCircle, ExternalLink } from "lucide-react";
+import { ArrowRight, Check, AlertCircle } from "lucide-react";
 import { applyPageMetadata } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
 
 const BASE = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
 
-export function OtfSectorGrantPage() {
+export function GrantWritingPage() {
   useEffect(() => {
     const siteUrl = new URL(BASE || "/", window.location.origin).toString();
     applyPageMetadata({
-      title: "OTF Grant Quote Support | Headwaters",
-      description: "Get a factual, approvable project scope and budget quote for your Ontario Trillium Foundation (OTF) grant application.",
-      path: `${BASE}/funding/otf-sector-grant`,
+      title: "Grant Writing & Funding Preparation | Headwaters",
+      description: "Prepare a clear grant application with project scoping, application writing, and a credible implementation budget.",
+      path: `${BASE}/funding/grant-writing`,
     });
   }, []);
 
   const quoteUrl = (placement: "hero" | "footer") =>
-    `/quote?intent=otf-sector-grant&funding=Ontario+Trillium+Foundation+Sector+Grant&source=otf-sector-grant-page&placement=${placement}`;
+    `/quote?intent=grant-writing&source=grant-writing-page&placement=${placement}`;
   const trackQuoteCta = (placement: "hero" | "footer") => {
     trackEvent("quote_landing_cta_clicked", {
-      intent: "otf-sector-grant",
-      source: "otf-sector-grant-page",
+      intent: "grant-writing",
+      source: "grant-writing-page",
       placement,
     });
   };
@@ -44,11 +44,11 @@ export function OtfSectorGrantPage() {
           </div>
           
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight mb-8 text-[#1C1917]">
-            Credible project quotes for your OTF application.
+            Grant applications grounded in work you can deliver.
           </h1>
           
           <p className="text-xl md:text-2xl text-[#57534E] leading-relaxed mb-10 font-light max-w-3xl">
-            When your organization applies for Ontario Trillium Foundation funding, the project budget must be real, bounded, and ready to execute. We provide the fixed-fee quotes that make implementation believable.
+            We help your organization turn an idea into a clear application, a bounded project scope, and a credible implementation budget.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
@@ -56,19 +56,10 @@ export function OtfSectorGrantPage() {
               href={quoteUrl("hero")}
               onClick={() => trackQuoteCta("hero")}
               className="inline-flex items-center justify-center gap-3 bg-[#1C1917] text-[#F7F7F5] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#2F3E35] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2"
-              data-testid="link-otf-quote"
+              data-testid="link-grant-writing-quote"
             >
-              Request a Project Quote <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              Discuss Your Application <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </Link>
-            <a 
-               href="https://otf.ca/our-grants/community-investments-grants/sector-grant"
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-transparent text-[#1C1917] border border-[#E7E5E4] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#F5F5F4] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2"
-              data-testid="link-otf-official"
-            >
-              Official OTF Site <ExternalLink className="w-4 h-4" aria-hidden="true" />
-            </a>
           </div>
         </div>
       </section>
@@ -81,9 +72,9 @@ export function OtfSectorGrantPage() {
               <div className="w-12 h-12 rounded-2xl bg-[#F5F5F4] flex items-center justify-center mb-6">
                 <Check className="w-6 h-6 text-[#2F3E35]" />
               </div>
-              <h2 className="font-serif text-2xl mb-4 text-[#1C1917]">Post-Award Implementation</h2>
+              <h2 className="font-serif text-2xl mb-4 text-[#1C1917]">Project Scope & Budget</h2>
               <p className="text-[#57534E] leading-relaxed">
-                We are a practitioner organization that builds practical capacity infrastructure. The quote covers <strong>future implementation</strong> — building the system, training the team, documenting it, and handing it off safely. Base engagements start at $20,000 CAD; unusual scopes receive a custom review. The applicant remains responsible for confirming budget eligibility with OTF.
+                We shape the proposed work into practical activities, deliverables, timing, and a defensible budget. Base implementation engagements start at $20,000 CAD; unusual scopes receive a custom review. Your organization remains responsible for confirming that every cost is eligible under the program you choose.
               </p>
             </div>
             
@@ -91,9 +82,9 @@ export function OtfSectorGrantPage() {
               <div className="w-12 h-12 rounded-2xl bg-[#FFF7ED] flex items-center justify-center mb-6 border border-[#FFEDD5]">
                 <AlertCircle className="w-6 h-6 text-[#D4A017]" />
               </div>
-              <h2 className="font-serif text-2xl mb-4 text-[#1C1917]">Pre-Award Application</h2>
+              <h2 className="font-serif text-2xl mb-4 text-[#1C1917]">Application Writing</h2>
               <p className="text-[#57534E] leading-relaxed">
-                Headwaters is <strong>not the grant applicant</strong>, and we do not guarantee funding. Your organization owns the application. If your team lacks the capacity to write the application, optional pre-award writing support is available as a separate conversation, but it is entirely distinct from the project quote.
+                We can help organize evidence, draft clear responses, and connect the narrative to the scope and budget. Headwaters is <strong>not the applicant</strong> and does not submit on your behalf. Your organization reviews, approves, and submits the final application.
               </p>
             </div>
           </div>
@@ -109,15 +100,15 @@ export function OtfSectorGrantPage() {
             <li className="flex items-start gap-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#D4A017] mt-2.5 shrink-0"></span>
               <p className="text-[#57534E] leading-relaxed">
-                 <strong className="text-[#1C1917] font-medium block">Last reviewed September 4, 2026</strong>
-                 OTF guidelines and cycles change. Always verify current sector eligibility, deadlines, and requirements directly on the <a href="https://otf.ca/our-grants/community-investments-grants/sector-grant" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 decoration-[#E7E5E4] hover:decoration-[#D4A017] text-[#1C1917]">official Sector Grant page</a>.
+                 <strong className="text-[#1C1917] font-medium block">Requirements change</strong>
+                 Funding priorities, eligibility rules, deadlines, forms, and budget rules can change at any time. Your organization must verify the current requirements with the funder before approving or submitting the application.
               </p>
             </li>
             <li className="flex items-start gap-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#D4A017] mt-2.5 shrink-0"></span>
               <p className="text-[#57534E] leading-relaxed">
                 <strong className="text-[#1C1917] font-medium block">Non-Guaranteeing</strong>
-                Providing a quote does not constitute an endorsement or a guarantee of funding success. We review your scope to ensure we can actually deliver it for the quoted price, but OTF makes all funding decisions.
+                Writing support, project scoping, and budget preparation do not guarantee eligibility, approval, or funding. The funder alone makes funding decisions.
               </p>
             </li>
             <li className="flex items-start gap-4">
@@ -136,7 +127,7 @@ export function OtfSectorGrantPage() {
               href={quoteUrl("footer")}
               onClick={() => trackQuoteCta("footer")}
               className="inline-flex items-center justify-center gap-3 bg-[#1C1917] text-[#F7F7F5] px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase hover:bg-[#2F3E35] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] focus-visible:ring-offset-2"
-              data-testid="link-otf-quote-bottom"
+              data-testid="link-grant-writing-quote-bottom"
             >
               Start the Quote Process <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>

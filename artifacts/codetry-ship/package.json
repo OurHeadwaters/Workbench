@@ -11,7 +11,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --config vitest.config.ts",
     "test:e2e": "playwright test --config playwright.config.ts",
-    "test:server": "node --test test/server-redirect.test.mjs",
+    "test:server": "node --test test/*.test.mjs",
     "check:public-links": "playwright test e2e/public-links.spec.ts --config playwright.config.ts --project desktop"
   },
   "devDependencies": {

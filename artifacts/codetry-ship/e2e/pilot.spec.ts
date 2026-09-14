@@ -289,4 +289,32 @@ test.describe("public care pilot invitation", () => {
     await expect(page.getByTestId("practical-example-link-business")).toBeVisible();
     await expectNoHorizontalOverflow(page);
   });
+
+  test("public grant-writing entry points use the generic funding route", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByTestId("link-headwaters-grant-writing")).toHaveAttribute(
+      "href",
+      /\/funding\/grant-writing$/,
+    );
+
+    await page.goto("/home");
+    await expect(page.getByTestId("link-home-grant-writing")).toHaveAttribute(
+      "href",
+      /\/funding\/grant-writing$/,
+    );
+
+    await page.goto("/services");
+    await expect(page.getByTestId("link-services-grant-writing")).toHaveAttribute(
+      "href",
+      /\/funding\/grant-writing$/,
+    );
+
+    await page.goto(`/funding/${["otf", "sector", "grant"].join("-")}`);
+    await expect(page).toHaveURL(/\/funding\/grant-writing$/);
+    await expect(
+      page.getByRole("heading", {
+        name: "Grant applications grounded in work you can deliver.",
+      }),
+    ).toBeVisible();
+  });
 });

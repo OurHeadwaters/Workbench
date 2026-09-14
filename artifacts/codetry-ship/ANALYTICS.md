@@ -12,11 +12,11 @@ an analytics script or send form contents to analytics.
 | A visitor opens one of the three practical-work examples from the Headwaters page. | `homepage_practical_example_clicked` | `example`: `co-op`, `care-continuity`, or `small-business`; `destination`: the destination hostname or route |
 | The quote intake API accepts a request successfully. | `quote_request_submitted` | `offer`: the submitted path; `mode`: `standard` or `custom` |
 
-### OTF landing-to-quote funnel
+### Grant-writing landing-to-quote funnel
 
 | Description | Event name | Properties |
 | --- | --- | --- |
-| A visitor clicks an OTF landing-page quote CTA. | `quote_landing_cta_clicked` | `intent`, `source`, and `placement` (`hero` or `footer`) |
+| A visitor clicks a grant-writing landing-page quote CTA. | `quote_landing_cta_clicked` | `intent`, `source`, and `placement` (`hero` or `footer`) |
 | The quote form opens. | `quote_started` | `intent`, `source`, `placement`, `step`, and `offer` |
 | A visitor completes a quote step and continues. | `quote_step_completed` | `intent`, `source`, `placement`, `step`, and `offer` |
 | A continue or submit attempt is blocked by validation. | `quote_validation_failed` | `intent`, `source`, `placement`, `step`, `offer`, and `error_count` |
@@ -36,7 +36,7 @@ never sent to analytics.
 
 ## Landing page to quote completion funnel
 
-After publishing, filter custom events to `intent = otf-sector-grant`, then
+After publishing, filter custom events to `intent = grant-writing`, then
 compare unique visitors in this order:
 
 1. `quote_landing_cta_clicked`
@@ -57,5 +57,5 @@ CTA `placement` to see which campaign entry points produce accepted requests.
   `offers_grid` or `fit_cta`, submit at different rates?
 - Are custom-review requests submitted at a different rate than standard quote
   requests?
-- At which quote step do OTF prospects abandon most often, and does that match
+- At which quote step do grant-writing prospects abandon most often, and does that match
   the step with the most validation failures?

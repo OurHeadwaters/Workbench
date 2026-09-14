@@ -299,11 +299,11 @@ export function HeadwatersPage() {
                   Headwaters helps organizations move one bounded piece of work from intention to something people can use, understand, and keep going.
                 </p>
 
-                <div className="bg-[#F5F5F4] border border-[#E7E5E4] rounded-2xl p-6 mb-10" data-testid="headwaters-otf-callout">
-                  <h3 className="font-serif text-xl mb-2 text-[#1C1917]">Applying for an OTF grant?</h3>
-                  <p className="text-[#57534E] mb-4">Get a credible, fixed-fee project scope and budget quote to include in your application.</p>
-                  <a href={route("funding/otf-sector-grant")} data-testid="link-headwaters-otf" className="inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-[#1C1917] hover:text-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">
-                    Prepare your funding quote <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                <div className="bg-[#F5F5F4] border border-[#E7E5E4] rounded-2xl p-6 mb-10" data-testid="headwaters-grant-writing-callout">
+                  <h3 className="font-serif text-xl mb-2 text-[#1C1917]">Preparing a grant application?</h3>
+                  <p className="text-[#57534E] mb-4">Get help with application writing, project scope, and a credible implementation budget.</p>
+                  <a href={route("funding/grant-writing")} data-testid="link-headwaters-grant-writing" className="inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-[#1C1917] hover:text-[#D4A017] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F3E35] rounded-sm">
+                    Prepare your application <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </a>
                 </div>
               </FadeIn>

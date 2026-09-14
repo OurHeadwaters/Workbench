@@ -109,6 +109,46 @@ async function fulfillSuccess(route: Route, index: number) {
 }
 
 test.describe("Headwaters quote journey", () => {
+  test("carries generic grant-writing context without naming or prefilling a program", async ({
+    page,
+  }) => {
+    await page.goto("/funding/grant-writing");
+
+    await expect(
+      page.getByRole("heading", {
+        name: "Grant applications grounded in work you can deliver.",
+      }),
+    ).toBeVisible();
+    await expect(page).toHaveTitle(/Grant Writing & Funding Preparation/);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      "content",
+      /application writing.*implementation budget/i,
+    );
+
+    const publicContent = `${await page.locator("body").innerText()} ${await page.title()} ${await page.locator('meta[name="description"]').getAttribute("content")}`;
+    const prohibitedNames = [
+      ["Ontario", "Trillium", "Foundation"].join(" "),
+      ["O", "T", "F"].join(""),
+    ];
+    for (const prohibitedName of prohibitedNames) {
+      expect(publicContent.toLowerCase()).not.toContain(prohibitedName.toLowerCase());
+    }
+
+    await page.getByTestId("link-grant-writing-quote").click();
+    await expect(page).toHaveURL(
+      /\/quote\?intent=grant-writing&source=grant-writing-page&placement=hero$/,
+    );
+    await expect(page.getByTestId("quote-campaign-context")).toContainText(
+      "Your grant-writing context is ready.",
+    );
+
+    await page.getByLabel("What are we calling this work?").fill("Community capacity");
+    await page.getByLabel("What is the situation?").fill("We need to prepare a clear application.");
+    await page.getByLabel("What does better look like?").fill("A scoped project and credible budget.");
+    await page.getByRole("button", { name: /continue/i }).click();
+    await expect(page.getByLabel("How is this being funded?")).toHaveValue("");
+  });
+
   test("submits commercial, nonprofit, community, and custom-review requests", async ({
     page,
   }) => {
