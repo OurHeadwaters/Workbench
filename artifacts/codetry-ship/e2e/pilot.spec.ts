@@ -15,6 +15,17 @@ async function expectNoHorizontalOverflow(page: Page) {
   );
 }
 
+async function expectRegularFontWeight(locator: ReturnType<Page["getByText"]>, passage: string) {
+  await expect(locator, `${passage} should be visible`).toBeVisible();
+  const fontWeight = await locator.evaluate((element) =>
+    Number.parseInt(window.getComputedStyle(element).fontWeight, 10),
+  );
+
+  expect(fontWeight, `${passage} should render at regular weight or stronger`).toBeGreaterThanOrEqual(
+    400,
+  );
+}
+
 test.describe("public care pilot invitation", () => {
   test("explains the care pilot, fits the viewport, and reaches the private conversation", async ({
     page,
@@ -288,6 +299,35 @@ test.describe("public care pilot invitation", () => {
     await expect(page.getByTestId("practical-example-link-care")).toBeVisible();
     await expect(page.getByTestId("practical-example-link-business")).toBeVisible();
     await expectNoHorizontalOverflow(page);
+  });
+
+  test("principal homepage body passages remain readable at phone width", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+
+    await expectRegularFontWeight(
+      page.getByText(
+        "Through Headwaters and Codetry, organizations move important work into practical systems they can use, own, and keep running.",
+        { exact: true },
+      ),
+      "hero introduction",
+    );
+    await expectRegularFontWeight(
+      page.getByText(/A grant deadline, a new service, a better way to coordinate people/),
+      "capacity-gap passage",
+    );
+    await expectRegularFontWeight(
+      page.getByText(/The work changes with the organization\. The promise stays concrete/),
+      "examples introduction",
+    );
+    await expectRegularFontWeight(
+      page.getByText(/Year 1 and Year 2 are separate scoped engagements/),
+      "offers introduction",
+    );
+    await expectRegularFontWeight(
+      page.getByText(/Headwaters works with community organizations, co-ops, nonprofits/).last(),
+      "closing passage",
+    );
   });
 
   test("public grant-writing entry points use the generic funding route", async ({ page }) => {
