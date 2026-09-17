@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
-    "build": "pnpm run test:e2e && vite build --config vite.config.ts",
+    "build": "pnpm run check:fonts && pnpm run test:e2e && vite build --config vite.config.ts",
+    "check:fonts": "node scripts/check-fonts.mjs",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:e2e": "playwright test --config playwright.config.ts"
