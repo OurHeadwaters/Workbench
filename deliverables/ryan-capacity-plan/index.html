@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>1–2–3 Capacity-Building Action Plan & 45-Day Launch Program</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --evergreen: #1f3d2e;
+      --rust: #b85a3e;
+      --blue: #1B5E8A;
+      --cream: #f4ede0;
+      --ink: #2b2116;
+      --muted: #6b7665;
+      --font-serif: 'Fraunces', serif;
+      --font-sans: 'Inter', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #d8d2c8;
+      font-family: var(--font-sans);
+      color: var(--ink);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      width: 8.5in;
+      height: 11in;
+      margin: 0.5in auto;
+      background: var(--cream);
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+      page-break-after: always;
+    }
+    @media print {
+      body { background: white; margin: 0; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        border: none;
+        page-break-after: always;
+      }
+    }
+    .hw-label {
+      display: inline-block;
+      background: var(--evergreen);
+      color: var(--cream);
+      border-radius: 3px;
+      padding: 0.28em 0.55em;
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+    .hw-label.rust { background: var(--rust); }
+    .hw-label.blue { background: var(--blue); }
+
+    h1, h2, h3, h4 { font-family: var(--font-serif); margin-top: 0; color: var(--evergreen); font-weight: 700; }
+    h1 { font-size: 2.5rem; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.25in; }
+    h2 { font-size: 1.55rem; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 0.2in; }
+    h3 { font-size: 1.1rem; line-height: 1.3; font-weight: 600; color: var(--ink); margin-bottom: 0.05in; }
+    h4 { font-size: 0.95rem; line-height: 1.3; font-weight: 700; color: var(--evergreen); margin-bottom: 0.05in; font-family: var(--font-sans); }
+
+    p, ul, li { font-size: 0.85rem; line-height: 1.65; margin-top: 0; color: var(--ink); }
+    ul { padding-left: 1.25rem; margin-bottom: 0.15in; }
+    p { margin-bottom: 0.15in; }
+    
+    .muted { color: var(--muted); }
+    .italic-serif { font-family: var(--font-serif); font-style: italic; font-size: 1rem; color: var(--muted); }
+
+    .page-content { padding: 0.65in 0.75in; height: 100%; display: flex; flex-direction: column; }
+    .header-bar { border-bottom: 2px solid var(--rust); padding-bottom: 0.25in; margin-bottom: 0.35in; }
+    .footer-bar { position: absolute; bottom: 0.5in; left: 0.75in; right: 0.75in; border-top: 1px solid rgba(31,61,46,0.12); padding-top: 0.15in; display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--muted); }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4in; margin-bottom: 0.2in; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.3in; margin-bottom: 0.2in; }
+
+    .callout { background: rgba(31,61,46,0.06); padding: 0.2in 0.25in; border-radius: 6px; border-left: 4px solid var(--evergreen); margin-bottom: 0.2in; }
+    .callout.rust { background: rgba(184,90,62,0.08); border-left-color: var(--rust); }
+    .callout.blue { background: rgba(27,94,138,0.08); border-left-color: var(--blue); }
+
+    .number-block { border-top: 2px solid var(--rust); padding-top: 0.15in; margin-top: 0.15in; }
+    .number { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 700; color: var(--rust); margin-bottom: 0.05in; }
+
+    .financial-table { width: 100%; border-collapse: collapse; margin-bottom: 0.2in; }
+    .financial-table td { padding: 0.08in 0; border-bottom: 1px solid rgba(31,61,46,0.1); font-size: 0.85rem; }
+    .financial-table td.amount { text-align: right; font-weight: 600; font-family: var(--font-mono, monospace); }
+    .financial-table tr.total td { font-weight: 700; color: var(--evergreen); border-bottom: 2px solid var(--evergreen); border-top: 2px solid var(--evergreen); }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1 -->
+  <div class="page">
+    <div class="page-content">
+      <div class="header-bar">
+        <div style="text-transform: uppercase; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--rust); font-weight: 700; margin-bottom: 0.05in;">Headwaters Development Services</div>
+        <div style="font-family: var(--font-serif); font-size: 1.2rem; color: var(--evergreen);">Prepared for Gizmos and Gadgets Hub</div>
+      </div>
+      
+      <h1>1–2–3 Capacity-Building Action Plan & 45-Day Launch Program</h1>
+      
+      <p class="italic-serif" style="margin-bottom: 0.35in;">Ryan, you offer a valuable service that solves direct, immediate problems for older adults and less tech-focused individuals in Northwestern Ontario. You provide the patient, in-home guidance that telecom retailers cannot. To grow this while working a full-time job, the business must move from informal, one-off assistance to a structured, highly credible service that you can operate independently. This is the blueprint.</p>
+      
+      <div class="hw-label">Current Service Reality</div>
+      <p style="margin-bottom: 0.2in;">You currently offer a robust suite of tech interventions:</p>
+      <div class="grid-2" style="margin-bottom: 0.15in; gap: 0.2in 0.4in;">
+        <div>
+          <h4>(A) Tech Support & Guidance</h4>
+          <p>From email account creation to basic Q&A, familiarizing users with their technology.</p>
+        </div>
+        <div>
+          <h4>(B) Set-Up & Data Transfers</h4>
+          <p>Old-to-new device setups, cross-OS migrations, and peripheral configuration.</p>
+        </div>
+        <div>
+          <h4>(C) Cleaning & Optimization</h4>
+          <p>Malicious ad removal, OS updating, and efficiency tools.</p>
+        </div>
+        <div>
+          <h4>(D) Purchasing & Selling</h4>
+          <p>Sourcing safe, reliable stock to act as transfer/demo pieces and retail inventory.</p>
+        </div>
+      </div>
+      <div style="margin-bottom: 0.35in;">
+        <h4>(E) CAPS (Clerical & Admin Support)</h4>
+        <p>Leveraging writing skills to assist seniors with pension documentation and form submissions.</p>
+      </div>
+
+      <div class="hw-label rust">The Problem & Recommended Shift</div>
+      <p><strong>The Problem:</strong> A flat $60/hour rate untethered from a defined outcome feels open-ended and expensive to new customers. Operating without a visible, professional digital footprint makes people question if the business is a scam. Furthermore, relying entirely on one-off hourly calls makes it impossible to efficiently schedule around your full-time job.</p>
+      <p><strong>The Shift:</strong> Service-first positioning. Lead with fixed-outcome packages while retaining hourly billing only where a package is not practical. A professional, founder-visible presence and formal sales materials for community groups will reduce skepticism and make the service easier to understand, book, and refer.</p>
+
+      <div class="footer-bar">
+        <span>Gizmos and Gadgets Hub</span>
+        <span>Page 1 of 5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page">
+    <div class="page-content">
+      <h2>Desired Outcomes & The 1–2–3 Pathway</h2>
+      
+      <div class="grid-2" style="margin-bottom: 0.4in;">
+        <div>
+          <h4>1. Authenticity & Trust</h4>
+          <p>Erase hesitation by deploying a professional digital presence, verified testimonials, and clear intake systems. No one should ever wonder if Gizmos and Gadgets is a scam.</p>
+        </div>
+        <div>
+          <h4>2. Strategic Pricing</h4>
+          <p>Move away from hourly billing. Deploy structured service packages that customers immediately understand and value.</p>
+        </div>
+        <div>
+          <h4>3. Community Clinic Reach</h4>
+          <p>Formalize your pop-up model to efficiently service community groups (e.g., Happy-Go-Lucky Seniors) in scheduled batches.</p>
+        </div>
+        <div>
+          <h4>4. Time Management</h4>
+          <p>Optimize your scheduling and intake so this business complements, rather than conflicts with, your full-time job.</p>
+        </div>
+      </div>
+
+      <div class="hw-label">The 1–2–3 Pathway</div>
+      
+      <div class="number-block" style="margin-top: 0; padding-top: 0; border: none;">
+        <div class="number">01 — Starter Company Plus (SCP)</div>
+        <p>Engage in business planning and training. This program offers potential grant funding of up to $5,000 for eligible launch costs.</p>
+      </div>
+      
+      <div class="number-block" style="border-top-color: rgba(31,61,46,0.12);">
+        <div class="number" style="color: var(--evergreen);">02 — Futurpreneur Financing (Optional)</div>
+        <p>A debt-financing option. <strong>Note:</strong> This is a loan, not a grant. We advise extreme caution here—financing device inventory is a high-risk proposition. Borrowing should be carefully evaluated against actual cash flow needs.</p>
+      </div>
+      
+      <div class="number-block" style="border-top-color: rgba(31,61,46,0.12); margin-bottom: 0.3in;">
+        <div class="number" style="color: var(--evergreen);">03 — The 45-Day Launch Project</div>
+        <p>A structured, finite launch engagement executed by Headwaters to build your professional infrastructure. The project may proceed through approved matched funding or through another financing route chosen by Ryan.</p>
+      </div>
+
+      <div class="callout blue">
+        <h4 style="color: var(--blue);">Explicit Funding Arithmetic</h4>
+        <p>The launch project is carefully sized to maximize available community economic development grants.</p>
+        
+        <table class="financial-table">
+          <tr>
+            <td>Headwaters Professional Services</td>
+            <td class="amount">$7,500</td>
+          </tr>
+          <tr>
+            <td>Reserved for Approved Direct Launch Expenses</td>
+            <td class="amount">$2,500</td>
+          </tr>
+          <tr class="total">
+            <td>Total Project Budget</td>
+            <td class="amount">$10,000</td>
+          </tr>
+        </table>
+        
+        <p style="font-weight: 600; margin-bottom: 0.05in;">Possible Matched Funding Illustration:</p>
+        <ul style="margin-bottom: 0.15in;">
+          <li>Up to $5,000 from Starter Company Plus</li>
+          <li>Up to $5,000 from a separate eligible funding stream administered by a partner such as NOHFC, Northwest Business Centre, or Sioux Lookout Innovation Centre</li>
+        </ul>
+        
+        <p style="font-size: 0.75rem; line-height: 1.4; color: rgba(27,94,138,0.9); margin-bottom: 0;"><strong>Important:</strong> These funds are not confirmed. Stacking, matching, vendor, eligible-cost, timing, and reimbursement rules must be confirmed in writing before commitments are made. Both programs must approve stacking and accept the match.</p>
+      </div>
+
+      <div class="footer-bar">
+        <span>Gizmos and Gadgets Hub</span>
+        <span>Page 2 of 5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="page">
+    <div class="page-content">
+      <h2>The 45-Day Launch Project Scope</h2>
+      <p style="margin-bottom: 0.25in;">A focused, finite sprint to build the operational and marketing infrastructure required for Gizmos and Gadgets Hub to run independently and profitably.</p>
+      
+      <div class="hw-label rust" style="margin-bottom: 0.2in;">Headwaters Quote: $7,500</div>
+      
+      <div style="display: flex; flex-direction: column; gap: 0.18in;">
+        <div>
+          <h4>Positioning & Pricing Framework</h4>
+          <p style="margin-bottom: 0;">Converting your $60/hour model into distinct, outcome-based service packages (e.g., The Setup, The Clean, The Transfer). We define exactly what is included, what it costs, and how long it takes.</p>
+        </div>
+        <div>
+          <h4>Credibility System</h4>
+          <p style="margin-bottom: 0;">Creation of a unified brand identity—wordmarks, typography, color palettes, and messaging guidelines—designed to instantly project institutional trust and eliminate "scam" hesitations.</p>
+        </div>
+        <div>
+          <h4>Digital Web Presence</h4>
+          <p style="margin-bottom: 0;">A fully functional, mobile-optimized website outlining your packages, your story, your service area, and verified client testimonials.</p>
+        </div>
+        <div>
+          <h4>Booking, Intake & Follow-up</h4>
+          <p style="margin-bottom: 0;">Deployment of an automated workflow to handle customer requests, triage needs before the appointment, and follow up afterward, reducing your administrative burden.</p>
+        </div>
+        <div>
+          <h4>Organization Clinic Sales Kit</h4>
+          <p style="margin-bottom: 0;">A professional pitch deck and physical leave-behinds designed specifically for selling pop-up clinic days to groups like the Dryden Go-Getters or Vermilion Bay seniors clubs.</p>
+        </div>
+        <div>
+          <h4>45-Day Campaign Materials</h4>
+          <p style="margin-bottom: 0;">Initial marketing collateral (flyers, localized social graphics, community board postings) to announce the formalized service.</p>
+        </div>
+        <div>
+          <h4>Launch Support, Analytics & Handoff</h4>
+          <p style="margin-bottom: 0;">Final testing of all systems, measuring initial engagement, and a full handoff session ensuring you can operate every tool without ongoing consultant fees.</p>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top: 0.35in;">
+        <p style="font-size: 0.8rem; margin-bottom: 0; font-style: italic;">Headwaters is a finite launch provider, not your ongoing manager. Note that future exposure, inclusion in a Headwaters case study, references, and appropriate introductions represent additional mutual value, and are not a substitute for the $7,500 professional services fee.</p>
+      </div>
+
+      <div class="footer-bar">
+        <span>Gizmos and Gadgets Hub</span>
+        <span>Page 3 of 5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4 -->
+  <div class="page">
+    <div class="page-content">
+      <h2>Exclusions, Process & Responsibilities</h2>
+
+      <div class="grid-2" style="margin-bottom: 0.3in;">
+        <div>
+          <div class="hw-label">Project Exclusions</div>
+          <p style="margin-bottom: 0.1in;">To ensure we stay on budget and timeline, the following are strictly excluded from the $7,500 scope:</p>
+          <ul style="font-size: 0.8rem;">
+            <li>Purchasing of device inventory.</li>
+            <li>Paid advertising spend (beyond the reserved $2,500 direct budget).</li>
+            <li>Grant writing (unless separately scoped).</li>
+            <li>Ongoing social media management or content creation post-launch.</li>
+            <li>Ongoing business coaching or legal/accounting advice.</li>
+            <li>Unlimited revisions.</li>
+          </ul>
+        </div>
+        
+        <div>
+          <div class="hw-label rust">Working Parameters</div>
+          <h4>Five-Meeting Limit</h4>
+          <p style="font-size: 0.8rem; margin-bottom: 0.15in;">To respect your full-time work schedule and maintain our 45-day velocity, our engagement is capped at 5 structured, high-impact meetings (Kickoff, Brand Review, Web Review, Sales Kit Review, Final Handoff).</p>
+          
+          <h4>Consolidated Feedback</h4>
+          <p style="font-size: 0.8rem; margin-bottom: 0;">Instead of endless email threads, all project feedback is batched and consolidated at designated review gates.</p>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 0.3in;">
+        <div>
+          <div class="hw-label blue">Ryan's Responsibilities</div>
+          <ul style="font-size: 0.8rem;">
+            <li>Timely attendance at the 5 scheduled meetings.</li>
+            <li>Providing prompt, consolidated feedback at review gates.</li>
+            <li>Supplying core content inputs (your story, available photos, existing client references).</li>
+            <li>Securing written funding confirmations prior to kickoff.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="hw-label blue">Headwaters Responsibilities</div>
+          <ul style="font-size: 0.8rem;">
+            <li>On-time delivery of all scoped digital and physical assets.</li>
+            <li>Transparent communication regarding project status.</li>
+            <li>Adherence to the 45-day timeline constraint.</li>
+            <li>Ensuring all systems are fully handed over for independent operation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div class="hw-label">Success Measures</div>
+          <ul style="font-size: 0.8rem; margin-bottom: 0;">
+            <li>At least 1 community-clinic proposal delivered using the new sales kit.</li>
+            <li>New leads are offered clear fixed-price packages where appropriate.</li>
+            <li>Founder identity, service boundaries, contact details, and trust signals are publicly visible.</li>
+            <li>All workflows fully handed over and operable by Ryan.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="hw-label">Milestones & Payments</div>
+          <p style="font-size: 0.8rem; margin-bottom: 0;">Proposed Headwaters payments: $2,250 at kickoff, $3,000 at build approval, and $2,250 at final handoff. Timing may be adjusted to approved funder rules. The final contract will confirm taxes and keep all costs within the approved project budget.</p>
+        </div>
+      </div>
+
+      <div class="footer-bar">
+        <span>Gizmos and Gadgets Hub</span>
+        <span>Page 4 of 5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 5 -->
+  <div class="page">
+    <div class="page-content">
+      <h2>Risks & Safeguards</h2>
+      <p style="margin-bottom: 0.25in;">Operating a tech support business in a small region carries specific risks. We build these safeguards into your operational plan from day one:</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 0.2in;">
+        <div>
+          <h4>1. The Bell Conflict</h4>
+          <p style="margin-bottom: 0; font-size: 0.85rem;"><strong>Risk:</strong> Perception of conflict of interest with your employer.<br><strong>Safeguard:</strong> Strict adherence to positioning Gizmos and Gadgets as an in-home mobile support and clinic service, entirely distinct from telecom retail sales.</p>
+        </div>
+        <div>
+          <h4>2. Inventory Holding</h4>
+          <p style="margin-bottom: 0; font-size: 0.85rem;"><strong>Risk:</strong> Tying up vital cash flow in depreciating tech hardware.<br><strong>Safeguard:</strong> Treating devices strictly as transfer/demo pieces rather than adopting a primary retail holding model. Avoid taking on debt to buy inventory.</p>
+        </div>
+        <div>
+          <h4>3. Privacy & Data</h4>
+          <p style="margin-bottom: 0; font-size: 0.85rem;"><strong>Risk:</strong> Mishandling sensitive information belonging to vulnerable elderly clients.<br><strong>Safeguard:</strong> Establishing clear, written data-handling protocols and waivers that protect both the client and your business.</p>
+        </div>
+        <div>
+          <h4>4. CAPS (Clerical Support) Boundaries</h4>
+          <p style="margin-bottom: 0; font-size: 0.85rem;"><strong>Risk:</strong> Accidentally assuming legal or financial liability when helping with pensions.<br><strong>Safeguard:</strong> Clear boundary documentation proving you act strictly as an administrative assistant, not an authorized representative.</p>
+        </div>
+        <div>
+          <h4>5. Used Devices</h4>
+          <p style="margin-bottom: 0; font-size: 0.85rem;"><strong>Risk:</strong> Acquiring stolen, carrier-blocked, locked, or poor-condition hardware.<br><strong>Safeguard:</strong> Use documented IMEI/blacklist, activation-lock, battery, condition, data-erasure, return, and warranty checks before accepting or selling a device.</p>
+        </div>
+      </div>
+
+      <div class="hw-label rust" style="margin-top: 0.45in;">Acceptance & Next Steps</div>
+      <ul style="font-size: 0.85rem;">
+        <li>Review this capacity-building plan in its entirety.</li>
+        <li>Present this document to Starter Company Plus and your matching funding partner.</li>
+        <li>Confirm stacking, matching, and eligible-cost rules in writing.</li>
+        <li>Once funding is approved, Headwaters will issue a formal contract and schedule our Kickoff Meeting.</li>
+      </ul>
+
+      <div style="margin-top: auto; border-top: 1px solid rgba(31,61,46,0.12); padding-top: 0.2in;">
+        <p style="font-size: 0.7rem; color: var(--muted); line-height: 1.4; margin-bottom: 0;"><strong>Disclaimer:</strong> This document is a non-binding capacity-building action plan and preliminary quote. All funding arithmetic, potential grant matches, and project budgets are illustrative and must be explicitly confirmed by the respective funding agencies (Starter Company Plus, NOHFC, Northwest Business Centre, Sioux Lookout Innovation Centre, etc.) before any financial commitments are made. Headwaters Development Services assumes no liability for grant application outcomes or funder decisions.</p>
+      </div>
+
+      <div class="footer-bar">
+        <span>Gizmos and Gadgets Hub</span>
+        <span>Page 5 of 5</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
