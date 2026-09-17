@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
-    "build": "pnpm run check:fonts && pnpm run test:e2e && vite build --config vite.config.ts",
+    "build": "pnpm run check:fonts && pnpm run test:font-validation && pnpm run validate:fonts:source && pnpm run test:e2e && vite build --config vite.config.ts && pnpm run validate:fonts",
     "check:fonts": "node scripts/check-fonts.mjs",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:e2e": "playwright test --config playwright.config.ts"
+    "test:e2e": "playwright test --config playwright.config.ts",
+    "test:font-validation": "node --test scripts/validate-fonts.test.mjs",
+    "validate:fonts:source": "node scripts/validate-fonts.mjs --source-only",
+    "validate:fonts": "node scripts/validate-fonts.mjs"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",
