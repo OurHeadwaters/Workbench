@@ -77,6 +77,10 @@
     .italic-serif { font-family: var(--font-serif); font-style: italic; font-size: 1rem; color: var(--muted); }
 
     .page-content { padding: 0.65in 0.75in; height: 100%; display: flex; flex-direction: column; }
+    .page.compact p, .page.compact li { font-size: 0.79rem; line-height: 1.48; }
+    .page.compact h1 { font-size: 2.3rem; margin-bottom: 0.18in; }
+    .page.compact .header-bar { margin-bottom: 0.25in; }
+    .page.compact .hw-label { margin-bottom: 0.55rem; }
     .header-bar { border-bottom: 2px solid var(--rust); padding-bottom: 0.25in; margin-bottom: 0.35in; }
     .footer-bar { position: absolute; bottom: 0.5in; left: 0.75in; right: 0.75in; border-top: 1px solid rgba(31,61,46,0.12); padding-top: 0.15in; display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--muted); }
 
@@ -99,7 +103,7 @@
 <body>
 
   <!-- PAGE 1 -->
-  <div class="page">
+  <div class="page compact">
     <div class="page-content">
       <div class="header-bar">
         <div style="text-transform: uppercase; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--rust); font-weight: 700; margin-bottom: 0.05in;">Headwaters Development Services</div>
@@ -141,7 +145,7 @@
 
       <div class="footer-bar">
         <span>Gizmos and Gadgets Hub</span>
-        <span>Page 1 of 5</span>
+        <span>Page 1 of 6</span>
       </div>
     </div>
   </div>
@@ -178,19 +182,38 @@
       </div>
       
       <div class="number-block" style="border-top-color: rgba(31,61,46,0.12);">
-        <div class="number" style="color: var(--evergreen);">02 — Futurpreneur Financing (Optional)</div>
-        <p>A debt-financing option. <strong>Note:</strong> This is a loan, not a grant. We advise extreme caution here—financing device inventory is a high-risk proposition. Borrowing should be carefully evaluated against actual cash flow needs.</p>
+        <div class="number" style="color: var(--evergreen);">02 — Secure an Approved Matching-Fund Partner</div>
+        <p>Use the completed SCP plan and proposed $5,000 contribution to seek a separate 50% cost-share approval. Current possibilities require direct confirmation:</p>
+        <ul style="margin-bottom: 0.08in;">
+          <li><strong>NOIC Next Level:</strong> closest marketing-consulting fit, but currently closed and subject to business-model eligibility.</li>
+          <li><strong>NOIC BBAA:</strong> limited funding consultations are available, but only for substantive AI adoption—not a basic website launch.</li>
+          <li><strong>NOHFC Invest North — Launch:</strong> applications are available, but its full-time-owner, new-business, own-contribution, marketing-cap, and consulting-cost rules make this scope a weak fit.</li>
+          <li><strong>Regional alternatives:</strong> ask Northwest Business Centre, NOIC, and Sioux Lookout Innovation Centre to identify an open, compatible $5,000 stream.</li>
+        </ul>
+        <p style="font-size: 0.75rem; line-height: 1.4; margin-bottom: 0;"><strong>Gate:</strong> obtain written confirmation that SCP funds can be stacked and accepted as match before committing project costs.</p>
+      </div>
+
+      <div class="callout" style="margin-top: 0.18in;">
+        <p style="font-size: 0.74rem; line-height: 1.4; margin-bottom: 0;"><strong>Before contracting:</strong> Confirm eligibility, stacking, treatment of SCP funds, vendor rules, project dates, eligible costs, taxes, payment timing, and reimbursement. If no compatible grant is approved, Ryan may finance the project another way or reduce the scope.</p>
       </div>
       
-      <div class="number-block" style="border-top-color: rgba(31,61,46,0.12); margin-bottom: 0.3in;">
-        <div class="number" style="color: var(--evergreen);">03 — The 45-Day Launch Project</div>
-        <p>A structured, finite launch engagement executed by Headwaters to build your professional infrastructure. The project may proceed through approved matched funding or through another financing route chosen by Ryan.</p>
+      <div class="footer-bar">
+        <span>Gizmos and Gadgets Hub</span>
+        <span>Page 2 of 6</span>
       </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="page">
+    <div class="page-content">
+      <h2>03 — The 45-Day Launch Project</h2>
+      <p style="margin-bottom: 0.25in;">A structured, finite launch engagement executed by Headwaters to build your professional infrastructure. The project may proceed through approved matched funding or through another financing route chosen by Ryan.</p>
 
       <div class="callout blue">
         <h4 style="color: var(--blue);">Explicit Funding Arithmetic</h4>
-        <p>The launch project is carefully sized to maximize available community economic development grants.</p>
-        
+        <p>The launch project is sized at $10,000. The intended illustration is two approved $5,000 contributions—not a confirmed grant award.</p>
+
         <table class="financial-table">
           <tr>
             <td>Headwaters Professional Services</td>
@@ -205,24 +228,40 @@
             <td class="amount">$10,000</td>
           </tr>
         </table>
-        
+
         <p style="font-weight: 600; margin-bottom: 0.05in;">Possible Matched Funding Illustration:</p>
         <ul style="margin-bottom: 0.15in;">
-          <li>Up to $5,000 from Starter Company Plus</li>
-          <li>Up to $5,000 from a separate eligible funding stream administered by a partner such as NOHFC, Northwest Business Centre, or Sioux Lookout Innovation Centre</li>
+          <li>Up to $5,000 from Starter Company Plus, if awarded and permitted as match.</li>
+          <li>Up to $5,000 from a separate 50% cost-share program, if Ryan and the project qualify.</li>
         </ul>
-        
-        <p style="font-size: 0.75rem; line-height: 1.4; color: rgba(27,94,138,0.9); margin-bottom: 0;"><strong>Important:</strong> These funds are not confirmed. Stacking, matching, vendor, eligible-cost, timing, and reimbursement rules must be confirmed in writing before commitments are made. Both programs must approve stacking and accept the match.</p>
+      </div>
+
+      <div class="grid-2" style="margin-top: 0.1in;">
+        <div class="callout rust">
+          <h4>NOHFC Invest North — Launch</h4>
+          <p><strong>Status:</strong> Applications are available, but this project is not a strong fit as currently scoped.</p>
+          <ul>
+            <li>The owner is expected to work in the new business full-time.</li>
+            <li>A new business is generally one operating for six months or less.</li>
+            <li>Project, consulting, and administration costs are listed as ineligible.</li>
+            <li>Marketing is capped, and the applicant must provide at least 15% from their own resources.</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <h4>Northwestern Ontario Innovation Centre</h4>
+          <p><strong>Next Level:</strong> The closest 50% program for marketing consulting is currently closed and also excludes part-time businesses, retailers, resellers, and consultants.</p>
+          <p><strong>BBAA:</strong> Limited funding is open for genuine AI-adoption projects at 50% cost-share. A basic website and marketing launch would not qualify on their own.</p>
+        </div>
       </div>
 
       <div class="footer-bar">
         <span>Gizmos and Gadgets Hub</span>
-        <span>Page 2 of 5</span>
+        <span>Page 3 of 6</span>
       </div>
     </div>
   </div>
 
-  <!-- PAGE 3 -->
+  <!-- PAGE 4 -->
   <div class="page">
     <div class="page-content">
       <h2>The 45-Day Launch Project Scope</h2>
@@ -267,12 +306,12 @@
 
       <div class="footer-bar">
         <span>Gizmos and Gadgets Hub</span>
-        <span>Page 3 of 5</span>
+        <span>Page 4 of 6</span>
       </div>
     </div>
   </div>
 
-  <!-- PAGE 4 -->
+  <!-- PAGE 5 -->
   <div class="page">
     <div class="page-content">
       <h2>Exclusions, Process & Responsibilities</h2>
@@ -340,12 +379,12 @@
 
       <div class="footer-bar">
         <span>Gizmos and Gadgets Hub</span>
-        <span>Page 4 of 5</span>
+        <span>Page 5 of 6</span>
       </div>
     </div>
   </div>
 
-  <!-- PAGE 5 -->
+  <!-- PAGE 6 -->
   <div class="page">
     <div class="page-content">
       <h2>Risks & Safeguards</h2>
@@ -388,7 +427,7 @@
 
       <div class="footer-bar">
         <span>Gizmos and Gadgets Hub</span>
-        <span>Page 5 of 5</span>
+        <span>Page 6 of 6</span>
       </div>
     </div>
   </div>
