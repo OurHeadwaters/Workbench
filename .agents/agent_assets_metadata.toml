@@ -248,3 +248,73 @@ mtime_ms = 1789606257368
 storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:77c2ef5e-9483-45bc-b920-da6fc3c7936e/ffef2ae5-d425-4037-aa84-4320b0797f67/4a42535e-5cd5-4e90-b5be-5ae65ab47463"
 storage_version_token = "1789606267937341"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "n_zruj-PX17YjEyG_0psF"
+uri = "file://deliverables/headwaters-facebook-starter-kit/Headwaters-Facebook-Marketing-Starter-Kit.pdf"
+type = "pdf"
+title = "Headwaters Facebook Marketing Starter Kit"
+description = "Two printable pages: a practical weekly routine and prompts for writing posts in your own words."
+logical_id = "e163a314-2b2d-43c2-af00-179b70cefd7a"
+content_hash = "sha256:9b5ab61c70979c149ca55bff4da22301afc7f62abf83233f9fcfee48f36e126e"
+size = 173609
+mtime_ms = 1789609733724
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:77c2ef5e-9483-45bc-b920-da6fc3c7936e/e163a314-2b2d-43c2-af00-179b70cefd7a/c6be9623-5b92-4566-a4e1-1ba227751d3b"
+storage_version_token = "1789609776324261"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "4OoCinUjYVtr-sT-DG_77"
+uri = "file://deliverables/headwaters-facebook-starter-kit/visual-a.png"
+type = "image"
+title = "Facebook Visual — Turning Ideas Into Systems"
+description = "Introductory Headwaters services graphic, sized 1080 × 1350 for Facebook."
+logical_id = "54577259-4e73-42d7-bcb9-0e61fed7bce8"
+content_hash = "sha256:8791ce5832195b592604884709ee84d498d5b0c5f1e91a3b7fd4cb33f1f1b1ae"
+size = 111146
+mtime_ms = 1789609735912
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:77c2ef5e-9483-45bc-b920-da6fc3c7936e/54577259-4e73-42d7-bcb9-0e61fed7bce8/170f93b1-c600-4230-a6e4-49d07ec14365"
+storage_version_token = "1789609776858156"
+content_type = "image/png"
+
+[[outputs]]
+id = "BPJIOhWdsJi-RS3Qtrr6g"
+uri = "file://deliverables/headwaters-facebook-starter-kit/visual-b.png"
+type = "image"
+title = "Facebook Visual — Grant vs. Implementation"
+description = "Educational graphic explaining that a grant application is not an implementation plan."
+logical_id = "a568ea49-a868-4fcd-ba88-436c17d02bff"
+content_hash = "sha256:e63806ba0a8afe423176573d77c5d635a83494840e29818c7a3ae8cb5486f188"
+size = 130946
+mtime_ms = 1789609736672
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:77c2ef5e-9483-45bc-b920-da6fc3c7936e/a568ea49-a868-4fcd-ba88-436c17d02bff/9c917798-0286-4199-bbfc-b72b631dae53"
+storage_version_token = "1789609777348462"
+content_type = "image/png"
+
+[[outputs]]
+id = "0JOkE6XNjSKMNTVXSYx-q"
+uri = "file://deliverables/headwaters-facebook-starter-kit/visual-c.png"
+type = "image"
+title = "Facebook Visual — Community-Owned Capacity"
+description = "Graphic explaining what remains after the consultant leaves."
+logical_id = "f015885c-be12-490a-86cb-08454f532f94"
+content_hash = "sha256:4ef1ebfa95d96b76f1c022f84f91e5bec6a10c7367cd352efb7de73212110863"
+size = 136991
+mtime_ms = 1789609737892
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:77c2ef5e-9483-45bc-b920-da6fc3c7936e/f015885c-be12-490a-86cb-08454f532f94/446e75d5-0c42-42d6-88c6-3c834b3472f4"
+storage_version_token = "1789609778601880"
+content_type = "image/png"
+
+[[outputs]]
+id = "kJH8BS31-STSTC8hR94q0"
+uri = "file://deliverables/headwaters-facebook-starter-kit/visual-d.png"
+type = "image"
+title = "Facebook Visual — Scattered Workflows"
+description = "Problem-recognition graphic for organizations working across forms, spreadsheets, and messages."
+logical_id = "504818dd-d05e-47e9-852e-1e80c42a513a"
+content_hash = "sha256:b2f1a7769b36b546ce1c5f12da65590ea4d42a36593f5fee606f5f58b1b7b759"
+size = 177471
+mtime_ms = 1789609738740
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:77c2ef5e-9483-45bc-b920-da6fc3c7936e/504818dd-d05e-47e9-852e-1e80c42a513a/52c4fa48-a954-4fbd-a954-95e319b9220a"
+storage_version_token = "1789609779241368"
+content_type = "image/png"

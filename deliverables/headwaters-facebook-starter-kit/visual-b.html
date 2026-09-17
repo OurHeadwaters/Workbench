@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root {
+    --evergreen: #1f3d2e;
+    --cream: #f4ede0;
+    --rust: #b85a3e;
+    --ink: #17211c;
+    --muted: #6d8176;
+    --gold: #d4a017;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px; height: 1350px;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    display: flex; flex-direction: column;
+    padding: 120px 100px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bg-shape {
+    position: absolute;
+    bottom: -200px; left: -200px;
+    width: 800px; height: 800px;
+    border-radius: 50%;
+    background: rgba(31,61,46,0.05);
+    pointer-events: none;
+  }
+  
+  .eyebrow {
+    font-size: 24px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 40px;
+    font-weight: 700;
+  }
+  .title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 110px;
+    line-height: 1.05;
+    margin-bottom: 100px;
+    letter-spacing: -0.02em;
+    color: var(--evergreen);
+  }
+  
+  .points {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    margin-bottom: auto;
+  }
+  .point-item {
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--ink);
+    display: flex;
+    gap: 30px;
+    line-height: 1.3;
+  }
+  .point-item::before {
+    content: "—";
+    color: var(--rust);
+    font-weight: 700;
+  }
+  .point-item strong {
+    color: var(--evergreen);
+    font-weight: 800;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 2px solid rgba(31,61,46,0.15);
+    padding-top: 50px;
+  }
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    color: var(--evergreen);
+  }
+  .footer-sub {
+    font-size: 24px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-top: 10px;
+  }
+  .footer-url {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--rust);
+  }
+</style>
+</head>
+<body>
+  <div class="bg-shape"></div>
+  
+  <div class="eyebrow">Headwaters Development Services</div>
+  
+  <div class="title">A grant application is not an implementation plan.</div>
+  
+  <div class="points">
+    <div class="point-item"><div>A grant application is a <strong>promise</strong>.</div></div>
+    <div class="point-item"><div>An implementation plan is <strong>how you keep it</strong>.</div></div>
+    <div class="point-item"><div>We build the systems to <strong>do the work</strong>.</div></div>
+  </div>
+  
+  <div class="footer">
+    <div>
+      <div class="footer-brand">Headwaters</div>
+      <div class="footer-sub">Led by Bobbie Parr</div>
+    </div>
+    <div class="footer-url">ourheadwaters.ca</div>
+  </div>
+</body>
+</html>

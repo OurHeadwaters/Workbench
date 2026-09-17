@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Headwaters Marketing Starter Kit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  
+  :root {
+    --evergreen: #1f3d2e;
+    --cream: #f4ede0;
+    --rust: #b85a3e;
+    --ink: #17211c;
+    --muted: #6d8176;
+    --gold: #d4a017;
+    --font-serif: 'DM Serif Display', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  body {
+    background: #e5e5e5;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .page {
+    width: 8.5in;
+    height: 11in;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  @page {
+    size: letter portrait;
+    margin: 0;
+  }
+
+  .header {
+    background: var(--evergreen);
+    color: var(--cream);
+    padding: 0.5in 0.65in 0.4in;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 0.05in;
+    background: var(--rust);
+  }
+  .header-brand {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(244,237,224,0.6);
+    margin-bottom: 0.15in;
+    font-weight: 700;
+  }
+  .header-title {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    line-height: 1.1;
+    margin-bottom: 0.05in;
+  }
+  .header-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-style: italic;
+    color: rgba(244,237,224,0.8);
+  }
+  
+  .content {
+    padding: 0.4in 0.65in;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35in;
+  }
+  
+  h2 {
+    font-family: var(--font-serif);
+    color: var(--evergreen);
+    font-size: 1.2rem;
+    margin-bottom: 0.1in;
+  }
+  
+  h3 {
+    font-family: var(--font-sans);
+    color: var(--rust);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.65rem;
+    font-weight: 800;
+    margin-bottom: 0.08in;
+  }
+
+  p, li {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .positioning {
+    background: rgba(212, 160, 23, 0.1);
+    border-left: 4px solid var(--gold);
+    padding: 0.2in 0.25in;
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--evergreen);
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3in; }
+  
+  .box {
+    border: 1px solid rgba(31,61,46,0.15);
+    padding: 0.2in;
+    background: #faf7f2;
+    border-radius: 4px;
+  }
+
+  .checkbox-line {
+    display: flex;
+    align-items: center;
+    gap: 0.1in;
+    margin-bottom: 0.1in;
+  }
+  .checkbox {
+    width: 0.15in;
+    height: 0.15in;
+    border: 1px solid var(--muted);
+    border-radius: 2px;
+    flex-shrink: 0;
+    background: white;
+  }
+  
+  .line-blank {
+    border-bottom: 1px solid var(--muted);
+    flex: 1;
+    height: 0.15in;
+  }
+  
+  .bullet-list { padding-left: 0.2in; margin-bottom: 0.1in; }
+  .bullet-list li { margin-bottom: 0.05in; }
+  
+  .num-list { list-style: none; counter-reset: my-counter; margin-bottom: 0.1in; }
+  .num-list li {
+    counter-increment: my-counter;
+    position: relative;
+    padding-left: 0.25in;
+    margin-bottom: 0.1in;
+  }
+  .num-list li::before {
+    content: "0" counter(my-counter);
+    position: absolute;
+    left: 0; top: 0.02in;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--rust);
+  }
+  
+  .prompt-card {
+    border: 1px solid rgba(31,61,46,0.15);
+    padding: 0.25in;
+    border-radius: 4px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .prompt-card-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    margin-bottom: 0.1in;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .prompt-card-title {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--evergreen);
+    margin-bottom: 0.15in;
+    line-height: 1.2;
+  }
+  .prompt-section { margin-bottom: 0.15in; }
+  .prompt-section:last-child { margin-bottom: 0; }
+  .prompt-card ul { padding-left: 0.15in; }
+  .prompt-card li { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.06in; }
+  .quote-start {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--ink);
+    margin-bottom: 0.05in;
+    display: block;
+    background: var(--cream);
+    padding: 0.08in 0.1in;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Page 1 -->
+<div class="page">
+  <div class="header">
+    <div class="header-brand">Headwaters Marketing Starter Kit</div>
+    <div class="header-title">Get My Name Out There</div>
+    <div class="header-subtitle">A Practical Facebook Marketing Routine</div>
+  </div>
+  
+  <div class="content">
+    <div class="positioning">
+      “A Northwestern Ontario community-development practitioner helping northern organizations and community businesses turn important ideas into practical systems they can fund, operate, own, and keep running.”
+    </div>
+    
+    <div>
+      <h3>Core Services to Talk About</h3>
+      <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr; gap: 0.15in;">
+        <div class="box" style="padding: 0.15in; background: white;">
+          <strong style="color: var(--evergreen); font-size: 0.8rem;">Project & Funding Readiness</strong><br>
+          <span style="font-size: 0.7rem; color: var(--muted);">Aligning ideas into clear, fundable plans.</span>
+        </div>
+        <div class="box" style="padding: 0.15in; background: white;">
+          <strong style="color: var(--evergreen); font-size: 0.8rem;">Organizational Capacity</strong><br>
+          <span style="font-size: 0.7rem; color: var(--muted);">Building structures that survive turnover.</span>
+        </div>
+        <div class="box" style="padding: 0.15in; background: white;">
+          <strong style="color: var(--evergreen); font-size: 0.8rem;">Practical Digital Systems</strong><br>
+          <span style="font-size: 0.7rem; color: var(--muted);">Tools your team actually uses.</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="grid-2">
+      <!-- Left Col -->
+      <div>
+        <h3>Rhythm & Location</h3>
+        <p style="margin-bottom: 0.2in;">
+          <strong>Where:</strong> Facebook (personal page, business page, and relevant community groups).<br>
+          <strong>Rhythm:</strong> 2 posts per week. Keep it steady, grounded, and local.
+        </p>
+        
+        <h3>The Exact Post Structure</h3>
+        <ul class="num-list">
+          <li><strong>Local Problem:</strong> What are people stuck on? (e.g. scattered spreadsheets)</li>
+          <li><strong>Practical Lesson:</strong> What have you learned fixing it?</li>
+          <li><strong>Proof:</strong> A quick, anonymous story or metric from past work.</li>
+          <li><strong>One Invitation:</strong> What should they do next? (e.g. Message me to chat)</li>
+        </ul>
+        
+        <h3 style="margin-top: 0.25in;">Messenger Qualification Response</h3>
+        <p style="font-style: italic; padding: 0.15in; background: #faf7f2; border: 1px solid rgba(0,0,0,0.05); font-size: 0.75rem;">
+          "Hi <span class="line-blank" style="display:inline-block; width: 0.5in; border-bottom-color: #ccc;"></span>, thanks for reaching out. We usually start with a quick chat to see if Headwaters is the right fit. Are you looking for help with <span class="line-blank" style="display:inline-block; width: 0.8in; border-bottom-color: #ccc;"></span> or more focused on <span class="line-blank" style="display:inline-block; width: 0.8in; border-bottom-color: #ccc;"></span>?"
+        </p>
+      </div>
+      
+      <!-- Right Col -->
+      <div>
+        <div class="box" style="margin-bottom: 0.25in; border-top: 3px solid var(--evergreen);">
+          <h3>Weekly Tracking Targets</h3>
+          <div class="checkbox-line"><div class="checkbox"></div><p>Post 1 published</p></div>
+          <div class="checkbox-line"><div class="checkbox"></div><p>Post 2 published</p></div>
+          <div class="checkbox-line"><div class="checkbox"></div><p>3 conversations started in Messenger</p></div>
+          <div class="checkbox-line"><div class="checkbox"></div><p>1 follow-up with a past connection</p></div>
+          
+          <h3 style="margin-top: 0.2in; margin-bottom: 0.1in;">Upcoming Post Ideas / Groups</h3>
+          <div class="checkbox-line"><div class="line-blank"></div></div>
+          <div class="checkbox-line"><div class="line-blank"></div></div>
+          <div class="checkbox-line"><div class="line-blank"></div></div>
+          <div class="checkbox-line"><div class="line-blank"></div></div>
+          <div class="checkbox-line"><div class="line-blank"></div></div>
+        </div>
+        
+        <h3>The Do-Not-Post List</h3>
+        <ul class="bullet-list" style="color: var(--muted); font-size: 0.75rem;">
+          <li>No generic tech jargon or "hustle culture" quotes.</li>
+          <li>No complaining about clients or funding bodies.</li>
+          <li>No over-promising without proof.</li>
+          <li>No generic stock photos (use real local photos or Headwaters graphics).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page 2 -->
+<div class="page">
+  <div class="header">
+    <div class="header-brand">Headwaters Marketing Starter Kit</div>
+    <div class="header-title">Write It In My Own Words</div>
+    <div class="header-subtitle">Caption prompt cards to help you speak naturally.</div>
+  </div>
+  
+  <div class="content">
+    <p style="margin-bottom: 0.1in;">Don't overthink the captions for the four starter graphics. Pick one prompt, write a few sentences like you're talking to a client over coffee, and hit post.</p>
+    
+    <div class="grid-2" style="grid-template-rows: 1fr 1fr; gap: 0.25in; height: 7.4in;">
+      
+      <div class="prompt-card">
+        <div class="prompt-card-tag">Visual A · Intro / Services</div>
+        <div class="prompt-card-title">"Turning northern ideas into practical systems"</div>
+        <div class="prompt-section">
+          <h3>Sentence Starters</h3>
+          <span class="quote-start">“Lately, I've been talking to a lot of folks in [Sector] who are trying to...”</span>
+          <span class="quote-start">“If your organization is stuck on...”</span>
+        </div>
+        <div class="prompt-section">
+          <h3>Prompts</h3>
+          <ul class="bullet-list">
+            <li>What is the most common operational question you get asked?</li>
+            <li>Share a recent win where a system finally clicked into place.</li>
+            <li>Name a specific community you love working with and why.</li>
+            <li>What does a "practical system" actually look like in day-to-day work?</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="prompt-card">
+        <div class="prompt-card-tag">Visual B · Educational</div>
+        <div class="prompt-card-title">"A grant application is not an implementation plan"</div>
+        <div class="prompt-section">
+          <h3>Sentence Starters</h3>
+          <span class="quote-start">“Getting the funding is only step one. The real work is...”</span>
+          <span class="quote-start">“I often see groups get stuck after the grant arrives because...”</span>
+        </div>
+        <div class="prompt-section">
+          <h3>Prompts</h3>
+          <ul class="bullet-list">
+            <li>Explain a time a project succeeded because of the plan, not just the money.</li>
+            <li>What is the very first thing you build when a project gets funded?</li>
+            <li>Share a common misconception about grant funding in the north.</li>
+            <li>Why do well-funded projects still fail without a strong operating layer?</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="prompt-card">
+        <div class="prompt-card-tag">Visual C · Ownership</div>
+        <div class="prompt-card-title">"Community-owned means it still works when the consultant leaves"</div>
+        <div class="prompt-section">
+          <h3>Sentence Starters</h3>
+          <span class="quote-start">“My goal isn't to stay forever. It's to build...”</span>
+          <span class="quote-start">“You don't need a consultant to run your day-to-day. You need...”</span>
+        </div>
+        <div class="prompt-section">
+          <h3>Prompts</h3>
+          <ul class="bullet-list">
+            <li>What does a successful hand-off actually look like?</li>
+            <li>Share a story of a community independently running a system you built.</li>
+            <li>Why is local ownership and data sovereignty so important to you?</li>
+            <li>How do you ensure a platform doesn't die when the champion leaves?</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="prompt-card">
+        <div class="prompt-card-tag">Visual D · Problem-recognition</div>
+        <div class="prompt-card-title">"Still running important work through scattered forms..."</div>
+        <div class="prompt-section">
+          <h3>Sentence Starters</h3>
+          <span class="quote-start">“If your board is frustrated with...”</span>
+          <span class="quote-start">“It shouldn't take 3 days to pull a simple report for...”</span>
+        </div>
+        <div class="prompt-section">
+          <h3>Prompts</h3>
+          <ul class="bullet-list">
+            <li>Describe the chaos of a poorly managed spreadsheet in a real-world scenario.</li>
+            <li>How does a streamlined digital platform change the daily life of an admin?</li>
+            <li>What is the hidden cost of "making do" with scattered tools?</li>
+            <li>Invite them to a quick 15-minute chat to map out a better way.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root {
+    --evergreen: #1f3d2e;
+    --cream: #f4ede0;
+    --rust: #b85a3e;
+    --ink: #17211c;
+    --muted: #6d8176;
+    --gold: #d4a017;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px; height: 1350px;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    display: flex; flex-direction: column;
+    padding: 120px 100px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bg-shape {
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 600px;
+    background: linear-gradient(to bottom, rgba(31,61,46,0.5), transparent);
+    pointer-events: none;
+  }
+  
+  .eyebrow {
+    font-size: 24px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 40px;
+    font-weight: 700;
+  }
+  .title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 100px;
+    line-height: 1.1;
+    margin-bottom: 60px;
+    letter-spacing: -0.02em;
+    color: white;
+  }
+  
+  .outcome {
+    margin-bottom: auto;
+    font-size: 40px;
+    line-height: 1.4;
+    color: rgba(244,237,224,0.7);
+    border-left: 6px solid var(--rust);
+    padding-left: 40px;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 2px solid rgba(244,237,224,0.15);
+    padding-top: 50px;
+  }
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+  }
+  .footer-sub {
+    font-size: 24px;
+    color: rgba(244,237,224,0.5);
+    letter-spacing: 0.05em;
+    margin-top: 10px;
+  }
+  .footer-url {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+</style>
+</head>
+<body>
+  <div class="bg-shape"></div>
+  
+  <div class="eyebrow">Headwaters Development Services</div>
+  
+  <div class="title">Still running important work through scattered forms, spreadsheets and messages?</div>
+  
+  <div class="outcome">
+    We build custom digital platforms for northern organizations so you can stop wrestling with paper and start doing the work.
+  </div>
+  
+  <div class="footer">
+    <div>
+      <div class="footer-brand">Headwaters</div>
+      <div class="footer-sub">Led by Bobbie Parr</div>
+    </div>
+    <div class="footer-url">ourheadwaters.ca</div>
+  </div>
+</body>
+</html>
