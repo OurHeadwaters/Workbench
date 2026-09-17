@@ -9,6 +9,7 @@
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "typecheck:gated": "pnpm run typecheck:libs && pnpm --filter @workspace/scripts --filter @workspace/api-server --filter @workspace/codetry-handbook --filter @workspace/headwaters-books --filter @workspace/library --filter @workspace/north-star --filter @workspace/field-guide-finance --filter @workspace/print-marketing --filter @workspace/hinterland --filter @workspace/k-pizza --filter @workspace/codetry-ship --filter @workspace/deer-lake-store-plan run typecheck",
+    "test:e2e:the-logic": "pnpm --filter @workspace/the-logic run test:e2e",
     "audit:harvest": "tsx codetry-book/audit.ts",
     "check-constellations": "bash scripts/check-constellations.sh"
   },
