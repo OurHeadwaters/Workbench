@@ -19,20 +19,20 @@ export default function Reference() {
           The Logic
         </h1>
         
-        <p className="text-xl md:text-3xl text-muted-foreground font-serif italic max-w-xl font-light">
+        <p className="text-xl md:text-3xl text-muted-foreground font-serif italic max-w-xl">
           Zone 5 Doctrine Instruments
         </p>
         
         <nav className="mt-20 flex flex-wrap justify-center items-center gap-x-10 gap-y-6">
           <a 
             href="#reality-core" 
-            className="text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary pb-2"
+            className="text-base uppercase tracking-[0.12em] text-muted-foreground hover:text-primary transition-colors border-b-2 border-border hover:border-primary px-1 pb-2"
           >
             RealityCore
           </a>
           <a 
             href="#fallacy-map" 
-            className="text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary pb-2"
+            className="text-base uppercase tracking-[0.12em] text-muted-foreground hover:text-primary transition-colors border-b-2 border-border hover:border-primary px-1 pb-2"
           >
             Fallacy Map
           </a>
@@ -40,7 +40,7 @@ export default function Reference() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-3xl mx-auto px-6 pb-32">
+      <main className="max-w-[48rem] mx-auto px-5 sm:px-7 pb-32">
         <div className="ornament">
           <div className="ornament-icon">
             <div className="w-2 h-2 rotate-45 bg-primary"></div>
@@ -57,7 +57,7 @@ export default function Reference() {
               <div className="w-16 h-[2px] bg-primary/80"></div>
             </header>
             
-            <p className="text-xl md:text-2xl leading-loose md:leading-loose text-foreground/90 drop-cap text-justify">
+            <p className="text-xl md:text-[1.4rem] leading-[1.7] text-foreground drop-cap text-left">
               RealityCore is the practitioner's tool for checking whether a claim about the bright side or the systems side is grounded in fact or is a narrative the speaker has mistaken for one. Before the Gate can pass or refuse a piece of language, the practitioner needs this prior discipline: the ability to separate what is real from what is story. A Gate operated without RealityCore is guessing.
             </p>
 
@@ -66,7 +66,7 @@ export default function Reference() {
               <h3 className="font-serif text-2xl font-bold text-foreground mb-4 tracking-tight">
                 The Formal Test
               </h3>
-              <p className="text-base md:text-lg leading-relaxed text-foreground/80 mb-6">
+              <p className="text-[1.05rem] md:text-lg leading-[1.7] text-foreground/90 mb-7">
                 Apply these four questions to any claim before the Gate acts on it. A claim that cannot survive all four questions is a story, not a fact, and must be held on the bright side until it earns passage.
               </p>
               <ol className="flex flex-col gap-6 list-none pl-0">
@@ -93,10 +93,10 @@ export default function Reference() {
                   },
                 ].map(({ num, title, body }) => (
                   <li key={num} className="flex gap-5">
-                    <span className="font-serif text-3xl font-bold text-primary/40 leading-none mt-1 select-none w-6 shrink-0">{num}</span>
+                    <span className="font-serif text-3xl font-bold text-primary leading-none mt-1 select-none w-7 shrink-0">{num}</span>
                     <div>
                       <p className="font-semibold text-foreground mb-2 text-base md:text-lg tracking-tight">{title}</p>
-                      <p className="text-base md:text-lg leading-relaxed text-foreground/75">{body}</p>
+                      <p className="text-[1.05rem] md:text-lg leading-[1.7] text-foreground/90">{body}</p>
                     </div>
                   </li>
                 ))}
@@ -104,18 +104,19 @@ export default function Reference() {
             </div>
 
             {/* ── Story vs. Fact Checklist ── */}
-            <div className="mt-8 border border-border rounded-sm p-6 bg-muted/30">
+            <div className="mt-8 border border-border rounded-sm p-5 sm:p-7 bg-muted/55">
               <h3 className="font-serif text-xl font-bold text-foreground mb-5 tracking-tight uppercase text-sm tracking-[0.12em]">
                 Story-vs-Fact Field Checklist
               </h3>
-              <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
+              <p className="text-base text-muted-foreground mb-6 leading-relaxed">
                 Run this checklist in the field when you do not have time for the full formal test. Any "story" column answer is a flag; three flags in a row means hold the claim before the Gate acts.
               </p>
-              <table className="w-full text-sm border-collapse">
+              <div className="overflow-x-auto">
+              <table className="w-full min-w-[34rem] text-base border-collapse">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left py-2 pr-4 font-semibold text-foreground/70 uppercase tracking-wider text-xs w-1/2">Sounds like a fact when…</th>
-                    <th className="text-left py-2 font-semibold text-foreground/70 uppercase tracking-wider text-xs w-1/2">Sounds like a story when…</th>
+                    <th className="text-left py-3 pr-5 font-semibold text-muted-foreground uppercase tracking-wider text-xs w-1/2">Sounds like a fact when…</th>
+                    <th className="text-left py-3 font-semibold text-muted-foreground uppercase tracking-wider text-xs w-1/2">Sounds like a story when…</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/50">
@@ -128,12 +129,13 @@ export default function Reference() {
                     ["It is the same claim in the morning as in the evening.", "It changes with the audience."],
                   ].map(([fact, story], i) => (
                     <tr key={i}>
-                      <td className="py-3 pr-4 text-foreground/75 align-top leading-snug">{fact}</td>
-                      <td className="py-3 text-foreground/75 align-top leading-snug">{story}</td>
+                      <td className="py-4 pr-5 text-foreground/90 align-top leading-relaxed">{fact}</td>
+                      <td className="py-4 text-foreground/90 align-top leading-relaxed">{story}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
 
             {/* ── Worked Examples ── */}
@@ -141,19 +143,19 @@ export default function Reference() {
               <h3 className="font-serif text-2xl font-bold text-foreground mb-4 tracking-tight">
                 Worked Examples
               </h3>
-              <p className="text-base md:text-lg leading-relaxed text-foreground/80 mb-8">
+              <p className="text-[1.05rem] md:text-lg leading-[1.7] text-foreground/90 mb-8">
                 Each example below shows a claim as it arrived at the Gate, the RealityCore verdict, and what the practitioner did with it.
               </p>
 
               <div className="flex flex-col gap-10">
 
                 {/* Example 1 */}
-                <div className="border-l-2 border-primary/30 pl-6">
-                  <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-2">Example 1 — Eave / Grant Application</p>
+                <div className="border-l-2 border-primary/70 pl-5 sm:pl-6">
+                  <p className="text-sm uppercase tracking-[0.12em] text-muted-foreground mb-2">Example 1 — Eave / Grant Application</p>
                   <blockquote className="font-serif italic text-lg text-foreground/90 mb-4">
                     "Our members saved an estimated $80,000 last year by buying together."
                   </blockquote>
-                  <div className="flex flex-col gap-3 text-sm text-foreground/75 leading-relaxed">
+                  <div className="flex flex-col gap-3 text-base text-foreground/90 leading-[1.65]">
                     <p><span className="font-semibold text-foreground">Evidence test:</span> The co-op had bulk-purchase receipts and could compare the per-unit price to retail prices from the same period. The arithmetic was reproducible.</p>
                     <p><span className="font-semibold text-foreground">Skeptic test:</span> An outside accountant applied a conservative retail comparison and arrived at $71,000 — a different number, but in the same order of magnitude and using the same method.</p>
                     <p><span className="font-semibold text-foreground">Friction test:</span> The number appeared in an audited report the previous year; no funder or auditor had disputed the methodology.</p>
@@ -163,12 +165,12 @@ export default function Reference() {
                 </div>
 
                 {/* Example 2 */}
-                <div className="border-l-2 border-primary/30 pl-6">
-                  <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-2">Example 2 — Zone 3 / Community Meeting</p>
+                <div className="border-l-2 border-primary/70 pl-5 sm:pl-6">
+                  <p className="text-sm uppercase tracking-[0.12em] text-muted-foreground mb-2">Example 2 — Zone 3 / Community Meeting</p>
                   <blockquote className="font-serif italic text-lg text-foreground/90 mb-4">
                     "The community has always supported this kind of initiative."
                   </blockquote>
-                  <div className="flex flex-col gap-3 text-sm text-foreground/75 leading-relaxed">
+                  <div className="flex flex-col gap-3 text-base text-foreground/90 leading-[1.65]">
                     <p><span className="font-semibold text-foreground">Evidence test:</span> No record of prior votes, meeting minutes, or surveys was produced. The speaker was describing a feeling of support, not a documented history of it.</p>
                     <p><span className="font-semibold text-foreground">Skeptic test:</span> A member who had voted against a similar initiative two years earlier was in the room. The claim as stated would exclude her experience.</p>
                     <p><span className="font-semibold text-foreground">Friction test:</span> The claim had never been put in writing and had never been tested against the record.</p>
@@ -178,12 +180,12 @@ export default function Reference() {
                 </div>
 
                 {/* Example 3 */}
-                <div className="border-l-2 border-primary/30 pl-6">
-                  <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-2">Example 3 — Zone 4 / Funder Report</p>
+                <div className="border-l-2 border-primary/70 pl-5 sm:pl-6">
+                  <p className="text-sm uppercase tracking-[0.12em] text-muted-foreground mb-2">Example 3 — Zone 4 / Funder Report</p>
                   <blockquote className="font-serif italic text-lg text-foreground/90 mb-4">
                     "This model has been proven to work in remote northern communities."
                   </blockquote>
-                  <div className="flex flex-col gap-3 text-sm text-foreground/75 leading-relaxed">
+                  <div className="flex flex-col gap-3 text-base text-foreground/90 leading-[1.65]">
                     <p><span className="font-semibold text-foreground">Evidence test:</span> Two case studies existed — one from a community with road access that operated at a scale ten times larger, one from a fly-in community that had since wound down. Both were real. Neither matched the current context.</p>
                     <p><span className="font-semibold text-foreground">Skeptic test:</span> A skeptic reviewing both cases would say "proven in some contexts under some conditions" — which is weaker than "proven to work."</p>
                     <p><span className="font-semibold text-foreground">Friction test:</span> The claim had appeared in previous grant applications without challenge. That is not the same as having been tested.</p>
@@ -196,9 +198,9 @@ export default function Reference() {
             </div>
 
             {/* ── Practitioner's Note ── */}
-            <div className="mt-6 border border-border/60 rounded-sm p-6 bg-muted/20">
+            <div className="mt-6 border border-border rounded-sm p-5 sm:p-7 bg-muted/45">
               <p className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-3">Practitioner's Note</p>
-              <p className="text-base leading-relaxed text-foreground/80">
+              <p className="text-[1.05rem] leading-[1.7] text-foreground/90">
                 RealityCore does not determine whether a claim is good or bad for the community. It determines only whether the claim is real — whether it describes the world as it is, or the world as the speaker hopes or fears it to be. Stories are not failures; they are indispensable for mobilising people and sustaining culture. But stories that cross the Gate as facts will be contradicted by the systems, and the contradiction will land on the community, not on the story. The Gate's job is to know the difference before that happens.
               </p>
             </div>
@@ -222,11 +224,11 @@ export default function Reference() {
               <div className="w-16 h-[2px] bg-primary/80"></div>
             </header>
             
-            <p className="text-xl md:text-2xl leading-loose md:leading-loose text-foreground/90 drop-cap text-justify">
+            <p className="text-xl md:text-[1.4rem] leading-[1.7] text-foreground drop-cap text-left">
               The Fallacy Map is the named catalogue of reasoning errors practitioners catch in the field: the common moves that make a false crossing look honest, a refusal look cowardly, or a substitution look like an equivalent when it is not. Together with RealityCore, it forms the epistemological backbone the Gate rests on.
             </p>
 
-            <p className="text-base md:text-lg leading-relaxed text-foreground/80">
+            <p className="text-[1.05rem] md:text-lg leading-[1.7] text-foreground/90">
               Each entry below names the fallacy, describes the move it makes, and gives a field example from Gate practice. The names are working names — they are chosen to be memorable in a meeting, not to match a philosophy textbook. If a fallacy in this catalogue shows up in a Gate decision, it should be named by name in the record.
             </p>
 
@@ -308,21 +310,21 @@ export default function Reference() {
                     <div className="w-8 h-[1px] bg-primary/40"></div>
                   </div>
 
-                  <p className="text-base md:text-lg leading-relaxed text-foreground/80">{description}</p>
+                  <p className="text-[1.05rem] md:text-lg leading-[1.7] text-foreground/90">{description}</p>
 
                   <div className="flex gap-3 items-start">
-                    <span className="text-xs uppercase tracking-[0.12em] text-muted-foreground font-semibold shrink-0 mt-1 w-16">Signal</span>
-                    <p className="text-sm leading-relaxed text-foreground/70 italic">{signal}</p>
+                    <span className="text-sm uppercase tracking-[0.1em] text-muted-foreground font-semibold shrink-0 mt-1 w-16">Signal</span>
+                    <p className="text-base leading-[1.65] text-foreground/85 italic">{signal}</p>
                   </div>
 
-                  <div className="border-l-2 border-muted pl-5 ml-2">
-                    <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground font-semibold mb-2">Field Example</p>
-                    <p className="text-sm leading-relaxed text-foreground/75">{example}</p>
+                  <div className="border-l-2 border-border pl-5 ml-2">
+                    <p className="text-sm uppercase tracking-[0.1em] text-muted-foreground font-semibold mb-2">Field Example</p>
+                    <p className="text-base leading-[1.65] text-foreground/90">{example}</p>
                   </div>
 
-                  <div className="flex gap-3 items-start bg-muted/25 border border-border/50 rounded-sm p-4">
-                    <span className="text-xs uppercase tracking-[0.12em] text-primary font-semibold shrink-0 mt-0.5 w-20">Gate Call</span>
-                    <p className="text-sm leading-relaxed text-foreground/80">{gatecall}</p>
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start bg-muted/55 border border-border rounded-sm p-5">
+                    <span className="text-sm uppercase tracking-[0.1em] text-primary font-semibold shrink-0 mt-0.5 w-20">Gate Call</span>
+                    <p className="text-base leading-[1.65] text-foreground/90">{gatecall}</p>
                   </div>
                 </div>
               ))}
@@ -330,9 +332,9 @@ export default function Reference() {
             </div>
 
             {/* ── Map Note ── */}
-            <div className="mt-8 border border-border/60 rounded-sm p-6 bg-muted/20">
+            <div className="mt-8 border border-border rounded-sm p-5 sm:p-7 bg-muted/45">
               <p className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-3">On Naming</p>
-              <p className="text-base leading-relaxed text-foreground/80">
+              <p className="text-[1.05rem] leading-[1.7] text-foreground/90">
                 The names in this map are working names chosen for fieldwork. They are meant to be sayable in a meeting: "that looks like the Bright-Side Slide" is a usable intervention; a citation to a logic text is not. When a new fallacy pattern shows up repeatedly in Gate decisions and does not fit any of the above categories, it should be named and added — the map is not closed. The discipline is to name the move, not just to notice it.
               </p>
             </div>

@@ -23,18 +23,18 @@
 }
 
 :root {
-  --background: 25 22% 8%; /* Very dark espresso */
-  --foreground: 35 25% 82%; /* Warm parchment */
+  --background: 25 24% 8%; /* Very dark espresso */
+  --foreground: 38 34% 90%; /* Clear warm parchment */
   
-  --border: 25 20% 18%; /* Dark brown border */
-  --input: 25 20% 18%;
-  --ring: 15 65% 45%;
+  --border: 27 24% 29%; /* Visible warm brown border */
+  --input: 27 24% 24%;
+  --ring: 16 72% 57%;
   
-  --primary: 15 65% 45%; /* Deep rust / candlelight orange */
-  --primary-foreground: 35 25% 82%;
+  --primary: 16 72% 57%; /* Readable rust / candlelight orange */
+  --primary-foreground: 38 34% 94%;
   
-  --muted: 25 15% 15%;
-  --muted-foreground: 35 15% 55%;
+  --muted: 27 18% 17%;
+  --muted-foreground: 35 20% 72%;
 
   --app-font-sans: 'Crimson Pro', serif;
   --app-font-serif: 'Playfair Display', serif;
@@ -47,9 +47,13 @@ html {
 
 body {
   @apply font-sans antialiased bg-background text-foreground min-h-[100dvh];
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.65;
   background-image: 
-    linear-gradient(to right, rgba(255,255,255,0.015) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.015) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255,255,255,0.01) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.01) 1px, transparent 1px),
+    radial-gradient(circle at 50% 18%, hsl(24 22% 12%) 0%, transparent 58%);
   background-size: 3rem 3rem;
   background-attachment: fixed;
 }
@@ -59,8 +63,8 @@ body::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 30%, transparent 20%, rgba(10, 5, 0, 0.4) 100%);
-  z-index: 50;
+  background: radial-gradient(circle at 50% 25%, transparent 50%, rgba(10, 5, 0, 0.18) 100%);
+  z-index: 0;
 }
 
 .drop-cap::first-letter {
@@ -73,7 +77,7 @@ body::after {
 
 .ornament::before {
   content: '';
-  @apply absolute w-full h-[1px] bg-border;
+  @apply absolute w-full h-[1px] bg-border/80;
 }
 
 .ornament-icon {
@@ -83,4 +87,24 @@ body::after {
 ::selection {
   background: hsl(var(--primary) / 0.3);
   color: hsl(var(--primary-foreground));
+}
+
+a:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 5px;
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  body::after {
+    background: radial-gradient(circle at 50% 18%, transparent 62%, rgba(10, 5, 0, 0.12) 100%);
+  }
+
+  .ornament {
+    @apply my-12;
+  }
 }
