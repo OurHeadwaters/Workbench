@@ -5,3 +5,4 @@
 - [Annual Codetry commercial model](annual-codetry-commercial-model.md) — Year 1 funds the base build; Year 2 funds the next layer plus the annual strategic/training cycle, with the operating fee waived
 - [Multi-step form button identity](multi-step-form-button-identity.md) — give step and submit buttons distinct React keys so one click cannot change type and submit
 - [Artifact release gates](artifact-release-gates.md) — deploy-blocking checks belong in the artifact build; external targets use PLAYWRIGHT_BASE_URL
+- [Browser contrast assertions](browser-contrast-assertions.md) — Chromium may serialize Tailwind opacity colors as oklab; normalize computed colors before calculating WCAG contrast
